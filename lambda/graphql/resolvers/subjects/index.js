@@ -31,8 +31,48 @@ exports.Query = {
   },
 };
 
-exports.Subject = {
-};
+exports.Subject = {};
 
 exports.Course = {
+  terms_sections: ({ terms }) => {
+    if (terms === undefined) {
+      return null;
+    }
+
+    const termsNames = Object.keys(terms);
+    return termsNames.map(termName => ({
+      termName,
+      sections: terms[termName],
+    }));
+  },
+  assessments: ({ assessments }) => {
+    if (assessments === undefined) {
+      return null;
+    }
+
+    return Object.keys(assessments).map(assessment => ({
+      name: assessment,
+      percentage: assessments[assessment],
+    }));
+  },
 };
+
+exports.TermSections = {
+  sections: ({ sections }) => {
+    const sectionsNames = Object.keys(sections);
+    return sectionsNames.map(sectionName => ({
+      name: sectionName,
+      ...sections[sectionName],
+    }));
+  }
+};
+
+exports.CourseSection = {
+  startTimes: ({ startTimes }) => startTimes[0],
+  endTimes: ({ endTimes }) => endTimes[0],
+  days: ({ days }) => days[0],
+  locations: ({ locations }) => locations[0],
+  instructors: ({ instructors }) => instructors[0],
+};
+
+exports.AssessementComponent = {};

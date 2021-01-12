@@ -32,6 +32,22 @@ module.exports = `
     syllabus: String!
     required_readings: String!
     recommended_readings: String!
+    terms_sections: [TermSections]
+    assessments: [AssessementComponent]
+  }
+
+  type TermSections {
+    termName: String!
+    sections: [CourseSection]
+  }
+
+  type CourseSection {
+    name: String!
+    startTimes: String!
+    endTimes: String!
+    days: String!
+    locations: String!
+    instructors: String!
   }
 
   type AssessementComponent {
