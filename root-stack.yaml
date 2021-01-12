@@ -1,0 +1,22 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: "AWS::Serverless-2016-10-31"
+Parameters:
+  CoursesTableName:
+    Type: String
+Resources:
+  DynamoDB:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: ./dynamodb/dynamodb.yaml
+      Parameters:
+        CoursesTableName: !Sub
+          - ${AWS::StackName}-${DBName}
+          - { DBName: !Ref CoursesTableName }
+  Lambda:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: ./lambda/lambda.yaml
+      Parameters:
+        CoursesTableName: !Sub
+          - ${AWS::StackName}-${DBName}
+          - { DBName: !Ref CoursesTableName }

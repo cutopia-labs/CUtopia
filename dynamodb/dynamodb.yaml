@@ -1,0 +1,27 @@
+Parameters:
+  CoursesTableName:
+    Type: String
+  ReadCapacityUnits:
+    Description: Provisioned read throughput
+    Type: Number
+    Default: "5"
+    MaxValue: "25"
+  WriteCapacityUnits:
+    Description: Provisioned write throughput
+    Type: Number
+    Default: "10"
+    MaxValue: "25"
+Resources:
+  CoursesDB:
+    Type: "AWS::DynamoDB::Table"
+    Properties:
+      TableName: !Ref CoursesTableName
+      AttributeDefinitions:
+        - AttributeName: "course-code"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "course-code"
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: !Ref ReadCapacityUnits
+        WriteCapacityUnits: !Ref WriteCapacityUnits
