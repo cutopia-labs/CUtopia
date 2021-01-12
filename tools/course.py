@@ -135,12 +135,17 @@ class Course:
             'requirements': soup.select_one('#uc_course_tc_enrl_requirement'),
             'description': soup.select_one('#uc_course_lbl_crse_descrlong').text,
             'academic_group': soup.select_one('#uc_course_lbl_acad_group').text,
+            'outcome': '',
+            'syllabus': '',
+            'required_readings': '',
+            'recommended_readings': '',
         }
         course_detail['requirements'] = soup.select_one('#uc_course_tc_enrl_requirement').get_text(';') if course_detail['requirements'] else ''
         
         # Get sections of the course
         try: 
             term_selection_options = soup.select_one('#uc_course_ddl_class_term').findChildren('option', recursive=False)
+            terms = {}
             for term_node in term_selection_options:
                 if term_node.has_attr('selected'):
                     print(f"For term {term_node.text}")
@@ -157,9 +162,10 @@ class Course:
                         soup_alt = BeautifulSoup(res.text, 'html.parser')
                         course_sections = self.parse_sections(soup_alt)
                     pass
-                course_detail[term_node.text] = course_sections
+                terms[term_node.text] = course_sections
                 print(course_sections)
             
+            course_detail['terms'] = terms
             # Get course outcome for the course
             form = {
                 'btn_course_outcome': 'Course Outcome',
@@ -246,7 +252,7 @@ class Course:
 
 cusis = Course()
 # cusis.parse_all()
-cusis.search_subject('ACCT', save=False)
+cusis.search_subject('AIST', save=True)
 # print(cusis.courses)
 
 """
