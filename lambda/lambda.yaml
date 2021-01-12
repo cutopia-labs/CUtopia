@@ -4,25 +4,26 @@ Parameters:
   CoursesTableName:
     Type: String
 Resources:
-  CoursesHandler:
+  GraphQL:
     Properties:
-      CodeUri: ./courses
-      Environment:
-        Variables:
-          CoursesTableName: !Ref CoursesTableName
-      Handler: index.handler
+      CodeUri: ./graphql
+      Handler: graphql.graphqlHandler
       Events:
         HttpGet:
           Properties:
             Method: get
-            Path: "/courses"
+            Path: /graphql
           Type: Api
-      Handler: index.handler
-      Role: !GetAtt "CoursesHandlerRole.Arn"
+        HttpPost:
+          Properties:
+            Method: post
+            Path: /graphql
+          Type: Api
+      Role: !GetAtt "GraphQLRole.Arn"
       Runtime: nodejs12.x
-      Timeout: 5
+      Timeout: 20
     Type: AWS::Serverless::Function
-  CoursesHandlerRole:
+  GraphQLRole:
     Properties:
       AssumeRolePolicyDocument:
         Statement:
