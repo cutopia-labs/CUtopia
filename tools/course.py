@@ -6,8 +6,6 @@ import io
 import pytesseract
 import json
 
-# Get courses from http://rgsntl.rgs.cuhk.edu.hk/aqs_prd_applx/Public/tt_dsp_crse_catalog.aspx
-
 class Course:
     def __init__(self):
         self.headers = {
@@ -25,6 +23,13 @@ class Course:
         self.courses = {}
         self.form_body = {}
 
+    def parse_all(self):
+        self.get_code_list()
+        print(f"Parsing courses for all {len(self.code_list)} subjects")
+        for code in self.code_list:
+            print(f"\nParsing courses for {code.split()[0]}\n")
+            self.search_subject(code.split()[0], save=True)
+
     def get_code_list(self):
         with closing(requests.get(self.course_url, headers=self.headers)) as res:
             soup = BeautifulSoup(res.text, 'html.parser')
@@ -33,8 +38,10 @@ class Course:
                 code_list.append(node.text)
             self.code_list = list(filter(None, code_list))
 
-    def get_captcha(self, url, manual=True):
-        with closing(self.sess.get(url, headers=self.headers)) as captcha_res:
+    def get_captcha(self, soup:BeautifulSoup, manual=True):
+        captcha_id = soup.select_one('#hf_Captcha')['value']
+        captcha_url = f'http://rgsntl.rgs.cuhk.edu.hk/aqs_prd_applx/Public/BuildCaptcha.aspx?captchaname={captcha_id}&len=4'
+        with closing(self.sess.get(captcha_url, headers=self.headers)) as captcha_res:
             in_memory_file = io.BytesIO(captcha_res.content)
             im = Image.open(in_memory_file)
             if manual:
@@ -43,7 +50,10 @@ class Course:
             else:
                 captcha = pytesseract.image_to_string(im) # not working lol, need to do CNN later
                 print(f'Recognized captcha: {captcha}')
-            return captcha
+            self.form_body.update({
+                'hf_Captcha': captcha_id,
+                'txt_captcha': captcha,
+            })
 
     def update_form(self, soup: BeautifulSoup, update=True, additional_keys=None) -> dict:
         form_body = {'__VIEWSTATEFIELDCOUNT': soup.select_one('#__VIEWSTATEFIELDCOUNT')['value']}
@@ -62,29 +72,32 @@ class Course:
         with closing(self.sess.get(self.course_url, headers=self.headers)) as res:
             soup = BeautifulSoup(res.text, 'html.parser')
             self.update_form(soup)
-            captcha_id = soup.select_one('#hf_Captcha')['value']
-            captcha_url = f'http://rgsntl.rgs.cuhk.edu.hk/aqs_prd_applx/Public/BuildCaptcha.aspx?captchaname={captcha_id}&len=4'
-            captcha_text = self.get_captcha(captcha_url, manual)
             self.form_body.update({
-                'hf_Captcha': captcha_id,
-                'txt_captcha': captcha_text,
                 'ddl_subject': subject,
                 'hf_previous_page': 'SEARCH',
                 'hf_max_search_iteration': '1',
                 'hf_search_iteration': '1',
             })
-            form_body = {
-                'btn_search': 'Search',
-            }
-            form_body.update(self.form_body)
-            with closing(self.sess.post(self.course_url, headers=self.form_headers, data=form_body)) as res:
-                self.parse_subject_courses(subject, res.text, save)
+
+            while True:
+                self.get_captcha(soup, manual)
+                form_body = { 'btn_search': 'Search' }
+                form_body.update(self.form_body)
+                with closing(self.sess.post(self.course_url, headers=self.form_headers, data=form_body)) as res:
+                    correct_captcha = self.parse_subject_courses(subject, res.text, save)
+                    if correct_captcha:
+                        break
+                    else:
+                        print("Wrong captcha")
     
     def parse_subject_courses(self, subject, html, save): # parse the courses under a subject and get details of each course
         course_list = []
         soup = BeautifulSoup(html, 'html.parser')
         self.update_form(soup)
-        course_row_nodes = soup.select_one('#gv_detail').findChildren('tr', recursive=False)
+        course_detail_node = soup.select_one('#gv_detail')
+        if not course_detail_node:
+            return False
+        course_row_nodes = course_detail_node.findChildren('tr', recursive=False)
         course_row_nodes.pop(0) # remove the header node
         for i, row in enumerate(course_row_nodes):
             a_node = row.select('a')
@@ -107,6 +120,7 @@ class Course:
             with open(f'{subject}.json', 'w') as f:
                 json.dump(course_list, f)
         self.courses[subject] = course_list
+        return True
 
     def parse_course_detail(self, html) -> dict:
         # Get general information about the course
@@ -122,8 +136,7 @@ class Course:
             'description': soup.select_one('#uc_course_lbl_crse_descrlong').text,
             'academic_group': soup.select_one('#uc_course_lbl_acad_group').text,
         }
-        if course_detail['requirements']:
-            course_detail['requirements'] = soup.select_one('#uc_course_tc_enrl_requirement').get_text(';')
+        course_detail['requirements'] = soup.select_one('#uc_course_tc_enrl_requirement').get_text(';') if course_detail['requirements'] else ''
         
         # Get sections of the course
         try: 
@@ -149,9 +162,9 @@ class Course:
             
             # Get course outcome for the course
             form = {
-            'btn_course_outcome': 'Course Outcome',
-            'uc_course$ddl_class_term': term_selection_options[0]['value'],
-            'hf_previous_page': 'SEARCH'
+                'btn_course_outcome': 'Course Outcome',
+                'uc_course$ddl_class_term': term_selection_options[0]['value'],
+                'hf_previous_page': 'SEARCH'
             }
             form.update(self.update_form(soup, update=False, additional_keys=['hf_course_offer_nbr', 'hf_course_id']))
             
@@ -205,7 +218,6 @@ class Course:
             }
         return course_sections
 
-
     @staticmethod
     def parse_days_and_times(s: str) -> tuple:
         if s == 'TBA':
@@ -233,14 +245,8 @@ class Course:
         return (days_dict[raw[0]], to_24_hours(raw[1]), to_24_hours(raw[2]))
 
 cusis = Course()
-# cusis.get_code_list()
-# print(len(cusis.code_list))
-
-""" To get all courses for all subjects
-for code in cusis.code_list:
-    cusis.search_subject(code.split()[0], save=True)
-"""
-cusis.search_subject('ACCT', save=True)
+# cusis.parse_all()
+cusis.search_subject('ACCT', save=False)
 # print(cusis.courses)
 
 """
