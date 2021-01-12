@@ -22,6 +22,13 @@ class Course:
         self.sess = requests.Session()
         self.courses = {}
         self.form_body = {}
+        try:
+            with open('subjects.json', 'r') as f:
+                self.faculty_subjects = json.load(f)
+                print("Loaded")
+                print(self.faculty_subjects)
+        except FileNotFoundError:
+            self.faculty_subjects = {}
 
     def parse_all(self):
         self.get_code_list()
@@ -68,7 +75,7 @@ class Course:
         else:
             return form_body
 
-    def search_subject(self, subject, save=False, manual=True): # get all course under a subject code
+    def search_subject(self, subject, save=True, manual=True): # get all course under a subject code
         with closing(self.sess.get(self.course_url, headers=self.headers)) as res:
             soup = BeautifulSoup(res.text, 'html.parser')
             self.update_form(soup)
@@ -88,7 +95,8 @@ class Course:
                     if correct_captcha:
                         break
                     else:
-                        print("Wrong captcha")
+                        print("Wrong captcha!" if manual else 'Unable to decode the captcha, please enter manually!')
+                        manual = True
     
     def parse_subject_courses(self, subject, html, save): # parse the courses under a subject and get details of each course
         course_list = []
@@ -105,14 +113,18 @@ class Course:
                 'code': a_node[0].text,
                 'title': a_node[1].text,
             }
-            print(f'Posting request {i}')
-            num = f'0{i+2}' if i + 2 < 10 else str(i+2)
+            print('Posting request {} for {}{} {}'.format(i, subject, course['code'], course['title']))
             form_body = {
-                '__EVENTTARGET': f'gv_detail$ctl{num}$lbtn_course_title',
+                '__EVENTTARGET': 'gv_detail$ctl{}$lbtn_course_title'.format(f'0{i+2}' if i + 2 < 10 else str(i+2)),
             }
             form_body.update(self.form_body)
             with closing(self.sess.post(self.course_url, headers=self.headers, data=form_body)) as res:
                 course_detail = self.parse_course_detail(res.text)
+                if not subject in self.faculty_subjects and 'academic_group' in course_detail:
+                    self.faculty_subjects[subject] = course_detail['academic_group']
+                    with open('subjects.json', 'w') as f:
+                        json.dump(self.faculty_subjects, f)
+                    print(self.faculty_subjects)
                 course.update(course_detail)
             course_list.append(course)
         course_list = sorted(course_list, key=lambda x:x['code'])
@@ -125,22 +137,25 @@ class Course:
     def parse_course_detail(self, html) -> dict:
         # Get general information about the course
         soup = BeautifulSoup(html, 'html.parser')
-        course_detail = {
-            'career': soup.select_one('#uc_course_lbl_acad_career').text,
-            'units': soup.select_one('#uc_course_lbl_units').text,
-            'grading': soup.select_one('#uc_course_lbl_grading_basis').text,
-            'components': soup.select_one('#uc_course_lbl_component').text,
-            'campus': soup.select_one('#uc_course_lbl_campus').text,
-            'academic_group': soup.select_one('#uc_course_lbl_acad_group').text,
-            'requirements': soup.select_one('#uc_course_tc_enrl_requirement'),
-            'description': soup.select_one('#uc_course_lbl_crse_descrlong').text,
-            'academic_group': soup.select_one('#uc_course_lbl_acad_group').text,
-            'outcome': '',
-            'syllabus': '',
-            'required_readings': '',
-            'recommended_readings': '',
-        }
-        course_detail['requirements'] = soup.select_one('#uc_course_tc_enrl_requirement').get_text(';') if course_detail['requirements'] else ''
+        try:
+            course_detail = {
+                'career': soup.select_one('#uc_course_lbl_acad_career').text,
+                'units': soup.select_one('#uc_course_lbl_units').text,
+                'grading': soup.select_one('#uc_course_lbl_grading_basis').text,
+                'components': soup.select_one('#uc_course_lbl_component').text,
+                'campus': soup.select_one('#uc_course_lbl_campus').text,
+                'academic_group': soup.select_one('#uc_course_lbl_acad_group').text,
+                'requirements': soup.select_one('#uc_course_tc_enrl_requirement'),
+                'description': soup.select_one('#uc_course_lbl_crse_descrlong').text,
+                'outcome': '',
+                'syllabus': '',
+                'required_readings': '',
+                'recommended_readings': '',
+            }
+            course_detail['requirements'] = soup.select_one('#uc_course_tc_enrl_requirement').get_text(';') if course_detail['requirements'] else ''
+        except AttributeError:
+            print("Unknown error parsing this course")
+            return {}
         
         # Get sections of the course
         try: 
@@ -148,11 +163,9 @@ class Course:
             terms = {}
             for term_node in term_selection_options:
                 if term_node.has_attr('selected'):
-                    print(f"For term {term_node.text}")
                     course_sections = self.parse_sections(soup)
                 else:
                     # post form request to get schedule for non-default term
-                    print(f"For non-selected term {term_node.text}")
                     form = {
                         'uc_course$btn_class_section': 'Show sections',
                         'uc_course$ddl_class_term': term_node['value'],
@@ -163,7 +176,6 @@ class Course:
                         course_sections = self.parse_sections(soup_alt)
                     pass
                 terms[term_node.text] = course_sections
-                print(course_sections)
             
             course_detail['terms'] = terms
             # Get course outcome for the course
@@ -252,7 +264,7 @@ class Course:
 
 cusis = Course()
 # cusis.parse_all()
-cusis.search_subject('AIST', save=True)
+cusis.search_subject('AIST')
 # print(cusis.courses)
 
 """
