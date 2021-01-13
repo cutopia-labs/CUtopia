@@ -75,6 +75,14 @@ class Course:
         else:
             return form_body
 
+    def search_all_subjects(self, save=True, manual=True):
+        with closing(self.sess.get(self.course_url, headers=self.headers)) as res:
+            soup = BeautifulSoup(res.text, 'html.parser')
+            subjects_elements = soup.select('#ddl_subject option')[1:] # the first one element is not valid
+            for element in subjects_elements:
+                subject = element.get('value')
+                self.search_subject(subject, save, manual)
+
     def search_subject(self, subject, save=True, manual=True): # get all course under a subject code
         with closing(self.sess.get(self.course_url, headers=self.headers)) as res:
             soup = BeautifulSoup(res.text, 'html.parser')
@@ -264,7 +272,8 @@ class Course:
 
 cusis = Course()
 # cusis.parse_all()
-cusis.search_subject('AIST')
+# cusis.search_subject('AIST')
+cusis.search_all_subjects()
 # print(cusis.courses)
 
 """
