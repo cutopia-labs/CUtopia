@@ -4,23 +4,18 @@ const subjects = {};
 const subjectNames = [];
 fs.readdirSync(`${__dirname}/data`).forEach(subjectFileName => {
   const subject = JSON.parse(fs.readFileSync(`${__dirname}/data/${subjectFileName}`));
-  const subjectName = subjectFileName.split('.')[0];
-  subjects[subjectName] = subject;
-  subjectNames.push(subjectName);
+  if (subject.length !== 0) {
+    const subjectName = subjectFileName.split('.')[0];
+    subjects[subjectName] = subject;
+    subjectNames.push(subjectName);
+  }
 });
 
 exports.Query = {
   subjects: (parent, { filter }) => {
-    const defaultFilter = {
-      requiredSubjects: null,
-    };
-    const { requiredSubjects } = {
-      ...defaultFilter,
-      ...filter,
-    };
+    const { requiredSubjects = null } = { ...filter };
 
     let filteredSubjects = subjectNames;
-
     if (requiredSubjects) {
       filteredSubjects = requiredSubjects.filter(subName => subjectNames.includes(subName));
     }
@@ -31,7 +26,17 @@ exports.Query = {
   },
 };
 
-exports.Subject = {};
+exports.Subject = {
+  courses: ({ courses }, { filter }) => {
+    const { requiredCourses = null } = { ...filter };
+
+    let filteredCourses = courses;
+    if (requiredCourses) {
+      filteredCourses = courses.filter(course => requiredCourses.includes(course.code));
+    }
+    return filteredCourses;
+  },
+};
 
 exports.Course = {
   terms_sections: ({ terms }) => {
@@ -65,14 +70,6 @@ exports.TermSections = {
       ...sections[sectionName],
     }));
   }
-};
-
-exports.CourseSection = {
-  startTimes: ({ startTimes }) => startTimes[0],
-  endTimes: ({ endTimes }) => endTimes[0],
-  days: ({ days }) => days[0],
-  locations: ({ locations }) => locations[0],
-  instructors: ({ instructors }) => instructors[0],
 };
 
 exports.AssessementComponent = {};

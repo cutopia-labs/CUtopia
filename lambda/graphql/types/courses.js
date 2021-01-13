@@ -3,18 +3,17 @@ module.exports = `
     subjects(filter: SubjectFilter): [Subject]!
   }
 
+  input SubjectFilter {
+    requiredSubjects: [String]
+  }
+
   type Subject {
     name: String!
-    courses: [Course]!
+    courses(filter: CourseFilter): [Course]!
   }
 
   input CourseFilter {
-    subject: [String]
-    maxNum: Int
-  }
-
-  input SubjectFilter {
-    requiredSubjects: [String]
+    requiredCourses: [String]
   }
 
   type Course {
@@ -43,11 +42,11 @@ module.exports = `
 
   type CourseSection {
     name: String!
-    startTimes: String!
-    endTimes: String!
-    days: String!
-    locations: String!
-    instructors: String!
+    startTimes: [String]!
+    endTimes: [String]!
+    days: [String]!
+    locations: [String]!
+    instructors: [String]!
   }
 
   type AssessementComponent {
