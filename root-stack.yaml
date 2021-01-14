@@ -1,22 +1,25 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Transform: "AWS::Serverless-2016-10-31"
 Parameters:
-  CoursesTableName:
+  ReviewsTableName:
     Type: String
 Resources:
   DynamoDB:
-    Type: AWS::Serverless::Application
+    Type: AWS::CloudFormation::Stack
     Properties:
-      Location: ./dynamodb/dynamodb.yaml
+      TemplateURL: ./dynamodb/dynamodb.yaml
       Parameters:
-        CoursesTableName: !Sub
+        ReviewsTableName: !Sub
           - ${AWS::StackName}-${DBName}
-          - { DBName: !Ref CoursesTableName }
+          - { DBName: !Ref ReviewsTableName }
   Lambda:
-    Type: AWS::Serverless::Application
+    DependsOn:
+      - DynamoDB
+    Type: AWS::CloudFormation::Stack
     Properties:
-      Location: ./lambda/lambda.yaml
+      TemplateURL: ./lambda/lambda.yaml
       Parameters:
-        CoursesTableName: !Sub
+        ReviewsTableName: !Sub
           - ${AWS::StackName}-${DBName}
-          - { DBName: !Ref CoursesTableName }
+          - { DBName: !Ref ReviewsTableName }
+        ReviewsDBArn: !GetAtt DynamoDB.Outputs.ReviewsDBArn

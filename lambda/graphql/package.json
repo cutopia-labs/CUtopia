@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "apollo-server-lambda": "^2.19.1",
+    "dynamodb": "file:../../dynamodb",
     "graphql": "^15.4.0",
     "graphql-scalars": "^1.7.0",
     "graphql-tools": "^7.0.2",

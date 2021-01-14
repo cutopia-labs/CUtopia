@@ -1,4 +1,5 @@
 const fs = require('fs');
+const { getReviews } = require('dynamodb');
 
 const subjects = {};
 const subjectNames = [];
@@ -10,66 +11,6 @@ fs.readdirSync(`${__dirname}/data`).forEach(subjectFileName => {
     subjectNames.push(subjectName);
   }
 });
-
-const mock1 = {
-  subject: 'AIST',
-  code: '1000',
-  term: '2020-21 Term 1',
-  section: '--LEC (4742)',
-  author: 'zzzzzzz',
-  anonymous: true,
-  lecturer: 'Dr. CHAU Chuck Jee, \n\rMr. FUNG Ping Fu',
-  createdTime: '1608738619',
-  modifiedTime: '1608738619',
-  overall: 'A-',
-  grading: {
-    review: 'Leng grade',
-    grade: 'A-',
-  },
-  teaching: {
-    review: 'Good',
-    grade: 'B',
-  },
-  difficulty: {
-    review: 'Easy for programmer',
-    grade: 'A',
-  },
-  content: {
-    review: 'This course aims to provide an intensive hands-on introduction to the Python programming language. Topics include Python programming language syntax, basic data types, operators for various data types, function definition and usage, file and operating system support, object-oriented programming, functional programming, module creation, visualization, multi-threaded programming, networking, cryptography, web/database access. The course will go through some important Python packages for artificial intelligence and machine learning applications, e.g., NumPy and SciPy, and use these packages to accomplish some simple artificial intelligence and machine learning tasks.',
-    grade: 'A-',
-  },
-};
-
-const mock2 = {
-  subject: 'ENGG',
-  code: '2440',
-  term: '2020-21 Term 1',
-  section: 'B-LEC (8967)',
-  author: 'blablabla',
-  anonymous: false,
-  lecturer: 'Dr. Ng',
-  createdTime: '1610524219',
-  modifiedTime: '1610524219',
-  overall: 'B-',
-  grading: {
-    review: 'Broken grade',
-    grade: 'B-',
-  },
-  teaching: {
-    review: 'Not bad',
-    grade: 'B',
-  },
-  difficulty: {
-    review: 'Easy for programmer',
-    grade: 'A',
-  },
-  content: {
-    review: 'This course aims to provide an intensive hands-on introduction to the Python programming language. Topics include Python programming language syntax, basic data types, operators for various data types, function definition and usage, file and operating system support, object-oriented programming, functional programming, module creation, visualization, multi-threaded programming, networking, cryptography, web/database access. The course will go through some important Python packages for artificial intelligence and machine learning applications, e.g., NumPy and SciPy, and use these packages to accomplish some simple artificial intelligence and machine learning tasks.',
-    grade: 'A-',
-  },
-};
-
-const mockReviews = [mock1, mock2];
 
 exports.Query = {
   subjects: (parent, { filter }) => {
@@ -89,10 +30,10 @@ exports.Query = {
 exports.Subject = {
   courses: ({ name, courses }, { filter }) => {
     const idsContext = {
-      subjectName: name,
+      subject: name,
       courseCode: null,
-      termName: null,
-      sectionName: null,
+      term: null,
+      section: null,
     };
 
     const { requiredCourses = null } = { ...filter };
@@ -123,6 +64,11 @@ exports.Course = {
   syllabus: ({ course }) => course.syllabus,
   required_readings: ({ course }) => course.required_readings,
   recommended_readings: ({ course }) => course.recommended_readings,
+  reviews: async ({ course, idsContext }) => {
+    const { subject } = idsContext;
+    const courseCode = course.code;
+    return await getReviews({ subject, courseCode });
+  },
   terms: ({ idsContext, course }) => {
     const { code, terms } = course;
     if (terms === undefined) {
@@ -130,13 +76,13 @@ exports.Course = {
     }
 
     const termsNames = Object.keys(terms);
-    return termsNames.map(termName => ({
+    return termsNames.map(term => ({
       idsContext: {
         ...idsContext,
         courseCode: code,
-        termName,
+        term,
       },
-      course_sections: terms[termName],
+      course_sections: terms[term],
     }));
   },
   assessments: ({ course }) => {
@@ -153,26 +99,21 @@ exports.Course = {
 };
 
 exports.Term = {
-  name: ({ idsContext }) => idsContext.termName,
+  name: ({ idsContext }) => idsContext.term,
   course_sections: ({ idsContext, course_sections }) => {
     const sectionsNames = Object.keys(course_sections);
-    return sectionsNames.map(sectionName => ({
+    return sectionsNames.map(section => ({
       idsContext: {
         ...idsContext,
-        sectionName,
+        section,
       },
-      ...course_sections[sectionName],
+      ...course_sections[section],
     }));
   }
 };
 
 exports.CourseSection = {
-  name: ({ idsContext }) => idsContext.sectionName,
-  reviews: ({ idsContext }) => {
-    const { subjectName, courseCode, termName, sectionName } = idsContext;
-    const reviews = mockReviews.filter(review => review.subject === subjectName && review.code === courseCode && review.term === termName && review.section === sectionName);
-    return reviews;
-  },
+  name: ({ idsContext }) => idsContext.section,
 };
 
 exports.AssessementComponent = {};

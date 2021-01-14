@@ -1,5 +1,5 @@
 Parameters:
-  CoursesTableName:
+  ReviewsTableName:
     Type: String
   ReadCapacityUnits:
     Description: Provisioned read throughput
@@ -12,16 +12,23 @@ Parameters:
     Default: "10"
     MaxValue: "25"
 Resources:
-  CoursesDB:
+  ReviewsDB:
     Type: "AWS::DynamoDB::Table"
     Properties:
-      TableName: !Ref CoursesTableName
+      TableName: !Ref ReviewsTableName
       AttributeDefinitions:
-        - AttributeName: "course-code"
+        - AttributeName: "courseId"
+          AttributeType: "S"
+        - AttributeName: "reviewId"
           AttributeType: "S"
       KeySchema:
-        - AttributeName: "course-code"
+        - AttributeName: "courseId"
           KeyType: HASH
+        - AttributeName: "reviewId"
+          KeyType: RANGE
       ProvisionedThroughput:
         ReadCapacityUnits: !Ref ReadCapacityUnits
         WriteCapacityUnits: !Ref WriteCapacityUnits
+Outputs:
+  ReviewsDBArn:
+    Value: !GetAtt ReviewsDB.Arn

@@ -1,7 +1,9 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Transform: "AWS::Serverless-2016-10-31"
 Parameters:
-  CoursesTableName:
+  ReviewsTableName:
+    Type: String
+  ReviewsDBArn:
     Type: String
 Resources:
   GraphQL:
@@ -19,6 +21,9 @@ Resources:
             Method: post
             Path: /graphql
           Type: Api
+      Environment:
+        Variables:
+          ReviewsTableName: !Ref ReviewsTableName
       Role: !GetAtt "GraphQLRole.Arn"
       Runtime: nodejs12.x
       Timeout: 20
@@ -44,6 +49,12 @@ Resources:
                 Effect: Allow
                 Resource:
                   - arn:aws:logs:*:*:*
+              - Action:
+                  - dynamodb:PutItem
+                  - dynamodb:Query
+                Effect: Allow
+                Resource:
+                  - !Ref ReviewsDBArn
             Version: "2012-10-17"
           PolicyName: LambdaPolicy
     Type: AWS::IAM::Role
