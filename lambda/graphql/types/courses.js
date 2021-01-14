@@ -31,13 +31,13 @@ module.exports = `
     syllabus: String!
     required_readings: String!
     recommended_readings: String!
-    terms_sections: [TermSections]
+    terms: [Term]
     assessments: [AssessementComponent]
   }
 
-  type TermSections {
-    termName: String!
-    sections: [CourseSection]
+  type Term {
+    name: String!
+    course_sections: [CourseSection]
   }
 
   type CourseSection {
@@ -47,10 +47,33 @@ module.exports = `
     days: [String]!
     locations: [String]!
     instructors: [String]!
+    reviews(input: ReviewFilter): [Review]!
   }
 
   type AssessementComponent {
     name: String!
     percentage: String!
+  }
+
+  input ReviewFilter {
+    random: Int
+  }
+
+  type Review {
+    author: String!
+    anonymous: Boolean!
+    createdTime: String!
+    modifiedTime: String!
+    lecturer: String!
+    section: String!
+    grading: ReviewDetails!
+    teaching: ReviewDetails!
+    difficulty: ReviewDetails!
+    content: ReviewDetails!
+  }
+
+  type ReviewDetails {
+    review: String!
+    grade: String!
   }
 `;
