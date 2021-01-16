@@ -5,3 +5,9 @@ exports.Mutation = {
     return await createReview(input);
   },
 };
+
+exports.Review = {
+  author: ({ author, anonymous }) => {
+    return anonymous ? 'Anonymous' : author;
+  },
+};

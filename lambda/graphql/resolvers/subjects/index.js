@@ -118,10 +118,4 @@ exports.CourseSection = {
 
 exports.AssessementComponent = {};
 
-exports.Review = {
-  author: ({ author, anonymous }) => {
-    return anonymous ? 'Anonymous' : author;
-  },
-};
-
 exports.ReviewDetails = {};

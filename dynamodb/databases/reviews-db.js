@@ -4,7 +4,7 @@ const AWS = require("aws-sdk");
 const db = new AWS.DynamoDB.DocumentClient();
 
 exports.createReview = async (input) => {
-  const now = new Date().getTime();
+  const now = new Date().getTime().toString();
   const { subject, courseCode, ...reviewData } = input;
 
   const courseId = `${subject}${courseCode}`;
@@ -15,8 +15,8 @@ exports.createReview = async (input) => {
     Item: {
       "courseId": courseId,
       "reviewId": reviewId,
-      "createdTime": now,
-      "modifiedTime": now,
+      "createdDate": now,
+      "modifiedDate": now,
       ...reviewData,
     },
   };
@@ -50,7 +50,7 @@ exports.getReviews = async (input) => {
   try {
     const reviews = (await db.query(params).promise()).Items;
     return reviews.map(review => {
-      const { courseId, reviewId, term, ...rest } = review;
+      const { courseId, reviewId, ...rest } = review;
       return {
         ...rest,
         id: reviewId,

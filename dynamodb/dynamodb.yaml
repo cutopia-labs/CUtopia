@@ -19,12 +19,12 @@ Resources:
       AttributeDefinitions:
         - AttributeName: "courseId"
           AttributeType: "S"
-        - AttributeName: "reviewId"
+        - AttributeName: "createdDate"
           AttributeType: "S"
       KeySchema:
         - AttributeName: "courseId"
           KeyType: HASH
-        - AttributeName: "reviewId"
+        - AttributeName: "createdDate"
           KeyType: RANGE
       ProvisionedThroughput:
         ReadCapacityUnits: !Ref ReadCapacityUnits

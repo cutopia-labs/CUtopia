@@ -6,6 +6,7 @@ module.exports = `
   input CreateReviewInput {
     author: String!
     anonymous: Boolean!
+    title: String
     subject: String!
     courseCode: String!
     term: String!
@@ -32,8 +33,9 @@ module.exports = `
     id: String!
     author: String!
     anonymous: Boolean!
-    createdTime: Int!
-    modifiedTime: Int!
+    title: String
+    createdDate: String!
+    modifiedDate: String!
     term: String!
     section: String!
     lecturer: String!
@@ -45,12 +47,12 @@ module.exports = `
   }
 
   type ReviewDetails {
-    review: String!
     grade: String!
+    text: String!
   }
 
   input ReviewDetailsInput {
-    review: String!
     grade: String!
+    text: String!
   }
 `;
