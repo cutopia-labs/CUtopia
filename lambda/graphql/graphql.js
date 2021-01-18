@@ -3,19 +3,23 @@ const { mergeTypeDefs, mergeResolvers } = require('@graphql-tools/merge');
 
 const courseType = require("./types/courses");
 const reviewType = require("./types/reviews");
+const searchType = require("./types/search");
 
 const subjectResolver = require("./resolvers/subjects");
 const reviewResolver = require("./resolvers/reviews");
+const searchResolver = require("./resolvers/search");
 
 const types = [
   courseType,
   reviewType,
+  searchType,
 ];
 const mergedTypeDefs = mergeTypeDefs(types);
 
 const resolvers = [
   subjectResolver,
   reviewResolver,
+  searchResolver,
 ];
 const mergedResolvers = mergeResolvers(resolvers);
 

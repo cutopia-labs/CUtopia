@@ -1,16 +1,4 @@
-const fs = require('fs');
-const { getReviews } = require('dynamodb');
-
-const subjects = {};
-const subjectNames = [];
-fs.readdirSync(`${__dirname}/data`).forEach(subjectFileName => {
-  const subject = JSON.parse(fs.readFileSync(`${__dirname}/data/${subjectFileName}`));
-  if (subject.length !== 0) {
-    const subjectName = subjectFileName.split('.')[0];
-    subjects[subjectName] = subject;
-    subjectNames.push(subjectName);
-  }
-});
+const { subjects, subjectNames } = require('../../data/courses');
 
 exports.Query = {
   subjects: (parent, { filter }) => {
@@ -50,6 +38,10 @@ exports.Subject = {
 };
 
 exports.Course = {
+  subject: ({ subject }) => ({
+    name: subject,
+    courses: subjects[subject],
+  }),
   code: ({ course }) => course.code,
   title: ({ course }) => course.title,
   career: ({ course }) => course.career,
@@ -64,11 +56,6 @@ exports.Course = {
   syllabus: ({ course }) => course.syllabus,
   required_readings: ({ course }) => course.required_readings,
   recommended_readings: ({ course }) => course.recommended_readings,
-  reviews: async ({ course, idsContext }) => {
-    const { subject } = idsContext;
-    const courseCode = course.code;
-    return await getReviews({ subject, courseCode });
-  },
   terms: ({ idsContext, course }) => {
     const { code, terms } = course;
     if (terms === undefined) {
@@ -117,5 +104,3 @@ exports.CourseSection = {
 };
 
 exports.AssessementComponent = {};
-
-exports.ReviewDetails = {};
