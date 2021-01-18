@@ -1,6 +1,7 @@
 module.exports = `
   type Mutation {
-    createReview(input: CreateReviewInput): CreateReviewResult
+    createReview(input: CreateReviewInput!): CreateReviewResult
+    voteReview(input: VoteReviewInput!): VoteReviewResult
   }
 
   type Query {
@@ -10,6 +11,7 @@ module.exports = `
   input ReviewFilter {
     courseId: String
     ascendingDate: Boolean
+    ascendingVote: Boolean
   }
 
   input CreateReviewInput {
@@ -34,6 +36,17 @@ module.exports = `
     errorMessage: String
   }
 
+  input VoteReviewInput {
+    courseId: String!
+    createdDate: String!
+    vote: Int!
+  }
+
+  type VoteReviewResult {
+    review: Review
+    errorMessage: String
+  }
+
   type Review {
     id: String!
     author: String!
@@ -49,6 +62,8 @@ module.exports = `
     teaching: ReviewDetails!
     difficulty: ReviewDetails!
     content: ReviewDetails!
+    upvote: Int!
+    downvote: Int!
   }
 
   type ReviewDetails {

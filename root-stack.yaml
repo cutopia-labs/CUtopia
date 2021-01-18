@@ -3,6 +3,8 @@ Transform: "AWS::Serverless-2016-10-31"
 Parameters:
   ReviewsTableName:
     Type: String
+  ReviewsByVoteIndexName:
+    Type: String
   LatestReviewsTableName:
     Type: String
 Resources:
@@ -17,6 +19,7 @@ Resources:
         LatestReviewsTableName: !Sub
           - ${AWS::StackName}-${DBName}
           - { DBName: !Ref LatestReviewsTableName }
+        ReviewsByVoteIndexName: !Ref ReviewsByVoteIndexName
   Lambda:
     DependsOn:
       - DynamoDB
@@ -32,3 +35,4 @@ Resources:
           - { DBName: !Ref LatestReviewsTableName }
         ReviewsDBArn: !GetAtt DynamoDB.Outputs.ReviewsDBArn
         LatestReviewsDBArn: !GetAtt DynamoDB.Outputs.LatestReviewsDBArn
+        ReviewsByVoteIndexName: !Ref ReviewsByVoteIndexName

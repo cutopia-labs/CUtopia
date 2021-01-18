@@ -1,8 +1,11 @@
-const { getReviews, createReview } = require('dynamodb');
+const { getReviews, createReview, voteReview } = require('dynamodb');
 
 exports.Mutation = {
   createReview: async (parent, { input }) => {
     return await createReview(input);
+  },
+  voteReview: async (parent, { input }) => {
+    return await voteReview(input)
   },
 };
 

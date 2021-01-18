@@ -3,6 +3,8 @@ Transform: "AWS::Serverless-2016-10-31"
 Parameters:
   ReviewsTableName:
     Type: String
+  ReviewsByVoteIndexName:
+    Type: String
   LatestReviewsTableName:
     Type: String
   ReviewsDBArn:
@@ -57,6 +59,7 @@ Resources:
               - Action:
                   - dynamodb:PutItem
                   - dynamodb:Query
+                  - dynamodb:UpdateItem
                 Effect: Allow
                 Resource:
                   - !Ref ReviewsDBArn

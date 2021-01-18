@@ -1,6 +1,8 @@
 Parameters:
   ReviewsTableName:
     Type: String
+  ReviewsByVoteIndexName:
+    Type: String
   LatestReviewsTableName:
     Type: String
   ReadCapacityUnits:
@@ -20,9 +22,11 @@ Resources:
       TableName: !Ref ReviewsTableName
       AttributeDefinitions:
         - AttributeName: "courseId"
-          AttributeType: "S"
+          AttributeType: S
         - AttributeName: "createdDate"
-          AttributeType: "S"
+          AttributeType: S
+        - AttributeName: "upvote"
+          AttributeType: N
       KeySchema:
         - AttributeName: "courseId"
           KeyType: HASH
@@ -31,15 +35,24 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: !Ref ReadCapacityUnits
         WriteCapacityUnits: !Ref WriteCapacityUnits
+      LocalSecondaryIndexes:
+        - IndexName: !Ref ReviewsByVoteIndexName
+          KeySchema:
+            - AttributeName: "courseId"
+              KeyType: HASH
+            - AttributeName: "upvote"
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
   LatestReviewsDB:
     Type: "AWS::DynamoDB::Table"
     Properties:
       TableName: !Ref LatestReviewsTableName
       AttributeDefinitions:
         - AttributeName: "primaryKey"
-          AttributeType: "S"
+          AttributeType: S
         - AttributeName: "sortKey"
-          AttributeType: "S"
+          AttributeType: S
       KeySchema:
         - AttributeName: "primaryKey"
           KeyType: HASH

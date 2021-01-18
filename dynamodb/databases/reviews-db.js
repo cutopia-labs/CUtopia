@@ -19,6 +19,8 @@ exports.createReview = async (input) => {
       "reviewId": reviewId,
       "createdDate": now,
       "modifiedDate": now,
+      "upvote": 0,
+      "downvote": 0,
       ...reviewData,
     },
   };
@@ -33,6 +35,8 @@ exports.createReview = async (input) => {
       "reviewId": reviewId,
       "createdDate": now,
       "modifiedDate": now,
+      "upvote": 0,
+      "downvote": 0,
       ...reviewData,
     },
   };
@@ -53,25 +57,88 @@ exports.createReview = async (input) => {
   }
 };
 
+exports.voteReview = async (input) => {
+  const { courseId, createdDate, vote } = input;
+  if (vote !== 1 && vote !== -1) {
+    throw Error("Vote must be either +1 or -1");
+  }
+
+  const params = {
+    TableName: process.env.ReviewsTableName,
+    Key: {
+      courseId,
+      createdDate,
+    },
+    UpdateExpression: vote === 1 ? "set upvote = upvote + :val" : "set downvote = downvote + :val",
+    ExpressionAttributeValues: {
+      ":val": 1,
+    },
+    ReturnValues: "ALL_NEW",
+  };
+  try {
+    const result = await db.update(params).promise();
+    const { reviewId, ...reviewData } = result.Attributes;
+    return {
+      review: {
+        id: reviewId,
+        ...reviewData,
+      },
+    }
+  } catch (e) {
+    return {
+      errorMessage: e,
+    }
+  }
+};
+
 const latestReviewsCache = new NodeCache({
   stdTTL: 300
 });
 const numOfLatestReviews = 20;
 
 exports.getReviews = async (input) => {
-  const { courseId, limit = 20, ascendingDate = true } = { ...input };
+  const { courseId, limit = 20, ascendingDate, ascendingVote } = { ...input };
 
   if (courseId) {
     // return reviews of a course
-    const params = {
-      TableName: process.env.ReviewsTableName,
-      KeyConditionExpression: "courseId = :courseId",
-      ExpressionAttributeValues: {
-        ":courseId": courseId,
-      },
-      ScanIndexForward: ascendingDate,
-      Limit: limit,
-    };
+    const sortByVotes = ascendingVote != null;
+    const sortByDate = ascendingDate != null;
+    if (sortByVotes && sortByDate) {
+      throw Error("Either sort by votes or date.");
+    }
+
+    let params = null;
+    if (sortByDate) {
+      params = {
+        TableName: process.env.ReviewsTableName,
+        KeyConditionExpression: "courseId = :courseId",
+        ExpressionAttributeValues: {
+          ":courseId": courseId,
+        },
+        ScanIndexForward: ascendingDate,
+        Limit: limit,
+      };
+    } else if (sortByVotes) {
+      params = {
+        TableName: process.env.ReviewsTableName,
+        Index: process.env.ReviewsByVoteIndexName,
+        KeyConditionExpression: "courseId = :courseId",
+        ExpressionAttributeValues: {
+          ":courseId": courseId,
+        },
+        ScanIndexForward: ascendingVote,
+        Limit: limit,
+      };
+    } else {
+      params = {
+        TableName: process.env.ReviewsTableName,
+        KeyConditionExpression: "courseId = :courseId",
+        ExpressionAttributeValues: {
+          ":courseId": courseId,
+        },
+        Limit: limit,
+      };
+    }
 
     try {
       const reviews = (await db.query(params).promise()).Items;
