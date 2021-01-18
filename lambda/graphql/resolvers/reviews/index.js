@@ -12,11 +12,9 @@ exports.Review = {
   },
 };
 
-exports.Course = {
-  reviews: async ({ course, idsContext }) => {
-    const { subject } = idsContext;
-    const courseCode = course.code;
-    return await getReviews({ subject, courseCode });
+exports.Query = {
+  reviews: async (parent, { input }) => {
+    return await getReviews(input);
   },
 };
 

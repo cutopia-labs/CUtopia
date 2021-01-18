@@ -32,7 +32,6 @@ module.exports = `
     syllabus: String!
     required_readings: String!
     recommended_readings: String!
-    reviews(input: ReviewFilter): [Review]!
     terms: [Term]
     assessments: [AssessementComponent]
   }

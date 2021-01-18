@@ -1,6 +1,8 @@
 Parameters:
   ReviewsTableName:
     Type: String
+  LatestReviewsTableName:
+    Type: String
   ReadCapacityUnits:
     Description: Provisioned read throughput
     Type: Number
@@ -29,6 +31,25 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: !Ref ReadCapacityUnits
         WriteCapacityUnits: !Ref WriteCapacityUnits
+  LatestReviewsDB:
+    Type: "AWS::DynamoDB::Table"
+    Properties:
+      TableName: !Ref LatestReviewsTableName
+      AttributeDefinitions:
+        - AttributeName: "primaryKey"
+          AttributeType: "S"
+        - AttributeName: "sortKey"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "primaryKey"
+          KeyType: HASH
+        - AttributeName: "sortKey"
+          KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: !Ref ReadCapacityUnits
+        WriteCapacityUnits: !Ref WriteCapacityUnits
 Outputs:
   ReviewsDBArn:
     Value: !GetAtt ReviewsDB.Arn
+  LatestReviewsDBArn:
+    Value: !GetAtt LatestReviewsDB.Arn

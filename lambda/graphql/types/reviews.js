@@ -3,6 +3,15 @@ module.exports = `
     createReview(input: CreateReviewInput): CreateReviewResult
   }
 
+  type Query {
+    reviews(input: ReviewFilter): [Review]!
+  }
+
+  input ReviewFilter {
+    courseId: String
+    ascendingDate: Boolean
+  }
+
   input CreateReviewInput {
     author: String!
     anonymous: Boolean!
@@ -23,10 +32,6 @@ module.exports = `
     id: String
     createdTime: Int
     errorMessage: String
-  }
-
-  input ReviewFilter {
-    random: Int
   }
 
   type Review {

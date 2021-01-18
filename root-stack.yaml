@@ -3,6 +3,8 @@ Transform: "AWS::Serverless-2016-10-31"
 Parameters:
   ReviewsTableName:
     Type: String
+  LatestReviewsTableName:
+    Type: String
 Resources:
   DynamoDB:
     Type: AWS::CloudFormation::Stack
@@ -12,6 +14,9 @@ Resources:
         ReviewsTableName: !Sub
           - ${AWS::StackName}-${DBName}
           - { DBName: !Ref ReviewsTableName }
+        LatestReviewsTableName: !Sub
+          - ${AWS::StackName}-${DBName}
+          - { DBName: !Ref LatestReviewsTableName }
   Lambda:
     DependsOn:
       - DynamoDB
@@ -22,4 +27,8 @@ Resources:
         ReviewsTableName: !Sub
           - ${AWS::StackName}-${DBName}
           - { DBName: !Ref ReviewsTableName }
+        LatestReviewsTableName: !Sub
+          - ${AWS::StackName}-${DBName}
+          - { DBName: !Ref LatestReviewsTableName }
         ReviewsDBArn: !GetAtt DynamoDB.Outputs.ReviewsDBArn
+        LatestReviewsDBArn: !GetAtt DynamoDB.Outputs.LatestReviewsDBArn

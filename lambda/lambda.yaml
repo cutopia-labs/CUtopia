@@ -3,7 +3,11 @@ Transform: "AWS::Serverless-2016-10-31"
 Parameters:
   ReviewsTableName:
     Type: String
+  LatestReviewsTableName:
+    Type: String
   ReviewsDBArn:
+    Type: String
+  LatestReviewsDBArn:
     Type: String
 Resources:
   GraphQL:
@@ -24,6 +28,7 @@ Resources:
       Environment:
         Variables:
           ReviewsTableName: !Ref ReviewsTableName
+          LatestReviewsTableName: !Ref LatestReviewsTableName
       Role: !GetAtt "GraphQLRole.Arn"
       Runtime: nodejs12.x
       Timeout: 20
@@ -55,6 +60,7 @@ Resources:
                 Effect: Allow
                 Resource:
                   - !Ref ReviewsDBArn
+                  - !Ref LatestReviewsDBArn
             Version: "2012-10-17"
           PolicyName: LambdaPolicy
     Type: AWS::IAM::Role
