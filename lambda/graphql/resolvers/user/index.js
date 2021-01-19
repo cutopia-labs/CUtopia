@@ -1,10 +1,7 @@
 const AWS = require("aws-sdk");
 const SNS = new AWS.SNS({ apiVersion: "2010-03-31" });
 const { createUser, verifyUser, updateUser, login, LOGIN_CODES } = require("dynamodb");
-const jwt = require("jsonwebtoken");
-const fs = require("fs");
-const { join } = require("path");
-const privateKey = fs.readFileSync(join(__dirname, "./jwtRS256.key"));
+const { sign } = require("../../jwt");
 
 exports.Mutation = {
   createUser: async (parent, { input }) => {
@@ -40,7 +37,7 @@ exports.Mutation = {
     const result = await login(input);
     if (result === LOGIN_CODES.SUCCEEDED) {
       const { email } = input;
-      const token = jwt.sign({ email }, privateKey, { algorithm: "RS256" });
+      const token = sign({ email });
       return {
         code: result,
         token,
