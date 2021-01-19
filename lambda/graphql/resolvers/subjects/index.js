@@ -42,7 +42,7 @@ exports.Course = {
     name: subject,
     courses: subjects[subject],
   }),
-  code: ({ course }) => course.code,
+  courseId: ({ course }) => course.courseId,
   title: ({ course }) => course.title,
   career: ({ course }) => course.career,
   units: ({ course }) => course.units,

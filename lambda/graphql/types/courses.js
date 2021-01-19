@@ -18,7 +18,7 @@ module.exports = `
 
   type Course {
     subject: Subject!
-    code: String!
+    courseId: String!
     title: String!
     career: String!
     units: String!

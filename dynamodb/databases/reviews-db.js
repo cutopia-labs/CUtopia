@@ -6,9 +6,7 @@ const db = new AWS.DynamoDB.DocumentClient();
 
 exports.createReview = async (input) => {
   const now = new Date().getTime().toString();
-  const { subject, courseCode, ...reviewData } = input;
-
-  const courseId = `${subject}${courseCode}`;
+  const { courseId, ...reviewData } = input;
   const reviewId = nanoid(10);
 
   // parameters for inserting new review into reviews database

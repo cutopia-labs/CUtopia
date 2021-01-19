@@ -18,8 +18,7 @@ module.exports = `
     author: String!
     anonymous: Boolean!
     title: String
-    subject: String!
-    courseCode: String!
+    courseId: String!
     term: String!
     section: String!
     lecturer: String!
