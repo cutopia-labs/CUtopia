@@ -147,6 +147,7 @@ exports.getReviews = async (input) => {
         return {
           ...rest,
           id: reviewId,
+          courseId: courseId,
         };
       });
     } catch (e) {

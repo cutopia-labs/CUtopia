@@ -49,6 +49,7 @@ module.exports = `
 
   type Review {
     id: String!
+    courseId: String!
     author: String!
     anonymous: Boolean!
     title: String
