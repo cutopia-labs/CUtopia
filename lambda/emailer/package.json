@@ -1,16 +1,15 @@
 {
-  "name": "dynamodb",
+  "name": "emailer",
   "version": "1.0.0",
   "description": "",
-  "main": "reviews-db.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "nanoid": "^3.1.20",
-    "node-cache": "^5.1.2"
+    "googleapis": "^67.0.0",
+    "nodemailer": "^6.4.17"
   }
 }

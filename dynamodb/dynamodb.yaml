@@ -1,4 +1,6 @@
 Parameters:
+  UserTableName:
+    Type: String
   ReviewsTableName:
     Type: String
   ReviewsByVoteIndexName:
@@ -16,6 +18,19 @@ Parameters:
     Default: "10"
     MaxValue: "25"
 Resources:
+  UserDB:
+    Type: "AWS::DynamoDB::Table"
+    Properties:
+      TableName: !Ref UserTableName
+      AttributeDefinitions:
+        - AttributeName: "email"
+          AttributeType: S
+      KeySchema:
+        - AttributeName: "email"
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: !Ref ReadCapacityUnits
+        WriteCapacityUnits: !Ref WriteCapacityUnits
   ReviewsDB:
     Type: "AWS::DynamoDB::Table"
     Properties:
@@ -62,6 +77,8 @@ Resources:
         ReadCapacityUnits: !Ref ReadCapacityUnits
         WriteCapacityUnits: !Ref WriteCapacityUnits
 Outputs:
+  UserDBArn:
+    Value: !GetAtt UserDB.Arn
   ReviewsDBArn:
     Value: !GetAtt ReviewsDB.Arn
   LatestReviewsDBArn:

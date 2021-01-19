@@ -1,15 +1,29 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Transform: "AWS::Serverless-2016-10-31"
 Parameters:
+  UserTableName:
+    Type: String
   ReviewsTableName:
     Type: String
   ReviewsByVoteIndexName:
     Type: String
   LatestReviewsTableName:
     Type: String
+  UserDBArn:
+    Type: String
   ReviewsDBArn:
     Type: String
   LatestReviewsDBArn:
+    Type: String
+  GmailAddress:
+    Type: String
+  GamilClientID:
+    Type: String
+  GmailClientSecret:
+    Type: String
+  GmailRefreshToken:
+    Type: String
+  UserSNSTopic:
     Type: String
 Resources:
   GraphQL:
@@ -31,7 +45,9 @@ Resources:
         Variables:
           ReviewsTableName: !Ref ReviewsTableName
           LatestReviewsTableName: !Ref LatestReviewsTableName
-      Role: !GetAtt "GraphQLRole.Arn"
+          UserTableName: !Ref UserTableName
+          UserSNSTopic: !Ref UserSNSTopic
+      Role: !GetAtt GraphQLRole.Arn
       Runtime: nodejs12.x
       Timeout: 20
     Type: AWS::Serverless::Function
@@ -60,10 +76,60 @@ Resources:
                   - dynamodb:PutItem
                   - dynamodb:Query
                   - dynamodb:UpdateItem
+                  - dynamodb:GetItem
                 Effect: Allow
                 Resource:
                   - !Ref ReviewsDBArn
                   - !Ref LatestReviewsDBArn
+                  - !Ref UserDBArn
+              - Action:
+                  - SNS:Publish
+                Effect: Allow
+                Resource:
+                  - !Ref UserSNSTopic
+            Version: "2012-10-17"
+          PolicyName: LambdaPolicy
+    Type: AWS::IAM::Role
+  Emailer:
+    Properties:
+      CodeUri: ./emailer
+      Handler: index.handler
+      Events:
+        SNSEvent:
+          Type: SNS
+          Properties:
+            Topic: !Ref UserSNSTopic
+      Environment:
+        Variables:
+          GmailAddress: !Ref GmailAddress
+          GamilClientID: !Ref GamilClientID
+          GmailClientSecret: !Ref GmailClientSecret
+          GmailRefreshToken: !Ref GmailRefreshToken
+      Role: !GetAtt EmailerRole.Arn
+      Runtime: nodejs12.x
+      Timeout: 20
+    Type: AWS::Serverless::Function
+  EmailerRole:
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action:
+              - "sts:AssumeRole"
+            Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+        Version: "2012-10-17"
+      Policies:
+        - PolicyDocument:
+            Statement:
+              - Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Effect: Allow
+                Resource:
+                  - arn:aws:logs:*:*:*
             Version: "2012-10-17"
           PolicyName: LambdaPolicy
     Type: AWS::IAM::Role
