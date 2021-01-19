@@ -12,6 +12,8 @@ module.exports = `
   type Mutation {
     createUser(input: CreateUserInput!): CreateUserResult!
     verifyUser(input: VerifyUserInput!): VerifyUserResult!
+    updateUser(input: UpdateUserInput!): UpdateUserResult!
+    login(input: LoginInput!): LoginResult!
   }
 
   input CreateUserInput {
@@ -31,5 +33,24 @@ module.exports = `
 
   type VerifyUserResult {
     code: Int!
+  }
+
+  input UpdateUserInput {
+    email: String!
+    password: String
+  }
+
+  type UpdateUserResult {
+    error: String
+  }
+
+  input LoginInput {
+    email: String!
+    password: String!
+  }
+
+  type LoginResult {
+    code: Int!
+    token: String
   }
 `;

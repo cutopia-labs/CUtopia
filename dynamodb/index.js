@@ -1,5 +1,5 @@
 const { createReview, getReviews, voteReview } = require('./databases/reviews-db');
-const { createUser, verifyUser } = require('./databases/user-db');
+const { createUser, verifyUser, updateUser, login, LOGIN_CODES, VERIFICATION_CODES } = require('./databases/user-db');
 
 module.exports = {
   createReview,
@@ -7,4 +7,8 @@ module.exports = {
   voteReview,
   createUser,
   verifyUser,
+  updateUser,
+  login,
+  LOGIN_CODES,
+  VERIFICATION_CODES,
 };
