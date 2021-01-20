@@ -19,6 +19,7 @@ exports.createUser = async (input) => {
       "name": name,
       "verified": false,
       "verificationCode": verificationCode,
+      "reviewIds": db.createSet([""]),
     },
   };
 
@@ -174,7 +175,7 @@ exports.resetPassword = async (input) => {
     return this.RESET_PASSWORD_CODES.NOT_VERIFIED;
   }
 
-  const correct = data.resetPwdCode === resetCode;
+  const correct = resetCode !== "" && data.resetPwdCode === resetCode;
   if (correct) {
     await this.updateUser({
       email,

@@ -10,6 +10,8 @@ type User {
   name: String!
   email: String!
   verified: Boolean!
+  reviewIds: [String]!
+  upvoteCount: Int!
 }
 
 type Mutation {

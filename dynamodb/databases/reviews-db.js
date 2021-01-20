@@ -4,44 +4,57 @@ const AWS = require("aws-sdk");
 
 const db = new AWS.DynamoDB.DocumentClient();
 
-exports.createReview = async (input) => {
+exports.createReview = async (input, user) => {
   const now = new Date().getTime().toString();
   const { courseId, ...reviewData } = input;
   const reviewId = nanoid(10);
+  const { email } = user;
+
+  const review = {
+    "courseId": courseId,
+    "reviewId": reviewId,
+    "createdDate": now,
+    "modifiedDate": now,
+    "upvote": 0,
+    "upvoteUserIds": db.createSet([""]),
+    "downvote": 0,
+    "downvoteUserIds": db.createSet([""]),
+    ...reviewData,
+  };
 
   // parameters for inserting new review into reviews database
-  const params = {
+  const addReviewParams = {
     TableName: process.env.ReviewsTableName,
-    Item: {
-      "courseId": courseId,
-      "reviewId": reviewId,
-      "createdDate": now,
-      "modifiedDate": now,
-      "upvote": 0,
-      "downvote": 0,
-      ...reviewData,
-    },
+    Item: review,
   };
 
   // parameters for inserting new review into latest reviews database
-  const params2 = {
+  const addLatestReviewParams = {
     TableName: process.env.LatestReviewsTableName,
     Item: {
+      ...review,
       "primaryKey": "reviews-latest",
       "sortKey": `${now}#${reviewId}`,
-      "courseId": courseId,
-      "reviewId": reviewId,
-      "createdDate": now,
-      "modifiedDate": now,
-      "upvote": 0,
-      "downvote": 0,
-      ...reviewData,
+    },
+  };
+
+  const addToMyReviewsParams = {
+    TableName: process.env.UserTableName,
+    Key: {
+      email,
+    },
+    UpdateExpression: "add reviewIds :reviewId",
+    ExpressionAttributeValues: {
+      ":reviewId": db.createSet(`${courseId}#${now}`),
     },
   };
 
   try {
-    await db.put(params).promise();
-    await db.put(params2).promise();
+    await Promise.all([
+      db.put(addReviewParams).promise(),
+      db.put(addLatestReviewParams).promise(),
+      db.update(addToMyReviewsParams).promise(),
+    ]);
 
     return {
       id: reviewId,
@@ -50,26 +63,37 @@ exports.createReview = async (input) => {
   } catch (e) {
     console.trace(e);
     return {
-      errorMessage: e,
-    }
+      error: e,
+    };
   }
 };
 
-exports.voteReview = async (input) => {
+const VOTE_ACTIONS = Object.freeze({
+  DOWNVOTE: 0,
+  UPVOTE: 1,
+});
+exports.voteReview = async (input, user) => {
   const { courseId, createdDate, vote } = input;
-  if (vote !== 1 && vote !== -1) {
-    throw Error("Vote must be either +1 or -1");
+  const { email } = user;
+  if (vote !== 0 && vote !== 1) {
+    throw Error("Vote must be either 0 or 1");
   }
 
+  const isUpvote = vote === VOTE_ACTIONS.UPVOTE;
   const params = {
     TableName: process.env.ReviewsTableName,
     Key: {
       courseId,
       createdDate,
     },
-    UpdateExpression: vote === 1 ? "set upvote = upvote + :val" : "set downvote = downvote + :val",
+    UpdateExpression:
+      (isUpvote ? "set upvote = upvote + :val " : "set downvote = downvote + :val ") + 
+      (isUpvote ? "add upvoteUserIds :userIdSet" : "add downvoteUserIds :userIdSet"),
+    ConditionExpression: `not (contains(upvoteUserIds, :userId) or contains(downvoteUserIds, :userId))`,
     ExpressionAttributeValues: {
       ":val": 1,
+      ":userId": email,
+      ":userIdSet": db.createSet(email),
     },
     ReturnValues: "ALL_NEW",
   };
@@ -81,11 +105,16 @@ exports.voteReview = async (input) => {
         id: reviewId,
         ...reviewData,
       },
-    }
+    };
   } catch (e) {
-    return {
-      errorMessage: e,
+    if (e.code === "ConditionalCheckFailedException") {
+      return {
+        error: "Voted already",
+      };
     }
+    return {
+      error: e,
+    };
   }
 };
 

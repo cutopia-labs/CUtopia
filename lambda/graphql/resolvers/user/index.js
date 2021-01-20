@@ -17,7 +17,11 @@ exports.Query = {
   },
 };
 
-exports.User = {};
+exports.User = {
+  reviewIds: ({ reviewIds }) => { // reviewIds is a set
+    return reviewIds.values.filter(reviewId => reviewId); // filter out empty string
+  },
+};
 
 exports.Mutation = {
   createUser: async (parent, { input }) => {

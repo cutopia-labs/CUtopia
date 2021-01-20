@@ -31,7 +31,7 @@ input CreateReviewInput {
 type CreateReviewResult {
   id: String
   createdTime: Int
-  errorMessage: String
+  error: String
 }
 
 input VoteReviewInput {
@@ -42,7 +42,7 @@ input VoteReviewInput {
 
 type VoteReviewResult {
   review: Review
-  errorMessage: String
+  error: String
 }
 
 type Review {
@@ -63,6 +63,8 @@ type Review {
   content: ReviewDetails!
   upvote: Int!
   downvote: Int!
+  upvoteUserIds: [String]!
+  downvoteUserIds: [String]!
 }
 
 type ReviewDetails {

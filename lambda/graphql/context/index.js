@@ -2,6 +2,7 @@ const { verify } = require("../jwt");
 
 const DEFAULT_CONTEXT = {
   authenticated: false,
+  user: null,
 };
 
 module.exports = async ({
@@ -21,7 +22,7 @@ module.exports = async ({
 
     return userContext ? {
       authenticated: true,
-      ...userContext
+      user: userContext,
     } : DEFAULT_CONTEXT;
   } catch (e) {
     console.error(e);
