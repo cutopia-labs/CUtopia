@@ -1,5 +1,10 @@
-const { createReview, getReviews, voteReview } = require('./databases/reviews-db');
-const { 
+const {
+  createReview,
+  getReviews,
+  voteReview,
+  VOTE_ACTIONS,
+} = require('./databases/reviews-db');
+const {
   createUser,
   verifyUser,
   updateUser,
@@ -10,7 +15,7 @@ const {
   LOGIN_CODES,
   VERIFICATION_CODES,
   GET_PASSWORD_CODE_CODES,
-  RESET_PASSWORD_CODES
+  RESET_PASSWORD_CODES,
 } = require('./databases/user-db');
 
 module.exports = {
@@ -24,6 +29,7 @@ module.exports = {
   getResetPasswordCode,
   resetPassword,
   login,
+  VOTE_ACTIONS,
   LOGIN_CODES,
   VERIFICATION_CODES,
   GET_PASSWORD_CODE_CODES,

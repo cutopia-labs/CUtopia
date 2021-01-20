@@ -63,8 +63,7 @@ type Review {
   content: ReviewDetails!
   upvotes: Int!
   downvotes: Int!
-  upvotesUserIds: [String]!
-  downvotesUserIds: [String]!
+  myVote: Int
 }
 
 type ReviewDetails {

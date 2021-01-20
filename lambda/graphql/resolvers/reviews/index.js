@@ -1,4 +1,4 @@
-const { getReviews, createReview, voteReview } = require('dynamodb');
+const { getReviews, createReview, voteReview, VOTE_ACTIONS } = require('dynamodb');
 
 exports.Mutation = {
   createReview: async (parent, { input }, { user }) => {
@@ -13,11 +13,17 @@ exports.Review = {
   author: ({ author, anonymous }) => {
     return anonymous ? 'Anonymous' : author;
   },
-  upvotesUserIds: ({ upvotesUserIds }) => { // upvotesUserIds is a set
-    return upvotesUserIds.values.filter(id => id); // filter out empty string
-  },
-  downvotesUserIds: ({ downvotesUserIds }) => { // downvotesUserIds is a set
-    return downvotesUserIds.values.filter(id => id); // filter out empty string
+  myVote: ({ upvotesUserIds, downvotesUserIds }, args, { user }) => { // upvotesUserIds and downvotesUserIds are sets
+    if (user) {
+      const { email } = user;
+      if (upvotesUserIds.values.includes(email)) {
+        return VOTE_ACTIONS.UPVOTE;
+      }
+      if (downvotesUserIds.values.includes(email)) {
+        return VOTE_ACTIONS.DOWNVOTE;
+      }
+    }
+    return null;
   },
 };
 

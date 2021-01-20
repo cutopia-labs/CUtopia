@@ -81,7 +81,7 @@ exports.createReview = async (input, user) => {
   }
 };
 
-const VOTE_ACTIONS = Object.freeze({
+exports.VOTE_ACTIONS = Object.freeze({
   DOWNVOTE: 0,
   UPVOTE: 1,
 });
@@ -92,7 +92,7 @@ exports.voteReview = async (input, user) => {
     throw Error("Vote must be either 0 or 1");
   }
 
-  const isUpvote = vote === VOTE_ACTIONS.UPVOTE;
+  const isUpvote = vote === this.VOTE_ACTIONS.UPVOTE;
   const params = {
     TableName: process.env.ReviewsTableName,
     Key: {
