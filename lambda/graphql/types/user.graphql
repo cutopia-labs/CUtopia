@@ -1,5 +1,9 @@
 type Query {
-  user: SearchTable
+  user(input: GetUserInput!): User
+}
+
+input GetUserInput {
+  email: String!
 }
 
 type User {
@@ -13,6 +17,8 @@ type Mutation {
   verifyUser(input: VerifyUserInput!): VerifyUserResult!
   updateUser(input: UpdateUserInput!): UpdateUserResult!
   login(input: LoginInput!): LoginResult!
+  sendResetPasswordCode(input: SendResetPasswordCodeIbnput!): SendResetPasswordCodeResult!
+  resetPassword(input: ResetPasswordInput!): ResetPasswordResult!
 }
 
 input CreateUserInput {
@@ -51,4 +57,24 @@ input LoginInput {
 type LoginResult {
   code: Int!
   token: String
+}
+
+input SendResetPasswordCodeIbnput {
+  email: String!
+}
+
+type SendResetPasswordCodeResult {
+  code: Int
+  error: String
+}
+
+input ResetPasswordInput {
+  email: String!
+  newPassword: String!
+  resetCode: String!
+}
+
+type ResetPasswordResult {
+  code: Int
+  error: String
 }

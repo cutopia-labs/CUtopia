@@ -27,14 +27,26 @@ const transporter = nodemailer.createTransport({
 
 exports.handler = (event) => {
   const message = event.Records[0].Sns.Message;
-  const { email, verificationCode } = JSON.parse(message);
+  const { action, email, verificationCode, resetPwdCode } = JSON.parse(message);
 
-  const mail = {
+  let mail = {
     from: "CUtopia Team <cutopia.team@gmail.com>",
     to: email,
-    subject: "CUtopia confirmation email",
-    text: `Thanks for using CUtopia! Your verification code for registration is: ${verificationCode}`,
   };
+  if (action === "create") {
+    mail = {
+      ...mail,
+      subject: "CUtopia confirmation email",
+      text: `Thanks for using CUtopia! Your verification code for registration is: ${verificationCode}`,
+    };
+  
+  } else if (action === "resetPwd") {
+    mail = {
+      ...mail,
+      subject: "CUtopia reset password",
+      text: `Your verification code for resetting password is: ${resetPwdCode}`,
+    };
+  }
 
   transporter.sendMail(mail, (err, info) => {
     if (err) {
