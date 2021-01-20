@@ -40,7 +40,7 @@ Resources:
           AttributeType: S
         - AttributeName: "createdDate"
           AttributeType: S
-        - AttributeName: "upvote"
+        - AttributeName: "upvotes"
           AttributeType: N
       KeySchema:
         - AttributeName: "courseId"
@@ -55,7 +55,7 @@ Resources:
           KeySchema:
             - AttributeName: "courseId"
               KeyType: HASH
-            - AttributeName: "upvote"
+            - AttributeName: "upvotes"
               KeyType: RANGE
           Projection:
             ProjectionType: ALL

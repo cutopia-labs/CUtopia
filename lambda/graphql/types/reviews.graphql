@@ -61,10 +61,10 @@ type Review {
   teaching: ReviewDetails!
   difficulty: ReviewDetails!
   content: ReviewDetails!
-  upvote: Int!
-  downvote: Int!
-  upvoteUserIds: [String]!
-  downvoteUserIds: [String]!
+  upvotes: Int!
+  downvotes: Int!
+  upvotesUserIds: [String]!
+  downvotesUserIds: [String]!
 }
 
 type ReviewDetails {

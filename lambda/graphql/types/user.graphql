@@ -11,7 +11,7 @@ type User {
   email: String!
   verified: Boolean!
   reviewIds: [String]!
-  upvoteCount: Int!
+  upvotesCount: Int!
 }
 
 type Mutation {

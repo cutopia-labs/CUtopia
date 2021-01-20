@@ -13,11 +13,11 @@ exports.Review = {
   author: ({ author, anonymous }) => {
     return anonymous ? 'Anonymous' : author;
   },
-  upvoteUserIds: ({ upvoteUserIds }) => { // upvoteUserIds is a set
-    return upvoteUserIds.values.filter(id => id); // filter out empty string
+  upvotesUserIds: ({ upvotesUserIds }) => { // upvotesUserIds is a set
+    return upvotesUserIds.values.filter(id => id); // filter out empty string
   },
-  downvoteUserIds: ({ downvoteUserIds }) => { // downvoteUserIds is a set
-    return downvoteUserIds.values.filter(id => id); // filter out empty string
+  downvotesUserIds: ({ downvotesUserIds }) => { // downvotesUserIds is a set
+    return downvotesUserIds.values.filter(id => id); // filter out empty string
   },
 };
 

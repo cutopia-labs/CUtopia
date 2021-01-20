@@ -15,10 +15,10 @@ exports.createReview = async (input, user) => {
     "reviewId": reviewId,
     "createdDate": now,
     "modifiedDate": now,
-    "upvote": 0,
-    "upvoteUserIds": db.createSet([""]),
-    "downvote": 0,
-    "downvoteUserIds": db.createSet([""]),
+    "upvotes": 0,
+    "upvotesUserIds": db.createSet([""]),
+    "downvotes": 0,
+    "downvotesUserIds": db.createSet([""]),
     ...reviewData,
   };
 
@@ -87,9 +87,9 @@ exports.voteReview = async (input, user) => {
       createdDate,
     },
     UpdateExpression:
-      (isUpvote ? "set upvote = upvote + :val " : "set downvote = downvote + :val ") + 
-      (isUpvote ? "add upvoteUserIds :userIdSet" : "add downvoteUserIds :userIdSet"),
-    ConditionExpression: `not (contains(upvoteUserIds, :userId) or contains(downvoteUserIds, :userId))`,
+      (isUpvote ? "set upvotes = upvotes + :val " : "set downvotes = downvotes + :val ") + 
+      (isUpvote ? "add upvotesUserIds :userIdSet" : "add downvotesUserIds :userIdSet"),
+    ConditionExpression: `not (contains(upvotesUserIds, :userId) or contains(downvotesUserIds, :userId))`,
     ExpressionAttributeValues: {
       ":val": 1,
       ":userId": email,
