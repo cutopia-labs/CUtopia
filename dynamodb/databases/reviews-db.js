@@ -4,6 +4,11 @@ const AWS = require("aws-sdk");
 
 const db = new AWS.DynamoDB.DocumentClient();
 
+const latestReviewsCache = new NodeCache({
+  stdTTL: 300,
+});
+const numOfLatestReviews = 20;
+
 exports.createReview = async (input, user) => {
   const now = new Date().getTime().toString();
   const { courseId, ...reviewData } = input;
@@ -28,14 +33,16 @@ exports.createReview = async (input, user) => {
     Item: review,
   };
 
+  const latestReview = {
+    ...review,
+    "primaryKey": "reviews-latest",
+    "sortKey": `${now}#${reviewId}`,
+  };
+
   // parameters for inserting new review into latest reviews database
   const addLatestReviewParams = {
     TableName: process.env.LatestReviewsTableName,
-    Item: {
-      ...review,
-      "primaryKey": "reviews-latest",
-      "sortKey": `${now}#${reviewId}`,
-    },
+    Item: latestReview,
   };
 
   const addToMyReviewsParams = {
@@ -55,6 +62,12 @@ exports.createReview = async (input, user) => {
       db.put(addLatestReviewParams).promise(),
       db.update(addToMyReviewsParams).promise(),
     ]);
+
+    const latestReviews = latestReviewsCache.get("reviews-latest");
+    if (latestReviews) {
+      latestReviews.unshift(mapReview(latestReview)); // the list is ordered by descending date by default
+      latestReviewsCache.set("reviews-latest", latestReviews);
+    }
 
     return {
       id: reviewId,
@@ -87,7 +100,7 @@ exports.voteReview = async (input, user) => {
       createdDate,
     },
     UpdateExpression:
-      (isUpvote ? "set upvotes = upvotes + :val " : "set downvotes = downvotes + :val ") + 
+      (isUpvote ? "set upvotes = upvotes + :val " : "set downvotes = downvotes + :val ") +
       (isUpvote ? "add upvotesUserIds :userIdSet" : "add downvotesUserIds :userIdSet"),
     ConditionExpression: `not (contains(upvotesUserIds, :userId) or contains(downvotesUserIds, :userId))`,
     ExpressionAttributeValues: {
@@ -118,11 +131,13 @@ exports.voteReview = async (input, user) => {
   }
 };
 
-const latestReviewsCache = new NodeCache({
-  stdTTL: 300
-});
-const numOfLatestReviews = 20;
-
+const mapReview = review => {
+  const { primaryKey, sortKey, reviewId, ...reviewData } = review;
+  return {
+    id: reviewId,
+    ...reviewData,
+  };
+};
 exports.getReviews = async (input) => {
   const { courseId, limit = 20, ascendingDate, ascendingVote } = { ...input };
 
@@ -182,9 +197,9 @@ exports.getReviews = async (input) => {
     }
   } else {
     // return latest reviews from cache
-    const cachedReviews = latestReviewsCache.get(`reviews-latest-${ascendingDate}`);
+    const cachedReviews = latestReviewsCache.get("reviews-latest");
     if (cachedReviews) {
-      return cachedReviews;
+      return ascendingDate ? cachedReviews.reverse() : cachedReviews;
     }
 
     // return latest reviews from database
@@ -194,20 +209,14 @@ exports.getReviews = async (input) => {
       ExpressionAttributeValues: {
         ":key": "reviews-latest",
       },
-      ScanIndexForward: ascendingDate,
+      ScanIndexForward: false,
       Limit: numOfLatestReviews,
     };
 
     try {
-      const latestReviews = (await db.query(params).promise()).Items.map(review => {
-        const { primaryKey, sortKey, reviewId, ...reviewData } = review;
-        return {
-          id: reviewId,
-          ...reviewData,
-        };
-      });
-      latestReviewsCache.set(`reviews-latest-${ascendingDate}`, latestReviews);
-      return latestReviews;
+      const latestReviews = (await db.query(params).promise()).Items.map(mapReview);
+      latestReviewsCache.set("reviews-latest", latestReviews);
+      return ascendingDate ? latestReviews.reverse() : latestReviews;
     } catch (e) {
       console.trace(e);
     }
