@@ -89,7 +89,7 @@ exports.VERIFICATION_CODES = Object.freeze({
 });
 exports.verifyUser = async (input) => {
   const { email, code } = input;
-  const result = this.getUser({
+  const result = await this.getUser({
     email,
     requiredFields: ["verified", "verificationCode"],
   });
@@ -117,7 +117,7 @@ exports.LOGIN_CODES = Object.freeze({
 });
 exports.login = async (input) => {
   const { email, password } = input;
-  const result = this.getUser({
+  const result = await this.getUser({
     email,
     requiredFields: ["password"],
   });
