@@ -163,7 +163,7 @@ exports.getReviews = async (input) => {
     } else if (sortByVotes) {
       params = {
         TableName: process.env.ReviewsTableName,
-        Index: process.env.ReviewsByVoteIndexName,
+        IndexName: process.env.ReviewsByVoteIndexName,
         KeyConditionExpression: "courseId = :courseId",
         ExpressionAttributeValues: {
           ":courseId": courseId,

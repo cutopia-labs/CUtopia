@@ -44,6 +44,7 @@ Resources:
       Environment:
         Variables:
           ReviewsTableName: !Ref ReviewsTableName
+          ReviewsByVoteIndexName: !Ref ReviewsByVoteIndexName
           LatestReviewsTableName: !Ref LatestReviewsTableName
           UserTableName: !Ref UserTableName
           UserSNSTopic: !Ref UserSNSTopic
@@ -80,6 +81,7 @@ Resources:
                 Effect: Allow
                 Resource:
                   - !Ref ReviewsDBArn
+                  - !Sub ${ReviewsDBArn}/index/${ReviewsByVoteIndexName}
                   - !Ref LatestReviewsDBArn
                   - !Ref UserDBArn
               - Action:
