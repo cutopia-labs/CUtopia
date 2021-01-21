@@ -3,11 +3,11 @@ type Query {
 }
 
 input GetUserInput {
-  email: String!
+  username: String!
 }
 
 type User {
-  name: String!
+  username: String!
   email: String!
   verified: Boolean!
   reviewIds: [String]!
@@ -24,7 +24,7 @@ type Mutation {
 }
 
 input CreateUserInput {
-  name: String!
+  username: String!
   email: String!
   password: String!
 }
@@ -34,7 +34,7 @@ type CreateUserResult {
 }
 
 input VerifyUserInput {
-  email: String!
+  username: String!
   code: String!
 }
 
@@ -43,7 +43,7 @@ type VerifyUserResult {
 }
 
 input UpdateUserInput {
-  email: String!
+  username: String!
   password: String
 }
 
@@ -52,17 +52,18 @@ type UpdateUserResult {
 }
 
 input LoginInput {
-  email: String!
+  username: String!
   password: String!
 }
 
 type LoginResult {
   code: Int!
   token: String
+  me: User
 }
 
 input SendResetPasswordCodeIbnput {
-  email: String!
+  username: String!
 }
 
 type SendResetPasswordCodeResult {
@@ -71,7 +72,7 @@ type SendResetPasswordCodeResult {
 }
 
 input ResetPasswordInput {
-  email: String!
+  username: String!
   newPassword: String!
   resetCode: String!
 }

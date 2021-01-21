@@ -23,10 +23,10 @@ Resources:
     Properties:
       TableName: !Ref UserTableName
       AttributeDefinitions:
-        - AttributeName: "email"
+        - AttributeName: "username"
           AttributeType: S
       KeySchema:
-        - AttributeName: "email"
+        - AttributeName: "username"
           KeyType: HASH
       ProvisionedThroughput:
         ReadCapacityUnits: !Ref ReadCapacityUnits

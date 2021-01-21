@@ -1,6 +1,6 @@
 const AWS = require("aws-sdk");
 const SNS = new AWS.SNS({ apiVersion: "2010-03-31" });
-const { createUser, verifyUser, updateUser, getUser, getResetPasswordCode, resetPassword, login, LOGIN_CODES, GET_PASSWORD_CODE_CODES } = require("dynamodb");
+const { createUser, verifyUser, updateUser, getUser, getResetPasswordCodeAndEmail, resetPassword, login, LOGIN_CODES, GET_PASSWORD_CODE_CODES } = require("dynamodb");
 const { sign } = require("../../jwt");
 
 const sendEmail = async (message) => {
@@ -52,27 +52,27 @@ exports.Mutation = {
   },
   login: async (parent, { input }) => {
     const result = await login(input);
-    if (result === LOGIN_CODES.SUCCEEDED) {
-      const { email } = input;
-      const token = sign({ email });
+    if (result[0] === LOGIN_CODES.SUCCEEDED) {
+      const { username } = input;
+      const token = sign({ username });
       return {
-        code: result,
+        code: result[0],
         token,
+        me: result[1],
       };
     }
     return {
-      code: result,
+      code: result[0],
     };
   },
   sendResetPasswordCode: async (parent, { input }) => {
     try {
-      const result = await getResetPasswordCode(input);
+      const result = await getResetPasswordCodeAndEmail(input);
       if (result[0] === GET_PASSWORD_CODE_CODES.SUCCEEDED) {
-        const { email } = input;
         await sendEmail({
           action: "resetPwd",
-          email,
           resetPwdCode: result[1],
+          email: result[2],
         });
         return {
           code: GET_PASSWORD_CODE_CODES.SUCCEEDED,

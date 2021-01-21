@@ -7,16 +7,16 @@ const db = new AWS.DynamoDB.DocumentClient();
 
 exports.createUser = async (input) => {
   // TODO: check if user exists
-  const { name, email, password } = input;
+  const { username, email, password } = input;
   const hash = await bcrypt.hash(password, saltRounds);
   const verificationCode = nanoid(5);
 
   const params = {
     TableName: process.env.UserTableName,
     Item: {
-      "email": email,
+      "username": username,
       "password": hash,
-      "name": name,
+      "email": email,
       "verified": false,
       "verificationCode": verificationCode,
       "reviewIds": db.createSet([""]),
@@ -31,11 +31,11 @@ const generateProjectionExpression = (fieldNames) => {
   return fieldNames.join(", ");
 };
 exports.getUser = async (input) => {
-  const { email, requiredFields } = input;
+  const { username, requiredFields } = input;
   const params = {
     TableName: process.env.UserTableName,
     Key: {
-      "email": email,
+      "username": username,
     },
     ...(requiredFields && { ProjectionExpression: generateProjectionExpression(requiredFields) }),
   };
@@ -59,7 +59,7 @@ const generateUpdateParams = (fields) => {
 };
 
 exports.updateUser = async (input) => {
-  const { email, ...updatedFields } = input; // Disallow updating email
+  const { username, ...updatedFields } = input; // Disallow updating username
   if ("password" in updatedFields) {
     updatedFields["password"] = await bcrypt.hash(updatedFields["password"], saltRounds);
   }
@@ -67,7 +67,7 @@ exports.updateUser = async (input) => {
   const params = {
     TableName: process.env.UserTableName,
     Key: {
-      "email": email,
+      "username": username,
     },
     UpdateExpression: updateExpression,
     ExpressionAttributeValues: expressionValues,
@@ -89,9 +89,9 @@ exports.VERIFICATION_CODES = Object.freeze({
   USER_DNE: 3,
 });
 exports.verifyUser = async (input) => {
-  const { email, code } = input;
+  const { username, code } = input;
   const result = await this.getUser({
-    email,
+    username,
     requiredFields: ["verified", "verificationCode"],
   });
 
@@ -101,7 +101,7 @@ exports.verifyUser = async (input) => {
     }
     if (result.verificationCode === code) {
       await this.updateUser({
-        email,
+        username,
         verified: true,
       });
       return this.VERIFICATION_CODES.SUCCEEDED;
@@ -117,16 +117,17 @@ exports.LOGIN_CODES = Object.freeze({
   USER_DNE: 2,
 });
 exports.login = async (input) => {
-  const { email, password } = input;
+  const { username, password } = input;
   const result = await this.getUser({
-    email,
-    requiredFields: ["password"],
+    username,
+    requiredFields: ["username", "password", "email", "verified", "reviewIds"],
   });
   if (!result) {
-    return this.LOGIN_CODES.USER_DNE;
+    return [this.LOGIN_CODES.USER_DNE];
   }
   const correct = await bcrypt.compare(password, result.password);
-  return correct ? this.LOGIN_CODES.SUCCEEDED : this.LOGIN_CODES.FAILED;
+  const { password: pwd, ...remainedFields } = result
+  return correct ? [this.LOGIN_CODES.SUCCEEDED, remainedFields] : [this.LOGIN_CODES.FAILED];
 };
 
 exports.GET_PASSWORD_CODE_CODES = Object.freeze({
@@ -134,11 +135,11 @@ exports.GET_PASSWORD_CODE_CODES = Object.freeze({
   USER_DNE: 1,
   NOT_VERIFIED: 2,
 });
-exports.getResetPasswordCode = async (input) => {
-  const { email } = input;
+exports.getResetPasswordCodeAndEmail = async (input) => {
+  const { username } = input;
   const data = await this.getUser({
-    email,
-    requiredFields: ["verified"],
+    username,
+    requiredFields: ["email", "verified"],
   });
 
   if (!data) {
@@ -149,10 +150,10 @@ exports.getResetPasswordCode = async (input) => {
   }
   const resetPwdCode = nanoid(5);
   await this.updateUser({
-    email,
+    username,
     resetPwdCode,
   });
-  return [this.GET_PASSWORD_CODE_CODES.SUCCEEDED, resetPwdCode];
+  return [this.GET_PASSWORD_CODE_CODES.SUCCEEDED, resetPwdCode, data.email];
 };
 
 exports.RESET_PASSWORD_CODES = Object.freeze({
@@ -162,9 +163,9 @@ exports.RESET_PASSWORD_CODES = Object.freeze({
   NOT_VERIFIED: 3,
 });
 exports.resetPassword = async (input) => {
-  const { email, newPassword, resetCode } = input;
+  const { username, newPassword, resetCode } = input;
   const data = await this.getUser({
-    email,
+    username,
     requiredFields: ["verified", "resetPwdCode"],
   });
 
@@ -178,7 +179,7 @@ exports.resetPassword = async (input) => {
   const correct = resetCode !== "" && data.resetPwdCode === resetCode;
   if (correct) {
     await this.updateUser({
-      email,
+      username,
       password: newPassword,
       resetPwdCode: "",
     });

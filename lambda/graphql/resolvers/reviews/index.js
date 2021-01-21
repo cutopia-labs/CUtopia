@@ -15,11 +15,11 @@ exports.Review = {
   },
   myVote: ({ upvotesUserIds, downvotesUserIds }, args, { user }) => { // upvotesUserIds and downvotesUserIds are sets
     if (user) {
-      const { email } = user;
-      if (upvotesUserIds.values.includes(email)) {
+      const { username } = user;
+      if (upvotesUserIds.values.includes(username)) {
         return VOTE_ACTIONS.UPVOTE;
       }
-      if (downvotesUserIds.values.includes(email)) {
+      if (downvotesUserIds.values.includes(username)) {
         return VOTE_ACTIONS.DOWNVOTE;
       }
     }

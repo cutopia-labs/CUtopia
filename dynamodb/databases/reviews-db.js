@@ -13,7 +13,7 @@ exports.createReview = async (input, user) => {
   const now = new Date().getTime().toString();
   const { courseId, ...reviewData } = input;
   const reviewId = nanoid(10);
-  const { email } = user;
+  const { username } = user;
 
   const review = {
     "courseId": courseId,
@@ -48,7 +48,7 @@ exports.createReview = async (input, user) => {
   const addToMyReviewsParams = {
     TableName: process.env.UserTableName,
     Key: {
-      email,
+      username,
     },
     UpdateExpression: "add reviewIds :reviewId",
     ExpressionAttributeValues: {
@@ -87,7 +87,7 @@ exports.VOTE_ACTIONS = Object.freeze({
 });
 exports.voteReview = async (input, user) => {
   const { courseId, createdDate, vote } = input;
-  const { email } = user;
+  const { username } = user;
   if (vote !== 0 && vote !== 1) {
     throw Error("Vote must be either 0 or 1");
   }
@@ -101,12 +101,12 @@ exports.voteReview = async (input, user) => {
     },
     UpdateExpression:
       (isUpvote ? "set upvotes = upvotes + :val " : "set downvotes = downvotes + :val ") +
-      (isUpvote ? "add upvotesUserIds :userIdSet" : "add downvotesUserIds :userIdSet"),
-    ConditionExpression: `not (contains(upvotesUserIds, :userId) or contains(downvotesUserIds, :userId))`,
+      (isUpvote ? "add upvotesUserIds :usernameSet" : "add downvotesUserIds :usernameSet"),
+    ConditionExpression: `not (contains(upvotesUserIds, :username) or contains(downvotesUserIds, :username))`,
     ExpressionAttributeValues: {
       ":val": 1,
-      ":userId": email,
-      ":userIdSet": db.createSet(email),
+      ":username": username,
+      ":usernameSet": db.createSet(username),
     },
     ReturnValues: "ALL_NEW",
   };
