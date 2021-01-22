@@ -3,6 +3,8 @@ Transform: "AWS::Serverless-2016-10-31"
 Parameters:
   UserTableName:
     Type: String
+  UserEmailMappingIndexName:
+    Type: String
   ReviewsTableName:
     Type: String
   ReviewsByVoteIndexName:
@@ -47,6 +49,7 @@ Resources:
           ReviewsByVoteIndexName: !Ref ReviewsByVoteIndexName
           LatestReviewsTableName: !Ref LatestReviewsTableName
           UserTableName: !Ref UserTableName
+          UserEmailMappingIndexName: !Ref UserEmailMappingIndexName
           UserSNSTopic: !Ref UserSNSTopic
       Role: !GetAtt GraphQLRole.Arn
       Runtime: nodejs12.x
@@ -84,6 +87,7 @@ Resources:
                   - !Sub ${ReviewsDBArn}/index/${ReviewsByVoteIndexName}
                   - !Ref LatestReviewsDBArn
                   - !Ref UserDBArn
+                  - !Sub ${UserDBArn}/index/${UserEmailMappingIndexName}
               - Action:
                   - SNS:Publish
                 Effect: Allow

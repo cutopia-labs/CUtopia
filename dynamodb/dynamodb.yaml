@@ -1,6 +1,8 @@
 Parameters:
   UserTableName:
     Type: String
+  UserEmailMappingIndexName:
+    Type: String
   ReviewsTableName:
     Type: String
   ReviewsByVoteIndexName:
@@ -25,12 +27,24 @@ Resources:
       AttributeDefinitions:
         - AttributeName: "username"
           AttributeType: S
+        - AttributeName: "email"
+          AttributeType: S
       KeySchema:
         - AttributeName: "username"
           KeyType: HASH
       ProvisionedThroughput:
         ReadCapacityUnits: !Ref ReadCapacityUnits
         WriteCapacityUnits: !Ref WriteCapacityUnits
+      GlobalSecondaryIndexes:
+        - IndexName: !Ref UserEmailMappingIndexName
+          KeySchema:
+            - AttributeName: "email"
+              KeyType: HASH
+          Projection:
+            ProjectionType: KEYS_ONLY
+          ProvisionedThroughput:
+            ReadCapacityUnits: !Ref ReadCapacityUnits
+            WriteCapacityUnits: !Ref WriteCapacityUnits
   ReviewsDB:
     Type: "AWS::DynamoDB::Table"
     Properties:

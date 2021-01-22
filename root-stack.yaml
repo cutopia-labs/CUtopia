@@ -3,6 +3,8 @@ Transform: "AWS::Serverless-2016-10-31"
 Parameters:
   UserTableName:
     Type: String
+  UserEmailMappingIndexName:
+    Type: String 
   ReviewsTableName:
     Type: String
   ReviewsByVoteIndexName:
@@ -26,6 +28,7 @@ Resources:
         UserTableName: !Sub
           - ${AWS::StackName}-${DBName}
           - { DBName: !Ref UserTableName }
+        UserEmailMappingIndexName: !Ref UserEmailMappingIndexName
         ReviewsTableName: !Sub
           - ${AWS::StackName}-${DBName}
           - { DBName: !Ref ReviewsTableName }
@@ -43,16 +46,17 @@ Resources:
         UserTableName: !Sub
           - ${AWS::StackName}-${DBName}
           - { DBName: !Ref UserTableName }
+        UserEmailMappingIndexName: !Ref UserEmailMappingIndexName
         ReviewsTableName: !Sub
           - ${AWS::StackName}-${DBName}
           - { DBName: !Ref ReviewsTableName }
+        ReviewsByVoteIndexName: !Ref ReviewsByVoteIndexName
         LatestReviewsTableName: !Sub
           - ${AWS::StackName}-${DBName}
           - { DBName: !Ref LatestReviewsTableName }
         UserDBArn: !GetAtt DynamoDB.Outputs.UserDBArn
         ReviewsDBArn: !GetAtt DynamoDB.Outputs.ReviewsDBArn
         LatestReviewsDBArn: !GetAtt DynamoDB.Outputs.LatestReviewsDBArn
-        ReviewsByVoteIndexName: !Ref ReviewsByVoteIndexName
         GmailAddress: !Ref GmailAddress
         GamilClientID: !Ref GamilClientID
         GmailClientSecret: !Ref GmailClientSecret

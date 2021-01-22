@@ -6,8 +6,16 @@ const { nanoid } = require("nanoid");
 const db = new AWS.DynamoDB.DocumentClient();
 
 exports.createUser = async (input) => {
-  // TODO: check if user exists
   const { username, email, password } = input;
+  const userExistsCode = await this.checkUserExist({
+    username,
+    email,
+  });
+
+  if (userExistsCode !== CHECK_USER_EXIST_CODES.USERNAME_EMAIL_AVAILABLE) {
+    throw Error(userExistsCode);
+  }
+
   const hash = await bcrypt.hash(password, saltRounds);
   const verificationCode = nanoid(5);
 
@@ -42,6 +50,46 @@ exports.getUser = async (input) => {
 
   const result = (await db.get(params).promise()).Item;
   return result;
+};
+
+exports.getUsernameByEmail = async (input) => {
+  const { email } = input;
+  // GetItem does not support GSI / LSI
+  const params = {
+    TableName: process.env.UserTableName,
+    IndexName: process.env.UserEmailMappingIndexName,
+    KeyConditionExpression: "email = :email",
+    ExpressionAttributeValues: {
+      ":email": email,
+    },
+  };
+
+  const result = (await db.query(params).promise()).Items;
+  return result;
+}
+
+const CHECK_USER_EXIST_CODES = Object.freeze({
+  USERNAME_EMAIL_AVAILABLE: 0,
+  USERNAME_EXISTS: 1,
+  EMAIL_EXISTS: 2,
+});
+exports.checkUserExist = async (input) => {
+  const { username, email } = input;
+
+  const usernameResult = await this.getUser({
+    username,
+    requiredFields: ["email"],
+  });
+  if (usernameResult) {
+    return CHECK_USER_EXIST_CODES.USERNAME_EXISTS;
+  }
+  
+  const emailResult = await this.getUsernameByEmail({ email });
+  if (emailResult.length !== 0) {
+    return CHECK_USER_EXIST_CODES.EMAIL_EXISTS;
+  }
+
+  return CHECK_USER_EXIST_CODES.USERNAME_EMAIL_AVAILABLE;
 };
 
 const generateUpdateParams = (fields) => {

@@ -16,6 +16,7 @@ exports.createReview = async (input, user) => {
   const { username } = user;
 
   const review = {
+    "username": username,
     "courseId": courseId,
     "reviewId": reviewId,
     "createdDate": now,
@@ -71,7 +72,7 @@ exports.createReview = async (input, user) => {
 
     return {
       id: reviewId,
-      createdTime: now,
+      createdDate: now,
     };
   } catch (e) {
     console.trace(e);

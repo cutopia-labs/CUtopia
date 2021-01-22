@@ -14,7 +14,6 @@ input ReviewFilter {
 }
 
 input CreateReviewInput {
-  author: String!
   anonymous: Boolean!
   title: String
   courseId: String!
@@ -30,7 +29,7 @@ input CreateReviewInput {
 
 type CreateReviewResult {
   id: String
-  createdTime: Int
+  createdDate: String
   error: String
 }
 
@@ -48,7 +47,7 @@ type VoteReviewResult {
 type Review {
   id: String!
   courseId: String!
-  author: String!
+  username: String!
   anonymous: Boolean!
   title: String
   createdDate: String!

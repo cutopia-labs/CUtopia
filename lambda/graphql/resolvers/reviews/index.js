@@ -10,8 +10,8 @@ exports.Mutation = {
 };
 
 exports.Review = {
-  author: ({ author, anonymous }) => {
-    return anonymous ? 'Anonymous' : author;
+  username: ({ username, anonymous }) => {
+    return anonymous ? 'Anonymous' : username;
   },
   myVote: ({ upvotesUserIds, downvotesUserIds }, args, { user }) => { // upvotesUserIds and downvotesUserIds are sets
     if (user) {
