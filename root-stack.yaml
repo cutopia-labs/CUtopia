@@ -65,5 +65,5 @@ Resources:
   UserSNSTopic:
     Type: AWS::SNS::Topic
     Properties:
-      TopicName: "User"
+      TopicName: !Sub ${AWS::StackName}-User
       DisplayName: "User"

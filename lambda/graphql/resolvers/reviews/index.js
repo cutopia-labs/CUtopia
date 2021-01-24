@@ -1,4 +1,4 @@
-const { getReviews, createReview, voteReview, VOTE_ACTIONS } = require('dynamodb');
+const { getReviews, getReview, createReview, voteReview, VOTE_ACTIONS } = require('dynamodb');
 
 exports.Mutation = {
   createReview: async (parent, { input }, { user }) => {
@@ -30,6 +30,9 @@ exports.Review = {
 exports.Query = {
   reviews: async (parent, { input }) => {
     return await getReviews(input);
+  },
+  review: async (parent, { input }) => {
+    return await getReview(input);
   },
 };
 

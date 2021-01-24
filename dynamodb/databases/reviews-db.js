@@ -1,6 +1,7 @@
 const { nanoid } = require('nanoid');
 const NodeCache = require('node-cache');
 const AWS = require("aws-sdk");
+const { incrementUpvotesCount } = require("./user-db");
 
 const db = new AWS.DynamoDB.DocumentClient();
 
@@ -114,6 +115,11 @@ exports.voteReview = async (input, user) => {
   try {
     const result = await db.update(params).promise();
     const { reviewId, ...reviewData } = result.Attributes;
+    if (isUpvote) {
+      const reviewAuthor = reviewData.username;
+      await incrementUpvotesCount({ username: reviewAuthor });
+    }
+
     return {
       review: {
         id: reviewId,
@@ -222,4 +228,19 @@ exports.getReviews = async (input) => {
       console.trace(e);
     }
   }
+};
+
+exports.getReview = async (input) => {
+  const { courseId, createdDate } = { ...input };
+
+  const params = {
+    TableName: process.env.ReviewsTableName,
+    Key: {
+      "courseId": courseId,
+      "createdDate": createdDate,
+    },
+  };
+
+  const review = mapReview((await db.get(params).promise()).Item);
+  return review;
 };

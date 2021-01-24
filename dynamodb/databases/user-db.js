@@ -28,6 +28,7 @@ exports.createUser = async (input) => {
       "verified": false,
       "verificationCode": verificationCode,
       "reviewIds": db.createSet([""]),
+      "upvotesCount": 0,
     },
   };
 
@@ -105,7 +106,6 @@ const generateUpdateParams = (fields) => {
   }
   return [expression, values];
 };
-
 exports.updateUser = async (input) => {
   const { username, ...updatedFields } = input; // Disallow updating username
   if ("password" in updatedFields) {
@@ -234,4 +234,19 @@ exports.resetPassword = async (input) => {
     return this.RESET_PASSWORD_CODES.SUCCEEDED;
   }
   return this.RESET_PASSWORD_CODES.FAILED;
+};
+
+exports.incrementUpvotesCount = async (input) => {
+  const { username } = input;
+  const params = {
+    TableName: process.env.UserTableName,
+    Key: {
+      "username": username,
+    },
+    UpdateExpression: "set upvotesCount = upvotesCount + :value",
+    ExpressionAttributeValues: {
+      ":value": 1,
+    },
+  };
+  await db.update(params).promise();
 };

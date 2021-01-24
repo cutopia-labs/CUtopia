@@ -1,6 +1,7 @@
 const {
   createReview,
   getReviews,
+  getReview,
   voteReview,
   VOTE_ACTIONS,
 } = require('./databases/reviews-db');
@@ -21,6 +22,7 @@ const {
 module.exports = {
   createReview,
   getReviews,
+  getReview,
   voteReview,
   createUser,
   verifyUser,
