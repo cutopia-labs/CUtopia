@@ -1,13 +1,15 @@
+from re import sub
 import requests
 from PIL import Image
 from bs4 import BeautifulSoup
 from contextlib import closing
 import io
+import os
 import pytesseract
 import json
 
 class Course:
-    def __init__(self):
+    def __init__(self, dirname):
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9'
@@ -22,6 +24,7 @@ class Course:
         self.sess = requests.Session()
         self.courses = {}
         self.form_body = {}
+        self.dirname = dirname
         try:
             with open('subjects.json', 'r') as f:
                 self.faculty_subjects = json.load(f)
@@ -29,6 +32,36 @@ class Course:
                 print(self.faculty_subjects)
         except FileNotFoundError:
             self.faculty_subjects = {}
+
+    # Get all department codes
+    def process_faculty_subjects(self):
+        subjects_under_department = {}
+        for k, v in self.faculty_subjects.items():
+            if v in subjects_under_department:
+                subjects_under_department[v].append(k)
+            else:
+                subjects_under_department[v] = [k]
+        print(f'Number of departments: {len(subjects_under_department)}')
+        with open('departments.json', 'w') as f:
+            json.dump(subjects_under_department, f)
+
+    # Get all courses under a subject
+    def process_subjects(self):
+        all_courses = {}
+        with os.scandir(self.dirname) as it:
+            for entry in it:
+                with open(entry.path, 'r') as f:
+                    course_list = []
+                    subject = entry.path[(len(self.dirname)+1):-5]
+                    courses = json.load(f)
+                    for course in courses:
+                        course_list.append({
+                            'courseId': subject + course['code'],
+                            'title': course['title']
+                        })
+                    all_courses[subject] = course_list
+        with open('subjcet_courses.json', 'w') as f:
+            json.dump(all_courses, f)
 
     def parse_all(self):
         self.get_code_list()
@@ -270,10 +303,13 @@ class Course:
         raw = list(filter(lambda x: x!='-', s.split())) # first is 2-letter weekday abbr, second is start time, last is end time
         return (days_dict[raw[0]], to_24_hours(raw[1]), to_24_hours(raw[2]))
 
-cusis = Course()
+cusis = Course(dirname='lambda/graphql/data/courses')
+cusis.process_subjects()
+
+# cusis.process_faculty_subjects()
+
 # cusis.parse_all()
 # cusis.search_subject('AIST')
-cusis.search_all_subjects()
 # print(cusis.courses)
 
 """
