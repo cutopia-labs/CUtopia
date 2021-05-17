@@ -30,6 +30,7 @@ module.exports = {
     'linebreak-style': 0,
     'react/jsx-filename-extension': [0],
     'react/jsx-one-expression-per-line': ['error', { allow: 'single-child' }],
+    'max-len': 0,
   },
   ignorePatterns: [
     '*.css',

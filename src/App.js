@@ -1,16 +1,18 @@
-import React from 'react';
+import React, { useContext, useMemo } from 'react';
 import {
-  HashRouter as Router,
-  Switch,
-  Route,
-} from 'react-router-dom';
+  ApolloClient, InMemoryCache, ApolloProvider, createHttpLink,
+} from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
+import { observer } from 'mobx-react-lite';
 
-import ForumPage from './containers/forum';
-import logo from './logo.svg';
+import StoreProvider, { UserContext, PreferenceContext } from './store';
+
+import { LOGIN_STATES } from './constants/states';
+import Navigator from './containers';
 
 import './App.css';
 
-const App = () => {
+const AppWrapper = observer(() => {
   const preference = useContext(PreferenceContext);
   const user = useContext(UserContext);
   const client = useMemo(() => {
@@ -18,7 +20,7 @@ const App = () => {
       uri: 'https://7n5g73jlp6.execute-api.ap-northeast-1.amazonaws.com/Stage/graphql',
     });
     const authLink = setContext((_, { headers }) => {
-      const token = user.token;
+      const { token } = user;
       return {
         headers: {
           ...headers,
@@ -35,26 +37,18 @@ const App = () => {
   if (user.loginState !== undefined) {
     console.log(user.loginState === LOGIN_STATES.LOGGED_IN_CUTOPIA ? 'Logged in' : 'Not Logged in');
   }
-  
+
   return (
-    <div className="App">
-      <Router>
-        <Switch>
-          <Route exact path="/">
-            <HomePage
-              {...props}
-            />
-          </Route>
-          <Route exact path="/article/:id">
-            <ArticlePage {...props} />
-          </Route>
-          <Route exact path="/edit">
-            <EditPage {...props} />
-          </Route>
-        </Switch>
-      </Router>
-    </div>
+    <ApolloProvider client={client}>
+      <Navigator />
+    </ApolloProvider>
+  );
+});
+
+export default function App() {
+  return (
+    <StoreProvider>
+      <AppWrapper />
+    </StoreProvider>
   );
 }
-
-export default App;
