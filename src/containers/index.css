@@ -1,0 +1,55 @@
+body {
+    --primary: rgba(21,101,192,1);
+    --accent: rgba(249, 169, 83, 1);
+    --surface: rgba(255,255,255,1);
+    --background: rgb(250, 252, 255, 1);
+    --text: rgba(12,12,12,1);
+    --button: rgba(21, 121, 193, 1);
+    --border: #dedede80;
+    --underlay: #DDDDDD;
+    --statusBar: rgba(21,101,192,1);
+    --bottomBar: rgba(255,255,255,1);
+    --caption: rgba(12,12,12, 0.5);
+    --headerHeight: 50px;
+    --marginHorizontal: 40px;
+    background-color: var(--background);
+    color: var(--text);
+}
+
+a {
+    color: inherit; /* blue colors for links too */
+    text-decoration: inherit; /* no underline */
+}
+
+.App {
+    text-align: center;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 10px;
+    background-color: var(--surface);
+    padding: 10px 20px;
+}
+  
+@media screen and (prefer-color-scheme: dark) {
+    body {
+        --primary: rgba(249, 169, 83, 1);
+        --accent: rgba(249, 169, 83, 1);
+        --surface: rgba(31,31,31,1);
+        --background: rgba(5,5,5,1);
+        --text: rgba(255,255,255,1);
+        --button: rgba(92, 158, 235, 1);
+        --border: #bdbcc24d;
+        --underlay: #bdbcc233;
+        --statusBar: rgba(5,5,5,1);
+        --bottomBar: rgba(31,31,31,1);
+        --caption: rgba(255,255,255,0.5);
+    }
+}

@@ -1,0 +1,48 @@
+.header-container {
+    width: 100vw;
+    height: var(--headerHeight);
+    padding: 10px 20px;
+    justify-content: space-between;
+    background-color: var(--surface);
+    box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 10px;
+}
+
+.header-logo {
+    width: 200px;
+    background-image: url("../images/cutopia-logo.png");
+    background-repeat: no-repeat;
+    background-size: 100%;
+    background-position: center;
+}
+
+.header-nav > :last-child {
+    margin-right: 40px;
+}
+
+.nav-label-container, .nav-label-container-active {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 20px;
+    font-size: 18px;
+    font-weight: bold;
+    opacity: 0.5;
+    transition: all 0.1s ease-in-out;
+}
+
+.nav-label-container-active {
+    color: var(--primary);
+    opacity: 1;
+}
+
+.nav-label-container:hover {
+    opacity: 0.8;
+}
+
+.nav-label-container-active {
+
+}
+
+.nav-label {
+    text-transform: capitalize;
+}

@@ -1,0 +1,6 @@
+.forum-page {
+    margin: 20px 40px;
+    width: calc(100vw - 2 * var(--marginHorizontal));
+    /* header - header padding - margin */
+    height: calc(100vh - var(--headerHeight) - 60px);
+}

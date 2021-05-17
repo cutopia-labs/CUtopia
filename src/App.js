@@ -10,8 +10,6 @@ import StoreProvider, { UserContext, PreferenceContext } from './store';
 import { LOGIN_STATES } from './constants/states';
 import Navigator from './containers';
 
-import './App.css';
-
 const AppWrapper = observer(() => {
   const preference = useContext(PreferenceContext);
   const user = useContext(UserContext);

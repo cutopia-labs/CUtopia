@@ -4,18 +4,29 @@ import {
   Switch,
   Route,
 } from 'react-router-dom';
+
+import Header from '../components/Header';
+import './index.css';
 import HomePage from './HomePage';
+import ForumPage from './ForumPage';
 
 const Navigator = () => (
-  <div className="App">
-    <Router>
+  <Router>
+    <div className="App">
+      <Header />
       <Switch>
         <Route exact path="/">
           <HomePage />
         </Route>
+        <Route exact path="/forum">
+          <ForumPage />
+        </Route>
+        <Route exact path="/forum/:id">
+          <ForumPage />
+        </Route>
       </Switch>
-    </Router>
-  </div>
+    </div>
+  </Router>
 );
 
 export default Navigator;
