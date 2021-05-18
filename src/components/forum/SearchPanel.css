@@ -1,6 +1,6 @@
 .search-panel {
     width: 380px;
-    overflow: scroll;
+    overflow-y: scroll;
 }
 
 .search-panel > div {
@@ -29,7 +29,8 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    height: 104px;
+    max-height: 104px;
+    overflow: hidden;
 }
 
 .chips-row > div {
@@ -59,4 +60,5 @@
 .code-list {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
+    overflow-x: hidden;
 }

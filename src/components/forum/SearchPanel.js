@@ -15,26 +15,17 @@ import COURSE_CODES from '../../constants/courseCodes';
 
 const HISTORY_MAX_LENGTH = 10;
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    width: '100%',
-    maxWidth: 360,
-    backgroundColor: theme.palette.background.paper,
-  },
-  nested: {
-    paddingLeft: theme.spacing(4),
-  },
-}));
-
 export default function SearchPanel() {
-  const classes = useStyles();
   const [search, setSearch] = useState('');
-  const [currentSchool, setCurrentSchool] = useState('Business Administration');
+  const [currentSchool, setCurrentSchool] = useState();
   const [historyList, setHistoryList] = useState([]);
 
   const saveHistory = async () => {
-    const sliceIndex = historyList.length <= HISTORY_MAX_LENGTH ? 0 : historyList.length - HISTORY_MAX_LENGTH;
-    const temp = [search].concat(historyList.slice(sliceIndex).filter(history => history !== search));
+    let temp = [...historyList];
+    if (temp.length >= HISTORY_MAX_LENGTH) {
+      temp.pop();
+    }
+    temp = [search].concat(historyList.filter(history => history !== search));
     setHistoryList(temp);
     await storeData('search_history', JSON.stringify(temp));
   };

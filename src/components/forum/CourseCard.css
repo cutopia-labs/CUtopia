@@ -1,0 +1,47 @@
+.course-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0 24px;
+    overflow-y: scroll;
+}
+
+.course-card > p, .caption, .sub-heading {
+    text-align: left;
+}
+
+.course-card-title-container > button {
+    width: 40px;
+    height: 40px;
+}
+
+.course-card-title-container > .active {
+    color: var(--primary);
+}
+
+.course-card > .caption, .course-card > div > .caption {
+    margin: 0;
+}
+
+.course-card-title-container {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    margin-bottom: -14px;
+}
+
+.course-card-title-container > .title {
+    margin-right: 6px;
+}
+
+.course-badge-row {
+    font-weight: bold;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top: 14px;
+}
+
+.caption.description {
+    margin-top: 6px;
+}

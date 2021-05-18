@@ -12,7 +12,7 @@ class UserStore {
   @observable loginState
 
   // User Saved Data
-  @observable favoriteCourses
+  @observable favoriteCourses = []
   @observable timetable
 
   // CUtopia
@@ -95,13 +95,13 @@ class UserStore {
     this.setFavoriteCourses(courses);
   }
 
-  @action.bound setFavoriteCourses(courses) {
-    this.favoriteCourses = courses;
+  @action async applyFavoriteCourses() {
+    const courses = JSON.parse(await getStoreData('favoriteCourses'));
+    this.setFavoriteCourses(courses || []);
   }
 
-  @action async applyFavoriteCourses() {
-    const courses = await getStoreData('favoriteCourses');
-    this.favoriteCourses = JSON.parse(courses) || [];
+  @action.bound setFavoriteCourses(courses) {
+    this.favoriteCourses = courses;
   }
 
   // CUtopia

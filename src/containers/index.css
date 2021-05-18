@@ -1,5 +1,5 @@
 body {
-    --primary: rgba(21,101,192,1);
+    --primary: #673AB7;
     --accent: rgba(249, 169, 83, 1);
     --surface: rgba(255,255,255,1);
     --background: rgb(250, 252, 255, 1);
@@ -38,7 +38,26 @@ a {
     background-color: var(--surface);
     border-radius: var(--border-radius);
 }
-  
+
+.title {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.caption {
+    color: var(--text);
+    opacity: 0.9;
+}
+
+.sub-heading {
+    font-size: 20px;
+    padding-bottom: 6px;
+    text-transform: capitalize;
+    border-bottom: 1px solid var(--border);
+    margin-top: 16px;
+    margin-bottom: 10px;
+}
+
 @media screen and (prefer-color-scheme: dark) {
     body {
         --primary: rgba(249, 169, 83, 1);
