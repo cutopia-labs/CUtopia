@@ -79,6 +79,7 @@ Resources:
               - Action:
                   - dynamodb:PutItem
                   - dynamodb:Query
+                  - dynamodb:Scan
                   - dynamodb:UpdateItem
                   - dynamodb:GetItem
                 Effect: Allow

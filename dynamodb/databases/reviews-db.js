@@ -10,6 +10,10 @@ const latestReviewsCache = new NodeCache({
 });
 const numOfLatestReviews = 20;
 
+const allReviewsCache = new NodeCache({
+  stdTTL: 1800,
+});
+
 exports.createReview = async (input, user) => {
   const now = new Date().getTime().toString();
   const { courseId, ...reviewData } = input;
@@ -146,12 +150,12 @@ const mapReview = review => {
   };
 };
 exports.getReviews = async (input) => {
-  const { courseId, limit = 20, ascendingDate, ascendingVote } = { ...input };
+  const { courseId, getLatest, getAll, limit = 20, ascendingDate, ascendingVote } = { ...input };
 
   if (courseId) {
     // return reviews of a course
-    const sortByVotes = ascendingVote != null;
-    const sortByDate = ascendingDate != null;
+    const sortByVotes = ascendingVote !== null;
+    const sortByDate = ascendingDate !== null;
     if (sortByVotes && sortByDate) {
       throw Error("Either sort by votes or date.");
     }
@@ -202,7 +206,9 @@ exports.getReviews = async (input) => {
     } catch (e) {
       console.warn(e);
     }
-  } else {
+  }
+
+  if (getLatest) {
     // return latest reviews from cache
     const cachedReviews = latestReviewsCache.get("reviews-latest");
     if (cachedReviews) {
@@ -227,6 +233,23 @@ exports.getReviews = async (input) => {
     } catch (e) {
       console.trace(e);
     }
+  }
+
+  if (getAll) {
+    // return all reviews from cache
+    const cachedReviews = allReviewsCache.get("all-reviews");
+    if (cachedReviews) {
+      return cachedReviews;
+    }
+
+    // return all reviews from database
+    const params = {
+      TableName: process.env.LatestReviewsTableName,
+      ProjectionExpression: "courseId, grading, difficulty, teaching, content",
+    };
+    const reviews = (await db.scan(params).promise()).Items;
+    allReviewsCache.set("all-reviews", reviews);
+    return reviews;
   }
 };
 

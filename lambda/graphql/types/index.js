@@ -5,6 +5,7 @@ const { join } = require("path");
 const graphqlFiles = [
   "./courses.graphql",
   "./directives.graphql",
+  "./ranking.graphql",
   "./reviews.graphql",
   "./search.graphql",
   "./user.graphql",

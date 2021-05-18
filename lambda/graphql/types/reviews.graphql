@@ -9,7 +9,11 @@ type Query {
 }
 
 input ReviewsFilter {
+  """
+    Either set courseId or getLatest
+  """
   courseId: String
+  getLatest: Boolean
   ascendingDate: Boolean
   ascendingVote: Boolean
 }

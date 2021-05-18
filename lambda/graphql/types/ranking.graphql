@@ -1,0 +1,34 @@
+type Query {
+  ranking: RankTable
+}
+
+type RankTable {
+  popularCourses(filter: PopularFilter): [PopularCourse]
+  topRatedCourses(filter: TopRatedFilter): [TopRatedCourse]
+}
+
+input PopularFilter {
+  limit: Int!
+}
+
+input TopRatedFilter {
+  limit: Int!
+  sortBy: String # grading, content, difficulty, teaching
+}
+
+type PopularCourse {
+  courseId: String!
+  course: Course!
+  numReviews: Int!
+}
+
+type TopRatedCourse {
+  courseId: String!
+  course: Course!
+  numReviews: Int!
+  overall: Float!
+  grading: Float!
+  content: Float!
+  difficulty: Float!
+  teaching: Float!
+}
