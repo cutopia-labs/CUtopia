@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, {
+  useState, useEffect, useContext, useRef, useLayoutEffect,
+} from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Paper } from '@material-ui/core';
 import { useQuery } from '@apollo/client';
@@ -10,11 +12,15 @@ import {
   ShoppingCart, ShoppingCartOutlined, Favorite, FavoriteOutlined,
 } from '@material-ui/icons';
 
+import ShowMoreOverlay from '../ShowMoreOverlay';
+import Loading from '../Loading';
 import Badge from '../Badge';
 import { UserContext } from '../../store';
 import { validCourse } from '../../helpers/marcos';
 import { COURSE_INFO_QUERY, GET_REVIEW, REVIEWS_QUERY } from '../../constants/queries';
 import './CourseCard.css';
+
+const loading = false;
 
 const courseInfo = {
   subjects: [
@@ -104,15 +110,19 @@ const courseInfo = {
 };
 
 const CourseCard = ({ courseId }) => {
+  const [showMore, setShowMore] = useState(true);
+  const user = useContext(UserContext);
+  const containerRef = useRef();
+
   // Fetch course info
-  /* const { data: courseInfo, error } = useQuery(COURSE_INFO_QUERY, {
+  /* const { data: courseInfo, loading, error } = useQuery(COURSE_INFO_QUERY, {
     variables: {
       subject: courseId.substring(0, 4),
       code: courseId.substring(4),
     },
     skip: !validCourse(courseId),
   }); */
-  const user = useContext(UserContext);
+
   const isFavorited = user.favoriteCourses.some(course => course.courseId === courseId);
   const setFavorited = async () => {
     if (isFavorited) {
@@ -131,45 +141,57 @@ const CourseCard = ({ courseId }) => {
     }
   };
 
-  useEffect(() => {
-    console.log(courseInfo);
-  }, [courseInfo]);
+  useLayoutEffect(() => {
+    if (containerRef.current.clientHeight > window.innerHeight * 0.5) {
+      console.log(containerRef.current.clientHeight);
+      console.log(window.innerHeight);
+      setShowMore(false);
+    }
+  }, []);
 
-  return (
-    <div className="course-card">
-      <div className="course-card-title-container">
-        <p className="title">{courseId}</p>
-        <IconButton aria-label="cart" components="span" size="medium">
-          <ShoppingCart />
-        </IconButton>
-        <IconButton className={isFavorited ? 'active' : ''} onClick={() => setFavorited()} aria-label="favourite" components="span" size="medium">
-          <Favorite />
-        </IconButton>
-      </div>
-      <p className="caption">{courseInfo.subjects[0].courses[0].title}</p>
-      <div className="course-badge-row">
+  if (!loading) {
+    return (
+      <div className="course-card" ref={containerRef}>
+        <div className="course-card-title-container">
+          <p className="title">{courseId}</p>
+          <IconButton aria-label="cart" components="span" size="medium">
+            <ShoppingCart />
+          </IconButton>
+          <IconButton className={isFavorited ? 'active' : ''} onClick={() => setFavorited()} aria-label="favourite" components="span" size="medium">
+            <Favorite />
+          </IconButton>
+        </div>
+        <p className="caption">{courseInfo.subjects[0].courses[0].title}</p>
+        <div className="course-badge-row">
+          {
+            [
+              [`${parseInt(courseInfo.subjects[0].courses[0].units, 10)} Credits`],
+              [courseInfo.subjects[0].courses[0].academic_group],
+              ...(Array.isArray(courseInfo.subjects[0].courses[0].components) ? courseInfo.subjects[0].courses[0].components : (courseInfo.subjects[0].courses[0].components || '').match(/[A-Z][a-z]+/g)).map(item => [item]),
+              ...(courseInfo.subjects[0].courses[0].assessments || []).map(assessment => [assessment.name, parseInt(assessment.percentage, 10) || false]),
+            ].map(([k, v], i) => <Badge index={i} text={k} value={v} key={k + v} />)
+          }
+        </div>
+        <p className="caption description">{courseInfo.subjects[0].courses[0].description}</p>
+        <ShowMoreOverlay
+          visible={!showMore}
+          onShowMore={() => setShowMore(true)}
+        />
         {
-          [
-            [`${parseInt(courseInfo.subjects[0].courses[0].units, 10)} Credits`],
-            [courseInfo.subjects[0].courses[0].academic_group],
-            ...(Array.isArray(courseInfo.subjects[0].courses[0].components) ? courseInfo.subjects[0].courses[0].components : (courseInfo.subjects[0].courses[0].components || '').match(/[A-Z][a-z]+/g)).map(item => [item]),
-            ...(courseInfo.subjects[0].courses[0].assessments || []).map(assessment => [assessment.name, parseInt(assessment.percentage, 10) || false]),
-          ].map(([k, v], i) => <Badge index={i} text={k} value={v} key={k + v} />)
+          showMore
+          && ['outcome', 'syllabus', 'required_readings', 'recommended_readings']
+            .filter(key => courseInfo.subjects[0].courses[0][key] && courseInfo.subjects[0].courses[0][key] !== '') // filter off empty strings
+            .map(key => (
+              <div key={key}>
+                <p className="sub-heading">{key.replace('_', ' ')}</p>
+                <p className="caption">{courseInfo.subjects[0].courses[0][key]}</p>
+              </div>
+            ))
         }
       </div>
-      <p className="caption description">{courseInfo.subjects[0].courses[0].description}</p>
-      {
-        ['outcome', 'syllabus', 'required_readings', 'recommended_readings']
-          .filter(key => courseInfo.subjects[0].courses[0][key] && courseInfo.subjects[0].courses[0][key] !== '') // filter off empty strings
-          .map(key => (
-            <div key={key}>
-              <p className="sub-heading">{key.replace('_', ' ')}</p>
-              <p className="caption">{courseInfo.subjects[0].courses[0][key]}</p>
-            </div>
-          ))
-      }
-    </div>
-  );
+    );
+  }
+  return <Loading />;
 };
 
 export default observer(CourseCard);

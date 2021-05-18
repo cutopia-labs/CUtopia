@@ -50,7 +50,8 @@ a {
 }
 
 .sub-heading {
-    font-size: 20px;
+    font-weight: 500;
+    font-size: 18px;
     padding-bottom: 6px;
     text-transform: capitalize;
     border-bottom: 1px solid var(--border);
