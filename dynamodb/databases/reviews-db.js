@@ -154,8 +154,8 @@ exports.getReviews = async (input) => {
 
   if (courseId) {
     // return reviews of a course
-    const sortByVotes = ascendingVote !== null;
-    const sortByDate = ascendingDate !== null;
+    const sortByVotes = ascendingVote !== undefined;
+    const sortByDate = ascendingDate !== undefined;
     if (sortByVotes && sortByDate) {
       throw Error("Either sort by votes or date.");
     }

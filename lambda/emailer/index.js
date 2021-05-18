@@ -10,7 +10,6 @@ const OAuth2Client = new OAuth2(
 OAuth2Client.setCredentials({
   refresh_token: process.env.GmailRefreshToken,
 });
-const accessToken = OAuth2Client.getAccessToken();
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 465,
@@ -21,8 +20,11 @@ const transporter = nodemailer.createTransport({
     clientId: process.env.GamilClientID,
     clientSecret: process.env.GmailClientSecret,
     refreshToken: process.env.GmailRefreshToken,
-    accessToken: accessToken,
   },
+});
+transporter.set('oauth2_provision_cb', (user, renew, callback) => {
+  const accessToken = OAuth2Client.getAccessToken();
+  return callback(null, accessToken);
 });
 
 exports.handler = (event) => {
@@ -39,7 +41,7 @@ exports.handler = (event) => {
       subject: "CUtopia confirmation email",
       text: `Thanks for using CUtopia! Your verification code for registration is: ${verificationCode}`,
     };
-  
+
   } else if (action === "resetPwd") {
     mail = {
       ...mail,
