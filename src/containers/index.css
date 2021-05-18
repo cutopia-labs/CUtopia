@@ -12,6 +12,7 @@ body {
     --caption: rgba(12,12,12, 0.5);
     --headerHeight: 50px;
     --marginHorizontal: 40px;
+    --border-radius: 8px;
     background-color: var(--background);
     color: var(--text);
 }
@@ -33,9 +34,9 @@ a {
 .card {
     display: flex;
     flex-direction: column;
-    box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 10px;
+    box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 6px;
     background-color: var(--surface);
-    padding: 10px 20px;
+    border-radius: var(--border-radius);
 }
   
 @media screen and (prefer-color-scheme: dark) {

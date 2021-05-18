@@ -4,7 +4,7 @@
     padding: 10px 20px;
     justify-content: space-between;
     background-color: var(--surface);
-    box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 10px;
+    box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 6px;
 }
 
 .header-logo {

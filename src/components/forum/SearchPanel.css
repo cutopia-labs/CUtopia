@@ -1,3 +1,62 @@
 .search-panel {
-    width: 300px;
+    width: 380px;
+    overflow: scroll;
+}
+
+.search-panel > div {
+    background-color: var(--surface);
+}
+
+.search-input-container {
+    align-items: center;
+    padding: 6px 16px;
+}
+
+.search-icon {
+    margin-right: 20px;
+}
+
+.search-form {
+    display: flex;
+    flex: 1;
+}
+
+.search-input {
+    flex: 1;
+}
+
+.chips-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    height: 104px;
+}
+
+.chips-row > div {
+    margin: 10px 10px;
+    max-width: 120px;
+}
+
+.schools-container {
+}
+
+.course-codes-container {
+    text-align: left;
+}
+
+.course-codes-container > * {
+    padding: 0 16px;
+}
+
+.course-codes-title {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    font-size: 18;
+    background-color: #DDDDDD;
+}
+
+.code-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
 }

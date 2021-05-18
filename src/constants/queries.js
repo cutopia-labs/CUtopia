@@ -1,7 +1,6 @@
 import { gql } from '@apollo/client';
 
 // Course Information Query
-
 const COURSE_INFO_QUERY = gql`
   query ($subject: String!, $code: String!) {
     subjects(filter: {
@@ -29,7 +28,6 @@ const COURSE_INFO_QUERY = gql`
   }`;
 
 // Review Queries
-
 const REVIEWS_QUERY = gql`
   query ($courseId: String) {
     reviews(input: {
@@ -110,7 +108,7 @@ const GET_REVIEW = gql`
       createdDate
       upvotes
       downvotes
-    	myVote
+      myVote
       term
       section
       lecturer
@@ -135,7 +133,6 @@ const GET_REVIEW = gql`
   }`;
 
 // User Info Query
-
 const GET_USER = gql`
   query ($username: String!) {
     user(input: {
@@ -146,10 +143,50 @@ const GET_USER = gql`
     }
   }`;
 
+// Top Rated Courses Query
+const TOP_RATED_COURSES_QUERY = gql`
+  query ($criteria:String!) {
+    ranking {
+      topRatedCourses(filter:{
+        limit:10,
+        sortBy:$criteria,
+      }) {
+        courseId
+        course {
+          title
+        }
+        numReviews
+        overall
+        grading
+        content
+        difficulty
+        teaching
+      }
+    }
+  }`;
+
+// Popular Courses Query
+const POPULAR_COURSES_QUERY = gql`
+  query {
+    ranking {
+      popularCourses(filter:{
+        limit:10
+      }) {
+        courseId
+        course {
+          title
+        }
+        numReviews
+      }
+    }
+  }`;
+
 export {
   COURSE_INFO_QUERY,
   REVIEWS_QUERY,
   RECENT_REVIEWS_QUERY,
   GET_REVIEW,
   GET_USER,
+  TOP_RATED_COURSES_QUERY,
+  POPULAR_COURSES_QUERY,
 };
