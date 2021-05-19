@@ -30,7 +30,7 @@ input CreateReviewInput {
   term: String!
   section: String!
   lecturer: String!
-  overall: String!
+  overall: Int!
   grading: ReviewDetailsInput!
   teaching: ReviewDetailsInput!
   difficulty: ReviewDetailsInput!
@@ -65,7 +65,7 @@ type Review {
   term: String!
   section: String!
   lecturer: String!
-  overall: String!
+  overall: Int!
   grading: ReviewDetails!
   teaching: ReviewDetails!
   difficulty: ReviewDetails!
@@ -76,11 +76,11 @@ type Review {
 }
 
 type ReviewDetails {
-  grade: String!
+  grade: Int!
   text: String!
 }
 
 input ReviewDetailsInput {
-  grade: String!
+  grade: Int!
   text: String!
 }

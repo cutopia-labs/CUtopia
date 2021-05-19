@@ -17,7 +17,7 @@ input CourseFilter {
 
 type Course {
   subject: Subject!
-  courseId: String!
+  code: String!
   title: String!
   career: String!
   units: String!
@@ -33,6 +33,16 @@ type Course {
   recommended_readings: String!
   terms: [Term]
   assessments: [AssessementComponent]
+  rating: CourseRating
+}
+
+type CourseRating {
+  numReviews: Int!
+  overall: Float!
+  grading: Float!
+  content: Float!
+  difficulty: Float!
+  teaching: Float!
 }
 
 type Term {

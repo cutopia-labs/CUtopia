@@ -5,6 +5,7 @@ type Query {
 type RankTable {
   popularCourses(filter: PopularFilter): [PopularCourse]
   topRatedCourses(filter: TopRatedFilter): [TopRatedCourse]
+  topRatedAcademicGroups(filter: TopRatedFilter): [TopRatedAcademicGroups]
 }
 
 input PopularFilter {
@@ -25,6 +26,16 @@ type PopularCourse {
 type TopRatedCourse {
   courseId: String!
   course: Course!
+  numReviews: Int!
+  overall: Float!
+  grading: Float!
+  content: Float!
+  difficulty: Float!
+  teaching: Float!
+}
+
+type TopRatedAcademicGroups {
+  name: String!
   numReviews: Int!
   overall: Float!
   grading: Float!

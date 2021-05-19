@@ -38,6 +38,11 @@ Resources:
             Method: get
             Path: /graphql
           Type: Api
+        HttpOptions:
+          Properties:
+            Method: options
+            Path: /graphql
+          Type: Api
         HttpPost:
           Properties:
             Method: post

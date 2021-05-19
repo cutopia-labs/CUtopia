@@ -17,3 +17,10 @@ exports.SearchTable = {
     return courses;
   },
 };
+
+exports.Course = {
+  subject: ({ subject }) => ({
+    name: subject,
+    courses: subjects[subject],
+  }),
+};
