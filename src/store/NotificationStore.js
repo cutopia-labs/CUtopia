@@ -7,7 +7,7 @@ class NotificationStore {
     this.snackbar = {
       message: '',
       label: '',
-      onPress: null,
+      onClick: null,
       id: '',
     };
   }
@@ -17,9 +17,9 @@ class NotificationStore {
     this.init();
   }
 
-  @action async setSnackBar(msg, label, onPress) {
+  @action async setSnackBar(msg, label, onClick) {
     const id = msg ? +new Date() : undefined;
-    this.updateSnackBar(msg, label, onPress, id);
+    this.updateSnackBar(msg, label, onClick, id);
     await new Promise(resolve => setTimeout(resolve, 2000));
     this.needClear(id) && this.updateSnackBar(); // only clear if currect snackbar is itself
   }
@@ -28,11 +28,11 @@ class NotificationStore {
     return this.snackbar.id === id;
   }
 
-  @action.bound updateSnackBar(msg, label, onPress, id) {
+  @action.bound updateSnackBar(msg, label, onClick, id) {
     this.snackbar = {
       message: msg,
       label: label,
-      onPress: onPress,
+      onClick: onClick,
       id: id,
     };
   }

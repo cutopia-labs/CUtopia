@@ -2,8 +2,6 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding: 0 24px;
-    overflow-y: scroll;
 }
 
 .course-card > p, .caption, .sub-heading {

@@ -134,7 +134,7 @@ export default function SearchPanel() {
                         label={code}
                         ribbonIndex={i}
                         chevron
-                        onPress={() => {}}
+                        onClick={() => {}}
                       />
                     ))
                   }

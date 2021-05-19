@@ -1,4 +1,46 @@
 .course-panel {
+    display: flex;
+    flex-direction: column;
     flex: 1;
     margin-left: 40px;
+    overflow-y: scroll;
+}
+
+.course-panel > * {
+    padding: 0 24px;
+}
+
+.course-summary {
+    display: flex;
+    margin: 20px 24px 0 24px;
+    background-color: #dedede26;
+    padding: 12px 8px;
+    align-items: center;
+    border-radius: var(--border-radius);
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.course-summary-ratings {
+    align-items: center;
+}
+
+.course-summary-ratings > svg, .course-summary > svg {
+    color: #3b3b3bbf;
+}
+
+.course-summary-label {
+    text-transform: capitalize;
+    margin: 0 10px;
+    font-size: 14px;
+    color: #3b3b3bbf;
+}
+
+.grade-indicator.course-summary-grade-indicator {
+    border-radius: 8px;
+    height: auto;
+    width: auto;
+    padding: 2px 6px;
+    min-width: 28px;
+    font-size: 14px;
 }

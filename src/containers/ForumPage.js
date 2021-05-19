@@ -8,7 +8,7 @@ import { GET_USER } from '../constants/queries';
 
 const ForumPage = () => {
   const user = useContext(UserContext);
-  const [courseId, setCourseId] = useState('AIST1110');
+  const [courseId, setCourseId] = useState('AIST3010');
   return (
     <div className="forum-page row">
       <SearchPanel />

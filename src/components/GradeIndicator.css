@@ -1,0 +1,9 @@
+.grade-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+}

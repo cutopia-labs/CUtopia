@@ -62,6 +62,8 @@ const VALUE_TO_LETTER = Object.freeze({
 
 const GRADES = Object.freeze(['F', 'D', 'C', 'B', 'A']);
 
+const GRADE_VALUES = Object.freeze([4, 3.7, 3.3, 3, 2.7, 2.3, 2, 1.7, 1, 0]);
+
 const LETTER_TO_FIVE_VALUES = Object.freeze({
   A: 4,
   B: 3,
@@ -94,5 +96,6 @@ export {
   WEEKDAYS,
   WEEKDAYS_TWO_ABBR,
   GRADES,
+  GRADE_VALUES,
   LETTER_TO_FIVE_VALUES,
 };

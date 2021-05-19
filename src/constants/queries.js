@@ -22,7 +22,15 @@ const COURSE_INFO_QUERY = gql`
         assessments {
           name
           percentage
-        },
+        }
+        rating {
+          numReviews
+          overall
+          grading
+          content
+          difficulty
+          teaching
+        }
       }
     }
   }`;
@@ -67,6 +75,7 @@ const REVIEWS_QUERY = gql`
 const RECENT_REVIEWS_QUERY = gql`
   query {
     reviews(input: {
+      getLatest: true
       ascendingDate: false
     }) {
       courseId
