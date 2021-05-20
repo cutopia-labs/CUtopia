@@ -13,7 +13,7 @@
 .course-summary {
     display: flex;
     margin: 20px 24px 0 24px;
-    background-color: #dedede26;
+    background-color: var(--background-on-white);
     padding: 12px 8px;
     align-items: center;
     border-radius: var(--border-radius);
@@ -25,7 +25,7 @@
     align-items: center;
 }
 
-.course-summary-ratings > svg, .course-summary > svg {
+.course-summary svg {
     color: #3b3b3bbf;
 }
 
@@ -43,4 +43,10 @@
     padding: 2px 6px;
     min-width: 28px;
     font-size: 14px;
+}
+
+.vertical-divider {
+    width: 1px;
+    height: 16px;
+    background-color: #3b3b3b80;
 }

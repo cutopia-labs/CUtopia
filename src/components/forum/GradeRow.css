@@ -1,0 +1,55 @@
+.grade-row {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    overflow: hidden;
+    background-color: var(--background-on-white);
+    border-radius: var(--border-radius);
+    flex-wrap: wrap;
+    /* grid-template-columns: repeat(2, 1fr); */
+}
+
+.grade-row > div:first-child {
+    height: 33px;
+}
+
+.grade-row svg {
+    color: #3b3b3bbf;
+}
+
+.grade-row > div:first-child > div {
+    margin: 6px;
+}
+
+.grade-indicator.course-summary-grade-indicator.overall {
+    margin: -10px 6px -10px 0px !important;
+    height: 50px;
+    border-radius: 0;
+}
+
+.rating-container {
+    cursor: pointer;
+    padding: 0 10px;
+    height: 30px;
+    transition: all 0.1s ease-in-out;
+}
+
+.rating-container > .course-summary-label {
+    margin: 0 10px 0 0;
+}
+
+.grade-row.review-header > div > .rating-container {
+    height: 38px;
+}
+
+.grade-row.review-header .rating-container.active {
+    position: relative;
+    background-color: #dedede60;
+    border-radius: var(--border-radius);
+    /* 
+    background-color: #683ab71f;
+    border-radius: var(--border-radius);
+    margin: 20px 0;
+    */
+}
+

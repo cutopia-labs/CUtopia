@@ -4,9 +4,12 @@ import React, {
 import { observer } from 'mobx-react-lite';
 import IconButton from '@material-ui/core/IconButton';
 import {
-  ShoppingCart, ShoppingCartOutlined, Favorite, FavoriteOutlined,
+  ShoppingCart, ShoppingCartOutlined, Favorite, FavoriteOutlined, BarChart, Grade,
 } from '@material-ui/icons';
 
+import { RATING_FIELDS } from '../../constants/states';
+import GradeIndicator from '../GradeIndicator';
+import GradeRow from './GradeRow';
 import ShowMoreOverlay from '../ShowMoreOverlay';
 import Badge from '../Badge';
 import { UserContext } from '../../store';
@@ -20,7 +23,7 @@ const CourseCard = ({ courseInfo }) => {
   const isFavorited = user.favoriteCourses.some(course => course.courseId === courseInfo.courseId);
   const setFavorited = async () => {
     if (isFavorited) {
-      await user.saveFavoriteCourses([...user.favoriteCourses].filter(course => course.courseId !== courseId));
+      await user.saveFavoriteCourses([...user.favoriteCourses].filter(course => course.courseId !== courseInfo.courseId));
     }
     else {
       console.log('Setting');
@@ -47,19 +50,22 @@ const CourseCard = ({ courseInfo }) => {
       }}
     >
       <div className="course-card-title-container">
-        <p className="title">{courseInfo.courseId}</p>
-        <IconButton aria-label="cart" components="span" size="medium">
-          <ShoppingCart />
-        </IconButton>
-        <IconButton
-          className={isFavorited ? 'active' : ''}
-          onClick={() => setFavorited()}
-          aria-label="favourite"
-          components="span"
-          size="medium"
-        >
-          <Favorite />
-        </IconButton>
+        <div className="center-row">
+          <p className="title">{courseInfo.courseId}</p>
+          <IconButton aria-label="cart" components="span" size="medium">
+            <ShoppingCart />
+          </IconButton>
+          <IconButton
+            className={isFavorited ? 'active' : ''}
+            onClick={() => setFavorited()}
+            aria-label="favourite"
+            components="span"
+            size="medium"
+          >
+            <Favorite />
+          </IconButton>
+        </div>
+        <GradeRow rating={courseInfo.rating} />
       </div>
       <p className="caption">{courseInfo.title}</p>
       <div className="course-badge-row">

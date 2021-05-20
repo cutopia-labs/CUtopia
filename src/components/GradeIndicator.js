@@ -3,19 +3,11 @@ import React from 'react';
 import './GradeIndicator.css';
 import colors from '../constants/colors';
 import updateOpacity from '../helpers/updateOpacity';
-import { floatToGrade } from '../helpers/marcos';
-import { VALUE_TO_LETTER, GRADES } from '../constants/states';
-
-const getLabel = grade => {
-  if (typeof grade === 'string') return grade;
-  if (grade >= 0 && grade <= 4) {
-    return floatToGrade(grade);
-  }
-  return grade;
-};
+import { getLabel } from '../helpers/marcos';
 
 export default function GradeIndicator({ grade, additionalClassName }) {
-  const color = colors.gradeColors[getLabel(grade).charAt(0)];
+  const label = getLabel(grade);
+  const color = colors.gradeColors[label.charAt(0)];
   return (
     <div
       className={`grade-indicator${additionalClassName ? ` ${additionalClassName}` : ''}`}
@@ -24,9 +16,7 @@ export default function GradeIndicator({ grade, additionalClassName }) {
         color: updateOpacity(color, 0.8),
       }}
     >
-      {
-        typeof grade === 'string' ? grade : getLabel(grade)
-      }
+      {label}
     </div>
   );
 }

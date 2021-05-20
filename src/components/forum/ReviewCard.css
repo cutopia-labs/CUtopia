@@ -1,0 +1,59 @@
+.review-card {
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border);
+    margin: 20px 24px 0 24px;
+    padding: 0;
+}
+
+.course-summary.review {
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+}
+
+.grade-row.review-header {
+    width: 100%;
+    margin-top: 0;
+    background-color: transparent;
+    border-radius: 0;
+    /* border-bottom: 1px solid var(--border); */
+    justify-content: space-between;
+}
+
+.grade-row.review-header .center-row {
+    height: 50px;
+}
+
+.review-text {
+    text-align: start;
+    font-size: 14px;
+}
+
+.review-info-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 12px 8px;
+    /* border-bottom: 1px solid var(--border); */
+    width: 100%;
+}
+
+.review-info-row > :nth-child(2) {
+    width: 160px;
+    margin-left: 16px;
+}
+
+.review-text {
+    margin: 0;
+    padding: 12px 8px;
+}
+
+.course-summary-label.author {
+    margin-left: auto;
+    text-transform: none;
+}
+
+.course-summary-label.author > span {
+    color: var(--text);
+    cursor: pointer;
+}

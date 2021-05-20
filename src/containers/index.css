@@ -13,6 +13,7 @@ body {
     --headerHeight: 50px;
     --marginHorizontal: 40px;
     --border-radius: 8px;
+    --background-on-white: #dedede26;
     background-color: var(--background);
     color: var(--text);
 }
@@ -26,9 +27,13 @@ a {
     text-align: center;
 }
 
-.row {
+.row, .center-row {
     display: flex;
     flex-direction: row;
+}
+
+.center-row {
+    align-items: center;
 }
 
 .card {
@@ -57,6 +62,10 @@ a {
     border-bottom: 1px solid var(--border);
     margin-top: 16px;
     margin-bottom: 10px;
+}
+
+.transparent {
+    background-color: transparent !important;
 }
 
 @media screen and (prefer-color-scheme: dark) {

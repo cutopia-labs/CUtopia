@@ -83,6 +83,11 @@ const TIMETABLE_CONSTANTS = Object.freeze({
 const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const WEEKDAYS_TWO_ABBR = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
 
+const VOTE_ACTIONS = Object.freeze({
+  UPVOTE: 1,
+  DOWNVOTE: 0,
+});
+
 export {
   RATING_FIELDS,
   MODES,
@@ -98,4 +103,5 @@ export {
   GRADES,
   GRADE_VALUES,
   LETTER_TO_FIVE_VALUES,
+  VOTE_ACTIONS,
 };

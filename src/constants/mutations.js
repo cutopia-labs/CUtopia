@@ -70,7 +70,7 @@ const ADD_REVIEW = gql`
     $term: String!,
     $section: String!,
     $lecturer: String!,
-    $overall: String!,
+    $overall: Int!,
     $grading: ReviewDetailsInput!,
     $teaching: ReviewDetailsInput!,
     $difficulty: ReviewDetailsInput!,
