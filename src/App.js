@@ -4,6 +4,7 @@ import {
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { observer } from 'mobx-react-lite';
+import { createMuiTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
 
 import StoreProvider, { UserContext, PreferenceContext } from './store';
 
@@ -38,7 +39,9 @@ const AppWrapper = observer(() => {
 
   return (
     <ApolloProvider client={client}>
-      <Navigator />
+      <ThemeProvider theme={preference.theme}>
+        <Navigator />
+      </ThemeProvider>
     </ApolloProvider>
   );
 });

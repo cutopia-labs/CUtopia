@@ -1,0 +1,13 @@
+.logo-container {
+	font-family: Futura, sans-serif;
+    opacity: 0.7;
+	font-weight: 900;
+	font-size: 32px;
+    letter-spacing: 2px;
+    --float-distance: 6px;
+    cursor: default;
+}
+
+.logo-container .float {
+    /* text-shadow: calc(-1 * var(--float-distance)) var(--float-distance) rgba(173, 216, 230, 0.6) !important; */
+}

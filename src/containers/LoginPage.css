@@ -1,0 +1,68 @@
+.login-page {
+    display: flex;
+    background-color: var(--surface);
+    width: 100vw;
+    height: 100vh;
+}
+
+.login-page .right, .login-page .left {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-page .left {
+    color: white;
+    background: linear-gradient(195deg, var(--primary) 2.3%,rgba(220, 86, 227,1) 88.5%);
+    padding: 20px 40px;
+    width: 30%;
+    max-width: 600px;
+}
+
+.login-page .left > .logo-container {
+    font-size: 20px;
+    opacity: 1;
+    position: absolute;
+    top: 20px;
+    left: 40px;
+    font-weight: 600;
+}
+
+.banner-text {
+    font-size: 26px;
+    font-weight: bold;
+}
+
+.login-page .right {
+    flex: 1;
+}
+
+@media only screen and (max-width: 1260px) {
+    .login-page {
+        flex-direction: column;
+        background-color: var(--background);
+    }
+    .login-page .left {
+        background: var(--primary);
+        width: 100%;
+        max-width: none;
+        height: calc(100vh - 604px); /* 604px is the height and padding needed for login-panel */
+        padding: 0;
+    }
+    .login-page .left > .logo-container {
+        top: calc((100vh - 614px) / 2 - 14px);
+        left: 5%;
+    }
+    .login-page .left > .banner-text {
+        display: none;
+    }
+    .login-page .right {
+        margin-top: -10px;
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+        background-color: white;
+    }
+    .login-page .right > .login-panel {
+        width: 90%;
+    }
+}

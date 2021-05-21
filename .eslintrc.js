@@ -17,6 +17,17 @@ module.exports = {
     'react',
     'only-warn', // for run build
   ],
+  parser: 'babel-eslint',
+  parserOptions: {
+    ecmaVersion: 2018,
+    ecmaFeatures: {
+      jsx: true,
+      modules: true,
+      legacyDecorators: true,
+    },
+    sourceType: 'module',
+    useJSXTextNode: false,
+  },
   rules: {
     indent: ['error', 2, { SwitchCase: 1 }],
     'no-console': 0,

@@ -9,6 +9,11 @@
     opacity: 0.8;
 }
 
+.like-btn-row > .like-btn.active {
+    background-color: #dedede60;
+    border: none;
+}
+
 .like-btn-row {
     margin-right: 16px;
 }

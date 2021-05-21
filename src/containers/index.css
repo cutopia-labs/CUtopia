@@ -3,6 +3,7 @@ body {
     --accent: rgba(249, 169, 83, 1);
     --surface: rgba(255,255,255,1);
     --background: rgb(250, 252, 255, 1);
+    --background-dark: rgba(5,5,5,1);
     --text: rgba(12,12,12,1);
     --button: rgba(21, 121, 193, 1);
     --border: #dedede80;
@@ -14,6 +15,7 @@ body {
     --marginHorizontal: 40px;
     --border-radius: 8px;
     --background-on-white: #dedede26;
+    --grey-text: rgba(0, 0, 0, 0.54);
     background-color: var(--background);
     color: var(--text);
 }
@@ -21,6 +23,24 @@ body {
 a {
     color: inherit; /* blue colors for links too */
     text-decoration: inherit; /* no underline */
+}
+
+input {
+    outline: none;
+    appearance: none;
+    border: none;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }
 
 .App {

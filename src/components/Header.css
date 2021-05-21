@@ -8,10 +8,15 @@
 
 .header-logo {
     width: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /*
     background-image: url("../images/cutopia-logo.png");
     background-repeat: no-repeat;
     background-size: 100%;
     background-position: center;
+    */
 }
 
 .header-nav > :last-child {

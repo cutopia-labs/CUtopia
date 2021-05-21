@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Paper } from '@material-ui/core';
+import { observer } from 'mobx-react-lite';
 
 import './Header.css';
+import Logo from './Logo';
+import { UserContext } from '../store';
+import { MODES, LOGIN_STATES } from '../constants/states';
 
 const SECTIONS = [
   {
@@ -19,11 +23,14 @@ const SECTIONS = [
   },
 ];
 
-export default function Header() {
+const Header = () => {
   const location = useLocation();
+  const user = useContext(UserContext);
   return (
     <header className="header-container row">
-      <Link className="header-logo" to="/" />
+      <Link className="header-logo" to="/">
+        <Logo />
+      </Link>
       <nav className="header-nav row">
         {
           SECTIONS.map(section => (
@@ -35,4 +42,6 @@ export default function Header() {
       </nav>
     </header>
   );
-}
+};
+
+export default observer(Header);
