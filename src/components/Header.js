@@ -14,12 +14,12 @@ const SECTIONS = [
     link: '/',
   },
   {
-    label: 'Forum',
-    link: '/forum',
+    label: 'Review',
+    link: '/review',
   },
   {
-    label: 'Planer',
-    link: '/planer',
+    label: 'Planner',
+    link: '/planner',
   },
 ];
 
@@ -34,7 +34,11 @@ const Header = () => {
       <nav className="header-nav row">
         {
           SECTIONS.map(section => (
-            <Link to={section.link} className={`nav-label-container${section.link === location.pathname ? '-active' : ''}`}>
+            <Link
+              key={section.link}
+              to={section.link}
+              className={`nav-label-container${section.link === location.pathname ? '-active' : ''}`}
+            >
               <span className="nav-label">{section.label}</span>
             </Link>
           ))

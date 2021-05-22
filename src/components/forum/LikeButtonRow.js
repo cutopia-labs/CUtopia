@@ -11,7 +11,7 @@ const LikeButton = ({
   <Button
     size="small"
     onClick={onClick}
-    variant={selected ? 'outlined' : ''}
+    variant={selected ? 'outlined' : 'text'}
     startIcon={isLike ? <ThumbUp /> : <ThumbDown />}
     className={`like-btn${selected ? ' active' : ''}`}
     disabled={disabled}

@@ -1,7 +1,7 @@
 .review-card {
     border-radius: var(--border-radius);
     border: 1px solid var(--border);
-    margin: 20px 24px 0 24px;
+    margin-top: 24px;
     padding: 0;
 }
 

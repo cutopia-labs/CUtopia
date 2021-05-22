@@ -25,7 +25,6 @@ class PreferenceStore {
   @observable theme = THEME;
 
   constructor() {
-    this.init();
     makeObservable(this);
   }
 

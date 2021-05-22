@@ -19,6 +19,7 @@ const GradeRow = ({
       {
         RATING_FIELDS.map(field => (
           <div
+            key={field}
             className={`center-row rating-container${selected === field ? ' active' : ''}`}
             onClick={() => {
               if (setSelected) {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   Paper, InputBase, ListItem, ListItemIcon, ListItemText, Divider, Chip, Collapse, List,
@@ -85,6 +85,7 @@ export default function SearchPanel() {
                   variant="outlined"
                   label={history}
                   onDelete={() => deleteHistory(history)}
+                  key={history}
                 />
               ))
             }
@@ -108,7 +109,7 @@ export default function SearchPanel() {
       <div className="schools-container">
         {
           Object.entries(COURSE_CODES).map(([k, v]) => (
-            <>
+            <Fragment key={k}>
               <ListItem
                 button
                 onClick={() => {
@@ -131,6 +132,7 @@ export default function SearchPanel() {
                   {
                     v.map((code, i) => (
                       <MyListItem
+                        key={code}
                         label={code}
                         ribbonIndex={i}
                         chevron
@@ -140,7 +142,7 @@ export default function SearchPanel() {
                   }
                 </div>
               </Collapse>
-            </>
+            </Fragment>
           ))
         }
       </div>

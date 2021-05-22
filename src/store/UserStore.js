@@ -22,7 +22,6 @@ class UserStore {
   @observable token
 
   constructor(notificationStore) {
-    this.init();
     makeObservable(this);
     this.observeLoadingError();
     this.notificationStore = notificationStore;

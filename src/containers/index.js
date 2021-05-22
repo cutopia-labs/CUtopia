@@ -28,10 +28,10 @@ const Navigator = () => {
           <Route exact path="/">
             <HomePage />
           </Route>
-          <Route exact path="/forum">
+          <Route exact path="/review">
             <ForumPage />
           </Route>
-          <Route exact path="/forum/:id">
+          <Route exact path="/review/:id">
             <ForumPage />
           </Route>
         </Switch>

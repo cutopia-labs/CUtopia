@@ -56,6 +56,7 @@ const CourseSummary = ({ courseInfo, sorting, setSorting }) => {
         {
           SORTING_FIELDS.map(field => (
             <MenuItem
+              key={field}
               onClick={() => handleClose(field)}
               selected={sorting === field}
             >
@@ -122,7 +123,7 @@ export default function CoursePanel({ courseId }) {
                   ? <Loading />
                   : mode === COURSE_PANEL_MODES.FETCH_REVIEWS && reviews && Boolean(reviews.reviews.length)
                   && reviews.reviews.map(item => (
-                    <ReviewCard review={item} />
+                    <ReviewCard key={item.createdDate} review={item} />
                   ))
               }
             </>
