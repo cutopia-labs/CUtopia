@@ -12,7 +12,7 @@ const ForumPage = () => {
   return (
     <div className="forum-page row">
       <SearchPanel />
-      <CoursePanel courseId={courseId} />
+      <CoursePanel />
     </div>
   );
 };

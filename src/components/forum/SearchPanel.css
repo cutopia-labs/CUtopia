@@ -1,6 +1,7 @@
 .search-panel {
     width: 380px;
     overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 .search-panel > div {
@@ -12,8 +13,19 @@
     padding: 6px 16px;
 }
 
+.search-input-container > .go-back-btn {
+    margin-left: -4px;
+    margin-right: 20px;
+    height: 30px;
+    width: 30px;
+}
+
 .search-icon {
     margin-right: 20px;
+}
+
+.search-icon > svg {
+    opacity: 0.54;
 }
 
 .search-form {
@@ -61,4 +73,31 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     overflow-x: hidden;
+}
+
+.search-list-item-container > .list-item-container {
+    height: auto;
+    justify-content: space-between;
+    position: relative;
+}
+
+.search-list-item-container > .list-item-container .list-item-color-bar {
+    height: 140px;
+    position: absolute;
+}
+
+.search-list-item {
+    align-items: flex-start;
+    flex: 1;
+    padding: 12px 22px;
+}
+
+.search-list-item .title {
+    font-size: 16px;
+}
+
+.search-list-item .caption {
+    margin-top: 8px;
+    font-size: 14px;
+    opacity: 0.8;
 }

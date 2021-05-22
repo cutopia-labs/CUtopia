@@ -65,7 +65,10 @@ const CourseCard = ({ courseInfo }) => {
             <Favorite />
           </IconButton>
         </div>
-        <GradeRow rating={courseInfo.rating} />
+        {
+          courseInfo.rating
+          && <GradeRow rating={courseInfo.rating} />
+        }
       </div>
       <p className="caption">{courseInfo.title}</p>
       <div className="course-badge-row">

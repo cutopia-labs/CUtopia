@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import {
+  Link, useHistory, useLocation, useParams,
+} from 'react-router-dom';
 import { BarChart, Sort } from '@material-ui/icons';
 import { useQuery } from '@apollo/client';
 import { IconButton, Menu, MenuItem } from '@material-ui/core';
+import SpeedDial from '@material-ui/lab/SpeedDial';
 
 import './CoursePanel.css';
 import GradeIndicator from '../GradeIndicator';
@@ -14,6 +17,7 @@ import Loading from '../Loading';
 import ReviewCard from './ReviewCard';
 
 export const COURSE_PANEL_MODES = Object.freeze({
+  DEFAULT: 0,
   WITH_REVIEW: 1,
   GET_TARGET_REVIEW: 2,
   FETCH_REVIEWS: 3,
@@ -35,50 +39,62 @@ const CourseSummary = ({ courseInfo, sorting, setSorting }) => {
   };
   return (
     <div className="course-summary">
-      <div className="center-row">
-        <IconButton
-          aria-label="sort"
-          components="span"
-          size="small"
-          onClick={e => setAnchorEl(e.currentTarget)}
-        >
-          <Sort />
-        </IconButton>
-        <div className="course-summary-label">{`${courseInfo.rating.numReviews} reviews`}</div>
-      </div>
-      <Menu
-        id="simple-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
-        {
-          SORTING_FIELDS.map(field => (
-            <MenuItem
-              key={field}
-              onClick={() => handleClose(field)}
-              selected={sorting === field}
-            >
-              {field}
-            </MenuItem>
-          ))
-        }
-      </Menu>
+      {
+        courseInfo.rating
+          ? (
+            <>
+              <div className="center-row">
+                <IconButton
+                  aria-label="sort"
+                  components="span"
+                  size="small"
+                  onClick={e => setAnchorEl(e.currentTarget)}
+                >
+                  <Sort />
+                </IconButton>
+                <div className="course-summary-label">{`${courseInfo.rating.numReviews} reviews`}</div>
+              </div>
+              <Menu
+                id="simple-menu"
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+              >
+                {
+                  SORTING_FIELDS.map(field => (
+                    <MenuItem
+                      key={field}
+                      onClick={() => handleClose(field)}
+                      selected={sorting === field}
+                    >
+                      {field}
+                    </MenuItem>
+                  ))
+                }
+              </Menu>
+            </>
+          )
+          : <span>No review yet</span>
+      }
     </div>
   );
 };
 
-export default function CoursePanel({ courseId }) {
-  const [mode, setMode] = useState(COURSE_PANEL_MODES.FETCH_REVIEWS);
+export default function CoursePanel() {
+  const { id } = useParams();
+  const courseId = validCourse(id) ? id.toUpperCase() : '';
+  const [mode, setMode] = useState(courseId ? COURSE_PANEL_MODES.FETCH_REVIEWS : COURSE_PANEL_MODES.DEFAULT);
   const [sorting, setSorting] = useState('date');
+  const history = useHistory();
+
   // Fetch course info
   const { data: courseInfo, courseInfoLoading, error } = useQuery(COURSE_INFO_QUERY, {
     variables: {
       subject: courseId.substring(0, 4),
       code: courseId.substring(4),
     },
-    skip: !validCourse(courseId),
+    skip: !courseId,
   });
 
   // Fetch all reviews
@@ -96,16 +112,33 @@ export default function CoursePanel({ courseId }) {
   });
 
   useEffect(() => {
-    courseInfo && console.log(courseInfo.subjects[0].courses[0]);
+    if (courseInfo) {
+      if (!courseInfo.subjects || !courseInfo.subjects[0]) {
+        history.push('/review');
+      }
+    }
   }, [courseInfo]);
+
+  useEffect(() => {
+    console.log(`courseId: ${courseId}`);
+  }, [courseId]);
 
   useEffect(() => {
     console.log(reviews);
   }, [reviews]);
+
+  if (!validCourse(courseId)) {
+    return (
+      <div className="course-panel card">
+        Recent Reviews
+      </div>
+    );
+  }
+
   return (
     <div className="course-panel card">
       {
-        !courseInfoLoading && courseInfo
+        !courseInfoLoading && courseInfo && courseInfo.subjects && courseInfo.subjects[0]
           ? (
             <>
               <CourseCard
@@ -114,10 +147,7 @@ export default function CoursePanel({ courseId }) {
                   courseId,
                 }}
               />
-              {
-                courseInfo.subjects[0].courses[0].rating
-                && <CourseSummary courseInfo={courseInfo.subjects[0].courses[0]} sorting={sorting} setSorting={setSorting} />
-              }
+              <CourseSummary courseInfo={courseInfo.subjects[0].courses[0]} sorting={sorting} setSorting={setSorting} />
               {
                 reviewsLoading
                   ? <Loading />

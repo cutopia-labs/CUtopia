@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Paper } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
@@ -26,6 +26,9 @@ const SECTIONS = [
 const Header = () => {
   const location = useLocation();
   const user = useContext(UserContext);
+  useEffect(() => {
+    console.log(location);
+  }, [location])
   return (
     <header className="header-container row">
       <Link className="header-logo" to="/">
@@ -37,7 +40,7 @@ const Header = () => {
             <Link
               key={section.link}
               to={section.link}
-              className={`nav-label-container${section.link === location.pathname ? '-active' : ''}`}
+              className={`nav-label-container${location.pathname.startsWith(section.link) && (section.link.length > 1 || section.link === location.pathname) ? '-active' : ''}`}
             >
               <span className="nav-label">{section.label}</span>
             </Link>
