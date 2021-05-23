@@ -5,6 +5,7 @@ import {
   Route,
 } from 'react-router-dom';
 
+import SnackBar from '../components/SnackBar';
 import { UserContext } from '../store';
 import { MODES, LOGIN_STATES } from '../constants/states';
 import Header from '../components/Header';
@@ -35,6 +36,7 @@ const Navigator = () => {
             <ForumPage />
           </Route>
         </Switch>
+        <SnackBar />
       </div>
     </Router>
   );

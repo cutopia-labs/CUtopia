@@ -16,6 +16,7 @@ body {
     --border-radius: 8px;
     --background-on-white: #dedede26;
     --grey-text: rgba(0, 0, 0, 0.54);
+    --snackbar: rgba(31,31,31,1);
     background-color: var(--background);
     color: var(--text);
 }

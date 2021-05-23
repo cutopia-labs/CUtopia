@@ -6,7 +6,7 @@ import {
   Paper, InputBase, ListItem, ListItemIcon, ListItemText, Divider, Chip, Collapse, List, IconButton,
 } from '@material-ui/core';
 import {
-  MoveToInbox, Search, ExpandLess, ExpandMore, School, StarBorder, ArrowBack,
+  MoveToInbox, Search, ExpandLess, ExpandMore, School, StarBorder, ArrowBack, Bookmark, Class
 } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 import { observer } from 'mobx-react-lite';
@@ -90,7 +90,7 @@ const DepartmentList = ({ setSearchPayload }) => {
               }}
             >
               <ListItemIcon>
-                <School />
+                <Class />
               </ListItemIcon>
               <ListItemText primary={k} />
               {k === currentSchool ? <ExpandLess /> : <ExpandMore />}
@@ -202,9 +202,8 @@ const SearchPanel = () => {
       {
         searchPayload.mode && (searchPayload.mode !== 'query' || searchPayload.text) ? (
           (getCoursesFromQuery(searchPayload, user) || []).map((course, i) => (
-            <Link to={`/review/${course.courseId}`} className="search-list-item-container">
+            <Link key={course.courseId} to={`/review/${course.courseId}`} className="search-list-item-container">
               <MyListItem
-                key={course.courseId}
                 ribbonIndex={i}
                 chevron
                 onClick={() => {}}
@@ -238,13 +237,13 @@ const SearchPanel = () => {
             <Divider />
             <ListItem button onClick={() => setSearchPayload({ mode: 'Pins' })}>
               <ListItemIcon>
-                <MoveToInbox />
+                <Bookmark />
               </ListItemIcon>
               <ListItemText primary="Pins" />
             </ListItem>
             <ListItem button onClick={() => setSearchPayload({ mode: 'My Courses' })}>
               <ListItemIcon>
-                <MoveToInbox />
+                <School />
               </ListItemIcon>
               <ListItemText primary="My Courses" />
             </ListItem>

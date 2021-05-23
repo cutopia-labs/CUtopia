@@ -47,3 +47,10 @@
     height: 16px;
     background-color: #3b3b3b80;
 }
+
+.course-panel-fab {
+    position: absolute;
+    right: calc(var(--marginHorizontal) + 40px);
+    bottom: calc(40px);
+}
+

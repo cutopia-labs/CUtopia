@@ -7,8 +7,6 @@ import {
   ShoppingCart, ShoppingCartOutlined, Favorite, FavoriteOutlined, BarChart, Grade,
 } from '@material-ui/icons';
 
-import { RATING_FIELDS } from '../../constants/states';
-import GradeIndicator from '../GradeIndicator';
 import GradeRow from './GradeRow';
 import ShowMoreOverlay from '../ShowMoreOverlay';
 import Badge from '../Badge';

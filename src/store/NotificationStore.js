@@ -31,9 +31,9 @@ class NotificationStore {
   @action.bound updateSnackBar(msg, label, onClick, id) {
     this.snackbar = {
       message: msg,
-      label: label,
-      onClick: onClick,
-      id: id,
+      label,
+      onClick,
+      id,
     };
   }
 }

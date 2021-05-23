@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   Link, useHistory, useLocation, useParams,
 } from 'react-router-dom';
-import { BarChart, Sort } from '@material-ui/icons';
+import {
+  BarChart, Sort, Edit, Share,
+} from '@material-ui/icons';
 import { useQuery } from '@apollo/client';
 import { IconButton, Menu, MenuItem } from '@material-ui/core';
-import SpeedDial from '@material-ui/lab/SpeedDial';
+import { SpeedDial, SpeedDialIcon, SpeedDialAction } from '@material-ui/lab';
 
 import './CoursePanel.css';
 import GradeIndicator from '../GradeIndicator';
@@ -15,12 +17,14 @@ import { RATING_FIELDS } from '../../constants/states';
 import { COURSE_INFO_QUERY, GET_REVIEW, REVIEWS_QUERY } from '../../constants/queries';
 import Loading from '../Loading';
 import ReviewCard from './ReviewCard';
+import { NotificationContext } from '../../store';
 
 export const COURSE_PANEL_MODES = Object.freeze({
-  DEFAULT: 0,
+  DEFAULT: 0, // i.e. card to show recent reviews & rankings
   WITH_REVIEW: 1,
   GET_TARGET_REVIEW: 2,
   FETCH_REVIEWS: 3,
+  EDIT_REVIEW: 4,
 });
 
 const targetReview = '1231231';
@@ -87,6 +91,17 @@ export default function CoursePanel() {
   const [mode, setMode] = useState(courseId ? COURSE_PANEL_MODES.FETCH_REVIEWS : COURSE_PANEL_MODES.DEFAULT);
   const [sorting, setSorting] = useState('date');
   const history = useHistory();
+  const [FABOpen, setFABOpen] = React.useState(false);
+  const [FABHidden, setFABHidden] = React.useState(false);
+  const notification = useContext(NotificationContext);
+
+  const FAB_GROUP_ACTIONS = Object.freeze([
+    {
+      icon: <Share />,
+      name: 'Share',
+      action: () => notification.setSnackBar('Copied share link to clipboard!'),
+    },
+  ]);
 
   // Fetch course info
   const { data: courseInfo, courseInfoLoading, error } = useQuery(COURSE_INFO_QUERY, {
@@ -156,6 +171,25 @@ export default function CoursePanel() {
                     <ReviewCard key={item.createdDate} review={item} />
                   ))
               }
+              <SpeedDial
+                ariaLabel="SpeedDial"
+                hidden={FABHidden}
+                icon={<SpeedDialIcon openIcon={<Edit />} />}
+                onClose={() => setFABOpen(false)}
+                onOpen={() => setFABOpen(true)}
+                open={FABOpen}
+                className="course-panel-fab"
+                small
+              >
+                {FAB_GROUP_ACTIONS.map(action => (
+                  <SpeedDialAction
+                    key={action.name}
+                    icon={action.icon}
+                    tooltipTitle={action.name}
+                    onClick={action.action}
+                  />
+                ))}
+              </SpeedDial>
             </>
           )
           : <Loading />
