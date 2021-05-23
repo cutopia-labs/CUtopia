@@ -14,7 +14,7 @@ input PopularFilter {
 
 input TopRatedFilter {
   limit: Int!
-  sortBy: String # grading, content, difficulty, teaching
+  sortBy: String! # grading, content, difficulty, teaching
 }
 
 type PopularCourse {

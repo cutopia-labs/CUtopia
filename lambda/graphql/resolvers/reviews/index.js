@@ -1,7 +1,9 @@
 const { getReviews, getReview, createReview, voteReview, VOTE_ACTIONS } = require('dynamodb');
+const { recalWithNewReview } = require('../ranking/impl');
 
 exports.Mutation = {
   createReview: async (parent, { input }, { user }) => {
+    await recalWithNewReview(input);
     return await createReview(input, user);
   },
   voteReview: async (parent, { input }, { user }) => {
