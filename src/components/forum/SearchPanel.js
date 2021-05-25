@@ -1,14 +1,15 @@
 import React, {
   useState, useEffect, Fragment, useContext,
 } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useRouteMatch } from 'react-router-dom';
 import {
   Paper, InputBase, ListItem, ListItemIcon, ListItemText, Divider, Chip, Collapse, List, IconButton,
 } from '@material-ui/core';
 import {
-  MoveToInbox, Search, ExpandLess, ExpandMore, School, StarBorder, ArrowBack, Bookmark, Class
+  MoveToInbox, Search, ExpandLess, ExpandMore, School, StarBorder, ArrowBack, Bookmark, Class,
 } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
+import { useQuery } from '@apollo/client';
 import { observer } from 'mobx-react-lite';
 
 import './SearchPanel.css';
@@ -17,16 +18,39 @@ import { storeData, getStoreData } from '../../helpers/store';
 import COURSE_CODES from '../../constants/courseCodes';
 import { UserContext } from '../../store';
 import COURSES from '../../constants/courses';
+import { COURSE_SECTIONS_QUERY } from '../../constants/queries';
+import { validCourse } from '../../helpers/marcos';
+import CourseCard from './CourseCard';
+import Loading from '../Loading';
+
+/*
+c: courseId
+t: title
+*/
 
 const HISTORY_MAX_LENGTH = 10;
 const MAX_SEARCH_RESULT_LENGTH = 20;
+
+const LIST_ITEMS = Object.freeze([
+  {
+    label: 'Pins',
+    icon: <Bookmark />,
+  },
+  {
+    label: 'My Courses',
+    icon: <School />,
+  },
+]);
 
 const getCoursesFromQuery = (payload, user) => {
   // load local courselist
   const { mode } = payload;
   switch (mode) {
     case 'Pins':
-      return user.favoriteCourses;
+      return user.favoriteCourses.map(course => ({
+        c: course.courseId,
+        t: course.title,
+      }));
     case 'subject':
       return COURSES[payload.text];
     case 'query':
@@ -41,7 +65,7 @@ const getCoursesFromQuery = (payload, user) => {
         if (subject && code) {
           const results = [];
           for (let i = 0; (i < COURSES[subject].length && results.length < MAX_SEARCH_RESULT_LENGTH); i++) {
-            if (COURSES[subject][i].courseId.includes(code)) {
+            if (COURSES[subject][i].c.includes(code)) {
               if (code.length === 4) {
                 return [COURSES[subject][i]].slice(0, MAX_SEARCH_RESULT_LENGTH);
               }
@@ -58,7 +82,7 @@ const getCoursesFromQuery = (payload, user) => {
         const results = [];
         for (const [, courses] of Object.entries(COURSES)) {
           for (let i = 0; (i < courses.length && results.length < MAX_SEARCH_RESULT_LENGTH); i++) {
-            if (courses[i].title.toLowerCase().includes(payload.text.toLowerCase())) {
+            if (courses[i].t.toLowerCase().includes(payload.text.toLowerCase())) {
               results.push(courses[i]);
             }
           }
@@ -124,6 +148,42 @@ const SearchPanel = () => {
   const [searchPayload, setSearchPayload] = useState({});
   const [historyList, setHistoryList] = useState([]);
   const user = useContext(UserContext);
+  const isPlanner = useRouteMatch({
+    path: '/planner',
+    strict: true,
+    exact: true,
+  });
+  const isPlannerCourse = useRouteMatch({
+    path: '/planner/:id',
+    strict: true,
+    exact: true,
+  });
+
+  // Fetch course info
+  const { data: courseInfo, courseInfoLoading, error } = useQuery(COURSE_SECTIONS_QUERY, {
+    skip: !isPlannerCourse || !validCourse(isPlannerCourse.params.id),
+    ...(
+      isPlannerCourse
+        && {
+          variables: {
+            subject: isPlannerCourse.params.id.substring(0, 4),
+            code: isPlannerCourse.params.id.substring(4),
+          },
+        }
+    ),
+  });
+
+  useEffect(() => {
+    console.log(isPlanner);
+  }, [isPlanner]);
+
+  useEffect(() => {
+    console.log(isPlannerCourse);
+  }, [isPlannerCourse]);
+
+  useEffect(() => {
+    console.log(courseInfo);
+  }, [courseInfo]);
 
   const saveHistory = async () => {
     if (searchPayload.text) {
@@ -200,56 +260,70 @@ const SearchPanel = () => {
         </form>
       </div>
       {
-        searchPayload.mode && (searchPayload.mode !== 'query' || searchPayload.text) ? (
-          (getCoursesFromQuery(searchPayload, user) || []).map((course, i) => (
-            <Link key={course.courseId} to={`/review/${course.courseId}`} className="search-list-item-container">
-              <MyListItem
-                ribbonIndex={i}
-                chevron
-                onClick={() => {}}
-              >
-                <div className="search-list-item column">
-                  <span className="title">{course.courseId}</span>
-                  <span className="caption">{course.title}</span>
-                </div>
-              </MyListItem>
-            </Link>
-          ))
-        ) : (
-          <>
-            {
-              Boolean(historyList.length) && (
-                <div className="chips-row">
-                  {
-                    historyList.map(history => (
-                      <Chip
-                        onClick={() => console.log('Hi')}
-                        variant="outlined"
-                        label={history.text}
-                        onDelete={() => deleteHistory(history.text)}
-                        key={history}
-                      />
-                    ))
-                  }
-                </div>
-              )
-            }
-            <Divider />
-            <ListItem button onClick={() => setSearchPayload({ mode: 'Pins' })}>
-              <ListItemIcon>
-                <Bookmark />
-              </ListItemIcon>
-              <ListItemText primary="Pins" />
-            </ListItem>
-            <ListItem button onClick={() => setSearchPayload({ mode: 'My Courses' })}>
-              <ListItemIcon>
-                <School />
-              </ListItemIcon>
-              <ListItemText primary="My Courses" />
-            </ListItem>
-            <Divider />
-            <DepartmentList setSearchPayload={setSearchPayload} />
-          </>
+        isPlannerCourse && (
+          (courseInfo && !courseInfoLoading)
+            ? (
+              <CourseCard
+                courseInfo={{
+                  ...courseInfo.subjects[0].courses[0],
+                  courseId: isPlannerCourse.params.id,
+                }}
+                concise
+              />
+            ) : <Loading />
+        )
+      }
+      {
+        !isPlannerCourse
+        && (
+          searchPayload.mode && (searchPayload.mode !== 'query' || searchPayload.text) ? (
+            (getCoursesFromQuery(searchPayload, user) || []).map((course, i) => (
+              <Link key={course.c} to={`/${isPlanner || isPlannerCourse ? 'planner' : 'review'}/${course.c}`} className="search-list-item-container">
+                <MyListItem
+                  ribbonIndex={i}
+                  chevron
+                >
+                  <div className="search-list-item column">
+                    <span className="title">{course.c}</span>
+                    <span className="caption">{course.t}</span>
+                  </div>
+                </MyListItem>
+              </Link>
+            ))
+          ) : (
+            <>
+              {
+                Boolean(historyList.length) && (
+                  <div className="chips-row">
+                    {
+                      historyList.map(history => (
+                        <Chip
+                          onClick={() => console.log('Hi')}
+                          variant="outlined"
+                          label={history.text}
+                          onDelete={() => deleteHistory(history.text)}
+                          key={history}
+                        />
+                      ))
+                    }
+                  </div>
+                )
+              }
+              <Divider />
+              {
+                LIST_ITEMS.map(item => (
+                  <ListItem key={item.label} button onClick={() => setSearchPayload({ mode: item.label })}>
+                    <ListItemIcon>
+                      {item.icon}
+                    </ListItemIcon>
+                    <ListItemText primary={item.label} />
+                  </ListItem>
+                ))
+              }
+              <Divider />
+              <DepartmentList setSearchPayload={setSearchPayload} />
+            </>
+          )
         )
       }
     </div>

@@ -190,6 +190,41 @@ const POPULAR_COURSES_QUERY = gql`
     }
   }`;
 
+const COURSE_SECTIONS_QUERY = gql`
+  query ($subject: String!, $code: String!) {
+    subjects(filter: {
+      requiredSubjects: [$subject]
+    }) {
+      courses(filter: {
+        requiredCourses: [$code]
+      }) {
+        units
+        title
+        academic_group
+        requirements
+        rating {
+          numReviews
+          overall
+          grading
+          content
+          difficulty
+          teaching
+        }
+        terms {
+          name
+          course_sections {
+            name
+            startTimes
+            endTimes
+            days
+            locations
+            instructors
+          }
+        }
+      }
+    }
+  }`
+
 export {
   COURSE_INFO_QUERY,
   REVIEWS_QUERY,
@@ -198,4 +233,5 @@ export {
   GET_USER,
   TOP_RATED_COURSES_QUERY,
   POPULAR_COURSES_QUERY,
+  COURSE_SECTIONS_QUERY,
 };

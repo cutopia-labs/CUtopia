@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Button, Icon, Portal } from '@material-ui/core';
+import { Button, Portal } from '@material-ui/core';
 import { Check } from '@material-ui/icons';
 import { observer } from 'mobx-react-lite';
 

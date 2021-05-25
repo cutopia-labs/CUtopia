@@ -1,6 +1,14 @@
 .forum-page {
-    margin: 20px 40px;
+    margin: 20px 30px;
     width: calc(100vw - 2 * var(--marginHorizontal));
     /* header - header padding - margin */
     height: calc(100vh - var(--headerHeight) - 60px);
+}
+
+.forum-page > * {
+    margin-left: 30px
+}
+
+.forum-page > :first-child {
+    margin-left: 0;
 }

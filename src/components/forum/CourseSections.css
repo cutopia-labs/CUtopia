@@ -1,0 +1,49 @@
+.course-sections-card {
+    display: flex;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.course-section-wrapper {
+    width: 100%;
+}
+
+.course-term-label {
+    display: flex;
+    font-size: 14px;
+    font-weight: bold;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.course-section-card {
+    margin: 16px 0;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 4px;
+}
+
+.section-header > button {
+    color: var(--primary);
+}
+
+.section-detail {
+    display: flex;
+    flex-wrap: wrap;
+    padding-bottom: 6px;
+    justify-content: space-between;
+}
+
+.section-detail-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.section-detail-item > :first-child {
+    margin-right: 6px;
+}

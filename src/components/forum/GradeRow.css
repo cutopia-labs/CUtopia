@@ -53,3 +53,20 @@
     */
 }
 
+.grade-row.concise {
+    margin-top: 20px;
+}
+
+.grade-row.concise > .center-row {
+    height: auto;
+    flex-wrap: wrap;
+    justify-content: flex-start
+}
+
+.grade-row.concise > .center-row > * {
+    flex: 1;
+    justify-content: space-between;
+}
+.grade-row.concise > .center-row > :first-child {
+    display: none;
+}

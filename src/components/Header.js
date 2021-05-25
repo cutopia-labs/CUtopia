@@ -26,9 +26,6 @@ const SECTIONS = [
 const Header = () => {
   const location = useLocation();
   const user = useContext(UserContext);
-  useEffect(() => {
-    console.log(location);
-  }, [location])
   return (
     <header className="header-container row">
       <Link className="header-logo" to="/">

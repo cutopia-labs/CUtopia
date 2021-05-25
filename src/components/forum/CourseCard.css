@@ -8,7 +8,6 @@
     text-align: left;
 }
 
-
 .course-card-title-container.left {
     display: flex;
     flex-direction: column;
@@ -49,4 +48,15 @@
 
 .caption.description {
     margin-top: 6px;
+}
+
+.course-card.concise {
+    padding: 0px 16px;
+}
+.course-card.concise > .course-card-title-container {
+    align-items: center;
+}
+.course-card.concise > .course-card-title-container > .badge {
+    margin-right: 0;
+    margin-bottom: 0;
 }
