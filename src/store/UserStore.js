@@ -234,6 +234,31 @@ class UserStore {
     }
   }
 
+  @action async deleteSectionInPlannerCourses({ courseId, sectionId }) {
+    const index = this.plannerCourses.findIndex(course => course.courseId === courseId);
+    if (index !== -1) {
+      const UNDO_COPY = JSON.stringify(this.plannerCourses);
+      const sectionCopy = { ...this.plannerCourses[index].sections };
+      delete sectionCopy[sectionId];
+      if (sectionCopy) {
+        this.plannerCourses.splice(index, 1);
+      }
+      else {
+        this.plannerCourses[index] = {
+          ...this.plannerCourses[index],
+          sections: sectionCopy,
+        };
+      }
+      await this.notificationStore.setSnackBar('1 item deleted', 'UNDO', () => {
+        this.setPlannerCourses(JSON.parse(UNDO_COPY));
+      });
+      await storeData('plannerCourses', JSON.stringify(this.plannerCourses));
+    }
+    else {
+      this.notificationStore.setSnackBar('Error... OuO');
+    }
+  }
+
   @action async deleteInPlannerCourses(courseId) {
     const index = this.plannerCourses.findIndex(course => course.courseId === courseId);
     if (index !== -1) {

@@ -1,8 +1,13 @@
 import { makeStyles } from '@material-ui/styles';
-import React, { create } from 'react';
+import React, { create, useContext } from 'react';
 
+import './CourseCard.css';
+import { IconButton } from '@material-ui/core';
+import { Delete } from '@material-ui/icons';
 import { TIMETABLE_CONSTANTS } from '../../constants/states';
 import updateOpacity from '../../helpers/updateOpacity';
+import { UserContext } from '../../store';
+import { observer } from 'mobx-react-lite';
 
 const {
   CELL_WIDTH, CELL_HEIGHT, START_HOUR, NO_OF_DAYS, NO_OF_HOURS,
@@ -10,41 +15,23 @@ const {
 
 const useStyles = (durationHeight, topMarginValue, bgColor, textColor, day) => ({
   courseCard: {
-    display: 'flex',
-    flexDirection: 'column',
-    position: 'absolute',
-    borderRadius: 4,
-    zIndex: 2,
     width: `${99 / NO_OF_DAYS}%`,
     marginLeft: `${(100 / NO_OF_DAYS) * (day - 1)}%`,
     height: durationHeight,
     top: topMarginValue,
-    backgroundColor: 'var(--background)',
   },
   innerCard: {
-    display: 'flex',
-    flexDirection: 'column',
-    flex: 1,
-    overflow: 'hidden',
-    borderRadius: 4,
-    padding: '4px 6px',
     backgroundColor: bgColor,
   },
   courseCardTitle: {
-    display: 'flex',
-    fontSize: 12,
-    fontWeight: 'bold',
     color: textColor,
-    textAlign: 'initial',
   },
   courseCardLocation: {
-    marginTop: 2,
-    fontSize: 10,
     color: textColor,
   },
 });
 
-export default function CourseCard({ course, backgroundColor, onClick }) {
+const CourseCard = ({ course, backgroundColor, onClick }) => {
   console.log(`${course.courseId} ${course.section}`);
 
   const sTime = course.startTime.split(':');
@@ -53,20 +40,37 @@ export default function CourseCard({ course, backgroundColor, onClick }) {
   const durationHeight = `${(100 / NO_OF_HOURS) * (eTime[0] - sTime[0] + (eTime[1] - sTime[1]) / 60.0)}%`;
   const bgColor = updateOpacity(course.color, 0.15);
   const textColor = updateOpacity(course.color, 0.8);
-
-  const classes = useStyles(durationHeight, topMarginValue, bgColor, textColor, course.day);
+  const styles = useStyles(durationHeight, topMarginValue, bgColor, textColor, course.day);
+  const user = useContext(UserContext);
 
   return (
     <div
       activeOpacity={0.7}
-      style={classes.courseCard}
-      onClick={onClick}
+      className="timetable-course-card"
+      style={styles.courseCard}
     >
-      <div style={classes.innerCard}>
-        <span style={classes.courseCardTitle} numberOfLines={2} ellipsizeMode="clip">
+      <div className="timetable-inner-card" style={styles.innerCard}>
+        <span className="timetable-course-card-title" style={styles.courseCardTitle} numberOfLines={2} ellipsizeMode="clip">
           {`${course.courseId} ${course.section}`}
         </span>
+        <span className="timetable-course-card-location" style={styles.courseCardLocation}>{course.location}</span>
+        <IconButton
+          size="small"
+          color="primary"
+          className="timetable-course-card-delete"
+          style={{
+            color: textColor,
+          }}
+          onClick={() => user.deleteSectionInPlannerCourses({
+            courseId: course.courseId,
+            sectionId: course.section,
+          })}
+        >
+          <Delete />
+        </IconButton>
       </div>
     </div>
   );
 }
+
+export default observer(CourseCard)

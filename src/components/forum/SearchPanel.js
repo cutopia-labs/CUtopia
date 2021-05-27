@@ -147,27 +147,24 @@ const DepartmentList = ({ setSearchPayload }) => {
 const SearchPanel = () => {
   const [searchPayload, setSearchPayload] = useState({});
   const [historyList, setHistoryList] = useState([]);
+  const [currentCourse, setCurrentCourse] = useState(null);
+
   const user = useContext(UserContext);
   const isPlanner = useRouteMatch({
     path: '/planner',
     strict: true,
     exact: true,
   });
-  const isPlannerCourse = useRouteMatch({
-    path: '/planner/:id',
-    strict: true,
-    exact: true,
-  });
 
   // Fetch course info
   const { data: courseInfo, courseInfoLoading, error } = useQuery(COURSE_SECTIONS_QUERY, {
-    skip: !isPlannerCourse || !validCourse(isPlannerCourse.params.id),
+    skip: !currentCourse || !validCourse(currentCourse),
     ...(
-      isPlannerCourse
+      currentCourse
         && {
           variables: {
-            subject: isPlannerCourse.params.id.substring(0, 4),
-            code: isPlannerCourse.params.id.substring(4),
+            subject: currentCourse.substring(0, 4),
+            code: currentCourse.substring(4),
           },
         }
     ),
@@ -176,10 +173,6 @@ const SearchPanel = () => {
   useEffect(() => {
     console.log(isPlanner);
   }, [isPlanner]);
-
-  useEffect(() => {
-    console.log(isPlannerCourse);
-  }, [isPlannerCourse]);
 
   useEffect(() => {
     console.log(courseInfo);
@@ -233,7 +226,17 @@ const SearchPanel = () => {
         {
           Boolean(searchPayload.mode) && (searchPayload.mode !== 'query' || searchPayload.text)
             ? (
-              <IconButton size="small" className="go-back-btn" onClick={() => setSearchPayload({})}>
+              <IconButton
+                size="small"
+                className="go-back-btn"
+                onClick={() => {
+                  if (currentCourse) {
+                    setCurrentCourse();
+                    return;
+                  }
+                  setSearchPayload({});
+                }}
+              >
                 <ArrowBack />
               </IconButton>
             )
@@ -251,22 +254,25 @@ const SearchPanel = () => {
             className="search-input"
             placeholder="Search…"
             value={searchPayload.text || ''}
-            onChange={e => setSearchPayload({
-              text: e.target.value,
-              mode: 'query',
-            })}
+            onChange={e => {
+              setSearchPayload({
+                text: e.target.value,
+                mode: 'query',
+              });
+              setCurrentCourse();
+            }}
             inputProps={{ 'aria-label': 'search' }}
           />
         </form>
       </div>
       {
-        isPlannerCourse && (
+        Boolean(currentCourse) && (
           (courseInfo && !courseInfoLoading)
             ? (
               <CourseCard
                 courseInfo={{
                   ...courseInfo.subjects[0].courses[0],
-                  courseId: isPlannerCourse.params.id,
+                  courseId: currentCourse,
                 }}
                 concise
               />
@@ -274,14 +280,15 @@ const SearchPanel = () => {
         )
       }
       {
-        !isPlannerCourse
+        !currentCourse
         && (
           searchPayload.mode && (searchPayload.mode !== 'query' || searchPayload.text) ? (
             (getCoursesFromQuery(searchPayload, user) || []).map((course, i) => (
-              <Link key={course.c} to={`/${isPlanner || isPlannerCourse ? 'planner' : 'review'}/${course.c}`} className="search-list-item-container">
+              <Link key={course.c} to={!isPlanner && `/review/${course.c}`} className="search-list-item-container">
                 <MyListItem
                   ribbonIndex={i}
                   chevron
+                  onClick={isPlanner && (() => setCurrentCourse(course.c))}
                 >
                   <div className="search-list-item column">
                     <span className="title">{course.c}</span>
