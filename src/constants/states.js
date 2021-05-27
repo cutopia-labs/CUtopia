@@ -76,12 +76,14 @@ const TIMETABLE_CONSTANTS = Object.freeze({
   START_HOUR: 8,
   END_HOUR: 19,
   NO_OF_HOURS: 12,
-  NO_OF_DAYS: 7,
+  NO_OF_DAYS: 6,
   LEFT_BAR_WIDTH: 52,
+  CELL_WIDTH: 52,
+  CELL_HEIGHT: 52,
 });
 
 const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-const WEEKDAYS_TWO_ABBR = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
+const WEEKDAYS_TWO_ABBR = ['', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
 
 const VOTE_ACTIONS = Object.freeze({
   UPVOTE: 1,

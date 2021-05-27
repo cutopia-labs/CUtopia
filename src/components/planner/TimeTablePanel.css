@@ -1,0 +1,23 @@
+.time-table-panel {
+    flex: 1;
+    display: flex;
+    padding: 10px 24px 20px 24px;
+}
+
+.time-table-panel > header {
+    justify-content: space-between;
+}
+
+.time-table-panel > header .title {
+    font-size: 18px;
+}
+
+.time-table-panel > header .btn-row > button {
+    margin-left: 24px;
+}
+
+.time-table-panel > header .btn-row > button > .MuiButton-label {
+    text-transform: capitalize;
+    font-weight: bold;
+    opacity: 0.5;
+}

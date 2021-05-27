@@ -18,7 +18,7 @@ import CourseSections from './CourseSections';
 
 const CourseCard = ({ courseInfo, concise }) => {
   const [showMore, setShowMore] = useState(true);
-  const [skipHeightCheck, setSkipHeightCheck] = useState(false);
+  const [skipHeightCheck, setSkipHeightCheck] = useState(concise);
   const user = useContext(UserContext);
 
   const isFavorited = user.favoriteCourses.some(course => course.courseId === courseInfo.courseId);
@@ -82,27 +82,40 @@ const CourseCard = ({ courseInfo, concise }) => {
       </div>
       <p className="caption">{courseInfo.title}</p>
       {
-        courseInfo.rating && concise
-        && <GradeRow rating={courseInfo.rating} additionalClassName="concise" />
-      }
-      {
-        concise && courseInfo.terms
-        && <CourseSections courseTerms={courseInfo.terms} />
-      }
-      {
-        !concise
-        && (
-          <div className="course-badge-row">
-            {
-              [
-                [`${parseInt(courseInfo.units, 10)} Credits`],
-                [courseInfo.academic_group],
-                ...(Array.isArray(courseInfo.components) ? courseInfo.components : (courseInfo.components || '').match(/[A-Z][a-z]+/g) || []).map(item => item && [item]),
-                ...(courseInfo.assessments || []).map(assessment => [assessment.name, parseInt(assessment.percentage, 10) || false]),
-              ].map(([k, v], i) => <Badge index={i} text={k} value={v} key={k + v} />)
-            }
-          </div>
-        )
+        concise
+          ? (
+            <>
+              {
+                courseInfo.requirements
+                && (
+                  <div>
+                    <p className="sub-heading">Requirements</p>
+                    <p className="caption">{courseInfo.requirements}</p>
+                  </div>
+                )
+              }
+              {
+                courseInfo.rating
+            && <GradeRow rating={courseInfo.rating} additionalClassName="concise" />
+              }
+              {
+                courseInfo.terms
+            && <CourseSections courseInfo={courseInfo} />
+              }
+            </>
+          )
+          : (
+            <div className="course-badge-row">
+              {
+                [
+                  [`${parseInt(courseInfo.units, 10)} Credits`],
+                  [courseInfo.academic_group],
+                  ...(Array.isArray(courseInfo.components) ? courseInfo.components : (courseInfo.components || '').match(/[A-Z][a-z]+/g) || []).map(item => item && [item]),
+                  ...(courseInfo.assessments || []).map(assessment => [assessment.name, parseInt(assessment.percentage, 10) || false]),
+                ].map(([k, v], i) => <Badge index={i} text={k} value={v} key={k + v} />)
+              }
+            </div>
+          )
       }
       {
         Boolean(courseInfo.description)
@@ -113,8 +126,8 @@ const CourseCard = ({ courseInfo, concise }) => {
         onShowMore={() => [setShowMore(true), setSkipHeightCheck(true)]}
       />
       {
-        showMore
-          && ['outcome', 'syllabus', 'required_readings', 'recommended_readings']
+        showMore && !concise
+          && ['requirements', 'outcome', 'required_readings']
             .filter(key => courseInfo[key] && courseInfo[key] !== '') // filter off empty strings
             .map(key => (
               <div key={key}>

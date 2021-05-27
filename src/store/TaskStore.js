@@ -3,6 +3,7 @@ import { storeData, getStoreData, removeStoreItem } from '../helpers/store';
 
 class TaskStore {
   @observable tasks;
+
   @observable sort;
 
   constructor(notificationStore) {
@@ -49,7 +50,7 @@ class TaskStore {
 
   @action async updateTask(task) {
     const index = this.tasks.findIndex(item => item.id === task.id);
-    if (index !== -1 && JSON.stringify(this.tasks[index]) !== JSON.stringify(task)){
+    if (index !== -1 && JSON.stringify(this.tasks[index]) !== JSON.stringify(task)) {
       const UNDO_COPY = [...this.tasks];
       this.tasks[index] = task;
       await this.notificationStore.setSnackBar('Updated!', 'UNDO', () => {
@@ -61,7 +62,7 @@ class TaskStore {
 
   @action async deleteTask(id) {
     const index = this.tasks.findIndex(task => task.id === id);
-    if (index !== -1){
+    if (index !== -1) {
       const UNDO_COPY = [...this.tasks];
       this.tasks.splice(index, 1);
       await this.notificationStore.setSnackBar('1 item deleted', 'UNDO', () => {
@@ -77,7 +78,7 @@ class TaskStore {
 
   @action async markAsDone(id) {
     const index = this.tasks.findIndex(task => task.id === id);
-    if (index !== -1){
+    if (index !== -1) {
       const UNDO_COPY = [...this.tasks];
       const newTask = {
         ...this.tasks[index],
@@ -99,13 +100,13 @@ class TaskStore {
   @action async clearTasks({ mode }) {
     const UNDO_COPY = [...this.tasks];
     let tasks = [];
-    switch (mode){
+    switch (mode) {
       case null: {
         break;
       }
       case 'done': {
         tasks = [...this.tasks.filter(item => !item.done)];
-        if (!(this.tasks.length - tasks.length)){
+        if (!(this.tasks.length - tasks.length)) {
           this.notificationStore.setSnackBar('Nothing to clear~');
           return;
         }

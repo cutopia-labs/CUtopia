@@ -23,27 +23,16 @@ const SnackBar = () => {
             Boolean(notification.snackbar.label)
             && (
               <Button
+                color="secondary"
                 className="btn-container"
                 onClick={() => {
                   notification.snackbar.onClick();
                   setButtonClicked(true);
                 }}
-                type="clear"
-                {
-                  ...(
-                    buttonClicked
-                      ? {
-                        icon:
-                        <Check className="snackbar-check-icon" />,
-                        disabled: true,
-                      }
-                      : {
-                        titleStyle: [styles.buttonTitle, { color: theme.colors.accent }],
-                        title: notification.snackbar.label,
-                      }
-                  )
-                }
-              />
+                disabled={buttonClicked}
+              >
+                {buttonClicked ? <Check color="secondary" className="snackbar-check-icon" /> : notification.snackbar.label}
+              </Button>
             )
           }
         </div>

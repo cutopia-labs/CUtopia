@@ -1,5 +1,5 @@
-import PlannerCart from './PlannerCart';
+import TimeTablePanel from './TimeTablePanel';
 
 export {
-  PlannerCart,
+  TimeTablePanel,
 };

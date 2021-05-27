@@ -22,14 +22,14 @@
 }
 
 .course-summary svg {
-    color: #3b3b3bbf;
+    color: #494949;
 }
 
 .course-summary-label {
     text-transform: capitalize;
     margin: 0 10px;
     font-size: 14px;
-    color: #3b3b3bbf;
+    color: #494949;
 }
 
 .grade-indicator.course-summary-grade-indicator {

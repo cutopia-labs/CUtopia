@@ -1,4 +1,6 @@
-import { makeObservable, observable, action, reaction, remove } from 'mobx';
+import {
+  makeObservable, observable, action, reaction, remove,
+} from 'mobx';
 
 import errorStore, { ERROR_CODES } from './ErrorStore';
 import { storeData, getStoreData, removeStoreItem } from '../helpers/store';
@@ -13,13 +15,22 @@ class UserStore {
 
   // User Saved Data
   @observable favoriteCourses = []
+
   @observable timetable
 
   // CUtopia
   @observable userId
+
   @observable cutopiaUsername
+
   @observable cutopiaPassword
+
   @observable token
+
+  // Planner
+  @observable plannerTerm;
+
+  @observable plannerCourses = []
 
   constructor(notificationStore) {
     makeObservable(this);
@@ -40,6 +51,7 @@ class UserStore {
     this.loginState = LOGIN_STATES.LOGGED_OUT;
     // User Saved Data
     await this.applyTimeTable();
+    await this.applyPlannerCourses();
     await this.applyFavoriteCourses();
     // CUtopia
     await this.applyCutopiaAccount();
@@ -69,7 +81,7 @@ class UserStore {
 
   @action async deleteInTimeTable(courseId) {
     const index = this.timetable.findIndex(course => course.courseId === courseId);
-    if (index !== -1){
+    if (index !== -1) {
       const UNDO_COPY = [...this.timetable];
       this.timetable.splice(index, 1);
       await this.notificationStore.setSnackBar('1 item deleted', 'UNDO', () => {
@@ -104,14 +116,20 @@ class UserStore {
   }
 
   // CUtopia
-  @action async saveCutopiaAccount({ username, sid, password, token }) {
+  @action async saveCutopiaAccount({
+    username, sid, password, token,
+  }) {
     username && await storeData('cutopiaUsername', username);
     sid && await storeData('userId', sid);
     password && await storeData('cutopiaPassword', password);
-    await this.setCutopiaAccount({ username, sid, password, token });
+    await this.setCutopiaAccount({
+      username, sid, password, token,
+    });
   }
 
-  @action async setCutopiaAccount({ username, sid, password, token }) {
+  @action async setCutopiaAccount({
+    username, sid, password, token,
+  }) {
     this.cutopiaUsername = username || '';
     this.userId = sid || '';
     this.cutopiaPassword = password || '';
@@ -133,7 +151,7 @@ class UserStore {
 
   @action async saveToken(token) {
     const savedToken = {
-      token: token,
+      token,
       expire: new Date().setDate(new Date().getDate() + TOKEN_EXPIRE_DAYS),
     };
     await storeData('token', JSON.stringify(savedToken));
@@ -151,7 +169,7 @@ class UserStore {
       ['cutopiaUsername', 'cutopiaPassword', 'userId', 'token']
         .map(async key => {
           await removeStoreItem(key);
-        })
+        }),
     );
   }
 
@@ -168,11 +186,81 @@ class UserStore {
     this.init();
     // Clear user related asyncstorage
     await Promise.all(
-      ['cutopiaUsername', 'cutopiaPassword', 'userId', 'token', 'favoriteCourses', 'timetable']
+      ['cutopiaUsername', 'cutopiaPassword', 'userId', 'token', 'favoriteCourses', 'timetable', 'plannerCourses']
         .map(async key => {
           await removeStoreItem(key);
-        })
+        }),
     );
+  }
+
+  /* Planner */
+
+  @action async applyPlannerCourses() {
+    const courses = JSON.parse(await getStoreData('plannerCourses'));
+    console.table(courses);
+    this.setPlannerCourses(courses || []);
+    const term = await getStoreData('plannerTerm');
+    this.updatePlannerTerm(term || null);
+  }
+
+  @action async savePlannerCourses(courses) {
+    this.setPlannerCourses(courses);
+    await storeData('plannerCourses', JSON.stringify(courses));
+  }
+
+  @action async clearPlannerCourses() {
+    const UNDO_COPY = [...this.plannerCourses];
+    this.setPlannerCourses([]);
+    await this.notificationStore.setSnackBar('Cleared planner!', 'UNDO', () => {
+      this.setPlannerCourses(UNDO_COPY);
+    });
+    await storeData('plannerCourses', JSON.stringify(this.plannerCourses));
+  }
+
+  @action async addToPlannerCourses(course) {
+    const index = this.plannerCourses.findIndex(item => item.courseId === course.courseId);
+    if (index !== -1) {
+      this.plannerCourses[index] = { // not update sections directly to trigger update
+        ...this.plannerCourses[index],
+        sections: {
+          ...this.plannerCourses[index].sections,
+          ...course.sections,
+        },
+      };
+      await storeData('plannerCourses', JSON.stringify(this.plannerCourses));
+    }
+    else {
+      this.savePlannerCourses([...this.plannerCourses, course]);
+    }
+  }
+
+  @action async deleteInPlannerCourses(courseId) {
+    const index = this.plannerCourses.findIndex(course => course.courseId === courseId);
+    if (index !== -1) {
+      const UNDO_COPY = [...this.plannerCourses];
+      this.plannerCourses.splice(index, 1);
+      await this.notificationStore.setSnackBar('1 item deleted', 'UNDO', () => {
+        this.setPlannerCourses(UNDO_COPY);
+      });
+      // Update AsyncStorage after undo valid period passed.
+      await storeData('plannerCourses', JSON.stringify(this.plannerCourses));
+    }
+    else {
+      this.notificationStore.setSnackBar('Error... OuO');
+    }
+  }
+
+  @action.bound setPlannerCourses(courses) {
+    this.plannerCourses = courses;
+  }
+
+  @action async setPlannerTerm(term) {
+    await storeData('plannerTerm', term);
+    this.updatePlannerTerm(term);
+  }
+
+  @action.bound updatePlannerTerm(term) {
+    this.plannerTerm = term;
   }
 }
 

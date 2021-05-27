@@ -7,6 +7,7 @@ const THEME = createMuiTheme({
   palette: {
     primary: {
       main: '#673AB7',
+      secondary: 'rgba(249, 169, 83, 1)',
     },
   },
 });
@@ -15,6 +16,7 @@ const DARK_THEME = {
   palette: {
     primary: {
       main: '#673AB7',
+      secondary: 'rgba(249, 169, 83, 1)',
     },
   },
 };

@@ -1,0 +1,43 @@
+.timetable-container {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    --left-bar-width: 52px;
+    margin: 16px 0;
+}
+
+.weekday-row {
+    display: flex;
+    margin-left: var(--left-bar-width);
+    margin-bottom: 10px;
+}
+
+.weekday-row > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+}
+
+.timetable-canvas {
+    display: flex;
+    flex: 1;
+}
+
+.timetable-ticks {
+    display: flex;
+    flex-direction: column;
+    width: var(--left-bar-width);
+    font-size: 12px;
+}
+
+.timetable-ticks > div {
+    flex: 1;
+    margin-top: -7px;
+}
+
+.timetable-courses-container {
+    flex: 1;
+    position: relative;
+    display: flex;
+}

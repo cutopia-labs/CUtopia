@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite';
 
 import './PlannerPage.css';
 import { CoursePanel, SearchPanel } from '../components/forum';
-import { PlannerCart } from '../components/planner';
+import { TimeTablePanel } from '../components/planner';
 import { UserContext } from '../store';
 import { GET_USER } from '../constants/queries';
 
@@ -13,8 +13,7 @@ const PlannerPage = () => {
   return (
     <div className="forum-page row">
       <SearchPanel />
-      <PlannerCart />
-      <CoursePanel />
+      <TimeTablePanel />
     </div>
   );
 };

@@ -11,7 +11,7 @@ body {
     --statusBar: rgba(21,101,192,1);
     --bottomBar: rgba(255,255,255,1);
     --caption: rgba(12,12,12, 0.5);
-    --headerHeight: 50px;
+    --headerHeight: 40px;
     --marginHorizontal: 40px;
     --border-radius: 8px;
     --background-on-white: #dedede26;

@@ -1,7 +1,10 @@
 .snackbar-container {
+    --SNACK-BAR-DURATION-IN: 0.5s;
+    --SNACK-BAR-DURATION-OUT: 2.5s;
     position: absolute;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 0 20px;
     height: 54px;
     z-index: 5;
@@ -15,8 +18,13 @@
     background-color: var(--snackbar);
     color: white;
     transition: all 0.2s ease-in-out;
-    -webkit-animation: fadein 0.5s, fadeout 0.5s 1.5s;
-    animation: fadein 0.5s, fadeout 0.5s 1.5s;
+    -webkit-animation: fadein var(--SNACK-BAR-DURATION-IN), fadeout var(--SNACK-BAR-DURATION-IN) var(--SNACK-BAR-DURATION-OUT);
+    animation: fadein var(--SNACK-BAR-DURATION-IN), fadeout var(--SNACK-BAR-DURATION-IN) var(--SNACK-BAR-DURATION-OUT);
+}
+
+.snackbar-container > .btn-container {
+    display: flex;
+    justify-content: center;
 }
 
 @-webkit-keyframes fadein {

@@ -223,7 +223,7 @@ const COURSE_SECTIONS_QUERY = gql`
         }
       }
     }
-  }`
+  }`;
 
 export {
   COURSE_INFO_QUERY,

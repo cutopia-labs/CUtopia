@@ -1,10 +1,17 @@
 .course-sections-card {
     display: flex;
+    flex-direction: column;
     margin-top: 20px;
     width: 100%;
 }
 
+.course-sections-card > :last-child {
+    border-bottom: 1px solid var(--border);
+}
+
 .course-section-wrapper {
+    display: flex;
+    flex-direction: column;
     width: 100%;
 }
 
@@ -17,7 +24,8 @@
 }
 
 .course-section-card {
-    margin: 16px 0;
+    padding: 12px 0;
+    border-top: 1px solid var(--border);
 }
 
 .section-header {
@@ -34,16 +42,18 @@
 .section-detail {
     display: flex;
     flex-wrap: wrap;
-    padding-bottom: 6px;
     justify-content: space-between;
 }
 
 .section-detail-item {
+    min-width: 50%;
     display: flex;
     align-items: center;
     margin-bottom: 10px;
+    font-size: 12px;
 }
 
-.section-detail-item > :first-child {
+.section-detail-item svg {
     margin-right: 6px;
+    color: rgba(0, 0, 0, 0.4);
 }

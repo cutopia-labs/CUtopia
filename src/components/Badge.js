@@ -5,14 +5,14 @@ import updateOpacity from '../helpers/updateOpacity';
 import colors from '../constants/colors';
 
 const Badge = ({
-  index, text, value, isGrade,
+  index, text, value, isGrade, color,
 }) => {
-  const color = isGrade ? colors.gradeColors[value] : colors.randomColors[index >= colors.randomColors.length ? (index % colors.randomColors.length) : index];
+  const badgeColor = isGrade ? colors.gradeColors[value] : colors.randomColors[index >= colors.randomColors.length ? (index % colors.randomColors.length) : index];
   return (
     <div
       className="badge"
       style={{
-        backgroundColor: updateOpacity(color, isGrade ? 1 : 0.7),
+        backgroundColor: color || updateOpacity(badgeColor, isGrade ? 1 : 0.7),
       }}
     >
       <p className="badge-text">{text}</p>

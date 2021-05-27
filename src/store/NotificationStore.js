@@ -1,5 +1,7 @@
 import { makeObservable, observable, action } from 'mobx';
 
+const SNACKBAR_TIMEOUT = 3000;
+
 class NotificationStore {
   @observable snackbar;
 
@@ -20,7 +22,7 @@ class NotificationStore {
   @action async setSnackBar(msg, label, onClick) {
     const id = msg ? +new Date() : undefined;
     this.updateSnackBar(msg, label, onClick, id);
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise(resolve => setTimeout(resolve, SNACKBAR_TIMEOUT));
     this.needClear(id) && this.updateSnackBar(); // only clear if currect snackbar is itself
   }
 
