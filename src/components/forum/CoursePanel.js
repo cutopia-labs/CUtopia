@@ -18,6 +18,7 @@ import { COURSE_INFO_QUERY, GET_REVIEW, REVIEWS_QUERY } from '../../constants/qu
 import Loading from '../Loading';
 import ReviewCard from './ReviewCard';
 import { NotificationContext } from '../../store';
+import copyToClipboard from '../../helpers/copyToClipboard';
 
 export const COURSE_PANEL_MODES = Object.freeze({
   DEFAULT: 0, // i.e. card to show recent reviews & rankings
@@ -99,7 +100,10 @@ export default function CoursePanel() {
     {
       icon: <Share />,
       name: 'Share',
-      action: () => notification.setSnackBar('Copied share link to clipboard!'),
+      action: () => {
+        copyToClipboard(window.location.href);
+        notification.setSnackBar('Copied share link to clipboard!');
+      },
     },
   ]);
 
@@ -166,7 +170,7 @@ export default function CoursePanel() {
               {
                 reviewsLoading
                   ? <Loading />
-                  : mode === COURSE_PANEL_MODES.FETCH_REVIEWS && reviews && Boolean(reviews.reviews.length)
+                  : reviews && Boolean(reviews.reviews.length)
                   && reviews.reviews.map(item => (
                     <ReviewCard key={item.createdDate} review={item} />
                   ))

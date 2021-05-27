@@ -210,9 +210,9 @@ class UserStore {
 
   @action async clearPlannerCourses() {
     const UNDO_COPY = [...this.plannerCourses];
-    this.setPlannerCourses([]);
+    this.plannerCourses = [];
     await this.notificationStore.setSnackBar('Cleared planner!', 'UNDO', () => {
-      this.setPlannerCourses(UNDO_COPY);
+      this.plannerCourses = UNDO_COPY;
     });
     await storeData('plannerCourses', JSON.stringify(this.plannerCourses));
   }
@@ -241,13 +241,13 @@ class UserStore {
       const sectionCopy = { ...this.plannerCourses[index].sections };
       delete sectionCopy[sectionId];
       if (sectionCopy) {
-        this.plannerCourses.splice(index, 1);
-      }
-      else {
         this.plannerCourses[index] = {
           ...this.plannerCourses[index],
           sections: sectionCopy,
         };
+      }
+      else {
+        this.plannerCourses.splice(index, 1);
       }
       await this.notificationStore.setSnackBar('1 item deleted', 'UNDO', () => {
         this.setPlannerCourses(JSON.parse(UNDO_COPY));
@@ -277,6 +277,11 @@ class UserStore {
 
   @action.bound setPlannerCourses(courses) {
     this.plannerCourses = courses;
+  }
+
+  @action async setAndSavePlannerCourses(courses) {
+    this.setPlannerCourses(courses);
+    await storeData('plannerCourses', JSON.stringify(this.plannerCourses));
   }
 
   @action async setPlannerTerm(term) {

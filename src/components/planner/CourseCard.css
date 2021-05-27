@@ -46,10 +46,12 @@
     bottom: 2px;
     right: 2px;
 }
+
 .timetable-inner-card > .timetable-course-card-delete svg {
     width: 18px;
     height: 18px;
 }
+
 .timetable-course-card:hover .timetable-course-card-delete {
     display: inline-flex;
 }
