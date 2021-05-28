@@ -75,14 +75,13 @@
     overflow-x: hidden;
 }
 
-.search-list-item-container > .list-item-container {
+.search-panel > .list-item-container  {
     height: auto;
     justify-content: space-between;
     position: relative;
 }
 
-.search-list-item-container > .list-item-container .list-item-color-bar {
-    height: 140px;
+.search-panel > .list-item-container .list-item-color-bar {
     position: absolute;
 }
 

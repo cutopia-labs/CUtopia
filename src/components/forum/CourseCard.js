@@ -53,14 +53,6 @@ const CourseCard = ({ courseInfo, concise }) => {
       <div className="course-card-title-container">
         <div className="center-row">
           <p className="title">{courseInfo.courseId}</p>
-          {
-            !concise
-            && (
-              <IconButton aria-label="cart" components="span" size="medium">
-                <ShoppingCart />
-              </IconButton>
-            )
-          }
           <IconButton
             className={isFavorited ? 'active' : ''}
             onClick={() => setFavorited()}

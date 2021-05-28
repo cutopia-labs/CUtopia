@@ -21,11 +21,11 @@ import { NotificationContext } from '../../store';
 import copyToClipboard from '../../helpers/copyToClipboard';
 
 export const COURSE_PANEL_MODES = Object.freeze({
-  DEFAULT: 0, // i.e. card to show recent reviews & rankings
-  WITH_REVIEW: 1,
-  GET_TARGET_REVIEW: 2,
-  FETCH_REVIEWS: 3,
-  EDIT_REVIEW: 4,
+  DEFAULT: 1, // i.e. card to show recent reviews & rankings
+  WITH_REVIEW: 2,
+  GET_TARGET_REVIEW: 3,
+  FETCH_REVIEWS: 4,
+  EDIT_REVIEW: 5,
 });
 
 const targetReview = '1231231';
@@ -87,8 +87,7 @@ const CourseSummary = ({ courseInfo, sorting, setSorting }) => {
 };
 
 export default function CoursePanel() {
-  const { id } = useParams();
-  const courseId = validCourse(id) ? id.toUpperCase() : '';
+  const { id: courseId } = useParams();
   const [mode, setMode] = useState(courseId ? COURSE_PANEL_MODES.FETCH_REVIEWS : COURSE_PANEL_MODES.DEFAULT);
   const [sorting, setSorting] = useState('date');
   const history = useHistory();
@@ -109,11 +108,16 @@ export default function CoursePanel() {
 
   // Fetch course info
   const { data: courseInfo, courseInfoLoading, error } = useQuery(COURSE_INFO_QUERY, {
-    variables: {
-      subject: courseId.substring(0, 4),
-      code: courseId.substring(4),
-    },
     skip: !courseId,
+    ...(
+      courseId
+        && {
+          variables: {
+            subject: courseId.substring(0, 4),
+            code: courseId.substring(4),
+          },
+        }
+    ),
   });
 
   // Fetch all reviews
@@ -121,35 +125,32 @@ export default function CoursePanel() {
     variables: {
       courseId,
     },
-    skip: mode !== COURSE_PANEL_MODES.FETCH_REVIEWS,
   });
 
   // Fetch a review based on reviewId
   const { data: review, loading: reviewLoading } = useQuery(GET_REVIEW, {
     variables: targetReview,
-    skip: mode !== COURSE_PANEL_MODES.GET_TARGET_REVIEW,
+    skip: !courseId || mode !== COURSE_PANEL_MODES.GET_TARGET_REVIEW,
   });
 
   useEffect(() => {
-    if (courseInfo) {
-      if (!courseInfo.subjects || !courseInfo.subjects[0]) {
-        history.push('/review');
-      }
+    console.log(`Current id: ${courseId}`);
+    if (validCourse(courseId)) {
+      setMode(COURSE_PANEL_MODES.FETCH_REVIEWS);
     }
-  }, [courseInfo]);
-
-  useEffect(() => {
-    console.log(`courseId: ${courseId}`);
+    else if (mode !== COURSE_PANEL_MODES.DEFAULT) setMode(COURSE_PANEL_MODES.DEFAULT);
   }, [courseId]);
 
   useEffect(() => {
-    console.log(reviews);
-  }, [reviews]);
+    console.log(`Current mode: ${mode}`);
+  }, [mode]);
 
-  if (!validCourse(courseId)) {
+  if (mode === COURSE_PANEL_MODES.DEFAULT) {
     return (
       <div className="course-panel card">
-        Recent Reviews
+        {
+          console.log(`Called once with mode :${mode}`)
+        }
       </div>
     );
   }
@@ -170,7 +171,7 @@ export default function CoursePanel() {
               {
                 reviewsLoading
                   ? <Loading />
-                  : reviews && Boolean(reviews.reviews.length)
+                  : mode === COURSE_PANEL_MODES.FETCH_REVIEWS && reviews
                   && reviews.reviews.map(item => (
                     <ReviewCard key={item.createdDate} review={item} />
                   ))
@@ -183,7 +184,6 @@ export default function CoursePanel() {
                 onOpen={() => setFABOpen(true)}
                 open={FABOpen}
                 className="course-panel-fab"
-                small
               >
                 {FAB_GROUP_ACTIONS.map(action => (
                   <SpeedDialAction

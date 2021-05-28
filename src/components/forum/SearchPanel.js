@@ -1,14 +1,15 @@
 import React, {
   useState, useEffect, Fragment, useContext,
 } from 'react';
-import { Link, useLocation, useRouteMatch } from 'react-router-dom';
 import {
-  Paper, InputBase, ListItem, ListItemIcon, ListItemText, Divider, Chip, Collapse, List, IconButton,
+  useHistory, useRouteMatch,
+} from 'react-router-dom';
+import {
+  InputBase, ListItem, ListItemIcon, ListItemText, Divider, Chip, Collapse, IconButton,
 } from '@material-ui/core';
 import {
-  MoveToInbox, Search, ExpandLess, ExpandMore, School, StarBorder, ArrowBack, Bookmark, Class,
+  Search, ExpandLess, ExpandMore, School, ArrowBack, Bookmark, Class,
 } from '@material-ui/icons';
-import { makeStyles } from '@material-ui/core/styles';
 import { useQuery } from '@apollo/client';
 import { observer } from 'mobx-react-lite';
 
@@ -28,7 +29,7 @@ c: courseId
 t: title
 */
 
-const HISTORY_MAX_LENGTH = 10;
+const HISTORY_MAX_LENGTH = 4;
 const MAX_SEARCH_RESULT_LENGTH = 20;
 
 const LIST_ITEMS = Object.freeze([
@@ -48,6 +49,11 @@ const getCoursesFromQuery = (payload, user) => {
   switch (mode) {
     case 'Pins':
       return user.favoriteCourses.map(course => ({
+        c: course.courseId,
+        t: course.title,
+      }));
+    case 'My Courses':
+      return user.plannerCourses.map(course => ({
         c: course.courseId,
         t: course.title,
       }));
@@ -148,6 +154,7 @@ const SearchPanel = () => {
   const [searchPayload, setSearchPayload] = useState({});
   const [historyList, setHistoryList] = useState([]);
   const [currentCourse, setCurrentCourse] = useState(null);
+  const history = useHistory();
 
   const user = useContext(UserContext);
   const isPlanner = useRouteMatch({
@@ -178,16 +185,14 @@ const SearchPanel = () => {
     console.log(courseInfo);
   }, [courseInfo]);
 
-  const saveHistory = async () => {
-    if (searchPayload.text) {
-      let temp = [...historyList];
-      if (temp.length >= HISTORY_MAX_LENGTH) {
-        temp.pop();
-      }
-      temp = [searchPayload].concat(historyList.filter(history => history.text !== searchPayload.text));
-      setHistoryList(temp);
-      await storeData('search_history', JSON.stringify(temp));
+  const saveHistory = async courseId => {
+    let temp = [...historyList];
+    if (temp.length > HISTORY_MAX_LENGTH) {
+      temp.pop();
     }
+    temp = [courseId].concat(temp.filter(saved => saved !== courseId));
+    setHistoryList(temp);
+    await storeData('search_history', JSON.stringify(temp));
   };
 
   const loadHistory = async () => {
@@ -198,17 +203,10 @@ const SearchPanel = () => {
     }
   };
 
-  const deleteHistory = async label => {
-    const temp = historyList.filter(hist => hist.text !== label);
+  const deleteHistory = async courseId => {
+    const temp = historyList.filter(hist => hist !== courseId);
     setHistoryList(temp);
     await storeData('search_history', JSON.stringify(temp));
-  };
-
-  const submitSearch = async () => {
-    if (searchPayload.text) {
-      console.log(searchPayload);
-      await saveHistory(searchPayload);
-    }
   };
 
   useEffect(() => {
@@ -284,18 +282,25 @@ const SearchPanel = () => {
         && (
           searchPayload.mode && (searchPayload.mode !== 'query' || searchPayload.text) ? (
             (getCoursesFromQuery(searchPayload, user) || []).map((course, i) => (
-              <Link key={course.c} to={!isPlanner && `/review/${course.c}`} className="search-list-item-container">
-                <MyListItem
-                  ribbonIndex={i}
-                  chevron
-                  onClick={isPlanner && (() => setCurrentCourse(course.c))}
-                >
-                  <div className="search-list-item column">
-                    <span className="title">{course.c}</span>
-                    <span className="caption">{course.t}</span>
-                  </div>
-                </MyListItem>
-              </Link>
+              <MyListItem
+                key={`listitem-${course.c}`}
+                ribbonIndex={i}
+                chevron
+                onClick={() => {
+                  saveHistory(course.c);
+                  if (isPlanner) {
+                    setCurrentCourse(course.c);
+                  }
+                  else {
+                    history.push(`/review/${course.c}`);
+                  }
+                }}
+              >
+                <div className="search-list-item column">
+                  <span className="title">{course.c}</span>
+                  <span className="caption">{course.t}</span>
+                </div>
+              </MyListItem>
             ))
           ) : (
             <>
@@ -303,13 +308,16 @@ const SearchPanel = () => {
                 Boolean(historyList.length) && (
                   <div className="chips-row">
                     {
-                      historyList.map(history => (
+                      historyList.map(courseId => (
                         <Chip
-                          onClick={() => console.log('Hi')}
+                          onClick={() => {
+                            if (isPlanner) setCurrentCourse(courseId);
+                            else history.push(`/review/${courseId}`);
+                          }}
                           variant="outlined"
-                          label={history.text}
-                          onDelete={() => deleteHistory(history.text)}
-                          key={history}
+                          label={courseId}
+                          onDelete={() => deleteHistory(courseId)}
+                          key={courseId}
                         />
                       ))
                     }
