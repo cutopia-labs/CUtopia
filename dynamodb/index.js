@@ -19,6 +19,12 @@ const {
   RESET_PASSWORD_CODES,
 } = require('./databases/user-db');
 
+const {
+  getTimetable,
+  addTimetable,
+  removeTimetable,
+} = require('./databases/timetable-db');
+
 module.exports = {
   createReview,
   getReviews,
@@ -31,6 +37,9 @@ module.exports = {
   getResetPasswordCodeAndEmail,
   resetPassword,
   login,
+  getTimetable,
+  addTimetable,
+  removeTimetable,
   VOTE_ACTIONS,
   LOGIN_CODES,
   VERIFICATION_CODES,

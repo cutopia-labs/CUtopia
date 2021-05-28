@@ -8,6 +8,7 @@ const graphqlFiles = [
   "./ranking.graphql",
   "./reviews.graphql",
   "./search.graphql",
+  "./timetable.graphql",
   "./user.graphql",
 ].map(relativePath => join(__dirname, relativePath));
 

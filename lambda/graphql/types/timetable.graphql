@@ -1,0 +1,37 @@
+type Mutation {
+  addTimetable(input: AddTimetableInput!): [CourseTableEntry]
+  removeTimetable(input: RemoveTimetableInput!): [CourseTableEntry]
+}
+
+type User {
+  timetable: [CourseTableEntry]
+}
+
+type CourseTableEntry {
+  courseId: String!
+  title: String!
+  course_sections: [CourseSection]
+}
+
+input CourseTableEntryInput {
+  courseId: String!
+  title: String!
+  course_sections: [CourseSectionInput]
+}
+
+input AddTimetableInput {
+  entries: [CourseTableEntryInput]!
+}
+
+input RemoveTimetableInput {
+  indices: [Int]!
+}
+
+input CourseSectionInput {
+  name: String!
+  startTimes: [String]!
+  endTimes: [String]!
+  days: [String]!
+  locations: [String]!
+  instructors: [String]!
+}
