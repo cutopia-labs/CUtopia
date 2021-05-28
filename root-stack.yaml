@@ -11,6 +11,8 @@ Parameters:
     Type: String
   LatestReviewsTableName:
     Type: String
+  ReportTableName:
+    Type: String
   GmailAddress:
     Type: String
   GamilClientID:
@@ -36,6 +38,9 @@ Resources:
           - ${AWS::StackName}-${DBName}
           - { DBName: !Ref LatestReviewsTableName }
         ReviewsByVoteIndexName: !Ref ReviewsByVoteIndexName
+        ReportTableName: !Sub
+          - ${AWS::StackName}-${DBName}
+          - { DBName: !Ref ReportTableName }
   Lambda:
     DependsOn:
       - DynamoDB
@@ -54,9 +59,13 @@ Resources:
         LatestReviewsTableName: !Sub
           - ${AWS::StackName}-${DBName}
           - { DBName: !Ref LatestReviewsTableName }
+        ReportTableName: !Sub
+          - ${AWS::StackName}-${DBName}
+          - { DBName: !Ref ReportTableName }
         UserDBArn: !GetAtt DynamoDB.Outputs.UserDBArn
         ReviewsDBArn: !GetAtt DynamoDB.Outputs.ReviewsDBArn
         LatestReviewsDBArn: !GetAtt DynamoDB.Outputs.LatestReviewsDBArn
+        ReportDBArn: !GetAtt DynamoDB.Outputs.ReportDBArn
         GmailAddress: !Ref GmailAddress
         GamilClientID: !Ref GamilClientID
         GmailClientSecret: !Ref GmailClientSecret

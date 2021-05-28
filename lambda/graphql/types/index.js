@@ -6,6 +6,7 @@ const graphqlFiles = [
   "./courses.graphql",
   "./directives.graphql",
   "./ranking.graphql",
+  "./report.graphql",
   "./reviews.graphql",
   "./search.graphql",
   "./timetable.graphql",

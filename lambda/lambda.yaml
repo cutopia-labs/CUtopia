@@ -11,9 +11,13 @@ Parameters:
     Type: String
   LatestReviewsTableName:
     Type: String
+  ReportTableName:
+    Type: String
   UserDBArn:
     Type: String
   ReviewsDBArn:
+    Type: String
+  ReportDBArn:
     Type: String
   LatestReviewsDBArn:
     Type: String
@@ -55,6 +59,7 @@ Resources:
           LatestReviewsTableName: !Ref LatestReviewsTableName
           UserTableName: !Ref UserTableName
           UserEmailMappingIndexName: !Ref UserEmailMappingIndexName
+          ReportTableName: !Ref ReportTableName
           UserSNSTopic: !Ref UserSNSTopic
       Role: !GetAtt GraphQLRole.Arn
       Runtime: nodejs12.x
@@ -94,6 +99,7 @@ Resources:
                   - !Ref LatestReviewsDBArn
                   - !Ref UserDBArn
                   - !Sub ${UserDBArn}/index/${UserEmailMappingIndexName}
+                  - !Ref ReportDBArn
               - Action:
                   - SNS:Publish
                 Effect: Allow

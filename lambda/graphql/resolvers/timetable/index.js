@@ -29,7 +29,7 @@ exports.CourseTableEntry = {
         idsContext: {
           section: name,
         },
-      }
+      };
     });
   },
 };

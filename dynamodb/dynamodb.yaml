@@ -9,15 +9,17 @@ Parameters:
     Type: String
   LatestReviewsTableName:
     Type: String
+  ReportTableName:
+    Type: String
   ReadCapacityUnits:
     Description: Provisioned read throughput
     Type: Number
-    Default: "5"
+    Default: "2"
     MaxValue: "25"
   WriteCapacityUnits:
     Description: Provisioned write throughput
     Type: Number
-    Default: "10"
+    Default: "2"
     MaxValue: "25"
 Resources:
   UserDB:
@@ -90,6 +92,19 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: !Ref ReadCapacityUnits
         WriteCapacityUnits: !Ref WriteCapacityUnits
+  ReportDB:
+    Type: "AWS::DynamoDB::Table"
+    Properties:
+      TableName: !Ref ReportTableName
+      AttributeDefinitions:
+        - AttributeName: "id"
+          AttributeType: S
+      KeySchema:
+        - AttributeName: "id"
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: !Ref ReadCapacityUnits
+        WriteCapacityUnits: !Ref WriteCapacityUnits
 Outputs:
   UserDBArn:
     Value: !GetAtt UserDB.Arn
@@ -97,3 +112,5 @@ Outputs:
     Value: !GetAtt ReviewsDB.Arn
   LatestReviewsDBArn:
     Value: !GetAtt LatestReviewsDB.Arn
+  ReportDBArn:
+    Value: !GetAtt ReportDB.Arn

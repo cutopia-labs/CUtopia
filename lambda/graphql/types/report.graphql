@@ -1,0 +1,8 @@
+type Mutation {
+  report(input: ReportInput!): String @auth
+}
+
+input ReportInput {
+  type: String! # error, feedback
+  description: String!
+}
