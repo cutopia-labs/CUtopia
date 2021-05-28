@@ -4,7 +4,7 @@ import './ListItem.css';
 import colors from '../constants/colors';
 
 const MyListItem = ({
-  label, onClick, chevron, children, noBorder, ribbonIndex,
+  label, onClick, chevron, children, noBorder, ribbonIndex, left, right,
 }) => (
   <div
     className={`list-item-container${!noBorder ? ' border' : ''} row`}
@@ -18,7 +18,9 @@ const MyListItem = ({
       label
         && <span className="list-item-label">{label}</span>
     }
+    {left}
     {children}
+    {right}
     {
       chevron
         && <span className="list-item-label chevron">{'\u203A'}</span>

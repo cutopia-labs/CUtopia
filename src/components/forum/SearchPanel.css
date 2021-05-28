@@ -41,13 +41,20 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    max-height: 104px;
-    overflow: hidden;
+    padding: 0 10px 10px 10px;
 }
 
 .chips-row > div {
-    margin: 10px 10px;
-    max-width: 120px;
+    margin-left: 6px;
+}
+
+.chips-row > div:first-child {
+    margin-left: 0;
+}
+
+.chips-row > div > .MuiChip-label {
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .schools-container {

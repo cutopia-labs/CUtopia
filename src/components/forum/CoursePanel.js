@@ -19,6 +19,8 @@ import Loading from '../Loading';
 import ReviewCard from './ReviewCard';
 import { NotificationContext } from '../../store';
 import copyToClipboard from '../../helpers/copyToClipboard';
+import { observer } from 'mobx-react-lite';
+import HomePanel from './HomePanel';
 
 export const COURSE_PANEL_MODES = Object.freeze({
   DEFAULT: 1, // i.e. card to show recent reviews & rankings
@@ -86,7 +88,7 @@ const CourseSummary = ({ courseInfo, sorting, setSorting }) => {
   );
 };
 
-export default function CoursePanel() {
+const CoursePanel = () => {
   const { id: courseId } = useParams();
   const [mode, setMode] = useState(courseId ? COURSE_PANEL_MODES.FETCH_REVIEWS : COURSE_PANEL_MODES.DEFAULT);
   const [sorting, setSorting] = useState('date');
@@ -147,11 +149,7 @@ export default function CoursePanel() {
 
   if (mode === COURSE_PANEL_MODES.DEFAULT) {
     return (
-      <div className="course-panel card">
-        {
-          console.log(`Called once with mode :${mode}`)
-        }
-      </div>
+      <HomePanel />
     );
   }
 
@@ -200,4 +198,6 @@ export default function CoursePanel() {
       }
     </div>
   );
-}
+};
+
+export default observer(CoursePanel);

@@ -29,7 +29,7 @@ c: courseId
 t: title
 */
 
-const HISTORY_MAX_LENGTH = 4;
+const HISTORY_MAX_LENGTH = 3;
 const MAX_SEARCH_RESULT_LENGTH = 20;
 
 const LIST_ITEMS = Object.freeze([
@@ -45,7 +45,7 @@ const LIST_ITEMS = Object.freeze([
 
 const getCoursesFromQuery = (payload, user) => {
   // load local courselist
-  const { mode } = payload;
+  const { mode, text } = payload;
   switch (mode) {
     case 'Pins':
       return user.favoriteCourses.map(course => ({
@@ -58,9 +58,9 @@ const getCoursesFromQuery = (payload, user) => {
         t: course.title,
       }));
     case 'subject':
-      return COURSES[payload.text];
+      return COURSES[text];
     case 'query':
-      const condensed = payload.text.replace(/[^a-zA-Z0-9]/g, '');
+      const condensed = text.replace(/[^a-zA-Z0-9]/g, '');
       try { // valid search contains suject and code
         const subject = condensed.match(/[a-zA-Z]{4}/)[0].toUpperCase();
         const raw_code = condensed.match(/\d{4}$/) || condensed.match(/\d+/g);
@@ -88,7 +88,7 @@ const getCoursesFromQuery = (payload, user) => {
         const results = [];
         for (const [, courses] of Object.entries(COURSES)) {
           for (let i = 0; (i < courses.length && results.length < MAX_SEARCH_RESULT_LENGTH); i++) {
-            if (courses[i].t.toLowerCase().includes(payload.text.toLowerCase())) {
+            if (courses[i].t.toLowerCase().includes(text.toLowerCase())) {
               results.push(courses[i]);
             }
           }
@@ -187,7 +187,7 @@ const SearchPanel = () => {
 
   const saveHistory = async courseId => {
     let temp = [...historyList];
-    if (temp.length > HISTORY_MAX_LENGTH) {
+    if (temp.length >= HISTORY_MAX_LENGTH) {
       temp.pop();
     }
     temp = [courseId].concat(temp.filter(saved => saved !== courseId));
