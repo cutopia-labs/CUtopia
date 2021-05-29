@@ -1,12 +1,8 @@
-import React, { useContext, useEffect } from 'react';
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Paper } from '@material-ui/core';
-import { observer } from 'mobx-react-lite';
 
 import './Header.css';
 import Logo from './Logo';
-import { UserContext } from '../store';
-import { MODES, LOGIN_STATES } from '../constants/states';
 
 const SECTIONS = [
   {
@@ -25,7 +21,6 @@ const SECTIONS = [
 
 const Header = () => {
   const location = useLocation();
-  const user = useContext(UserContext);
   return (
     <header className="header-container row">
       <Link className="header-logo" to="/">
@@ -48,4 +43,4 @@ const Header = () => {
   );
 };
 
-export default observer(Header);
+export default Header;

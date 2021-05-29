@@ -15,6 +15,10 @@
     margin-bottom: 0;
 }
 
+.login-panel .title {
+    margin-bottom: 20px;
+}
+
 .login-panel .caption {
     opacity: 0.6;
 }
@@ -22,6 +26,10 @@
 .login-panel .go-back-icon {
     color: var(--text);
     margin: 0 10px 0 -16px;
+}
+
+.qrcode-row {
+    justify-content: space-between;
 }
 
 .check-box-row {

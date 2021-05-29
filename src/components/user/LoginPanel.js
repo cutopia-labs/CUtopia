@@ -1,13 +1,16 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useRef } from 'react';
 import {
   Button, IconButton, Checkbox, CircularProgress,
 } from '@material-ui/core';
 import {
   ArrowBack,
 } from '@material-ui/icons';
+import QRCode from 'qrcode.react';
 
 import { observer } from 'mobx-react-lite';
 import { useMutation } from '@apollo/client';
+import useWebSocket, { ReadyState } from 'react-use-websocket';
+import { nanoid } from 'nanoid';
 
 import './LoginPanel.css';
 import TextField from '../TextField';
@@ -77,6 +80,54 @@ const LoginPanel = ({ route, navigation }) => {
   const user = useContext(UserContext);
   const notification = useContext(NotificationContext);
 
+  const {
+    sendMessage,
+    lastMessage,
+    readyState,
+  } = useWebSocket("wss://1rys6xiqvk.execute-api.ap-northeast-1.amazonaws.com/Prod");
+  const [QRCodeData, setQRCodeData] = useState();
+  const accessPwd = useRef();
+
+  useEffect(() => {
+    if (readyState === ReadyState.OPEN && !QRCodeData) {
+      sendMessage(JSON.stringify({
+        "action": "sendmessage",
+        "type": "getSelfId",
+      }));
+    }
+  }, [readyState, QRCodeData]);
+
+  useEffect(() => {
+    if (!lastMessage) {
+      return;
+    }
+
+    try {
+      const data = JSON.parse(lastMessage.data);
+      if (data.connectionId) {
+        const pwd = nanoid(10);
+        accessPwd.current = pwd;
+        setQRCodeData(JSON.stringify({
+          "valid": "CUtopia",
+          "id": data.connectionId,
+          "pwd": pwd,
+        }));
+      }
+
+      if (data.pwd !== accessPwd.current) {
+        console.warn("Unauthorized");
+        return;
+      }
+
+      if (data.type === "token") {
+        user.saveCutopiaAccount(data.username, data.userId, null, data.token);
+      }
+    }
+    catch (err) {
+      console.warn(err);
+    }
+  }, [lastMessage]);
+
   const [createUser, { loading: creatingUser, error: createError }] = useMutation(SEND_VERIFICATION);
   const [verifyUser, { loading: verifying, error: verifyError }] = useMutation(VERIFY_USER);
   const [loginCUtopia, { loading: loggingInCUtopia }] = useMutation(LOGIN_CUTOPIA);
@@ -94,12 +145,12 @@ const LoginPanel = ({ route, navigation }) => {
     if (data?.login.code === LOGIN_CODES.SUCCEEDED) {
       notification.setSnackBar('Success !');
       console.log(`Login success with token ${data.login.token}`);
-      await user.saveCutopiaAccount({
+      await user.saveCutopiaAccount(
         username,
-        sid: userId,
-        password: rememberMe && password,
-        token: data.login.token,
-      });
+        userId,
+        rememberMe && password,
+        data.login.token,
+      );
     }
     else if (data?.login.code === LOGIN_CODES.FAILED) {
       alert('Wrong Password!');
@@ -219,21 +270,28 @@ const LoginPanel = ({ route, navigation }) => {
 
   return (
     <div className="login-panel">
-      <div className="center-row">
-        {
-          mode !== MODES.CUTOPIA_LOGIN && mode !== MODES.CUTOPIA_SIGNUP
-          && (
-            <IconButton
-              className="go-back-icon"
-              onClick={goBack}
-            >
-              <ArrowBack />
-            </IconButton>
-          )
-        }
-        <h2>{MODE_ITEMS[mode].title}</h2>
+      <div className="center-row qrcode-row">
+        <div>
+          {
+            mode !== MODES.CUTOPIA_LOGIN && mode !== MODES.CUTOPIA_SIGNUP
+            && (
+              <IconButton
+                className="go-back-icon"
+                onClick={goBack}
+              >
+                <ArrowBack />
+              </IconButton>
+            )
+          }
+          <h2 className="title">{MODE_ITEMS[mode].title}</h2>
+          <span className="caption">{MODE_ITEMS[mode].caption}</span>
+        </div>
+        {mode === MODES.CUTOPIA_LOGIN && (
+          (readyState === ReadyState.OPEN && QRCodeData) ?
+            <QRCode value={QRCodeData} size={64} /> :
+            <CircularProgress />
+        )}
       </div>
-      <span className="caption">{MODE_ITEMS[mode].caption}</span>
       {
         MODE_ITEMS[mode].userId
         && (

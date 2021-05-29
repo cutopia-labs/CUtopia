@@ -8276,7 +8276,7 @@ nan@^2.12.1:
 
 nanoid@^3.1.23:
   version "3.1.23"
-  resolved "https://registry.npmjs.org/nanoid/-/nanoid-3.1.23.tgz"
+  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.1.23.tgz#f744086ce7c2bc47ee0a8472574d5c78e4183a81"
   integrity sha512-FiB0kzdP0FFVGDKlRLEQ1BgDzU87dy5NnzjeW9YZNt+/c3+q82EQDUwniSAUxp/F0gFNI1ZhKU1FqYsMuqZVnw==
 
 nanomatch@^1.2.9:
@@ -9846,7 +9846,7 @@ prompts@^2.0.1:
     kleur "^3.0.3"
     sisteransi "^1.0.4"
 
-prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@^15.6.0, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.npmjs.org/prop-types/-/prop-types-15.7.2.tgz"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -9934,6 +9934,20 @@ q@^1.1.2:
   version "1.5.1"
   resolved "https://registry.npmjs.org/q/-/q-1.5.1.tgz"
   integrity sha1-fjL3W0E4EpHQRhHxvxQQmsAGUdc=
+
+qr.js@0.0.0:
+  version "0.0.0"
+  resolved "https://registry.yarnpkg.com/qr.js/-/qr.js-0.0.0.tgz#cace86386f59a0db8050fa90d9b6b0e88a1e364f"
+  integrity sha1-ys6GOG9ZoNuAUPqQ2baw6IoeNk8=
+
+qrcode.react@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/qrcode.react/-/qrcode.react-1.0.1.tgz#2834bb50e5e275ffe5af6906eff15391fe9e38a5"
+  integrity sha512-8d3Tackk8IRLXTo67Y+c1rpaiXjoz/Dd2HpcMdW//62/x8J1Nbho14Kh8x974t9prsLHN6XqVgcnRiBGFptQmg==
+  dependencies:
+    loose-envify "^1.4.0"
+    prop-types "^15.6.0"
+    qr.js "0.0.0"
 
 qs@6.7.0:
   version "6.7.0"
@@ -10202,6 +10216,11 @@ react-transition-group@^4.4.0:
     dom-helpers "^5.0.1"
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
+
+react-use-websocket@^2.7.1:
+  version "2.7.1"
+  resolved "https://registry.yarnpkg.com/react-use-websocket/-/react-use-websocket-2.7.1.tgz#51e4798aa4e328595b86e63b9d667ae2114eed1b"
+  integrity sha512-n0H429jQGaZAnn8BJljCcAgeSezXYzTLO0tb5QvdZnNjhAA8Br3A3GjU5ziNMlxant++Iv/IRQRNMKCfWnsHrQ==
 
 react@^17.0.2:
   version "17.0.2"

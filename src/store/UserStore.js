@@ -100,7 +100,6 @@ class UserStore {
   }
 
   // User Fav Courses
-
   @action async saveFavoriteCourses(courses) {
     await storeData('favoriteCourses', JSON.stringify(courses));
     this.setFavoriteCourses(courses);
@@ -116,23 +115,10 @@ class UserStore {
   }
 
   // CUtopia
-  @action async saveCutopiaAccount({
-    username, sid, password, token,
-  }) {
+  @action async saveCutopiaAccount(username, sid, password, token) {
     username && await storeData('cutopiaUsername', username);
     sid && await storeData('userId', sid);
     password && await storeData('cutopiaPassword', password);
-    await this.setCutopiaAccount({
-      username, sid, password, token,
-    });
-  }
-
-  @action async setCutopiaAccount({
-    username, sid, password, token,
-  }) {
-    this.cutopiaUsername = username || '';
-    this.userId = sid || '';
-    this.cutopiaPassword = password || '';
     await this.saveToken(token);
   }
 
