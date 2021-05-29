@@ -6,7 +6,7 @@ import { storeData, getStoreData } from '../helpers/store';
 const THEME = createMuiTheme({
   palette: {
     primary: {
-      main: '#673AB7',
+      main: '#8565bd',
       secondary: 'rgba(249, 169, 83, 1)',
     },
   },
@@ -15,7 +15,7 @@ const THEME = createMuiTheme({
 const DARK_THEME = {
   palette: {
     primary: {
-      main: '#673AB7',
+      main: '#8565bd',
       secondary: 'rgba(249, 169, 83, 1)',
     },
   },

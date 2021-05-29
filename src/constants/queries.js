@@ -164,12 +164,7 @@ const TOP_RATED_COURSES_QUERY = gql`
         course {
           title
         }
-        numReviews
         overall
-        grading
-        content
-        difficulty
-        teaching
       }
     }
   }`;

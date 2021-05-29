@@ -1,0 +1,47 @@
+.review-home-panel {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.ranking-card-header {
+    padding: 16px 16px;
+    color: var(--primary);
+}
+
+.ranking-card-header > :first-child {
+    margin-right: 10px;
+}
+
+.ranking-card-header-title {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.ranking-card {
+    flex: 1;
+    margin-left: 30px;
+    overflow: hidden;
+}
+
+.ranking-card:first-child {
+    margin-left: 0;
+}
+
+.ranking-label {
+    margin: 0 14px;
+    opacity: 0.5;
+}
+
+.ranking-card .list-item-container {
+    height: auto;
+}
+
+.ranking-card .list-item-container > :last-child {
+    margin-right: 8px;
+    margin-bottom: 0;
+}
+
+.ranking-card .search-list-item {
+    padding: 10px 0;
+}
