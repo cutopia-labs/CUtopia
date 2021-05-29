@@ -120,6 +120,7 @@ class UserStore {
     sid && await storeData('userId', sid);
     password && await storeData('cutopiaPassword', password);
     await this.saveToken(token);
+    this.notificationStore.setSnackBar('Successfully logged in !');
   }
 
   @action async applyCutopiaAccount() {

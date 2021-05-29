@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import {
-  Link, useHistory, useLocation, useParams,
+  Link, useHistory, useLocation, useParams, useRouteMatch,
 } from 'react-router-dom';
 import {
   BarChart, Sort, Edit, Share,
@@ -10,6 +10,7 @@ import { IconButton, Menu, MenuItem } from '@material-ui/core';
 import { SpeedDial, SpeedDialIcon, SpeedDialAction } from '@material-ui/lab';
 
 import './CoursePanel.css';
+import { observer } from 'mobx-react-lite';
 import GradeIndicator from '../GradeIndicator';
 import CourseCard from './CourseCard';
 import { validCourse } from '../../helpers/marcos';
@@ -19,8 +20,8 @@ import Loading from '../Loading';
 import ReviewCard from './ReviewCard';
 import { NotificationContext } from '../../store';
 import copyToClipboard from '../../helpers/copyToClipboard';
-import { observer } from 'mobx-react-lite';
 import HomePanel from './HomePanel';
+import ReviewEdit from './ReviewEdit';
 
 export const COURSE_PANEL_MODES = Object.freeze({
   DEFAULT: 1, // i.e. card to show recent reviews & rankings
@@ -96,6 +97,11 @@ const CoursePanel = () => {
   const [FABOpen, setFABOpen] = React.useState(false);
   const [FABHidden, setFABHidden] = React.useState(false);
   const notification = useContext(NotificationContext);
+  const isEdit = useRouteMatch({
+    path: '/review/:id/compose',
+    strict: true,
+    exact: true,
+  });
 
   const FAB_GROUP_ACTIONS = Object.freeze([
     {
@@ -144,12 +150,35 @@ const CoursePanel = () => {
   }, [courseId]);
 
   useEffect(() => {
+    console.log(isEdit);
+  }, [isEdit]);
+
+  useEffect(() => {
     console.log(`Current mode: ${mode}`);
   }, [mode]);
 
   if (mode === COURSE_PANEL_MODES.DEFAULT) {
     return (
       <HomePanel />
+    );
+  }
+
+  if (isEdit) {
+    return (
+      <div className="course-panel card">
+        {
+          !courseInfoLoading && courseInfo && courseInfo.subjects && courseInfo.subjects[0]
+          && (
+            <CourseCard
+              courseInfo={{
+                ...courseInfo.subjects[0].courses[0],
+                courseId,
+              }}
+            />
+          )
+        }
+        <ReviewEdit courseId={courseId} />
+      </div>
     );
   }
 
@@ -177,7 +206,16 @@ const CoursePanel = () => {
               <SpeedDial
                 ariaLabel="SpeedDial"
                 hidden={FABHidden}
-                icon={<SpeedDialIcon openIcon={<Edit />} />}
+                icon={(
+                  <SpeedDialIcon
+                    onClick={() => {
+                      if (!isEdit) {
+                        history.push(`/review/${courseId}/compose`);
+                      }
+                    }}
+                    openIcon={<Edit />}
+                  />
+                )}
                 onClose={() => setFABOpen(false)}
                 onOpen={() => setFABOpen(true)}
                 open={FABOpen}

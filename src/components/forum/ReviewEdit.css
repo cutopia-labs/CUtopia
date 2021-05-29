@@ -1,0 +1,108 @@
+.review-edit {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border);
+    --review-field-margin-top: 16px;
+    margin: var(--review-field-margin-top) 0;
+    padding: var(--review-field-margin-top) 10px;
+}
+
+.review-edit .input-container {
+    width: calc(100% - 36px);
+}
+
+.review-header-container {
+    width: 100%;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.review-header-container .title {
+    width: fit-content;
+}
+
+.review-header-container .caption {
+    margin-left: 16px;
+    font-size: var(--review-field-margin-top);
+}
+
+.form-section-title {
+    margin-top: var(--review-field-margin-top);
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 14px;
+    opacity: 0.6;
+}
+
+.term-selection-anchor {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: #00000066;
+    font-weight: 400;
+    font-size: 16px;
+}
+
+.review-section-header {
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--review-field-margin-top);
+}
+
+.review-section-title {
+    margin-top: 0;
+}
+
+.selection-group {
+    background-color: var(--background-on-white);
+    border-radius: 4px;
+    margin-right: 4px;
+    overflow: hidden;
+}
+
+.selecion-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    height: 28px;
+    width: 28px;
+    opacity: 0.5;
+}
+
+.selecion-item.selected {
+    color: white;
+    opacity: 1;
+}
+
+.review-sections-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 20px;
+    width: 100%;
+}
+
+.submit-btn-row {
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--review-field-margin-top);
+    margin-bottom: 6px;
+}
+
+.submit-btn-row > .review-section-container {
+    width: 50%;
+}
+
+.submit-btn-row .review-section-header {
+    margin-top: 0;
+}
+
+.submit-btn-row > .submit-btn {
+    width: 180px;
+    border: none;
+    height: 40px;
+}

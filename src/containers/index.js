@@ -36,6 +36,12 @@ const Navigator = () => {
           <Route exact path="/review/:id">
             <ForumPage />
           </Route>
+          <Route exact path="/review/:id">
+            <ForumPage />
+          </Route>
+          <Route exact path="/review/:id/compose">
+            <ForumPage />
+          </Route>
           <Route exact path="/planner">
             <PlannerPage />
           </Route>

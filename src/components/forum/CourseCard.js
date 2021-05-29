@@ -122,7 +122,7 @@ const CourseCard = ({ courseInfo, concise }) => {
           && ['requirements', 'outcome', 'required_readings']
             .filter(key => courseInfo[key] && courseInfo[key] !== '') // filter off empty strings
             .map(key => (
-              <div key={key}>
+              <div className="sub-heading-container" key={key}>
                 <p className="sub-heading">{key.replace('_', ' ')}</p>
                 <p className="caption">{courseInfo[key]}</p>
               </div>

@@ -14,3 +14,8 @@
     font-weight: 500;
     margin-left: 3px;
 }
+
+textarea.input-container {
+    padding: 16px;
+    font-family: Arial;
+}

@@ -44,6 +44,7 @@ const AppWrapper = observer(() => {
     return new ApolloClient({
       link: authLink.concat(httpLink),
       cache: new InMemoryCache(),
+      onError: (e) => { console.log(e) },
     });
   }, [user.token]);
 

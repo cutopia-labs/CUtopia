@@ -1,4 +1,6 @@
-import React, { useState, useContext, useEffect, useRef } from 'react';
+import React, {
+  useState, useContext, useEffect, useRef,
+} from 'react';
 import {
   Button, IconButton, Checkbox, CircularProgress,
 } from '@material-ui/core';
@@ -84,15 +86,15 @@ const LoginPanel = ({ route, navigation }) => {
     sendMessage,
     lastMessage,
     readyState,
-  } = useWebSocket("wss://1rys6xiqvk.execute-api.ap-northeast-1.amazonaws.com/Prod");
+  } = useWebSocket('wss://1rys6xiqvk.execute-api.ap-northeast-1.amazonaws.com/Prod');
   const [QRCodeData, setQRCodeData] = useState();
   const accessPwd = useRef();
 
   useEffect(() => {
     if (readyState === ReadyState.OPEN && !QRCodeData) {
       sendMessage(JSON.stringify({
-        "action": "sendmessage",
-        "type": "getSelfId",
+        action: 'sendmessage',
+        type: 'getSelfId',
       }));
     }
   }, [readyState, QRCodeData]);
@@ -108,18 +110,18 @@ const LoginPanel = ({ route, navigation }) => {
         const pwd = nanoid(10);
         accessPwd.current = pwd;
         setQRCodeData(JSON.stringify({
-          "valid": "CUtopia",
-          "id": data.connectionId,
-          "pwd": pwd,
+          valid: 'CUtopia',
+          id: data.connectionId,
+          pwd,
         }));
       }
 
       if (data.pwd !== accessPwd.current) {
-        console.warn("Unauthorized");
+        console.warn('Unauthorized');
         return;
       }
 
-      if (data.type === "token") {
+      if (data.type === 'token') {
         user.saveCutopiaAccount(data.username, data.userId, null, data.token);
       }
     }
@@ -143,7 +145,6 @@ const LoginPanel = ({ route, navigation }) => {
     };
     const { data } = await loginCUtopia(loginPayload);
     if (data?.login.code === LOGIN_CODES.SUCCEEDED) {
-      notification.setSnackBar('Success !');
       console.log(`Login success with token ${data.login.token}`);
       await user.saveCutopiaAccount(
         username,
@@ -287,9 +288,9 @@ const LoginPanel = ({ route, navigation }) => {
           <span className="caption">{MODE_ITEMS[mode].caption}</span>
         </div>
         {mode === MODES.CUTOPIA_LOGIN && (
-          (readyState === ReadyState.OPEN && QRCodeData) ?
-            <QRCode value={QRCodeData} size={64} /> :
-            <CircularProgress />
+          (readyState === ReadyState.OPEN && QRCodeData)
+            ? <QRCode value={QRCodeData} size={64} />
+            : <CircularProgress />
         )}
       </div>
       {
