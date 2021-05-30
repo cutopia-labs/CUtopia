@@ -7,6 +7,7 @@ import {
 import { setContext } from '@apollo/client/link/context';
 import { observer } from 'mobx-react-lite';
 import { createMuiTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
+import { useMediaQuery } from '@material-ui/core';
 
 import StoreProvider, { UserContext, PreferenceContext } from './store';
 
@@ -28,6 +29,16 @@ const AppWrapper = observer(() => {
     init();
   }, []);
 
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  const theme = useMemo(
+    () => createMuiTheme({
+      palette: {
+        type: prefersDarkMode ? 'dark' : 'light',
+      },
+    }),
+    [prefersDarkMode],
+  );
+
   const client = useMemo(() => {
     const httpLink = createHttpLink({
       uri: 'https://uqtx8qgnz5.execute-api.ap-northeast-1.amazonaws.com/Stage/graphql',
@@ -44,7 +55,9 @@ const AppWrapper = observer(() => {
     return new ApolloClient({
       link: authLink.concat(httpLink),
       cache: new InMemoryCache(),
-      onError: (e) => { console.log(e) },
+      onError: e => {
+        console.log(e);
+      },
     });
   }, [user.token]);
 
@@ -58,7 +71,7 @@ const AppWrapper = observer(() => {
 
   return (
     <ApolloProvider client={client}>
-      <ThemeProvider theme={preference.theme}>
+      <ThemeProvider theme={theme}>
         <Navigator />
       </ThemeProvider>
     </ApolloProvider>

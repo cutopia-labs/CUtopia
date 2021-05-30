@@ -10,7 +10,7 @@ import { useMutation } from '@apollo/client';
 import './ReviewCard.css';
 import { VOTE_ACTIONS } from '../../constants/states';
 import { VOTE_REVIEW } from '../../constants/mutations';
-import { getDateDifference, getMMMDDYY } from '../../helpers/getTime';
+import { getMMMDDYY } from '../../helpers/getTime';
 import GradeIndicator from '../GradeIndicator';
 import GradeRow from './GradeRow';
 import LikeButtonsRow from './LikeButtonRow';

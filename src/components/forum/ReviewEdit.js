@@ -3,9 +3,6 @@ import React, {
 } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  FaChalkboardTeacher, FaRegCalendarAlt,
-} from 'react-icons/fa';
-import {
   Menu, MenuItem, List, ListItm, ButtonGroup, Button,
 } from '@material-ui/core';
 import { useMutation, useQuery } from '@apollo/client';
@@ -15,7 +12,6 @@ import { useHistory, useParams } from 'react-router';
 import { NotificationContext, UserContext } from '../../store';
 import { GET_USER, GET_REVIEW } from '../../constants/queries';
 import { ADD_REVIEW } from '../../constants/mutations';
-import updateOpacity from '../../helpers/updateOpacity';
 import { GRADES, RATING_FIELDS, LETTER_TO_FIVE_VALUES } from '../../constants/states';
 import colors from '../../constants/colors';
 import TextField from '../TextField';

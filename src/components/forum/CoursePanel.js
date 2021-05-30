@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import {
-  Link, useHistory, useLocation, useParams, useRouteMatch,
+  useHistory, useParams, useRouteMatch,
 } from 'react-router-dom';
 import {
-  BarChart, Sort, Edit, Share,
+  Sort, Edit, Share,
 } from '@material-ui/icons';
 import { useQuery } from '@apollo/client';
 import { IconButton, Menu, MenuItem } from '@material-ui/core';
@@ -11,10 +11,8 @@ import { SpeedDial, SpeedDialIcon, SpeedDialAction } from '@material-ui/lab';
 
 import './CoursePanel.css';
 import { observer } from 'mobx-react-lite';
-import GradeIndicator from '../GradeIndicator';
 import CourseCard from './CourseCard';
 import { validCourse } from '../../helpers/marcos';
-import { RATING_FIELDS } from '../../constants/states';
 import { COURSE_INFO_QUERY, GET_REVIEW, REVIEWS_QUERY } from '../../constants/queries';
 import Loading from '../Loading';
 import ReviewCard from './ReviewCard';
@@ -94,8 +92,8 @@ const CoursePanel = () => {
   const [mode, setMode] = useState(courseId ? COURSE_PANEL_MODES.FETCH_REVIEWS : COURSE_PANEL_MODES.DEFAULT);
   const [sorting, setSorting] = useState('date');
   const history = useHistory();
-  const [FABOpen, setFABOpen] = React.useState(false);
-  const [FABHidden, setFABHidden] = React.useState(false);
+  const [FABOpen, setFABOpen] = useState(false);
+  const [FABHidden, setFABHidden] = useState(false);
   const notification = useContext(NotificationContext);
   const isEdit = useRouteMatch({
     path: '/review/:id/compose',
@@ -132,6 +130,8 @@ const CoursePanel = () => {
   const { data: reviews, loading: reviewsLoading, refetch } = useQuery(REVIEWS_QUERY, {
     variables: {
       courseId,
+      ascendingDate: sorting === 'date' ? true : null,
+      ascendingVote: sorting === 'upvotes' ? false : null,
     },
   });
 
@@ -157,6 +157,10 @@ const CoursePanel = () => {
     console.log(`Current mode: ${mode}`);
   }, [mode]);
 
+  useEffect(() => {
+    console.log(reviews);
+  }, [reviews]);
+
   if (mode === COURSE_PANEL_MODES.DEFAULT) {
     return (
       <HomePanel />
@@ -165,7 +169,7 @@ const CoursePanel = () => {
 
   if (isEdit) {
     return (
-      <div className="course-panel card">
+      <div className="review-edit-panel course-panel card">
         {
           !courseInfoLoading && courseInfo && courseInfo.subjects && courseInfo.subjects[0]
           && (

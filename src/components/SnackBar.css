@@ -16,7 +16,7 @@
     right: 2.5%;
     left: 2.5%;
     background-color: var(--snackbar);
-    color: white;
+    color: var(--background);
     transition: all 0.2s ease-in-out;
     -webkit-animation: fadein var(--SNACK-BAR-DURATION-IN), fadeout var(--SNACK-BAR-DURATION-IN) var(--SNACK-BAR-DURATION-OUT);
     animation: fadein var(--SNACK-BAR-DURATION-IN), fadeout var(--SNACK-BAR-DURATION-IN) var(--SNACK-BAR-DURATION-OUT);
@@ -50,6 +50,7 @@
 .btn-container {
     margin-left: auto;
 }
+
 .btn-title {
     font-size: 14px;
     text-transform: uppercase;

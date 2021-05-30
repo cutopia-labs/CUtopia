@@ -37,10 +37,11 @@ const COURSE_INFO_QUERY = gql`
 
 // Review Queries
 const REVIEWS_QUERY = gql`
-  query ($courseId: String) {
+  query ($courseId: String, $ascendingVote:Boolean, $ascendingDate: Boolean) {
     reviews(input: {
       courseId: $courseId,
-      ascendingDate: false
+      ascendingVote: $ascendingVote,
+      ascendingDate: $ascendingDate,
     }) {
       courseId
       username
@@ -76,7 +77,6 @@ const RECENT_REVIEWS_QUERY = gql`
   query {
     reviews(input: {
       getLatest: true
-      ascendingDate: false
     }) {
       courseId
       username

@@ -13,3 +13,9 @@
     margin-top: 52px !important;
     background-color: var(--surface) !important;
 }
+
+@media (prefers-color-scheme: dark) {
+    .show-more-overlay {
+        background-image: linear-gradient(to bottom,rgba(31,31,31,0.2) 0,var(--surface) 100%);
+    }
+}

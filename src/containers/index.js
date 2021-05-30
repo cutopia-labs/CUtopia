@@ -5,11 +5,11 @@ import {
   Route,
 } from 'react-router-dom';
 
+import './index.css';
 import SnackBar from '../components/SnackBar';
 import { UserContext } from '../store';
 import { MODES, LOGIN_STATES } from '../constants/states';
 import Header from '../components/Header';
-import './index.css';
 import HomePage from './HomePage';
 import ForumPage from './ForumPage';
 import LoginPage from './LoginPage';

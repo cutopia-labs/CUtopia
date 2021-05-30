@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { useMediaQuery } from '@material-ui/core';
 
 import './CourseList.css';
 import CourseCard from './CourseCard';
@@ -19,9 +20,7 @@ const TimeTableTicks = () => {
     const hourString = i > 9 ? `${i}` : `0${i}`;
     timeLineViews.push(
       <div className="time-line-box" key={`Timeline:${hourString}`}>
-        {
-          <span className="time-line-text">{`${hourString}:00`}</span>
-        }
+        <span className="time-line-text">{`${hourString}:00`}</span>
       </div>,
     );
   }
@@ -49,6 +48,7 @@ const WeekdayText = ({ withDate }) => {
 };
 
 export default function CourseList({ courses }) {
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const courseViews = [];
   let colorIndex = 0;
   let earlistGrid = NO_OF_HOURS; // Auto vertical scroll to earlistGrid
@@ -115,7 +115,7 @@ export default function CourseList({ courses }) {
                 <path
                   d="M 300 1 L 1 1 1 300"
                   fill="none"
-                  stroke="rgba(0,0,0,0.1)"
+                  stroke={prefersDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}
                 />
               </pattern>
             </defs>

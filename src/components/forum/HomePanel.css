@@ -45,3 +45,18 @@
 .ranking-card .search-list-item {
     padding: 10px 0;
 }
+
+.sort-selector {
+    margin-left: auto;
+    text-transform: capitalize;
+    font-size: 16px;
+}
+
+.sort-selector > button {
+    color: var(--primary);
+    margin-right: 6px;
+}
+
+.sort-menu {
+    text-transform: capitalize;
+}

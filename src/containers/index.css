@@ -10,13 +10,13 @@ body {
     --underlay: #DDDDDD;
     --statusBar: rgba(21,101,192,1);
     --bottomBar: rgba(255,255,255,1);
-    --caption: rgba(12,12,12, 0.5);
     --headerHeight: 40px;
     --marginHorizontal: 40px;
     --border-radius: 8px;
     --background-on-white: #dedede26;
     --grey-text: rgba(0, 0, 0, 0.5);
     --snackbar: rgba(31,31,31,1);
+    --caption: #494949;
     background-color: var(--background);
     color: var(--text);
 }
@@ -100,7 +100,8 @@ textarea[type=number] {
     background-color: transparent !important;
 }
 
-@media screen and (prefer-color-scheme: dark) {
+
+@media (prefers-color-scheme: dark) {
     body {
         --primary: rgba(249, 169, 83, 1);
         --accent: rgba(249, 169, 83, 1);
@@ -113,5 +114,6 @@ textarea[type=number] {
         --statusBar: rgba(5,5,5,1);
         --bottomBar: rgba(31,31,31,1);
         --caption: rgba(255,255,255,0.5);
+        --snackbar: rgba(255,255,255,1);
     }
 }
