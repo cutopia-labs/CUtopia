@@ -13,6 +13,7 @@ import StoreProvider, { UserContext, PreferenceContext } from './store';
 
 import { LOGIN_STATES } from './constants/states';
 import Navigator from './containers';
+import { DARK_THEME, THEME } from './constants/colors';
 
 const AppWrapper = observer(() => {
   const [ready, setReady] = useState(false);
@@ -31,11 +32,7 @@ const AppWrapper = observer(() => {
 
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const theme = useMemo(
-    () => createMuiTheme({
-      palette: {
-        type: prefersDarkMode ? 'dark' : 'light',
-      },
-    }),
+    () => (prefersDarkMode ? DARK_THEME : THEME),
     [prefersDarkMode],
   );
 

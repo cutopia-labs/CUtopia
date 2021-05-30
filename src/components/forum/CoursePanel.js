@@ -130,7 +130,7 @@ const CoursePanel = () => {
   const { data: reviews, loading: reviewsLoading, refetch } = useQuery(REVIEWS_QUERY, {
     variables: {
       courseId,
-      ascendingDate: sorting === 'date' ? true : null,
+      ascendingDate: sorting === 'date' ? false : null,
       ascendingVote: sorting === 'upvotes' ? false : null,
     },
   });

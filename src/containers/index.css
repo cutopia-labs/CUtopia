@@ -17,6 +17,7 @@ body {
     --grey-text: rgba(0, 0, 0, 0.5);
     --snackbar: rgba(31,31,31,1);
     --caption: #494949;
+    --highlight-on-surface: #dedede60;
     background-color: var(--background);
     color: var(--text);
 }
@@ -115,5 +116,6 @@ textarea[type=number] {
         --bottomBar: rgba(31,31,31,1);
         --caption: rgba(255,255,255,0.5);
         --snackbar: rgba(255,255,255,1);
+        --highlight-on-surface: #dedede1f;
     }
 }

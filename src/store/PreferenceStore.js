@@ -2,24 +2,7 @@ import { makeObservable, observable, action } from 'mobx';
 import { createMuiTheme } from '@material-ui/core/styles';
 
 import { storeData, getStoreData } from '../helpers/store';
-
-const THEME = createMuiTheme({
-  palette: {
-    primary: {
-      main: '#8565bd',
-      secondary: 'rgba(249, 169, 83, 1)',
-    },
-  },
-});
-
-const DARK_THEME = createMuiTheme({
-  palette: {
-    primary: {
-      main: '#8565bd',
-      secondary: 'rgba(249, 169, 83, 1)',
-    },
-  },
-});
+import { THEME, DARK_THEME } from '../constants/colors';
 
 class PreferenceStore {
   @observable darkTheme = false;

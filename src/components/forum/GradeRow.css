@@ -44,7 +44,7 @@
 
 .grade-row.review-header .rating-container.active {
     position: relative;
-    background-color: #dedede60;
+    background-color: var(--highlight-on-surface);
     border-radius: var(--border-radius);
     /* 
     background-color: #683ab71f;

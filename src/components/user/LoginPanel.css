@@ -32,6 +32,11 @@
     justify-content: space-between;
 }
 
+.qrcode-row canvas {
+    padding: 2px;
+    background-color: white;
+}
+
 .check-box-row {
     margin-top: 4px;
     align-items: center;

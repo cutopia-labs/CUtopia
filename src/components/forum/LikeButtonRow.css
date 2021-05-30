@@ -10,10 +10,15 @@
 }
 
 .like-btn-row > .like-btn.active {
-    background-color: #dedede60;
+    background-color: var(--highlight-on-surface);
     border: none;
 }
 
 .like-btn-row {
     margin-right: 16px;
+}
+
+.like-btn-row > .MuiButton-root.Mui-disabled {
+    color: var(--text);
+    opacity: 0.8;
 }

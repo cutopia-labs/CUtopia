@@ -3,12 +3,13 @@ import React, {
 } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  Menu, MenuItem, List, ListItm, ButtonGroup, Button,
+  Menu, MenuItem, List, ListItm, ButtonGroup, Button, Switch, FormGroup, FormControl, FormControlLabel, CircularProgress, IconButton,
 } from '@material-ui/core';
 import { useMutation, useQuery } from '@apollo/client';
 
 import './ReviewEdit.css';
 import { useHistory, useParams } from 'react-router';
+import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { NotificationContext, UserContext } from '../../store';
 import { GET_USER, GET_REVIEW } from '../../constants/queries';
 import { ADD_REVIEW } from '../../constants/mutations';
@@ -202,6 +203,13 @@ const ReviewEdit = ({
       <div className="review-header-container center-row">
         <span className="title">Your Review</span>
         <span className="caption">前人種樹，後人乘涼--</span>
+        <IconButton
+          className="anonymous-switch"
+          aria-label="anonymous"
+          onClick={() => dispatchFormData({ anonymous: !formData.anonymous })}
+        >
+          {formData.anonymous ? <VisibilityOff /> : <Visibility />}
+        </IconButton>
       </div>
       <FormSection title="term">
         <div
@@ -271,7 +279,7 @@ const ReviewEdit = ({
         >
           {
             loading
-              ? <Loading />
+              ? <CircularProgress size={24} />
               : 'Submit'
           }
         </Button>

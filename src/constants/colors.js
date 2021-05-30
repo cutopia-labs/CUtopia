@@ -1,3 +1,5 @@
+import { createMuiTheme } from '@material-ui/core/styles';
+
 const colors = {
   primary: 'rgba(21,101,192,1)',
   accent: '#f7c188',
@@ -26,6 +28,26 @@ const colors = {
     F: 'rgba(255, 174, 188, 1)',
   },
 };
+
+export const THEME = createMuiTheme({
+  palette: {
+    type: 'light',
+    primary: {
+      main: '#8565bd',
+      secondary: 'rgba(249, 169, 83, 1)',
+    },
+  },
+});
+
+export const DARK_THEME = createMuiTheme({
+  palette: {
+    type: 'dark',
+    primary: {
+      main: 'rgba(249, 169, 83, 1)',
+      secondary: 'rgb(255,255,255)',
+    },
+  },
+});
 
 /*
     'A': 'rgba(160, 231, 229, 1)',

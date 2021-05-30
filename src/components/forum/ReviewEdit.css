@@ -28,6 +28,11 @@
     font-size: var(--review-field-margin-top);
 }
 
+.review-header-container .anonymous-switch {
+    margin-left: auto;
+    color: var(--text);
+}
+
 .form-section-title {
     margin-top: var(--review-field-margin-top);
     font-weight: bold;
@@ -40,7 +45,6 @@
     display: flex;
     align-items: center;
     cursor: pointer;
-    color: #00000066;
     font-weight: 400;
     font-size: 16px;
 }
