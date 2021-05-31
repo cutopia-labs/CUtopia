@@ -1,4 +1,5 @@
 import React, {
+  useContext,
   useState,
 } from 'react';
 import { observer } from 'mobx-react-lite';
@@ -14,10 +15,15 @@ import { getMMMDDYY } from '../../helpers/getTime';
 import GradeIndicator from '../GradeIndicator';
 import GradeRow from './GradeRow';
 import LikeButtonsRow from './LikeButtonRow';
+import { NotificationContext } from '../../store';
+import { IconButton } from '@material-ui/core';
+import { Share } from '@material-ui/icons';
+import copyToClipboard from '../../helpers/copyToClipboard';
 
 const ReviewCard = ({
-  review, onClick, concise, showAll,
+  review, onClick, concise, showAll, shareAction,
 }) => {
+  const notification = useContext(NotificationContext);
   const [selectedCriteria, setSelectedCriteria] = useState('grading');
   const [voteReview, { loading, error }] = useMutation(VOTE_REVIEW);
   const [liked, setLiked] = useState(review.myVote); // null for unset, false for dislike, true for like
@@ -89,6 +95,14 @@ const ReviewCard = ({
             likeCaption={(review.upvotes || 0) + (review.myVote === null && liked === VOTE_ACTIONS.UPVOTE ? 1 : 0)}
             dislikeCaption={(review.downvotes || 0) + (review.myVote === null && liked === VOTE_ACTIONS.DOWNVOTE) ? 1 : 0}
           />
+          <IconButton
+            className="share-icon-btn"
+            size="small"
+            onClick={shareAction}
+            color="primary"
+          >
+            <Share />
+          </IconButton>
         </GradeRow>
       </div>
       <p className="review-text">{review[selectedCriteria].text}</p>

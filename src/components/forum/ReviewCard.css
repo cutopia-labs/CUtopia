@@ -17,11 +17,14 @@
     background-color: transparent;
     border-radius: 0;
     /* border-bottom: 1px solid var(--border); */
-    justify-content: space-between;
 }
 
 .grade-row.review-header .center-row {
     height: 50px;
+}
+
+.grade-row.review-header .like-btn-row {
+    margin-left: auto;
 }
 
 .review-text {
@@ -56,4 +59,10 @@
 .course-summary-label.author > span {
     color: var(--text);
     cursor: pointer;
+}
+
+.grade-row.review-header .share-icon-btn {
+    color: var(--text);
+    opacity: 0.8;
+    margin-right: 12px;
 }

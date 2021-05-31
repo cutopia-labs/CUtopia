@@ -6,7 +6,9 @@ import {
   Sort, Edit, Share,
 } from '@material-ui/icons';
 import { useQuery } from '@apollo/client';
-import { IconButton, Menu, MenuItem } from '@material-ui/core';
+import {
+  Button, IconButton, Menu, MenuItem,
+} from '@material-ui/core';
 import { SpeedDial, SpeedDialIcon, SpeedDialAction } from '@material-ui/lab';
 
 import './CoursePanel.css';
@@ -36,7 +38,9 @@ const SORTING_FIELDS = Object.freeze([
   'upvotes',
 ]);
 
-const CourseSummary = ({ courseInfo, sorting, setSorting }) => {
+const CourseSummary = ({
+  courseInfo, sorting, setSorting, fetchAllAction,
+}) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const handleClose = field => {
     console.log(`Setted to ${field}`);
@@ -58,7 +62,7 @@ const CourseSummary = ({ courseInfo, sorting, setSorting }) => {
                 >
                   <Sort />
                 </IconButton>
-                <div className="course-summary-label">{`${courseInfo.rating.numReviews} reviews`}</div>
+                <div className="course-summary-label">{fetchAllAction ? 'Showing 1 review only!' : `${courseInfo.rating.numReviews} reviews`}</div>
               </div>
               <Menu
                 id="simple-menu"
@@ -83,12 +87,24 @@ const CourseSummary = ({ courseInfo, sorting, setSorting }) => {
           )
           : <span>No review yet</span>
       }
+      {
+        fetchAllAction
+        && (
+          <Button
+            size="small"
+            color="primary"
+            onClick={fetchAllAction}
+          >
+            Fetch All
+          </Button>
+        )
+      }
     </div>
   );
 };
 
 const CoursePanel = () => {
-  const { id: courseId } = useParams();
+  const { id: courseId, reviewId } = useParams();
   const [mode, setMode] = useState(courseId ? COURSE_PANEL_MODES.FETCH_REVIEWS : COURSE_PANEL_MODES.DEFAULT);
   const [sorting, setSorting] = useState('date');
   const history = useHistory();
@@ -137,8 +153,11 @@ const CoursePanel = () => {
 
   // Fetch a review based on reviewId
   const { data: review, loading: reviewLoading } = useQuery(GET_REVIEW, {
-    variables: targetReview,
-    skip: !courseId || mode !== COURSE_PANEL_MODES.GET_TARGET_REVIEW,
+    variables: {
+      courseId,
+      createdDate: reviewId,
+    },
+    skip: !reviewId,
   });
 
   useEffect(() => {
@@ -160,6 +179,11 @@ const CoursePanel = () => {
   useEffect(() => {
     console.log(reviews);
   }, [reviews]);
+
+  useEffect(() => {
+    console.log('Review');
+    console.log(review);
+  }, [review]);
 
   if (mode === COURSE_PANEL_MODES.DEFAULT) {
     return (
@@ -198,13 +222,25 @@ const CoursePanel = () => {
                   courseId,
                 }}
               />
-              <CourseSummary courseInfo={courseInfo.subjects[0].courses[0]} sorting={sorting} setSorting={setSorting} />
+              <CourseSummary
+                courseInfo={courseInfo.subjects[0].courses[0]}
+                sorting={sorting}
+                setSorting={setSorting}
+                fetchAllAction={Boolean(reviewId) && (() => history.push(`/review/${courseId}`))}
+                isSingleReview={Boolean(reviewId)}
+              />
               {
-                reviewsLoading
+                reviewsLoading || reviewLoading
                   ? <Loading />
-                  : mode === COURSE_PANEL_MODES.FETCH_REVIEWS && reviews
-                  && reviews.reviews.map(item => (
-                    <ReviewCard key={item.createdDate} review={item} />
+                  : (reviewId ? (review ? [review.review] : []) : reviews.reviews).map(item => (
+                    <ReviewCard
+                      key={item.createdDate}
+                      review={item}
+                      shareAction={() => {
+                        copyToClipboard(reviewId ? window.location.href : `${window.location.href}/${item.createdDate}`);
+                        notification.setSnackBar('Copied sharelink to clipboard!');
+                      }}
+                    />
                   ))
               }
               <SpeedDial

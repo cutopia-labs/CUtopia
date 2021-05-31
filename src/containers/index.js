@@ -8,7 +8,7 @@ import {
 import './index.css';
 import SnackBar from '../components/SnackBar';
 import { UserContext } from '../store';
-import { MODES, LOGIN_STATES } from '../constants/states';
+import { LOGIN_STATES } from '../constants/states';
 import Header from '../components/Header';
 import HomePage from './HomePage';
 import ForumPage from './ForumPage';
@@ -30,16 +30,7 @@ const Navigator = () => {
           <Route exact path="/">
             <HomePage />
           </Route>
-          <Route exact path="/review">
-            <ForumPage />
-          </Route>
-          <Route exact path="/review/:id">
-            <ForumPage />
-          </Route>
-          <Route exact path="/review/:id">
-            <ForumPage />
-          </Route>
-          <Route exact path="/review/:id/compose">
+          <Route exact path={['/review', '/review/:id', '/review/:id/compose', '/review/:id/:reviewId']}>
             <ForumPage />
           </Route>
           <Route exact path="/planner">

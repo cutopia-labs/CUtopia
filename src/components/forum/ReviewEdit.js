@@ -279,7 +279,7 @@ const ReviewEdit = ({
         >
           {
             loading
-              ? <CircularProgress size={24} />
+              ? <CircularProgress color="secondary" size={24} />
               : 'Submit'
           }
         </Button>

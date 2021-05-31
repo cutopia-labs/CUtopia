@@ -17,7 +17,7 @@
     left: 2.5%;
     background-color: var(--snackbar);
     color: var(--background);
-    transition: all 0.2s ease-in-out;
+    transition: opacity .3s;
     -webkit-animation: fadein var(--SNACK-BAR-DURATION-IN), fadeout var(--SNACK-BAR-DURATION-IN) var(--SNACK-BAR-DURATION-OUT);
     animation: fadein var(--SNACK-BAR-DURATION-IN), fadeout var(--SNACK-BAR-DURATION-IN) var(--SNACK-BAR-DURATION-OUT);
 }
