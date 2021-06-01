@@ -1,7 +1,6 @@
 import { gql } from '@apollo/client';
 
 // CUTOPIA LOGIN Mutations
-
 const LOGIN_CUTOPIA = gql`
   mutation ($username: String!, $password: String!) {
     login(input: {
@@ -14,7 +13,6 @@ const LOGIN_CUTOPIA = gql`
   }`;
 
 // CUTOPIA SIGNUP Mutations
-
 const SEND_VERIFICATION = gql`
   mutation ($email: String!, $password: String!, $username: String!) {
     createUser(input: {
@@ -37,7 +35,6 @@ const VERIFY_USER = gql`
 }`;
 
 // CUTOPIA PASSWORD RESET Mutations
-
 const SEND_RESET_PASSWORD_CODE = gql`
   mutation ($username:String!) {
     sendResetPasswordCode(input:{
@@ -61,7 +58,6 @@ const RESET_PASSWORD = gql`
   }`;
 
 // REVIEW Mutations
-
 const ADD_REVIEW = gql`
   mutation (
     $anonymous: Boolean!,

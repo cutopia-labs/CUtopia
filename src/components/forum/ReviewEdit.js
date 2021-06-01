@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  Menu, MenuItem, List, ListItm, ButtonGroup, Button, Switch, FormGroup, FormControl, FormControlLabel, CircularProgress, IconButton,
+  Menu, MenuItem, Button, CircularProgress, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
 } from '@material-ui/core';
 import { useMutation, useQuery } from '@apollo/client';
 
@@ -97,6 +97,7 @@ const ReviewEdit = ({
 }) => {
   const [mode, setMode] = useState();
   const [targetReview, setTargetReview] = useState();
+  const progress = useState(0);
   const [anchorEl, setAnchorEl] = useState(null);
   const [addReview, { loading, error }] = useMutation(ADD_REVIEW);
   const [formData, dispatchFormData] = useReducer(
@@ -125,8 +126,11 @@ const ReviewEdit = ({
 
   // Fetch a review based on reviewId
   const { data: review, loading: reviewLoading } = useQuery(GET_REVIEW, {
-    variables: targetReview,
-    skip: mode !== MODES.EDIT,
+    variables: {
+      courseId,
+      createdDate: targetReview,
+    },
+    skip: mode !== MODES.EDIT || !targetReview,
   });
 
   const submit = async e => {
@@ -147,7 +151,7 @@ const ReviewEdit = ({
   const validation = () => {
     if (typeof formData === 'object' && formData) {
       for (const [key, value] of Object.entries(formData)) {
-        if (!value && !(key === 'title' || key === 'anonymous')) {
+        if (value === '' && !(key === 'title' || key === 'anonymous')) {
           console.log(key);
           return false;
         }
@@ -165,6 +169,7 @@ const ReviewEdit = ({
     return false;
   };
 
+  // Check userData to see if user already posted review
   useEffect(() => {
     if (userData && !userLoading) {
       if (!userData.user) {
@@ -174,6 +179,8 @@ const ReviewEdit = ({
       else if (userData.user.reviewIds && userData.user.reviewIds.length) {
         for (let i = 0; i < userData.user.reviewIds.length; i++) {
           if (userData.user.reviewIds[i].startsWith(courseId)) {
+            const parts = userData.user.reviewIds[i].split('#');
+            setTargetReview(parts[1]);
             setMode(MODES.MODAL);
           }
         }
@@ -194,12 +201,41 @@ const ReviewEdit = ({
   }, [error]);
 
   useEffect(() => {
-    const overall_average = RATING_FIELDS.map(type => formData[type].grade).reduce((acc, v) => acc + v) / RATING_FIELDS.length;
-    dispatchFormData({ overall: Math.round(overall_average) }); // later detemine round or floor
+    const overallAverage = RATING_FIELDS.map(type => formData[type].grade).reduce((acc, v) => acc + v) / RATING_FIELDS.length;
+    dispatchFormData({ overall: Math.round(overallAverage) }); // later detemine round or floor
   }, RATING_FIELDS.map(type => formData[type].grade));
+
+  useEffect(() => {
+    const textCount = RATING_FIELDS.map(type => formData[type].text).reduce((acc, v) => acc + v).split(' ').length;
+    console.log(textCount);
+  }, RATING_FIELDS.map(type => formData[type].text));
 
   return (
     <div className="review-edit">
+      {
+        reviewLoading && <Loading absolute />
+      }
+      <Dialog
+        open={mode === MODES.MODAL}
+        onClose={() => history.push(`/review/${courseId}`)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">You have already reviewed this course!</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Do you want to edit your posted review?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => history.push(`/review/${courseId}`)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={() => setMode(MODES.EDIT)} color="primary" autoFocus>
+            Edit
+          </Button>
+        </DialogActions>
+      </Dialog>
       <div className="review-header-container center-row">
         <span className="title">Your Review</span>
         <span className="caption">前人種樹，後人乘涼--</span>

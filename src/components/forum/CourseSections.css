@@ -55,5 +55,6 @@
 
 .section-detail-item svg {
     margin-right: 6px;
-    color: rgba(0, 0, 0, 0.4);
+    color: var(--text);
+    opacity: 0.4;
 }

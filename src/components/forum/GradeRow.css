@@ -1,7 +1,6 @@
 .grade-row {
     display: flex;
     align-items: center;
-    margin-top: 10px;
     overflow: hidden;
     background-color: var(--background-on-white);
     border-radius: var(--border-radius);
@@ -54,7 +53,8 @@
 }
 
 .grade-row.concise {
-    margin-top: 20px;
+    margin-top: 20px !important;
+    margin-bottom: 0 !important;
 }
 
 .grade-row.concise > .center-row {

@@ -4,6 +4,10 @@
     align-items: flex-start;
 }
 
+.course-card .grade-row {
+    margin: 10px 0;
+}
+
 .sub-heading-container {
     width: 100%;
 }
@@ -33,7 +37,6 @@
 .course-card-title-container {
     display: flex;
     flex: 1;
-    margin-top: 6px;
     width: 100%;
     justify-content: space-between;
 }

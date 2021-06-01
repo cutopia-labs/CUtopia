@@ -2,11 +2,8 @@ import React, {
   useState, useEffect, useContext, useRef, useLayoutEffect,
 } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Divider, IconButton } from '@material-ui/core';
-import { Link, useLocation } from 'react-router-dom';
-import {
-  ShoppingCart, ShoppingCartOutlined, Favorite, FavoriteOutlined, BarChart, Grade,
-} from '@material-ui/icons';
+import { IconButton } from '@material-ui/core';
+import { Favorite } from '@material-ui/icons';
 
 import GradeRow from './GradeRow';
 import ShowMoreOverlay from '../ShowMoreOverlay';

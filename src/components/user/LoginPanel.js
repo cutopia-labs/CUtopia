@@ -347,7 +347,7 @@ const LoginPanel = ({ route, navigation }) => {
             <div className="center-row check-box-container">
               <Checkbox
                 className="check-box"
-                color={LOGIN_ACCENT}
+                color="primary"
                 checked={rememberMe}
                 onChange={e => setRememberMe(e.target.checked)}
               />
