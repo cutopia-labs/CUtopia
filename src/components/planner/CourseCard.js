@@ -1,16 +1,15 @@
-import { makeStyles } from '@material-ui/styles';
-import React, { create, useContext } from 'react';
-
-import './CourseCard.css';
+import React, { useContext } from 'react';
 import { IconButton } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
+import { observer } from 'mobx-react-lite';
+
+import './CourseCard.css';
 import { TIMETABLE_CONSTANTS } from '../../constants/states';
 import updateOpacity from '../../helpers/updateOpacity';
 import { UserContext } from '../../store';
-import { observer } from 'mobx-react-lite';
 
 const {
-  CELL_WIDTH, CELL_HEIGHT, START_HOUR, NO_OF_DAYS, NO_OF_HOURS,
+  START_HOUR, NO_OF_DAYS, NO_OF_HOURS,
 } = TIMETABLE_CONSTANTS;
 
 const useStyles = (durationHeight, topMarginValue, bgColor, textColor, day) => ({
@@ -18,6 +17,7 @@ const useStyles = (durationHeight, topMarginValue, bgColor, textColor, day) => (
     width: `${99 / NO_OF_DAYS}%`,
     marginLeft: `${(100 / NO_OF_DAYS) * (day - 1)}%`,
     height: durationHeight,
+    minHeight: durationHeight, // For the use of hover height: fit-content
     top: topMarginValue,
   },
   innerCard: {
@@ -31,7 +31,7 @@ const useStyles = (durationHeight, topMarginValue, bgColor, textColor, day) => (
   },
 });
 
-const CourseCard = ({ course, backgroundColor, onClick }) => {
+const CourseCard = ({ course }) => {
   console.log(`${course.courseId} ${course.section}`);
 
   const sTime = course.startTime.split(':');
@@ -71,6 +71,6 @@ const CourseCard = ({ course, backgroundColor, onClick }) => {
       </div>
     </div>
   );
-}
+};
 
-export default observer(CourseCard)
+export default observer(CourseCard);

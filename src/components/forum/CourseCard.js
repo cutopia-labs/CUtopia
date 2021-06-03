@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import { observer } from 'mobx-react-lite';
 import { IconButton } from '@material-ui/core';
-import { Favorite } from '@material-ui/icons';
+import { Favorite, FavoriteBorder, FavoriteOutlined } from '@material-ui/icons';
 
 import GradeRow from './GradeRow';
 import ShowMoreOverlay from '../ShowMoreOverlay';
@@ -57,7 +57,9 @@ const CourseCard = ({ courseInfo, concise }) => {
             components="span"
             size="medium"
           >
-            <Favorite />
+            {
+              isFavorited ? <Favorite /> : <FavoriteBorder />
+            }
           </IconButton>
         </div>
         {

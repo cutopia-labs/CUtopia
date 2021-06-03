@@ -13,11 +13,12 @@ body {
     --headerHeight: 40px;
     --marginHorizontal: 40px;
     --border-radius: 8px;
-    --background-on-white: #dedede26;
+    --background-on-white: #f8f8f8;
     --grey-text: rgba(0, 0, 0, 0.5);
     --snackbar: rgba(31,31,31,1);
     --caption: #494949;
     --highlight-on-surface: #dedede60;
+    --scrollbar: rgb(204, 204, 204);
     background-color: var(--background);
     color: var(--text);
 }
@@ -27,13 +28,14 @@ a {
     text-decoration: inherit; /* no underline */
 }
 
+/* To standardize input and textarea */
+
 input, textarea {
     outline: none;
     appearance: none;
     border: none;
 }
 
-/* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button,
 textarea::-webkit-outer-spin-button,
@@ -42,7 +44,6 @@ textarea::-webkit-inner-spin-button {
   margin: 0;
 }
 
-/* Firefox */
 input[type=number] {
   -moz-appearance: textfield;
 }
@@ -50,6 +51,7 @@ textarea[type=number] {
   -moz-appearance: textfield;
 }
 
+/* Common Styles */
 
 .App {
     text-align: center;
@@ -101,6 +103,31 @@ textarea[type=number] {
     background-color: transparent !important;
 }
 
+/* Scrollbar styles */
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar);
+    border-radius: var(--border-radius);
+    -webkit-transition: background-color 1000ms linear;
+    -moz-transition: background-color 1000ms linear;
+    -o-transition: background-color 1000ms linear;
+    -ms-transition: background-color 1000ms linear;
+    transition: background-color 1000ms linear;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #888;
+}
+
+/* Dark Mode Colors */
 
 @media (prefers-color-scheme: dark) {
     body {
@@ -117,5 +144,7 @@ textarea[type=number] {
         --caption: rgba(255,255,255,0.5);
         --snackbar: rgba(255,255,255,1);
         --highlight-on-surface: #dedede1f;
+        --scrollbar: rgb(80, 80, 80);
+        --background-on-white: #333;
     }
 }

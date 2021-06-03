@@ -9,15 +9,17 @@ const GradeRow = ({
 }) => (
   <div className={`grade-row${additionalClassName ? ` ${additionalClassName}` : ''}`}>
     <div className="center-row">
-      {!isReview
-      && (
-        <GradeIndicator
-          grade={rating.overall}
-          additionalClassName="course-summary-grade-indicator overall"
-        />
-      )}
       {
-        RATING_FIELDS.map(field => (
+        !isReview
+        && (
+          <GradeIndicator
+            grade={rating.overall}
+            additionalClassName={`course-summary-grade-indicator${isReview ? '' : ' overall'}`}
+          />
+        )
+      }
+      {
+        [isReview ? 'overall' : false, ...RATING_FIELDS].filter(x => x).map(field => (
           <div
             key={field}
             className={`center-row rating-container${selected === field ? ' active' : ''}`}
@@ -27,9 +29,12 @@ const GradeRow = ({
               }
             }}
           >
-            <div className="course-summary-label" key={field}>{`${field}:`}</div>
+            {
+              field !== 'overall' &&
+              <div className="course-summary-label" key={field}>{`${field}:`}</div>
+            }
             <GradeIndicator
-              grade={isReview ? rating[field].grade : rating[field]}
+              grade={isReview && field !== 'overall' ? rating[field].grade : rating[field]}
               additionalClassName="course-summary-grade-indicator"
             />
           </div>

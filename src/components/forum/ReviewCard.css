@@ -5,6 +5,21 @@
     padding: 0;
 }
 
+.review-card .course-summary {
+    background-color: transparent;
+}
+
+.review-title {
+    display: flex;
+    width: 100%;
+    padding: 12px 8px;
+    text-align: start;
+}
+
+.review-title svg {
+    margin-right: 6px;
+}
+
 .course-summary.review {
     margin: 0;
     padding: 0;
@@ -48,7 +63,7 @@
 
 .review-text {
     margin: 0;
-    padding: 12px 8px;
+    padding: 4px 8px 12px 8px;
 }
 
 .course-summary-label.author {
@@ -65,4 +80,18 @@
     color: var(--text);
     opacity: 0.8;
     margin-right: 12px;
+    padding: 8px;
+}
+
+.review-text-full {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.review-text-label {
+    text-align: start;
+    text-transform: capitalize;
+    color: var(--primary);
+    padding: 8px 8px;
+    font-weight: bold;
 }

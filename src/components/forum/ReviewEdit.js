@@ -18,6 +18,8 @@ import colors from '../../constants/colors';
 import TextField from '../TextField';
 import Loading from '../Loading';
 
+const TARGET_WORD_COUNT = 150;
+
 const now = new Date();
 const EARLIEST_YEAR = now.getFullYear() - 3; // most ppl writing reviews are current students?
 const currentAcademicYear = now.getMonth() < 9 ? now.getFullYear() : now.getFullYear() + 1; // After Sept new sem started
@@ -97,7 +99,7 @@ const ReviewEdit = ({
 }) => {
   const [mode, setMode] = useState();
   const [targetReview, setTargetReview] = useState();
-  const progress = useState(0);
+  const [progress, setProgress] = useState(0);
   const [anchorEl, setAnchorEl] = useState(null);
   const [addReview, { loading, error }] = useMutation(ADD_REVIEW);
   const [formData, dispatchFormData] = useReducer(
@@ -135,6 +137,9 @@ const ReviewEdit = ({
 
   const submit = async e => {
     e.preventDefault();
+    if(progress < 100){
+      return;
+    }
     // below are temp b4 server schema updated
     console.log(JSON.stringify(formData));
 
@@ -208,6 +213,7 @@ const ReviewEdit = ({
   useEffect(() => {
     const textCount = RATING_FIELDS.map(type => formData[type].text).reduce((acc, v) => acc + v).split(' ').length;
     console.log(textCount);
+    setProgress(textCount * 100 / TARGET_WORD_COUNT)
   }, RATING_FIELDS.map(type => formData[type].text));
 
   return (
@@ -312,6 +318,9 @@ const ReviewEdit = ({
           color="primary"
           onClick={submit}
           disabled={!validation()}
+          style={{
+            background: `linear-gradient(to right, var(--primary) ${progress}%, white ${100 - progress}%)`,
+          }}
         >
           {
             loading

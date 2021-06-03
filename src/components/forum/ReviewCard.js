@@ -6,25 +6,27 @@ import { observer } from 'mobx-react-lite';
 import {
   FaChalkboardTeacher, FaRegCalendarAlt,
 } from 'react-icons/fa';
+import { BiMessageRounded } from 'react-icons/bi';
+import { IoMdShareAlt } from 'react-icons/io';
 import { useMutation } from '@apollo/client';
 
 import './ReviewCard.css';
-import { VOTE_ACTIONS } from '../../constants/states';
+import { IconButton } from '@material-ui/core';
+import { Forum, Share } from '@material-ui/icons';
+import { RATING_FIELDS, VOTE_ACTIONS } from '../../constants/states';
 import { VOTE_REVIEW } from '../../constants/mutations';
 import { getMMMDDYY } from '../../helpers/getTime';
 import GradeIndicator from '../GradeIndicator';
 import GradeRow from './GradeRow';
 import LikeButtonsRow from './LikeButtonRow';
 import { NotificationContext } from '../../store';
-import { IconButton } from '@material-ui/core';
-import { Share } from '@material-ui/icons';
 import copyToClipboard from '../../helpers/copyToClipboard';
 
 const ReviewCard = ({
   review, onClick, concise, showAll, shareAction,
 }) => {
   const notification = useContext(NotificationContext);
-  const [selectedCriteria, setSelectedCriteria] = useState('grading');
+  const [selectedCriteria, setSelectedCriteria] = useState('overall');
   const [voteReview, { loading, error }] = useMutation(VOTE_REVIEW);
   const [liked, setLiked] = useState(review.myVote); // null for unset, false for dislike, true for like
 
@@ -58,13 +60,16 @@ const ReviewCard = ({
   return (
     <div className="review-card">
       <div className="course-summary review">
+        {
+          Boolean(review.title)
+          && (
+            <div className="review-title center-row">
+              <BiMessageRounded />
+              {review.title}
+            </div>
+          )
+        }
         <div className="review-info-row">
-          <div className="center-row overall">
-            <GradeIndicator
-              grade={review.overall}
-              additionalClassName="course-summary-grade-indicator"
-            />
-          </div>
           <div className="center-row">
             <FaRegCalendarAlt />
             <p className="course-summary-label">{review.term}</p>
@@ -101,11 +106,29 @@ const ReviewCard = ({
             onClick={shareAction}
             color="primary"
           >
-            <Share />
+            <IoMdShareAlt />
           </IconButton>
         </GradeRow>
       </div>
-      <p className="review-text">{review[selectedCriteria].text}</p>
+      {
+        selectedCriteria === 'overall'
+          ? 
+          <div className="review-text-full">
+            {
+              RATING_FIELDS.map(field =>
+                <div className="review-text-container">
+                  <p className="review-text-label review-text">{field}</p>
+                  <p className="review-text">{review[field].text}</p>
+                </div>
+              )
+            }
+          </div>
+          : 
+          <div className="review-text-container">
+            <p className="review-text-label review-text">{selectedCriteria}</p>
+            <p className="review-text">{review[selectedCriteria].text}</p>
+          </div>
+      }
     </div>
   );
 };

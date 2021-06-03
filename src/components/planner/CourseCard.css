@@ -33,6 +33,7 @@
 }
 
 .timetable-course-card:hover {
+    height: fit-content !important;
     transform: scale(1.2);
     z-index: 10;
 }
