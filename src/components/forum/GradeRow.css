@@ -41,7 +41,7 @@
 }
 
 .grade-row.review-header .rating-container.active {
-    border-bottom: 2px solid #f9826c;
+    border-bottom: 2px solid var(--accent);
     /*
     position: relative;
     background-color: var(--background-on-white);

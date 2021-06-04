@@ -1,7 +1,12 @@
 .search-panel {
     width: 380px;
-    overflow-y: scroll;
-    overflow-x: hidden;
+    border-right: 1px solid var(--border);
+    position: sticky;
+    top: 0px;
+    left: 0;
+    height: auto;
+    align-self: flex-start;
+    min-height: calc(100vh - var(--headerHeight) - 20px);
 }
 
 .search-panel > div {

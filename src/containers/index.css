@@ -1,10 +1,11 @@
 body {
-    --primary: #5c6bc0;
+    --primary: #7e57c2;
     --accent: #f9826c;
     --surface: rgba(255,255,255,1);
     --background: rgb(250, 252, 255, 1);
     --background-dark: rgba(5,5,5,1);
     --text: rgba(12,12,12,1);
+    --reversed-text: rgba(255,255,255,1);
     --button: rgba(21, 121, 193, 1);
     --border: #dedede80;
     --underlay: #DDDDDD;
@@ -19,7 +20,6 @@ body {
     --caption: #494949;
     --highlight-on-surface: #dedede60;
     --scrollbar: rgb(204, 204, 204);
-    background-color: var(--background);
     color: var(--text);
 }
 
@@ -54,7 +54,10 @@ textarea[type=number] {
 /* Common Styles */
 
 .App {
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    max-height: 100vh;
 }
 
 .row, .center-row {
@@ -74,7 +77,8 @@ textarea[type=number] {
 .card {
     display: flex;
     flex-direction: column;
-    box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 6px;
+    /* box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 6px; */
+    border: 1px solid var(--border);
     background-color: var(--surface);
     border-radius: var(--border-radius);
 }
@@ -136,6 +140,7 @@ textarea[type=number] {
         --surface: rgba(31,31,31,1);
         --background: rgba(5,5,5,1);
         --text: rgba(255,255,255,1);
+        --reversed-text: rgba(12,12,12,1);
         --button: rgba(92, 158, 235, 1);
         --border: #bdbcc24d;
         --underlay: #bdbcc233;

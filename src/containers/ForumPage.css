@@ -1,13 +1,8 @@
 .forum-page {
-    margin: 20px 30px;
     /* header - header padding - margin */
-    height: calc(100vh - var(--headerHeight) - 60px);
+    flex: 1;
 }
 
 .forum-page > * {
-    margin-left: 30px
-}
-
-.forum-page > :first-child {
-    margin-left: 0;
+    background-color: var(--surface);
 }

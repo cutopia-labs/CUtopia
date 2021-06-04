@@ -14,7 +14,7 @@
 }
 
 .list-item-container:hover {
-    box-shadow: rgba(0, 0, 0, 0.1) 0 2px 2px 0;
+    background-color: var(--background-on-white);
 }
 
 .list-item-color-bar {

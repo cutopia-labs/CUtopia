@@ -37,7 +37,7 @@ const TimeTablePanel = () => {
     },
   ];
   return (
-    <div className="time-table-panel card">
+    <div className="time-table-panel column">
       <header className="center-row">
         <span className="title">My Schedule</span>
         <div className="btn-row center-row">

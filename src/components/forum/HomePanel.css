@@ -1,7 +1,12 @@
 .review-home-panel {
+    padding: 10px 24px 20px 24px;
     display: flex;
     flex-direction: column;
     flex: 1;
+}
+
+.ranking-card > * {
+    border-bottom: 1px solid var(--border);
 }
 
 .ranking-card-header {
@@ -22,6 +27,7 @@
     flex: 1;
     margin-left: 30px;
     overflow: hidden;
+    border-bottom: 0;
 }
 
 .ranking-card:first-child {
@@ -35,6 +41,11 @@
 
 .ranking-card .list-item-container {
     height: auto;
+    border-bottom: none;
+    border-right: none;
+}
+
+.ranking-card .list-item-container:last-of-type{
 }
 
 .ranking-card .list-item-container > :last-child {

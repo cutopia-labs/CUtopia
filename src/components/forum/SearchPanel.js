@@ -219,7 +219,7 @@ const SearchPanel = () => {
   }, [historyList]);
 
   return (
-    <div className="search-panel card">
+    <div className="search-panel">
       <div className="search-input-container row">
         {
           Boolean(searchPayload.mode) && (searchPayload.mode !== 'query' || searchPayload.text)

@@ -52,7 +52,8 @@
     height: 40px;
     margin-top: 10px !important;
     border-radius: var(--border-radius) !important;
-    background: linear-gradient(195deg, var(--primary) 2.3%,rgba(220, 86, 227,1) 88.5%);    box-shadow: none !important;
+    background: linear-gradient(195deg, var(--primary) 2.3%,rgba(220, 86, 227,1) 88.5%);
+    box-shadow: none !important;
 }
 
 .login-btn > .MuiButton-label {

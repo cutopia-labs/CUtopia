@@ -48,7 +48,7 @@
 }
 
 .course-panel-fab {
-    position: absolute;
+    position: fixed;
     right: calc(var(--marginHorizontal) + 40px);
     bottom: calc(40px);
 }

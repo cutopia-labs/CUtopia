@@ -112,22 +112,24 @@ const ReviewCard = ({
       </div>
       {
         selectedCriteria === 'overall'
-          ? 
-          <div className="review-text-full">
-            {
-              RATING_FIELDS.map(field =>
-                <div className="review-text-container">
-                  <p className="review-text-label review-text">{field}</p>
-                  <p className="review-text">{review[field].text}</p>
-                </div>
-              )
-            }
-          </div>
-          : 
-          <div className="review-text-container">
-            <p className="review-text-label review-text">{selectedCriteria}</p>
-            <p className="review-text">{review[selectedCriteria].text}</p>
-          </div>
+          ? (
+            <div className="review-text-full">
+              {
+                RATING_FIELDS.map(field => (
+                  <div className="review-text-container">
+                    <p className="review-text-label review-text">{field}</p>
+                    <p className="review-text">{review[field].text}</p>
+                  </div>
+                ))
+              }
+            </div>
+          )
+          : (
+            <div className="review-text-container">
+              <p className="review-text-label review-text">{selectedCriteria}</p>
+              <p className="review-text">{review[selectedCriteria].text}</p>
+            </div>
+          )
       }
     </div>
   );

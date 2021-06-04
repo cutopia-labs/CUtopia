@@ -193,7 +193,7 @@ const CoursePanel = () => {
 
   if (isEdit) {
     return (
-      <div className="review-edit-panel course-panel card">
+      <div className="review-edit-panel course-panel">
         {
           !courseInfoLoading && courseInfo && courseInfo.subjects && courseInfo.subjects[0]
           && (
@@ -211,7 +211,7 @@ const CoursePanel = () => {
   }
 
   return (
-    <div className="course-panel card">
+    <div className="course-panel">
       {
         !courseInfoLoading && courseInfo && courseInfo.subjects && courseInfo.subjects[0]
           ? (
