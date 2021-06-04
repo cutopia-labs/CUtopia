@@ -31,11 +31,15 @@
     margin-top: 0;
     background-color: transparent;
     border-radius: 0;
-    /* border-bottom: 1px solid var(--border); */
+    border-bottom: 1px solid var(--border);
 }
 
 .grade-row.review-header .center-row {
-    height: 50px;
+    height: auto;
+}
+
+.grade-row.review-header > div:first-child > div {
+    margin: 0;
 }
 
 .grade-row.review-header .like-btn-row {

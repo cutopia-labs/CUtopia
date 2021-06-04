@@ -1,4 +1,9 @@
 import { createMuiTheme } from '@material-ui/core/styles';
+import {
+  blue, cyan, lime, amber, deepOrange,
+} from '@material-ui/core/colors';
+
+const COLOR_SHADE = 300;
 
 const colors = {
   primary: 'rgba(21,101,192,1)',
@@ -21,11 +26,11 @@ const colors = {
     'rgba(255,153,204,1)',
   ],
   gradeColors: {
-    A: 'rgba(160, 231, 229, 1)',
-    B: 'rgba(180, 248, 200, 1)',
-    C: 'rgba(251, 231, 198, 1)',
-    D: 'rgba(238, 198, 251, 1)',
-    F: 'rgba(255, 174, 188, 1)',
+    A: blue[COLOR_SHADE],
+    B: cyan[COLOR_SHADE],
+    C: lime[COLOR_SHADE],
+    D: amber[COLOR_SHADE],
+    F: deepOrange[COLOR_SHADE],
   },
 };
 
@@ -33,8 +38,8 @@ export const THEME = createMuiTheme({
   palette: {
     type: 'light',
     primary: {
-      main: '#8565bd',
-      secondary: 'rgba(249, 169, 83, 1)',
+      main: '#5c6bc0',
+      secondary: '#f9826c',
     },
   },
 });
@@ -43,7 +48,7 @@ export const DARK_THEME = createMuiTheme({
   palette: {
     type: 'dark',
     primary: {
-      main: 'rgba(249, 169, 83, 1)',
+      main: '#f9826c',
       secondary: 'rgb(255,255,255)',
     },
   },

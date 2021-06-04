@@ -30,7 +30,6 @@
     cursor: pointer;
     padding: 0 10px;
     height: 30px;
-    transition: all 0.1s ease-in-out;
 }
 
 .rating-container > .course-summary-label {
@@ -42,15 +41,18 @@
 }
 
 .grade-row.review-header .rating-container.active {
+    border-bottom: 2px solid #f9826c;
+    /*
     position: relative;
-    background-color: var(--highlight-on-surface);
-    border-radius: var(--border-radius);
+    background-color: var(--background-on-white);
+    border-radius: var(--border-radius); */
     /* 
     background-color: #683ab71f;
     border-radius: var(--border-radius);
     margin: 20px 0;
     */
 }
+
 
 .grade-row.concise {
     margin-top: 20px !important;

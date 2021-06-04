@@ -1,6 +1,6 @@
 body {
-    --primary: #8565bd;
-    --accent: rgba(249, 169, 83, 1);
+    --primary: #5c6bc0;
+    --accent: #f9826c;
     --surface: rgba(255,255,255,1);
     --background: rgb(250, 252, 255, 1);
     --background-dark: rgba(5,5,5,1);
@@ -131,8 +131,8 @@ textarea[type=number] {
 
 @media (prefers-color-scheme: dark) {
     body {
-        --primary: rgba(249, 169, 83, 1);
-        --accent: rgba(249, 169, 83, 1);
+        --primary: #f9826c;
+        --accent: #f9826c;
         --surface: rgba(31,31,31,1);
         --background: rgba(5,5,5,1);
         --text: rgba(255,255,255,1);

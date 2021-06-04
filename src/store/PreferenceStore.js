@@ -1,5 +1,4 @@
 import { makeObservable, observable, action } from 'mobx';
-import { createMuiTheme } from '@material-ui/core/styles';
 
 import { storeData, getStoreData } from '../helpers/store';
 import { THEME, DARK_THEME } from '../constants/colors';
