@@ -39,9 +39,9 @@ const SORTING_FIELDS = Object.freeze([
 ]);
 
 const CourseSummary = ({
-  courseInfo, sorting, setSorting, fetchAllAction,
+  courseInfo, sorting, setSorting, fetchAllAction, writeAction
 }) => {
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
   const handleClose = field => {
     console.log(`Setted to ${field}`);
     setSorting(field);
@@ -88,7 +88,19 @@ const CourseSummary = ({
           : <span>No review yet</span>
       }
       {
-        fetchAllAction
+        !courseInfo.rating &&
+        (
+          <Button
+            size="small"
+            color="primary"
+            onClick={writeAction}
+          >
+            Write One!
+          </Button>
+        )
+      }
+      {
+        courseInfo.rating && fetchAllAction
         && (
           <Button
             size="small"
@@ -227,7 +239,7 @@ const CoursePanel = () => {
                 sorting={sorting}
                 setSorting={setSorting}
                 fetchAllAction={Boolean(reviewId) && (() => history.push(`/review/${courseId}`))}
-                isSingleReview={Boolean(reviewId)}
+                writeAction={() => history.push(`/review/${courseId}/compose`)}
               />
               {
                 reviewsLoading || reviewLoading

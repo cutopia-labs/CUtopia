@@ -18,7 +18,7 @@ import colors from '../../constants/colors';
 import TextField from '../TextField';
 import Loading from '../Loading';
 
-const TARGET_WORD_COUNT = 150;
+const TARGET_WORD_COUNT = 80;
 
 const now = new Date();
 const EARLIEST_YEAR = now.getFullYear() - 3; // most ppl writing reviews are current students?
@@ -137,7 +137,8 @@ const ReviewEdit = ({
 
   const submit = async e => {
     e.preventDefault();
-    if(progress < 100){
+    if (progress < 100) {
+      notification.setSnackBar(`Please write at least ${TARGET_WORD_COUNT} words before submit~`);
       return;
     }
     // below are temp b4 server schema updated
@@ -147,8 +148,8 @@ const ReviewEdit = ({
       variables: formData,
     });
     console.log(res);
-    if (res && res.data && res.data.createReview && res.data.createReview.id) {
-      history.push(`/review/${courseId}`);
+    if (res && res.data && res.data.createReview && res.data.createReview.createdDate) {
+      history.push(`/review/${courseId}/${res.data.createReview.createdDate}`);
       notification.setSnackBar('Review added!');
     }
   };
@@ -211,9 +212,9 @@ const ReviewEdit = ({
   }, RATING_FIELDS.map(type => formData[type].grade));
 
   useEffect(() => {
-    const textCount = RATING_FIELDS.map(type => formData[type].text).reduce((acc, v) => acc + v).split(' ').length;
+    const textCount = RATING_FIELDS.map(type => formData[type].text).reduce((acc, v) => acc + v).split(' ').filter(x => x !== '').length;
     console.log(textCount);
-    setProgress(textCount * 100 / TARGET_WORD_COUNT)
+    setProgress((textCount * 100) / TARGET_WORD_COUNT);
   }, RATING_FIELDS.map(type => formData[type].text));
 
   return (
@@ -319,13 +320,13 @@ const ReviewEdit = ({
           onClick={submit}
           disabled={!validation()}
           style={{
-            background: `linear-gradient(to right, var(--primary) ${progress}%, white ${100 - progress}%)`,
+            background: `linear-gradient(to right, var(--primary) ${progress}%, transparent ${progress}%)`,
           }}
         >
           {
             loading
               ? <CircularProgress color="secondary" size={24} />
-              : 'Submit'
+              : (progress < 100 ? 'write more!' : 'submit')
           }
         </Button>
       </div>

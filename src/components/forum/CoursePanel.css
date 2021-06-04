@@ -4,6 +4,7 @@
     flex: 1;
     padding: 10px 24px 20px 24px;
     overflow-y: scroll;
+    max-height: calc(100vh - var(--headerHeight) - 41px);
 }
 
 .course-summary {
@@ -49,6 +50,6 @@
 
 .course-panel-fab {
     position: fixed;
-    right: calc(var(--marginHorizontal) + 40px);
-    bottom: calc(40px);
+    right: 33px;
+    bottom: 20px;
 }

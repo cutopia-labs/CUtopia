@@ -85,7 +85,7 @@ const ADD_REVIEW = gql`
       difficulty: $difficulty,
       content: $content
     }) {
-      id
+      createdDate
     }
   }`;
 

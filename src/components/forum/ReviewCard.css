@@ -90,6 +90,7 @@
 .review-text-full {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
+    padding: 6px 0;
 }
 
 .review-text-label {

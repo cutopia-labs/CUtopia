@@ -98,7 +98,7 @@
 }
 
 .submit-btn-row > .review-section-container {
-    width: 50%;
+    width: calc(50% - 10px);
 }
 
 .submit-btn-row .review-section-header {
@@ -109,4 +109,5 @@
     width: 180px;
     border: none;
     height: 40px;
+    color: var(--text);
 }

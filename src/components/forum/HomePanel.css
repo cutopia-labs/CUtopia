@@ -3,6 +3,11 @@
     display: flex;
     flex-direction: column;
     flex: 1;
+    background-color: var(--background);
+}
+
+.review-home-row {
+    align-items: flex-start;
 }
 
 .ranking-card > * {
@@ -51,6 +56,11 @@
 .ranking-card .list-item-container > :last-child {
     margin-right: 8px;
     margin-bottom: 0;
+}
+
+.ranking-card .grade-indicator {
+    width: 57px;
+    height: 25px;
 }
 
 .ranking-card .search-list-item {
