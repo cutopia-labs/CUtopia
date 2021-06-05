@@ -19,7 +19,6 @@ const HomePage = () => {
     onCompleted: (data) => {
       user.saveTimeTable(data.user.timetable);
     },
-    skip: user.timetable.length !== 0,
   });
 
   const { loading: reviewsLoading } = useQuery(GET_USER, {
@@ -29,7 +28,6 @@ const HomePage = () => {
     onCompleted: (data) => {
       user.saveReviews(data.user);
     },
-    skip: !user.reviews,
   });
 
   return (

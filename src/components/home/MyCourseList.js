@@ -7,17 +7,17 @@ import MyListItem from '../ListItem';
 import Loading from '../Loading';
 
 const MyCourseList = ({ loading, courses }) => (
-  <div className="course-card">
-    <div className="course-card-header center-row">
+  <div className="home-course-card">
+    <div className="home-course-card-header center-row">
       <School />
-      <span className="course-card-header-title">My Courses</span>
+      <span className="home-course-card-header-title">My Courses</span>
     </div>
     {
       loading ? (
         <Loading />
       ) : (
-        <div className="course-container">
-          {courses.map(course => (
+        <div className="home-course-container">
+          {courses?.map(course => (
             <Link
               key={course.courseId}
               to={`/review/${course.courseId}`}

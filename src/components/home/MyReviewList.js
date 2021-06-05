@@ -9,16 +9,16 @@ import Loading from '../Loading';
 import { getMMMDDYY } from '../../helpers/getTime';
 
 const MyReviewList = ({ loading, reviews }) => (
-  <div className="course-card">
-    <div className="course-card-header center-row">
+  <div className="home-course-card">
+    <div className="home-course-card-header center-row">
       <RateReview />
-      <span className="course-card-header-title">My Reviews</span>
+      <span className="home-course-card-header-title">My Reviews</span>
     </div>
     {
       loading ? (
         <Loading />
       ) : (
-        <div className="reviews-container">
+        <div className="home-reviews-container">
           {(reviews?.reviewIds).map(reviewId => {
             const [courseId, createdDate] = reviewId.split('#');
 

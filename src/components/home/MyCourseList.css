@@ -1,5 +1,6 @@
-.course-card {
+.home-course-card {
   display: flex;
+  flex-direction: column;
   width: 380px;
   margin-left: 30px;
   overflow: hidden;
@@ -8,38 +9,38 @@
   border-bottom: 1px solid var(--border);
 }
 
-.course-card-header {
+.home-course-card-header {
   padding: 16px 16px;
   color: var(--primary);
 }
 
-.course-card-header > :first-child {
+.home-course-card-header > :first-child {
   margin-right: 10px;
 }
 
-.course-card-header-title {
+.home-course-card-header-title {
   font-size: 18px;
   font-weight: 500;
 }
 
-.course-label {
+.home-course-label {
   margin: 0 14px;
   opacity: 0.5;
 }
 
-.course-card .list-item-container {
+.home-course-card .list-item-container {
   height: auto;
 }
 
-.course-card .list-item-container > :last-child {
+.home-course-card .list-item-container > :last-child {
   margin-right: 8px;
   margin-bottom: 0;
 }
 
-.course-card .search-list-item {
+.home-course-card .search-list-item {
   padding: 10px 0;
 }
 
-.course-container {
+.home-course-container {
   width: 100%;
 }
