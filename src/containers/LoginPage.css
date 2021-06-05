@@ -15,8 +15,8 @@
     color: white;
     background: linear-gradient(195deg, var(--primary) 2.3%,rgba(220, 86, 227,1) 88.5%);
     padding: 20px 40px;
-    width: 30%;
-    max-width: 600px;
+    width: 25%;
+    max-width: 400px;
 }
 
 .login-page .left > .logo-container {
@@ -28,9 +28,34 @@
     font-weight: 600;
 }
 
-.banner-text {
-    font-size: 26px;
+.banner-box {
+    margin-bottom: 20%;
+}
+
+.banner-big-title {
+    font-size: 35px;
     font-weight: bold;
+    margin-top: 40px;
+    margin-bottom: 55px;
+}
+
+.banner-title {
+    font-size: 25px;
+    font-weight: bold;
+    margin-top: 35px;
+    margin-bottom: 0;
+}
+
+.banner-text {
+    font-size: 16px;
+    margin-top: 7px;
+    margin-bottom: 0;
+}
+
+.banner-image {
+    margin-top: 40px;
+    height: 177px;
+    width: 360px;
 }
 
 .login-page .right {
@@ -64,5 +89,10 @@
     }
     .login-page .right > .login-panel {
         width: 90%;
+    }
+    .banner-box {
+        width: 0;
+        height: 0;
+        margin-bottom: 0;
     }
 }
