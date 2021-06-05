@@ -31,7 +31,7 @@ exports.addTimetable = async (input) => {
       ":entries": entries,
       ":empty_list": [],
     },
-    ReturnValues:"UPDATED_NEW",
+    ReturnValues: "UPDATED_NEW",
   };
 
   const result = await db.update(params).promise();
@@ -49,7 +49,7 @@ exports.removeTimetable = async (input) => {
       "username": username,
     },
     UpdateExpression,
-    ReturnValues:"UPDATED_NEW",
+    ReturnValues: "UPDATED_NEW",
   };
 
   const result = await db.update(params).promise();

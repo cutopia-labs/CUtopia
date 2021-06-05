@@ -21,11 +21,11 @@ exports.Mutation = {
 };
 
 exports.CourseTableEntry = {
-  course_sections: ({ course_sections }) => {
-    return course_sections.map(course_section => {
-      const { name } = course_section;
+  sections: ({ sections }) => {
+    return sections.map(section => {
+      const { name } = section;
       return {
-        ...course_section,
+        ...section,
         idsContext: {
           section: name,
         },

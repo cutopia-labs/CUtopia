@@ -10,13 +10,13 @@ type User {
 type CourseTableEntry {
   courseId: String!
   title: String!
-  course_sections: [CourseSection]
+  sections: [CourseSection]
 }
 
 input CourseTableEntryInput {
   courseId: String!
   title: String!
-  course_sections: [CourseSectionInput]
+  sections: [CourseSectionInput]
 }
 
 input AddTimetableInput {
