@@ -18,6 +18,8 @@ class UserStore {
 
   @observable timetable
 
+  @observable reviews
+
   // CUtopia
   @observable userId
 
@@ -47,10 +49,11 @@ class UserStore {
     );
   }
 
-  @action.bound async init() {
+  @action async init() {
     this.loginState = LOGIN_STATES.LOGGED_OUT;
     // User Saved Data
     await this.applyTimeTable();
+    await this.applyReviews();
     await this.applyPlannerCourses();
     await this.applyFavoriteCourses();
     // CUtopia
@@ -99,6 +102,35 @@ class UserStore {
     this.timetable = courses;
   }
 
+  @action async setAndSaveTimeTable(courses) {
+    this.setTimeTable(courses);
+    await storeData('timetable', JSON.stringify(courses));
+  }
+
+  // Reviews
+  @action async applyReviews() {
+    const reviews = JSON.parse(await getStoreData('reviews'));
+    this.setReviews(reviews);
+  }
+
+  @action async saveReviews(reviews) {
+    this.setReviews(reviews);
+    await storeData('reviews', JSON.stringify(reviews));
+  }
+
+  @action async clearReviews() {
+    await removeStoreItem('reviews');
+    this.setReviews([]);
+  }
+
+  @action async addReview(review) {
+    this.saveReviews([...this.reviews, review]);
+  }
+
+  @action.bound setReviews(reviews) {
+    this.reviews = reviews;
+  }
+
   // User Fav Courses
   @action async saveFavoriteCourses(courses) {
     await storeData('favoriteCourses', JSON.stringify(courses));
@@ -145,7 +177,7 @@ class UserStore {
     this.setToken(token);
   }
 
-  @action setToken(token) {
+  @action.bound setToken(token) {
     this.token = token;
     this.loginState = LOGIN_STATES.LOGGED_IN_CUTOPIA;
   }

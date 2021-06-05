@@ -31,8 +31,6 @@ export const COURSE_PANEL_MODES = Object.freeze({
   EDIT_REVIEW: 5,
 });
 
-const targetReview = '1231231';
-
 const SORTING_FIELDS = Object.freeze([
   'date',
   'upvotes',

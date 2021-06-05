@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState } from 'react';
 import {
   Link,
 } from 'react-router-dom';
@@ -78,7 +78,7 @@ const HomePanel = () => {
   });
   if (recentReviewsLoading || popularCoursesLoading || topRatedCoursesLoading) return <Loading />;
   return (
-    <div className="review-home-panel">
+    <div className="panel review-home-panel">
       <div className="review-home-row center-row">
         {
           topRatedCourses && topRatedCourses.ranking.topRatedCourses

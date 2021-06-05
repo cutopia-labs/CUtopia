@@ -220,6 +220,26 @@ const COURSE_SECTIONS_QUERY = gql`
     }
   }`;
 
+const MY_TIMETABLE_QUERY = gql`
+  query ($username: String!) {
+  user(input: {
+    username: $username
+  }) {
+    timetable {
+      courseId
+      title
+      sections{
+        name
+        startTimes
+        endTimes
+        days
+        locations
+        instructors
+      }
+    }
+  }
+}`;
+
 export {
   COURSE_INFO_QUERY,
   REVIEWS_QUERY,
@@ -229,4 +249,5 @@ export {
   TOP_RATED_COURSES_QUERY,
   POPULAR_COURSES_QUERY,
   COURSE_SECTIONS_QUERY,
+  MY_TIMETABLE_QUERY,
 };

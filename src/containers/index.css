@@ -60,6 +60,22 @@ textarea[type=number] {
     max-height: 100vh;
 }
 
+.page {
+    /* header - header padding - margin */
+    flex: 1;
+}
+
+.page > * {
+    background-color: var(--surface);
+}
+
+.panel {
+    flex: 1;
+    display: flex;
+    padding: 10px 24px 20px 24px;
+    background-color: var(--background);
+}
+
 .row, .center-row {
     display: flex;
     flex-direction: row;

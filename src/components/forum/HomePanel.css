@@ -1,9 +1,5 @@
 .review-home-panel {
-    padding: 10px 24px 20px 24px;
-    display: flex;
     flex-direction: column;
-    flex: 1;
-    background-color: var(--background);
 }
 
 .review-home-row {

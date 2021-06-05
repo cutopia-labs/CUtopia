@@ -1,19 +1,23 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import { observer } from 'mobx-react-lite';
 
 import './PlannerPage.css';
-import { CoursePanel, SearchPanel } from '../components/forum';
-import { TimeTablePanel } from '../components/planner';
+import { SearchPanel } from '../components/forum';
+import TimeTablePanel from '../components/TimeTablePanel';
 import { UserContext } from '../store';
-import { GET_USER } from '../constants/queries';
 
 const PlannerPage = () => {
   const user = useContext(UserContext);
-  const [courseId, setCourseId] = useState('AIST3010');
+
   return (
-    <div className="forum-page row">
+    <div className="page row">
       <SearchPanel />
-      <TimeTablePanel />
+      <TimeTablePanel
+        title="My Schedule"
+        courses={user.plannerCourses}
+        onImport={(parsedData) => user.setAndSavePlannerCourses(parsedData)}
+        onClear={() => user.clearPlannerCourses()}
+      />
     </div>
   );
 };

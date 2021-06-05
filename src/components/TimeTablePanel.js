@@ -1,12 +1,11 @@
 import React, { useContext, useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@material-ui/core';
-import { NotificationContext, UserContext } from '../../store';
+import { NotificationContext } from '../store';
 import { observer } from 'mobx-react-lite';
 
 import './TimeTablePanel.css';
-import CourseList from './CourseList';
-import courseParser from '../../parsers/courseParser';
-import copyToClipboard from '../../helpers/copyToClipboard';
+import CourseList from './planner/CourseList';
+import copyToClipboard from '../helpers/copyToClipboard';
 
 const MODAL_MODES = {
   NO_MODAL: 0,
@@ -14,11 +13,11 @@ const MODAL_MODES = {
   EXPORT_MODAL: 2,
 }
 
-const TimeTablePanel = () => {
-  const user = useContext(UserContext);
+const TimeTablePanel = ({ title, courses, onImport, onExport, onClear }) => {
   const notification = useContext(NotificationContext);
   const [modalMode, setModalMode] = useState(MODAL_MODES.NO_MODAL);
   const [importInput, setImportInput] = useState('');
+
   const FUNCTION_BUTTONS = [
     {
       label: 'import',
@@ -27,32 +26,31 @@ const TimeTablePanel = () => {
     {
       label: 'export',
       action: () => {
-        copyToClipboard(JSON.stringify(user.plannerCourses));
+        copyToClipboard(JSON.stringify(courses));
         notification.setSnackBar('Copied the timetable to clipboard!');
       },
     },
     {
       label: 'clear',
-      action: () => user.clearPlannerCourses(),
+      action: onClear,
     },
   ];
+
   return (
-    <div className="time-table-panel column">
+    <div className="panel time-table-panel column">
       <header className="center-row">
-        <span className="title">My Schedule</span>
+        <span className="title">{title}</span>
         <div className="btn-row center-row">
           {
             FUNCTION_BUTTONS.map(item => (
-              <Button
-                onClick={item.action}
-              >
+              <Button onClick={item.action}>
                 {item.label}
               </Button>
             ))
           }
         </div>
       </header>
-      <CourseList courses={user.plannerCourses.slice()} />
+      <CourseList courses={courses?.slice()} />
 
       <Dialog open={modalMode === MODAL_MODES.IMPORT_MODAL} onClose={() => setModalMode(MODAL_MODES.NO_MODAL)} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title">Import</DialogTitle>
@@ -79,16 +77,15 @@ const TimeTablePanel = () => {
           <Button onClick={() => setModalMode(MODAL_MODES.NO_MODAL)} color="primary">
             Cancel
           </Button>
-          <Button onClick={() => {
-            setModalMode(MODAL_MODES.NO_MODAL)
-            if(importInput){
-              // const parsed = courseParser(importInput)
-              const parsed = JSON.parse(importInput);
-              user.setAndSavePlannerCourses(parsed);
-              console.log(parsed)
-              
-            }
-          }} color="primary">
+          <Button
+            color="primary"
+            onClick={() => {
+              setModalMode(MODAL_MODES.NO_MODAL);
+              if (importInput) {
+                onImport(JSON.parse(importInput));
+              }
+            }}
+          >
             Import
           </Button>
         </DialogActions>

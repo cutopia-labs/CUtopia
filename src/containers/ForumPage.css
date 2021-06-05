@@ -1,8 +1,0 @@
-.forum-page {
-    /* header - header padding - margin */
-    flex: 1;
-}
-
-.forum-page > * {
-    background-color: var(--surface);
-}
