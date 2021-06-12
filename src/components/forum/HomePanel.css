@@ -1,5 +1,6 @@
 .review-home-panel {
     flex-direction: column;
+    background-color: var(--background);
 }
 
 .review-home-row {

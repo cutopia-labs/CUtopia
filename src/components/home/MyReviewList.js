@@ -19,7 +19,7 @@ const MyReviewList = ({ loading, reviews }) => (
         <Loading />
       ) : (
         <div className="home-reviews-container">
-          {(reviews?.reviewIds).map(reviewId => {
+          {(reviews || []).map(reviewId => {
             const [courseId, createdDate] = reviewId.split('#');
 
             return (

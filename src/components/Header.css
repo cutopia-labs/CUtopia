@@ -2,22 +2,41 @@
     height: var(--headerHeight);
     padding: 10px 20px;
     justify-content: space-between;
-    background-color: var(--surface);
+    background-color: rgb(32, 38, 44);
     /* box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 6px; */
-    border-bottom: 1px solid var(--border);
 }
 
-.header-logo {
-    width: 200px;
+.header-container > .header-logo {
     display: flex;
     align-items: center;
-    justify-content: center;
+    color: var(--reversed-text);
+    opacity: 1;
+    margin-left: 16px;
     /*
     background-image: url("../images/cutopia-logo.png");
     background-repeat: no-repeat;
     background-size: 100%;
     background-position: center;
     */
+}
+
+.header-container .search-input-container {
+    border: 1px solid #444d56;
+    border-radius: 6px;
+    margin-right: 12px;
+}
+
+.header-container .search-input-container > button,
+.header-container .search-input-container > .search-input {
+    color: white;
+}
+
+.header-container .search-input-container > .search-input-divider {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.header-nav {
+    margin-left: auto;
 }
 
 .header-nav > :last-child {
@@ -31,17 +50,16 @@
     padding: 0 20px;
     font-size: 18px;
     font-weight: bold;
-    opacity: 0.5;
     transition: all 0.1s ease-in-out;
+    color: var(--reversed-text);
 }
 
 .nav-label-container-active {
     opacity: 1;
-    color: var(--primary);
 }
 
 .nav-label-container:hover {
-    opacity: 0.8;
+    opacity: 0.6;
 }
 
 .nav-label-container-active {

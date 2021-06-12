@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 
 import './Header.css';
 import Logo from './Logo';
+import SearchInput from './SearchInput';
 
 const SECTIONS = [
   {
@@ -27,6 +28,7 @@ const Header = () => {
         <Logo />
       </Link>
       <nav className="header-nav row">
+        <SearchInput />
         {
           SECTIONS.map(section => (
             <Link

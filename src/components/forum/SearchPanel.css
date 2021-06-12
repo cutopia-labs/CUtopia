@@ -15,8 +15,7 @@
     background-color: var(--surface);
 }
 
-.search-input-container {
-    align-items: center;
+.search-panel .search-input-container {
     padding: 6px 16px;
 }
 

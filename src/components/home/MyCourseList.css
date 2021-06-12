@@ -30,6 +30,7 @@
 
 .home-course-card .list-item-container {
   height: auto;
+  padding: 0 16px;
 }
 
 .home-course-card .list-item-container > :last-child {

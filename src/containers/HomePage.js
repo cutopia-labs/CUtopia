@@ -16,16 +16,16 @@ const HomePage = () => {
     variables: {
       username: user.cutopiaUsername,
     },
-    onCompleted: (data) => {
+    onCompleted: data => {
       user.saveTimeTable(data.user.timetable);
     },
   });
 
-  const { loading: reviewsLoading } = useQuery(GET_USER, {
+  const { data: userData, loading: reviewsLoading } = useQuery(GET_USER, {
     variables: {
       username: user.cutopiaUsername,
     },
-    onCompleted: (data) => {
+    onCompleted: data => {
       user.saveReviews(data.user);
     },
   });
@@ -34,12 +34,12 @@ const HomePage = () => {
     <div className="page row">
       <div className="column">
         <MyCourseList loading={timetableLoading} courses={user.timetable} />
-        <MyReviewList loading={reviewsLoading} reviews={user.reviews} />
+        <MyReviewList loading={reviewsLoading} reviews={userData ? userData.user.reviewIds : null} />
       </div>
       <TimeTablePanel
-        title='Timetable'
+        title="Timetable"
         courses={user.timetable}
-        onImport={(parsedData) => user.setAndSaveTimeTable(parsedData)}
+        onImport={parsedData => user.setAndSaveTimeTable(parsedData)}
         onClear={() => user.clearTimeTable()}
       />
     </div>

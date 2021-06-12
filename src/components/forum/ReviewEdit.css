@@ -109,5 +109,8 @@
     width: 180px;
     border: none;
     height: 40px;
-    color: var(--text);
+    color: white;
+    box-shadow: none;
+    border: 1px solid var(--border);
+    border-right: 1px solida var(--border);
 }

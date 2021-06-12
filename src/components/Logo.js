@@ -1,11 +1,16 @@
 import React from 'react';
 import './Logo.css';
 
+export const LogoIcon = () => (
+  <div className="logo-container icon">
+    c
+  </div>
+);
+
 export default function Logo() {
   return (
     <div className="logo-container">
-      <span className="float">CU</span>
-      TOPIA
+      cutopia
     </div>
   );
 }

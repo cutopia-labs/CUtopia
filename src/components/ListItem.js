@@ -8,7 +8,6 @@ const MyListItem = ({
 }) => (
   <div
     className={`list-item-container${!noBorder ? ' border' : ''} row`}
-    style={{ paddingLeft: left ? '0px' : '16px', paddingRight: right ? '0px' : '16px' }}
     onClick={onClick}
   >
     {

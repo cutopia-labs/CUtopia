@@ -6,7 +6,7 @@ import {
 const COLOR_SHADE = 300;
 
 const colors = {
-  primary: 'rgba(21,101,192,1)',
+  primary: '#01579b',
   accent: '#f7c188',
   primaryDark: '#1F1F1F',
   randomColors: [
@@ -38,7 +38,7 @@ export const THEME = createMuiTheme({
   palette: {
     type: 'light',
     primary: {
-      main: '#7e57c2',
+      main: '#01579b',
       secondary: '#f9826c',
     },
   },

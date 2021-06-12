@@ -1,5 +1,5 @@
 body {
-    --primary: #7e57c2;
+    --primary: rgb(3, 102, 214);
     --accent: #f9826c;
     --surface: rgba(255,255,255,1);
     --background: rgb(250, 252, 255, 1);
@@ -73,7 +73,6 @@ textarea[type=number] {
     flex: 1;
     display: flex;
     padding: 10px 24px 20px 24px;
-    background-color: var(--background);
 }
 
 .row, .center-row {
