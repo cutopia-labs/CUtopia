@@ -19,7 +19,10 @@ const Navigator = () => {
   const user = useContext(UserContext);
   if (user.loginState !== LOGIN_STATES.LOGGED_IN_CUTOPIA) {
     return (
-      <LoginPage />
+      <>
+        <SnackBar />
+        <LoginPage />
+      </>
     );
   }
   return (

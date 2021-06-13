@@ -1,0 +1,38 @@
+.home-page {
+    width: 100%;
+    background-color: var(--background);
+    --home-page-card-padding: 16px;
+}
+
+.home-page .center-page {
+    padding: 20px 24px;
+    background-color: var(--background);
+}
+
+.home-page-left {
+    width: 300px;
+}
+
+/* Links Card */
+
+.links-card {
+    margin-top: var(--home-page-card-padding);
+    padding: var(--home-page-card-padding);
+}
+
+.links-card .sub-title {
+    margin-bottom: 6px;
+}
+
+.link-container {
+    font-size: 14px;
+    margin-top: 6px;
+}
+
+.link-container:hover {
+    color: var(--primary);
+}
+
+.link-container svg {
+    margin-right: 6px;
+}

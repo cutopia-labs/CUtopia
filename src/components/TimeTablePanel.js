@@ -1,8 +1,10 @@
 import React, { useContext, useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@material-ui/core';
-import { NotificationContext } from '../store';
+import {
+  Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField,
+} from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 
+import { NotificationContext } from '../store';
 import './TimeTablePanel.css';
 import CourseList from './planner/CourseList';
 import copyToClipboard from '../helpers/copyToClipboard';
@@ -11,9 +13,11 @@ const MODAL_MODES = {
   NO_MODAL: 0,
   IMPORT_MODAL: 1,
   EXPORT_MODAL: 2,
-}
+};
 
-const TimeTablePanel = ({ title, courses, onImport, onExport, onClear }) => {
+const TimeTablePanel = ({
+  title, courses, onImport, onExport, onClear,
+}) => {
   const notification = useContext(NotificationContext);
   const [modalMode, setModalMode] = useState(MODAL_MODES.NO_MODAL);
   const [importInput, setImportInput] = useState('');

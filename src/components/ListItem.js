@@ -4,10 +4,10 @@ import './ListItem.css';
 import colors from '../constants/colors';
 
 const MyListItem = ({
-  label, onClick, chevron, children, noBorder, ribbonIndex, left, right,
+  label, onClick, chevron, children, noBorder, ribbonIndex, left, right, className
 }) => (
   <div
-    className={`list-item-container${!noBorder ? ' border' : ''} row`}
+    className={`list-item-container${!noBorder ? ' border' : ''} row${className ? ` ${className}` : ''}`}
     onClick={onClick}
   >
     {

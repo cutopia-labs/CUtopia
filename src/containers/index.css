@@ -2,7 +2,7 @@ body {
     --primary: rgb(3, 102, 214);
     --accent: #f9826c;
     --surface: rgba(255,255,255,1);
-    --background: rgb(250, 252, 255, 1);
+    --background: rgb(250, 249, 248, 1);
     --background-dark: rgba(5,5,5,1);
     --background-secondary: rgb(246, 248, 250);
     --text: rgba(12,12,12,1);
@@ -71,6 +71,14 @@ textarea[type=number] {
     background-color: var(--surface);
 }
 
+.center-page {
+    padding: 0 24px;
+    max-width: var(--max-width);
+    width: var(--max-width);
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .panel {
     flex: 1;
     display: flex;
@@ -94,7 +102,6 @@ textarea[type=number] {
 .card {
     display: flex;
     flex-direction: column;
-    /* box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 6px; */
     border: 1px solid var(--border);
     background-color: var(--surface);
     border-radius: var(--border-radius);
@@ -105,9 +112,20 @@ textarea[type=number] {
     font-weight: bold;
 }
 
+.sub-title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
 .caption {
     color: var(--text);
     opacity: 0.9;
+}
+
+.light-caption {
+    color: var(--text);
+    opacity: 0.6;
+    font-size: 12px;
 }
 
 .sub-heading {
@@ -132,6 +150,20 @@ textarea[type=number] {
 .bottom-border-container.active {
     padding-top: 2px;
     border-bottom: 2px solid var(--accent);
+}
+
+.icon {
+    margin-right: 20px;
+    cursor: pointer;
+    background: rgb(250, 241, 223);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    transition: all .3s ease-in-out;
+}
+
+.char-icon {
+    text-transform: uppercase;
 }
 
 /* Scrollbar styles */

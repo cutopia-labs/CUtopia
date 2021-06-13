@@ -60,6 +60,10 @@ class UserStore {
     await this.applyCutopiaAccount();
   }
 
+  @action.bound setUserStore(key, value) {
+    this[key] = value;
+  }
+
   // TimeTable
   @action async applyTimeTable() {
     const courses = JSON.parse(await getStoreData('timetable'));
@@ -148,6 +152,9 @@ class UserStore {
 
   // CUtopia
   @action async saveCutopiaAccount(username, sid, password, token) {
+    this.setUserStore('cutopiaUsername', username);
+    this.setUserStore('userId', sid);
+    this.setUserStore('cutopiaPassword', password);
     username && await storeData('cutopiaUsername', username);
     sid && await storeData('userId', sid);
     password && await storeData('cutopiaPassword', password);
@@ -217,13 +224,13 @@ class UserStore {
   @action async applyPlannerCourses() {
     const courses = JSON.parse(await getStoreData('plannerCourses'));
     console.table(courses);
-    this.setPlannerCourses(courses || []);
+    this.setUserStore('plannerCourses', courses || []);
     const term = await getStoreData('plannerTerm');
-    this.updatePlannerTerm(term || null);
+    this.setUserStore('plannerTerm', term || null);
   }
 
   @action async savePlannerCourses(courses) {
-    this.setPlannerCourses(courses);
+    this.setUserStore('plannerCourses', courses);
     await storeData('plannerCourses', JSON.stringify(courses));
   }
 
@@ -269,7 +276,7 @@ class UserStore {
         this.plannerCourses.splice(index, 1);
       }
       await this.notificationStore.setSnackBar('1 item deleted', 'UNDO', () => {
-        this.setPlannerCourses(JSON.parse(UNDO_COPY));
+        this.setUserStore('plannerCourses', JSON.parse(UNDO_COPY));
       });
       await storeData('plannerCourses', JSON.stringify(this.plannerCourses));
     }
@@ -284,7 +291,7 @@ class UserStore {
       const UNDO_COPY = [...this.plannerCourses];
       this.plannerCourses.splice(index, 1);
       await this.notificationStore.setSnackBar('1 item deleted', 'UNDO', () => {
-        this.setPlannerCourses(UNDO_COPY);
+        this.setUserStore('plannerCourses', UNDO_COPY);
       });
       // Update AsyncStorage after undo valid period passed.
       await storeData('plannerCourses', JSON.stringify(this.plannerCourses));
@@ -294,22 +301,14 @@ class UserStore {
     }
   }
 
-  @action.bound setPlannerCourses(courses) {
-    this.plannerCourses = courses;
-  }
-
   @action async setAndSavePlannerCourses(courses) {
-    this.setPlannerCourses(courses);
+    this.setUserStore('plannerCourses', courses);
     await storeData('plannerCourses', JSON.stringify(this.plannerCourses));
   }
 
   @action async setPlannerTerm(term) {
     await storeData('plannerTerm', term);
-    this.updatePlannerTerm(term);
-  }
-
-  @action.bound updatePlannerTerm(term) {
-    this.plannerTerm = term;
+    this.setUserStore('plannerTerm', term);
   }
 }
 
