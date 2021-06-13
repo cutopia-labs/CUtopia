@@ -219,7 +219,7 @@ const SearchPanel = () => {
   }, [historyList]);
 
   return (
-    <div className="search-panel">
+    <div className="search-panel card">
       <div className="search-input-container row">
         {
           Boolean(searchPayload.mode) && (searchPayload.mode !== 'query' || searchPayload.text)
@@ -280,65 +280,51 @@ const SearchPanel = () => {
       {
         !currentCourse
         && (
-          searchPayload.mode && (searchPayload.mode !== 'query' || searchPayload.text) ? (
-            (getCoursesFromQuery(searchPayload, user) || []).map((course, i) => (
-              <ListItem
-                key={`listitem-${course.c}`}
-                ribbonIndex={i}
-                chevron
-                onClick={() => {
-                  saveHistory(course.c);
-                  if (isPlanner) {
-                    setCurrentCourse(course.c);
-                  }
-                  else {
-                    history.push(`/review/${course.c}`);
-                  }
-                }}
-              >
-                <div className="search-list-item column">
-                  <span className="title">{course.c}</span>
-                  <span className="caption">{course.t}</span>
-                </div>
-              </ListItem>
-            ))
-          ) : (
-            <>
-              {
-                Boolean(historyList.length) && (
-                  <div className="chips-row">
-                    {
-                      historyList.map(courseId => (
-                        <Chip
-                          onClick={() => {
-                            if (isPlanner) setCurrentCourse(courseId);
-                            else history.push(`/review/${courseId}`);
-                          }}
-                          variant="outlined"
-                          label={courseId}
-                          onDelete={() => deleteHistory(courseId)}
-                          key={courseId}
-                        />
-                      ))
-                    }
-                  </div>
-                )
-              }
-              <Divider />
-              {
-                LIST_ITEMS.map(item => (
-                  <MUIListItem key={item.label} button onClick={() => setSearchPayload({ mode: item.label })}>
-                    <ListItemIcon>
-                      {item.icon}
-                    </ListItemIcon>
-                    <ListItemText primary={item.label} />
-                  </MUIListItem>
-                ))
-              }
-              <Divider />
-              <DepartmentList setSearchPayload={setSearchPayload} />
-            </>
-          )
+          searchPayload.mode && (searchPayload.mode !== 'query' || searchPayload.text)
+            ? (
+              <>
+                <Divider />
+                {
+                  (getCoursesFromQuery(searchPayload, user) || []).map((course, i) => (
+                    <ListItem
+                      key={`listitem-${course.c}`}
+                      ribbonIndex={i}
+                      chevron
+                      onClick={() => {
+                        saveHistory(course.c);
+                        if (isPlanner) {
+                          setCurrentCourse(course.c);
+                        }
+                        else {
+                          history.push(`/review/${course.c}`);
+                        }
+                      }}
+                    >
+                      <div className="search-list-item column">
+                        <span className="title">{course.c}</span>
+                        <span className="caption">{course.t}</span>
+                      </div>
+                    </ListItem>
+                  ))
+                }
+              </>
+            ) : (
+              <>
+                <Divider />
+                {
+                  LIST_ITEMS.map(item => (
+                    <MUIListItem key={item.label} button onClick={() => setSearchPayload({ mode: item.label })}>
+                      <ListItemIcon>
+                        {item.icon}
+                      </ListItemIcon>
+                      <ListItemText primary={item.label} />
+                    </MUIListItem>
+                  ))
+                }
+                <Divider />
+                <DepartmentList setSearchPayload={setSearchPayload} />
+              </>
+            )
         )
       }
     </div>

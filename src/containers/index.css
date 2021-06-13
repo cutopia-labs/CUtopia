@@ -22,7 +22,9 @@ body {
     --highlight-on-surface: #dedede60;
     --scrollbar: rgb(204, 204, 204);
     --max-width: 1260px;
+    --card-padding: 16px;
     color: var(--text);
+    background-color: var(--background);
 }
 
 a {
@@ -67,10 +69,6 @@ textarea[type=number] {
     flex: 1;
 }
 
-.page > * {
-    background-color: var(--surface);
-}
-
 .center-page {
     padding: 0 24px;
     max-width: var(--max-width);
@@ -99,12 +97,16 @@ textarea[type=number] {
     flex-direction: column;
 }
 
-.card {
+.card, .margin-card {
     display: flex;
     flex-direction: column;
     border: 1px solid var(--border);
     background-color: var(--surface);
     border-radius: var(--border-radius);
+}
+
+.margin-card {
+    margin: var(--card-padding);
 }
 
 .title {
@@ -183,7 +185,8 @@ textarea[type=number] {
 }
 
 ::-webkit-scrollbar-track {
-    background: transparent;
+    background: var(--background);
+    border-left: 1px solid var(--border);
 }
 
 ::-webkit-scrollbar-thumb {

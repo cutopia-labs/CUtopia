@@ -1,14 +1,16 @@
 .search-panel {
-    width: 380px;
+    width: 340px;
+    min-width: 340px;
     border-right: 1px solid var(--border);
     top: 0px;
     left: 0;
     height: auto;
     align-self: flex-start;
-    min-height: calc(100vh - var(--headerHeight) - 11px);
-    max-height: calc(100vh - var(--headerHeight) - 11px);
+    max-height: calc(100vh - var(--headerHeight) - 51px);
     overflow-y: scroll;
     overflow-x: hidden;
+    background-color: var(--surface);
+    margin: var(--card-padding) 0;
 }
 
 .search-panel > div {

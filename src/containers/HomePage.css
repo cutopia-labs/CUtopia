@@ -62,7 +62,6 @@
 /* Links Card */
 
 .links-card {
-    margin-top: var(--home-page-card-padding);
     padding: var(--home-page-card-padding);
 }
 

@@ -10,9 +10,10 @@ const PlannerPage = () => {
   const user = useContext(UserContext);
 
   return (
-    <div className="page row">
+    <div className="planner-page center-page page row">
       <SearchPanel />
       <TimeTablePanel
+        className="planner-timetable margin-card"
         title="My Schedule"
         courses={user.plannerCourses}
         onImport={(parsedData) => user.setAndSavePlannerCourses(parsedData)}

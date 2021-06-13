@@ -4,7 +4,9 @@
     flex: 1;
     padding: 10px 24px 20px 24px;
     overflow-y: scroll;
-    max-height: calc(100vh - var(--headerHeight) - 41px);
+    max-height: calc(100vh - var(--headerHeight) - 81px);
+    margin: var(--card-padding);
+    margin-right: 0;
 }
 
 .course-summary {

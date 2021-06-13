@@ -1,9 +1,0 @@
-.home-reviews-container {
-  overflow-y: scroll;
-  overflow-x: hidden;
-  width: 100%;
-}
-
-.home-reviews-container .list-item-container {
-  padding: 0 16px;
-}

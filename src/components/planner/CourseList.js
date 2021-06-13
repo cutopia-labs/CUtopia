@@ -77,7 +77,7 @@ export default function CourseList({ courses }) {
                 startTime: v.startTimes[i],
                 endTime: v.endTimes[i],
                 location: v.locations[i],
-                color: colors.randomColors[colorIndex],
+                color: colors.randomColors[colorIndex % colors.randomColors.length],
               }}
             />,
           );

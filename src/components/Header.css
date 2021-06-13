@@ -1,5 +1,6 @@
 .header-container {
     height: var(--headerHeight);
+    min-height: var(--headerHeight);
     padding: 10px 20px;
     justify-content: space-between;
     background-color: rgb(32, 38, 44);

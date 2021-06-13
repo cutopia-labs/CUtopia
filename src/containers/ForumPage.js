@@ -9,7 +9,7 @@ const ForumPage = () => {
   const user = useContext(UserContext);
 
   return (
-    <div className="page row">
+    <div className="forum-page center-page page row">
       <SearchPanel />
       <CoursePanel />
     </div>

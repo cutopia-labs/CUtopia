@@ -1,5 +1,6 @@
 .user-card {
     height: fit-content;
+    margin-bottom: var(--home-page-card-padding);
 }
 
 .user-card-header {
