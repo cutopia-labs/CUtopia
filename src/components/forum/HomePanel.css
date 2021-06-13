@@ -1,6 +1,5 @@
 .review-home-panel {
     flex-direction: column;
-    background-color: var(--background);
 }
 
 .review-home-row {
@@ -14,6 +13,7 @@
 .ranking-card-header {
     padding: 16px 16px;
     color: var(--primary);
+    background-color: var(--background-secondary);
 }
 
 .ranking-card-header > :first-child {

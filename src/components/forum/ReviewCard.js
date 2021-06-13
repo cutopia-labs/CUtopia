@@ -90,6 +90,7 @@ const ReviewCard = ({
           rating={review}
           isReview
           additionalClassName="review-header"
+          additionalChildClassName="bottom-border-container"
           selected={selectedCriteria}
           setSelected={setSelectedCriteria}
         >

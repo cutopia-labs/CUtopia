@@ -12,18 +12,21 @@
     color: var(--reversed-text);
     opacity: 1;
     margin-left: 16px;
-    /*
-    background-image: url("../images/cutopia-logo.png");
-    background-repeat: no-repeat;
-    background-size: 100%;
-    background-position: center;
-    */
 }
 
 .header-container .search-input-container {
     border: 1px solid #444d56;
     border-radius: 6px;
     margin-right: 12px;
+}
+
+.header-container .search-input-container input {
+    width: 200px;
+    transition: width 300ms cubic-bezier(0.7, 0, 0.3, 1) 0ms;
+}
+
+.header-container .search-input-container input:focus {
+    width: 280px;
 }
 
 .header-container .search-input-container > button,

@@ -5,7 +5,7 @@ import GradeIndicator from '../GradeIndicator';
 import './GradeRow.css';
 
 const GradeRow = ({
-  rating, children, additionalClassName, isReview, selected, setSelected,
+  rating, children, isReview, selected, setSelected, additionalClassName, additionalChildClassName
 }) => (
   <div className={`grade-row${additionalClassName ? ` ${additionalClassName}` : ''}`}>
     <div className="center-row">
@@ -22,7 +22,7 @@ const GradeRow = ({
         [isReview ? 'overall' : false, ...RATING_FIELDS].filter(x => x).map(field => (
           <div
             key={field}
-            className={`center-row rating-container${selected === field ? ' active' : ''}`}
+            className={`center-row rating-container${selected === field ? ' active' : ''}${additionalChildClassName ? ` ${additionalChildClassName}` : ''}`}
             onClick={() => {
               if (setSelected) {
                 setSelected(field);

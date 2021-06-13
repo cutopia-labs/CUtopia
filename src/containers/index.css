@@ -4,6 +4,7 @@ body {
     --surface: rgba(255,255,255,1);
     --background: rgb(250, 252, 255, 1);
     --background-dark: rgba(5,5,5,1);
+    --background-secondary: rgb(246, 248, 250);
     --text: rgba(12,12,12,1);
     --reversed-text: rgba(255,255,255,1);
     --button: rgba(21, 121, 193, 1);
@@ -20,6 +21,7 @@ body {
     --caption: #494949;
     --highlight-on-surface: #dedede60;
     --scrollbar: rgb(204, 204, 204);
+    --max-width: 1260px;
     color: var(--text);
 }
 
@@ -120,6 +122,16 @@ textarea[type=number] {
 
 .transparent {
     background-color: transparent !important;
+}
+
+.bottom-border-container:hover {
+    padding-top: 2px; /*　Prevent the border pushes the content upwards */
+    border-bottom: 2px solid var(--border)
+}
+
+.bottom-border-container.active {
+    padding-top: 2px;
+    border-bottom: 2px solid var(--accent);
 }
 
 /* Scrollbar styles */

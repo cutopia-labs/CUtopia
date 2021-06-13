@@ -14,7 +14,3 @@
     border-radius: 50%;
     background-color: white;
 }
-
-.logo-container .float {
-    /* text-shadow: calc(-1 * var(--float-distance)) var(--float-distance) rgba(173, 216, 230, 0.6) !important; */
-}
