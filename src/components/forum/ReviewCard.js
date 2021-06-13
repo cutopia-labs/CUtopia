@@ -89,8 +89,8 @@ const ReviewCard = ({
         <GradeRow
           rating={review}
           isReview
-          additionalClassName="review-header"
-          additionalChildClassName="bottom-border-container"
+          additionalClassName="review-header bottom-border-row"
+          additionalChildClassName="bottom-border-item"
           selected={selectedCriteria}
           setSelected={setSelectedCriteria}
         >

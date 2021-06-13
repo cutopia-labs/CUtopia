@@ -5,7 +5,7 @@ import {
   useHistory, useRouteMatch,
 } from 'react-router-dom';
 import {
-  InputBase, ListItem, ListItemIcon, ListItemText, Divider, Chip, Collapse, IconButton,
+  InputBase, ListItem as MUIListItem, ListItemIcon, ListItemText, Divider, Chip, Collapse, IconButton,
 } from '@material-ui/core';
 import {
   Search, ExpandLess, ExpandMore, School, ArrowBack, Bookmark, Class,
@@ -14,7 +14,7 @@ import { useQuery } from '@apollo/client';
 import { observer } from 'mobx-react-lite';
 
 import './SearchPanel.css';
-import MyListItem from '../ListItem';
+import ListItem from '../ListItem';
 import { storeData, getStoreData } from '../../helpers/store';
 import COURSE_CODES from '../../constants/courseCodes';
 import { UserContext } from '../../store';
@@ -108,7 +108,7 @@ const DepartmentList = ({ setSearchPayload }) => {
       {
         Object.entries(COURSE_CODES).map(([k, v]) => (
           <Fragment key={k}>
-            <ListItem
+            <MUIListItem
               button
               onClick={() => {
                 if (k === currentSchool) {
@@ -124,12 +124,12 @@ const DepartmentList = ({ setSearchPayload }) => {
               </ListItemIcon>
               <ListItemText primary={k} />
               {k === currentSchool ? <ExpandLess /> : <ExpandMore />}
-            </ListItem>
+            </MUIListItem>
             <Collapse in={k === currentSchool} timeout="auto" unmountOnExit>
               <div className="code-list">
                 {
                   v.map((code, i) => (
-                    <MyListItem
+                    <ListItem
                       key={code}
                       label={code}
                       ribbonIndex={i}
@@ -282,7 +282,7 @@ const SearchPanel = () => {
         && (
           searchPayload.mode && (searchPayload.mode !== 'query' || searchPayload.text) ? (
             (getCoursesFromQuery(searchPayload, user) || []).map((course, i) => (
-              <MyListItem
+              <ListItem
                 key={`listitem-${course.c}`}
                 ribbonIndex={i}
                 chevron
@@ -300,7 +300,7 @@ const SearchPanel = () => {
                   <span className="title">{course.c}</span>
                   <span className="caption">{course.t}</span>
                 </div>
-              </MyListItem>
+              </ListItem>
             ))
           ) : (
             <>
@@ -327,12 +327,12 @@ const SearchPanel = () => {
               <Divider />
               {
                 LIST_ITEMS.map(item => (
-                  <ListItem key={item.label} button onClick={() => setSearchPayload({ mode: item.label })}>
+                  <MUIListItem key={item.label} button onClick={() => setSearchPayload({ mode: item.label })}>
                     <ListItemIcon>
                       {item.icon}
                     </ListItemIcon>
                     <ListItemText primary={item.label} />
-                  </ListItem>
+                  </MUIListItem>
                 ))
               }
               <Divider />

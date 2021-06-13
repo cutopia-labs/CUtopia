@@ -13,7 +13,7 @@ import GradeIndicator from '../GradeIndicator';
 import { RATING_FIELDS } from '../../constants/states';
 import { RECENT_REVIEWS_QUERY, TOP_RATED_COURSES_QUERY, POPULAR_COURSES_QUERY } from '../../constants/queries';
 import Loading from '../Loading';
-import MyListItem from '../ListItem';
+import ListItem from '../ListItem';
 import Badge from '../Badge';
 
 const RANKING_ITEMS = {
@@ -40,7 +40,7 @@ const RankingCard = ({
           key={`${headerTitle}-${course.courseId}`}
           to={`/review/${course.courseId}`}
         >
-          <MyListItem
+          <ListItem
             left={
               <span className="ranking-label">{i + 1}</span>
             }
@@ -59,7 +59,7 @@ const RankingCard = ({
               <span className="title">{course.courseId}</span>
               <span className="caption">{course.course.title}</span>
             </div>
-          </MyListItem>
+          </ListItem>
         </Link>
       ))
     }

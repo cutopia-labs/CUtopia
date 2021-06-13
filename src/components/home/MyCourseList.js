@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { School } from '@material-ui/icons';
 
 import './MyCourseList.css';
-import MyListItem from '../ListItem';
+import ListItem from '../ListItem';
 import Loading from '../Loading';
 
 const MyCourseList = ({ loading, courses }) => (
@@ -22,12 +22,12 @@ const MyCourseList = ({ loading, courses }) => (
               key={course.courseId}
               to={`/review/${course.courseId}`}
             >
-              <MyListItem>
+              <ListItem>
                 <div className="search-list-item column">
                   <span className="title">{course.courseId}</span>
                   <span className="caption">{course.title}</span>
                 </div>
-              </MyListItem>
+              </ListItem>
             </Link>
           ))}
         </div>

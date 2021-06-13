@@ -16,7 +16,7 @@ const MODAL_MODES = {
 };
 
 const TimeTablePanel = ({
-  title, courses, onImport, onExport, onClear,
+  title, courses, onImport, onExport, onClear, className
 }) => {
   const notification = useContext(NotificationContext);
   const [modalMode, setModalMode] = useState(MODAL_MODES.NO_MODAL);
@@ -41,7 +41,7 @@ const TimeTablePanel = ({
   ];
 
   return (
-    <div className="panel time-table-panel column">
+    <div className={`panel time-table-panel column${className ? ` ${className}` : ''}`}>
       <header className="center-row">
         <span className="title">{title}</span>
         <div className="btn-row center-row">

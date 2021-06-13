@@ -4,7 +4,7 @@ import { RateReview } from '@material-ui/icons';
 import { observer } from 'mobx-react-lite';
 
 import './MyReviewList.css';
-import MyListItem from '../ListItem';
+import ListItem from '../ListItem';
 import Loading from '../Loading';
 import { getMMMDDYY } from '../../helpers/getTime';
 
@@ -27,12 +27,12 @@ const MyReviewList = ({ loading, reviews }) => (
                 key={courseId}
                 to={`/review/${courseId}`}
               >
-                <MyListItem>
+                <ListItem>
                   <div className="search-list-item column">
                     <span className="title">{courseId}</span>
                     <span className="caption">{getMMMDDYY(createdDate)}</span>
                   </div>
-                </MyListItem>
+                </ListItem>
               </Link>
             );
           })}

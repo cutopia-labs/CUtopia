@@ -3,8 +3,8 @@ import React from 'react';
 import './ListItem.css';
 import colors from '../constants/colors';
 
-const MyListItem = ({
-  label, onClick, chevron, children, noBorder, ribbonIndex, left, right, className
+const ListItem = ({
+  label, caption, onClick, chevron, children, noBorder, ribbonIndex, left, right, className,
 }) => (
   <div
     className={`list-item-container${!noBorder ? ' border' : ''} row${className ? ` ${className}` : ''}`}
@@ -16,7 +16,11 @@ const MyListItem = ({
     }
     {
       label
-        && <span className="list-item-label">{label}</span>
+        && <span className="list-item-label title">{label}</span>
+    }
+    {
+      caption
+        && <span className="list-item-caption caption">{caption}</span>
     }
     {left}
     {children}
@@ -28,4 +32,4 @@ const MyListItem = ({
   </div>
 );
 
-export default MyListItem;
+export default ListItem;

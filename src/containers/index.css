@@ -142,12 +142,22 @@ textarea[type=number] {
     background-color: transparent !important;
 }
 
-.bottom-border-container:hover {
+.bottom-border-row {
+    display: flex;
+    width: 100%;
+    border-bottom: 1px solid var(--border);
+}
+
+.bottom-border-item {
+    cursor: pointer;
+}
+
+.bottom-border-item:hover {
     padding-top: 2px; /*　Prevent the border pushes the content upwards */
     border-bottom: 2px solid var(--border)
 }
 
-.bottom-border-container.active {
+.bottom-border-item.active {
     padding-top: 2px;
     border-bottom: 2px solid var(--accent);
 }

@@ -2,6 +2,8 @@
     width: 100%;
     background-color: var(--background);
     --home-page-card-padding: 16px;
+    height: 100%;
+    overflow-y: scroll;
 }
 
 .home-page .center-page {
@@ -11,6 +13,50 @@
 
 .home-page-left {
     width: 300px;
+    position: sticky;
+    top: 20px;
+    height: 0;
+}
+
+.home-page-right {
+    flex: 1;
+    margin-left: var(--home-page-card-padding);
+    min-height: 100%;
+    height: fit-content;
+}
+
+.home-page .user-menu {
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+    min-height: 50px;
+    height: 50px;
+    margin-bottom: var(--home-page-card-padding);
+}
+
+.user-menu-item {
+    display: flex;
+    height: 48px;
+    padding: 0 var(--home-page-card-padding);
+}
+
+.user-menu-item svg {
+    font-size: 16px;
+}
+
+.user-menu-item .caption {
+    text-transform: capitalize !important;
+    margin-left: 6px;
+    font-size: 14px;
+}
+
+.user-menu .user-menu-item.active,
+.user-menu .user-menu-item:hover {
+    padding-top: 0;
+}
+
+.home-page-timetable {
+    height: 100%;
 }
 
 /* Links Card */
