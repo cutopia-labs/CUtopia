@@ -4,11 +4,12 @@ import './ListItem.css';
 import colors from '../constants/colors';
 
 const ListItem = ({
-  label, caption, onClick, chevron, children, noBorder, ribbonIndex, left, right, className,
+  label, caption, onClick, chevron, children, noBorder, ribbonIndex, left, right, className, onMouseDown
 }) => (
   <div
     className={`list-item-container${!noBorder ? ' border' : ''} row${className ? ` ${className}` : ''}`}
     onClick={onClick}
+    onMouseDown={onMouseDown}
   >
     {
       ribbonIndex !== undefined

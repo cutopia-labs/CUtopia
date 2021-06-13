@@ -43,7 +43,7 @@ const LIST_ITEMS = Object.freeze([
   },
 ]);
 
-const getCoursesFromQuery = (payload, user) => {
+const getCoursesFromQuery = (payload, user, limit) => {
   // load local courselist
   const { mode, text } = payload;
   switch (mode) {
@@ -70,10 +70,10 @@ const getCoursesFromQuery = (payload, user) => {
         }
         if (subject && code) {
           const results = [];
-          for (let i = 0; (i < COURSES[subject].length && results.length < MAX_SEARCH_RESULT_LENGTH); i++) {
+          for (let i = 0; (i < COURSES[subject].length && results.length < limit); i++) {
             if (COURSES[subject][i].c.includes(code)) {
               if (code.length === 4) {
-                return [COURSES[subject][i]].slice(0, MAX_SEARCH_RESULT_LENGTH);
+                return [COURSES[subject][i]].slice(0, limit);
               }
               results.push(COURSES[subject][i]);
             }
@@ -81,13 +81,13 @@ const getCoursesFromQuery = (payload, user) => {
           return results;
         }
         if (subject) {
-          return COURSES[subject].slice(0, MAX_SEARCH_RESULT_LENGTH);
+          return COURSES[subject].slice(0, limit);
         }
       }
       catch (error) { // search for titles
         const results = [];
         for (const [, courses] of Object.entries(COURSES)) {
-          for (let i = 0; (i < courses.length && results.length < MAX_SEARCH_RESULT_LENGTH); i++) {
+          for (let i = 0; (i < courses.length && results.length < limit); i++) {
             if (courses[i].t.toLowerCase().includes(text.toLowerCase())) {
               results.push(courses[i]);
             }
@@ -149,6 +149,24 @@ const DepartmentList = ({ setSearchPayload }) => {
     </div>
   );
 };
+
+export const SearchResult = ({
+  searchPayload, user, onClick, onMouseDown, limit,
+}) => (
+  (getCoursesFromQuery(searchPayload, user, limit || MAX_SEARCH_RESULT_LENGTH) || []).map((course, i) => (
+    <ListItem
+      key={`listitem-${course.c}`}
+      ribbonIndex={i}
+      chevron
+      onClick={() => onClick(course.c)}
+      onMouseDown={() => onMouseDown(course.c)}
+    >
+      <div className="search-list-item column">
+        <span className="title">{course.c}</span>
+        <span className="caption">{course.t}</span>
+      </div>
+    </ListItem>
+  )));
 
 const SearchPanel = () => {
   const [searchPayload, setSearchPayload] = useState({});
@@ -284,29 +302,19 @@ const SearchPanel = () => {
             ? (
               <>
                 <Divider />
-                {
-                  (getCoursesFromQuery(searchPayload, user) || []).map((course, i) => (
-                    <ListItem
-                      key={`listitem-${course.c}`}
-                      ribbonIndex={i}
-                      chevron
-                      onClick={() => {
-                        saveHistory(course.c);
-                        if (isPlanner) {
-                          setCurrentCourse(course.c);
-                        }
-                        else {
-                          history.push(`/review/${course.c}`);
-                        }
-                      }}
-                    >
-                      <div className="search-list-item column">
-                        <span className="title">{course.c}</span>
-                        <span className="caption">{course.t}</span>
-                      </div>
-                    </ListItem>
-                  ))
-                }
+                <SearchResult
+                  searchPayload={searchPayload}
+                  user={user}
+                  onClick={courseId => {
+                    saveHistory(courseId);
+                    if (isPlanner) {
+                      setCurrentCourse(courseId);
+                    }
+                    else {
+                      history.push(`/review/${courseId}`);
+                    }
+                  }}
+                />
               </>
             ) : (
               <>

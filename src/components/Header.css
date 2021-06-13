@@ -27,7 +27,7 @@
 }
 
 .header-container .search-input-container input:focus {
-    width: 280px;
+    width: 330px;
 }
 
 .header-container .search-input-container > button,
@@ -37,6 +37,21 @@
 
 .header-container .search-input-container > .search-input-divider {
     background-color: rgba(255, 255, 255, 0.3);
+}
+
+.header-search-result {
+    position: fixed;
+    margin-top: calc(var(--headerHeight) + 10px);
+    height: fit-content;
+    z-index: 10;
+    border-bottom: none;
+    border-right: none;
+    box-shadow: 0 4px 6px rgb(0 0 0 / 10%);
+}
+
+.header-search-result > .list-item-container {
+    width: 380px;
+    height: auto;
 }
 
 .header-nav {

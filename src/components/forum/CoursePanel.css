@@ -5,6 +5,7 @@
     padding: 10px 24px 20px 24px;
     overflow-y: scroll;
     max-height: calc(100vh - var(--headerHeight) - 81px);
+    height: fit-content;
     margin: var(--card-padding);
     margin-right: 0;
 }

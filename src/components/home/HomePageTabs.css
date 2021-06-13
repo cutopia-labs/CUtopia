@@ -8,6 +8,7 @@
     padding: 12px 0;
     height: auto;
     border-bottom: 1px solid var(--border);
+    align-items: flex-start;
 }
 
 .home-course-container > a:last-child .home-course-list-item {

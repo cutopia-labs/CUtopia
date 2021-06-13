@@ -5,9 +5,11 @@ import SearchIcon from '@material-ui/icons/Search';
 
 import './SearchInput.css';
 
-export default function SearchInput() {
+export default function SearchInput({
+  value, setValue, onSubmit, setVisible,
+}) {
   return (
-    <div className="search-input-container">
+    <form className="search-input-container" onSubmit={onSubmit}>
       <IconButton size="small" type="submit" className="search-input-icon" aria-label="search">
         <SearchIcon />
       </IconButton>
@@ -15,7 +17,11 @@ export default function SearchInput() {
         className="search-input"
         placeholder="Search for courses"
         inputProps={{ 'aria-label': 'search google maps' }}
+        value={value}
+        onChange={e => setValue(e.target.value)}
+        onFocus={() => setVisible(true)}
+        onBlur={() => setVisible(false)}
       />
-    </div>
+    </form>
   );
 }
