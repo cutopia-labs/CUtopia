@@ -10,9 +10,9 @@ import {
   Button, IconButton, Menu, MenuItem,
 } from '@material-ui/core';
 import { SpeedDial, SpeedDialIcon, SpeedDialAction } from '@material-ui/lab';
+import { observer } from 'mobx-react-lite';
 
 import './CoursePanel.css';
-import { observer } from 'mobx-react-lite';
 import CourseCard from './CourseCard';
 import { validCourse } from '../../helpers/marcos';
 import { COURSE_INFO_QUERY, GET_REVIEW, REVIEWS_QUERY } from '../../constants/queries';

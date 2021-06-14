@@ -4,9 +4,8 @@
     align-items: flex-start;
     border-radius: var(--border-radius);
     border: 1px solid var(--border);
-    --review-field-margin-top: 16px;
-    margin: var(--review-field-margin-top) 0;
-    padding: var(--review-field-margin-top) 10px;
+    margin: var(--card-padding) 0;
+    padding: var(--card-padding) 10px;
     position: relative;
 }
 
@@ -25,7 +24,7 @@
 
 .review-header-container .caption {
     margin-left: 16px;
-    font-size: var(--review-field-margin-top);
+    font-size: var(--card-padding);
 }
 
 .review-header-container .anonymous-switch {
@@ -34,7 +33,7 @@
 }
 
 .form-section-title {
-    margin-top: var(--review-field-margin-top);
+    margin-top: var(--card-padding);
     font-weight: bold;
     text-transform: uppercase;
     font-size: 14px;
@@ -53,7 +52,7 @@
     width: 100%;
     justify-content: space-between;
     align-items: center;
-    margin-top: var(--review-field-margin-top);
+    margin-top: var(--card-padding);
 }
 
 .review-section-title {
@@ -61,7 +60,7 @@
 }
 
 .selection-group {
-    background-color: var(--background-on-white);
+    background-color: var(--background-secondary);
     border-radius: 4px;
     margin-right: 4px;
     overflow: hidden;
@@ -85,7 +84,7 @@
 .review-sections-container {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    column-gap: 20px;
+    column-gap: var(--card-padding);
     width: 100%;
 }
 
@@ -93,7 +92,7 @@
     width: 100%;
     justify-content: space-between;
     align-items: center;
-    margin-top: var(--review-field-margin-top);
+    margin-top: var(--card-padding);
     margin-bottom: 6px;
 }
 
@@ -113,4 +112,20 @@
     box-shadow: none;
     border: 1px solid var(--border);
     border-right: 1px solida var(--border);
+}
+
+@media only screen and (max-width: 1260px) {
+    .review-sections-container {
+        display: block;
+    }
+    .submit-btn-row {
+        flex-direction: column;
+    }
+    .submit-btn-row > .review-section-container {
+        width: 100%;
+        margin-bottom: var(--card-padding);
+    }
+    .submit-btn-row > .submit-btn {
+        width: 100%;
+    }
 }

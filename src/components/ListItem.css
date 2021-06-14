@@ -14,7 +14,7 @@
 }
 
 .list-item-container:hover {
-    background-color: var(--background-on-white);
+    background-color: var(--background-secondary);
 }
 
 .list-item-color-bar {

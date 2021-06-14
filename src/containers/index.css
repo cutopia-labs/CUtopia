@@ -4,7 +4,8 @@ body {
     --surface: rgba(255,255,255,1);
     --background: rgb(250, 249, 248, 1);
     --background-dark: rgba(5,5,5,1);
-    --background-secondary: rgb(246, 248, 250);
+    --background-secondary: rgb(250, 251, 252);
+    --background-tertiary: rgb(246, 248, 250);
     --text: rgba(12,12,12,1);
     --reversed-text: rgba(255,255,255,1);
     --button: rgba(21, 121, 193, 1);
@@ -15,7 +16,6 @@ body {
     --headerHeight: 40px;
     --marginHorizontal: 40px;
     --border-radius: 8px;
-    --background-on-white: #f8f8f8;
     --grey-text: rgba(0, 0, 0, 0.5);
     --snackbar: rgba(31,31,31,1);
     --caption: #494949;
@@ -23,6 +23,8 @@ body {
     --scrollbar: rgb(204, 204, 204);
     --max-width: 1260px;
     --card-padding: 16px;
+    --page-margin: 24px;
+    --page-magrgin-top: 0;
     color: var(--text);
     background-color: var(--background);
 }
@@ -70,7 +72,7 @@ textarea[type=number] {
 }
 
 .center-page {
-    padding: 0 24px;
+    padding: var(--page-margin-top) var(--page-margin);
     max-width: var(--max-width);
     width: var(--max-width);
     margin-left: auto;
@@ -180,33 +182,12 @@ textarea[type=number] {
 
 /* Scrollbar styles */
 
-::-webkit-scrollbar {
-    width: 10px;
-}
-
-::-webkit-scrollbar-track {
-    background: var(--background);
-    border-left: 1px solid var(--border);
-}
-
-::-webkit-scrollbar-thumb {
-    background-color: var(--scrollbar);
-    border-radius: var(--border-radius);
-    -webkit-transition: background-color 1000ms linear;
-    -moz-transition: background-color 1000ms linear;
-    -o-transition: background-color 1000ms linear;
-    -ms-transition: background-color 1000ms linear;
-    transition: background-color 1000ms linear;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background-color: #888;
-}
-
 /* Mobile Styles */
 
 @media only screen and (max-width: 1260px) {
     body {
+        --page-margin-top: 3vh;
+        --page-margin: 5vw;
     }
     .App {
         overflow-y: scroll;
@@ -245,6 +226,6 @@ textarea[type=number] {
         --snackbar: rgba(255,255,255,1);
         --highlight-on-surface: #dedede1f;
         --scrollbar: rgb(80, 80, 80);
-        --background-on-white: #333;
+        --background-secondary: #333;
     }
 }

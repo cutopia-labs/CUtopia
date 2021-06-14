@@ -82,11 +82,10 @@
 
 
 @media only screen and (max-width: 1260px) {
-    .home-page {
-        overflow: visible;
-    }
     .home-page .center-page {
         flex-direction: column;
+        overflow-y: visible;
+        overflow-x: hidden;
     }
     .home-page-left {
         position: relative;
@@ -95,10 +94,11 @@
         top: 0;
     }
     .home-page .user-menu {
-        display: grid;
         grid-template-columns: repeat(2, 1fr);
         height: auto;
         flex-shrink: 0;
+        width: 100%;
+        overflow-x: scroll;
     }
     .home-page .user-menu-item {
     }

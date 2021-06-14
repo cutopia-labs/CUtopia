@@ -9,7 +9,7 @@
 .course-summary {
     display: flex;
     margin-top: 20px;
-    background-color: var(--background-on-white);
+    background-color: var(--background-secondary);
     padding: 12px 8px;
     align-items: center;
     border-radius: var(--border-radius);

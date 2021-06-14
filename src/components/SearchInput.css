@@ -17,3 +17,6 @@
     margin-left: 12px;
     flex: 1;
 }
+
+@media only screen and (max-width: 1260px) {
+}
