@@ -27,7 +27,7 @@
 
 .ranking-card {
     flex: 1;
-    margin-left: 30px;
+    margin-left: 20px;
     overflow: hidden;
     border-bottom: 0;
 }
@@ -78,3 +78,14 @@
 .sort-menu {
     text-transform: capitalize;
 }
+
+@media only screen and (max-width: 1260px) {
+    .review-home-row {
+        flex-direction: column;
+    }
+    .ranking-card:last-child {
+        margin-left: 0;
+        margin-top: var(--card-padding);
+    }
+}
+

@@ -15,3 +15,14 @@
     font-weight: bold;
     opacity: 0.5;
 }
+
+
+@media only screen and (max-width: 1260px) {
+    .time-table-panel {
+        padding: var(--card-padding);
+    }
+    .btn-row  {
+        display: none;
+    }
+}
+

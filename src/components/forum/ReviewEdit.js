@@ -211,10 +211,15 @@ const ReviewEdit = ({
     dispatchFormData({ overall: Math.round(overallAverage) }); // later detemine round or floor
   }, RATING_FIELDS.map(type => formData[type].grade));
 
+  const wordCount = str => {
+    const matches = str.match(/[\u00ff-\uffff]|\S+/g);
+    return matches ? matches.length : 0;
+  };
+
   useEffect(() => {
-    const textCount = RATING_FIELDS.map(type => formData[type].text).reduce((acc, v) => acc + v).split(' ').filter(x => x !== '').length;
-    console.log(textCount);
-    setProgress((textCount * 100) / TARGET_WORD_COUNT);
+    const combinedReviewText = RATING_FIELDS.map(type => formData[type].text).reduce((acc, v) => acc + v);
+    const count = wordCount(combinedReviewText);
+    setProgress((count * 100) / TARGET_WORD_COUNT);
   }, RATING_FIELDS.map(type => formData[type].text));
 
   return (

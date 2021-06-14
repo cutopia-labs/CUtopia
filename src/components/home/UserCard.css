@@ -1,10 +1,10 @@
 .user-card {
     height: fit-content;
-    margin-bottom: var(--home-page-card-padding);
+    margin-bottom: var(--card-padding);
 }
 
 .user-card-header {
-    padding: var(--home-page-card-padding);
+    padding: var(--card-padding);
 }
 
 .user-card-header .char-icon {
@@ -40,7 +40,7 @@
 }
 
 .user-card .user-card-divider {
-    margin: 0 var(--home-page-card-padding);
+    margin: 0 var(--card-padding);
 }
 
 /* Settings Modal */
@@ -63,8 +63,8 @@
 /* About card */
 
 .user-about-card {
-    margin-top: var(--home-page-card-padding);
-    padding: var(--home-page-card-padding);
+    margin-top: var(--card-padding);
+    padding: var(--card-padding);
     padding-top: 0;
     flex-direction: row;
 }

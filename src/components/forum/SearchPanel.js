@@ -159,7 +159,7 @@ export const SearchResult = ({
       ribbonIndex={i}
       chevron
       onClick={() => onClick(course.c)}
-      onMouseDown={() => onMouseDown(course.c)}
+      onMouseDown={() => (onMouseDown ? onMouseDown(course.c) : {})}
     >
       <div className="search-list-item column">
         <span className="title">{course.c}</span>

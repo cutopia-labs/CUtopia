@@ -88,3 +88,14 @@
 .nav-label {
     text-transform: capitalize;
 }
+
+@media only screen and (max-width: 1260px) {
+    .header-container {
+        width: calc(100vw - 50px);
+        overflow: hidden;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+}
+

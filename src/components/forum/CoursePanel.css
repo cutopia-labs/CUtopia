@@ -1,8 +1,4 @@
 .course-panel {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    padding: 10px 24px 20px 24px;
     overflow-y: scroll;
     max-height: calc(100vh - var(--headerHeight) - 81px);
     height: fit-content;
@@ -55,4 +51,10 @@
     position: fixed;
     right: 33px;
     bottom: 20px;
+}
+
+@media only screen and (max-width: 1260px) {
+    .course-panel {
+        max-height: none;
+    }
 }
