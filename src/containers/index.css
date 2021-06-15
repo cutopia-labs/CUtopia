@@ -206,6 +206,10 @@ textarea[type=number] {
     .page {
         padding: 0;
     }
+    .bottom-border-item:hover {
+        padding-top: none;
+        border-bottom: none;
+    }
 }
 
 

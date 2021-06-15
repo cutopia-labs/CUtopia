@@ -80,8 +80,8 @@ const ReviewSection = ({
       />
     </div>
     {
-      type !== 'overall'
-        && (
+      type !== 'overall' &&
+        (
           <TextField
             className="review-section-input"
             Tag="textarea"

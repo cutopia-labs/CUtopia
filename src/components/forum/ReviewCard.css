@@ -5,14 +5,13 @@
     padding: 0;
 }
 
-.review-card .course-summary {
-}
-
 .review-title {
     display: flex;
     width: 100%;
     padding: 12px 8px;
     text-align: start;
+    /* border-bottom: 1px solid var(--border); */
+    /* background-color: var(--background-tertiary); */
 }
 
 .review-title svg {
@@ -29,14 +28,6 @@
     margin-top: 0;
     background-color: transparent;
     border-radius: 0;
-}
-
-.grade-row.review-header .center-row {
-    height: auto;
-}
-
-.grade-row.review-header > div:first-child > div {
-    margin: 0;
 }
 
 .grade-row.review-header .like-btn-row {

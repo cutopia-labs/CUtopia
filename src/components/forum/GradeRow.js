@@ -5,13 +5,13 @@ import GradeIndicator from '../GradeIndicator';
 import './GradeRow.css';
 
 const GradeRow = ({
-  rating, children, isReview, selected, setSelected, additionalClassName, additionalChildClassName
+  rating, children, isReview, selected, setSelected, additionalClassName, additionalChildClassName, isMobile,
 }) => (
   <div className={`grade-row${additionalClassName ? ` ${additionalClassName}` : ''}`}>
     <div className="center-row">
       {
-        !isReview
-        && (
+        !isReview &&
+        (
           <GradeIndicator
             grade={rating.overall}
             additionalClassName={`course-summary-grade-indicator${isReview ? '' : ' overall'}`}
@@ -24,14 +24,14 @@ const GradeRow = ({
             key={field}
             className={`center-row rating-container${selected === field ? ' active' : ''}${additionalChildClassName ? ` ${additionalChildClassName}` : ''}`}
             onClick={() => {
-              if (setSelected) {
+              if (setSelected && !isMobile) {
                 setSelected(field);
               }
             }}
           >
             {
               field !== 'overall' &&
-              <div className="course-summary-label" key={field}>{`${field}:`}</div>
+              <div className="course-summary-label" key={field}>{`${field}${isMobile ? '' : ':'}`}</div>
             }
             <GradeIndicator
               grade={isReview && field !== 'overall' ? rating[field].grade : rating[field]}

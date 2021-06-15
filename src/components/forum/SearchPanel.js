@@ -185,8 +185,8 @@ const SearchPanel = () => {
   const { data: courseInfo, courseInfoLoading, error } = useQuery(COURSE_SECTIONS_QUERY, {
     skip: !currentCourse || !validCourse(currentCourse),
     ...(
-      currentCourse
-        && {
+      currentCourse &&
+        {
           variables: {
             subject: currentCourse.substring(0, 4),
             code: currentCourse.substring(4),
@@ -282,22 +282,28 @@ const SearchPanel = () => {
         </form>
       </div>
       {
-        Boolean(currentCourse) && (
-          (courseInfo && !courseInfoLoading)
-            ? (
-              <CourseCard
-                courseInfo={{
-                  ...courseInfo.subjects[0].courses[0],
-                  courseId: currentCourse,
-                }}
-                concise
-              />
-            ) : <Loading />
+        Boolean(currentCourse) &&
+        (
+          <>
+            <Divider />
+            {
+              (courseInfo && !courseInfoLoading)
+                ? (
+                  <CourseCard
+                    courseInfo={{
+                      ...courseInfo.subjects[0].courses[0],
+                      courseId: currentCourse,
+                    }}
+                    concise
+                  />
+                ) : <Loading />
+            }
+          </>
         )
       }
       {
-        !currentCourse
-        && (
+        !currentCourse &&
+        (
           searchPayload.mode && (searchPayload.mode !== 'query' || searchPayload.text)
             ? (
               <>

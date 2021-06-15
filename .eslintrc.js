@@ -42,6 +42,7 @@ module.exports = {
     'react/jsx-filename-extension': [0],
     'react/jsx-one-expression-per-line': ['error', { allow: 'single-child' }],
     'max-len': 0,
+    'operator-linebreak': ['error', 'after', { overrides: { '?': 'before', ':': 'before' } }],
   },
   ignorePatterns: [
     '*.css',

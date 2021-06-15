@@ -16,7 +16,7 @@ const PlannerPage = () => {
         className="planner-timetable margin-card"
         title="My Schedule"
         courses={user.plannerCourses}
-        onImport={(parsedData) => user.setAndSavePlannerCourses(parsedData)}
+        onImport={parsedData => user.setAndSavePlannerCourses(parsedData)}
         onClear={() => user.clearPlannerCourses()}
       />
     </div>

@@ -49,12 +49,15 @@
 
 .course-panel-fab {
     position: fixed;
-    right: 33px;
+    right: calc((100vw - var(--max-width)) / 2 + 32px);
     bottom: 20px;
 }
 
 @media only screen and (max-width: 1260px) {
     .course-panel {
         max-height: none;
+    }
+    .course-panel-fab {
+        right: 20px;
     }
 }

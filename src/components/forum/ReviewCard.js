@@ -9,10 +9,10 @@ import {
 import { BiMessageRounded } from 'react-icons/bi';
 import { IoMdShareAlt } from 'react-icons/io';
 import { useMutation } from '@apollo/client';
+import { IconButton, useMediaQuery } from '@material-ui/core';
+import { Forum, Share } from '@material-ui/icons';
 
 import './ReviewCard.css';
-import { IconButton } from '@material-ui/core';
-import { Forum, Share } from '@material-ui/icons';
 import { RATING_FIELDS, VOTE_ACTIONS } from '../../constants/states';
 import { VOTE_REVIEW } from '../../constants/mutations';
 import { getMMMDDYY } from '../../helpers/getTime';
@@ -29,6 +29,7 @@ const ReviewCard = ({
   const [selectedCriteria, setSelectedCriteria] = useState('overall');
   const [voteReview, { loading, error }] = useMutation(VOTE_REVIEW);
   const [liked, setLiked] = useState(review.myVote); // null for unset, false for dislike, true for like
+  const isMobile = useMediaQuery('(max-width:1260px)');
 
   const updateVote = async vote => {
     console.log(review.courseId);
@@ -61,8 +62,8 @@ const ReviewCard = ({
     <div className="review-card">
       <div className="course-summary review">
         {
-          Boolean(review.title)
-          && (
+          Boolean(review.title) &&
+          (
             <div className="review-title center-row">
               <BiMessageRounded />
               {review.title}
@@ -93,6 +94,7 @@ const ReviewCard = ({
           additionalChildClassName="bottom-border-item"
           selected={selectedCriteria}
           setSelected={setSelectedCriteria}
+          isMobile={isMobile}
         >
           <LikeButtonsRow
             liked={liked}

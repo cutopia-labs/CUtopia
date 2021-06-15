@@ -57,7 +57,8 @@ export const login = async (userId, password, successHandler = () => { }, errorH
 
   if (sessionData.RelayState !== undefined && ICSID) {
     successHandler(ICSID);
-  } else {
+  }
+  else {
     errorHandler(ERROR_CODES.PARSER.UNKNOWN);
   }
 };

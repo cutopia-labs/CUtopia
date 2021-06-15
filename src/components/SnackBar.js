@@ -20,8 +20,8 @@ const SnackBar = () => {
         <div className="snackbar-container">
           <span className="snack-text">{notification.snackbar.message}</span>
           {
-            Boolean(notification.snackbar.label)
-            && (
+            Boolean(notification.snackbar.label) &&
+            (
               <Button
                 color="secondary"
                 className="btn-container"

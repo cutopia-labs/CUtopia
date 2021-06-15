@@ -274,8 +274,8 @@ const LoginPanel = ({ route, navigation }) => {
       <div className="center-row qrcode-row">
         <div>
           {
-            mode !== MODES.CUTOPIA_LOGIN && mode !== MODES.CUTOPIA_SIGNUP
-            && (
+            mode !== MODES.CUTOPIA_LOGIN && mode !== MODES.CUTOPIA_SIGNUP &&
+            (
               <IconButton
                 className="go-back-icon"
                 onClick={goBack}
@@ -294,8 +294,8 @@ const LoginPanel = ({ route, navigation }) => {
         )}
       </div>
       {
-        MODE_ITEMS[mode].userId
-        && (
+        MODE_ITEMS[mode].userId &&
+        (
           <TextField
             error={errors.userId}
             placeholder={MODE_ITEMS[mode].userId}
@@ -306,8 +306,8 @@ const LoginPanel = ({ route, navigation }) => {
         )
       }
       {
-        MODE_ITEMS[mode].verificationCode
-        && (
+        MODE_ITEMS[mode].verificationCode &&
+        (
           <TextField
             error={errors.verificationCode}
             placeholder={MODE_ITEMS[mode].verificationCode}
@@ -317,8 +317,8 @@ const LoginPanel = ({ route, navigation }) => {
         )
       }
       {
-        MODE_ITEMS[mode].username
-        && (
+        MODE_ITEMS[mode].username &&
+        (
           <TextField
             error={errors.username}
             placeholder={MODE_ITEMS[mode].username}
@@ -328,8 +328,8 @@ const LoginPanel = ({ route, navigation }) => {
         )
       }
       {
-        MODE_ITEMS[mode].password
-        && (
+        MODE_ITEMS[mode].password &&
+        (
           <TextField
             error={errors.password}
             placeholder={MODE_ITEMS[mode].password}
@@ -341,8 +341,8 @@ const LoginPanel = ({ route, navigation }) => {
         )
       }
       {
-        mode === MODES.CUTOPIA_LOGIN
-        && (
+        mode === MODES.CUTOPIA_LOGIN &&
+        (
           <div className="center-row check-box-row">
             <div className="center-row check-box-container">
               <Checkbox
@@ -373,8 +373,8 @@ const LoginPanel = ({ route, navigation }) => {
         }
       </Button>
       {
-        (mode === MODES.CUTOPIA_LOGIN || mode === MODES.CUTOPIA_SIGNUP)
-        && (
+        (mode === MODES.CUTOPIA_LOGIN || mode === MODES.CUTOPIA_SIGNUP) &&
+        (
           <div className="switch-container center-row">
             <span className="caption">{mode === MODES.CUTOPIA_LOGIN ? 'Don\'t have an account?' : 'Already have an account?'}</span>
             <span

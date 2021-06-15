@@ -2,7 +2,7 @@ import React from 'react';
 import './TextField.css';
 
 const TextField = ({
-  value, onChangeText, placeholder, error, defaultValue, keyboardType, secureTextEntry, Tag
+  value, onChangeText, placeholder, error, defaultValue, keyboardType, secureTextEntry, Tag,
 }) => {
   const TagName = Tag || 'input';
   return (
@@ -18,8 +18,8 @@ const TextField = ({
         security={secureTextEntry}
       />
       {
-        error
-        && <div className="error-label" type="error">{error}</div>
+        error &&
+        <div className="error-label" type="error">{error}</div>
       }
     </>
   );

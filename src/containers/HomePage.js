@@ -102,8 +102,8 @@ const HomePage = () => {
       <div className="center-page row">
         <div className="home-page-left column">
           {
-            !userDataLoading
-            && <UserCard userData={userData.user} />
+            !userDataLoading &&
+            <UserCard userData={userData.user} />
           }
           <LinksCard />
         </div>
@@ -123,16 +123,16 @@ const HomePage = () => {
             }
           </div>
           {
-            mode === MODES.COURSES
-            && <CoursesList loading={false} courses={user.favoriteCourses} />
+            mode === MODES.COURSES &&
+            <CoursesList loading={false} courses={user.favoriteCourses} />
           }
           {
-            mode === MODES.REVIEWS
-            && <ReviewsList loading={userDataLoading} reviewIds={userData?.user?.reviewIds} />
+            mode === MODES.REVIEWS &&
+            <ReviewsList loading={userDataLoading} reviewIds={userData?.user?.reviewIds} />
           }
           {
-            mode === MODES.PLANNER
-            && (
+            mode === MODES.PLANNER &&
+            (
               <TimeTablePanel
                 className="home-page-timetable card"
                 title="Planner"
@@ -143,8 +143,8 @@ const HomePage = () => {
             )
           }
           {
-            mode === MODES.TIMETABLE
-            && (
+            mode === MODES.TIMETABLE &&
+            (
               <TimeTablePanel
                 className="home-page-timetable card"
                 title="Timetable"

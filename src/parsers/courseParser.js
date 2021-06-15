@@ -136,8 +136,8 @@ export default function courseParser(data) {
     // Get course params inside each section
     courseArray.forEach((line, j) => {
       if ( // Indicating the line is section code line
-        line.includes('( ')
-        && line.includes(' )')
+        line.includes('( ') &&
+        line.includes(' )')
       ) {
         if (currentSection) {
           sections[currentSection] = processSection(times, locations, days);

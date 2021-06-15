@@ -57,14 +57,15 @@ const Header = () => {
   ));
 
   return (
-    <header className="header-container row">
-      {
-        isMobile
-        && (
+    <header className="header-background-container">
+      <div className="header-container row">
+        {
+          isMobile &&
+        (
           <>
             {
-              (!visible || !isMobile)
-              && (
+              (!visible || !isMobile) &&
+              (
                 <IconButton
                   aria-label="sort"
                   components="span"
@@ -96,28 +97,28 @@ const Header = () => {
             </Menu>
           </>
         )
-      }
-      {
-        (!visible || !isMobile)
-        && (
+        }
+        {
+          (!visible || !isMobile) &&
+        (
           <Link className="header-logo" to="/">
             <Logo />
           </Link>
         )
-      }
-      <nav className="header-nav row">
-        <SearchInput
-          isMobile={isMobile}
-          value={searchQuery}
-          setValue={setSearchQuery}
-          onSubmit={onSubmitSearch}
-          inputRef={inputRef}
-          setVisible={setVisible}
-        />
-        <div ref={menuRef} className="header-search-result card">
-          {
-            visible && Boolean(searchQuery)
-            && (
+        }
+        <nav className="header-nav row">
+          <SearchInput
+            isMobile={isMobile}
+            value={searchQuery}
+            setValue={setSearchQuery}
+            onSubmit={onSubmitSearch}
+            inputRef={inputRef}
+            setVisible={setVisible}
+          />
+          <div ref={menuRef} className="header-search-result card">
+            {
+              visible && Boolean(searchQuery) &&
+            (
               <SearchResult
                 searchPayload={{
                   text: searchQuery,
@@ -133,13 +134,14 @@ const Header = () => {
                 }}
               />
             )
+            }
+          </div>
+          {
+            !isMobile &&
+          navSections
           }
-        </div>
-        {
-          !isMobile
-          && navSections
-        }
-      </nav>
+        </nav>
+      </div>
     </header>
   );
 };

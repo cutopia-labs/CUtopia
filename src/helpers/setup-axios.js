@@ -12,6 +12,4 @@ axios.interceptors.response.use(response => {
     return Promise.reject(ERROR_CODES.CUSIS.DOWN);
   }
   return response;
-}, error => {
-  return Promise.reject(error);
-});
+}, error => Promise.reject(error));

@@ -81,8 +81,8 @@ const HomePanel = () => {
     <div className="panel review-home-panel">
       <div className="review-home-row center-row">
         {
-          topRatedCourses && topRatedCourses.ranking.topRatedCourses
-          && (
+          topRatedCourses && topRatedCourses.ranking.topRatedCourses &&
+          (
             <RankingCard
               rankList={topRatedCourses.ranking.topRatedCourses}
               headerTitle="Top Rated"
@@ -122,8 +122,8 @@ const HomePanel = () => {
           )
         }
         {
-          popularCourses && popularCourses.ranking.popularCourses
-          && (
+          popularCourses && popularCourses.ranking.popularCourses &&
+          (
             <RankingCard
               rankList={popularCourses.ranking.popularCourses}
               headerTitle="Popular"

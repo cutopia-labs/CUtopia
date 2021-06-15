@@ -16,7 +16,7 @@ const MODAL_MODES = {
 };
 
 const TimeTablePanel = ({
-  title, courses, onImport, onExport, onClear, className
+  title, courses, onImport, onExport, onClear, className,
 }) => {
   const notification = useContext(NotificationContext);
   const [modalMode, setModalMode] = useState(MODAL_MODES.NO_MODAL);

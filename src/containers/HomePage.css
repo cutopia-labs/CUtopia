@@ -94,6 +94,7 @@
         top: 0;
     }
     .home-page .user-menu {
+        display: grid;
         grid-template-columns: repeat(2, 1fr);
         height: auto;
         flex-shrink: 0;

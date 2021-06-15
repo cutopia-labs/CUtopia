@@ -2,7 +2,7 @@ import React, {
   useState, useEffect, useContext, useRef, useLayoutEffect,
 } from 'react';
 import { observer } from 'mobx-react-lite';
-import { IconButton } from '@material-ui/core';
+import { IconButton, useMediaQuery } from '@material-ui/core';
 import { Favorite, FavoriteBorder, FavoriteOutlined } from '@material-ui/icons';
 
 import GradeRow from './GradeRow';
@@ -17,6 +17,7 @@ const CourseCard = ({ courseInfo, concise }) => {
   const [showMore, setShowMore] = useState(true);
   const [skipHeightCheck, setSkipHeightCheck] = useState(concise);
   const user = useContext(UserContext);
+  const isMobile = useMediaQuery('(max-width:1260px)');
 
   const isFavorited = user.favoriteCourses.some(course => course.courseId === courseInfo.courseId);
   const setFavorited = async () => {
@@ -63,12 +64,12 @@ const CourseCard = ({ courseInfo, concise }) => {
           </IconButton>
         </div>
         {
-          concise
-          && <Badge index={0} text={`${parseInt(courseInfo.units, 10)} credits`} value={null} />
+          concise &&
+          <Badge index={0} text={`${parseInt(courseInfo.units, 10)} credits`} value={null} />
         }
         {
-          courseInfo.rating && !concise
-          && <GradeRow rating={courseInfo.rating} />
+          courseInfo.rating && !concise && !isMobile &&
+          <GradeRow rating={courseInfo.rating} />
         }
       </div>
       <p className="caption">{courseInfo.title}</p>
@@ -77,8 +78,8 @@ const CourseCard = ({ courseInfo, concise }) => {
           ? (
             <>
               {
-                courseInfo.requirements
-                && (
+                courseInfo.requirements &&
+                (
                   <div>
                     <p className="sub-heading">Requirements</p>
                     <p className="caption">{courseInfo.requirements}</p>
@@ -86,12 +87,12 @@ const CourseCard = ({ courseInfo, concise }) => {
                 )
               }
               {
-                courseInfo.rating
-            && <GradeRow rating={courseInfo.rating} additionalClassName="concise" />
+                courseInfo.rating &&
+                <GradeRow rating={courseInfo.rating} additionalClassName="concise" />
               }
               {
-                courseInfo.terms
-            && <CourseSections courseInfo={courseInfo} />
+                courseInfo.terms &&
+                <CourseSections courseInfo={courseInfo} />
               }
             </>
           )
@@ -109,16 +110,16 @@ const CourseCard = ({ courseInfo, concise }) => {
           )
       }
       {
-        Boolean(courseInfo.description)
-        && <p className="caption description">{courseInfo.description}</p>
+        Boolean(courseInfo.description) &&
+        <p className="caption description">{courseInfo.description}</p>
       }
       <ShowMoreOverlay
         visible={!showMore}
         onShowMore={() => [setShowMore(true), setSkipHeightCheck(true)]}
       />
       {
-        showMore && !concise
-          && ['requirements', 'outcome', 'required_readings']
+        showMore && !concise &&
+          ['requirements', 'outcome', 'required_readings']
             .filter(key => courseInfo[key] && courseInfo[key] !== '') // filter off empty strings
             .map(key => (
               <div className="sub-heading-container" key={key}>
@@ -126,6 +127,11 @@ const CourseCard = ({ courseInfo, concise }) => {
                 <p className="caption">{courseInfo[key]}</p>
               </div>
             ))
+      }
+      {
+        courseInfo.rating &&
+        isMobile && !concise &&
+        <GradeRow rating={courseInfo.rating} additionalClassName="concise" />
       }
     </div>
   );

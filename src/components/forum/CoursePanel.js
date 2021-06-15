@@ -98,8 +98,8 @@ const CourseSummary = ({
           : <span>No review yet</span>
       }
       {
-        !courseInfo.rating
-        && (
+        !courseInfo.rating &&
+        (
           <Button
             size="small"
             color="primary"
@@ -110,8 +110,8 @@ const CourseSummary = ({
         )
       }
       {
-        courseInfo.rating && fetchAllAction
-        && (
+        courseInfo.rating && fetchAllAction &&
+        (
           <Button
             size="small"
             color="primary"
@@ -165,8 +165,8 @@ const CoursePanel = () => {
   const { data: courseInfo, courseInfoLoading, error } = useQuery(COURSE_INFO_QUERY, {
     skip: !courseId,
     ...(
-      courseId
-        && {
+      courseId &&
+        {
           variables: {
             subject: courseId.substring(0, 4),
             code: courseId.substring(4),
@@ -213,8 +213,8 @@ const CoursePanel = () => {
     return (
       <div className="review-edit-panel course-panel panel card">
         {
-          !courseInfoLoading && courseInfo && courseInfo.subjects && courseInfo.subjects[0]
-          && (
+          !courseInfoLoading && courseInfo && courseInfo.subjects && courseInfo.subjects[0] &&
+          (
             <CourseCard
               courseInfo={{
                 ...courseInfo.subjects[0].courses[0],
@@ -246,7 +246,7 @@ const CoursePanel = () => {
                 setSorting={setSorting}
                 fetchAllAction={Boolean(reviewId) && (() => history.push(`/review/${courseId}`))}
                 writeAction={() => history.push(`/review/${courseId}/compose`)}
-                exceedLimit={userDataLoading || (((userData.user?.reviewIds || user.reviews)?.length || 0) < FULL_MEMBER_REVIEWS && user.exceedLimit)}
+                exceedLimit={!userDataLoading && (((userData.user?.reviewIds || user.reviews)?.length || 0) < FULL_MEMBER_REVIEWS && user.exceedLimit)}
               />
               {
                 reviewsLoading || reviewLoading
