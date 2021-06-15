@@ -14,6 +14,8 @@ body {
     --statusBar: rgba(21,101,192,1);
     --bottomBar: rgba(255,255,255,1);
     --headerHeight: 40px;
+    --headerColor: rgba(31,31,31,1);
+    --headerTextColor: white;
     --marginHorizontal: 40px;
     --border-radius: 8px;
     --grey-text: rgba(0, 0, 0, 0.5);
@@ -227,5 +229,7 @@ textarea[type=number] {
         --highlight-on-surface: #dedede1f;
         --scrollbar: rgb(80, 80, 80);
         --background-secondary: #333;
+        --headerColor: rgba(31,31,31,1);
+        --headerTextColor: white;
     }
 }

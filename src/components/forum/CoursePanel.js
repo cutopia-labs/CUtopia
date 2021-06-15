@@ -15,13 +15,16 @@ import { observer } from 'mobx-react-lite';
 import './CoursePanel.css';
 import CourseCard from './CourseCard';
 import { validCourse } from '../../helpers/marcos';
-import { COURSE_INFO_QUERY, GET_REVIEW, REVIEWS_QUERY } from '../../constants/queries';
+import {
+  COURSE_INFO_QUERY, GET_REVIEW, REVIEWS_QUERY, GET_USER,
+} from '../../constants/queries';
 import Loading from '../Loading';
 import ReviewCard from './ReviewCard';
-import { NotificationContext } from '../../store';
+import { NotificationContext, UserContext } from '../../store';
 import copyToClipboard from '../../helpers/copyToClipboard';
 import HomePanel from './HomePanel';
 import ReviewEdit from './ReviewEdit';
+import { FULL_MEMBER_REVIEWS } from '../../constants/states';
 
 export const COURSE_PANEL_MODES = Object.freeze({
   DEFAULT: 1, // i.e. card to show recent reviews & rankings
@@ -37,7 +40,7 @@ const SORTING_FIELDS = Object.freeze([
 ]);
 
 const CourseSummary = ({
-  courseInfo, sorting, setSorting, fetchAllAction, writeAction
+  courseInfo, sorting, setSorting, fetchAllAction, writeAction, exceedLimit,
 }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const handleClose = field => {
@@ -60,7 +63,16 @@ const CourseSummary = ({
                 >
                   <Sort />
                 </IconButton>
-                <div className="course-summary-label">{fetchAllAction ? 'Showing 1 review only!' : `${courseInfo.rating.numReviews} reviews`}</div>
+                <div className="course-summary-label">
+                  {
+                    exceedLimit && `Limit exceeded (post ${FULL_MEMBER_REVIEWS} reviews to unlock)`
+                  }
+                  {
+                    !exceedLimit && (fetchAllAction
+                      ? 'Showing 1 review only!'
+                      : `${courseInfo.rating.numReviews} reviews`)
+                  }
+                </div>
               </div>
               <Menu
                 id="simple-menu"
@@ -86,8 +98,8 @@ const CourseSummary = ({
           : <span>No review yet</span>
       }
       {
-        !courseInfo.rating &&
-        (
+        !courseInfo.rating
+        && (
           <Button
             size="small"
             color="primary"
@@ -121,6 +133,7 @@ const CoursePanel = () => {
   const [FABOpen, setFABOpen] = useState(false);
   const [FABHidden, setFABHidden] = useState(false);
   const notification = useContext(NotificationContext);
+  const user = useContext(UserContext);
   const isEdit = useRouteMatch({
     path: '/review/:id/compose',
     strict: true,
@@ -138,6 +151,16 @@ const CoursePanel = () => {
     },
   ]);
 
+  const { data: userData, loading: userDataLoading } = useQuery(GET_USER, {
+    skip: Boolean(user.reviews.length >= FULL_MEMBER_REVIEWS),
+    variables: {
+      username: user.cutopiaUsername,
+    },
+    onCompleted: data => {
+      user.saveReviews(data.user);
+    },
+  });
+
   // Fetch course info
   const { data: courseInfo, courseInfoLoading, error } = useQuery(COURSE_INFO_QUERY, {
     skip: !courseId,
@@ -154,6 +177,7 @@ const CoursePanel = () => {
 
   // Fetch all reviews
   const { data: reviews, loading: reviewsLoading, refetch } = useQuery(REVIEWS_QUERY, {
+    skip: userDataLoading || (((userData.user?.reviewIds || user.reviews)?.length || 0) < FULL_MEMBER_REVIEWS && user.exceedLimit),
     variables: {
       courseId,
       ascendingDate: sorting === 'date' ? false : null,
@@ -174,26 +198,10 @@ const CoursePanel = () => {
     console.log(`Current id: ${courseId}`);
     if (validCourse(courseId)) {
       setMode(COURSE_PANEL_MODES.FETCH_REVIEWS);
+      user.increaseViewCount();
     }
     else if (mode !== COURSE_PANEL_MODES.DEFAULT) setMode(COURSE_PANEL_MODES.DEFAULT);
   }, [courseId]);
-
-  useEffect(() => {
-    console.log(isEdit);
-  }, [isEdit]);
-
-  useEffect(() => {
-    console.log(`Current mode: ${mode}`);
-  }, [mode]);
-
-  useEffect(() => {
-    console.log(reviews);
-  }, [reviews]);
-
-  useEffect(() => {
-    console.log('Review');
-    console.log(review);
-  }, [review]);
 
   if (mode === COURSE_PANEL_MODES.DEFAULT) {
     return (
@@ -238,11 +246,12 @@ const CoursePanel = () => {
                 setSorting={setSorting}
                 fetchAllAction={Boolean(reviewId) && (() => history.push(`/review/${courseId}`))}
                 writeAction={() => history.push(`/review/${courseId}/compose`)}
+                exceedLimit={userDataLoading || (((userData.user?.reviewIds || user.reviews)?.length || 0) < FULL_MEMBER_REVIEWS && user.exceedLimit)}
               />
               {
                 reviewsLoading || reviewLoading
                   ? <Loading />
-                  : (reviewId ? (review ? [review.review] : []) : reviews.reviews).map(item => (
+                  : ((reviewId ? (review ? [review.review] : []) : reviews?.reviews) || []).map(item => (
                     <ReviewCard
                       key={item.createdDate}
                       review={item}

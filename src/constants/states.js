@@ -90,6 +90,10 @@ const VOTE_ACTIONS = Object.freeze({
   DOWNVOTE: 0,
 });
 
+const TOKEN_EXPIRE_DAYS = 7;
+const VIEWS_LIMIT = 5;
+const FULL_MEMBER_REVIEWS = 3;
+
 export {
   RATING_FIELDS,
   MODES,
@@ -106,4 +110,7 @@ export {
   GRADE_VALUES,
   LETTER_TO_FIVE_VALUES,
   VOTE_ACTIONS,
+  TOKEN_EXPIRE_DAYS,
+  VIEWS_LIMIT,
+  FULL_MEMBER_REVIEWS,
 };

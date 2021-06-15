@@ -108,10 +108,14 @@
     width: 180px;
     border: none;
     height: 40px;
-    color: white;
+    color: var(--text);
     box-shadow: none;
     border: 1px solid var(--border);
     border-right: 1px solida var(--border);
+}
+
+.submit-btn-row > .submit-btn.filled {
+    color: white;
 }
 
 @media only screen and (max-width: 1260px) {

@@ -3,7 +3,7 @@
     min-height: var(--headerHeight);
     padding: 10px 20px;
     justify-content: space-between;
-    background-color: rgb(32, 38, 44);
+    background-color: var(--headerColor);
     /* box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 6px; */
 }
 
@@ -31,9 +31,11 @@
 }
 
 .header-container button,
+.header-container .logo-container,
+.header-container .header-nav.row,
 .header-container .search-input-container > button,
 .header-container .search-input-container > .search-input {
-    color: white;
+    color: var(--headerTextColor);
 }
 
 .header-container .search-input-container > .search-input-divider {
@@ -73,7 +75,6 @@
     font-size: 18px;
     font-weight: bold;
     transition: all 0.1s ease-in-out;
-    color: var(--reversed-text);
 }
 
 .nav-label-container-active {

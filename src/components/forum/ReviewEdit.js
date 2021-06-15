@@ -320,7 +320,7 @@ const ReviewEdit = ({
         />
         <Button
           variant="contained"
-          className="submit-btn"
+          className={`submit-btn${progress >= 100 ? ' filled' : ''}`}
           color="secondary"
           onClick={submit}
           disabled={!validation()}
@@ -331,7 +331,7 @@ const ReviewEdit = ({
           {
             loading
               ? <CircularProgress color="secondary" size={24} />
-              : (progress < 100 ? 'write more!' : 'submit~')
+              : (progress < 100 ? 'write more!' : 'submit')
           }
         </Button>
       </div>

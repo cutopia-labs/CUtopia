@@ -5,13 +5,11 @@ import {
 import errorStore, { ERROR_CODES } from './ErrorStore';
 import { storeData, getStoreData, removeStoreItem } from '../helpers/store';
 
-import { LOGIN_STATES } from '../constants/states';
-
-const TOKEN_EXPIRE_DAYS = 7;
+import { LOGIN_STATES, TOKEN_EXPIRE_DAYS, VIEWS_LIMIT } from '../constants/states';
 
 class UserStore {
   // General State
-  @observable loginState
+  @observable viewCount
 
   // User Saved Data
   @observable favoriteCourses = []
@@ -51,6 +49,7 @@ class UserStore {
 
   @action async init() {
     this.loginState = LOGIN_STATES.LOGGED_OUT;
+    await this.applyViewCount();
     // User Saved Data
     await this.applyTimeTable();
     await this.applyReviews();
@@ -62,6 +61,27 @@ class UserStore {
 
   @action.bound setUserStore(key, value) {
     this[key] = value;
+  }
+
+  // General
+
+  get exceedLimit() {
+    return this.viewCount > VIEWS_LIMIT;
+  }
+
+  @action async applyViewCount() {
+    const count = await getStoreData('viewCount');
+    this.setUserStore('viewCount', parseInt(count || 0, 10));
+  }
+
+  @action increaseViewCount = async () => {
+    await this.increaseViewCountBounded();
+  }
+
+  @action.bound increaseViewCountBounded = async () => {
+    const increased = this.viewCount + 1;
+    await storeData('viewCount', increased);
+    this.viewCount = increased;
   }
 
   // TimeTable
