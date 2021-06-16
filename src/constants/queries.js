@@ -165,6 +165,10 @@ const TOP_RATED_COURSES_QUERY = gql`
           title
         }
         overall
+        grading
+        content
+        difficulty
+        teaching
       }
     }
   }`;

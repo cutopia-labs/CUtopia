@@ -79,13 +79,6 @@ const ReviewCard = ({
             <FaChalkboardTeacher />
             <p className="course-summary-label">{review.lecturer}</p>
           </div>
-          <p className="course-summary-label author">
-            By
-            {' '}
-            <span>{review.anonymous ? 'Anonymous' : review.username}</span>
-            {' on '}
-            {getMMMDDYY(review.createdDate)}
-          </p>
         </div>
         <GradeRow
           rating={review}
@@ -95,23 +88,7 @@ const ReviewCard = ({
           selected={selectedCriteria}
           setSelected={setSelectedCriteria}
           isMobile={isMobile}
-        >
-          <LikeButtonsRow
-            liked={liked}
-            myVote={review.myVote}
-            updateVote={updateVote}
-            likeCaption={(review.upvotes || 0) + (review.myVote === null && liked === VOTE_ACTIONS.UPVOTE ? 1 : 0)}
-            dislikeCaption={(review.downvotes || 0) + (review.myVote === null && liked === VOTE_ACTIONS.DOWNVOTE) ? 1 : 0}
-          />
-          <IconButton
-            className="share-icon-btn"
-            size="small"
-            onClick={shareAction}
-            color="primary"
-          >
-            <IoMdShareAlt />
-          </IconButton>
-        </GradeRow>
+        />
       </div>
       {
         selectedCriteria === 'overall'
@@ -134,6 +111,32 @@ const ReviewCard = ({
             </div>
           )
       }
+      <div className="review-bottom-row center-row">
+        <p className="course-summary-label author">
+          By
+          {' '}
+          <span>{review.anonymous ? 'Anonymous' : review.username}</span>
+          {' on '}
+          {getMMMDDYY(review.createdDate)}
+        </p>
+        <div className="right center-row">
+          <LikeButtonsRow
+            liked={liked}
+            myVote={review.myVote}
+            updateVote={updateVote}
+            likeCaption={(review.upvotes || 0) + (review.myVote === null && liked === VOTE_ACTIONS.UPVOTE ? 1 : 0)}
+            dislikeCaption={(review.downvotes || 0) + (review.myVote === null && liked === VOTE_ACTIONS.DOWNVOTE) ? 1 : 0}
+          />
+          <IconButton
+            className="share-icon-btn"
+            size="small"
+            onClick={shareAction}
+            color="primary"
+          >
+            <IoMdShareAlt />
+          </IconButton>
+        </div>
+      </div>
     </div>
   );
 };

@@ -40,7 +40,7 @@
 
 .header-container button,
 .header-container .logo-container,
-.header-container .header-nav.row,
+.header-container .nav-label,
 .header-container .search-input-container > button,
 .header-container .search-input-container > .search-input {
     color: var(--headerTextColor);

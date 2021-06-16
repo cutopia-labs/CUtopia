@@ -3,12 +3,14 @@
     border: 1px solid var(--border);
     margin-top: 24px;
     padding: 0;
+    --review-card-inner-padding-horizontal: 12px;
+    --review-card-inner-padding-vertical: 12px;
 }
 
 .review-title {
     display: flex;
     width: 100%;
-    padding: 12px 8px;
+    padding: var(--review-card-inner-padding-vertical) var(--review-card-inner-padding-horizontal);
     text-align: start;
     /* border-bottom: 1px solid var(--border); */
     /* background-color: var(--background-tertiary); */
@@ -43,24 +45,19 @@
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    padding: 12px 8px;
+    padding: var(--review-card-inner-padding-vertical) var(--review-card-inner-padding-horizontal);
     /* border-bottom: 1px solid var(--border); */
     width: 100%;
 }
 
 .review-info-row > :nth-child(2) {
-    width: 160px;
+    flex: 1;
     margin-left: 16px;
 }
 
 .review-text {
     margin: 0;
-    padding: 4px 8px 12px 8px;
-}
-
-.course-summary-label.author {
-    margin-left: auto;
-    text-transform: none;
+    padding: 4px var(--review-card-inner-padding-horizontal) var(--review-card-inner-padding-vertical) var(--review-card-inner-padding-horizontal);
 }
 
 .course-summary-label.author > span {
@@ -68,12 +65,6 @@
     cursor: pointer;
 }
 
-.grade-row.review-header .share-icon-btn {
-    color: var(--text);
-    opacity: 0.8;
-    margin-right: 12px;
-    padding: 8px;
-}
 
 .review-text-full {
     display: grid;
@@ -85,6 +76,44 @@
     text-align: start;
     text-transform: capitalize;
     color: var(--primary);
-    padding: 8px 8px;
+    padding: var(--review-card-inner-padding-horizontal) var(--review-card-inner-padding-horizontal);
     font-weight: bold;
+}
+
+.review-bottom-row {
+    margin: 0 var(--review-card-inner-padding-horizontal);
+    padding: 8px 0;
+    border-top: 1px solid var(--border);
+}
+
+.course-summary-label.author {
+    text-transform: none;
+    margin: 0;
+}
+
+.review-bottom-row .like-btn-row {
+    margin-left: auto;
+}
+
+.review-bottom-row .share-icon-btn {
+    color: var(--text);
+    opacity: 0.8;
+    margin-left: 4px;
+}
+
+
+
+@media only screen and (max-width: 1260px) {
+    .course-summary-label.author {
+        font-size: 12px;
+    }
+    .review-text-full {
+        grid-template-columns: repeat(1, 1fr);
+    }
+    .review-bottom-row .like-btn-row{
+        margin-left: 6px;
+    }
+    .review-bottom-row .like-btn-row .like-btn {
+        padding: 0;
+    }
 }

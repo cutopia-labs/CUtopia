@@ -26,7 +26,7 @@ const RANKING_ITEMS = {
 };
 
 const RankingCard = ({
-  rankList, children, headerTitle,
+  rankList, children, headerTitle, sortKey,
 }) => (
   <div className="ranking-card card">
     <div className="ranking-card-header center-row">
@@ -45,8 +45,8 @@ const RankingCard = ({
               <span className="ranking-label">{i + 1}</span>
             }
             right={
-              course.overall
-                ? <GradeIndicator grade={course.overall} />
+              (course[sortKey])
+                ? <GradeIndicator grade={course[sortKey]} />
                 : (
                   <Badge
                     index={0}
@@ -86,6 +86,7 @@ const HomePanel = () => {
             <RankingCard
               rankList={topRatedCourses.ranking.topRatedCourses}
               headerTitle="Top Rated"
+              sortKey={sortKey}
             >
               <div className="sort-selector center-row">
                 <IconButton

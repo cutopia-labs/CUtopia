@@ -1,5 +1,5 @@
 body {
-    --primary: rgb(3, 102, 214);
+    --primary: #01579b;
     --accent: #f9826c;
     --surface: rgba(255,255,255,1);
     --background: rgb(250, 249, 248, 1);
@@ -180,6 +180,14 @@ textarea[type=number] {
 
 .char-icon {
     text-transform: uppercase;
+}
+
+.left {
+    margin-right: auto;
+}
+
+.right {
+    margin-left: auto;
 }
 
 /* Scrollbar styles */
