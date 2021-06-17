@@ -259,6 +259,7 @@ const CoursePanel = () => {
                         copyToClipboard(reviewId ? window.location.href : `${window.location.href}/${item.createdDate}`);
                         notification.setSnackBar('Copied sharelink to clipboard!');
                       }}
+                      showAll={Boolean(reviewId)}
                     />
                   ))
               }

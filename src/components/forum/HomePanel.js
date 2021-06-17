@@ -3,10 +3,13 @@ import {
   Link,
 } from 'react-router-dom';
 import {
+  ExpandMore,
   Sort, ThumbUp, Whatshot,
 } from '@material-ui/icons';
 import { useQuery } from '@apollo/client';
-import { IconButton, Menu, MenuItem } from '@material-ui/core';
+import {
+  Button, IconButton, Menu, MenuItem,
+} from '@material-ui/core';
 
 import './HomePanel.css';
 import GradeIndicator from '../GradeIndicator';
@@ -78,27 +81,25 @@ const HomePanel = () => {
   });
   if (recentReviewsLoading || popularCoursesLoading || topRatedCoursesLoading) return <Loading />;
   return (
-    <div className="panel review-home-panel">
-      <div className="review-home-row center-row">
-        {
-          topRatedCourses && topRatedCourses.ranking.topRatedCourses &&
+    <div className="panel review-home-row center-row">
+      {
+        topRatedCourses && topRatedCourses.ranking.topRatedCourses &&
           (
             <RankingCard
               rankList={topRatedCourses.ranking.topRatedCourses}
               headerTitle="Top Rated"
               sortKey={sortKey}
             >
-              <div className="sort-selector center-row">
-                <IconButton
-                  aria-label="sort"
-                  components="span"
-                  size="small"
-                  onClick={e => setAnchorEl(e.currentTarget)}
-                >
-                  <Sort />
-                </IconButton>
+              <Button
+                className="sort-selector"
+                onClick={e => setAnchorEl(e.currentTarget)}
+                startIcon={
+                  <ExpandMore />
+                }
+                size="small"
+              >
                 {sortKey}
-              </div>
+              </Button>
               <Menu
                 id="simple-menu"
                 className="sort-menu"
@@ -121,17 +122,16 @@ const HomePanel = () => {
               </Menu>
             </RankingCard>
           )
-        }
-        {
-          popularCourses && popularCourses.ranking.popularCourses &&
+      }
+      {
+        popularCourses && popularCourses.ranking.popularCourses &&
           (
             <RankingCard
               rankList={popularCourses.ranking.popularCourses}
               headerTitle="Popular"
             />
           )
-        }
-      </div>
+      }
     </div>
   );
 };

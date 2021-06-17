@@ -21,6 +21,9 @@ import GradeRow from './GradeRow';
 import LikeButtonsRow from './LikeButtonRow';
 import { NotificationContext } from '../../store';
 import copyToClipboard from '../../helpers/copyToClipboard';
+import ShowMoreOverlay from '../ShowMoreOverlay';
+
+const MAX_NON_SHOW_MORE_HEIGHT = '300px';
 
 const ReviewCard = ({
   review, onClick, concise, showAll, shareAction,
@@ -30,6 +33,8 @@ const ReviewCard = ({
   const [voteReview, { loading, error }] = useMutation(VOTE_REVIEW);
   const [liked, setLiked] = useState(review.myVote); // null for unset, false for dislike, true for like
   const isMobile = useMediaQuery('(max-width:1260px)');
+  const [showMore, setShowMore] = useState(true);
+  const [skipHeightCheck, setSkipHeightCheck] = useState(showAll);
 
   const updateVote = async vote => {
     console.log(review.courseId);
@@ -59,7 +64,9 @@ const ReviewCard = ({
     );
   }
   return (
-    <div className="review-card">
+    <div
+      className={`review-card${showMore ? '' : ' retracted'}`}
+    >
       <div className="course-summary review">
         {
           Boolean(review.title) &&
@@ -93,7 +100,15 @@ const ReviewCard = ({
       {
         selectedCriteria === 'overall'
           ? (
-            <div className="review-text-full">
+            <div
+              ref={ref => {
+              // Wrap if course-card is too long
+                if (!skipHeightCheck && ref && ref.clientHeight > window.innerHeight * 0.4) {
+                  setShowMore(false);
+                }
+              }}
+              className={`review-text-full${showMore ? '' : ' retracted'}`}
+            >
               {
                 RATING_FIELDS.map(field => (
                   <div className="review-text-container">
@@ -102,6 +117,10 @@ const ReviewCard = ({
                   </div>
                 ))
               }
+              <ShowMoreOverlay
+                visible={!showMore}
+                onShowMore={() => [setShowMore(true), setSkipHeightCheck(true)]}
+              />
             </div>
           )
           : (
@@ -111,7 +130,9 @@ const ReviewCard = ({
             </div>
           )
       }
-      <div className="review-bottom-row center-row">
+      <div
+        className={`review-bottom-row center-row${showMore ? '' : ' retracted'}`}
+      >
         <p className="course-summary-label author">
           By
           {' '}

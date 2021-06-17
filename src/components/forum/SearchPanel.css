@@ -2,7 +2,8 @@
     width: 340px;
     min-width: 340px;
     border-right: 1px solid var(--border);
-    top: 0px;
+    position: sticky;
+    top: calc(var(--headerHeight) + 16px * 2);
     left: 0;
     height: auto;
     align-self: flex-start;

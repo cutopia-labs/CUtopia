@@ -23,11 +23,11 @@ const GradeRow = ({
           <div
             key={field}
             className={`center-row rating-container${selected === field ? ' active' : ''}${additionalChildClassName ? ` ${additionalChildClassName}` : ''}`}
-            onClick={!isMobile && (() => {
+            onClick={() => {
               if (setSelected && !isMobile) {
                 setSelected(field);
               }
-            })}
+            }}
           >
             {
               field !== 'overall' &&

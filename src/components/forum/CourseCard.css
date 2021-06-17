@@ -2,6 +2,12 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    position: relative;
+    overflow: hidden;
+}
+
+.course-card.retracted {
+    max-height: 580px;
 }
 
 .course-card .grade-row {
@@ -66,5 +72,11 @@
 }
 .course-card.concise > .course-card-title-container > .badge {
     margin-right: 0;
+    margin-bottom: 0;
+}
+
+
+.course-card.concise .grade-row.concise {
+    margin-top: 20px;
     margin-bottom: 0;
 }

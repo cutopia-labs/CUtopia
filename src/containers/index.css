@@ -25,7 +25,7 @@ body {
     --scrollbar: rgb(204, 204, 204);
     --max-width: 1260px;
     --card-padding: 16px;
-    --page-margin: 24px;
+    --page-margin: 20px;
     --page-magrgin-top: 0;
     color: var(--text);
     background-color: var(--background);
@@ -66,6 +66,7 @@ textarea[type=number] {
     flex-direction: column;
     min-height: 100vh;
     max-height: 100vh;
+    overflow-y: scroll;
 }
 
 .page {
@@ -213,10 +214,6 @@ textarea[type=number] {
     }
     .page {
         padding: 0;
-    }
-    .bottom-border-item:hover {
-        padding-top: none;
-        border-bottom: none;
     }
 }
 

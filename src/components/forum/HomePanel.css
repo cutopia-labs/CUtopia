@@ -11,7 +11,8 @@
 }
 
 .ranking-card-header {
-    padding: 16px 16px;
+    padding: 0 var(--card-padding);
+    height: 44px;
     color: var(--primary);
     background-color: var(--background-secondary);
 }
@@ -21,7 +22,7 @@
 }
 
 .ranking-card-header-title {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 500;
 }
 
@@ -64,16 +65,13 @@
     padding: 10px 0;
 }
 
-.sort-selector {
+.review-home-row .sort-selector {
     margin-left: auto;
     text-transform: capitalize;
     font-size: 16px;
+    color: var(--primary);
 }
 
-.sort-selector > button {
-    color: var(--primary);
-    margin-right: 6px;
-}
 
 .sort-menu {
     text-transform: capitalize;
@@ -86,6 +84,9 @@
     .ranking-card:last-child {
         margin-left: 0;
         margin-top: var(--card-padding);
+    }
+    .ranking-card {
+        width: 100%;
     }
 }
 

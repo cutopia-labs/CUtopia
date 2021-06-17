@@ -13,6 +13,8 @@ import './CourseCard.css';
 import { COURSE_SECTIONS_QUERY } from '../../constants/queries';
 import CourseSections from './CourseSections';
 
+const COURSE_CARD_MAX_HEIGHT = 580;
+
 const CourseCard = ({ courseInfo, concise }) => {
   const [showMore, setShowMore] = useState(true);
   const [skipHeightCheck, setSkipHeightCheck] = useState(concise);
@@ -38,12 +40,10 @@ const CourseCard = ({ courseInfo, concise }) => {
   };
   return (
     <div
-      className={`course-card${concise ? ' concise' : ''}`}
+      className={`course-card${concise ? ' concise' : ''}${showMore ? '' : ' retracted'}`}
       ref={ref => {
         // Wrap if course-card is too long
-        if (!skipHeightCheck && ref && ref.clientHeight > window.innerHeight * 0.5) {
-          console.log(ref.clientHeight);
-          console.log(window.innerHeight);
+        if (!skipHeightCheck && ref && ref.clientHeight >= COURSE_CARD_MAX_HEIGHT) {
           setShowMore(false);
         }
       }}
@@ -110,6 +110,11 @@ const CourseCard = ({ courseInfo, concise }) => {
           )
       }
       {
+        courseInfo.rating &&
+        isMobile && !concise &&
+        <GradeRow rating={courseInfo.rating} additionalClassName="concise" />
+      }
+      {
         Boolean(courseInfo.description) &&
         <p className="caption description">{courseInfo.description}</p>
       }
@@ -118,7 +123,7 @@ const CourseCard = ({ courseInfo, concise }) => {
         onShowMore={() => [setShowMore(true), setSkipHeightCheck(true)]}
       />
       {
-        showMore && !concise &&
+        !concise &&
           ['requirements', 'outcome', 'required_readings']
             .filter(key => courseInfo[key] && courseInfo[key] !== '') // filter off empty strings
             .map(key => (
@@ -127,11 +132,6 @@ const CourseCard = ({ courseInfo, concise }) => {
                 <p className="caption">{courseInfo[key]}</p>
               </div>
             ))
-      }
-      {
-        courseInfo.rating &&
-        isMobile && !concise &&
-        <GradeRow rating={courseInfo.rating} additionalClassName="concise" />
       }
     </div>
   );

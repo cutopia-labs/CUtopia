@@ -51,7 +51,7 @@
 }
 
 .header-search-result {
-    position: fixed;
+    position: absolute;
     margin-top: calc(var(--headerHeight) + 10px);
     height: fit-content;
     z-index: 10;
@@ -122,7 +122,6 @@
     }
     .header-search-result {
         width: 100vw;
-        position: fixed;
         left: 0;
     }
 }

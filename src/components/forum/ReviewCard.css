@@ -5,6 +5,7 @@
     padding: 0;
     --review-card-inner-padding-horizontal: 12px;
     --review-card-inner-padding-vertical: 12px;
+    position: relative;
 }
 
 .review-title {
@@ -69,7 +70,12 @@
 .review-text-full {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    padding: 6px 0;
+    position: relative;
+}
+
+.review-text-full.retracted {
+    overflow: hidden;
+    max-height: 360px;
 }
 
 .review-text-label {
@@ -81,9 +87,17 @@
 }
 
 .review-bottom-row {
-    margin: 0 var(--review-card-inner-padding-horizontal);
+    margin: 6px var(--review-card-inner-padding-horizontal) 0 var(--review-card-inner-padding-horizontal);
     padding: 8px 0;
     border-top: 1px solid var(--border);
+}
+
+.review-bottom-row.retracted {
+    margin-top: 0;
+}
+
+.review-text-full.retracted .show-more-overlay {
+    padding-bottom: 10px;
 }
 
 .course-summary-label.author {
@@ -115,5 +129,9 @@
     }
     .review-bottom-row .like-btn-row .like-btn {
         padding: 0;
+    }
+    .review-card .bottom-border-item:hover {
+        padding-top: none;
+        border-bottom: none;
     }
 }

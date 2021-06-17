@@ -2,18 +2,17 @@
     width: 100%;
     background-color: var(--background);
     height: 100%;
-    overflow-y: scroll;
 }
 
 .home-page .center-page {
-    padding: 20px 24px;
+    padding: var(--page-margin);
     background-color: var(--background);
 }
 
 .home-page-left {
     width: 300px;
     position: sticky;
-    top: 20px;
+    top: calc(var(--headerHeight) + var(--page-margin) * 2);
     height: 0;
 }
 
