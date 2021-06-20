@@ -43,6 +43,8 @@ module.exports = {
     'react/jsx-one-expression-per-line': ['error', { allow: 'single-child' }],
     'max-len': 0,
     'operator-linebreak': ['error', 'after', { overrides: { '?': 'before', ':': 'before' } }],
+    'jsx-a11y/click-events-have-key-events': 0,
+    'jsx-a11y/no-static-element-interactions': 0,
   },
   ignorePatterns: [
     '*.css',

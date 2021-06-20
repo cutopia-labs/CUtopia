@@ -10,7 +10,6 @@
     max-height: calc(100vh - var(--headerHeight) - 51px);
     overflow-y: scroll;
     overflow-x: hidden;
-    background-color: var(--surface);
     margin: var(--card-padding) 0;
 }
 

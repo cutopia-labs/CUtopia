@@ -67,6 +67,7 @@ textarea[type=number] {
     min-height: 100vh;
     max-height: 100vh;
     overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 .page {
@@ -95,6 +96,12 @@ textarea[type=number] {
 
 .center-row {
     align-items: center;
+}
+
+.center-flex-box {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .column {
@@ -149,26 +156,6 @@ textarea[type=number] {
     background-color: transparent !important;
 }
 
-.bottom-border-row {
-    display: flex;
-    width: 100%;
-    border-bottom: 1px solid var(--border);
-}
-
-.bottom-border-item {
-    cursor: pointer;
-}
-
-.bottom-border-item:hover {
-    padding-top: 2px; /*　Prevent the border pushes the content upwards */
-    border-bottom: 2px solid var(--border)
-}
-
-.bottom-border-item.active {
-    padding-top: 2px;
-    border-bottom: 2px solid var(--accent);
-}
-
 .icon {
     margin-right: 20px;
     cursor: pointer;
@@ -216,7 +203,6 @@ textarea[type=number] {
         padding: 0;
     }
 }
-
 
 /* Dark Mode Colors */
 

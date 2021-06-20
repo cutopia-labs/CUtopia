@@ -27,10 +27,10 @@
 }
 
 .ranking-card {
-    flex: 1;
-    margin-left: 20px;
     overflow: hidden;
     border-bottom: 0;
+    width: 100%;
+    margin-top: var(--card-padding);
 }
 
 .ranking-card:first-child {
@@ -38,7 +38,7 @@
 }
 
 .ranking-label {
-    margin: 0 14px;
+    width: 40px;
     opacity: 0.5;
 }
 
@@ -65,13 +65,11 @@
     padding: 10px 0;
 }
 
-.review-home-row .sort-selector {
-    margin-left: auto;
+.review-home-panel .sort-selector {
+    margin-left: 6px;
     text-transform: capitalize;
-    font-size: 16px;
-    color: var(--primary);
+    font-size: 14px;
 }
-
 
 .sort-menu {
     text-transform: capitalize;

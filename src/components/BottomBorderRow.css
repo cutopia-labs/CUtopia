@@ -1,0 +1,41 @@
+.bottom-border-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+}
+
+.bottom-border-item {
+    display: flex;
+    height: 48px;
+    padding: 0 var(--card-padding);
+    cursor: pointer;
+    padding-top: 0;
+    transition: width 300ms cubic-bezier(0.7, 0, 0.3, 1) 0ms;
+}
+
+.bottom-border-item svg {
+    font-size: 16px;
+    padding-top: 0;
+}
+
+.bottom-border-item .caption {
+    text-transform: capitalize!important;
+    margin-left: 6px;
+    font-size: 14px;
+}
+
+.bottom-border-item:hover {
+    padding-top: 2px; /*　Prevent the border pushes the content upwards */
+    border-bottom: 2px solid var(--border);
+}
+
+.bottom-border-item.active {
+    border-bottom: 2px solid var(--accent);
+}
+
+.bottom-border-item.active, .bottom-border-item:hover {
+    padding-top: 0;
+}

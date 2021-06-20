@@ -12,6 +12,7 @@ import { UserContext } from '../store';
 import { CoursesList, ReviewsList } from '../components/home/HomePageTabs';
 import TimeTablePanel from '../components/TimeTablePanel';
 import { MY_TIMETABLE_QUERY, GET_USER } from '../constants/queries';
+import BottomBorderRow from '../components/BottomBorderRow';
 
 const LINKS = [
   {
@@ -42,35 +43,28 @@ const LinksCard = () => (
   </div>
 );
 
-const MODES = {
-  COURSES: 0,
-  REVIEWS: 1,
-  TIMETABLE: 2,
-  PLANNER: 3,
-};
-
 const SELECTIONS = [
   {
-    label: 'COURSES',
+    label: 'Courses',
     icon: <SchoolOutlined />,
   },
   {
-    label: 'REVIEWS',
+    label: 'Reviews',
     icon: <ChatBubbleOutlineOutlined />,
   },
   {
-    label: 'PLANNER',
+    label: 'Planner',
     icon: <NoteOutlined />,
   },
   {
-    label: 'TIMETABLE',
+    label: 'Timetable',
     icon: <CalendarTodayOutlined />,
   },
 ];
 
 const HomePage = () => {
   const user = useContext(UserContext);
-  const [mode, setMode] = useState(MODES.COURSES);
+  const [mode, setMode] = useState('Courses');
 
   const { loading: timetableLoading } = useQuery(MY_TIMETABLE_QUERY, {
     variables: {
@@ -90,13 +84,6 @@ const HomePage = () => {
     },
   });
 
-  const CONTENTS = {
-    COURSES: <CoursesList />,
-    REVIEWS: 1,
-    TIMETABLE: 2,
-    PLANNER: 3,
-  };
-
   return (
     <div className="home-page page row">
       <div className="center-page row">
@@ -108,30 +95,21 @@ const HomePage = () => {
           <LinksCard />
         </div>
         <div className="home-page-right column">
-          <div className="card bottom-border-row user-menu">
-            {
-              SELECTIONS.map(selection => (
-                <div
-                  key={selection.label}
-                  className={`user-menu-item bottom-border-item center-row${MODES[selection.label] === mode ? ' active' : ''}`}
-                  onClick={() => setMode(MODES[selection.label])}
-                >
-                  {selection.icon}
-                  <span className="caption">{selection.label.toLowerCase()}</span>
-                </div>
-              ))
-            }
-          </div>
+          <BottomBorderRow
+            items={SELECTIONS}
+            select={mode}
+            setSelect={setMode}
+          />
           {
-            mode === MODES.COURSES &&
+            mode === 'Courses' &&
             <CoursesList loading={false} courses={user.favoriteCourses} />
           }
           {
-            mode === MODES.REVIEWS &&
+            mode === 'Reviews' &&
             <ReviewsList loading={userDataLoading} reviewIds={userData?.user?.reviewIds} />
           }
           {
-            mode === MODES.PLANNER &&
+            mode === 'Planner' &&
             (
               <TimeTablePanel
                 className="home-page-timetable card"
@@ -143,7 +121,7 @@ const HomePage = () => {
             )
           }
           {
-            mode === MODES.TIMETABLE &&
+            mode === 'Timetable' &&
             (
               <TimeTablePanel
                 className="home-page-timetable card"

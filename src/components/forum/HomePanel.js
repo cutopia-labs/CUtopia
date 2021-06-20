@@ -4,7 +4,7 @@ import {
 } from 'react-router-dom';
 import {
   ExpandMore,
-  Sort, ThumbUp, Whatshot,
+  Sort, SortOutlined, ThumbUp, ThumbUpOutlined, Whatshot, WhatshotOutlined,
 } from '@material-ui/icons';
 import { useQuery } from '@apollo/client';
 import {
@@ -18,6 +18,7 @@ import { RECENT_REVIEWS_QUERY, TOP_RATED_COURSES_QUERY, POPULAR_COURSES_QUERY } 
 import Loading from '../Loading';
 import ListItem from '../ListItem';
 import Badge from '../Badge';
+import BottomBorderRow from '../BottomBorderRow';
 
 const RANKING_ITEMS = {
   'Top Rated': {
@@ -28,68 +29,82 @@ const RANKING_ITEMS = {
   },
 };
 
+const MENU_ITEMS = [
+  {
+    label: 'Top Rated',
+    icon: <ThumbUpOutlined />,
+  },
+  {
+    label: 'Popular',
+    icon: <WhatshotOutlined />,
+  },
+];
+
 const RankingCard = ({
-  rankList, children, headerTitle, sortKey,
-}) => (
-  <div className="ranking-card card">
-    <div className="ranking-card-header center-row">
-      {RANKING_ITEMS[headerTitle].icon}
-      <span className="ranking-card-header-title">{headerTitle}</span>
-      {children}
-    </div>
-    {
-      rankList.map((course, i) => (
-        <Link
-          key={`${headerTitle}-${course.courseId}`}
-          to={`/review/${course.courseId}`}
-        >
-          <ListItem
-            left={
-              <span className="ranking-label">{i + 1}</span>
-            }
-            right={
-              (course[sortKey])
-                ? <GradeIndicator grade={course[sortKey]} />
-                : (
-                  <Badge
-                    index={0}
-                    text={`${course.numReviews} reviews`}
-                  />
-                )
-            }
+  rankList, headerTitle, sortKey, loading,
+}) => {
+  if (loading) return <Loading />;
+  if (!rankList || !rankList.length) return null;
+  return (
+    <div className="ranking-card card">
+      {
+        rankList.map((course, i) => (
+          <Link
+            key={`${headerTitle}-${course.courseId}`}
+            to={`/review/${course.courseId}`}
           >
-            <div className="search-list-item column">
-              <span className="title">{course.courseId}</span>
-              <span className="caption">{course.course.title}</span>
-            </div>
-          </ListItem>
-        </Link>
-      ))
-    }
-  </div>
-);
+            <ListItem
+              left={
+                <span className="ranking-label center-flex-box">{i + 1}</span>
+              }
+              right={
+                (course[sortKey])
+                  ? <GradeIndicator grade={course[sortKey]} />
+                  : (
+                    <Badge
+                      index={0}
+                      text={`${course.numReviews} reviews`}
+                    />
+                  )
+              }
+            >
+              <div className="search-list-item column">
+                <span className="title">{course.courseId}</span>
+                <span className="caption">{course.course.title}</span>
+              </div>
+            </ListItem>
+          </Link>
+        ))
+      }
+    </div>
+  );
+};
 
 const HomePanel = () => {
-  const { data: reviews, loading: recentReviewsLoading } = useQuery(RECENT_REVIEWS_QUERY);
-  const { data: popularCourses, loading: popularCoursesLoading } = useQuery(POPULAR_COURSES_QUERY);
+  const [mode, setMode] = useState('Top Rated');
   const [sortKey, setSortKey] = useState('overall');
   const [anchorEl, setAnchorEl] = useState();
+  const { data: reviews, loading: recentReviewsLoading } = useQuery(RECENT_REVIEWS_QUERY, {
+    skip: mode !== 'Recent',
+  });
+  const { data: popularCourses, loading: popularCoursesLoading } = useQuery(POPULAR_COURSES_QUERY, {
+    skip: mode !== 'Popular',
+  });
   const { data: topRatedCourses, loading: topRatedCoursesLoading } = useQuery(TOP_RATED_COURSES_QUERY, {
     variables: {
       criteria: sortKey,
     },
+    skip: mode !== 'Top Rated',
   });
-  if (recentReviewsLoading || popularCoursesLoading || topRatedCoursesLoading) return <Loading />;
   return (
-    <div className="panel review-home-row center-row">
-      {
-        topRatedCourses && topRatedCourses.ranking.topRatedCourses &&
-          (
-            <RankingCard
-              rankList={topRatedCourses.ranking.topRatedCourses}
-              headerTitle="Top Rated"
-              sortKey={sortKey}
-            >
+    <div className="panel review-home-panel center-row">
+      <BottomBorderRow
+        items={MENU_ITEMS}
+        select={mode}
+        setSelect={setMode}
+        onSelectItems={{
+          'Top Rated': (
+            <>
               <Button
                 className="sort-selector"
                 onClick={e => setAnchorEl(e.currentTarget)}
@@ -120,18 +135,19 @@ const HomePanel = () => {
                   ))
                 }
               </Menu>
-            </RankingCard>
-          )
-      }
-      {
-        popularCourses && popularCourses.ranking.popularCourses &&
-          (
-            <RankingCard
-              rankList={popularCourses.ranking.popularCourses}
-              headerTitle="Popular"
-            />
-          )
-      }
+            </>
+          ),
+        }}
+      />
+      <RankingCard
+        rankList={topRatedCourses?.ranking?.topRatedCourses}
+        sortKey={sortKey}
+        loading={topRatedCoursesLoading}
+      />
+      <RankingCard
+        rankList={popularCourses?.ranking?.popularCourses}
+        loading={popularCoursesLoading}
+      />
     </div>
   );
 };

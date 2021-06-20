@@ -128,7 +128,7 @@ const Header = () => {
                 onClick={courseId => {
                   history.push(`/review/${courseId}`);
                 }}
-                limit={6}
+                limit={isMobile ? 4 : 6}
                 onMouseDown={courseId => {
                   history.push(`/review/${courseId}`);
                 }}

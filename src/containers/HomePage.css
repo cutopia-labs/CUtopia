@@ -22,38 +22,34 @@
     height: fit-content;
 }
 
-.home-page .user-menu {
-    display: flex;
-    flex-direction: row;
-    overflow: hidden;
+.home-page .bottom-border-row {
     min-height: 50px;
     height: 50px;
     margin-bottom: var(--card-padding);
 }
 
-.user-menu-item {
+.bottom-border-item {
     display: flex;
     height: 48px;
     padding: 0 var(--card-padding);
 }
 
-.user-menu-item svg {
+.bottom-border-item svg {
     font-size: 16px;
 }
 
-.user-menu-item .caption {
-    text-transform: capitalize !important;
+.bottom-border-item .caption {
     margin-left: 6px;
     font-size: 14px;
 }
 
-.user-menu .user-menu-item.active,
-.user-menu .user-menu-item:hover {
+.bottom-border-row .bottom-border-item.active,
+.bottom-border-row .bottom-border-item:hover {
     padding-top: 0;
 }
 
 .home-page-timetable {
-    min-height: calc(100vh - 200px);
+    min-height: calc(100vh - 202px);
 }
 
 /* Links Card */
@@ -92,7 +88,7 @@
         width: 100%;
         top: 0;
     }
-    .home-page .user-menu {
+    .home-page .bottom-border-row {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         height: auto;
@@ -100,7 +96,7 @@
         width: 100%;
         overflow-x: scroll;
     }
-    .home-page .user-menu-item {
+    .home-page .bottom-border-item {
     }
     .home-page-right {
         width: 100%;
