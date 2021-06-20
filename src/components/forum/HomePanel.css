@@ -65,10 +65,9 @@
     padding: 10px 0;
 }
 
-.review-home-panel .sort-selector {
-    margin-left: 6px;
-    text-transform: capitalize;
-    font-size: 14px;
+.review-home-panel .chips-row {
+    margin-top: var(--card-padding);
+    margin-right: auto;
 }
 
 .sort-menu {

@@ -19,15 +19,7 @@ import Loading from '../Loading';
 import ListItem from '../ListItem';
 import Badge from '../Badge';
 import BottomBorderRow from '../BottomBorderRow';
-
-const RANKING_ITEMS = {
-  'Top Rated': {
-    icon: <ThumbUp />,
-  },
-  Popular: {
-    icon: <Whatshot />,
-  },
-};
+import ChipsRow from '../ChipsRow';
 
 const MENU_ITEMS = [
   {
@@ -102,43 +94,18 @@ const HomePanel = () => {
         items={MENU_ITEMS}
         select={mode}
         setSelect={setMode}
-        onSelectItems={{
-          'Top Rated': (
-            <>
-              <Button
-                className="sort-selector"
-                onClick={e => setAnchorEl(e.currentTarget)}
-                startIcon={
-                  <ExpandMore />
-                }
-                size="small"
-              >
-                {sortKey}
-              </Button>
-              <Menu
-                id="simple-menu"
-                className="sort-menu"
-                anchorEl={anchorEl}
-                keepMounted
-                open={Boolean(anchorEl)}
-                onClose={() => setAnchorEl()}
-              >
-                {
-                  ['overall', ...RATING_FIELDS].map(field => (
-                    <MenuItem
-                      key={field}
-                      onClick={() => [setSortKey(field), setAnchorEl()]}
-                      selected={sortKey === field}
-                    >
-                      {field}
-                    </MenuItem>
-                  ))
-                }
-              </Menu>
-            </>
-          ),
-        }}
       />
+      {
+        mode === 'Top Rated' && (
+          <>
+            <ChipsRow
+              items={['overall', ...RATING_FIELDS]}
+              select={sortKey}
+              setSelect={setSortKey}
+            />
+          </>
+        )
+      }
       <RankingCard
         rankList={topRatedCourses?.ranking?.topRatedCourses}
         sortKey={sortKey}

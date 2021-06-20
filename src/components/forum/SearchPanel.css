@@ -45,29 +45,6 @@
     flex: 1;
 }
 
-.chips-row {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    padding: 0 10px 10px 10px;
-}
-
-.chips-row > div {
-    margin-left: 6px;
-}
-
-.chips-row > div:first-child {
-    margin-left: 0;
-}
-
-.chips-row > div > .MuiChip-label {
-    padding-left: 10px;
-    padding-right: 10px;
-}
-
-.schools-container {
-}
-
 .course-codes-container {
     text-align: left;
 }

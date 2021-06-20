@@ -1,0 +1,24 @@
+.chips-row {
+    display: flex;
+    flex-direction: row;
+    overflow-x: scroll;
+    width: 100%;
+}
+
+.chips-row::-webkit-scrollbar {
+    display: none;
+}
+
+.chips-row > div {
+    margin-left: 8px;
+    text-transform: capitalize;
+}
+
+.chips-row > div:first-child {
+    margin-left: 0;
+}
+
+.chips-row > div > .MuiChip-label {
+    padding-left: 10px;
+    padding-right: 10px;
+}
