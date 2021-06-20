@@ -43,7 +43,7 @@ const LIST_ITEMS = Object.freeze([
   },
 ]);
 
-const getCoursesFromQuery = (payload, user, limit) => {
+const getCoursesFromQuery = ({ payload, user, limit }) => {
   // load local courselist
   const { mode, text } = payload;
   switch (mode) {
@@ -101,6 +101,28 @@ const getCoursesFromQuery = (payload, user, limit) => {
   }
 };
 
+export const SearchResult = ({
+  searchPayload, user, onClick, onMouseDown, limit,
+}) => (
+  (getCoursesFromQuery({
+    payload: searchPayload,
+    user,
+    limit: limit || MAX_SEARCH_RESULT_LENGTH,
+  }) || []).map((course, i) => (
+    <ListItem
+      key={`listitem-${course.c}`}
+      ribbonIndex={i}
+      chevron
+      onClick={() => onClick(course.c)}
+      onMouseDown={() => (onMouseDown ? onMouseDown(course.c) : {})}
+    >
+      <div className="search-list-item column">
+        <span className="title">{course.c}</span>
+        <span className="caption">{course.t}</span>
+      </div>
+    </ListItem>
+  )));
+
 const DepartmentList = ({ setSearchPayload }) => {
   const [currentSchool, setCurrentSchool] = useState();
   return (
@@ -149,24 +171,6 @@ const DepartmentList = ({ setSearchPayload }) => {
     </div>
   );
 };
-
-export const SearchResult = ({
-  searchPayload, user, onClick, onMouseDown, limit,
-}) => (
-  (getCoursesFromQuery(searchPayload, user, limit || MAX_SEARCH_RESULT_LENGTH) || []).map((course, i) => (
-    <ListItem
-      key={`listitem-${course.c}`}
-      ribbonIndex={i}
-      chevron
-      onClick={() => onClick(course.c)}
-      onMouseDown={() => (onMouseDown ? onMouseDown(course.c) : {})}
-    >
-      <div className="search-list-item column">
-        <span className="title">{course.c}</span>
-        <span className="caption">{course.t}</span>
-      </div>
-    </ListItem>
-  )));
 
 const SearchPanel = () => {
   const [searchPayload, setSearchPayload] = useState({});

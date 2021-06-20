@@ -1,15 +1,16 @@
 import React, {
-  useState, useEffect, useContext, useReducer,
+  useState, useEffect, useContext, useReducer, useRef,
 } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  Menu, MenuItem, Button, CircularProgress, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
+  Menu, MenuItem, Button, CircularProgress, IconButton, Dialog,
+  DialogActions, DialogContent, DialogContentText, DialogTitle, useMediaQuery,
 } from '@material-ui/core';
 import { useMutation, useQuery } from '@apollo/client';
+import { useHistory, useParams } from 'react-router-dom';
+import { Visibility, VisibilityOff } from '@material-ui/icons';
 
 import './ReviewEdit.css';
-import { useHistory, useParams } from 'react-router';
-import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { NotificationContext, UserContext } from '../../store';
 import { GET_USER, GET_REVIEW } from '../../constants/queries';
 import { ADD_REVIEW } from '../../constants/mutations';
@@ -17,6 +18,9 @@ import { GRADES, RATING_FIELDS, LETTER_TO_FIVE_VALUES } from '../../constants/st
 import colors from '../../constants/colors';
 import TextField from '../TextField';
 import Loading from '../Loading';
+import INSTRUCTORS from '../../constants/instructors';
+import { SearchResult } from './SearchPanel';
+import ListItem from '../ListItem';
 
 const TARGET_WORD_COUNT = 80;
 
@@ -42,9 +46,14 @@ const TERMS_OPTIONS = [
   `Before ${EARLIEST_YEAR}`,
 ];
 
-const FormSection = ({ title, children }) => (
+const wordCount = str => {
+  const matches = str.match(/[\u00ff-\uffff]|\S+/g);
+  return matches ? matches.length : 0;
+};
+
+const FormSection = ({ title, className, children }) => (
   <>
-    <span className="form-section-title">{title}</span>
+    <span className={`form-section-title ${className}`}>{title}</span>
     {children}
   </>
 );
@@ -66,6 +75,18 @@ const SelectionGroup = ({ selections, selectedIndex, onSelect }) => (
     }
   </div>
 );
+
+const searchLecturers = ({ payload, limit }) => {
+  const results = [];
+  let resultsLen = 0;
+  for (let i = 0; (i <= INSTRUCTORS.length && resultsLen <= limit); i++) {
+    if ((INSTRUCTORS[i] || '').toLowerCase().includes(payload.toLowerCase())) {
+      results.push(INSTRUCTORS[i]);
+      resultsLen++;
+    }
+  }
+  return results;
+};
 
 const ReviewSection = ({
   type, value, onChangeText, onChangeGrade,
@@ -101,7 +122,9 @@ const ReviewEdit = ({
   const [targetReview, setTargetReview] = useState();
   const [progress, setProgress] = useState(0);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [showLecturers, setShowLecturers] = useState(false);
   const [addReview, { loading, error }] = useMutation(ADD_REVIEW);
+  const isMobile = useMediaQuery('(max-width:1260px)');
   const [formData, dispatchFormData] = useReducer(
     (state, action) => ({ ...state, ...action }),
     {
@@ -118,6 +141,7 @@ const ReviewEdit = ({
   const notification = useContext(NotificationContext);
   const user = useContext(UserContext);
   const history = useHistory();
+  const lecturerInputRef = useRef();
 
   // Get user's reviewIds to see if he already reviewed this course
   const { data: userData, userLoading } = useQuery(GET_USER, {
@@ -211,11 +235,6 @@ const ReviewEdit = ({
     dispatchFormData({ overall: Math.round(overallAverage) }); // later detemine round or floor
   }, RATING_FIELDS.map(type => formData[type].grade));
 
-  const wordCount = str => {
-    const matches = str.match(/[\u00ff-\uffff]|\S+/g);
-    return matches ? matches.length : 0;
-  };
-
   useEffect(() => {
     const combinedReviewText = RATING_FIELDS.map(type => formData[type].text).reduce((acc, v) => acc + v);
     const count = wordCount(combinedReviewText);
@@ -291,12 +310,35 @@ const ReviewEdit = ({
           onChangeText={text => dispatchFormData({ title: text })}
         />
       </FormSection>
-      <FormSection title="lecturer">
+      <FormSection title="lecturer" className="lecturer">
         <TextField
           placeholder="Please input your course instructor here."
           value={formData.lecturer}
           onChangeText={text => dispatchFormData({ lecturer: text })}
+          ref={lecturerInputRef}
+          onFocus={() => setShowLecturers(true)}
+          onBlur={() => setShowLecturers(false)}
         />
+        {
+          showLecturers && Boolean(formData.lecturer) && (
+            <div className="header-search-result card">
+              {
+                searchLecturers({ payload: formData.lecturer, limit: isMobile ? 4 : 6 })
+                  .filter(item => formData.lecturer !== item)
+                  .map(lecturer => (
+                    <ListItem
+                      key={`listitem-${lecturer}`}
+                      onMouseDown={() => dispatchFormData({ lecturer })}
+                    >
+                      <div className="search-list-item column">
+                        <span className="title">{lecturer}</span>
+                      </div>
+                    </ListItem>
+                  ))
+              }
+            </div>
+          )
+        }
       </FormSection>
       <div className="review-sections-container">
         {

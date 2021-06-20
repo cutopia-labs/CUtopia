@@ -118,6 +118,20 @@
     color: white;
 }
 
+.review-edit .header-search-result {
+    width: calc(100% - 13px * 2);
+    top: 292px;
+    border-top: 0;
+}
+
+.review-edit .header-search-result > .list-item-container {
+    width: 100%;
+}
+
+.review-edit .search-list-item .title {
+    font-size: 14px;
+}
+
 @media only screen and (max-width: 1260px) {
     .review-sections-container {
         display: block;
@@ -131,5 +145,8 @@
     }
     .submit-btn-row > .submit-btn {
         width: 100%;
+    }
+    .review-edit .header-search-result {
+        margin-left: 11px;
     }
 }

@@ -13,6 +13,10 @@
     margin: var(--card-padding) 0;
 }
 
+.search-panel::-webkit-scrollbar {
+    display: none;
+}
+
 .search-panel > div {
     background-color: var(--surface);
 }

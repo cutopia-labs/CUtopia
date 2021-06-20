@@ -15,7 +15,7 @@ const ChipsRow = ({
           onClick={() => setSelect(item)}
           label={item}
           variant="outlined"
-          color={select === item ? 'primary' : 'default'}
+          color={select === item ? 'secondary' : 'default'}
         />
       ))
     }

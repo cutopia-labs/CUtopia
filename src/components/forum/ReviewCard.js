@@ -10,25 +10,19 @@ import { BiMessageRounded } from 'react-icons/bi';
 import { IoMdShareAlt } from 'react-icons/io';
 import { useMutation } from '@apollo/client';
 import { IconButton, useMediaQuery } from '@material-ui/core';
-import { Forum, Share } from '@material-ui/icons';
 
 import './ReviewCard.css';
 import { RATING_FIELDS, VOTE_ACTIONS } from '../../constants/states';
 import { VOTE_REVIEW } from '../../constants/mutations';
 import { getMMMDDYY } from '../../helpers/getTime';
-import GradeIndicator from '../GradeIndicator';
 import GradeRow from './GradeRow';
 import LikeButtonsRow from './LikeButtonRow';
 import { NotificationContext } from '../../store';
-import copyToClipboard from '../../helpers/copyToClipboard';
 import ShowMoreOverlay from '../ShowMoreOverlay';
 
-const MAX_NON_SHOW_MORE_HEIGHT = '300px';
-
 const ReviewCard = ({
-  review, onClick, concise, showAll, shareAction,
+  review, concise, showAll, shareAction,
 }) => {
-  const notification = useContext(NotificationContext);
   const [selectedCriteria, setSelectedCriteria] = useState('overall');
   const [voteReview, { loading, error }] = useMutation(VOTE_REVIEW);
   const [liked, setLiked] = useState(review.myVote); // null for unset, false for dislike, true for like

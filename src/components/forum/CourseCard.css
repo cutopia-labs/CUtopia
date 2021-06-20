@@ -22,6 +22,14 @@
     text-align: left;
 }
 
+.course-card-title-container {
+    display: flex;
+    flex: 1;
+    width: 100%;
+    justify-content: space-between;
+    margin-top: -10px;
+}
+
 .course-card-title-container.left {
     display: flex;
     flex-direction: column;
@@ -39,13 +47,6 @@
 
 .course-card .caption {
     margin: 0;
-}
-
-.course-card-title-container {
-    display: flex;
-    flex: 1;
-    width: 100%;
-    justify-content: space-between;
 }
 
 .course-card-title-container .title {

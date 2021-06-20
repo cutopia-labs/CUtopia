@@ -39,7 +39,9 @@ export const THEME = createMuiTheme({
     type: 'light',
     primary: {
       main: '#01579b',
-      secondary: '#f9826c',
+    },
+    secondary: {
+      main: '#ff8a65',
     },
   },
 });
@@ -48,8 +50,10 @@ export const DARK_THEME = createMuiTheme({
   palette: {
     type: 'dark',
     primary: {
-      main: '#f9826c',
-      secondary: 'rgb(255,255,255)',
+      main: '#ff8a65',
+    },
+    secondary: {
+      main: '#ff8a65',
     },
   },
 });

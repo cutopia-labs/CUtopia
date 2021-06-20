@@ -38,7 +38,6 @@ const Header = () => {
   const isMobile = useMediaQuery('(max-width:1260px)');
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const menuRef = useRef(null);
   const inputRef = useRef(null);
   const user = useContext(UserContext);
 
@@ -115,25 +114,21 @@ const Header = () => {
             inputRef={inputRef}
             setVisible={setVisible}
           />
-          <div ref={menuRef} className="header-search-result card">
+          <div className="header-search-result card">
             {
-              visible && Boolean(searchQuery) &&
-            (
-              <SearchResult
-                searchPayload={{
-                  text: searchQuery,
-                  mode: 'query',
-                }}
-                user={user}
-                onClick={courseId => {
-                  history.push(`/review/${courseId}`);
-                }}
-                limit={isMobile ? 4 : 6}
-                onMouseDown={courseId => {
-                  history.push(`/review/${courseId}`);
-                }}
-              />
-            )
+              visible && Boolean(searchQuery) && (
+                <SearchResult
+                  searchPayload={{
+                    text: searchQuery,
+                    mode: 'query',
+                  }}
+                  user={user}
+                  limit={isMobile ? 4 : 6}
+                  onMouseDown={courseId => {
+                    history.push(`/review/${courseId}`);
+                  }}
+                />
+              )
             }
           </div>
           {
