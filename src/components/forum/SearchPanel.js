@@ -23,14 +23,12 @@ import { COURSE_SECTIONS_QUERY } from '../../constants/queries';
 import { validCourse } from '../../helpers/marcos';
 import CourseCard from './CourseCard';
 import Loading from '../Loading';
+import { HISTORY_MAX_LENGTH, MAX_SEARCH_RESULT_LENGTH } from '../../constants/configs';
 
 /*
 c: courseId
 t: title
 */
-
-const HISTORY_MAX_LENGTH = 3;
-const MAX_SEARCH_RESULT_LENGTH = 20;
 
 const LIST_ITEMS = Object.freeze([
   {

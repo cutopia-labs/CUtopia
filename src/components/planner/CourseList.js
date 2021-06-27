@@ -4,16 +4,17 @@ import { useMediaQuery } from '@material-ui/core';
 import './CourseList.css';
 import CourseCard from './CourseCard';
 import colors from '../../constants/colors';
-import { TIMETABLE_CONSTANTS, WEEKDAYS } from '../../constants/states';
+import { WEEKDAYS } from '../../constants/states';
 import updateOpacity from '../../helpers/updateOpacity';
+import { TIMETABLE_CONSTANTS } from '../../constants/configs';
 
 const {
-  CELL_WIDTH, NO_OF_DAYS, NO_OF_HOURS, LEFT_BAR_WIDTH,
+  NO_OF_DAYS, NO_OF_HOURS, START_HOUR, END_HOUR,
 } = TIMETABLE_CONSTANTS;
 
 const TimeTableTicks = () => {
-  const startHour = 8;
-  const endHour = 19;
+  const startHour = START_HOUR;
+  const endHour = END_HOUR;
   const timeLineViews = [];
 
   for (let i = startHour; i <= endHour; i++) {

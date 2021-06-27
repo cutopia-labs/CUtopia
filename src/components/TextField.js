@@ -4,7 +4,7 @@ import './TextField.css';
 const TextField = ({
   value, onChangeText, placeholder, error,
   defaultValue, keyboardType, secureTextEntry, Tag, ref,
-  onBlur, onFocus
+  onBlur, onFocus,
 }) => {
   const TagName = Tag || 'input';
   return (

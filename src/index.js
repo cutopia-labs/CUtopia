@@ -6,6 +6,7 @@ import { Integrations } from '@sentry/tracing';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { SENTRY_SAMPLING_RATE } from './constants/configs';
 
 Sentry.init({
   dsn: 'https://c38359448a5448a58971eeb211568473@o861810.ingest.sentry.io/5821571',
@@ -14,7 +15,7 @@ Sentry.init({
   // Set tracesSampleRate to 1.0 to capture 100%
   // of transactions for performance monitoring.
   // We recommend adjusting this value in production
-  tracesSampleRate: 0.4,
+  tracesSampleRate: SENTRY_SAMPLING_RATE,
 });
 
 ReactDOM.render(

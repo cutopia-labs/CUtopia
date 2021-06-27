@@ -21,8 +21,7 @@ import Loading from '../Loading';
 import INSTRUCTORS from '../../constants/instructors';
 import { SearchResult } from './SearchPanel';
 import ListItem from '../ListItem';
-
-const TARGET_WORD_COUNT = 80;
+import { TARGET_REVIEW_WORD_COUNT } from '../../constants/configs';
 
 const now = new Date();
 const EARLIEST_YEAR = now.getFullYear() - 3; // most ppl writing reviews are current students?
@@ -203,7 +202,7 @@ const ReviewEdit = ({
   useEffect(() => {
     if (userData && !userLoading) {
       if (!userData.user) {
-        alert('Invalid Login Information!');
+        alert('Invalid Login Information!');f
         history.push(`/review/${courseId}`);
       }
       else if (userData.user.reviewIds && userData.user.reviewIds.length) {
@@ -238,7 +237,7 @@ const ReviewEdit = ({
   useEffect(() => {
     const combinedReviewText = RATING_FIELDS.map(type => formData[type].text).reduce((acc, v) => acc + v);
     const count = wordCount(combinedReviewText);
-    setProgress((count * 100) / TARGET_WORD_COUNT);
+    setProgress((count * 100) / TARGET_REVIEW_WORD_COUNT);
   }, RATING_FIELDS.map(type => formData[type].text));
 
   return (

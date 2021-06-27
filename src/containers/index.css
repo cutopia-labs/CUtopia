@@ -29,6 +29,7 @@ body {
     --page-magrgin-top: 0;
     color: var(--text);
     background-color: var(--background);
+    overflow-y: scroll;
 }
 
 a {
@@ -64,10 +65,6 @@ textarea[type=number] {
 .App {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
-    max-height: 100vh;
-    overflow-y: scroll;
-    overflow-x: hidden;
 }
 
 .page {

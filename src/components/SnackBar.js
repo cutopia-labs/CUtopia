@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Button, Portal } from '@material-ui/core';
+import { Button, Portal, Grow } from '@material-ui/core';
 import { Check } from '@material-ui/icons';
 import { observer } from 'mobx-react-lite';
 
@@ -12,35 +12,35 @@ const SnackBar = () => {
 
   useEffect(() => {
     setButtonClicked(false);
-  }, [notification.snackbar.message]);
+  }, [notification.snackbar.id]);
 
-  if (notification.snackbar.message) {
-    return (
-      <Portal>
+  return (
+    <Portal>
+      <Grow
+        in={Boolean(notification.snackbar.message)}
+      >
         <div className="snackbar-container">
           <span className="snack-text">{notification.snackbar.message}</span>
           {
             Boolean(notification.snackbar.label) &&
-            (
-              <Button
-                color="secondary"
-                className="btn-container"
-                onClick={() => {
-                  notification.snackbar.onClick();
-                  setButtonClicked(true);
-                }}
-                disabled={buttonClicked}
-              >
-                {buttonClicked ? <Check color="secondary" className="snackbar-check-icon" /> : notification.snackbar.label}
-              </Button>
-            )
+          (
+            <Button
+              color="secondary"
+              className="btn-container"
+              onClick={() => {
+                notification.snackbar.onClick();
+                setButtonClicked(true);
+              }}
+              disabled={buttonClicked}
+            >
+              {buttonClicked ? <Check color="secondary" className="snackbar-check-icon" /> : notification.snackbar.label}
+            </Button>
+          )
           }
         </div>
-      </Portal>
-    );
-  }
-
-  return null;
+      </Grow>
+    </Portal>
+  );
 };
 
 export default observer(SnackBar);

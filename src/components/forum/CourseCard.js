@@ -12,8 +12,7 @@ import { UserContext } from '../../store';
 import './CourseCard.css';
 import { COURSE_SECTIONS_QUERY } from '../../constants/queries';
 import CourseSections from './CourseSections';
-
-const COURSE_CARD_MAX_HEIGHT = 580;
+import { COURSE_CARD_MAX_HEIGHT } from '../../constants/configs';
 
 const CourseCard = ({ courseInfo, concise }) => {
   const [showMore, setShowMore] = useState(true);

@@ -25,6 +25,8 @@ import copyToClipboard from '../../helpers/copyToClipboard';
 import HomePanel from './HomePanel';
 import ReviewEdit from './ReviewEdit';
 import { FULL_MEMBER_REVIEWS } from '../../constants/states';
+import useDebounce from '../../helpers/useDebounce';
+import { FAB_HIDE_BUFFER } from '../../constants/configs';
 
 export const COURSE_PANEL_MODES = Object.freeze({
   DEFAULT: 1, // i.e. card to show recent reviews & rankings
@@ -152,7 +154,7 @@ const CoursePanel = () => {
   ]);
 
   const { data: userData, loading: userDataLoading } = useQuery(GET_USER, {
-    skip: Boolean(user.reviews.length >= FULL_MEMBER_REVIEWS),
+    skip: Boolean((user.reviews?.length || 0) >= FULL_MEMBER_REVIEWS),
     variables: {
       username: user.cutopiaUsername,
     },
@@ -194,8 +196,26 @@ const CoursePanel = () => {
     skip: !reviewId,
   });
 
+  const listenToScroll = useDebounce(() => {
+    const distanceFromBottom = document.documentElement.scrollHeight - document.documentElement.scrollTop - document.documentElement.clientHeight;
+    console.log(distanceFromBottom);
+    if (distanceFromBottom <= FAB_HIDE_BUFFER) {
+      // call fetch more here;
+      setFABHidden(true);
+    }
+    else {
+      setFABHidden(false);
+    }
+  }, 300);
+
+  useEffect(() => {
+    window.addEventListener('scroll', listenToScroll);
+    return (() => window.removeEventListener('scroll', listenToScroll));
+  }, [listenToScroll]);
+
   useEffect(() => {
     console.log(`Current id: ${courseId}`);
+    setFABHidden(false);
     if (validCourse(courseId)) {
       setMode(COURSE_PANEL_MODES.FETCH_REVIEWS);
       user.increaseViewCount();
