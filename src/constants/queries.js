@@ -37,38 +37,46 @@ const COURSE_INFO_QUERY = gql`
 
 // Review Queries
 const REVIEWS_QUERY = gql`
-  query ($courseId: String, $ascendingVote:Boolean, $ascendingDate: Boolean) {
+  query ($courseId: String, $ascendingVote: Boolean, $ascendingDate: Boolean, $lastEvaluatedKey: LastEvaluatedKeyInput){
     reviews(input: {
       courseId: $courseId,
       ascendingVote: $ascendingVote,
       ascendingDate: $ascendingDate,
+      lastEvaluatedKey: $lastEvaluatedKey
     }) {
-      courseId
-      username
-      title
-      createdDate
-      upvotes
-      downvotes
-      myVote
-      term
-      section
-      lecturer
-      overall
-      content {
-        text
-        grade
-      }
-      grading {
-        text
-        grade
-      }
-      teaching {
-        text
-        grade
-      }
-      difficulty {
-        text
-        grade
+      reviews { 
+        courseId
+        username
+        title
+        createdDate
+        upvotes
+        downvotes
+        myVote
+        term
+        section
+        lecturer
+        overall
+        content {
+          text
+          grade
+        }
+        grading {
+          text
+          grade
+        }
+        teaching {
+          text
+          grade
+        }
+        difficulty {
+          text
+          grade
+        }
+      },
+      lastEvaluatedKey {
+        courseId
+        createdDate
+        upvotes
       }
     }
   }`;

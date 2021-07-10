@@ -1,5 +1,6 @@
 import React, {
   useContext,
+  useEffect,
   useState,
 } from 'react';
 import { observer } from 'mobx-react-lite';
@@ -51,6 +52,10 @@ const ReviewCard = ({
       alert(res.data.voteReview.error);
     }
   };
+
+  useEffect(() => {
+    console.log(review)
+  }, [])
 
   if (concise) {
     return (

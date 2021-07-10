@@ -3,10 +3,10 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 import './Loading.css';
 
-export default function Loading({ absolute }) {
+export default function Loading({ fixed }) {
   return (
-    <div className={`loading-view${absolute ? ' absolute' : ''}`}>
-      <CircularProgress />
+    <div className={`loading-view${fixed ? ' fixed' : ''}`}>
+      <CircularProgress color="secondary" />
     </div>
   );
 }

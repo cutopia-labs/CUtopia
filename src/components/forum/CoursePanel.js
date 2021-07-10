@@ -27,6 +27,7 @@ import ReviewEdit from './ReviewEdit';
 import { FULL_MEMBER_REVIEWS } from '../../constants/states';
 import useDebounce from '../../helpers/useDebounce';
 import { FAB_HIDE_BUFFER } from '../../constants/configs';
+import compareObj from '../../helpers/compareObject';
 
 export const COURSE_PANEL_MODES = Object.freeze({
   DEFAULT: 1, // i.e. card to show recent reviews & rankings
@@ -134,6 +135,8 @@ const CoursePanel = () => {
   const history = useHistory();
   const [FABOpen, setFABOpen] = useState(false);
   const [FABHidden, setFABHidden] = useState(false);
+  const [lastEvaluatedKey, setLastEvaluatedKey] = useState(null);
+  const [reviews, setReviews] = useState([]);
   const notification = useContext(NotificationContext);
   const user = useContext(UserContext);
   const isEdit = useRouteMatch({
@@ -178,13 +181,22 @@ const CoursePanel = () => {
   });
 
   // Fetch all reviews
-  const { data: reviews, loading: reviewsLoading, refetch } = useQuery(REVIEWS_QUERY, {
+  const { data, loading: reviewsLoading, refetch: reviewsRefetch } = useQuery(REVIEWS_QUERY, {
     skip: userDataLoading || (((userData.user?.reviewIds || user.reviews)?.length || 0) < FULL_MEMBER_REVIEWS && user.exceedLimit),
     variables: {
       courseId,
       ascendingDate: sorting === 'date' ? false : null,
       ascendingVote: sorting === 'upvotes' ? false : null,
     },
+    onCompleted: data => {
+      console.table(data);
+      setReviews(prevReviews => prevReviews.concat(data.reviews.reviews).filter((v, i, a) => a.findIndex(m => v.createdDate === m.createdDate) === i));
+      setLastEvaluatedKey(data.reviews.lastEvaluatedKey);
+    },
+    onError: e => {
+      console.log(e);
+    },
+    notifyOnNetworkStatusChange: true,
   });
 
   // Fetch a review based on reviewId
@@ -194,13 +206,35 @@ const CoursePanel = () => {
       createdDate: reviewId,
     },
     skip: !reviewId,
+    onCompleted: data => {
+      setReviews([data.review]);
+    },
   });
 
   const listenToScroll = useDebounce(() => {
     const distanceFromBottom = document.documentElement.scrollHeight - document.documentElement.scrollTop - document.documentElement.clientHeight;
     console.log(distanceFromBottom);
     if (distanceFromBottom <= FAB_HIDE_BUFFER) {
-      // call fetch more here;
+      // Fetch more here;
+      if (lastEvaluatedKey && courseId && !reviewId) {
+        console.log('Refetching');
+        console.log({
+          courseId,
+          ascendingDate: sorting === 'date' ? false : null,
+          ascendingVote: sorting === 'upvotes' ? false : null,
+          lastEvaluatedKey,
+        });
+        reviewsRefetch({
+          courseId,
+          ascendingDate: sorting === 'date' ? false : null,
+          ascendingVote: sorting === 'upvotes' ? false : null,
+          lastEvaluatedKey: {
+            courseId: lastEvaluatedKey.courseId,
+            createdDate: lastEvaluatedKey.createdDate,
+            upvotes: lastEvaluatedKey.upvotes,
+          },
+        });
+      }
       setFABHidden(true);
     }
     else {
@@ -216,12 +250,19 @@ const CoursePanel = () => {
   useEffect(() => {
     console.log(`Current id: ${courseId}`);
     setFABHidden(false);
+    if (reviews.length) {
+      setReviews([]);
+    }
     if (validCourse(courseId)) {
       setMode(COURSE_PANEL_MODES.FETCH_REVIEWS);
       user.increaseViewCount();
     }
     else if (mode !== COURSE_PANEL_MODES.DEFAULT) setMode(COURSE_PANEL_MODES.DEFAULT);
   }, [courseId]);
+
+  useEffect(() => {
+    console.log(`Reviews loading: ${reviewsLoading}`);
+  }, [reviewsLoading]);
 
   if (mode === COURSE_PANEL_MODES.DEFAULT) {
     return (
@@ -251,7 +292,7 @@ const CoursePanel = () => {
   return (
     <div className="course-panel panel card">
       {
-        !courseInfoLoading && courseInfo && courseInfo.subjects && courseInfo.subjects[0]
+        courseInfo && courseInfo.subjects && courseInfo.subjects[0]
           ? (
             <>
               <CourseCard
@@ -269,20 +310,20 @@ const CoursePanel = () => {
                 exceedLimit={!userDataLoading && (((userData.user?.reviewIds || user.reviews)?.length || 0) < FULL_MEMBER_REVIEWS && user.exceedLimit)}
               />
               {
-                reviewsLoading || reviewLoading
-                  ? <Loading />
-                  : ((reviewId ? (review ? [review.review] : []) : reviews?.reviews) || []).map(item => (
-                    <ReviewCard
-                      key={item.createdDate}
-                      review={item}
-                      shareAction={() => {
-                        copyToClipboard(reviewId ? window.location.href : `${window.location.href}/${item.createdDate}`);
-                        notification.setSnackBar('Copied sharelink to clipboard!');
-                      }}
-                      showAll={Boolean(reviewId)}
-                    />
-                  ))
+                (reviewsLoading || reviewLoading) &&
+                <Loading fixed />
               }
+              {(review ? [review.review] : reviews).map(item => (
+                <ReviewCard
+                  key={item.createdDate}
+                  review={item}
+                  shareAction={() => {
+                    copyToClipboard(reviewId ? window.location.href : `${window.location.href}/${item.createdDate}`);
+                    notification.setSnackBar('Copied sharelink to clipboard!');
+                  }}
+                  showAll={Boolean(reviewId)}
+                />
+              ))}
               <SpeedDial
                 ariaLabel="SpeedDial"
                 hidden={FABHidden}
