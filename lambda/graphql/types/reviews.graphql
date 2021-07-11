@@ -4,8 +4,13 @@ type Mutation {
 }
 
 type Query {
-  reviews(input: ReviewsFilter): [Review]!
+  reviews(input: ReviewsFilter): ReviewsResult!
   review(input: ReviewFilter!): Review
+}
+
+type ReviewsResult {
+  reviews: [Review]!
+  lastEvaluatedKey: LastEvaluatedKey
 }
 
 input ReviewsFilter {
@@ -16,11 +21,24 @@ input ReviewsFilter {
   getLatest: Boolean
   ascendingDate: Boolean
   ascendingVote: Boolean
+  lastEvaluatedKey: LastEvaluatedKeyInput
 }
 
 input ReviewFilter {
   courseId: String!
   createdDate: String!
+}
+
+input LastEvaluatedKeyInput {
+  courseId: String!
+  createdDate: String!
+  upvotes: Int
+}
+
+type LastEvaluatedKey {
+  courseId: String!
+  createdDate: String!
+  upvotes: Int
 }
 
 input CreateReviewInput {
