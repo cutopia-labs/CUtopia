@@ -162,8 +162,6 @@ exports.getReviews = async (input) => {
     if (lastEvaluatedKey !== null && !sortByVotes) {
       delete lastEvaluatedKey.upvotes;
     }
-    console.log('key', lastEvaluatedKey)
-    console.log('process.env.ReviewsTableName', process.env.ReviewsTableName)
 
     let params = null;
     if (sortByDate) {
@@ -190,7 +188,6 @@ exports.getReviews = async (input) => {
         Limit: limit,
       };
     }
-    console.log('params', params);
 
     try {
       const result = await db.query(params).promise();

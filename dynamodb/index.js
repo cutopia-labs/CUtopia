@@ -27,7 +27,8 @@ const {
 } = require('./databases/timetable-db');
 
 const {
-  report,
+  reportError,
+  reportFeedback,
 } = require('./databases/report-db');
 
 module.exports = {
@@ -45,7 +46,8 @@ module.exports = {
   getTimetable,
   addTimetable,
   removeTimetable,
-  report,
+  reportError,
+  reportFeedback,
   VOTE_ACTIONS,
   LOGIN_CODES,
   VERIFICATION_CODES,

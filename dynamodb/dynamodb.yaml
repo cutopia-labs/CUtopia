@@ -14,12 +14,12 @@ Parameters:
   ReadCapacityUnits:
     Description: Provisioned read throughput
     Type: Number
-    Default: "2"
+    Default: "1"
     MaxValue: "25"
   WriteCapacityUnits:
     Description: Provisioned write throughput
     Type: Number
-    Default: "2"
+    Default: "1"
     MaxValue: "25"
 Resources:
   UserDB:
@@ -97,11 +97,15 @@ Resources:
     Properties:
       TableName: !Ref ReportTableName
       AttributeDefinitions:
-        - AttributeName: "id"
-          AttributeType: S
+        - AttributeName: "cat"
+          AttributeType: N
+        - AttributeName: "createdDate"
+          AttributeType: N
       KeySchema:
-        - AttributeName: "id"
+        - AttributeName: "cat"
           KeyType: HASH
+        - AttributeName: "createdDate"
+          KeyType: RANGE
       ProvisionedThroughput:
         ReadCapacityUnits: !Ref ReadCapacityUnits
         WriteCapacityUnits: !Ref WriteCapacityUnits
