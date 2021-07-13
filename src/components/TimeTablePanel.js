@@ -8,6 +8,7 @@ import { NotificationContext } from '../store';
 import './TimeTablePanel.css';
 import CourseList from './planner/CourseList';
 import copyToClipboard from '../helpers/copyToClipboard';
+import Card from './Card';
 
 const MODAL_MODES = {
   NO_MODAL: 0,
@@ -41,7 +42,7 @@ const TimeTablePanel = ({
   ];
 
   return (
-    <div className={`panel time-table-panel column${className ? ` ${className}` : ''}`}>
+    <Card className={`panel time-table-panel column${className ? ` ${className}` : ''}`}>
       <header className="center-row">
         <span className="title">{title}</span>
         <div className="btn-row center-row">
@@ -94,7 +95,7 @@ const TimeTablePanel = ({
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </Card>
   );
 };
 

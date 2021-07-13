@@ -16,6 +16,9 @@
     opacity: 0.5;
 }
 
+.home-page-timetable {
+    min-height: calc(100vh - 202px);
+}
 
 @media only screen and (max-width: 1260px) {
     .time-table-panel {

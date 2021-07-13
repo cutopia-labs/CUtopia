@@ -2,14 +2,8 @@ import React, { useState } from 'react';
 import {
   Link,
 } from 'react-router-dom';
-import {
-  ExpandMore,
-  Sort, SortOutlined, ThumbUp, ThumbUpOutlined, Whatshot, WhatshotOutlined,
-} from '@material-ui/icons';
+import { ThumbUpOutlined, WhatshotOutlined } from '@material-ui/icons';
 import { useQuery } from '@apollo/client';
-import {
-  Button, IconButton, Menu, MenuItem,
-} from '@material-ui/core';
 
 import './HomePanel.css';
 import GradeIndicator from '../GradeIndicator';
@@ -18,8 +12,8 @@ import { RECENT_REVIEWS_QUERY, TOP_RATED_COURSES_QUERY, POPULAR_COURSES_QUERY } 
 import Loading from '../Loading';
 import ListItem from '../ListItem';
 import Badge from '../Badge';
-import BottomBorderRow from '../BottomBorderRow';
 import ChipsRow from '../ChipsRow';
+import TabsContainer from '../TabsContainer';
 
 const MENU_ITEMS = [
   {
@@ -73,48 +67,45 @@ const RankingCard = ({
 };
 
 const HomePanel = () => {
-  const [mode, setMode] = useState('Top Rated');
+  const [tab, setTab] = useState('Top Rated');
   const [sortKey, setSortKey] = useState('overall');
-  const [anchorEl, setAnchorEl] = useState();
+
   const { data: reviews, loading: recentReviewsLoading } = useQuery(RECENT_REVIEWS_QUERY, {
-    skip: mode !== 'Recent',
+    skip: tab !== 'Recent',
   });
   const { data: popularCourses, loading: popularCoursesLoading } = useQuery(POPULAR_COURSES_QUERY, {
-    skip: mode !== 'Popular',
+    skip: tab !== 'Popular',
   });
   const { data: topRatedCourses, loading: topRatedCoursesLoading } = useQuery(TOP_RATED_COURSES_QUERY, {
     variables: {
       criteria: sortKey,
     },
-    skip: mode !== 'Top Rated',
+    skip: tab !== 'Top Rated',
   });
   return (
     <div className="panel review-home-panel center-row">
-      <BottomBorderRow
-        items={MENU_ITEMS}
-        select={mode}
-        setSelect={setMode}
-      />
-      {
-        mode === 'Top Rated' && (
-          <>
-            <ChipsRow
-              items={['overall', ...RATING_FIELDS]}
-              select={sortKey}
-              setSelect={setSortKey}
-            />
-          </>
-        )
-      }
-      <RankingCard
-        rankList={topRatedCourses?.ranking?.topRatedCourses}
-        sortKey={sortKey}
-        loading={topRatedCoursesLoading}
-      />
-      <RankingCard
-        rankList={popularCourses?.ranking?.popularCourses}
-        loading={popularCoursesLoading}
-      />
+      <TabsContainer
+        tabs={MENU_ITEMS}
+        selected={tab}
+        onSelect={setTab}
+      >
+        {tab === 'Top Rated' && (
+          <ChipsRow
+            items={['overall', ...RATING_FIELDS]}
+            select={sortKey}
+            setSelect={setSortKey}
+          />
+        )}
+        <RankingCard
+          rankList={topRatedCourses?.ranking?.topRatedCourses}
+          sortKey={sortKey}
+          loading={topRatedCoursesLoading}
+        />
+        <RankingCard
+          rankList={popularCourses?.ranking?.popularCourses}
+          loading={popularCoursesLoading}
+        />
+      </TabsContainer>
     </div>
   );
 };

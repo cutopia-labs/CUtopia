@@ -1,16 +1,25 @@
 import React from 'react';
-import './Logo.css';
+import { makeStyles } from '@material-ui/core';
 
-export const LogoIcon = () => (
-  <div className="logo-container icon">
-    c
-  </div>
-);
+const useStyles = makeStyles(theme => ({
+  logoContainer: {
+    fontFamily: 'Futura, sans-serif',
+    fontWeight: 900,
+    fontSize: '22px',
+    letterSpacing: '2px',
+    floatDistance: '6px',
+    cursor: 'default',
+  },
+}));
 
-export default function Logo() {
+const Logo = () => {
+  const classes = useStyles();
+
   return (
-    <div className="logo-container">
+    <div className={classes.logoContainer}>
       cutopia
     </div>
   );
-}
+};
+
+export default Logo;

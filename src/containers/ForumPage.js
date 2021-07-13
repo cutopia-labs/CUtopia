@@ -1,14 +1,14 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 
-import './ForumPage.css';
 import { CoursePanel, SearchPanel } from '../components/forum';
+import Page from '../components/Page';
 
 const ForumPage = () => (
-  <div className="forum-page center-page page row">
+  <Page>
     <SearchPanel />
     <CoursePanel />
-  </div>
+  </Page>
 );
 
 export default observer(ForumPage);

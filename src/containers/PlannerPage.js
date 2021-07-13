@@ -1,25 +1,24 @@
 import React, { useContext } from 'react';
 import { observer } from 'mobx-react-lite';
 
-import './PlannerPage.css';
 import { SearchPanel } from '../components/forum';
 import TimeTablePanel from '../components/TimeTablePanel';
 import { UserContext } from '../store';
+import Page from '../components/Page';
 
 const PlannerPage = () => {
   const user = useContext(UserContext);
 
   return (
-    <div className="planner-page center-page page row">
+    <Page>
       <SearchPanel />
       <TimeTablePanel
-        className="planner-timetable margin-card"
         title="My Schedule"
         courses={user.plannerCourses}
         onImport={parsedData => user.setAndSavePlannerCourses(parsedData)}
         onClear={() => user.clearPlannerCourses()}
       />
-    </div>
+    </Page>
   );
 };
 
