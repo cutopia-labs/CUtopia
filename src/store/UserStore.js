@@ -1,36 +1,38 @@
-import {
-  makeObservable, observable, action, reaction, remove,
-} from 'mobx';
+import { makeObservable, observable, action, reaction } from 'mobx';
 
-import errorStore, { ERROR_CODES } from './ErrorStore';
+import errorStore from './ErrorStore';
 import { storeData, getStoreData, removeStoreItem } from '../helpers/store';
 
-import { LOGIN_STATES, TOKEN_EXPIRE_DAYS, VIEWS_LIMIT } from '../constants/states';
+import {
+  LOGIN_STATES,
+  TOKEN_EXPIRE_DAYS,
+  VIEWS_LIMIT,
+} from '../constants/states';
 
 class UserStore {
   // General State
-  @observable viewCount
+  @observable viewCount;
 
   // User Saved Data
-  @observable favoriteCourses = []
+  @observable favoriteCourses = [];
 
-  @observable timetable
+  @observable timetable;
 
-  @observable reviews
+  @observable reviews;
 
   // CUtopia
-  @observable userId
+  @observable userId;
 
-  @observable cutopiaUsername
+  @observable cutopiaUsername;
 
-  @observable cutopiaPassword
+  @observable cutopiaPassword;
 
-  @observable token
+  @observable token;
 
   // Planner
   @observable plannerTerm;
 
-  @observable plannerCourses = []
+  @observable plannerCourses = [];
 
   constructor(notificationStore) {
     makeObservable(this);
@@ -41,9 +43,9 @@ class UserStore {
   observeLoadingError() {
     reaction(
       () => errorStore.loginError,
-      loginError => {
+      (loginError) => {
         // TODO: re-login if loginError is session timeout
-      },
+      }
     );
   }
 
@@ -76,13 +78,13 @@ class UserStore {
 
   @action increaseViewCount = async () => {
     await this.increaseViewCountBounded();
-  }
+  };
 
   @action.bound increaseViewCountBounded = async () => {
     const increased = this.viewCount + 1;
     await storeData('viewCount', increased);
     this.viewCount = increased;
-  }
+  };
 
   // TimeTable
   @action async applyTimeTable() {
@@ -103,11 +105,15 @@ class UserStore {
 
   @action async addToTimeTable(course) {
     this.saveTimeTable([...this.timetable, course]);
-    this.notificationStore.setSnackBar(`Added ${course.courseId} to your timetable!`);
+    this.notificationStore.setSnackBar(
+      `Added ${course.courseId} to your timetable!`
+    );
   }
 
   @action async deleteInTimeTable(courseId) {
-    const index = this.timetable.findIndex(course => course.courseId === courseId);
+    const index = this.timetable.findIndex(
+      (course) => course.courseId === courseId
+    );
     if (index !== -1) {
       const UNDO_COPY = [...this.timetable];
       this.timetable.splice(index, 1);
@@ -116,8 +122,7 @@ class UserStore {
       });
       // Update AsyncStorage after undo valid period passed.
       await storeData('timetable', JSON.stringify(this.timetable));
-    }
-    else {
+    } else {
       this.notificationStore.setSnackBar('Error... OuO');
     }
   }
@@ -175,9 +180,9 @@ class UserStore {
     this.setUserStore('cutopiaUsername', username);
     this.setUserStore('userId', sid);
     this.setUserStore('cutopiaPassword', password);
-    username && await storeData('cutopiaUsername', username);
-    sid && await storeData('userId', sid);
-    password && await storeData('cutopiaPassword', password);
+    username && (await storeData('cutopiaUsername', username));
+    sid && (await storeData('userId', sid));
+    password && (await storeData('cutopiaPassword', password));
     await this.saveToken(token);
     this.notificationStore.setSnackBar('Successfully logged in !');
   }
@@ -186,11 +191,16 @@ class UserStore {
     this.cutopiaUsername = (await getStoreData('cutopiaUsername')) || '';
     this.cutopiaPassword = (await getStoreData('cutopiaPassword')) || '';
     this.userId = (await getStoreData('userId')) || '';
-    const savedToken = JSON.parse((await getStoreData('token'))) || {};
+    const savedToken = JSON.parse(await getStoreData('token')) || {};
     console.log('Loaded Saved Token');
     console.log(savedToken);
-    console.log(`Token expired: ${new Date(savedToken).valueOf() > new Date().valueOf()}`);
-    if (savedToken.token && !(new Date(savedToken).valueOf() > new Date().valueOf())) {
+    console.log(
+      `Token expired: ${new Date(savedToken).valueOf() > new Date().valueOf()}`
+    );
+    if (
+      savedToken.token &&
+      !(new Date(savedToken).valueOf() > new Date().valueOf())
+    ) {
       this.setToken(savedToken.token);
     }
   }
@@ -212,10 +222,11 @@ class UserStore {
   @action async logout() {
     this.setLogout();
     await Promise.all(
-      ['cutopiaUsername', 'cutopiaPassword', 'userId', 'token']
-        .map(async key => {
+      ['cutopiaUsername', 'cutopiaPassword', 'userId', 'token'].map(
+        async (key) => {
           await removeStoreItem(key);
-        }),
+        }
+      )
     );
   }
 
@@ -232,10 +243,17 @@ class UserStore {
     this.init();
     // Clear user related asyncstorage
     await Promise.all(
-      ['cutopiaUsername', 'cutopiaPassword', 'userId', 'token', 'favoriteCourses', 'timetable', 'plannerCourses']
-        .map(async key => {
-          await removeStoreItem(key);
-        }),
+      [
+        'cutopiaUsername',
+        'cutopiaPassword',
+        'userId',
+        'token',
+        'favoriteCourses',
+        'timetable',
+        'plannerCourses',
+      ].map(async (key) => {
+        await removeStoreItem(key);
+      })
     );
   }
 
@@ -264,9 +282,12 @@ class UserStore {
   }
 
   @action async addToPlannerCourses(course) {
-    const index = this.plannerCourses.findIndex(item => item.courseId === course.courseId);
+    const index = this.plannerCourses.findIndex(
+      (item) => item.courseId === course.courseId
+    );
     if (index !== -1) {
-      this.plannerCourses[index] = { // not update sections directly to trigger update
+      this.plannerCourses[index] = {
+        // not update sections directly to trigger update
         ...this.plannerCourses[index],
         sections: {
           ...this.plannerCourses[index].sections,
@@ -274,14 +295,15 @@ class UserStore {
         },
       };
       await storeData('plannerCourses', JSON.stringify(this.plannerCourses));
-    }
-    else {
+    } else {
       this.savePlannerCourses([...this.plannerCourses, course]);
     }
   }
 
   @action async deleteSectionInPlannerCourses({ courseId, sectionId }) {
-    const index = this.plannerCourses.findIndex(course => course.courseId === courseId);
+    const index = this.plannerCourses.findIndex(
+      (course) => course.courseId === courseId
+    );
     if (index !== -1) {
       const UNDO_COPY = JSON.stringify(this.plannerCourses);
       const sectionCopy = { ...this.plannerCourses[index].sections };
@@ -291,22 +313,22 @@ class UserStore {
           ...this.plannerCourses[index],
           sections: sectionCopy,
         };
-      }
-      else {
+      } else {
         this.plannerCourses.splice(index, 1);
       }
       await this.notificationStore.setSnackBar('1 item deleted', 'UNDO', () => {
         this.setUserStore('plannerCourses', JSON.parse(UNDO_COPY));
       });
       await storeData('plannerCourses', JSON.stringify(this.plannerCourses));
-    }
-    else {
+    } else {
       this.notificationStore.setSnackBar('Error... OuO');
     }
   }
 
   @action async deleteInPlannerCourses(courseId) {
-    const index = this.plannerCourses.findIndex(course => course.courseId === courseId);
+    const index = this.plannerCourses.findIndex(
+      (course) => course.courseId === courseId
+    );
     if (index !== -1) {
       const UNDO_COPY = [...this.plannerCourses];
       this.plannerCourses.splice(index, 1);
@@ -315,8 +337,7 @@ class UserStore {
       });
       // Update AsyncStorage after undo valid period passed.
       await storeData('plannerCourses', JSON.stringify(this.plannerCourses));
-    }
-    else {
+    } else {
       this.notificationStore.setSnackBar('Error... OuO');
     }
   }

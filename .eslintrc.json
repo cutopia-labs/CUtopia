@@ -1,0 +1,57 @@
+ 
+{
+  "env": {
+      "browser": true,
+      "es2021": true
+  },
+  "extends": [
+    "plugin:react/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+      "ecmaFeatures": {
+          "jsx": true
+      },
+      "ecmaVersion": 12,
+      "sourceType": "module",
+      "project": "./tsconfig.json"
+  },
+  "plugins": [
+      "react",
+      "@typescript-eslint",
+      "only-warn"
+  ],
+  "rules": {
+    "react/jsx-props-no-spreading": "off",
+    "react/prop-types": 0,
+    "jsx-a11y/click-events-have-key-events": "off",
+    "jsx-a11y/no-noninteractive-element-interactions": "off",
+    "jsx-a11y/no-static-element-interactions": "off",
+    "react/button-has-type": "off",
+    "no-nested-ternary": "off",
+    "camelcase": "off",
+    "radix": "off",
+    "react/destructuring-assignment": "off",
+    "function-paren-newline": "off",
+    "jsx-a11y/alt-text": "off",
+    "jsx-a11y/media-has-caption": "off",
+    "react/react-in-jsx-scope": "off",
+    "no-confusing-arrow": "off",
+    "jsx-a11y/anchor-has-content": "off",
+    "no-unused-vars": ["warn", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }],
+    "no-underscore-dangle": 0,
+    "no-alert": 0,
+    "max-len": 0,
+    "no-mixed-operators": 0,
+    "prefer-rest-params": 0,
+    "no-console": 0,
+    "import/no-named-as-default": 0,
+    "no-restricted-syntax": 0,
+    "no-undef": 0,
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "prettier/prettier": [
+      "error"
+    ]
+  }
+}

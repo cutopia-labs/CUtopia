@@ -1,6 +1,12 @@
 import React, { useContext, useState } from 'react';
 import {
-  Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField,
 } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 
@@ -17,7 +23,12 @@ const MODAL_MODES = {
 };
 
 const TimeTablePanel = ({
-  title, courses, onImport, onExport, onClear, className,
+  title,
+  courses,
+  onImport,
+  onExport,
+  onClear,
+  className,
 }) => {
   const notification = useContext(NotificationContext);
   const [modalMode, setModalMode] = useState(MODAL_MODES.NO_MODAL);
@@ -42,22 +53,26 @@ const TimeTablePanel = ({
   ];
 
   return (
-    <Card className={`panel time-table-panel column${className ? ` ${className}` : ''}`}>
+    <Card
+      className={`panel time-table-panel column${
+        className ? ` ${className}` : ''
+      }`}
+    >
       <header className="center-row">
         <span className="title">{title}</span>
         <div className="btn-row center-row">
-          {
-            FUNCTION_BUTTONS.map(item => (
-              <Button onClick={item.action}>
-                {item.label}
-              </Button>
-            ))
-          }
+          {FUNCTION_BUTTONS.map((item) => (
+            <Button onClick={item.action}>{item.label}</Button>
+          ))}
         </div>
       </header>
       <CourseList courses={courses?.slice()} />
 
-      <Dialog open={modalMode === MODAL_MODES.IMPORT_MODAL} onClose={() => setModalMode(MODAL_MODES.NO_MODAL)} aria-labelledby="form-dialog-title">
+      <Dialog
+        open={modalMode === MODAL_MODES.IMPORT_MODAL}
+        onClose={() => setModalMode(MODAL_MODES.NO_MODAL)}
+        aria-labelledby="form-dialog-title"
+      >
         <DialogTitle id="form-dialog-title">Import</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -75,11 +90,14 @@ const TimeTablePanel = ({
             label="JSON"
             type="text"
             fullWidth
-            onChange={e => setImportInput(e.target.value)}
+            onChange={(e) => setImportInput(e.target.value)}
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setModalMode(MODAL_MODES.NO_MODAL)} color="primary">
+          <Button
+            onClick={() => setModalMode(MODAL_MODES.NO_MODAL)}
+            color="primary"
+          >
             Cancel
           </Button>
           <Button

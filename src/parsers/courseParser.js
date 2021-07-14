@@ -1,9 +1,10 @@
-const extractContent = html => html
-  .replace(/<\/?[^>]+(>|$)/g, '\n')
-  .replace(/\&nbsp;/g, '')
-  .split('\n');
+const extractContent = (html) =>
+  html
+    .replace(/<\/?[^>]+(>|$)/g, '\n')
+    .replace(/\&nbsp;/g, '')
+    .split('\n');
 
-const convertWeekday = weekdayString => {
+const convertWeekday = (weekdayString) => {
   switch (weekdayString) {
     case 'Monday':
       return 1;
@@ -24,7 +25,7 @@ const convertWeekday = weekdayString => {
   }
 };
 
-const to24Hours = str => {
+const to24Hours = (str) => {
   const timeParts = str.split(':');
   if (str.includes('AM') || str.substring(0, 2) === '12') {
     return `${parseInt(timeParts[0], 10)}:${parseInt(timeParts[1], 10)}`;
@@ -33,35 +34,46 @@ const to24Hours = str => {
   return `${parseInt(timeParts[0], 10) + 12}:${parseInt(timeParts[1], 10)}`;
 };
 
-const parseTimeStr = str => {
+const parseTimeStr = (str) => {
   const rawTimeParts = str.split(' ');
   return [to24Hours(rawTimeParts[0]), to24Hours(rawTimeParts[2])]; // first is startTime, second is endTime
 };
 
-const isUseful = line => (line.includes('( ') && line.includes(' )')) || (line.includes('Location') && line.length > 4) || line.includes('Days:') || line.includes('Times:');
+const isUseful = (line) =>
+  (line.includes('( ') && line.includes(' )')) ||
+  (line.includes('Location') && line.length > 4) ||
+  line.includes('Days:') ||
+  line.includes('Times:');
 
-const preprocessing = html => { // Take the page HTML and return an Array of Course Related Lines
+const preprocessing = (html) => {
+  // Take the page HTML and return an Array of Course Related Lines
   const courseRawArrays = [];
   let temp = []; // Temp array storing lines
   let counter = null;
   let currentCourseName = null;
 
   // Filters the tags and get all text inside
-  const innerTexts = extractContent(html).filter(s => s !== '' && s !== ']]>');
+  const innerTexts = extractContent(html).filter(
+    (s) => s !== '' && s !== ']]>'
+  );
   console.log(innerTexts);
 
   // Find corresponding text for each course, and arrange in order
   for (let i = 0; i < innerTexts.length; i++) {
     if (counter === null) {
-      if (innerTexts[i].includes('Show Detail View')) { // Start parsing the course related lines
+      if (innerTexts[i].includes('Show Detail View')) {
+        // Start parsing the course related lines
         counter = 0;
       }
       continue;
     }
 
-    if (innerTexts[i] === 'Subject Catalog' || i === innerTexts.length - 1) { // Means one course parsing ended
+    if (innerTexts[i] === 'Subject Catalog' || i === innerTexts.length - 1) {
+      // Means one course parsing ended
       isUseful(innerTexts[i]) && temp.push(innerTexts[i]);
-      innerTexts[i - 1].includes('Location') && !innerTexts[i].includes('(') && temp.push(`Location${innerTexts[i]}`);
+      innerTexts[i - 1].includes('Location') &&
+        !innerTexts[i].includes('(') &&
+        temp.push(`Location${innerTexts[i]}`);
       if (!counter && !temp.length) {
         currentCourseName = `${innerTexts[i - 1]} ${innerTexts[i + 1]}`;
         continue;
@@ -69,21 +81,30 @@ const preprocessing = html => { // Take the page HTML and return an Array of Cou
       temp.unshift(currentCourseName); // add course name to the top of List
       courseRawArrays.push(temp);
       temp = [];
-      currentCourseName = i === innerTexts.length - 1 ? innerTexts[i - 1] : `${innerTexts[i - 1]} ${innerTexts[i + 1]}`;
+      currentCourseName =
+        i === innerTexts.length - 1
+          ? innerTexts[i - 1]
+          : `${innerTexts[i - 1]} ${innerTexts[i + 1]}`;
       counter++;
       continue;
     }
     isUseful(innerTexts[i]) && temp.push(innerTexts[i]);
-    innerTexts[i - 1].includes('Location') && !innerTexts[i].includes('(') && temp.push(`Location${innerTexts[i]}`);
+    innerTexts[i - 1].includes('Location') &&
+      !innerTexts[i].includes('(') &&
+      temp.push(`Location${innerTexts[i]}`);
   }
   return courseRawArrays;
 };
 
-const processSection = (times, locations, days) => { // pass by value?
+const processSection = (times, locations, days) => {
+  // pass by value?
   const startTimes = [];
   const endTimes = [];
-  times.forEach(timeString => {
-    const parsedTimes = timeString === 'To be announced' ? ['TBA', 'TBA'] : parseTimeStr(timeString);
+  times.forEach((timeString) => {
+    const parsedTimes =
+      timeString === 'To be announced'
+        ? ['TBA', 'TBA']
+        : parseTimeStr(timeString);
     startTimes.push(parsedTimes[0]);
     endTimes.push(parsedTimes[1]);
   });
@@ -92,18 +113,19 @@ const processSection = (times, locations, days) => { // pass by value?
   days.forEach((day, i) => {
     if (daysOccurance[day]) {
       duplicatedIndexes.push(i);
-    }
-    else {
+    } else {
       daysOccurance[day] = true;
     }
   });
   const indexSet = new Set(duplicatedIndexes);
 
   const parsedSection = {
-    days: days.filter((v, i, a) => a.indexOf(v) === i).map(day => convertWeekday(day)),
+    days: days
+      .filter((v, i, a) => a.indexOf(v) === i)
+      .map((day) => convertWeekday(day)),
     startTimes: startTimes.filter((v, i) => !indexSet.has(i)),
     endTimes: endTimes.filter((v, i) => !indexSet.has(i)),
-    locations: locations.filter(v => v).filter((v, i) => !indexSet.has(i)),
+    locations: locations.filter((v) => v).filter((v, i) => !indexSet.has(i)),
   };
 
   console.log(parsedSection);
@@ -135,7 +157,8 @@ export default function courseParser(data) {
 
     // Get course params inside each section
     courseArray.forEach((line, j) => {
-      if ( // Indicating the line is section code line
+      if (
+        // Indicating the line is section code line
         line.includes('( ') &&
         line.includes(' )')
       ) {

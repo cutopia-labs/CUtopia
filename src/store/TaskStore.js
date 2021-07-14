@@ -13,11 +13,11 @@ class TaskStore {
   }
 
   get notDoneTasksCount() {
-    return this.tasks.filter(item => !item.done && !item.shortcut).length;
+    return this.tasks.filter((item) => !item.done && !item.shortcut).length;
   }
 
   get doneTasksCount() {
-    return this.tasks.filter(item => item.done && !item.shortcut).length;
+    return this.tasks.filter((item) => item.done && !item.shortcut).length;
   }
 
   @action.bound async init() {
@@ -25,7 +25,7 @@ class TaskStore {
   }
 
   @action async setSort(sort) {
-    sort && await storeData('sort', sort);
+    sort && (await storeData('sort', sort));
     this.saveSort(sort || null);
   }
 
@@ -49,8 +49,11 @@ class TaskStore {
   }
 
   @action async updateTask(task) {
-    const index = this.tasks.findIndex(item => item.id === task.id);
-    if (index !== -1 && JSON.stringify(this.tasks[index]) !== JSON.stringify(task)) {
+    const index = this.tasks.findIndex((item) => item.id === task.id);
+    if (
+      index !== -1 &&
+      JSON.stringify(this.tasks[index]) !== JSON.stringify(task)
+    ) {
       const UNDO_COPY = [...this.tasks];
       this.tasks[index] = task;
       await this.notificationStore.setSnackBar('Updated!', 'UNDO', () => {
@@ -61,7 +64,7 @@ class TaskStore {
   }
 
   @action async deleteTask(id) {
-    const index = this.tasks.findIndex(task => task.id === id);
+    const index = this.tasks.findIndex((task) => task.id === id);
     if (index !== -1) {
       const UNDO_COPY = [...this.tasks];
       this.tasks.splice(index, 1);
@@ -70,14 +73,13 @@ class TaskStore {
       });
       // Update AsyncStorage after undo valid period passed.
       await storeData('tasks', JSON.stringify(this.tasks));
-    }
-    else {
+    } else {
       this.notificationStore.setSnackBar('Error...');
     }
   }
 
   @action async markAsDone(id) {
-    const index = this.tasks.findIndex(task => task.id === id);
+    const index = this.tasks.findIndex((task) => task.id === id);
     if (index !== -1) {
       const UNDO_COPY = [...this.tasks];
       const newTask = {
@@ -86,13 +88,16 @@ class TaskStore {
       };
       this.tasks[index] = newTask;
       if (newTask.done) {
-        await this.notificationStore.setSnackBar('1 item markded as complete', 'UNDO', () => {
-          this.setTasks(UNDO_COPY);
-        });
+        await this.notificationStore.setSnackBar(
+          '1 item markded as complete',
+          'UNDO',
+          () => {
+            this.setTasks(UNDO_COPY);
+          }
+        );
       }
       await storeData('tasks', JSON.stringify(this.tasks));
-    }
-    else {
+    } else {
       console.warn('Error');
     }
   }
@@ -105,7 +110,7 @@ class TaskStore {
         break;
       }
       case 'done': {
-        tasks = [...this.tasks.filter(item => !item.done)];
+        tasks = [...this.tasks.filter((item) => !item.done)];
         if (!(this.tasks.length - tasks.length)) {
           this.notificationStore.setSnackBar('Nothing to clear~');
           return;
@@ -116,7 +121,9 @@ class TaskStore {
     await this.notificationStore.setSnackBar('Cleared!', 'UNDO', () => {
       this.setTasks(UNDO_COPY);
     });
-    tasks.length ? (await storeData('tasks', JSON.stringify(this.tasks))) : await removeStoreItem('tasks');
+    tasks.length
+      ? await storeData('tasks', JSON.stringify(this.tasks))
+      : await removeStoreItem('tasks');
   }
 
   @action.bound setTasks(tasks) {

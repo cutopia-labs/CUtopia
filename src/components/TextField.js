@@ -2,9 +2,17 @@ import React from 'react';
 import './TextField.css';
 
 const TextField = ({
-  value, onChangeText, placeholder, error,
-  defaultValue, keyboardType, secureTextEntry, Tag, ref,
-  onBlur, onFocus,
+  value,
+  onChangeText,
+  placeholder,
+  error,
+  defaultValue,
+  keyboardType,
+  secureTextEntry,
+  Tag,
+  ref,
+  onBlur,
+  onFocus,
 }) => {
   const TagName = Tag || 'input';
   return (
@@ -17,15 +25,16 @@ const TextField = ({
         defaultValue={defaultValue}
         type={keyboardType}
         value={value}
-        onChange={e => onChangeText(e.target.value)}
+        onChange={(e) => onChangeText(e.target.value)}
         security={secureTextEntry}
         onFocus={onFocus}
         onBlur={onBlur}
       />
-      {
-        error &&
-        <div className="error-label" type="error">{error}</div>
-      }
+      {error && (
+        <div className="error-label" type="error">
+          {error}
+        </div>
+      )}
     </>
   );
 };

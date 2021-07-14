@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   logoContainer: {
     fontFamily: 'Futura, sans-serif',
     fontWeight: 900,
@@ -15,11 +15,7 @@ const useStyles = makeStyles(theme => ({
 const Logo = () => {
   const classes = useStyles();
 
-  return (
-    <div className={classes.logoContainer}>
-      cutopia
-    </div>
-  );
+  return <div className={classes.logoContainer}>cutopia</div>;
 };
 
 export default Logo;

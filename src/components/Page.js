@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, makeStyles } from '@material-ui/core';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     padding: 30,
@@ -13,17 +13,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Page = ({
-  children,
-  ...props
-}) => {
+const Page = ({ children, ...props }) => {
   const classes = useStyles();
 
   return (
-    <Box
-      className={classes.root}
-      {...props}
-    >
+    <Box className={classes.root} {...props}>
       {children}
     </Box>
   );

@@ -1,18 +1,25 @@
 import React, { useContext, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import Avatar from '@material-ui/core/Avatar';
-import { SettingsOutlined, Settings } from '@material-ui/icons';
+import { SettingsOutlined } from '@material-ui/icons';
 import {
-  Button, Dialog, DialogActions, DialogContent,
-  DialogContentText, DialogTitle, TextField, IconButton,
-  Switch, Divider, Tooltip,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  Switch,
+  Divider,
+  Tooltip,
 } from '@material-ui/core';
 import { GoVerified } from 'react-icons/go';
 
 import './UserCard.css';
 import ListItem from '../ListItem';
-import { NotificationContext, PreferenceContext, UserContext } from '../../store';
+import {
+  NotificationContext,
+  PreferenceContext,
+  UserContext,
+} from '../../store';
 
 const UserCard = ({ userData }) => {
   const user = useContext(UserContext);
@@ -23,12 +30,18 @@ const UserCard = ({ userData }) => {
     <>
       <div className="user-card card">
         <div className="user-card-header center-row">
-          <Avatar className="char-icon">{user.cutopiaUsername ? user.cutopiaUsername.charAt(0) : ''}</Avatar>
+          <Avatar className="char-icon">
+            {user.cutopiaUsername ? user.cutopiaUsername.charAt(0) : ''}
+          </Avatar>
           <div className="user-card-header-details column">
             <div className="title center-row">
               {user.cutopiaUsername}
               <Tooltip
-                title={userData.reviewIds.length >= 3 ? 'Full Member' : 'Post 3 reviews to be a full member!'}
+                title={
+                  userData.reviewIds.length >= 3
+                    ? 'Full Member'
+                    : 'Post 3 reviews to be a full member!'
+                }
                 placement="top"
                 arrow
               >
@@ -59,7 +72,11 @@ const UserCard = ({ userData }) => {
             <div className="light-caption">Upvotes</div>
           </div>
         </div>
-        <Dialog className="settings-modal-container" open={openSettings} onClose={() => SetOpenSetting(false)}>
+        <Dialog
+          className="settings-modal-container"
+          open={openSettings}
+          onClose={() => SetOpenSetting(false)}
+        >
           <DialogTitle id="form-dialog-title">Settings</DialogTitle>
           <DialogContent className="settings-modal">
             <div className="toggle-row center-row">

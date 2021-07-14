@@ -1,9 +1,10 @@
 import React, { useContext, useState } from 'react';
+import { Box, Grid, makeStyles, Typography } from '@material-ui/core';
 import {
-  Box, Grid, makeStyles, Typography,
-} from '@material-ui/core';
-import {
-  ChatBubbleOutlineOutlined, SchoolOutlined, NoteOutlined, CalendarTodayOutlined,
+  ChatBubbleOutlineOutlined,
+  SchoolOutlined,
+  NoteOutlined,
+  CalendarTodayOutlined,
 } from '@material-ui/icons';
 import { observer } from 'mobx-react-lite';
 import { useQuery } from '@apollo/client';
@@ -33,13 +34,13 @@ const LINKS = [
   },
 ];
 
-const useLinksCardStyles = makeStyles(theme => ({
+const useLinksCardStyles = makeStyles((theme) => ({
   linksCard: {
     padding: 'var(--card-padding)',
   },
   linkContainer: {
-    fontSize: '14px',
-    marginTop: '6px',
+    'fontSize': '14px',
+    'marginTop': '6px',
     '&:hover': {
       color: 'var(--primary)',
     },
@@ -55,10 +56,12 @@ const LinksCard = () => {
   return (
     <Card className={classes.linksCard}>
       <Typography gutterBottom>Links</Typography>
-      {LINKS.map(link => (
+      {LINKS.map((link) => (
         <Box className={classes.linkContainer} key={link.url}>
           <FiExternalLink />
-          <a href={link.url} target="_blank" rel="noreferrer">{link.name}</a>
+          <a href={link.url} target="_blank" rel="noreferrer">
+            {link.name}
+          </a>
         </Box>
       ))}
     </Card>
@@ -84,7 +87,7 @@ const SELECTIONS = [
   },
 ];
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   leftPanels: {
     position: 'sticky',
     top: '0px',
@@ -101,7 +104,7 @@ const HomePage = () => {
     variables: {
       username: user.cutopiaUsername,
     },
-    onCompleted: data => {
+    onCompleted: (data) => {
       user.saveTimeTable(data.user.timetable);
     },
   });
@@ -110,7 +113,7 @@ const HomePage = () => {
     variables: {
       username: user.cutopiaUsername,
     },
-    onCompleted: data => {
+    onCompleted: (data) => {
       user.saveReviews(data.user);
     },
   });
@@ -120,14 +123,19 @@ const HomePage = () => {
       case 'Courses':
         return <CoursesList loading={false} courses={user.favoriteCourses} />;
       case 'Reviews':
-        return <ReviewsList loading={userDataLoading} reviewIds={userData?.user?.reviewIds} />;
+        return (
+          <ReviewsList
+            loading={userDataLoading}
+            reviewIds={userData?.user?.reviewIds}
+          />
+        );
       case 'Planner':
         return (
           <TimeTablePanel
             className="home-page-timetable"
             title="Planner"
             courses={user.plannerCourses}
-            onImport={parsedData => user.setAndSaveTimeTable(parsedData)}
+            onImport={(parsedData) => user.setAndSaveTimeTable(parsedData)}
             onClear={() => user.clearTimeTable()}
           />
         );
@@ -137,7 +145,7 @@ const HomePage = () => {
             className="home-page-timetable"
             title="Timetable"
             courses={user.timetable}
-            onImport={parsedData => user.setAndSaveTimeTable(parsedData)}
+            onImport={(parsedData) => user.setAndSaveTimeTable(parsedData)}
             onClear={() => user.clearTimeTable()}
           />
         );
@@ -150,18 +158,11 @@ const HomePage = () => {
     <Page>
       <Grid container spacing={2}>
         <Grid item className={classes.leftPanels} xs={12} sm={3}>
-          {
-            !userDataLoading &&
-            <UserCard userData={userData.user} />
-          }
+          {!userDataLoading && <UserCard userData={userData.user} />}
           <LinksCard />
         </Grid>
         <Grid item xs={12} sm={9}>
-          <TabsContainer
-            tabs={SELECTIONS}
-            selected={tab}
-            onSelect={setTab}
-          >
+          <TabsContainer tabs={SELECTIONS} selected={tab} onSelect={setTab}>
             {renderTab()}
           </TabsContainer>
         </Grid>

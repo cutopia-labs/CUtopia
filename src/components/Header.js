@@ -1,13 +1,7 @@
-import React, {
-  useState, useContext, useRef, useEffect,
-} from 'react';
+import React, { useState, useContext, useRef } from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
-import {
-  useMediaQuery, IconButton, Menu, MenuItem,
-} from '@material-ui/core';
-import {
-  Menu as MenuIcon,
-} from '@material-ui/icons';
+import { useMediaQuery, IconButton, Menu, MenuItem } from '@material-ui/core';
+import { Menu as MenuIcon } from '@material-ui/icons';
 
 import { UserContext } from '../store';
 import { SearchResult } from './forum/SearchPanel';
@@ -41,15 +35,20 @@ const Header = () => {
   const inputRef = useRef(null);
   const user = useContext(UserContext);
 
-  const onSubmitSearch = e => {
+  const onSubmitSearch = (e) => {
     e.preventDefault();
   };
 
-  const navSections = SECTIONS.map(section => (
+  const navSections = SECTIONS.map((section) => (
     <Link
       key={section.link}
       to={section.link}
-      className={`nav-label-container${location.pathname.startsWith(section.link) && (section.link.length > 1 || section.link === location.pathname) ? '-active' : ''}`}
+      className={`nav-label-container${
+        location.pathname.startsWith(section.link) &&
+        (section.link.length > 1 || section.link === location.pathname)
+          ? '-active'
+          : ''
+      }`}
     >
       <span className="nav-label">{section.label}</span>
     </Link>
@@ -58,23 +57,18 @@ const Header = () => {
   return (
     <header className="header-background-container">
       <div className="header-container row">
-        {
-          isMobile &&
-        (
+        {isMobile && (
           <>
-            {
-              (!visible || !isMobile) &&
-              (
-                <IconButton
-                  aria-label="sort"
-                  components="span"
-                  size="small"
-                  onClick={e => setAnchorEl(e.currentTarget)}
-                >
-                  <MenuIcon />
-                </IconButton>
-              )
-            }
+            {(!visible || !isMobile) && (
+              <IconButton
+                aria-label="sort"
+                components="span"
+                size="small"
+                onClick={(e) => setAnchorEl(e.currentTarget)}
+              >
+                <MenuIcon />
+              </IconButton>
+            )}
             <Menu
               id="simple-menu"
               className="sort-menu"
@@ -83,28 +77,22 @@ const Header = () => {
               open={Boolean(anchorEl)}
               onClose={() => setAnchorEl()}
             >
-              {
-                SECTIONS.map(section => (
-                  <MenuItem
-                    key={section.link}
-                    onClick={() => [history.push(section.link), setAnchorEl()]}
-                  >
-                    {section.label}
-                  </MenuItem>
-                ))
-              }
+              {SECTIONS.map((section) => (
+                <MenuItem
+                  key={section.link}
+                  onClick={() => [history.push(section.link), setAnchorEl()]}
+                >
+                  {section.label}
+                </MenuItem>
+              ))}
             </Menu>
           </>
-        )
-        }
-        {
-          (!visible || !isMobile) &&
-        (
+        )}
+        {(!visible || !isMobile) && (
           <Link className="header-logo" to="/">
             <Logo />
           </Link>
-        )
-        }
+        )}
         <nav className="header-nav row">
           <SearchInput
             isMobile={isMobile}
@@ -115,26 +103,21 @@ const Header = () => {
             setVisible={setVisible}
           />
           <div className="header-search-result card">
-            {
-              visible && Boolean(searchQuery) && (
-                <SearchResult
-                  searchPayload={{
-                    text: searchQuery,
-                    mode: 'query',
-                  }}
-                  user={user}
-                  limit={isMobile ? 4 : 6}
-                  onMouseDown={courseId => {
-                    history.push(`/review/${courseId}`);
-                  }}
-                />
-              )
-            }
+            {visible && Boolean(searchQuery) && (
+              <SearchResult
+                searchPayload={{
+                  text: searchQuery,
+                  mode: 'query',
+                }}
+                user={user}
+                limit={isMobile ? 4 : 6}
+                onMouseDown={(courseId) => {
+                  history.push(`/review/${courseId}`);
+                }}
+              />
+            )}
           </div>
-          {
-            !isMobile &&
-          navSections
-          }
+          {!isMobile && navSections}
         </nav>
       </div>
     </header>

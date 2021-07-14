@@ -16,14 +16,10 @@ const SnackBar = () => {
 
   return (
     <Portal>
-      <Grow
-        in={Boolean(notification.snackbar.message)}
-      >
+      <Grow in={Boolean(notification.snackbar.message)}>
         <div className="snackbar-container">
           <span className="snack-text">{notification.snackbar.message}</span>
-          {
-            Boolean(notification.snackbar.label) &&
-          (
+          {Boolean(notification.snackbar.label) && (
             <Button
               color="secondary"
               className="btn-container"
@@ -33,10 +29,13 @@ const SnackBar = () => {
               }}
               disabled={buttonClicked}
             >
-              {buttonClicked ? <Check color="secondary" className="snackbar-check-icon" /> : notification.snackbar.label}
+              {buttonClicked ? (
+                <Check color="secondary" className="snackbar-check-icon" />
+              ) : (
+                notification.snackbar.label
+              )}
             </Button>
-          )
-          }
+          )}
         </div>
       </Grow>
     </Portal>

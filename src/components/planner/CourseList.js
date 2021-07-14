@@ -1,16 +1,13 @@
-import React, { useState, useRef } from 'react';
+import React from 'react';
 import { useMediaQuery } from '@material-ui/core';
 
 import './CourseList.css';
 import CourseCard from './CourseCard';
 import colors from '../../constants/colors';
 import { WEEKDAYS } from '../../constants/states';
-import updateOpacity from '../../helpers/updateOpacity';
 import { TIMETABLE_CONSTANTS } from '../../constants/configs';
 
-const {
-  NO_OF_DAYS, NO_OF_HOURS, START_HOUR, END_HOUR,
-} = TIMETABLE_CONSTANTS;
+const { NO_OF_DAYS, NO_OF_HOURS, START_HOUR, END_HOUR } = TIMETABLE_CONSTANTS;
 
 const TimeTableTicks = () => {
   const startHour = START_HOUR;
@@ -22,7 +19,7 @@ const TimeTableTicks = () => {
     timeLineViews.push(
       <div className="time-line-box" key={`Timeline:${hourString}`}>
         <span className="time-line-text">{`${hourString}:00`}</span>
-      </div>,
+      </div>
     );
   }
   return timeLineViews;
@@ -42,7 +39,7 @@ const WeekdayText = ({ withDate }) => {
         <span className="weekday-text">
           {`${WEEKDAYS[i - 1]}${withDate ? ` ${thatDay.getDate()}` : ''}`}
         </span>
-      </div>,
+      </div>
     );
   }
   return returnView;
@@ -56,11 +53,12 @@ export default function CourseList({ courses }) {
   let weekendCourse = false;
 
   try {
-    courses.forEach(course => {
+    courses.forEach((course) => {
       Object.entries(course.sections).forEach(([k, v]) => {
         (v.days || []).forEach((day, i) => {
           const sTime = v.startTimes[i].split(':');
-          const timeGrid = parseInt(sTime[0], 10) + parseInt(sTime[1], 10) / 60 - 8;
+          const timeGrid =
+            parseInt(sTime[0], 10) + parseInt(sTime[1], 10) / 60 - 8;
           if (timeGrid < earlistGrid) {
             earlistGrid = timeGrid;
           }
@@ -78,16 +76,16 @@ export default function CourseList({ courses }) {
                 startTime: v.startTimes[i],
                 endTime: v.endTimes[i],
                 location: v.locations[i],
-                color: colors.randomColors[colorIndex % colors.randomColors.length],
+                color:
+                  colors.randomColors[colorIndex % colors.randomColors.length],
               }}
-            />,
+            />
           );
         });
       });
       colorIndex++;
     });
-  }
-  catch (error) {
+  } catch (error) {
     console.warn('Invalid TimeTable');
   }
 
@@ -101,11 +99,7 @@ export default function CourseList({ courses }) {
           <TimeTableTicks />
         </div>
         <div className="timetable-courses-container">
-          <svg
-            width="100%"
-            height="100%"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <pattern
                 id="grid"
@@ -116,7 +110,11 @@ export default function CourseList({ courses }) {
                 <path
                   d="M 300 1 L 1 1 1 300"
                   fill="none"
-                  stroke={prefersDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}
+                  stroke={
+                    prefersDarkMode
+                      ? 'rgba(255,255,255,0.1)'
+                      : 'rgba(0,0,0,0.1)'
+                  }
                 />
               </pattern>
             </defs>

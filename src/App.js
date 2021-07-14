@@ -1,12 +1,13 @@
-import React, {
-  useContext, useEffect, useMemo, useState,
-} from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import {
-  ApolloClient, InMemoryCache, ApolloProvider, createHttpLink,
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  createHttpLink,
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { observer } from 'mobx-react-lite';
-import { createMuiTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/core/styles';
 import { useMediaQuery } from '@material-ui/core';
 
 import StoreProvider, { UserContext, PreferenceContext } from './store';
@@ -33,7 +34,7 @@ const AppWrapper = observer(() => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const theme = useMemo(
     () => (prefersDarkMode ? DARK_THEME : THEME),
-    [prefersDarkMode],
+    [prefersDarkMode]
   );
 
   const client = useMemo(() => {
@@ -52,14 +53,18 @@ const AppWrapper = observer(() => {
     return new ApolloClient({
       link: authLink.concat(httpLink),
       cache: new InMemoryCache(),
-      onError: e => {
+      onError: (e) => {
         console.log(e);
       },
     });
   }, [user.token]);
 
   if (user.loginState !== undefined) {
-    console.log(user.loginState === LOGIN_STATES.LOGGED_IN_CUTOPIA ? 'Logged in' : 'Not Logged in');
+    console.log(
+      user.loginState === LOGIN_STATES.LOGGED_IN_CUTOPIA
+        ? 'Logged in'
+        : 'Not Logged in'
+    );
   }
 
   if (!ready) {

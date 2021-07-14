@@ -1,5 +1,5 @@
 const MAX_RANGE = 1000000;
-const copyToClipboard = copyStr => {
+const copyToClipboard = (copyStr) => {
   const input = document.createElement('input');
   input.value = copyStr;
   document.body.appendChild(input);
@@ -13,8 +13,7 @@ const copyToClipboard = copyStr => {
     selection.addRange(range);
 
     input.setSelectionRange(0, MAX_RANGE);
-  }
-  else {
+  } else {
     input.select();
   }
   document.execCommand('copy');

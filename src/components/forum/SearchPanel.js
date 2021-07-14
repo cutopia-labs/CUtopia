@@ -1,14 +1,22 @@
-import React, {
-  useState, useEffect, Fragment, useContext,
-} from 'react';
+import React, { useState, useEffect, Fragment, useContext } from 'react';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import {
-  useHistory, useRouteMatch,
-} from 'react-router-dom';
-import {
-  InputBase, ListItem as MUIListItem, ListItemIcon, ListItemText, Divider, Chip, Collapse, IconButton,
+  InputBase,
+  ListItem as MUIListItem,
+  ListItemIcon,
+  ListItemText,
+  Divider,
+  Collapse,
+  IconButton,
 } from '@material-ui/core';
 import {
-  Search, ExpandLess, ExpandMore, School, ArrowBack, Bookmark, Class,
+  Search,
+  ExpandLess,
+  ExpandMore,
+  School,
+  ArrowBack,
+  Bookmark,
+  Class,
 } from '@material-ui/icons';
 import { useQuery } from '@apollo/client';
 import { observer } from 'mobx-react-lite';
@@ -23,7 +31,10 @@ import { COURSE_SECTIONS_QUERY } from '../../constants/queries';
 import { validCourse } from '../../helpers/marcos';
 import CourseCard from './CourseCard';
 import Loading from '../Loading';
-import { HISTORY_MAX_LENGTH, MAX_SEARCH_RESULT_LENGTH } from '../../constants/configs';
+import {
+  HISTORY_MAX_LENGTH,
+  MAX_SEARCH_RESULT_LENGTH,
+} from '../../constants/configs';
 
 /*
 c: courseId
@@ -46,12 +57,12 @@ const getCoursesFromQuery = ({ payload, user, limit }) => {
   const { mode, text } = payload;
   switch (mode) {
     case 'Pins':
-      return user.favoriteCourses.map(course => ({
+      return user.favoriteCourses.map((course) => ({
         c: course.courseId,
         t: course.title,
       }));
     case 'My Courses':
-      return user.plannerCourses.map(course => ({
+      return user.plannerCourses.map((course) => ({
         c: course.courseId,
         t: course.title,
       }));
@@ -59,16 +70,21 @@ const getCoursesFromQuery = ({ payload, user, limit }) => {
       return COURSES[text];
     case 'query':
       const condensed = text.replace(/[^a-zA-Z0-9]/g, '');
-      try { // valid search contains suject and code
+      try {
+        // valid search contains suject and code
         const subject = condensed.match(/[a-zA-Z]{4}/)[0].toUpperCase();
-        const raw_code = condensed.match(/\d{4}$/) || condensed.match(/\d+/g);
-        const code = raw_code ? raw_code[0] : null;
+        const rawCode = condensed.match(/\d{4}$/) || condensed.match(/\d+/g);
+        const code = rawCode ? rawCode[0] : null;
         if (!(subject in COURSES)) {
           throw 'Wrong subject, searching for title';
         }
         if (subject && code) {
           const results = [];
-          for (let i = 0; (i < COURSES[subject].length && results.length < limit); i++) {
+          for (
+            let i = 0;
+            i < COURSES[subject].length && results.length < limit;
+            i++
+          ) {
             if (COURSES[subject][i].c.includes(code)) {
               if (code.length === 4) {
                 return [COURSES[subject][i]].slice(0, limit);
@@ -81,11 +97,11 @@ const getCoursesFromQuery = ({ payload, user, limit }) => {
         if (subject) {
           return COURSES[subject].slice(0, limit);
         }
-      }
-      catch (error) { // search for titles
+      } catch (error) {
+        // search for titles
         const results = [];
         for (const [, courses] of Object.entries(COURSES)) {
-          for (let i = 0; (i < courses.length && results.length < limit); i++) {
+          for (let i = 0; i < courses.length && results.length < limit; i++) {
             if (courses[i].t.toLowerCase().includes(text.toLowerCase())) {
               results.push(courses[i]);
             }
@@ -100,13 +116,19 @@ const getCoursesFromQuery = ({ payload, user, limit }) => {
 };
 
 export const SearchResult = ({
-  searchPayload, user, onClick, onMouseDown, limit,
-}) => (
-  (getCoursesFromQuery({
-    payload: searchPayload,
-    user,
-    limit: limit || MAX_SEARCH_RESULT_LENGTH,
-  }) || []).map((course, i) => (
+  searchPayload,
+  user,
+  onClick,
+  onMouseDown,
+  limit,
+}) =>
+  (
+    getCoursesFromQuery({
+      payload: searchPayload,
+      user,
+      limit: limit || MAX_SEARCH_RESULT_LENGTH,
+    }) || []
+  ).map((course, i) => (
     <ListItem
       key={`listitem-${course.c}`}
       ribbonIndex={i}
@@ -119,53 +141,50 @@ export const SearchResult = ({
         <span className="caption">{course.t}</span>
       </div>
     </ListItem>
-  )));
+  ));
 
 const DepartmentList = ({ setSearchPayload }) => {
   const [currentSchool, setCurrentSchool] = useState();
   return (
     <div className="schools-container">
-      {
-        Object.entries(COURSE_CODES).map(([k, v]) => (
-          <Fragment key={k}>
-            <MUIListItem
-              button
-              onClick={() => {
-                if (k === currentSchool) {
-                  setCurrentSchool();
-                }
-                else {
-                  setCurrentSchool(k);
-                }
-              }}
-            >
-              <ListItemIcon>
-                <Class />
-              </ListItemIcon>
-              <ListItemText primary={k} />
-              {k === currentSchool ? <ExpandLess /> : <ExpandMore />}
-            </MUIListItem>
-            <Collapse in={k === currentSchool} timeout="auto" unmountOnExit>
-              <div className="code-list">
-                {
-                  v.map((code, i) => (
-                    <ListItem
-                      key={code}
-                      label={code}
-                      ribbonIndex={i}
-                      chevron
-                      onClick={() => setSearchPayload({
-                        text: code,
-                        mode: 'subject',
-                      })}
-                    />
-                  ))
-                }
-              </div>
-            </Collapse>
-          </Fragment>
-        ))
-      }
+      {Object.entries(COURSE_CODES).map(([k, v]) => (
+        <Fragment key={k}>
+          <MUIListItem
+            button
+            onClick={() => {
+              if (k === currentSchool) {
+                setCurrentSchool();
+              } else {
+                setCurrentSchool(k);
+              }
+            }}
+          >
+            <ListItemIcon>
+              <Class />
+            </ListItemIcon>
+            <ListItemText primary={k} />
+            {k === currentSchool ? <ExpandLess /> : <ExpandMore />}
+          </MUIListItem>
+          <Collapse in={k === currentSchool} timeout="auto" unmountOnExit>
+            <div className="code-list">
+              {v.map((code, i) => (
+                <ListItem
+                  key={code}
+                  label={code}
+                  ribbonIndex={i}
+                  chevron
+                  onClick={() =>
+                    setSearchPayload({
+                      text: code,
+                      mode: 'subject',
+                    })
+                  }
+                />
+              ))}
+            </div>
+          </Collapse>
+        </Fragment>
+      ))}
     </div>
   );
 };
@@ -184,17 +203,18 @@ const SearchPanel = () => {
   });
 
   // Fetch course info
-  const { data: courseInfo, courseInfoLoading, error } = useQuery(COURSE_SECTIONS_QUERY, {
+  const {
+    data: courseInfo,
+    courseInfoLoading,
+    error,
+  } = useQuery(COURSE_SECTIONS_QUERY, {
     skip: !currentCourse || !validCourse(currentCourse),
-    ...(
-      currentCourse &&
-        {
-          variables: {
-            subject: currentCourse.substring(0, 4),
-            code: currentCourse.substring(4),
-          },
-        }
-    ),
+    ...(currentCourse && {
+      variables: {
+        subject: currentCourse.substring(0, 4),
+        code: currentCourse.substring(4),
+      },
+    }),
   });
 
   useEffect(() => {
@@ -205,12 +225,12 @@ const SearchPanel = () => {
     console.log(courseInfo);
   }, [courseInfo]);
 
-  const saveHistory = async courseId => {
+  const saveHistory = async (courseId) => {
     let temp = [...historyList];
     if (temp.length >= HISTORY_MAX_LENGTH) {
       temp.pop();
     }
-    temp = [courseId].concat(temp.filter(saved => saved !== courseId));
+    temp = [courseId].concat(temp.filter((saved) => saved !== courseId));
     setHistoryList(temp);
     await storeData('search_history', JSON.stringify(temp));
   };
@@ -223,8 +243,8 @@ const SearchPanel = () => {
     }
   };
 
-  const deleteHistory = async courseId => {
-    const temp = historyList.filter(hist => hist !== courseId);
+  const deleteHistory = async (courseId) => {
+    const temp = historyList.filter((hist) => hist !== courseId);
     setHistoryList(temp);
     await storeData('search_history', JSON.stringify(temp));
   };
@@ -241,38 +261,32 @@ const SearchPanel = () => {
   return (
     <div className="search-panel card">
       <div className="search-input-container row">
-        {
-          Boolean(searchPayload.mode) && (searchPayload.mode !== 'query' || searchPayload.text)
-            ? (
-              <IconButton
-                size="small"
-                className="go-back-btn"
-                onClick={() => {
-                  if (currentCourse) {
-                    setCurrentCourse();
-                    return;
-                  }
-                  setSearchPayload({});
-                }}
-              >
-                <ArrowBack />
-              </IconButton>
-            )
-            : (
-              <div className="search-icon">
-                <Search />
-              </div>
-            )
-        }
-        <form
-          className="search-form"
-          onSubmit={e => e.preventDefault()}
-        >
+        {Boolean(searchPayload.mode) &&
+        (searchPayload.mode !== 'query' || searchPayload.text) ? (
+          <IconButton
+            size="small"
+            className="go-back-btn"
+            onClick={() => {
+              if (currentCourse) {
+                setCurrentCourse();
+                return;
+              }
+              setSearchPayload({});
+            }}
+          >
+            <ArrowBack />
+          </IconButton>
+        ) : (
+          <div className="search-icon">
+            <Search />
+          </div>
+        )}
+        <form className="search-form" onSubmit={(e) => e.preventDefault()}>
           <InputBase
             className="search-input"
             placeholder="Search…"
             value={searchPayload.text || ''}
-            onChange={e => {
+            onChange={(e) => {
               setSearchPayload({
                 text: e.target.value,
                 mode: 'query',
@@ -283,66 +297,57 @@ const SearchPanel = () => {
           />
         </form>
       </div>
-      {
-        Boolean(currentCourse) &&
-        (
+      {Boolean(currentCourse) && (
+        <>
+          <Divider />
+          {courseInfo && !courseInfoLoading ? (
+            <CourseCard
+              courseInfo={{
+                ...courseInfo.subjects[0].courses[0],
+                courseId: currentCourse,
+              }}
+              concise
+            />
+          ) : (
+            <Loading />
+          )}
+        </>
+      )}
+      {!currentCourse &&
+        (searchPayload.mode &&
+        (searchPayload.mode !== 'query' || searchPayload.text) ? (
           <>
             <Divider />
-            {
-              (courseInfo && !courseInfoLoading)
-                ? (
-                  <CourseCard
-                    courseInfo={{
-                      ...courseInfo.subjects[0].courses[0],
-                      courseId: currentCourse,
-                    }}
-                    concise
-                  />
-                ) : <Loading />
-            }
-          </>
-        )
-      }
-      {
-        !currentCourse &&
-        (
-          searchPayload.mode && (searchPayload.mode !== 'query' || searchPayload.text)
-            ? (
-              <>
-                <Divider />
-                <SearchResult
-                  searchPayload={searchPayload}
-                  user={user}
-                  onClick={courseId => {
-                    saveHistory(courseId);
-                    if (isPlanner) {
-                      setCurrentCourse(courseId);
-                    }
-                    else {
-                      history.push(`/review/${courseId}`);
-                    }
-                  }}
-                />
-              </>
-            ) : (
-              <>
-                <Divider />
-                {
-                  LIST_ITEMS.map(item => (
-                    <MUIListItem key={item.label} button onClick={() => setSearchPayload({ mode: item.label })}>
-                      <ListItemIcon>
-                        {item.icon}
-                      </ListItemIcon>
-                      <ListItemText primary={item.label} />
-                    </MUIListItem>
-                  ))
+            <SearchResult
+              searchPayload={searchPayload}
+              user={user}
+              onClick={(courseId) => {
+                saveHistory(courseId);
+                if (isPlanner) {
+                  setCurrentCourse(courseId);
+                } else {
+                  history.push(`/review/${courseId}`);
                 }
-                <Divider />
-                <DepartmentList setSearchPayload={setSearchPayload} />
-              </>
-            )
-        )
-      }
+              }}
+            />
+          </>
+        ) : (
+          <>
+            <Divider />
+            {LIST_ITEMS.map((item) => (
+              <MUIListItem
+                key={item.label}
+                button
+                onClick={() => setSearchPayload({ mode: item.label })}
+              >
+                <ListItemIcon>{item.icon}</ListItemIcon>
+                <ListItemText primary={item.label} />
+              </MUIListItem>
+            ))}
+            <Divider />
+            <DepartmentList setSearchPayload={setSearchPayload} />
+          </>
+        ))}
     </div>
   );
 };

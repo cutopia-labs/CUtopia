@@ -21,7 +21,7 @@ class NotificationStore {
   @action async setSnackBar(msg, label, onClick) {
     const id = msg ? +new Date() : undefined;
     this.updateSnackBar(msg, label, onClick, id);
-    await new Promise(resolve => setTimeout(resolve, SNACKBAR_TIMEOUT));
+    await new Promise((resolve) => setTimeout(resolve, SNACKBAR_TIMEOUT));
     if (this.needsClear(id)) {
       this.updateSnackBar();
     }

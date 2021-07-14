@@ -1,9 +1,5 @@
-import React, { useContext, useEffect } from 'react';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-} from 'react-router-dom';
+import React, { useContext } from 'react';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import './index.css';
 import SnackBar from '../components/SnackBar';
@@ -33,7 +29,15 @@ const Navigator = () => {
           <Route exact path="/">
             <HomePage />
           </Route>
-          <Route exact path={['/review', '/review/:id', '/review/:id/compose', '/review/:id/:reviewId']}>
+          <Route
+            exact
+            path={[
+              '/review',
+              '/review/:id',
+              '/review/:id/compose',
+              '/review/:id/:reviewId',
+            ]}
+          >
             <ForumPage />
           </Route>
           <Route exact path="/planner">

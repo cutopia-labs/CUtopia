@@ -3,11 +3,8 @@ import Button from '@material-ui/core/Button';
 import { ThumbUp, ThumbDown } from '@material-ui/icons';
 
 import './LikeButtonRow.css';
-import updateOpacity from '../../helpers/updateOpacity';
 
-const LikeButton = ({
-  isLike, selected, disabled, caption, onClick,
-}) => (
+const LikeButton = ({ isLike, selected, disabled, caption, onClick }) => (
   <Button
     size="small"
     onClick={onClick}
@@ -21,22 +18,24 @@ const LikeButton = ({
 );
 
 export default function LikeButtonsRow({
-  liked, myVote, updateVote, likeCaption, dislikeCaption,
+  liked,
+  myVote,
+  updateVote,
+  likeCaption,
+  dislikeCaption,
 }) {
   return (
     <div className="like-btn-row center-row">
-      {
-        [1, 0].map(label => (
-          <LikeButton
-            key={label}
-            isLike={Boolean(label)}
-            selected={liked === label || myVote === label}
-            disabled={liked !== null || myVote !== null}
-            caption={label ? likeCaption : dislikeCaption}
-            onClick={() => updateVote(label)}
-          />
-        ))
-      }
+      {[1, 0].map((label) => (
+        <LikeButton
+          key={label}
+          isLike={Boolean(label)}
+          selected={liked === label || myVote === label}
+          disabled={liked !== null || myVote !== null}
+          caption={label ? likeCaption : dislikeCaption}
+          onClick={() => updateVote(label)}
+        />
+      ))}
     </div>
   );
 }

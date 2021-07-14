@@ -10,7 +10,9 @@ export default function GradeIndicator({ grade, additionalClassName }) {
   const color = colors.gradeColors[label.charAt(0)];
   return (
     <div
-      className={`grade-indicator${additionalClassName ? ` ${additionalClassName}` : ''}`}
+      className={`grade-indicator${
+        additionalClassName ? ` ${additionalClassName}` : ''
+      }`}
       style={{
         background: updateOpacity(color, 0.2),
         color: updateOpacity(color, 0.8),

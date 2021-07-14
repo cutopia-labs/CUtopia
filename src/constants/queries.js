@@ -3,12 +3,8 @@ import { gql } from '@apollo/client';
 // Course Information Query
 const COURSE_INFO_QUERY = gql`
   query ($subject: String!, $code: String!) {
-    subjects(filter: {
-      requiredSubjects: [$subject]
-    }) {
-      courses(filter: {
-        requiredCourses: [$code]
-      }) {
+    subjects(filter: { requiredSubjects: [$subject] }) {
+      courses(filter: { requiredCourses: [$code] }) {
         units
         title
         components
@@ -33,18 +29,26 @@ const COURSE_INFO_QUERY = gql`
         }
       }
     }
-  }`;
+  }
+`;
 
 // Review Queries
 const REVIEWS_QUERY = gql`
-  query ($courseId: String, $ascendingVote: Boolean, $ascendingDate: Boolean, $lastEvaluatedKey: LastEvaluatedKeyInput){
-    reviews(input: {
-      courseId: $courseId,
-      ascendingVote: $ascendingVote,
-      ascendingDate: $ascendingDate,
-      lastEvaluatedKey: $lastEvaluatedKey
-    }) {
-      reviews { 
+  query (
+    $courseId: String
+    $ascendingVote: Boolean
+    $ascendingDate: Boolean
+    $lastEvaluatedKey: LastEvaluatedKeyInput
+  ) {
+    reviews(
+      input: {
+        courseId: $courseId
+        ascendingVote: $ascendingVote
+        ascendingDate: $ascendingDate
+        lastEvaluatedKey: $lastEvaluatedKey
+      }
+    ) {
+      reviews {
         courseId
         username
         title
@@ -72,20 +76,19 @@ const REVIEWS_QUERY = gql`
           text
           grade
         }
-      },
+      }
       lastEvaluatedKey {
         courseId
         createdDate
         upvotes
       }
     }
-  }`;
+  }
+`;
 
 const RECENT_REVIEWS_QUERY = gql`
   query {
-    reviews(input: {
-      getLatest: true
-    }) {
+    reviews(input: { getLatest: true }) {
       courseId
       username
       title
@@ -111,14 +114,12 @@ const RECENT_REVIEWS_QUERY = gql`
         grade
       }
     }
-  }`;
+  }
+`;
 
 const GET_REVIEW = gql`
   query ($courseId: String!, $createdDate: String!) {
-    review(input: {
-      courseId: $courseId
-      createdDate: $createdDate
-    }) {
+    review(input: { courseId: $courseId, createdDate: $createdDate }) {
       courseId
       username
       title
@@ -147,27 +148,24 @@ const GET_REVIEW = gql`
         grade
       }
     }
-  }`;
+  }
+`;
 
 // User Info Query
 const GET_USER = gql`
   query ($username: String!) {
-    user(input: {
-      username: $username
-    }) {
+    user(input: { username: $username }) {
       reviewIds
       upvotesCount
     }
-  }`;
+  }
+`;
 
 // Top Rated Courses Query
 const TOP_RATED_COURSES_QUERY = gql`
-  query ($criteria:String!) {
+  query ($criteria: String!) {
     ranking {
-      topRatedCourses(filter:{
-        limit:10,
-        sortBy:$criteria,
-      }) {
+      topRatedCourses(filter: { limit: 10, sortBy: $criteria }) {
         courseId
         course {
           title
@@ -179,15 +177,14 @@ const TOP_RATED_COURSES_QUERY = gql`
         teaching
       }
     }
-  }`;
+  }
+`;
 
 // Popular Courses Query
 const POPULAR_COURSES_QUERY = gql`
   query {
     ranking {
-      popularCourses(filter:{
-        limit:10
-      }) {
+      popularCourses(filter: { limit: 10 }) {
         courseId
         course {
           title
@@ -195,16 +192,13 @@ const POPULAR_COURSES_QUERY = gql`
         numReviews
       }
     }
-  }`;
+  }
+`;
 
 const COURSE_SECTIONS_QUERY = gql`
   query ($subject: String!, $code: String!) {
-    subjects(filter: {
-      requiredSubjects: [$subject]
-    }) {
-      courses(filter: {
-        requiredCourses: [$code]
-      }) {
+    subjects(filter: { requiredSubjects: [$subject] }) {
+      courses(filter: { requiredCourses: [$code] }) {
         units
         title
         academic_group
@@ -230,27 +224,27 @@ const COURSE_SECTIONS_QUERY = gql`
         }
       }
     }
-  }`;
+  }
+`;
 
 const MY_TIMETABLE_QUERY = gql`
   query ($username: String!) {
-  user(input: {
-    username: $username
-  }) {
-    timetable {
-      courseId
-      title
-      sections{
-        name
-        startTimes
-        endTimes
-        days
-        locations
-        instructors
+    user(input: { username: $username }) {
+      timetable {
+        courseId
+        title
+        sections {
+          name
+          startTimes
+          endTimes
+          days
+          locations
+          instructors
+        }
       }
     }
   }
-}`;
+`;
 
 export {
   COURSE_INFO_QUERY,

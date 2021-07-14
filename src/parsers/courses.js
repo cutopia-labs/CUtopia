@@ -5,14 +5,18 @@ import courseParser from './courseParser';
 import { storeData } from '../helpers/store';
 
 export const fetchTerms = async () => {
-  const termsRes = await axios.get('https://cusis.cuhk.edu.hk/psc/CSPRD/EMPLOYEE/SA/c/SSR_STUDENT_FL.SSR_COMPONENT_FL.GBL?Page=SSR_VW_CLASS_FL&ICAJAX=1&ICAGTarget=start&ICAJAXTrf=true&ICPanelControlStyle=pst_side1-open%20pst_panel-mode%20');
+  const termsRes = await axios.get(
+    'https://cusis.cuhk.edu.hk/psc/CSPRD/EMPLOYEE/SA/c/SSR_STUDENT_FL.SSR_COMPONENT_FL.GBL?Page=SSR_VW_CLASS_FL&ICAJAX=1&ICAGTarget=start&ICAJAXTrf=true&ICPanelControlStyle=pst_side1-open%20pst_panel-mode%20'
+  );
   const termsHTML = await termsRes.data;
   const termsDoc = HTMLParser.parse(termsHTML);
   const termsNodes = termsDoc.querySelectorAll('.ps_grid-row.psc_rowact');
-  const terms = termsNodes.map(termNode => {
+  const terms = termsNodes.map((termNode) => {
     const aNode = termNode.querySelector('a');
     const termName = aNode.text;
-    const actionName = aNode.rawAttributes.href.match(/'.+'/g)[0].replace(/'/g, ''); // React Native does not support positive lookbehind: /(?<=').+(?=')/g ?
+    const actionName = aNode.rawAttributes.href
+      .match(/'.+'/g)[0]
+      .replace(/'/g, ''); // React Native does not support positive lookbehind: /(?<=').+(?=')/g ?
     // TODO: define a class for Term?
     return {
       termName,
@@ -61,8 +65,14 @@ export const fetchTimeTable = async (ICSID, ICAction) => {
   };
 
   // Need to post twice in order to get the class schedules
-  await axios.post('https://cusis.cuhk.edu.hk/psc/CSPRD/EMPLOYEE/SA/c/SSR_STUDENT_FL.SSR_COMPONENT_FL.GBL', jsonToForm(data));
-  const classRes = await axios.post('https://cusis.cuhk.edu.hk/psc/CSPRD/EMPLOYEE/SA/c/SSR_STUDENT_FL.SSR_COMPONENT_FL.GBL', jsonToForm(data));
+  await axios.post(
+    'https://cusis.cuhk.edu.hk/psc/CSPRD/EMPLOYEE/SA/c/SSR_STUDENT_FL.SSR_COMPONENT_FL.GBL',
+    jsonToForm(data)
+  );
+  const classRes = await axios.post(
+    'https://cusis.cuhk.edu.hk/psc/CSPRD/EMPLOYEE/SA/c/SSR_STUDENT_FL.SSR_COMPONENT_FL.GBL',
+    jsonToForm(data)
+  );
   const classXML = await classRes.data;
   // console.log(classXML);
   if (classXML.includes('Show Dropped Classes')) {

@@ -1,6 +1,0 @@
-{
-  "compilerOptions": {
-      "watch": true,
-      "experimentalDecorators": true
-  }
-}

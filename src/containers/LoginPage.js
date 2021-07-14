@@ -1,13 +1,11 @@
 import React from 'react';
-import {
-  Box, Grid, makeStyles, Typography,
-} from '@material-ui/core';
+import { Box, Grid, makeStyles, Typography } from '@material-ui/core';
 
 import Logo from '../components/Logo';
 import LoginPanel from '../components/user/LoginPanel';
 import Discusssing from '../images/talk.png';
 
-const useBannerStyles = makeStyles(theme => ({
+const useBannerStyles = makeStyles((theme) => ({
   bannerTitle: {
     fontWeight: 'bold',
     marginBottom: 8,
@@ -19,13 +17,15 @@ const IntroBanner = ({ title, text }) => {
 
   return (
     <Box mt={5}>
-      <Typography variant="h6" className={classes.bannerTitle}>{title}</Typography>
+      <Typography variant="h6" className={classes.bannerTitle}>
+        {title}
+      </Typography>
       <Typography variant="subtitle1">{text}</Typography>
     </Box>
   );
 };
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   loginPage: {
     display: 'flex',
     backgroundColor: 'var(--surface)',
@@ -34,7 +34,8 @@ const useStyles = makeStyles(theme => ({
   },
   bannerPanel: {
     color: 'white',
-    background: 'linear-gradient(195deg, var(--primary) 2.3%,rgba(220, 86, 227,1) 88.5%)',
+    background:
+      'linear-gradient(195deg, var(--primary) 2.3%,rgba(220, 86, 227,1) 88.5%)',
     padding: '42px',
     height: '100%',
   },
@@ -62,16 +63,22 @@ const LoginPage = () => {
     <Grid container className={classes.loginPage}>
       <Grid item className={classes.bannerPanel} xs={12} sm={3}>
         <Logo />
-        <Typography variant="h4" className={classes.slogan}>Grow together.</Typography>
-        <IntroBanner title="Comment on courses" text="Read and write course reviews" />
-        <IntroBanner title="Plan your timetable" text="Plan courses with our planner" />
-        <IntroBanner title="Sign up with your SID" text="Contribute to read more comments" />
-        <img
-          col
-          className={classes.bannerImage}
-          src={Discusssing}
-          alt=""
+        <Typography variant="h4" className={classes.slogan}>
+          Grow together.
+        </Typography>
+        <IntroBanner
+          title="Comment on courses"
+          text="Read and write course reviews"
         />
+        <IntroBanner
+          title="Plan your timetable"
+          text="Plan courses with our planner"
+        />
+        <IntroBanner
+          title="Sign up with your SID"
+          text="Contribute to read more comments"
+        />
+        <img col className={classes.bannerImage} src={Discusssing} alt="" />
       </Grid>
       <Grid item className={classes.loginPanel} xs={12} sm={9}>
         <LoginPanel />

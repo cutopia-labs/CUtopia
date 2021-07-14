@@ -1,33 +1,49 @@
 import React, {
-  useState, useEffect, useContext, useReducer, useRef,
+  useState,
+  useEffect,
+  useContext,
+  useReducer,
+  useRef,
 } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  Menu, MenuItem, Button, CircularProgress, IconButton, Dialog,
-  DialogActions, DialogContent, DialogContentText, DialogTitle, useMediaQuery,
+  Menu,
+  MenuItem,
+  Button,
+  CircularProgress,
+  IconButton,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  useMediaQuery,
 } from '@material-ui/core';
 import { useMutation, useQuery } from '@apollo/client';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 
 import './ReviewEdit.css';
 import { NotificationContext, UserContext } from '../../store';
 import { GET_USER, GET_REVIEW } from '../../constants/queries';
 import { ADD_REVIEW } from '../../constants/mutations';
-import { GRADES, RATING_FIELDS, LETTER_TO_FIVE_VALUES } from '../../constants/states';
+import { GRADES, RATING_FIELDS } from '../../constants/states';
 import colors from '../../constants/colors';
 import TextField from '../TextField';
 import Loading from '../Loading';
 import INSTRUCTORS from '../../constants/instructors';
-import { SearchResult } from './SearchPanel';
 import ListItem from '../ListItem';
 import { TARGET_REVIEW_WORD_COUNT } from '../../constants/configs';
 
 const now = new Date();
 const EARLIEST_YEAR = now.getFullYear() - 3; // most ppl writing reviews are current students?
-const currentAcademicYear = now.getMonth() < 9 ? now.getFullYear() : now.getFullYear() + 1; // After Sept new sem started
+const currentAcademicYear =
+  now.getMonth() < 9 ? now.getFullYear() : now.getFullYear() + 1; // After Sept new sem started
 const yearDifference = currentAcademicYear - EARLIEST_YEAR;
-const academicYears = Array.from(new Array(yearDifference), (v, i) => EARLIEST_YEAR + yearDifference - (i + 1));
+const academicYears = Array.from(
+  new Array(yearDifference),
+  (v, i) => EARLIEST_YEAR + yearDifference - (i + 1)
+);
 
 const DEFAULT_REVIEW = Object.freeze({
   grade: 3,
@@ -40,12 +56,16 @@ const MODES = Object.freeze({
 });
 
 const TERMS_OPTIONS = [
-  ...academicYears.flatMap(year => ['Term 1', 'Term 2', 'Summer']
-    .map(suffix => `${year.toString()}-${(year + 1).toString().substring(2)} ${suffix}`)),
+  ...academicYears.flatMap((year) =>
+    ['Term 1', 'Term 2', 'Summer'].map(
+      (suffix) =>
+        `${year.toString()}-${(year + 1).toString().substring(2)} ${suffix}`
+    )
+  ),
   `Before ${EARLIEST_YEAR}`,
 ];
 
-const wordCount = str => {
+const wordCount = (str) => {
   const matches = str.match(/[\u00ff-\uffff]|\S+/g);
   return matches ? matches.length : 0;
 };
@@ -59,26 +79,28 @@ const FormSection = ({ title, className, children }) => (
 
 const SelectionGroup = ({ selections, selectedIndex, onSelect }) => (
   <div className="selection-group center-row">
-    {
-      selections.map((selection, i) => (
-        <span
-          className={`selecion-item${selectedIndex === i ? ' selected' : ''}`}
-          onClick={() => onSelect(i)}
-          style={selectedIndex === i ? {
-            backgroundColor: colors.gradeColors[selection],
-          } : null}
-        >
-          {selection}
-        </span>
-      ))
-    }
+    {selections.map((selection, i) => (
+      <span
+        className={`selecion-item${selectedIndex === i ? ' selected' : ''}`}
+        onClick={() => onSelect(i)}
+        style={
+          selectedIndex === i
+            ? {
+                backgroundColor: colors.gradeColors[selection],
+              }
+            : null
+        }
+      >
+        {selection}
+      </span>
+    ))}
   </div>
 );
 
 const searchLecturers = ({ payload, limit }) => {
   const results = [];
   let resultsLen = 0;
-  for (let i = 0; (i <= INSTRUCTORS.length && resultsLen <= limit); i++) {
+  for (let i = 0; i <= INSTRUCTORS.length && resultsLen <= limit; i++) {
     if ((INSTRUCTORS[i] || '').toLowerCase().includes(payload.toLowerCase())) {
       results.push(INSTRUCTORS[i]);
       resultsLen++;
@@ -87,9 +109,7 @@ const searchLecturers = ({ payload, limit }) => {
   return results;
 };
 
-const ReviewSection = ({
-  type, value, onChangeText, onChangeGrade,
-}) => (
+const ReviewSection = ({ type, value, onChangeText, onChangeGrade }) => (
   <div className="review-section-container">
     <div className="review-section-header center-row">
       <span className="review-section-title form-section-title">{type}</span>
@@ -99,24 +119,19 @@ const ReviewSection = ({
         selections={GRADES}
       />
     </div>
-    {
-      type !== 'overall' &&
-        (
-          <TextField
-            className="review-section-input"
-            Tag="textarea"
-            placeholder={`Leave your opinion about ${type} here.`}
-            value={value.text}
-            onChangeText={onChangeText}
-          />
-        )
-    }
+    {type !== 'overall' && (
+      <TextField
+        className="review-section-input"
+        Tag="textarea"
+        placeholder={`Leave your opinion about ${type} here.`}
+        value={value.text}
+        onChangeText={onChangeText}
+      />
+    )}
   </div>
 );
 
-const ReviewEdit = ({
-  courseId,
-}) => {
+const ReviewEdit = ({ courseId }) => {
   const [mode, setMode] = useState();
   const [targetReview, setTargetReview] = useState();
   const [progress, setProgress] = useState(0);
@@ -134,8 +149,10 @@ const ReviewEdit = ({
       lecturer: '',
       title: '',
       overall: 3,
-      ...Object.fromEntries(RATING_FIELDS.map(type => [type, DEFAULT_REVIEW])),
-    },
+      ...Object.fromEntries(
+        RATING_FIELDS.map((type) => [type, DEFAULT_REVIEW])
+      ),
+    }
   );
   const notification = useContext(NotificationContext);
   const user = useContext(UserContext);
@@ -158,10 +175,12 @@ const ReviewEdit = ({
     skip: mode !== MODES.EDIT || !targetReview,
   });
 
-  const submit = async e => {
+  const submit = async (e) => {
     e.preventDefault();
     if (progress < 100) {
-      notification.setSnackBar(`Please write at least ${TARGET_WORD_COUNT} words before submit~`);
+      notification.setSnackBar(
+        `Please write at least ${TARGET_WORD_COUNT} words before submit~`
+      );
       return;
     }
     // below are temp b4 server schema updated
@@ -171,7 +190,12 @@ const ReviewEdit = ({
       variables: formData,
     });
     console.log(res);
-    if (res && res.data && res.data.createReview && res.data.createReview.createdDate) {
+    if (
+      res &&
+      res.data &&
+      res.data.createReview &&
+      res.data.createReview.createdDate
+    ) {
       history.push(`/review/${courseId}/${res.data.createReview.createdDate}`);
       notification.setSnackBar('Review added!');
     }
@@ -184,7 +208,7 @@ const ReviewEdit = ({
           console.log(key);
           return false;
         }
-        if (typeof (value) === 'object') {
+        if (typeof value === 'object') {
           for (const [innerKey, innerValue] of Object.entries(value || {})) {
             if (innerValue === '') {
               console.log(`${key}.${innerKey}`);
@@ -202,10 +226,10 @@ const ReviewEdit = ({
   useEffect(() => {
     if (userData && !userLoading) {
       if (!userData.user) {
-        alert('Invalid Login Information!');f
+        alert('Invalid Login Information!');
+        f;
         history.push(`/review/${courseId}`);
-      }
-      else if (userData.user.reviewIds && userData.user.reviewIds.length) {
+      } else if (userData.user.reviewIds && userData.user.reviewIds.length) {
         for (let i = 0; i < userData.user.reviewIds.length; i++) {
           if (userData.user.reviewIds[i].startsWith(courseId)) {
             const parts = userData.user.reviewIds[i].split('#');
@@ -229,36 +253,50 @@ const ReviewEdit = ({
     error && alert(error);
   }, [error]);
 
-  useEffect(() => {
-    const overallAverage = RATING_FIELDS.map(type => formData[type].grade).reduce((acc, v) => acc + v) / RATING_FIELDS.length;
-    dispatchFormData({ overall: Math.round(overallAverage) }); // later detemine round or floor
-  }, RATING_FIELDS.map(type => formData[type].grade));
+  useEffect(
+    () => {
+      const overallAverage =
+        RATING_FIELDS.map((type) => formData[type].grade).reduce(
+          (acc, v) => acc + v
+        ) / RATING_FIELDS.length;
+      dispatchFormData({ overall: Math.round(overallAverage) }); // later detemine round or floor
+    },
+    RATING_FIELDS.map((type) => formData[type].grade)
+  );
 
-  useEffect(() => {
-    const combinedReviewText = RATING_FIELDS.map(type => formData[type].text).reduce((acc, v) => acc + v);
-    const count = wordCount(combinedReviewText);
-    setProgress((count * 100) / TARGET_REVIEW_WORD_COUNT);
-  }, RATING_FIELDS.map(type => formData[type].text));
+  useEffect(
+    () => {
+      const combinedReviewText = RATING_FIELDS.map(
+        (type) => formData[type].text
+      ).reduce((acc, v) => acc + v);
+      const count = wordCount(combinedReviewText);
+      setProgress((count * 100) / TARGET_REVIEW_WORD_COUNT);
+    },
+    RATING_FIELDS.map((type) => formData[type].text)
+  );
 
   return (
     <div className="review-edit">
-      {
-        reviewLoading && <Loading absolute />
-      }
+      {reviewLoading && <Loading absolute />}
       <Dialog
         open={mode === MODES.MODAL}
         onClose={() => history.push(`/review/${courseId}`)}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">You have already reviewed this course!</DialogTitle>
+        <DialogTitle id="alert-dialog-title">
+          You have already reviewed this course!
+        </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             Do you want to edit your posted review?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => history.push(`/review/${courseId}`)} color="primary">
+          <Button
+            onClick={() => history.push(`/review/${courseId}`)}
+            color="primary"
+          >
             Cancel
           </Button>
           <Button onClick={() => setMode(MODES.EDIT)} color="primary" autoFocus>
@@ -280,7 +318,7 @@ const ReviewEdit = ({
       <FormSection title="term">
         <div
           className="term-selection-anchor input-container"
-          onClick={e => setAnchorEl(e.currentTarget)}
+          onClick={(e) => setAnchorEl(e.currentTarget)}
         >
           {formData.term || 'Please select a term'}
         </div>
@@ -306,58 +344,58 @@ const ReviewEdit = ({
         <TextField
           placeholder="(Optional) Your Review Title"
           value={formData.title}
-          onChangeText={text => dispatchFormData({ title: text })}
+          onChangeText={(text) => dispatchFormData({ title: text })}
         />
       </FormSection>
       <FormSection title="lecturer" className="lecturer">
         <TextField
           placeholder="Please input your course instructor here."
           value={formData.lecturer}
-          onChangeText={text => dispatchFormData({ lecturer: text })}
+          onChangeText={(text) => dispatchFormData({ lecturer: text })}
           ref={lecturerInputRef}
           onFocus={() => setShowLecturers(true)}
           onBlur={() => setShowLecturers(false)}
         />
-        {
-          showLecturers && Boolean(formData.lecturer) && (
-            <div className="header-search-result card">
-              {
-                searchLecturers({ payload: formData.lecturer, limit: isMobile ? 4 : 6 })
-                  .filter(item => formData.lecturer !== item)
-                  .map(lecturer => (
-                    <ListItem
-                      key={`listitem-${lecturer}`}
-                      onMouseDown={() => dispatchFormData({ lecturer })}
-                    >
-                      <div className="search-list-item column">
-                        <span className="title">{lecturer}</span>
-                      </div>
-                    </ListItem>
-                  ))
-              }
-            </div>
-          )
-        }
+        {showLecturers && Boolean(formData.lecturer) && (
+          <div className="header-search-result card">
+            {searchLecturers({
+              payload: formData.lecturer,
+              limit: isMobile ? 4 : 6,
+            })
+              .filter((item) => formData.lecturer !== item)
+              .map((lecturer) => (
+                <ListItem
+                  key={`listitem-${lecturer}`}
+                  onMouseDown={() => dispatchFormData({ lecturer })}
+                >
+                  <div className="search-list-item column">
+                    <span className="title">{lecturer}</span>
+                  </div>
+                </ListItem>
+              ))}
+          </div>
+        )}
       </FormSection>
       <div className="review-sections-container">
-        {
-          RATING_FIELDS
-            .map(type => (
-              <ReviewSection
-                key={type}
-                type={type}
-                value={formData[type]}
-                onChangeText={text => dispatchFormData({ [type]: { ...formData[type], text } })}
-                onChangeGrade={grade => dispatchFormData({ [type]: { ...formData[type], grade } })}
-              />
-            ))
-        }
+        {RATING_FIELDS.map((type) => (
+          <ReviewSection
+            key={type}
+            type={type}
+            value={formData[type]}
+            onChangeText={(text) =>
+              dispatchFormData({ [type]: { ...formData[type], text } })
+            }
+            onChangeGrade={(grade) =>
+              dispatchFormData({ [type]: { ...formData[type], grade } })
+            }
+          />
+        ))}
       </div>
       <div className="submit-btn-row center-row">
         <ReviewSection
           type="overall"
           value={formData.overall}
-          onChangeGrade={grade => dispatchFormData({ overall: grade })}
+          onChangeGrade={(grade) => dispatchFormData({ overall: grade })}
         />
         <Button
           variant="contained"
@@ -369,11 +407,13 @@ const ReviewEdit = ({
             background: `linear-gradient(to right, var(--accent) ${progress}%, transparent ${progress}%)`,
           }}
         >
-          {
-            loading
-              ? <CircularProgress color="secondary" size={24} />
-              : (progress < 100 ? 'write more!' : 'submit')
-          }
+          {loading ? (
+            <CircularProgress color="secondary" size={24} />
+          ) : progress < 100 ? (
+            'write more!'
+          ) : (
+            'submit'
+          )}
         </Button>
       </div>
     </div>

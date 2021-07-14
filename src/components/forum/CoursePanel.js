@@ -1,14 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
-import {
-  useHistory, useParams, useRouteMatch,
-} from 'react-router-dom';
-import {
-  Sort, Edit, Share,
-} from '@material-ui/icons';
+import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
+import { Sort, Edit, Share } from '@material-ui/icons';
 import { useQuery } from '@apollo/client';
-import {
-  Button, IconButton, Menu, MenuItem,
-} from '@material-ui/core';
+import { Button, IconButton, Menu, MenuItem } from '@material-ui/core';
 import { SpeedDial, SpeedDialIcon, SpeedDialAction } from '@material-ui/lab';
 import { observer } from 'mobx-react-lite';
 
@@ -16,7 +10,10 @@ import './CoursePanel.css';
 import CourseCard from './CourseCard';
 import { validCourse } from '../../helpers/marcos';
 import {
-  COURSE_INFO_QUERY, GET_REVIEW, REVIEWS_QUERY, GET_USER,
+  COURSE_INFO_QUERY,
+  GET_REVIEW,
+  REVIEWS_QUERY,
+  GET_USER,
 } from '../../constants/queries';
 import Loading from '../Loading';
 import ReviewCard from './ReviewCard';
@@ -27,7 +24,6 @@ import ReviewEdit from './ReviewEdit';
 import { FULL_MEMBER_REVIEWS } from '../../constants/states';
 import useDebounce from '../../helpers/useDebounce';
 import { FAB_HIDE_BUFFER } from '../../constants/configs';
-import compareObj from '../../helpers/compareObject';
 
 export const COURSE_PANEL_MODES = Object.freeze({
   DEFAULT: 1, // i.e. card to show recent reviews & rankings
@@ -37,100 +33,84 @@ export const COURSE_PANEL_MODES = Object.freeze({
   EDIT_REVIEW: 5,
 });
 
-const SORTING_FIELDS = Object.freeze([
-  'date',
-  'upvotes',
-]);
+const SORTING_FIELDS = Object.freeze(['date', 'upvotes']);
 
 const CourseSummary = ({
-  courseInfo, sorting, setSorting, fetchAllAction, writeAction, exceedLimit,
+  courseInfo,
+  sorting,
+  setSorting,
+  fetchAllAction,
+  writeAction,
+  exceedLimit,
 }) => {
   const [anchorEl, setAnchorEl] = useState(null);
-  const handleClose = field => {
+  const handleClose = (field) => {
     console.log(`Setted to ${field}`);
     setSorting(field);
     setAnchorEl(null);
   };
   return (
     <div className="course-summary">
-      {
-        courseInfo.rating
-          ? (
-            <>
-              <div className="center-row">
-                <IconButton
-                  aria-label="sort"
-                  components="span"
-                  size="small"
-                  onClick={e => setAnchorEl(e.currentTarget)}
-                >
-                  <Sort />
-                </IconButton>
-                <div className="course-summary-label">
-                  {
-                    exceedLimit && `Limit exceeded (post ${FULL_MEMBER_REVIEWS} reviews to unlock)`
-                  }
-                  {
-                    !exceedLimit && (fetchAllAction
-                      ? 'Showing 1 review only!'
-                      : `${courseInfo.rating.numReviews} reviews`)
-                  }
-                </div>
-              </div>
-              <Menu
-                id="simple-menu"
-                anchorEl={anchorEl}
-                keepMounted
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
+      {courseInfo.rating ? (
+        <>
+          <div className="center-row">
+            <IconButton
+              aria-label="sort"
+              components="span"
+              size="small"
+              onClick={(e) => setAnchorEl(e.currentTarget)}
+            >
+              <Sort />
+            </IconButton>
+            <div className="course-summary-label">
+              {exceedLimit &&
+                `Limit exceeded (post ${FULL_MEMBER_REVIEWS} reviews to unlock)`}
+              {!exceedLimit &&
+                (fetchAllAction
+                  ? 'Showing 1 review only!'
+                  : `${courseInfo.rating.numReviews} reviews`)}
+            </div>
+          </div>
+          <Menu
+            id="simple-menu"
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
+            {SORTING_FIELDS.map((field) => (
+              <MenuItem
+                key={field}
+                onClick={() => handleClose(field)}
+                selected={sorting === field}
               >
-                {
-                  SORTING_FIELDS.map(field => (
-                    <MenuItem
-                      key={field}
-                      onClick={() => handleClose(field)}
-                      selected={sorting === field}
-                    >
-                      {field}
-                    </MenuItem>
-                  ))
-                }
-              </Menu>
-            </>
-          )
-          : <span>No review yet</span>
-      }
-      {
-        !courseInfo.rating &&
-        (
-          <Button
-            size="small"
-            color="primary"
-            onClick={writeAction}
-          >
-            Write One!
-          </Button>
-        )
-      }
-      {
-        courseInfo.rating && fetchAllAction &&
-        (
-          <Button
-            size="small"
-            color="primary"
-            onClick={fetchAllAction}
-          >
-            Fetch All
-          </Button>
-        )
-      }
+                {field}
+              </MenuItem>
+            ))}
+          </Menu>
+        </>
+      ) : (
+        <span>No review yet</span>
+      )}
+      {!courseInfo.rating && (
+        <Button size="small" color="primary" onClick={writeAction}>
+          Write One!
+        </Button>
+      )}
+      {courseInfo.rating && fetchAllAction && (
+        <Button size="small" color="primary" onClick={fetchAllAction}>
+          Fetch All
+        </Button>
+      )}
     </div>
   );
 };
 
 const CoursePanel = () => {
   const { id: courseId, reviewId } = useParams();
-  const [mode, setMode] = useState(courseId ? COURSE_PANEL_MODES.FETCH_REVIEWS : COURSE_PANEL_MODES.DEFAULT);
+  const [mode, setMode] = useState(
+    courseId ? COURSE_PANEL_MODES.FETCH_REVIEWS : COURSE_PANEL_MODES.DEFAULT
+  );
   const [sorting, setSorting] = useState('date');
   const history = useHistory();
   const [FABOpen, setFABOpen] = useState(false);
@@ -161,39 +141,55 @@ const CoursePanel = () => {
     variables: {
       username: user.cutopiaUsername,
     },
-    onCompleted: data => {
+    onCompleted: (data) => {
       user.saveReviews(data.user);
     },
   });
 
   // Fetch course info
-  const { data: courseInfo, courseInfoLoading, error } = useQuery(COURSE_INFO_QUERY, {
+  const {
+    data: courseInfo,
+    courseInfoLoading,
+    error,
+  } = useQuery(COURSE_INFO_QUERY, {
     skip: !courseId,
-    ...(
-      courseId &&
-        {
-          variables: {
-            subject: courseId.substring(0, 4),
-            code: courseId.substring(4),
-          },
-        }
-    ),
+    ...(courseId && {
+      variables: {
+        subject: courseId.substring(0, 4),
+        code: courseId.substring(4),
+      },
+    }),
   });
 
   // Fetch all reviews
-  const { data, loading: reviewsLoading, refetch: reviewsRefetch } = useQuery(REVIEWS_QUERY, {
-    skip: userDataLoading || (((userData.user?.reviewIds || user.reviews)?.length || 0) < FULL_MEMBER_REVIEWS && user.exceedLimit),
+  const {
+    data,
+    loading: reviewsLoading,
+    refetch: reviewsRefetch,
+  } = useQuery(REVIEWS_QUERY, {
+    skip:
+      userDataLoading ||
+      (((userData.user?.reviewIds || user.reviews)?.length || 0) <
+        FULL_MEMBER_REVIEWS &&
+        user.exceedLimit),
     variables: {
       courseId,
       ascendingDate: sorting === 'date' ? false : null,
       ascendingVote: sorting === 'upvotes' ? false : null,
     },
-    onCompleted: data => {
+    onCompleted: (data) => {
       console.table(data);
-      setReviews(prevReviews => prevReviews.concat(data.reviews.reviews).filter((v, i, a) => a.findIndex(m => v.createdDate === m.createdDate) === i));
+      setReviews((prevReviews) =>
+        prevReviews
+          .concat(data.reviews.reviews)
+          .filter(
+            (v, i, a) =>
+              a.findIndex((m) => v.createdDate === m.createdDate) === i
+          )
+      );
       setLastEvaluatedKey(data.reviews.lastEvaluatedKey);
     },
-    onError: e => {
+    onError: (e) => {
       console.log(e);
     },
     notifyOnNetworkStatusChange: true,
@@ -206,13 +202,16 @@ const CoursePanel = () => {
       createdDate: reviewId,
     },
     skip: !reviewId,
-    onCompleted: data => {
+    onCompleted: (data) => {
       setReviews([data.review]);
     },
   });
 
   const listenToScroll = useDebounce(() => {
-    const distanceFromBottom = document.documentElement.scrollHeight - document.documentElement.scrollTop - document.documentElement.clientHeight;
+    const distanceFromBottom =
+      document.documentElement.scrollHeight -
+      document.documentElement.scrollTop -
+      document.documentElement.clientHeight;
     console.log(distanceFromBottom);
     if (distanceFromBottom <= FAB_HIDE_BUFFER) {
       // Fetch more here;
@@ -236,15 +235,14 @@ const CoursePanel = () => {
         });
       }
       setFABHidden(true);
-    }
-    else {
+    } else {
       setFABHidden(false);
     }
   }, 300);
 
   useEffect(() => {
     window.addEventListener('scroll', listenToScroll);
-    return (() => window.removeEventListener('scroll', listenToScroll));
+    return () => window.removeEventListener('scroll', listenToScroll);
   }, [listenToScroll]);
 
   useEffect(() => {
@@ -256,8 +254,8 @@ const CoursePanel = () => {
     if (validCourse(courseId)) {
       setMode(COURSE_PANEL_MODES.FETCH_REVIEWS);
       user.increaseViewCount();
-    }
-    else if (mode !== COURSE_PANEL_MODES.DEFAULT) setMode(COURSE_PANEL_MODES.DEFAULT);
+    } else if (mode !== COURSE_PANEL_MODES.DEFAULT)
+      setMode(COURSE_PANEL_MODES.DEFAULT);
   }, [courseId]);
 
   useEffect(() => {
@@ -265,25 +263,23 @@ const CoursePanel = () => {
   }, [reviewsLoading]);
 
   if (mode === COURSE_PANEL_MODES.DEFAULT) {
-    return (
-      <HomePanel />
-    );
+    return <HomePanel />;
   }
 
   if (isEdit) {
     return (
       <div className="review-edit-panel course-panel panel card">
-        {
-          !courseInfoLoading && courseInfo && courseInfo.subjects && courseInfo.subjects[0] &&
-          (
+        {!courseInfoLoading &&
+          courseInfo &&
+          courseInfo.subjects &&
+          courseInfo.subjects[0] && (
             <CourseCard
               courseInfo={{
                 ...courseInfo.subjects[0].courses[0],
                 courseId,
               }}
             />
-          )
-        }
+          )}
         <ReviewEdit courseId={courseId} />
       </div>
     );
@@ -291,70 +287,76 @@ const CoursePanel = () => {
 
   return (
     <div className="course-panel panel card">
-      {
-        courseInfo && courseInfo.subjects && courseInfo.subjects[0]
-          ? (
-            <>
-              <CourseCard
-                courseInfo={{
-                  ...courseInfo.subjects[0].courses[0],
-                  courseId,
+      {courseInfo && courseInfo.subjects && courseInfo.subjects[0] ? (
+        <>
+          <CourseCard
+            courseInfo={{
+              ...courseInfo.subjects[0].courses[0],
+              courseId,
+            }}
+          />
+          <CourseSummary
+            courseInfo={courseInfo.subjects[0].courses[0]}
+            sorting={sorting}
+            setSorting={setSorting}
+            fetchAllAction={
+              Boolean(reviewId) && (() => history.push(`/review/${courseId}`))
+            }
+            writeAction={() => history.push(`/review/${courseId}/compose`)}
+            exceedLimit={
+              !userDataLoading &&
+              ((userData.user?.reviewIds || user.reviews)?.length || 0) <
+                FULL_MEMBER_REVIEWS &&
+              user.exceedLimit
+            }
+          />
+          {(reviewsLoading || reviewLoading) && <Loading fixed />}
+          {(review ? [review.review] : reviews).map((item) => (
+            <ReviewCard
+              key={item.createdDate}
+              review={item}
+              shareAction={() => {
+                copyToClipboard(
+                  reviewId
+                    ? window.location.href
+                    : `${window.location.href}/${item.createdDate}`
+                );
+                notification.setSnackBar('Copied sharelink to clipboard!');
+              }}
+              showAll={Boolean(reviewId)}
+            />
+          ))}
+          <SpeedDial
+            ariaLabel="SpeedDial"
+            hidden={FABHidden}
+            icon={
+              <SpeedDialIcon
+                onClick={() => {
+                  if (!isEdit) {
+                    history.push(`/review/${courseId}/compose`);
+                  }
                 }}
+                openIcon={<Edit />}
               />
-              <CourseSummary
-                courseInfo={courseInfo.subjects[0].courses[0]}
-                sorting={sorting}
-                setSorting={setSorting}
-                fetchAllAction={Boolean(reviewId) && (() => history.push(`/review/${courseId}`))}
-                writeAction={() => history.push(`/review/${courseId}/compose`)}
-                exceedLimit={!userDataLoading && (((userData.user?.reviewIds || user.reviews)?.length || 0) < FULL_MEMBER_REVIEWS && user.exceedLimit)}
+            }
+            onClose={() => setFABOpen(false)}
+            onOpen={() => setFABOpen(true)}
+            open={FABOpen}
+            className="course-panel-fab"
+          >
+            {FAB_GROUP_ACTIONS.map((action) => (
+              <SpeedDialAction
+                key={action.name}
+                icon={action.icon}
+                tooltipTitle={action.name}
+                onClick={action.action}
               />
-              {
-                (reviewsLoading || reviewLoading) &&
-                <Loading fixed />
-              }
-              {(review ? [review.review] : reviews).map(item => (
-                <ReviewCard
-                  key={item.createdDate}
-                  review={item}
-                  shareAction={() => {
-                    copyToClipboard(reviewId ? window.location.href : `${window.location.href}/${item.createdDate}`);
-                    notification.setSnackBar('Copied sharelink to clipboard!');
-                  }}
-                  showAll={Boolean(reviewId)}
-                />
-              ))}
-              <SpeedDial
-                ariaLabel="SpeedDial"
-                hidden={FABHidden}
-                icon={(
-                  <SpeedDialIcon
-                    onClick={() => {
-                      if (!isEdit) {
-                        history.push(`/review/${courseId}/compose`);
-                      }
-                    }}
-                    openIcon={<Edit />}
-                  />
-                )}
-                onClose={() => setFABOpen(false)}
-                onOpen={() => setFABOpen(true)}
-                open={FABOpen}
-                className="course-panel-fab"
-              >
-                {FAB_GROUP_ACTIONS.map(action => (
-                  <SpeedDialAction
-                    key={action.name}
-                    icon={action.icon}
-                    tooltipTitle={action.name}
-                    onClick={action.action}
-                  />
-                ))}
-              </SpeedDial>
-            </>
-          )
-          : <Loading />
-      }
+            ))}
+          </SpeedDial>
+        </>
+      ) : (
+        <Loading />
+      )}
     </div>
   );
 };

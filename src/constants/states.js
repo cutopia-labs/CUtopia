@@ -35,16 +35,16 @@ const LOGIN_CODES = Object.freeze({
 });
 
 const LETTER_TO_VALUE = Object.freeze({
-  A: 4,
+  'A': 4,
   'A-': 3.7,
   'B+': 3.3,
-  B: 3,
+  'B': 3,
   'B-': 2.7,
   'C+': 2.3,
-  C: 2,
+  'C': 2,
   'C-': 1.7,
-  D: 1,
-  F: 0,
+  'D': 1,
+  'F': 0,
 });
 
 const VALUE_TO_LETTER = Object.freeze({

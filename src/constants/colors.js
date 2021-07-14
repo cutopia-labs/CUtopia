@@ -1,7 +1,5 @@
 import { createMuiTheme } from '@material-ui/core/styles';
-import {
-  blue, cyan, lime, amber, deepOrange,
-} from '@material-ui/core/colors';
+import { blue, cyan, lime, amber, deepOrange } from '@material-ui/core/colors';
 
 const COLOR_SHADE = 300;
 
