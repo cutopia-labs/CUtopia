@@ -1,4 +1,11 @@
-const RATING_FIELDS = ['grading', 'teaching', 'difficulty', 'content'];
+import { Grade, RatingField } from '../types';
+
+const RATING_FIELDS = [
+  'grading',
+  'teaching',
+  'difficulty',
+  'content',
+] as RatingField[];
 
 const MODES = Object.freeze({
   CUSIS: 0,
@@ -60,7 +67,7 @@ const VALUE_TO_LETTER = Object.freeze({
   0: 'F',
 });
 
-const GRADES = Object.freeze(['F', 'D', 'C', 'B', 'A']);
+const GRADES = Object.freeze(['F', 'D', 'C', 'B', 'A']) as Grade[];
 
 const GRADE_VALUES = Object.freeze([4, 3.7, 3.3, 3, 2.7, 2.3, 2, 1.7, 1, 0]);
 

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import {
   Button,
   Dialog,
@@ -72,7 +72,9 @@ const TimeTablePanel = ({
         <span className="title">{title}</span>
         <div className="btn-row center-row">
           {FUNCTION_BUTTONS.map((item) => (
-            <Button key={item.label} onClick={item.action}>{item.label}</Button>
+            <Button key={item.label} onClick={item.action}>
+              {item.label}
+            </Button>
           ))}
         </div>
       </header>

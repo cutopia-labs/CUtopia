@@ -1,4 +1,4 @@
-import React, { createContext } from 'react';
+import { createContext } from 'react';
 
 import ErrorStore from './ErrorStore';
 import PreferenceStore from './PreferenceStore';

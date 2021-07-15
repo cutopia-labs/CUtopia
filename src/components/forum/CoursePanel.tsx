@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
 import { Sort, Edit, Share } from '@material-ui/icons';
 import { useQuery } from '@apollo/client';
@@ -24,6 +24,7 @@ import ReviewEdit from './ReviewEdit';
 import { FULL_MEMBER_REVIEWS } from '../../constants/states';
 import useDebounce from '../../helpers/useDebounce';
 import { FAB_HIDE_BUFFER } from '../../constants/configs';
+import { ReviewsFilter, ReviewsResult } from '../../types';
 
 export const COURSE_PANEL_MODES = Object.freeze({
   DEFAULT: 1, // i.e. card to show recent reviews & rankings
@@ -56,7 +57,6 @@ const CourseSummary = ({
           <div className="center-row">
             <IconButton
               aria-label="sort"
-              components="span"
               size="small"
               onClick={(e) => setAnchorEl(e.currentTarget)}
             >
@@ -149,7 +149,7 @@ const CoursePanel = () => {
   // Fetch course info
   const {
     data: courseInfo,
-    courseInfoLoading,
+    loading: courseInfoLoading,
     error,
   } = useQuery(COURSE_INFO_QUERY, {
     skip: !courseId,
@@ -166,7 +166,7 @@ const CoursePanel = () => {
     data,
     loading: reviewsLoading,
     refetch: reviewsRefetch,
-  } = useQuery(REVIEWS_QUERY, {
+  } = useQuery<ReviewsResult, ReviewsFilter>(REVIEWS_QUERY, {
     skip:
       userDataLoading ||
       (((userData.user?.reviewIds || user.reviews)?.length || 0) <

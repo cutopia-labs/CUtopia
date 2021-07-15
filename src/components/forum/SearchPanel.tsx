@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment, useContext } from 'react';
+import { useState, useEffect, Fragment, useContext } from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import {
   InputBase,
@@ -35,6 +35,12 @@ import {
   HISTORY_MAX_LENGTH,
   MAX_SEARCH_RESULT_LENGTH,
 } from '../../constants/configs';
+import {
+  CourseSearchItem,
+  SearchMode,
+  SearchPayload,
+  UserStore,
+} from '../../types';
 
 /*
 c: courseId
@@ -43,16 +49,24 @@ t: title
 
 const LIST_ITEMS = Object.freeze([
   {
-    label: 'Pins',
+    label: 'Pins' as SearchMode,
     icon: <Bookmark />,
   },
   {
-    label: 'My Courses',
+    label: 'My Courses' as SearchMode,
     icon: <School />,
   },
 ]);
 
-const getCoursesFromQuery = ({ payload, user, limit }) => {
+const getCoursesFromQuery = ({
+  payload,
+  user,
+  limit,
+}: {
+  payload: SearchPayload;
+  user?: UserStore;
+  limit?: number;
+}): CourseSearchItem[] => {
   // load local courselist
   const { mode, text } = payload;
   switch (mode) {
@@ -115,36 +129,47 @@ const getCoursesFromQuery = ({ payload, user, limit }) => {
   }
 };
 
+type SearchResultProps = {
+  searchPayload: SearchPayload;
+  user: UserStore;
+  onClick?: (courseId: string) => any;
+  onMouseDown?: (courseId: string) => any;
+  limit?: number;
+};
+
 export const SearchResult = ({
   searchPayload,
   user,
   onClick,
   onMouseDown,
   limit,
-}) =>
-  (
-    getCoursesFromQuery({
-      payload: searchPayload,
-      user,
-      limit: limit || MAX_SEARCH_RESULT_LENGTH,
-    }) || []
-  ).map((course, i) => (
-    <ListItem
-      key={`listitem-${course.c}`}
-      ribbonIndex={i}
-      chevron
-      onClick={() => onClick(course.c)}
-      onMouseDown={() => (onMouseDown ? onMouseDown(course.c) : {})}
-    >
-      <div className="search-list-item column">
-        <span className="title">{course.c}</span>
-        <span className="caption">{course.t}</span>
-      </div>
-    </ListItem>
-  ));
+}: SearchResultProps) => (
+  <>
+    {(
+      getCoursesFromQuery({
+        payload: searchPayload,
+        user,
+        limit: limit || MAX_SEARCH_RESULT_LENGTH,
+      }) || []
+    ).map((course, i) => (
+      <ListItem
+        key={`listitem-${course.c}`}
+        ribbonIndex={i}
+        chevron
+        onClick={() => onClick(course.c)}
+        onMouseDown={() => (onMouseDown ? onMouseDown(course.c) : {})}
+      >
+        <div className="search-list-item column">
+          <span className="title">{course.c}</span>
+          <span className="caption">{course.t}</span>
+        </div>
+      </ListItem>
+    ))}
+  </>
+);
 
 const DepartmentList = ({ setSearchPayload }) => {
-  const [currentSchool, setCurrentSchool] = useState();
+  const [currentSchool, setCurrentSchool] = useState(null);
   return (
     <div className="schools-container">
       {Object.entries(COURSE_CODES).map(([k, v]) => (
@@ -153,7 +178,7 @@ const DepartmentList = ({ setSearchPayload }) => {
             button
             onClick={() => {
               if (k === currentSchool) {
-                setCurrentSchool();
+                setCurrentSchool(null);
               } else {
                 setCurrentSchool(k);
               }
@@ -190,7 +215,9 @@ const DepartmentList = ({ setSearchPayload }) => {
 };
 
 const SearchPanel = () => {
-  const [searchPayload, setSearchPayload] = useState({});
+  const [searchPayload, setSearchPayload] = useState<SearchPayload | null>(
+    null
+  );
   const [historyList, setHistoryList] = useState([]);
   const [currentCourse, setCurrentCourse] = useState(null);
   const history = useHistory();
@@ -205,7 +232,7 @@ const SearchPanel = () => {
   // Fetch course info
   const {
     data: courseInfo,
-    courseInfoLoading,
+    loading: courseInfoLoading,
     error,
   } = useQuery(COURSE_SECTIONS_QUERY, {
     skip: !currentCourse || !validCourse(currentCourse),
@@ -261,17 +288,17 @@ const SearchPanel = () => {
   return (
     <div className="search-panel card">
       <div className="search-input-container row">
-        {Boolean(searchPayload.mode) &&
+        {searchPayload &&
         (searchPayload.mode !== 'query' || searchPayload.text) ? (
           <IconButton
             size="small"
             className="go-back-btn"
             onClick={() => {
               if (currentCourse) {
-                setCurrentCourse();
+                setCurrentCourse(null);
                 return;
               }
-              setSearchPayload({});
+              setSearchPayload(null);
             }}
           >
             <ArrowBack />
@@ -291,7 +318,7 @@ const SearchPanel = () => {
                 text: e.target.value,
                 mode: 'query',
               });
-              setCurrentCourse();
+              setCurrentCourse(null);
             }}
             inputProps={{ 'aria-label': 'search' }}
           />

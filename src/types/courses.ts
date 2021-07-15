@@ -1,9 +1,18 @@
+type RatingField = 'grading' | 'content' | 'difficulty' | 'teaching';
+
+type RatingFieldWithOverall =
+  | 'overall'
+  | 'grading'
+  | 'content'
+  | 'difficulty'
+  | 'teaching';
+
 type Subject = {
   name: string;
   courses: Course[];
 };
 
-type Course = {
+interface Course {
   subject: Subject;
   code: string;
   title: string;
@@ -22,7 +31,11 @@ type Course = {
   terms?: Term[];
   assessments?: AssessementComponent[];
   rating?: CourseRating;
-};
+}
+
+interface CourseInfo extends Course {
+  courseId: string;
+}
 
 type CourseRating = {
   numReviews: number;
@@ -52,11 +65,25 @@ type AssessementComponent = {
   percentage: string;
 };
 
+type DepartmentCourses = {
+  [department: string]: CourseSearchItem[];
+};
+
+type CourseSearchItem = {
+  c: string;
+  t: string;
+};
+
 export type {
+  RatingField,
+  RatingFieldWithOverall,
+  DepartmentCourses,
   Subject,
   Course,
+  CourseInfo,
   CourseRating,
   Term,
   CourseSection,
   AssessementComponent,
+  CourseSearchItem,
 };

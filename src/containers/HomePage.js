@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import { Box, Grid, makeStyles, Typography } from '@material-ui/core';
 import {
   ChatBubbleOutlineOutlined,

@@ -1,8 +1,19 @@
-import React from 'react';
+import { PropsWithChildren } from 'react';
 
 import { RATING_FIELDS } from '../../constants/states';
+import { CourseRating, Review } from '../../types';
 import GradeIndicator from '../GradeIndicator';
 import './GradeRow.css';
+
+type GradeRowProps = {
+  rating: Review | CourseRating;
+  isReview?: boolean;
+  selected?: string;
+  setSelected?: (label: string) => void;
+  additionalClassName?: string;
+  additionalChildClassName?: string;
+  isMobile?: boolean;
+};
 
 const GradeRow = ({
   rating,
@@ -13,7 +24,7 @@ const GradeRow = ({
   additionalClassName,
   additionalChildClassName,
   isMobile,
-}) => (
+}: PropsWithChildren<GradeRowProps>) => (
   <div
     className={`grade-row${
       additionalClassName ? ` ${additionalClassName}` : ''
@@ -28,7 +39,7 @@ const GradeRow = ({
           }`}
         />
       )}
-      {[isReview ? 'overall' : false, ...RATING_FIELDS]
+      {[isReview ? 'overall' : '', ...RATING_FIELDS]
         .filter((x) => x)
         .map((field) => (
           <div

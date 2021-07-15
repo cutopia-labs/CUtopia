@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { FaChalkboardTeacher, FaRegCalendarAlt } from 'react-icons/fa';
 import { BiMessageRounded } from 'react-icons/bi';
@@ -13,8 +13,21 @@ import { getMMMDDYY } from '../../helpers/getTime';
 import GradeRow from './GradeRow';
 import LikeButtonsRow from './LikeButtonRow';
 import ShowMoreOverlay from '../ShowMoreOverlay';
+import { Review } from '../../types';
 
-const ReviewCard = ({ review, concise, showAll, shareAction }) => {
+type ReviewCardProps = {
+  review: Review;
+  concise?: boolean;
+  showAll?: boolean;
+  shareAction?: () => void;
+};
+
+const ReviewCard = ({
+  review,
+  concise,
+  showAll,
+  shareAction,
+}: ReviewCardProps) => {
   const [selectedCriteria, setSelectedCriteria] = useState('overall');
   const [voteReview, { loading, error }] = useMutation(VOTE_REVIEW);
   const [liked, setLiked] = useState(review.myVote); // null for unset, false for dislike, true for like
@@ -99,7 +112,7 @@ const ReviewCard = ({ review, concise, showAll, shareAction }) => {
           className={`review-text-full${showMore ? '' : ' retracted'}`}
         >
           {RATING_FIELDS.map((field) => (
-            <div className="review-text-container">
+            <div key={field} className="review-text-container">
               <p className="review-text-label review-text">{field}</p>
               <p className="review-text">{review[field].text}</p>
             </div>
@@ -136,9 +149,9 @@ const ReviewCard = ({ review, concise, showAll, shareAction }) => {
             }
             dislikeCaption={
               (review.downvotes || 0) +
-              (review.myVote === null && liked === VOTE_ACTIONS.DOWNVOTE)
+              (review.myVote === null && liked === VOTE_ACTIONS.DOWNVOTE
                 ? 1
-                : 0
+                : 0)
             }
           />
           <IconButton

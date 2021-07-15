@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import { useState, useContext } from 'react';
 import { observer } from 'mobx-react-lite';
 import { IconButton, useMediaQuery } from '@material-ui/core';
 import { Favorite, FavoriteBorder } from '@material-ui/icons';
@@ -10,8 +10,14 @@ import { UserContext } from '../../store';
 import './CourseCard.css';
 import CourseSections from './CourseSections';
 import { COURSE_CARD_MAX_HEIGHT } from '../../constants/configs';
+import { CourseInfo } from '../../types';
 
-const CourseCard = ({ courseInfo, concise }) => {
+type CourseCardProps = {
+  courseInfo: CourseInfo;
+  concise?: boolean;
+};
+
+const CourseCard = ({ courseInfo, concise }: CourseCardProps) => {
   const [showMore, setShowMore] = useState(true);
   const [skipHeightCheck, setSkipHeightCheck] = useState(concise);
   const user = useContext(UserContext);

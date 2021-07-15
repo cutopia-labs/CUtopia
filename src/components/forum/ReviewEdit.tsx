@@ -1,9 +1,10 @@
-import React, {
+import {
   useState,
   useEffect,
   useContext,
   useReducer,
   useRef,
+  PropsWithChildren,
 } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
@@ -34,6 +35,7 @@ import Loading from '../Loading';
 import INSTRUCTORS from '../../constants/instructors';
 import ListItem from '../ListItem';
 import { TARGET_REVIEW_WORD_COUNT } from '../../constants/configs';
+import { Grade, RatingFieldWithOverall, ReviewDetails } from '../../types';
 
 const now = new Date();
 const EARLIEST_YEAR = now.getFullYear() - 3; // most ppl writing reviews are current students?
@@ -50,10 +52,11 @@ const DEFAULT_REVIEW = Object.freeze({
   text: '',
 });
 
-const MODES = Object.freeze({
-  EDIT: 1,
-  MODAL: 2, // to ask if need to edit or exit
-});
+enum MODES {
+  INITIAL,
+  EDIT,
+  MODAL, // to ask if need to edit or exit
+}
 
 const TERMS_OPTIONS = [
   ...academicYears.flatMap((year) =>
@@ -65,22 +68,42 @@ const TERMS_OPTIONS = [
   `Before ${EARLIEST_YEAR}`,
 ];
 
-const wordCount = (str) => {
+const wordCount = (str: string) => {
   const matches = str.match(/[\u00ff-\uffff]|\S+/g);
   return matches ? matches.length : 0;
 };
 
-const FormSection = ({ title, className, children }) => (
+type FormSectionProps = {
+  title: string;
+  className?: string;
+};
+
+const FormSection = ({
+  title,
+  className,
+  children,
+}: PropsWithChildren<FormSectionProps>) => (
   <>
     <span className={`form-section-title ${className}`}>{title}</span>
     {children}
   </>
 );
 
-const SelectionGroup = ({ selections, selectedIndex, onSelect }) => (
+type SelectionGroupProps = {
+  selections: Grade[];
+  selectedIndex: number;
+  onSelect: (index: number) => any;
+};
+
+const SelectionGroup = ({
+  selections,
+  selectedIndex,
+  onSelect,
+}: SelectionGroupProps) => (
   <div className="selection-group center-row">
     {selections.map((selection, i) => (
       <span
+        key={selection}
         className={`selecion-item${selectedIndex === i ? ' selected' : ''}`}
         onClick={() => onSelect(i)}
         style={
@@ -97,7 +120,13 @@ const SelectionGroup = ({ selections, selectedIndex, onSelect }) => (
   </div>
 );
 
-const searchLecturers = ({ payload, limit }) => {
+const searchLecturers = ({
+  payload,
+  limit,
+}: {
+  payload: string;
+  limit: number;
+}): string[] => {
   const results = [];
   let resultsLen = 0;
   for (let i = 0; i <= INSTRUCTORS.length && resultsLen <= limit; i++) {
@@ -109,17 +138,29 @@ const searchLecturers = ({ payload, limit }) => {
   return results;
 };
 
-const ReviewSection = ({ type, value, onChangeText, onChangeGrade }) => (
+type ReviewSectionProps = {
+  type: RatingFieldWithOverall;
+  value: ReviewDetails | number;
+  onChangeText?: (text: string) => any;
+  onChangeGrade: (grade: number) => any;
+};
+
+const ReviewSection = ({
+  type,
+  value,
+  onChangeText,
+  onChangeGrade,
+}: ReviewSectionProps) => (
   <div className="review-section-container">
     <div className="review-section-header center-row">
       <span className="review-section-title form-section-title">{type}</span>
       <SelectionGroup
         onSelect={onChangeGrade}
-        selectedIndex={type === 'overall' ? value : value.grade}
+        selectedIndex={typeof value === 'number' ? value : value.grade}
         selections={GRADES}
       />
     </div>
-    {type !== 'overall' && (
+    {typeof value !== 'number' && (
       <TextField
         className="review-section-input"
         Tag="textarea"
@@ -132,7 +173,7 @@ const ReviewSection = ({ type, value, onChangeText, onChangeGrade }) => (
 );
 
 const ReviewEdit = ({ courseId }) => {
-  const [mode, setMode] = useState();
+  const [mode, setMode] = useState(MODES.INITIAL);
   const [targetReview, setTargetReview] = useState();
   const [progress, setProgress] = useState(0);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -160,7 +201,7 @@ const ReviewEdit = ({ courseId }) => {
   const lecturerInputRef = useRef();
 
   // Get user's reviewIds to see if he already reviewed this course
-  const { data: userData, userLoading } = useQuery(GET_USER, {
+  const { data: userData, loading: userLoading } = useQuery(GET_USER, {
     variables: {
       username: user.cutopiaUsername,
     },
@@ -179,7 +220,7 @@ const ReviewEdit = ({ courseId }) => {
     e.preventDefault();
     if (progress < 100) {
       notification.setSnackBar(
-        `Please write at least ${TARGET_WORD_COUNT} words before submit~`
+        `Please write at least ${TARGET_REVIEW_WORD_COUNT} words before submit~`
       );
       return;
     }
@@ -227,7 +268,6 @@ const ReviewEdit = ({ courseId }) => {
     if (userData && !userLoading) {
       if (!userData.user) {
         alert('Invalid Login Information!');
-        f;
         history.push(`/review/${courseId}`);
       } else if (userData.user.reviewIds && userData.user.reviewIds.length) {
         for (let i = 0; i < userData.user.reviewIds.length; i++) {
@@ -277,7 +317,7 @@ const ReviewEdit = ({ courseId }) => {
 
   return (
     <div className="review-edit">
-      {reviewLoading && <Loading absolute />}
+      {reviewLoading && <Loading fixed />}
       <Dialog
         open={mode === MODES.MODAL}
         onClose={() => history.push(`/review/${courseId}`)}
@@ -328,13 +368,16 @@ const ReviewEdit = ({ courseId }) => {
         anchorEl={anchorEl}
         keepMounted
         open={Boolean(anchorEl)}
-        onClose={() => setAnchorEl()}
+        onClose={() => setAnchorEl(null)}
       >
         {TERMS_OPTIONS.map((option, i) => (
           <MenuItem
             key={option}
             selected={option === formData.term}
-            onClick={() => [dispatchFormData({ term: option }), setAnchorEl()]}
+            onClick={() => [
+              dispatchFormData({ term: option }),
+              setAnchorEl(null),
+            ]}
           >
             {option}
           </MenuItem>

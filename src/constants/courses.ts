@@ -1,3 +1,5 @@
+import { DepartmentCourses } from '../types';
+
 const COURSES = {
   ITAL: [
     { c: 'ITAL1000', t: 'Italian I' },
@@ -11367,4 +11369,4 @@ const COURSES = {
   EURS: [],
 };
 
-export default COURSES;
+export default COURSES as DepartmentCourses;

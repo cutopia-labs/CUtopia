@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ThumbUpOutlined, WhatshotOutlined } from '@material-ui/icons';
 import { useQuery } from '@apollo/client';
@@ -16,6 +16,7 @@ import ListItem from '../ListItem';
 import Badge from '../Badge';
 import ChipsRow from '../ChipsRow';
 import TabsContainer from '../TabsContainer';
+import { PopularCourse, TopRatedCourse } from '../../types';
 
 const MENU_ITEMS = [
   {
@@ -28,12 +29,24 @@ const MENU_ITEMS = [
   },
 ];
 
-const RankingCard = ({ rankList, headerTitle, sortKey, loading }) => {
+type RankingCardProps = {
+  rankList?: PopularCourse[] | TopRatedCourse[];
+  headerTitle?: string;
+  sortKey?: string;
+  loading?: boolean;
+};
+
+const RankingCard = ({
+  rankList,
+  headerTitle,
+  sortKey,
+  loading,
+}: RankingCardProps) => {
   if (loading) return <Loading />;
   if (!rankList || !rankList.length) return null;
   return (
     <div className="ranking-card card">
-      {rankList.map((course, i) => (
+      {rankList.map((course: PopularCourse | TopRatedCourse, i: number) => (
         <Link
           key={`${headerTitle}-${course.courseId}`}
           to={`/review/${course.courseId}`}
