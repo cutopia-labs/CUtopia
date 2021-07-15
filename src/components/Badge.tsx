@@ -1,10 +1,16 @@
-import React from 'react';
-
 import './Badge.css';
 import updateOpacity from '../helpers/updateOpacity';
 import colors from '../constants/colors';
 
-const Badge = ({ index, text, value, isGrade, color }) => {
+type BadgeProps = {
+  index?: number;
+  text: string;
+  value?: string;
+  isGrade?: boolean;
+  color?: string;
+};
+
+const Badge = ({ index, text, value, isGrade, color }: BadgeProps) => {
   const badgeColor = isGrade
     ? colors.gradeColors[value]
     : colors.randomColors[

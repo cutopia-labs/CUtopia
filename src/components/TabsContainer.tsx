@@ -1,7 +1,8 @@
-import React from 'react';
 import { Box, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import clsx from 'clsx';
+import { PropsWithChildren } from 'react';
+import { MenuItem } from '../types';
 
 import Card from './Card';
 
@@ -42,7 +43,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TabsContainer = ({ tabs, selected, onSelect, children }) => {
+type TabsContainerProps = {
+  tabs: MenuItem[];
+  selected: string;
+  onSelect: (label: string) => void;
+};
+
+const TabsContainer = ({
+  tabs,
+  selected,
+  onSelect,
+  children,
+}: PropsWithChildren<TabsContainerProps>) => {
   const classes = useStyles();
 
   return (

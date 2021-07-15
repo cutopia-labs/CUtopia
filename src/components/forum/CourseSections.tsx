@@ -6,8 +6,14 @@ import { Add, PersonOutline, Schedule } from '@material-ui/icons';
 import './CourseSections.css';
 import { UserContext } from '../../store';
 import { WEEKDAYS_TWO_ABBR } from '../../constants/states';
+import { CourseSection, Term } from '../../types';
 
-const SectionCard = ({ section, addSection }) => {
+type SectionCardProps = {
+  section: CourseSection;
+  addSection: (section: CourseSection) => void;
+};
+
+const SectionCard = ({ section, addSection }: SectionCardProps) => {
   const SECTION_CARD_ITEMS = [
     {
       icon: <PersonOutline />,
@@ -43,15 +49,23 @@ const SectionCard = ({ section, addSection }) => {
   );
 };
 
+type CourseSectionsProps = {
+  courseInfo: {
+    terms: Term[];
+    courseId: string;
+    title: string;
+  };
+};
+
 const CourseSections = ({
   courseInfo: { terms: courseTerms, courseId, title },
-}) => {
+}: CourseSectionsProps) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [currentTermIndex, setCurrentTermIndex] = useState(
     courseTerms.length - 1
   );
   const user = useContext(UserContext);
-  const addToPlanner = (section) => {
+  const addToPlanner = (section: CourseSection) => {
     const copy = { ...section };
     delete copy.name;
     user.addToPlannerCourses({
@@ -67,7 +81,11 @@ const CourseSections = ({
       <div className="course-section-wrapper">
         <span className="course-term-label">{`${courseTerms[currentTermIndex].name} Sections:`}</span>
         {courseTerms[currentTermIndex].course_sections.map((section) => (
-          <SectionCard addSection={addToPlanner} section={section} />
+          <SectionCard
+            key={section.name}
+            addSection={addToPlanner}
+            section={section}
+          />
         ))}
       </div>
     </div>

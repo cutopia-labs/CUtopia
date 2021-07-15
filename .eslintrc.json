@@ -20,6 +20,7 @@
   "plugins": [
       "react",
       "@typescript-eslint",
+      "unused-imports",
       "only-warn"
   ],
   "rules": {
@@ -39,7 +40,6 @@
     "react/react-in-jsx-scope": "off",
     "no-confusing-arrow": "off",
     "jsx-a11y/anchor-has-content": "off",
-    "no-unused-vars": ["warn", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }],
     "no-underscore-dangle": 0,
     "no-alert": 0,
     "max-len": 0,
@@ -49,6 +49,13 @@
     "import/no-named-as-default": 0,
     "no-restricted-syntax": 0,
     "no-undef": 0,
+    "no-unused-vars": 0,
+		"@typescript-eslint/no-unused-vars": "off",
+		"unused-imports/no-unused-imports": "error",
+		"unused-imports/no-unused-vars": [
+			"off",
+			{ "vars": "all", "varsIgnorePattern": "^_", "args": "after-used", "argsIgnorePattern": "^_" }
+		],
     "@typescript-eslint/explicit-function-return-type": "off",
     "prettier/prettier": [
       "error"

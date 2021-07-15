@@ -1,11 +1,17 @@
-import React from 'react';
-
 import './GradeIndicator.css';
 import colors from '../constants/colors';
 import updateOpacity from '../helpers/updateOpacity';
 import { getLabel } from '../helpers/marcos';
 
-export default function GradeIndicator({ grade, additionalClassName }) {
+type GradeIndicatorProps = {
+  grade: string | number;
+  additionalClassName?: string;
+};
+
+export default function GradeIndicator({
+  grade,
+  additionalClassName,
+}: GradeIndicatorProps) {
   const label = getLabel(grade);
   const color = colors.gradeColors[label.charAt(0)];
   return (

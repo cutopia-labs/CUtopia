@@ -1,7 +1,20 @@
-import React from 'react';
+import { PropsWithChildren } from 'react';
 
 import './ListItem.css';
 import colors from '../constants/colors';
+
+type ListItemProps = {
+  label?: string;
+  caption?: string;
+  onClick?: (...args: any[]) => any;
+  chevron?: boolean;
+  noBorder?: boolean;
+  ribbonIndex?: number;
+  left?: JSX.Element;
+  right?: JSX.Element;
+  className?: string;
+  onMouseDown?: (...args: any[]) => any;
+};
 
 const ListItem = ({
   label,
@@ -15,7 +28,7 @@ const ListItem = ({
   right,
   className,
   onMouseDown,
-}) => (
+}: PropsWithChildren<ListItemProps>) => (
   <div
     className={`list-item-container${!noBorder ? ' border' : ''} row${
       className ? ` ${className}` : ''

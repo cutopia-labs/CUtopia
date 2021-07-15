@@ -1,5 +1,5 @@
-import React from 'react';
-import { Box, makeStyles } from '@material-ui/core';
+import { PropsWithChildren } from 'react';
+import { Box, BoxProps, makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Page = ({ children, ...props }) => {
+const Page = ({ children, ...props }: PropsWithChildren<BoxProps>) => {
   const classes = useStyles();
 
   return (

@@ -15,11 +15,21 @@ import './TimeTablePanel.css';
 import CourseList from './planner/CourseList';
 import copyToClipboard from '../helpers/copyToClipboard';
 import Card from './Card';
+import { CourseSection } from '../types';
 
-const MODAL_MODES = {
-  NO_MODAL: 0,
-  IMPORT_MODAL: 1,
-  EXPORT_MODAL: 2,
+enum MODAL_MODES {
+  NO_MODAL,
+  IMPORT_MODAL,
+  EXPORT_MODAL,
+}
+
+type TimeTablePanelProps = {
+  title?: string;
+  courses?: CourseSection[];
+  onImport?: (...args: any[]) => any;
+  onExport?: (...args: any[]) => any;
+  onClear?: (...args: any[]) => any;
+  className?: string;
 };
 
 const TimeTablePanel = ({
@@ -29,7 +39,7 @@ const TimeTablePanel = ({
   onExport,
   onClear,
   className,
-}) => {
+}: TimeTablePanelProps) => {
   const notification = useContext(NotificationContext);
   const [modalMode, setModalMode] = useState(MODAL_MODES.NO_MODAL);
   const [importInput, setImportInput] = useState('');
@@ -62,12 +72,11 @@ const TimeTablePanel = ({
         <span className="title">{title}</span>
         <div className="btn-row center-row">
           {FUNCTION_BUTTONS.map((item) => (
-            <Button onClick={item.action}>{item.label}</Button>
+            <Button key={item.label} onClick={item.action}>{item.label}</Button>
           ))}
         </div>
       </header>
       <CourseList courses={courses?.slice()} />
-
       <Dialog
         open={modalMode === MODAL_MODES.IMPORT_MODAL}
         onClose={() => setModalMode(MODAL_MODES.NO_MODAL)}

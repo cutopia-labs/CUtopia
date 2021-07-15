@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from 'react';
+import { useState, useContext, useRef } from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { useMediaQuery, IconButton, Menu, MenuItem } from '@material-ui/core';
 import { Menu as MenuIcon } from '@material-ui/icons';
@@ -62,7 +62,6 @@ const Header = () => {
             {(!visible || !isMobile) && (
               <IconButton
                 aria-label="sort"
-                components="span"
                 size="small"
                 onClick={(e) => setAnchorEl(e.currentTarget)}
               >
@@ -75,12 +74,15 @@ const Header = () => {
               anchorEl={anchorEl}
               keepMounted
               open={Boolean(anchorEl)}
-              onClose={() => setAnchorEl()}
+              onClose={() => setAnchorEl(null)}
             >
               {SECTIONS.map((section) => (
                 <MenuItem
                   key={section.link}
-                  onClick={() => [history.push(section.link), setAnchorEl()]}
+                  onClick={() => [
+                    history.push(section.link),
+                    setAnchorEl(null),
+                  ]}
                 >
                   {section.label}
                 </MenuItem>

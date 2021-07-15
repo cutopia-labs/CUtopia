@@ -1,9 +1,14 @@
-import React from 'react';
 import { Chip } from '@material-ui/core';
 
 import './ChipsRow.css';
 
-const ChipsRow = ({ items, select, setSelect }) => (
+type ChipsRowProps = {
+  items: string[];
+  select: string;
+  setSelect: (item: string) => any;
+};
+
+const ChipsRow = ({ items, select, setSelect }: ChipsRowProps) => (
   <div className="chips-row">
     {items.map((item) => (
       <Chip

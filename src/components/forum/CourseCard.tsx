@@ -61,7 +61,6 @@ const CourseCard = ({ courseInfo, concise }) => {
             className={isFavorited ? 'active' : ''}
             onClick={() => setFavorited()}
             aria-label="favourite"
-            components="span"
             size="medium"
           >
             {isFavorited ? <Favorite /> : <FavoriteBorder />}

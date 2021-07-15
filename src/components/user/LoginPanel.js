@@ -321,7 +321,7 @@ const LoginPanel = ({ route, navigation }) => {
         <TextField
           error={errors.userId}
           placeholder={MODE_ITEMS[mode].userId}
-          keyboardType="number"
+          type="number"
           value={userId}
           onChangeText={(text) => setUserId(text)}
         />
@@ -349,7 +349,7 @@ const LoginPanel = ({ route, navigation }) => {
           defaultValue=""
           value={password}
           onChangeText={(text) => setPassword(text)}
-          keyboardType={invisible ? 'password' : 'text'}
+          type={invisible ? 'password' : 'text'}
         />
       )}
       {mode === MODES.CUTOPIA_LOGIN && (

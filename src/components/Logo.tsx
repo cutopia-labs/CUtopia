@@ -1,7 +1,6 @@
-import React from 'react';
 import { makeStyles } from '@material-ui/core';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   logoContainer: {
     fontFamily: 'Futura, sans-serif',
     fontWeight: 900,

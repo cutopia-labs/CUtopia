@@ -1,5 +1,15 @@
-import React from 'react';
 import './TextField.css';
+
+type Tag = 'input' | 'textarea';
+
+type TextFieldProps = {
+  onChangeText: (text: string) => any;
+  error?: string;
+  Tag?: Tag;
+  value: string;
+  type?: string;
+  ref?: React.RefObject<HTMLInputElement | HTMLTextAreaElement>;
+};
 
 const TextField = ({
   value,
@@ -7,34 +17,28 @@ const TextField = ({
   placeholder,
   error,
   defaultValue,
-  keyboardType,
-  secureTextEntry,
+  type,
   Tag,
   ref,
   onBlur,
   onFocus,
-}) => {
+}: React.HTMLAttributes<HTMLInputElement | HTMLTextAreaElement> &
+  TextFieldProps) => {
   const TagName = Tag || 'input';
   return (
     <>
       <TagName
-        ref={ref}
+        ref={ref as any}
         className="input-container"
         placeholder={placeholder}
-        placeholderTextColor="#00000066"
         defaultValue={defaultValue}
-        type={keyboardType}
+        type={type}
         value={value}
         onChange={(e) => onChangeText(e.target.value)}
-        security={secureTextEntry}
         onFocus={onFocus}
         onBlur={onBlur}
       />
-      {error && (
-        <div className="error-label" type="error">
-          {error}
-        </div>
-      )}
+      {error && <div className="error-label">{error}</div>}
     </>
   );
 };

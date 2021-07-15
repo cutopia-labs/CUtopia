@@ -1,17 +1,20 @@
-import React from 'react';
 import { ExpandMore } from '@material-ui/icons';
 
 import './ShowMoreOverlay.css';
 
-export default function ShowMoreOverlay({ visible, onShowMore }) {
+type ShowMoreOverlayProps = {
+  visible: boolean;
+  onShowMore: (...args: any[]) => any;
+};
+
+export default function ShowMoreOverlay({
+  visible,
+  onShowMore,
+}: ShowMoreOverlayProps) {
   if (visible) {
     return (
       <div className="show-more-overlay" onClick={onShowMore}>
-        <div
-          size="small"
-          className="show-more-label center-row"
-          variant="outlined"
-        >
+        <div className="show-more-label center-row">
           Show More
           <ExpandMore />
         </div>
