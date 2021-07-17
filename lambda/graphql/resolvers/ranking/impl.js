@@ -70,25 +70,22 @@ const sortTopRatedCourses = (coursesRating, topRatedAcademicGroups) => {
   rankingCache.set('top-rated-academic-groups-by-criterion', topRatedAcademicGroupsByCriterion);
 };
 
-const calculateNewSum = (oldSum, numReviews, newValue) => {
-  const newSum = oldSum * numReviews + newValue;
-  return newSum / (numReviews + 1);
-};
-
-const updateCoursesRating = (courseId, reviewData) => {
-  // update course rating when adding new review
+const updateCourseRating = async (courseId, calculateRatingFn, increaseNumReviews = false) => {
+  // update course rating when new review is added or existing review is edited
   const coursesRating = rankingCache.get('courses-rating');
   const academicGroupsRating = rankingCache.get('academic-groups-rating');
 
   const course = coursesRating[courseId];
   let overall = 0;
   criterions.forEach(criterion => {
-    const newSum = calculateNewSum(course[criterion], course["numReviews"], reviewData[criterion]["grade"]);
-    course[criterion] = newSum;
-    overall += newSum;
+    const newAvg = calculateRatingFn(course, criterion);
+    course[criterion] = newAvg;
+    overall += newAvg;
   });
   course["overall"] = overall / criterions.length;
-  course["numReviews"]++;
+  if (increaseNumReviews) {
+    course["numReviews"]++;
+  }
   rankingCache.set('courses-rating', coursesRating);
 
   overall = 0;
@@ -96,15 +93,18 @@ const updateCoursesRating = (courseId, reviewData) => {
   const group = academicGroupsRating[academic_group];
 
   criterions.forEach(criterion => {
-    const newSum = calculateNewSum(group[criterion], group["numReviews"], reviewData[criterion]["grade"]);
-    group[criterion] = newSum;
-    overall += newSum;
+    const newAvg = calculateRatingFn(group, criterion);
+    group[criterion] = newAvg;
+    overall += newAvg;
   });
   group["overall"] = overall / criterions.length;
-  group["numReviews"]++;
+  if (increaseNumReviews) {
+    group["numReviews"]++;
+  }
   rankingCache.set('academic-groups-rating', academicGroupsRating);
 
-  return { coursesRating, academicGroupsRating };
+  sortTopRatedCourses(coursesRating, academicGroupsRating);
+  return { courseRatings: course, groupRatings: group };
 };
 
 exports.getCourseById = (courseId) => {
@@ -234,21 +234,19 @@ exports.recalWithNewReview = async (review) => {
   popularCourses[index].numReviews++;
   rankingCache.set('popular-courses', popularCourses);
 
-  const coursesByCriterion = await this.calculateTopRatedCourses('top-rated-courses-by-criterion');
-  criterions.forEach(criterion => {
-    index = coursesByCriterion[criterion].findIndex(course => course.courseId === courseId);
-    const targetCourse = coursesByCriterion[criterion][index];
-    const numReviews = targetCourse["numReviews"];
-    const grade = reviewData[criterion]["grade"];
-    let overall = 0;
-    criterions.forEach(c => {
-      const newSum = calculateNewSum(targetCourse[c], numReviews, grade);
-      overall += newSum;
-      targetCourse[c] = newSum;
-    });
-    targetCourse["overall"] = overall / criterions.length;
-    targetCourse["numReviews"]++;
-  });
-  const { coursesRating, academicGroupsRating } = updateCoursesRating(courseId, reviewData);
-  sortTopRatedCourses(coursesRating, academicGroupsRating);
+  await this.calculateTopRatedCourses('courses-rating'); // calculate top rated courses in case it does not exist in cache
+  const calculateRating = (course, criterion) => (
+    (course[criterion] * course["numReviews"] + reviewData[criterion]["grade"]) / (course["numReviews"] + 1)
+  );
+  return updateCourseRating(courseId, calculateRating, true);
+};
+
+exports.recalWithEdittedReview = async (review) => {
+  const { courseId, oldReviewData, ...reviewData } = review;
+
+  await this.calculateTopRatedCourses('courses-rating'); // calculate top rated courses in case it does not exist in cache
+  const calculateRating = (course, criterion) => (
+    (course[criterion] * course["numReviews"] - oldReviewData[criterion]["grade"] + reviewData[criterion]["grade"]) / course["numReviews"]
+  );
+  return updateCourseRating(courseId, calculateRating);
 };

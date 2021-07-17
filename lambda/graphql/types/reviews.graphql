@@ -1,6 +1,7 @@
 type Mutation {
   createReview(input: CreateReviewInput!): CreateReviewResult @auth
   voteReview(input: VoteReviewInput!): VoteReviewResult @auth
+  editReview(input: EditReviewInput!): EditReviewResult @auth
 }
 
 type Query {
@@ -56,9 +57,37 @@ input CreateReviewInput {
 }
 
 type CreateReviewResult {
-  id: String
-  createdDate: String
-  error: String
+  id: String!
+  createdDate: String!
+  courseRatings: Ratings!
+  groupRatings: Ratings!
+}
+
+input EditReviewInput {
+  title: String
+  courseId: String!
+  createdDate: String!
+  anonymous: Boolean!
+  overall: Int!
+  grading: ReviewDetailsInput!
+  teaching: ReviewDetailsInput!
+  difficulty: ReviewDetailsInput!
+  content: ReviewDetailsInput!
+}
+
+type EditReviewResult {
+  modifiedDate: String!
+  courseRatings: Ratings!
+  groupRatings: Ratings!
+}
+
+type Ratings {
+  overall: Float!
+  grading: Float!
+  teaching: Float!
+  difficulty: Float!
+  content: Float!
+  numReviews: Int!
 }
 
 input VoteReviewInput {

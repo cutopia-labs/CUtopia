@@ -1,13 +1,30 @@
-const { getReviews, getReview, createReview, voteReview, VOTE_ACTIONS } = require('dynamodb');
-const { recalWithNewReview } = require('../ranking/impl');
+const { getReviews, getReview, createReview, editReview, voteReview, VOTE_ACTIONS } = require('dynamodb');
+const { recalWithNewReview, recalWithEdittedReview } = require('../ranking/impl');
 
 exports.Mutation = {
   createReview: async (parent, { input }, { user }) => {
-    await recalWithNewReview(input);
-    return await createReview(input, user);
+    const { courseRatings, groupRatings } = await recalWithNewReview(input);
+    const { id, createdDate } = await createReview(input, user);
+    return {
+      id,
+      createdDate,
+      courseRatings,
+      groupRatings,
+    };
   },
   voteReview: async (parent, { input }, { user }) => {
     return await voteReview(input, user);
+  },
+  editReview: async (parent, { input }) => {
+    const { courseId, createdDate } = input;
+    const oldReviewData = await getReview({ courseId, createdDate });
+    const { courseRatings, groupRatings } = await recalWithEdittedReview({ oldReviewData, ...input });
+    const modifiedDate = await editReview({ oldReviewData, newReviewData: input });
+    return {
+      modifiedDate,
+      courseRatings,
+      groupRatings,
+    };
   },
 };
 

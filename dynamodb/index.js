@@ -1,5 +1,6 @@
 const {
   createReview,
+  editReview,
   getReviews,
   getReview,
   voteReview,
@@ -33,6 +34,7 @@ const {
 
 module.exports = {
   createReview,
+  editReview,
   getReviews,
   getReview,
   voteReview,

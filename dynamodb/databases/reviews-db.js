@@ -81,10 +81,23 @@ exports.createReview = async (input, user) => {
     };
   } catch (e) {
     console.trace(e);
-    return {
-      error: e,
-    };
   }
+};
+
+exports.editReview = async (input) => {
+  const { oldReviewData, newReviewData } = input;
+  const now = new Date().getTime().toString();
+
+  const params = {
+    TableName: process.env.ReviewsTableName,
+    Item: {
+      ...oldReviewData,
+      ...newReviewData,
+      modifiedDate: now,
+    },
+  };
+  await db.put(params).promise();
+  return now;
 };
 
 exports.VOTE_ACTIONS = Object.freeze({
@@ -213,7 +226,10 @@ exports.getReviews = async (input) => {
     // return latest reviews from cache
     const cachedReviews = latestReviewsCache.get('reviews-latest');
     if (cachedReviews) {
-      return ascendingDate ? cachedReviews.reverse() : cachedReviews;
+      return {
+        reviews: ascendingDate ? cachedReviews.reverse() : cachedReviews,
+        lastEvaluatedKey: null,
+      };
     }
 
     // return latest reviews from database
@@ -230,7 +246,10 @@ exports.getReviews = async (input) => {
     try {
       const latestReviews = (await db.query(params).promise()).Items.map(mapReview);
       latestReviewsCache.set('reviews-latest', latestReviews);
-      return ascendingDate ? latestReviews.reverse() : latestReviews;
+      return {
+        reviews: ascendingDate ? latestReviews.reverse() : latestReviews,
+        lastEvaluatedKey: null,
+      };
     } catch (e) {
       console.trace(e);
     }
@@ -245,7 +264,7 @@ exports.getReviews = async (input) => {
 
     // return all reviews from database
     const params = {
-      TableName: process.env.LatestReviewsTableName,
+      TableName: process.env.ReviewsTableName,
       ProjectionExpression: 'courseId, grading, difficulty, teaching, content',
     };
     const reviews = (await db.scan(params).promise()).Items;
