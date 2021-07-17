@@ -1,12 +1,17 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 
 import './HomePageTabs.css';
 import ListItem from '../ListItem';
 import Loading from '../Loading';
 import { getMMMDDYY } from '../../helpers/getTime';
+import { CourseConcise } from '../../types';
 
-const CoursesList = ({ loading, courses }) => (
+type CoursesListProps = {
+  loading: boolean;
+  courses: CourseConcise[];
+};
+
+const CoursesList = ({ loading, courses }: CoursesListProps) => (
   <>
     {loading ? (
       <Loading />
@@ -27,7 +32,12 @@ const CoursesList = ({ loading, courses }) => (
   </>
 );
 
-const ReviewsList = ({ loading, reviewIds }) => (
+type ReviewsListProps = {
+  loading: boolean;
+  reviewIds: string[];
+};
+
+const ReviewsList = ({ loading, reviewIds }: ReviewsListProps) => (
   <>
     {loading ? (
       <Loading />

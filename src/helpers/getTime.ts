@@ -14,9 +14,9 @@ const MONTHS = [
   'Nov',
   'Dec',
 ];
-const addZero = (digit) => (digit > 9 ? digit : `0${digit}`);
+const addZero = (digit: number) => (digit > 9 ? digit : `0${digit}`);
 
-export function getHHMM(timestamp) {
+export function getHHMM(timestamp: Date | string) {
   const time =
     typeof timestamp === 'object'
       ? timestamp
@@ -24,7 +24,12 @@ export function getHHMM(timestamp) {
   return `${addZero(time.getHours())}:${addZero(time.getMinutes())}`;
 }
 
-export function getMMMDDYY(timestamp, showWeekday, showMinutes, hideYear) {
+export function getMMMDDYY(
+  timestamp: string,
+  showWeekday?: boolean,
+  showMinutes?: boolean,
+  hideYear?: boolean
+) {
   const date = new Date(parseInt(timestamp, 10));
   const day = date.getDay();
   return `${showWeekday ? `${WEEKDAYS[day ? day - 1 : 6]}, ` : ''}${
@@ -34,9 +39,9 @@ export function getMMMDDYY(timestamp, showWeekday, showMinutes, hideYear) {
   }`;
 }
 
-export function getDateDifference(timestamp) {
-  const now = new Date();
-  const old = new Date(parseInt(timestamp, 10));
+export function getDateDifference(timestamp: string) {
+  const now = new Date() as any;
+  const old = new Date(parseInt(timestamp, 10)) as any;
   const diffHours = Math.floor((now - old) / (1000 * 60 * 60));
   if (diffHours < 1) {
     const diffMinites = Math.floor((now - old) / (1000 * 60));

@@ -1,4 +1,4 @@
-export default function jsonToForm(json) {
+export default function jsonToForm(json: object) {
   const formBody = [];
   for (const property in json) {
     const encodedKey = encodeURIComponent(property);

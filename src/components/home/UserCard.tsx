@@ -20,8 +20,13 @@ import {
   PreferenceContext,
   UserContext,
 } from '../../store';
+import { User } from '../../types';
 
-const UserCard = ({ userData }) => {
+type UserCardProps = {
+  userData: User;
+};
+
+const UserCard = ({ userData }: UserCardProps) => {
   const user = useContext(UserContext);
   const preference = useContext(PreferenceContext);
   const notification = useContext(NotificationContext);

@@ -1,9 +1,12 @@
+import { CourseTableEntry } from './events';
+
 type User = {
   username: string;
   email: string;
   verified: boolean;
   reviewIds: string[];
   upvotesCount: number;
+  timetable?: CourseTableEntry[];
 };
 
 type CreateUserResult = {
@@ -35,6 +38,7 @@ type ResetPasswordResult = {
 };
 
 export type {
+  User,
   CreateUserResult,
   VerifyUserResult,
   UpdateUserResult,

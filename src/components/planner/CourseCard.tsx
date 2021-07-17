@@ -11,11 +11,11 @@ import { UserContext } from '../../store';
 const { START_HOUR, NO_OF_DAYS, NO_OF_HOURS } = TIMETABLE_CONSTANTS;
 
 const useStyles = (
-  durationHeight,
-  topMarginValue,
-  bgColor,
-  textColor,
-  day
+  durationHeight: string,
+  topMarginValue: string,
+  bgColor: string,
+  textColor: string,
+  day: number
 ) => ({
   courseCard: {
     width: `${99 / NO_OF_DAYS}%`,
@@ -58,17 +58,11 @@ const CourseCard = ({ course }) => {
   const user = useContext(UserContext);
 
   return (
-    <div
-      activeOpacity={0.7}
-      className="timetable-course-card"
-      style={styles.courseCard}
-    >
+    <div className="timetable-course-card" style={styles.courseCard}>
       <div className="timetable-inner-card" style={styles.innerCard}>
         <span
           className="timetable-course-card-title"
           style={styles.courseCardTitle}
-          numberOfLines={2}
-          ellipsizeMode="clip"
         >
           {`${course.courseId} ${course.section}`}
         </span>

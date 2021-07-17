@@ -69,21 +69,21 @@ const MODE_ITEMS = {
   },
 };
 
-const LoginPanel = ({ route, navigation }) => {
+const LoginPanel = () => {
   const initialMode = LoginPageMode.CUTOPIA_SIGNUP;
 
   const [mode, setMode] = useState(initialMode);
-  const [username, setUsername] = useState();
-  const [verificationCode, setVerificationCode] = useState();
-  const [userId, setUserId] = useState();
-  const [password, setPassword] = useState();
+  const [username, setUsername] = useState('');
+  const [verificationCode, setVerificationCode] = useState('');
+  const [userId, setUserId] = useState('');
+  const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [invisible, setInvisible] = useState(true);
   const [errors, setErrors] = useState({
-    emptyVerification: null,
-    emptyUsername: null,
-    emptyEmail: null,
-    emptyPassword: null,
+    verification: null,
+    username: null,
+    userId: null,
+    password: null,
   });
 
   const preference = useContext(PreferenceContext);
@@ -93,8 +93,8 @@ const LoginPanel = ({ route, navigation }) => {
   const { sendMessage, lastMessage, readyState } = useWebSocket(
     'wss://1rys6xiqvk.execute-api.ap-northeast-1.amazonaws.com/Prod'
   );
-  const [QRCodeData, setQRCodeData] = useState();
-  const accessPwd = useRef();
+  const [QRCodeData, setQRCodeData] = useState('');
+  const accessPwd = useRef<string>();
 
   useEffect(() => {
     if (readyState === ReadyState.OPEN && !QRCodeData) {
@@ -175,7 +175,6 @@ const LoginPanel = ({ route, navigation }) => {
   };
 
   useEffect(() => {
-    console.log(mode === LoginPageMode.CUTOPIA);
     mode !== null && console.log(mode);
   }, [mode]);
 
@@ -206,11 +205,6 @@ const LoginPanel = ({ route, navigation }) => {
       return;
     }
     switch (mode) {
-      case LoginPageMode.CUSIS: {
-        // curly braces for const scope
-        await user.login(userId, password, rememberMe);
-        break;
-      }
       case LoginPageMode.CUTOPIA_LOGIN: {
         loginAndRedirect();
         break;
@@ -333,7 +327,7 @@ const LoginPanel = ({ route, navigation }) => {
       )}
       {MODE_ITEMS[mode].verificationCode && (
         <TextField
-          error={errors.verificationCode}
+          error={errors.verification}
           placeholder={MODE_ITEMS[mode].verificationCode}
           value={verificationCode}
           onChangeText={(text) => setVerificationCode(text)}

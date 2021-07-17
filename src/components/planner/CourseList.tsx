@@ -6,46 +6,58 @@ import CourseCard from './CourseCard';
 import colors from '../../constants/colors';
 import { WEEKDAYS } from '../../constants/states';
 import { TIMETABLE_CONSTANTS } from '../../constants/configs';
+import { CourseTableEntry } from '../../types';
 
 const { NO_OF_DAYS, NO_OF_HOURS, START_HOUR, END_HOUR } = TIMETABLE_CONSTANTS;
 
 const TimeTableTicks = () => {
   const startHour = START_HOUR;
   const endHour = END_HOUR;
-  const timeLineViews = [];
-
-  for (let i = startHour; i <= endHour; i++) {
-    const hourString = i > 9 ? `${i}` : `0${i}`;
-    timeLineViews.push(
-      <div className="time-line-box" key={`Timeline:${hourString}`}>
-        <span className="time-line-text">{`${hourString}:00`}</span>
-      </div>
-    );
-  }
-  return timeLineViews;
+  return (
+    <>
+      {Array.from(
+        { length: endHour - startHour + 1 },
+        (_, i) => startHour + i
+      ).map((hour) => (
+        <div className="time-line-box" key={`Timeline:${hour}`}>
+          {hour !== startHour ? `${hour > 9 ? '' + hour : '0' + hour}:00` : ''}
+        </div>
+      ))}
+    </>
+  );
 };
 
-const WeekdayText = ({ withDate }) => {
-  const returnView = [];
+type WeekdayTextProps = {
+  withDate?: boolean;
+};
+
+const WeekdayText = ({ withDate }: WeekdayTextProps) => {
   const currentDay = new Date();
   const currentWeekday = currentDay.getDay() ? currentDay.getDay() : 7;
 
-  for (let i = 1; i <= NO_OF_DAYS; i++) {
-    const differenceOfDate = i - currentWeekday;
-    const thatDay = new Date();
-    thatDay.setDate(new Date().getDate() + differenceOfDate);
-    returnView.push(
-      <div className="weekday-cell" key={`weekday-${i}`}>
-        <span className="weekday-text">
-          {`${WEEKDAYS[i - 1]}${withDate ? ` ${thatDay.getDate()}` : ''}`}
-        </span>
-      </div>
-    );
-  }
-  return returnView;
+  return (
+    <>
+      {Array.from({ length: NO_OF_DAYS }, (_, i) => 1 + i).map((day) => {
+        const differenceOfDate = day - currentWeekday;
+        const thatDay = new Date();
+        thatDay.setDate(new Date().getDate() + differenceOfDate);
+        return (
+          <div className="weekday-cell" key={`weekday-${day}`}>
+            <span className="weekday-text">
+              {`${WEEKDAYS[day - 1]}${withDate ? ` ${thatDay.getDate()}` : ''}`}
+            </span>
+          </div>
+        );
+      })}
+    </>
+  );
 };
 
-export default function CourseList({ courses }) {
+type CourseListProps = {
+  courses: CourseTableEntry[];
+};
+
+export default function CourseList({ courses }: CourseListProps) {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const courseViews = [];
   let colorIndex = 0;

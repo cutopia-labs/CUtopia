@@ -1,10 +1,13 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
+    "lib": [	
+      "dom",	
+      "dom.iterable",	
+      "esnext",	
+      "es5",	
+      "es6",	
+      "es7"
     ],
     "allowJs": true,
     "skipLibCheck": true,
@@ -23,6 +26,15 @@
     "jsx": "react-jsx",
     "experimentalDecorators": true
   },
+  "overrides": [
+    {
+      "files": [
+        "*.ts",
+        "*.tsx",
+        "*.js"
+      ]
+    }
+  ],
   "include": [
     "src"
   ]

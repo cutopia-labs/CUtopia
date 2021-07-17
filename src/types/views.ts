@@ -1,7 +1,7 @@
 export type SearchMode = 'subject' | 'query' | 'Pins' | 'My Courses';
 
 export type SearchPayload = {
-  mode: SearchMode;
+  mode: SearchMode | null;
   text?: string;
 };
 

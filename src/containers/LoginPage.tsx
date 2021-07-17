@@ -78,7 +78,7 @@ const LoginPage = () => {
           title="Sign up with your SID"
           text="Contribute to read more comments"
         />
-        <img col className={classes.bannerImage} src={Discusssing} alt="" />
+        <img className={classes.bannerImage} src={Discusssing} alt="" />
       </Grid>
       <Grid item className={classes.loginPanel} xs={12} sm={9}>
         <LoginPanel />

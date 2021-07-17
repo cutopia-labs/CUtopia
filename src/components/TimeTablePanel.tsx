@@ -15,7 +15,7 @@ import './TimeTablePanel.css';
 import CourseList from './planner/CourseList';
 import copyToClipboard from '../helpers/copyToClipboard';
 import Card from './Card';
-import { CourseSection } from '../types';
+import { CourseTableEntry } from '../types';
 
 enum MODAL_MODES {
   NO_MODAL,
@@ -25,7 +25,7 @@ enum MODAL_MODES {
 
 type TimeTablePanelProps = {
   title?: string;
-  courses?: CourseSection[];
+  courses?: CourseTableEntry[];
   onImport?: (...args: any[]) => any;
   onExport?: (...args: any[]) => any;
   onClear?: (...args: any[]) => any;

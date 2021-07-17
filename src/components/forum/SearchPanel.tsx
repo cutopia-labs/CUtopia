@@ -35,12 +35,8 @@ import {
   HISTORY_MAX_LENGTH,
   MAX_SEARCH_RESULT_LENGTH,
 } from '../../constants/configs';
-import {
-  CourseSearchItem,
-  SearchMode,
-  SearchPayload,
-  UserStore,
-} from '../../types';
+import { CourseSearchItem, SearchMode, SearchPayload } from '../../types';
+import UserStore from '../../store/UserStore';
 
 /*
 c: courseId
@@ -312,7 +308,7 @@ const SearchPanel = () => {
           <InputBase
             className="search-input"
             placeholder="Search…"
-            value={searchPayload.text || ''}
+            value={searchPayload?.text || ''}
             onChange={(e) => {
               setSearchPayload({
                 text: e.target.value,
@@ -341,7 +337,7 @@ const SearchPanel = () => {
         </>
       )}
       {!currentCourse &&
-        (searchPayload.mode &&
+        (searchPayload?.mode &&
         (searchPayload.mode !== 'query' || searchPayload.text) ? (
           <>
             <Divider />

@@ -11,18 +11,22 @@ class UserStore {
   // General State
   @observable viewCount: number;
   @observable loginState: LoginState;
+
   // User Saved Data
   @observable favoriteCourses: CourseConcise[] = [];
   @observable timetable: CourseTableEntry[];
+  @observable reviews: string[];
+
   // CUtopia
   @observable cutopiaUsername: string;
   @observable cutopiaPassword: string;
   @observable token: string;
-  notificationStore: NotificationStore;
 
   // Planner
   @observable plannerTerm: string;
   @observable plannerCourses = []; // To Add Type
+
+  notificationStore: NotificationStore;
 
   constructor(notificationStore: NotificationStore) {
     makeObservable(this);
@@ -46,11 +50,12 @@ class UserStore {
     await this.applyTimeTable();
     await this.applyPlannerCourses();
     await this.applyFavoriteCourses();
+    await this.applyReviews();
     // CUtopia
     await this.applyCutopiaAccount();
   }
 
-  @action.bound setUserStore(key, value) {
+  @action.bound setUserStore(key: string, value: any) {
     this[key] = value;
   }
 
@@ -62,7 +67,7 @@ class UserStore {
 
   @action async applyViewCount() {
     const count = await getStoreData('viewCount');
-    this.setUserStore('viewCount', parseInt(count || 0, 10));
+    this.setUserStore('viewCount', parseInt(count || '0', 10));
   }
 
   @action increaseViewCount = async () => {
@@ -125,8 +130,32 @@ class UserStore {
     await storeData('timetable', JSON.stringify(courses));
   }
 
+  // Reviews
+  @action async applyReviews() {
+    const reviews = JSON.parse(await getStoreData('reviews'));
+    this.setReviews(reviews);
+  }
+
+  @action async saveReviews(reviews) {
+    this.setReviews(reviews);
+    await storeData('reviews', JSON.stringify(reviews));
+  }
+
+  @action async clearReviews() {
+    await removeStoreItem('reviews');
+    this.setReviews([]);
+  }
+
+  @action async addReview(review) {
+    this.saveReviews([...this.reviews, review]);
+  }
+
+  @action.bound setReviews(reviews) {
+    this.reviews = reviews;
+  }
+
   // User Fav Courses
-  @action async saveFavoriteCourses(courses) {
+  @action async saveFavoriteCourses(courses: CourseConcise[]) {
     await storeData('favoriteCourses', JSON.stringify(courses));
     this.setFavoriteCourses(courses);
   }
@@ -136,7 +165,7 @@ class UserStore {
     this.setFavoriteCourses(courses || []);
   }
 
-  @action.bound setFavoriteCourses(courses) {
+  @action.bound setFavoriteCourses(courses: CourseConcise[]) {
     this.favoriteCourses = courses;
   }
 

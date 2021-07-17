@@ -55,7 +55,7 @@ type CourseSection = {
   name: string;
   startTimes: string[];
   endTimes: string[];
-  days: string[];
+  days: number[];
   locations: string[];
   instructors: string[];
 };

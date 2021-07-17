@@ -1,5 +1,5 @@
 const MAX_RANGE = 1000000;
-const copyToClipboard = (copyStr) => {
+const copyToClipboard = (copyStr: string) => {
   const input = document.createElement('input');
   input.value = copyStr;
   document.body.appendChild(input);
