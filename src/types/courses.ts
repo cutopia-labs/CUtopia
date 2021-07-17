@@ -74,6 +74,11 @@ type CourseSearchItem = {
   t: string;
 };
 
+type CourseConcise = {
+  courseId: string;
+  title: string;
+};
+
 export type {
   RatingField,
   RatingFieldWithOverall,
@@ -86,4 +91,5 @@ export type {
   CourseSection,
   AssessementComponent,
   CourseSearchItem,
+  CourseConcise,
 };

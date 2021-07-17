@@ -4,16 +4,16 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './index.css';
 import SnackBar from '../components/SnackBar';
 import { UserContext } from '../store';
-import { LOGIN_STATES } from '../constants/states';
 import Header from '../components/Header';
 import HomePage from './HomePage';
 import ForumPage from './ForumPage';
 import LoginPage from './LoginPage';
 import PlannerPage from './PlannerPage';
+import { LoginState } from '../types';
 
 const Navigator = () => {
   const user = useContext(UserContext);
-  if (user.loginState !== LOGIN_STATES.LOGGED_IN_CUTOPIA) {
+  if (user.loginState !== LoginState.LOGGED_IN_CUTOPIA) {
     return (
       <>
         <SnackBar />

@@ -1,3 +1,5 @@
-type UserStore = {};
+export interface NotificationStore {}
 
-export { UserStore };
+export interface UserStore {
+  notificationStore: NotificationStore;
+}

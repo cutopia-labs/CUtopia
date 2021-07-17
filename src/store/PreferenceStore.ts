@@ -16,7 +16,7 @@ class PreferenceStore {
     await this.applyUserTheme();
   }
 
-  @action async setDarkTheme(enabled) {
+  @action async setDarkTheme(enabled: boolean) {
     this.darkTheme = enabled;
     this.theme = enabled ? DARK_THEME : THEME;
     await storeData('theme', enabled ? 'dark' : 'default');

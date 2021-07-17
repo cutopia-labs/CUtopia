@@ -16,13 +16,14 @@ export const ERROR_CODES = Object.freeze({
 });
 
 class ErrorStore {
-  @observable loginError;
+  @observable loginError: string;
+  static loginError: string;
 
   constructor() {
     makeObservable(this);
   }
 
-  @action setLoginError(error) {
+  @action setLoginError(error: string) {
     this.loginError = error;
   }
 }

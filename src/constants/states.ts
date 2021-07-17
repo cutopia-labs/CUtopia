@@ -7,40 +7,6 @@ const RATING_FIELDS = [
   'content',
 ] as RatingField[];
 
-const MODES = Object.freeze({
-  CUSIS: 0,
-  CUTOPIA_LOGIN: 1,
-  CUTOPIA_SIGNUP: 2,
-  VERIFY: 3,
-  RESET_PASSWORD: 4,
-  RESET_PASSWORD_VERIFY: 5,
-});
-
-const CHECK_USER_EXIST_CODES = Object.freeze({
-  USERNAME_EMAIL_AVAILABLE: 0,
-  USERNAME_EXIST: 1,
-  EMAIL_EXIST: 2,
-});
-
-const LOGIN_STATES = Object.freeze({
-  LOGGED_OUT: 0,
-  LOGGED_IN_CUSIS: 1,
-  LOGGED_IN_CUTOPIA: 2,
-});
-
-const VERIFICATION_CODES = Object.freeze({
-  SUCCEEDED: 0,
-  FAILED: 1,
-  ALREADY_VERIFIED: 2,
-  USER_DNE: 3,
-});
-
-const LOGIN_CODES = Object.freeze({
-  SUCCEEDED: 0,
-  FAILED: 1,
-  USER_DNE: 2,
-});
-
 const LETTER_TO_VALUE = Object.freeze({
   'A': 4,
   'A-': 3.7,
@@ -93,11 +59,6 @@ const FULL_MEMBER_REVIEWS = 3;
 
 export {
   RATING_FIELDS,
-  MODES,
-  LOGIN_STATES,
-  VERIFICATION_CODES,
-  LOGIN_CODES,
-  CHECK_USER_EXIST_CODES,
   LETTER_TO_VALUE,
   VALUE_TO_LETTER,
   WEEKDAYS,

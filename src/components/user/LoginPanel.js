@@ -20,7 +20,6 @@ import {
   UserContext,
   NotificationContext,
 } from '../../store';
-import { LOGIN_CODES, VERIFICATION_CODES, MODES } from '../../constants/states';
 import {
   LOGIN_CUTOPIA,
   SEND_VERIFICATION,
@@ -28,18 +27,19 @@ import {
   SEND_RESET_PASSWORD_CODE,
   RESET_PASSWORD,
 } from '../../constants/mutations';
+import { LoginPageMode, LoginCode, VerificationCode } from '../../types';
 
 const LOGIN_ACCENT = '#873AFD';
 const CUHK_EMAIL_SUFFIX = '@link.cuhk.edu.hk';
 const MODE_ITEMS = {
-  [MODES.CUTOPIA_LOGIN]: {
+  [LoginPageMode.CUTOPIA_LOGIN]: {
     title: 'Log In',
     caption: 'Log in to unlock course reviews',
     username: 'Your username for CUtopia',
     password: 'Password for CUtopia Account',
     button: 'Log In',
   },
-  [MODES.CUTOPIA_SIGNUP]: {
+  [LoginPageMode.CUTOPIA_SIGNUP]: {
     title: 'Sign Up',
     caption: 'Sign up now to unlock course reviews',
     userId: 'Your CUHK SID (For Verification)',
@@ -47,20 +47,20 @@ const MODE_ITEMS = {
     password: 'Password for CUtopia Account',
     button: 'Sign Up',
   },
-  [MODES.VERIFY]: {
+  [LoginPageMode.VERIFY]: {
     title: 'Verify',
     caption:
       'An verification code has been sent to CUHK email.\nPlease enter your code here:',
     verificationCode: 'Your Verification Code',
     button: 'Verify',
   },
-  [MODES.RESET_PASSWORD]: {
+  [LoginPageMode.RESET_PASSWORD]: {
     title: 'Reset Password',
     caption: 'An verification code will be send to your CUHK email',
     username: 'Your CUtopia Username',
     button: 'Send Reset Code',
   },
-  [MODES.RESET_PASSWORD_VERIFY]: {
+  [LoginPageMode.RESET_PASSWORD_VERIFY]: {
     title: 'Verify',
     caption: 'An verification code will be send to your CUHK email',
     password: 'New Password',
@@ -70,7 +70,7 @@ const MODE_ITEMS = {
 };
 
 const LoginPanel = ({ route, navigation }) => {
-  const initialMode = MODES.CUTOPIA_SIGNUP;
+  const initialMode = LoginPageMode.CUTOPIA_SIGNUP;
 
   const [mode, setMode] = useState(initialMode);
   const [username, setUsername] = useState();
@@ -159,7 +159,7 @@ const LoginPanel = ({ route, navigation }) => {
       },
     };
     const { data } = await loginCUtopia(loginPayload);
-    if (data?.login.code === LOGIN_CODES.SUCCEEDED) {
+    if (data?.login.code === LoginCode.SUCCEEDED) {
       console.log(`Login success with token ${data.login.token}`);
       await user.saveCutopiaAccount(
         username,
@@ -167,7 +167,7 @@ const LoginPanel = ({ route, navigation }) => {
         rememberMe && password,
         data.login.token
       );
-    } else if (data?.login.code === LOGIN_CODES.FAILED) {
+    } else if (data?.login.code === LoginCode.FAILED) {
       alert('Wrong Password!');
     } else {
       alert("User doesn't exist!");
@@ -175,7 +175,7 @@ const LoginPanel = ({ route, navigation }) => {
   };
 
   useEffect(() => {
-    console.log(mode === MODES.CUTOPIA);
+    console.log(mode === LoginPageMode.CUTOPIA);
     mode !== null && console.log(mode);
   }, [mode]);
 
@@ -196,7 +196,9 @@ const LoginPanel = ({ route, navigation }) => {
       password:
         MODE_ITEMS[mode].password &&
         !password &&
-        `Please enter your ${mode === MODES.CUSIS ? 'OnePass ' : ''}password`,
+        `Please enter your ${
+          mode === LoginPageMode.CUSIS ? 'OnePass ' : ''
+        }password`,
     };
     setErrors(errorsFound);
     const hasError = Object.values(errorsFound).some((e) => e);
@@ -204,16 +206,16 @@ const LoginPanel = ({ route, navigation }) => {
       return;
     }
     switch (mode) {
-      case MODES.CUSIS: {
+      case LoginPageMode.CUSIS: {
         // curly braces for const scope
         await user.login(userId, password, rememberMe);
         break;
       }
-      case MODES.CUTOPIA_LOGIN: {
+      case LoginPageMode.CUTOPIA_LOGIN: {
         loginAndRedirect();
         break;
       }
-      case MODES.CUTOPIA_SIGNUP: {
+      case LoginPageMode.CUTOPIA_SIGNUP: {
         const createUserPayload = {
           variables: {
             username,
@@ -222,10 +224,10 @@ const LoginPanel = ({ route, navigation }) => {
           },
         };
         const { data } = await createUser(createUserPayload);
-        !data || data.error ? alert(data.error) : setMode(MODES.VERIFY);
+        !data || data.error ? alert(data.error) : setMode(LoginPageMode.VERIFY);
         break;
       }
-      case MODES.VERIFY: {
+      case LoginPageMode.VERIFY: {
         const verifyPayload = {
           variables: {
             username,
@@ -234,16 +236,16 @@ const LoginPanel = ({ route, navigation }) => {
         };
         const res = await verifyUser(verifyPayload);
         switch (res.data.verifyUser.code) {
-          case VERIFICATION_CODES.SUCCEEDED:
+          case VerificationCode.SUCCEEDED:
             loginAndRedirect();
             break;
-          case VERIFICATION_CODES.FAILED:
+          case VerificationCode.FAILED:
             alert('Failed to verify');
             break;
-          case VERIFICATION_CODES.ALREADY_VERIFIED:
+          case VerificationCode.ALREADY_VERIFIED:
             alert('CUHK SID already verified!');
             break;
-          case VERIFICATION_CODES.USER_DNE:
+          case VerificationCode.USER_DNE:
             alert("User doesn't exist!");
             break;
           default:
@@ -251,7 +253,7 @@ const LoginPanel = ({ route, navigation }) => {
         }
         break;
       }
-      case MODES.RESET_PASSWORD: {
+      case LoginPageMode.RESET_PASSWORD: {
         const resetPasswordPayload = {
           variables: {
             username,
@@ -259,10 +261,12 @@ const LoginPanel = ({ route, navigation }) => {
         };
         const res = (await sendResetPasswordCode(resetPasswordPayload)).data
           .sendResetPasswordCode;
-        res.error ? alert(res.error) : setMode(MODES.RESET_PASSWORD_VERIFY);
+        res.error
+          ? alert(res.error)
+          : setMode(LoginPageMode.RESET_PASSWORD_VERIFY);
         break;
       }
-      case MODES.RESET_PASSWORD_VERIFY:
+      case LoginPageMode.RESET_PASSWORD_VERIFY:
         {
           const resetPasswordVerifyPayload = {
             variables: {
@@ -274,7 +278,7 @@ const LoginPanel = ({ route, navigation }) => {
           console.log(resetPasswordVerifyPayload);
           const res = (await resetPassword(resetPasswordVerifyPayload)).data
             .resetPassword;
-          res.error ? alert(res.error) : setMode(MODES.CUTOPIA_LOGIN);
+          res.error ? alert(res.error) : setMode(LoginPageMode.CUTOPIA_LOGIN);
         }
         break;
       default:
@@ -284,14 +288,14 @@ const LoginPanel = ({ route, navigation }) => {
 
   const goBack = () => {
     switch (mode) {
-      case MODES.VERIFY:
-        setMode(MODES.CUTOPIA_LOGIN);
+      case LoginPageMode.VERIFY:
+        setMode(LoginPageMode.CUTOPIA_LOGIN);
         break;
-      case MODES.RESET_PASSWORD:
-        setMode(MODES.CUTOPIA_LOGIN);
+      case LoginPageMode.RESET_PASSWORD:
+        setMode(LoginPageMode.CUTOPIA_LOGIN);
         break;
-      case MODES.RESET_PASSWORD_VERIFY:
-        setMode(MODES.RESET_PASSWORD);
+      case LoginPageMode.RESET_PASSWORD_VERIFY:
+        setMode(LoginPageMode.RESET_PASSWORD);
         break;
       default:
         break;
@@ -302,15 +306,16 @@ const LoginPanel = ({ route, navigation }) => {
     <div className="login-panel">
       <div className="center-row qrcode-row">
         <div>
-          {mode !== MODES.CUTOPIA_LOGIN && mode !== MODES.CUTOPIA_SIGNUP && (
-            <IconButton className="go-back-icon" onClick={goBack}>
-              <ArrowBack />
-            </IconButton>
-          )}
+          {mode !== LoginPageMode.CUTOPIA_LOGIN &&
+            mode !== LoginPageMode.CUTOPIA_SIGNUP && (
+              <IconButton className="go-back-icon" onClick={goBack}>
+                <ArrowBack />
+              </IconButton>
+            )}
           <h2 className="title">{MODE_ITEMS[mode].title}</h2>
           <span className="caption">{MODE_ITEMS[mode].caption}</span>
         </div>
-        {mode === MODES.CUTOPIA_LOGIN &&
+        {mode === LoginPageMode.CUTOPIA_LOGIN &&
           (readyState === ReadyState.OPEN && QRCodeData ? (
             <QRCode value={QRCodeData} size={64} />
           ) : (
@@ -352,7 +357,7 @@ const LoginPanel = ({ route, navigation }) => {
           type={invisible ? 'password' : 'text'}
         />
       )}
-      {mode === MODES.CUTOPIA_LOGIN && (
+      {mode === LoginPageMode.CUTOPIA_LOGIN && (
         <div className="center-row check-box-row">
           <div className="center-row check-box-container">
             <Checkbox
@@ -363,7 +368,10 @@ const LoginPanel = ({ route, navigation }) => {
             />
             <span className="caption check-box-label">Remember Me</span>
           </div>
-          <span className="label" onClick={() => setMode(MODES.RESET_PASSWORD)}>
+          <span
+            className="label"
+            onClick={() => setMode(LoginPageMode.RESET_PASSWORD)}
+          >
             Forgot Password?
           </span>
         </div>
@@ -391,10 +399,11 @@ const LoginPanel = ({ route, navigation }) => {
           MODE_ITEMS[mode].button
         )}
       </Button>
-      {(mode === MODES.CUTOPIA_LOGIN || mode === MODES.CUTOPIA_SIGNUP) && (
+      {(mode === LoginPageMode.CUTOPIA_LOGIN ||
+        mode === LoginPageMode.CUTOPIA_SIGNUP) && (
         <div className="switch-container center-row">
           <span className="caption">
-            {mode === MODES.CUTOPIA_LOGIN
+            {mode === LoginPageMode.CUTOPIA_LOGIN
               ? "Don't have an account?"
               : 'Already have an account?'}
           </span>
@@ -402,13 +411,13 @@ const LoginPanel = ({ route, navigation }) => {
             className="label"
             onClick={() =>
               setMode(
-                mode === MODES.CUTOPIA_LOGIN
-                  ? MODES.CUTOPIA_SIGNUP
-                  : MODES.CUTOPIA_LOGIN
+                mode === LoginPageMode.CUTOPIA_LOGIN
+                  ? LoginPageMode.CUTOPIA_SIGNUP
+                  : LoginPageMode.CUTOPIA_LOGIN
               )
             }
           >
-            {mode === MODES.CUTOPIA_SIGNUP ? 'Log In' : 'Sign Up'}
+            {mode === LoginPageMode.CUTOPIA_SIGNUP ? 'Log In' : 'Sign Up'}
           </span>
         </div>
       )}

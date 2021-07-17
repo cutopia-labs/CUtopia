@@ -12,9 +12,9 @@ import { useMediaQuery } from '@material-ui/core';
 
 import StoreProvider, { UserContext, PreferenceContext } from './store';
 
-import { LOGIN_STATES } from './constants/states';
 import Navigator from './containers';
 import { DARK_THEME, THEME } from './constants/colors';
+import { LoginState } from './types';
 
 const AppWrapper = observer(() => {
   const [ready, setReady] = useState(false);
@@ -61,7 +61,7 @@ const AppWrapper = observer(() => {
 
   if (user.loginState !== undefined) {
     console.log(
-      user.loginState === LOGIN_STATES.LOGGED_IN_CUTOPIA
+      user.loginState === LoginState.LOGGED_IN_CUTOPIA
         ? 'Logged in'
         : 'Not Logged in'
     );
