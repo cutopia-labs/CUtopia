@@ -1,7 +1,6 @@
-import { makeObservable, observable, action, reaction } from 'mobx';
+import { makeObservable, observable, action } from 'mobx';
 
 import { CourseConcise, CourseTableEntry, LoginState } from '../types';
-import errorStore from './ErrorStore';
 import { storeData, getStoreData, removeStoreItem } from '../helpers/store';
 
 import { TOKEN_EXPIRE_DAYS, VIEWS_LIMIT } from '../constants/states';
@@ -30,17 +29,7 @@ class UserStore {
 
   constructor(notificationStore: NotificationStore) {
     makeObservable(this);
-    this.observeLoadingError();
     this.notificationStore = notificationStore;
-  }
-
-  observeLoadingError() {
-    reaction(
-      () => errorStore.loginError,
-      (loginError) => {
-        // TODO: re-login if loginError is session timeout
-      }
-    );
   }
 
   @action async init() {
@@ -67,7 +56,7 @@ class UserStore {
 
   @action async applyViewCount() {
     const count = await getStoreData('viewCount');
-    this.setUserStore('viewCount', parseInt(count || '0', 10));
+    this.setUserStore('viewCount', count || 0);
   }
 
   @action increaseViewCount = async () => {
@@ -82,14 +71,14 @@ class UserStore {
 
   // TimeTable
   @action async applyTimeTable() {
-    const courses = JSON.parse(await getStoreData('timetable'));
+    const courses = await getStoreData('timetable');
     console.table(courses);
     this.setTimeTable(courses || []);
   }
 
   @action async saveTimeTable(courses) {
     this.setTimeTable(courses);
-    await storeData('timetable', JSON.stringify(courses));
+    await storeData('timetable', courses);
   }
 
   @action async clearTimeTable() {
@@ -115,7 +104,7 @@ class UserStore {
         this.setTimeTable(UNDO_COPY);
       });
       // Update AsyncStorage after undo valid period passed.
-      await storeData('timetable', JSON.stringify(this.timetable));
+      await storeData('timetable', this.timetable);
     } else {
       this.notificationStore.setSnackBar('Error... OuO');
     }
@@ -127,18 +116,18 @@ class UserStore {
 
   @action async setAndSaveTimeTable(courses) {
     this.setTimeTable(courses);
-    await storeData('timetable', JSON.stringify(courses));
+    await storeData('timetable', courses);
   }
 
   // Reviews
   @action async applyReviews() {
-    const reviews = JSON.parse(await getStoreData('reviews'));
+    const reviews = await getStoreData('reviews');
     this.setReviews(reviews);
   }
 
   @action async saveReviews(reviews) {
     this.setReviews(reviews);
-    await storeData('reviews', JSON.stringify(reviews));
+    await storeData('reviews', reviews);
   }
 
   @action async clearReviews() {
@@ -156,12 +145,12 @@ class UserStore {
 
   // User Fav Courses
   @action async saveFavoriteCourses(courses: CourseConcise[]) {
-    await storeData('favoriteCourses', JSON.stringify(courses));
+    await storeData('favoriteCourses', courses);
     this.setFavoriteCourses(courses);
   }
 
   @action async applyFavoriteCourses() {
-    const courses = JSON.parse(await getStoreData('favoriteCourses'));
+    const courses = await getStoreData('favoriteCourses');
     this.setFavoriteCourses(courses || []);
   }
 
@@ -182,7 +171,7 @@ class UserStore {
   @action async applyCutopiaAccount() {
     this.cutopiaUsername = (await getStoreData('cutopiaUsername')) || '';
     this.cutopiaPassword = (await getStoreData('cutopiaPassword')) || '';
-    const savedToken = JSON.parse(await getStoreData('token')) || {};
+    const savedToken = (await getStoreData('token')) || {};
     console.log('Loaded Saved Token');
     console.log(savedToken);
     console.log(
@@ -201,7 +190,7 @@ class UserStore {
       token,
       expire: new Date().setDate(new Date().getDate() + TOKEN_EXPIRE_DAYS),
     };
-    await storeData('token', JSON.stringify(savedToken));
+    await storeData('token', savedToken);
     this.setToken(token);
   }
 
@@ -247,7 +236,7 @@ class UserStore {
   /* Planner */
 
   @action async applyPlannerCourses() {
-    const courses = JSON.parse(await getStoreData('plannerCourses'));
+    const courses = await getStoreData('plannerCourses');
     console.table(courses);
     this.setUserStore('plannerCourses', courses || []);
     const term = await getStoreData('plannerTerm');
@@ -256,7 +245,7 @@ class UserStore {
 
   @action async savePlannerCourses(courses) {
     this.setUserStore('plannerCourses', courses);
-    await storeData('plannerCourses', JSON.stringify(courses));
+    await storeData('plannerCourses', courses);
   }
 
   @action async clearPlannerCourses() {
@@ -265,7 +254,7 @@ class UserStore {
     await this.notificationStore.setSnackBar('Cleared planner!', 'UNDO', () => {
       this.plannerCourses = UNDO_COPY;
     });
-    await storeData('plannerCourses', JSON.stringify(this.plannerCourses));
+    await storeData('plannerCourses', this.plannerCourses);
   }
 
   @action async addToPlannerCourses(course) {
@@ -281,7 +270,7 @@ class UserStore {
           ...course.sections,
         },
       };
-      await storeData('plannerCourses', JSON.stringify(this.plannerCourses));
+      await storeData('plannerCourses', this.plannerCourses);
     } else {
       this.savePlannerCourses([...this.plannerCourses, course]);
     }
@@ -306,7 +295,7 @@ class UserStore {
       await this.notificationStore.setSnackBar('1 item deleted', 'UNDO', () => {
         this.setUserStore('plannerCourses', JSON.parse(UNDO_COPY));
       });
-      await storeData('plannerCourses', JSON.stringify(this.plannerCourses));
+      await storeData('plannerCourses', this.plannerCourses);
     } else {
       this.notificationStore.setSnackBar('Error... OuO');
     }
@@ -323,7 +312,7 @@ class UserStore {
         this.setUserStore('plannerCourses', UNDO_COPY);
       });
       // Update AsyncStorage after undo valid period passed.
-      await storeData('plannerCourses', JSON.stringify(this.plannerCourses));
+      await storeData('plannerCourses', this.plannerCourses);
     } else {
       this.notificationStore.setSnackBar('Error... OuO');
     }
@@ -331,7 +320,7 @@ class UserStore {
 
   @action async setAndSavePlannerCourses(courses) {
     this.setUserStore('plannerCourses', courses);
-    await storeData('plannerCourses', JSON.stringify(this.plannerCourses));
+    await storeData('plannerCourses', this.plannerCourses);
   }
 
   @action async setPlannerTerm(term) {

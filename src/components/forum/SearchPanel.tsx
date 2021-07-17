@@ -248,28 +248,28 @@ const SearchPanel = () => {
     console.log(courseInfo);
   }, [courseInfo]);
 
-  const saveHistory = async (courseId) => {
+  const saveHistory = async (courseId: string) => {
     let temp = [...historyList];
     if (temp.length >= HISTORY_MAX_LENGTH) {
       temp.pop();
     }
     temp = [courseId].concat(temp.filter((saved) => saved !== courseId));
     setHistoryList(temp);
-    await storeData('search_history', JSON.stringify(temp));
+    await storeData('search_history', temp);
   };
 
   const loadHistory = async () => {
     const savedData = await getStoreData('search_history');
     console.log(savedData);
     if (savedData) {
-      setHistoryList(JSON.parse(savedData) || []);
+      setHistoryList(savedData || []);
     }
   };
 
   const deleteHistory = async (courseId) => {
     const temp = historyList.filter((hist) => hist !== courseId);
     setHistoryList(temp);
-    await storeData('search_history', JSON.stringify(temp));
+    await storeData('search_history', temp);
   };
 
   useEffect(() => {

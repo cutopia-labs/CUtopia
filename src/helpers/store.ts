@@ -9,7 +9,7 @@ async function removeStoreItem(key: string) {
 
 async function getStoreData(key: string) {
   try {
-    return localStorage.getItem(key);
+    return JSON.parse(localStorage.getItem(key));
   } catch (e) {
     console.log(`Loading error: ${e}`);
     return '';
@@ -18,7 +18,7 @@ async function getStoreData(key: string) {
 
 async function storeData(key: string, value: any) {
   try {
-    return localStorage.setItem(key, value);
+    return localStorage.setItem(key, JSON.stringify(value));
   } catch (e) {
     console.log(`Saving error: ${e}`);
     return '';

@@ -94,7 +94,7 @@ const LoginPanel = () => {
     'wss://1rys6xiqvk.execute-api.ap-northeast-1.amazonaws.com/Prod'
   );
   const [QRCodeData, setQRCodeData] = useState('');
-  const accessPwd = useRef<string>();
+  const accessPwd = useRef('');
 
   useEffect(() => {
     if (readyState === ReadyState.OPEN && !QRCodeData) {

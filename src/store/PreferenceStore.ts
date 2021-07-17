@@ -5,7 +5,6 @@ import { THEME, DARK_THEME } from '../constants/colors';
 
 class PreferenceStore {
   @observable darkTheme = false;
-
   @observable theme = THEME;
 
   constructor() {
