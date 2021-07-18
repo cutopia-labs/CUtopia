@@ -3,7 +3,7 @@ import { IconButton } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
 import { observer } from 'mobx-react-lite';
 
-import './CourseCard.css';
+import './CourseCard.scss';
 import { TIMETABLE_CONSTANTS } from '../../constants/configs';
 import updateOpacity from '../../helpers/updateOpacity';
 import { UserContext } from '../../store';

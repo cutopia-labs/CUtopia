@@ -6,7 +6,7 @@ import { Button, IconButton, Menu, MenuItem } from '@material-ui/core';
 import { SpeedDial, SpeedDialIcon, SpeedDialAction } from '@material-ui/lab';
 import { observer } from 'mobx-react-lite';
 
-import './CoursePanel.css';
+import './CoursePanel.scss';
 import CourseCard from './CourseCard';
 import { validCourse } from '../../helpers/marcos';
 import {

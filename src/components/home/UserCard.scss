@@ -1,0 +1,71 @@
+.user-card {
+  height: fit-content;
+  margin-bottom: var(--card-padding);
+  .user-card-divider {
+    margin: 0 var(--card-padding);
+  }
+}
+.user-card-header {
+  padding: var(--card-padding);
+  .char-icon {
+    background-color: var(--primary);
+  }
+  .title {
+    font-size: 16px;
+    margin-bottom: auto;
+    span {
+      margin-left: 8px;
+      cursor: pointer;
+    }
+  }
+  .caption {
+    font-size: 12px;
+  }
+  button {
+    margin-left: auto;
+    color: var(--text);
+    svg {
+      font-size: 20px;
+    }
+  }
+}
+.user-card-header-details {
+  height: 36px;
+  margin-left: 8px;
+}
+.settings-modal-container {
+  .settings-modal {
+    width: 280px;
+    overflow-x: hidden;
+  }
+}
+.toggle-row {
+  span {
+    margin-left: auto;
+  }
+}
+.list-item-container {
+  &.log-out-row {
+    width: calc(100% - 24px);
+    padding: 12px 0 12px 24px;
+    height: 32px;
+  }
+}
+.user-about-card {
+  margin-top: var(--card-padding);
+  padding: var(--card-padding);
+  padding-top: 0;
+  flex-direction: row;
+  & > div {
+    flex: 1;
+    .sub-title {
+      margin-bottom: 6px;
+    }
+  }
+}
+
+@media only screen and (max-width: 1260px) {
+  .settings-modal-container .MuiDialog-paper {
+    margin: 0;
+  }
+}

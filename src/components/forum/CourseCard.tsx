@@ -3,11 +3,11 @@ import { observer } from 'mobx-react-lite';
 import { IconButton, useMediaQuery } from '@material-ui/core';
 import { Favorite, FavoriteBorder } from '@material-ui/icons';
 
+import './CourseCard.scss';
 import GradeRow from './GradeRow';
 import ShowMoreOverlay from '../ShowMoreOverlay';
 import Badge from '../Badge';
 import { UserContext } from '../../store';
-import './CourseCard.css';
 import CourseSections from './CourseSections';
 import { COURSE_CARD_MAX_HEIGHT } from '../../constants/configs';
 import { CourseInfo } from '../../types';

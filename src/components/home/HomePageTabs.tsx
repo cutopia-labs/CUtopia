@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-import './HomePageTabs.css';
+import './HomePageTabs.scss';
 import ListItem from '../ListItem';
 import Loading from '../Loading';
 import { getMMMDDYY } from '../../helpers/getTime';

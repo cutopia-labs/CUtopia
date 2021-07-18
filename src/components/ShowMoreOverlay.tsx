@@ -1,6 +1,6 @@
 import { ExpandMore } from '@material-ui/icons';
 
-import './ShowMoreOverlay.css';
+import './ShowMoreOverlay.scss';
 
 type ShowMoreOverlayProps = {
   visible: boolean;

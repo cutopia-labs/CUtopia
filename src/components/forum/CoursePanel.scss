@@ -1,0 +1,57 @@
+.course-panel {
+  height: fit-content;
+  margin: var(--card-padding);
+  margin-right: 0;
+}
+.course-summary {
+  display: flex;
+  margin-top: 20px;
+  background-color: var(--background-secondary);
+  padding: 12px 8px;
+  align-items: center;
+  border-radius: var(--border-radius);
+  flex-wrap: wrap;
+  justify-content: space-between;
+  svg {
+    color: var(--CAPTION);
+  }
+}
+.course-summary-ratings {
+  align-items: center;
+}
+.course-summary-label {
+  text-transform: capitalize;
+  margin: 0 10px;
+  font-size: 14px;
+  color: var(--CAPTION);
+}
+.grade-indicator {
+  &.course-summary-grade-indicator {
+    border-radius: 8px;
+    height: auto;
+    width: auto;
+    padding: 2px 6px;
+    min-width: 28px;
+    font-size: 14px;
+  }
+}
+.vertical-divider {
+  width: 1px;
+  height: 16px;
+  background-color: #3b3b3b80;
+}
+.course-panel-fab {
+  position: fixed;
+  right: calc((100vw - var(--max-width)) / 2 + 32px);
+  bottom: 20px;
+  right: 20px;
+}
+
+@media only screen and (max-width: 1260px) {
+  .course-panel {
+    max-height: none;
+  }
+  .course-panel-fab {
+    right: 20px;
+  }
+}

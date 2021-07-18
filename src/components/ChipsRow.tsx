@@ -1,6 +1,6 @@
 import { Chip } from '@material-ui/core';
 
-import './ChipsRow.css';
+import './ChipsRow.scss';
 
 type ChipsRowProps = {
   items: string[];

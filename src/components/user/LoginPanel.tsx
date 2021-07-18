@@ -13,7 +13,7 @@ import { useMutation } from '@apollo/client';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { nanoid } from 'nanoid';
 
-import './LoginPanel.css';
+import './LoginPanel.scss';
 import TextField from '../TextField';
 import {
   PreferenceContext,

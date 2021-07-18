@@ -1,4 +1,4 @@
-import './GradeIndicator.css';
+import './GradeIndicator.scss';
 import colors from '../constants/colors';
 import updateOpacity from '../helpers/updateOpacity';
 import { getLabel } from '../helpers/marcos';

@@ -1,7 +1,7 @@
 import Button from '@material-ui/core/Button';
 import { ThumbUp, ThumbDown } from '@material-ui/icons';
 
-import './LikeButtonRow.css';
+import './LikeButtonRow.scss';
 
 const LikeButton = ({ isLike, selected, disabled, caption, onClick }) => (
   <Button

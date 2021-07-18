@@ -24,7 +24,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import { useHistory } from 'react-router-dom';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 
-import './ReviewEdit.css';
+import './ReviewEdit.scss';
 import { NotificationContext, UserContext } from '../../store';
 import { GET_USER, GET_REVIEW } from '../../constants/queries';
 import { ADD_REVIEW } from '../../constants/mutations';

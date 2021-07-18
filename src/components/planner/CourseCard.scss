@@ -1,0 +1,51 @@
+.timetable-course-card {
+  display: flex;
+  position: absolute;
+  border-radius: 4px;
+  z-index: 2;
+  background-color: var(--background);
+  transform: scale(1);
+  transition: transform 0.3s;
+  &:hover {
+    height: fit-content !important;
+    transform: scale(1.2);
+    z-index: 10;
+    .timetable-course-card-delete {
+      display: inline-flex;
+    }
+  }
+}
+.timetable-inner-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  border-radius: 4px;
+  padding: 4px 6px;
+  width: calc(100% - 12px);
+  & > .timetable-course-card-delete {
+    position: absolute;
+    display: none;
+    color: white;
+    background-color: transparent;
+    z-index: 12;
+    bottom: 2px;
+    right: 2px;
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
+.timetable-course-card-title {
+  display: flex;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: initial;
+}
+.timetable-course-card-location {
+  margin-top: 2px;
+  font-size: 10px;
+  text-align: initial;
+}

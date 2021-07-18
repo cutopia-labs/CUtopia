@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react';
 
-import './ListItem.css';
+import './ListItem.scss';
 import colors from '../constants/colors';
 
 type ListItemProps = {

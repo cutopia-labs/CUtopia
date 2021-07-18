@@ -5,7 +5,7 @@ import { Menu as MenuIcon } from '@material-ui/icons';
 
 import { UserContext } from '../store';
 import { SearchResult } from './forum/SearchPanel';
-import './Header.css';
+import './Header.scss';
 import Logo from './Logo';
 import SearchInput from './SearchInput';
 

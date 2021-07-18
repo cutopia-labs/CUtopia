@@ -1,4 +1,4 @@
-import './Badge.css';
+import './Badge.scss';
 import updateOpacity from '../helpers/updateOpacity';
 import colors from '../constants/colors';
 

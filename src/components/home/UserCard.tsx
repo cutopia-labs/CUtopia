@@ -13,7 +13,7 @@ import {
 } from '@material-ui/core';
 import { GoVerified } from 'react-icons/go';
 
-import './UserCard.css';
+import './UserCard.scss';
 import ListItem from '../ListItem';
 import {
   NotificationContext,

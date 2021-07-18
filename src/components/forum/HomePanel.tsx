@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { ThumbUpOutlined, WhatshotOutlined } from '@material-ui/icons';
 import { useQuery } from '@apollo/client';
 
-import './HomePanel.css';
+import './HomePanel.scss';
 import GradeIndicator from '../GradeIndicator';
 import { RATING_FIELDS } from '../../constants/states';
 import {

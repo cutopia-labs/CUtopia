@@ -1,4 +1,4 @@
-import './TextField.css';
+import './TextField.scss';
 
 type Tag = 'input' | 'textarea';
 

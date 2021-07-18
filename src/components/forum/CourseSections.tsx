@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite';
 import { IconButton } from '@material-ui/core';
 import { Add, PersonOutline, Schedule } from '@material-ui/icons';
 
-import './CourseSections.css';
+import './CourseSections.scss';
 import { UserContext } from '../../store';
 import { WEEKDAYS_TWO_ABBR } from '../../constants/states';
 import { CourseInfo, CourseSection } from '../../types';

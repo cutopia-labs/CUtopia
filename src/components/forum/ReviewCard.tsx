@@ -6,7 +6,7 @@ import { IoMdShareAlt } from 'react-icons/io';
 import { useMutation } from '@apollo/client';
 import { IconButton, useMediaQuery } from '@material-ui/core';
 
-import './ReviewCard.css';
+import './ReviewCard.scss';
 import { RATING_FIELDS, VOTE_ACTIONS } from '../../constants/states';
 import { VOTE_REVIEW } from '../../constants/mutations';
 import { getMMMDDYY } from '../../helpers/getTime';

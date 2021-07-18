@@ -1,0 +1,23 @@
+.home-course-container {
+  height: fit-content;
+  overflow: visible;
+  margin-bottom: 20px;
+  .home-course-list-item {
+    padding: 12px 0;
+    height: auto;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+  }
+  & > a {
+    &:last-child {
+      .home-course-list-item {
+        border-bottom: none;
+      }
+    }
+  }
+}
+.home-course-list-item {
+  & > span {
+    margin: 0 16px;
+  }
+}

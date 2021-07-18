@@ -1,6 +1,6 @@
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import './Loading.css';
+import './Loading.scss';
 
 type LoadingProps = {
   fixed?: boolean;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useMediaQuery } from '@material-ui/core';
 
-import './CourseList.css';
+import './CourseList.scss';
 import CourseCard from './CourseCard';
 import colors from '../../constants/colors';
 import { WEEKDAYS } from '../../constants/states';

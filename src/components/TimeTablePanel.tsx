@@ -11,7 +11,7 @@ import {
 import { observer } from 'mobx-react-lite';
 
 import { NotificationContext } from '../store';
-import './TimeTablePanel.css';
+import './TimeTablePanel.scss';
 import CourseList from './planner/CourseList';
 import copyToClipboard from '../helpers/copyToClipboard';
 import Card from './Card';

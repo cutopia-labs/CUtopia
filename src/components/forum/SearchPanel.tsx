@@ -21,7 +21,7 @@ import {
 import { useQuery } from '@apollo/client';
 import { observer } from 'mobx-react-lite';
 
-import './SearchPanel.css';
+import './SearchPanel.scss';
 import ListItem from '../ListItem';
 import { storeData, getStoreData } from '../../helpers/store';
 import COURSE_CODES from '../../constants/courseCodes';

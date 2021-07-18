@@ -1,0 +1,16 @@
+.search-input-container {
+  display: flex;
+  align-items: center;
+  padding: 2px 4px;
+  & > button {
+    padding: 2px 4px;
+  }
+  .search-input-divider {
+    height: 24px;
+    margin-left: 4px;
+  }
+}
+.search-input {
+  margin-left: 12px;
+  flex: 1;
+}

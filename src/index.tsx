@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import * as Sentry from '@sentry/react';
 import { Integrations } from '@sentry/tracing';
 
-import './index.css';
+import './index.scss';
 import App from './App';
 import { SENTRY_SAMPLING_RATE } from './constants/configs';
 

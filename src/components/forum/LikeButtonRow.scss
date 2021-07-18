@@ -1,0 +1,24 @@
+.like-btn {
+  border-radius: 3px;
+  margin-right: 8px;
+  height: 30px;
+  padding: 0 5px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  opacity: 0.8;
+}
+.like-btn-row {
+  & > .like-btn {
+    &.active {
+      background-color: var(--highlight-on-surface);
+      border: none;
+    }
+  }
+  & > .MuiButton-root {
+    &.Mui-disabled {
+      color: var(--text);
+      opacity: 0.8;
+    }
+  }
+}

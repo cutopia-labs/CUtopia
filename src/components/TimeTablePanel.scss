@@ -1,0 +1,30 @@
+.time-table-panel {
+  & > header {
+    justify-content: space-between;
+    .title {
+      font-size: 18px;
+    }
+    .btn-row {
+      & > button {
+        margin-left: 24px;
+        & > .MuiButton-label {
+          text-transform: capitalize;
+          font-weight: bold;
+          opacity: 0.5;
+        }
+      }
+    }
+  }
+}
+.home-page-timetable {
+  min-height: calc(100vh - 202px);
+}
+
+@media only screen and (max-width: 1260px) {
+  .time-table-panel {
+    padding: var(--card-padding);
+  }
+  .btn-row {
+    display: none;
+  }
+}
