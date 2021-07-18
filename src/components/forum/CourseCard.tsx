@@ -5,8 +5,8 @@ import { Favorite, FavoriteBorder } from '@material-ui/icons';
 
 import './CourseCard.scss';
 import GradeRow from './GradeRow';
-import ShowMoreOverlay from '../ShowMoreOverlay';
-import Badge from '../Badge';
+import ShowMoreOverlay from '../molecules/ShowMoreOverlay';
+import Badge from '../atoms/Badge';
 import { UserContext } from '../../store';
 import CourseSections from './CourseSections';
 import { COURSE_CARD_MAX_HEIGHT } from '../../constants/configs';

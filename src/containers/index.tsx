@@ -1,10 +1,10 @@
 import { useContext } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
-import './index.css';
-import SnackBar from '../components/SnackBar';
+import './index.scss';
+import SnackBar from '../components/molecules/SnackBar';
 import { UserContext } from '../store';
-import Header from '../components/Header';
+import Header from '../components/organisms/Header';
 import HomePage from './HomePage';
 import ForumPage from './ForumPage';
 import LoginPage from './LoginPage';

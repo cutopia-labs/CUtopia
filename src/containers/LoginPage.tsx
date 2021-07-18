@@ -1,6 +1,6 @@
 import { Box, Grid, makeStyles, Typography } from '@material-ui/core';
 
-import Logo from '../components/Logo';
+import Logo from '../components/atoms/Logo';
 import LoginPanel from '../components/user/LoginPanel';
 import Discusssing from '../images/talk.png';
 

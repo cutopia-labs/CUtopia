@@ -12,7 +12,7 @@ import { VOTE_REVIEW } from '../../constants/mutations';
 import { getMMMDDYY } from '../../helpers/getTime';
 import GradeRow from './GradeRow';
 import LikeButtonsRow from './LikeButtonRow';
-import ShowMoreOverlay from '../ShowMoreOverlay';
+import ShowMoreOverlay from '../molecules/ShowMoreOverlay';
 import { Review } from '../../types';
 
 type ReviewCardProps = {
@@ -90,8 +90,8 @@ const ReviewCard = ({
         <GradeRow
           rating={review}
           isReview
-          additionalClassName="review-header bottom-border-row"
-          additionalChildClassName="bottom-border-item"
+          additionalClassName="review-header tabs-row"
+          additionalChildClassName="tab"
           selected={selectedCriteria}
           setSelected={setSelectedCriteria}
           isMobile={isMobile}

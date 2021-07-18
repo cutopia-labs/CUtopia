@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
 
 import './HomePageTabs.scss';
-import ListItem from '../ListItem';
-import Loading from '../Loading';
+import ListItem from '../molecules/ListItem';
+import Loading from '../atoms/Loading';
 import { getMMMDDYY } from '../../helpers/getTime';
 import { CourseConcise } from '../../types';
 

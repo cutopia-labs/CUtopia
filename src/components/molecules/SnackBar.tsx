@@ -4,7 +4,7 @@ import { Check } from '@material-ui/icons';
 import { observer } from 'mobx-react-lite';
 
 import './SnackBar.scss';
-import { NotificationContext } from '../store';
+import { NotificationContext } from '../../store';
 
 const SnackBar = () => {
   const notification = useContext(NotificationContext);

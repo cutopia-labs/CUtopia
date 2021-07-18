@@ -2,7 +2,7 @@ import { PropsWithChildren } from 'react';
 
 import { RATING_FIELDS } from '../../constants/states';
 import { CourseRating, Review } from '../../types';
-import GradeIndicator from '../GradeIndicator';
+import GradeIndicator from '../atoms/GradeIndicator';
 import './GradeRow.scss';
 
 type GradeRowProps = {

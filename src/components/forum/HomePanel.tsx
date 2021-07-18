@@ -4,18 +4,18 @@ import { ThumbUpOutlined, WhatshotOutlined } from '@material-ui/icons';
 import { useQuery } from '@apollo/client';
 
 import './HomePanel.scss';
-import GradeIndicator from '../GradeIndicator';
+import GradeIndicator from '../atoms/GradeIndicator';
 import { RATING_FIELDS } from '../../constants/states';
 import {
   RECENT_REVIEWS_QUERY,
   TOP_RATED_COURSES_QUERY,
   POPULAR_COURSES_QUERY,
 } from '../../constants/queries';
-import Loading from '../Loading';
-import ListItem from '../ListItem';
-import Badge from '../Badge';
-import ChipsRow from '../ChipsRow';
-import TabsContainer from '../TabsContainer';
+import Loading from '../atoms/Loading';
+import ListItem from '../molecules/ListItem';
+import Badge from '../atoms/Badge';
+import ChipsRow from '../molecules/ChipsRow';
+import TabsContainer from '../molecules/TabsContainer';
 import { PopularCourse, TopRatedCourse } from '../../types';
 
 const MENU_ITEMS = [
@@ -101,24 +101,23 @@ const HomePanel = () => {
   );
   return (
     <div className="panel review-home-panel center-row">
-      <TabsContainer tabs={MENU_ITEMS} selected={tab} onSelect={setTab}>
-        {tab === 'Top Rated' && (
-          <ChipsRow
-            items={['overall', ...RATING_FIELDS]}
-            select={sortKey}
-            setSelect={setSortKey}
-          />
-        )}
-        <RankingCard
-          rankList={topRatedCourses?.ranking?.topRatedCourses}
-          sortKey={sortKey}
-          loading={topRatedCoursesLoading}
+      <TabsContainer items={MENU_ITEMS} selected={tab} onSelect={setTab} />
+      {tab === 'Top Rated' && (
+        <ChipsRow
+          items={['overall', ...RATING_FIELDS]}
+          select={sortKey}
+          setSelect={setSortKey}
         />
-        <RankingCard
-          rankList={popularCourses?.ranking?.popularCourses}
-          loading={popularCoursesLoading}
-        />
-      </TabsContainer>
+      )}
+      <RankingCard
+        rankList={topRatedCourses?.ranking?.topRatedCourses}
+        sortKey={sortKey}
+        loading={topRatedCoursesLoading}
+      />
+      <RankingCard
+        rankList={popularCourses?.ranking?.popularCourses}
+        loading={popularCoursesLoading}
+      />
     </div>
   );
 };

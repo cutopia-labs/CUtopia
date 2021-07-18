@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { Box, Grid, makeStyles, Typography } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 import {
   ChatBubbleOutlineOutlined,
   SchoolOutlined,
@@ -10,14 +10,15 @@ import { observer } from 'mobx-react-lite';
 import { useQuery } from '@apollo/client';
 import { FiExternalLink } from 'react-icons/fi';
 
+import './HomePage.scss';
 import UserCard from '../components/home/UserCard';
 import { UserContext } from '../store';
 import { CoursesList, ReviewsList } from '../components/home/HomePageTabs';
-import TimeTablePanel from '../components/TimeTablePanel';
+import TimeTablePanel from '../components/templates/TimeTablePanel';
 import { MY_TIMETABLE_QUERY, GET_USER } from '../constants/queries';
-import TabsContainer from '../components/TabsContainer';
-import Page from '../components/Page';
-import Card from '../components/Card';
+import TabsContainer from '../components/molecules/TabsContainer';
+import Page from '../components/atoms/Page';
+import Card from '../components/atoms/Card';
 
 const LINKS = [
   {
@@ -34,39 +35,19 @@ const LINKS = [
   },
 ];
 
-const useLinksCardStyles = makeStyles((theme) => ({
-  linksCard: {
-    padding: 'var(--card-padding)',
-  },
-  linkContainer: {
-    'fontSize': '14px',
-    'marginTop': '6px',
-    '&:hover': {
-      color: 'var(--primary)',
-    },
-    '& svg': {
-      marginRight: '6px',
-    },
-  },
-}));
-
-const LinksCard = () => {
-  const classes = useLinksCardStyles();
-
-  return (
-    <Card className={classes.linksCard}>
-      <Typography gutterBottom>Links</Typography>
-      {LINKS.map((link) => (
-        <Box className={classes.linkContainer} key={link.url}>
-          <FiExternalLink />
-          <a href={link.url} target="_blank" rel="noreferrer">
-            {link.name}
-          </a>
-        </Box>
-      ))}
-    </Card>
-  );
-};
+const LinksCard = () => (
+  <Card className="links-card">
+    <Typography gutterBottom>Links</Typography>
+    {LINKS.map((link) => (
+      <div className="link-container center-row" key={link.url}>
+        <FiExternalLink />
+        <a href={link.url} target="_blank" rel="noreferrer">
+          {link.name}
+        </a>
+      </div>
+    ))}
+  </Card>
+);
 
 const SELECTIONS = [
   {
@@ -87,16 +68,7 @@ const SELECTIONS = [
   },
 ];
 
-const useStyles = makeStyles((theme) => ({
-  leftPanels: {
-    position: 'sticky',
-    top: '0px',
-  },
-}));
-
 const HomePage = () => {
-  const classes = useStyles();
-
   const user = useContext(UserContext);
   const [tab, setTab] = useState('Courses');
 
@@ -155,16 +127,20 @@ const HomePage = () => {
   };
 
   return (
-    <Page>
-      <Grid container spacing={2}>
-        <Grid item className={classes.leftPanels} xs={12} sm={3}>
+    <Page className="home-page" center padding>
+      <Grid className="home-page-left" container spacing={2}>
+        <Grid item xs={12} sm={3}>
           {!userDataLoading && <UserCard userData={userData.user} />}
           <LinksCard />
         </Grid>
         <Grid item xs={12} sm={9}>
-          <TabsContainer tabs={SELECTIONS} selected={tab} onSelect={setTab}>
-            {renderTab()}
-          </TabsContainer>
+          <TabsContainer
+            mb
+            items={SELECTIONS}
+            selected={tab}
+            onSelect={setTab}
+          />
+          {renderTab()}
         </Grid>
       </Grid>
     </Page>

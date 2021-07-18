@@ -22,7 +22,7 @@ import { useQuery } from '@apollo/client';
 import { observer } from 'mobx-react-lite';
 
 import './SearchPanel.scss';
-import ListItem from '../ListItem';
+import ListItem from '../molecules/ListItem';
 import { storeData, getStoreData } from '../../helpers/store';
 import COURSE_CODES from '../../constants/courseCodes';
 import { UserContext } from '../../store';
@@ -30,13 +30,14 @@ import COURSES from '../../constants/courses';
 import { COURSE_SECTIONS_QUERY } from '../../constants/queries';
 import { validCourse } from '../../helpers/marcos';
 import CourseCard from './CourseCard';
-import Loading from '../Loading';
+import Loading from '../atoms/Loading';
 import {
   HISTORY_MAX_LENGTH,
   MAX_SEARCH_RESULT_LENGTH,
 } from '../../constants/configs';
 import { CourseSearchItem, SearchMode, SearchPayload } from '../../types';
 import UserStore from '../../store/UserStore';
+import Card from '../atoms/Card';
 
 /*
 c: courseId
@@ -282,7 +283,7 @@ const SearchPanel = () => {
   }, [historyList]);
 
   return (
-    <div className="search-panel card">
+    <Card className="search-panel" mb={2}>
       <div className="search-input-container row">
         {searchPayload &&
         (searchPayload.mode !== 'query' || searchPayload.text) ? (
@@ -371,7 +372,7 @@ const SearchPanel = () => {
             <DepartmentList setSearchPayload={setSearchPayload} />
           </>
         ))}
-    </div>
+    </Card>
   );
 };
 

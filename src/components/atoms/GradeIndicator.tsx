@@ -1,7 +1,7 @@
 import './GradeIndicator.scss';
-import colors from '../constants/colors';
-import updateOpacity from '../helpers/updateOpacity';
-import { getLabel } from '../helpers/marcos';
+import colors from '../../constants/colors';
+import updateOpacity from '../../helpers/updateOpacity';
+import { getLabel } from '../../helpers/marcos';
 
 type GradeIndicatorProps = {
   grade: string | number;

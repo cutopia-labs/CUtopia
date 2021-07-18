@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'react';
 
 import './ListItem.scss';
-import colors from '../constants/colors';
+import colors from '../../constants/colors';
 
 type ListItemProps = {
   label?: string;

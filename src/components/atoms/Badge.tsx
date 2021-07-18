@@ -1,6 +1,6 @@
 import './Badge.scss';
-import updateOpacity from '../helpers/updateOpacity';
-import colors from '../constants/colors';
+import updateOpacity from '../../helpers/updateOpacity';
+import colors from '../../constants/colors';
 
 type BadgeProps = {
   index?: number;

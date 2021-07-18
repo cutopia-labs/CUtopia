@@ -10,12 +10,13 @@ import {
 } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 
-import { NotificationContext } from '../store';
+import { NotificationContext } from '../../store';
 import './TimeTablePanel.scss';
-import CourseList from './planner/CourseList';
-import copyToClipboard from '../helpers/copyToClipboard';
-import Card from './Card';
-import { CourseTableEntry } from '../types';
+import CourseList from '../planner/CourseList';
+import copyToClipboard from '../../helpers/copyToClipboard';
+import Card from '../atoms/Card';
+import { CourseTableEntry } from '../../types';
+import clsx from 'clsx';
 
 enum MODAL_MODES {
   NO_MODAL,
@@ -63,11 +64,7 @@ const TimeTablePanel = ({
   ];
 
   return (
-    <Card
-      className={`panel time-table-panel column${
-        className ? ` ${className}` : ''
-      }`}
-    >
+    <Card className={clsx('panel', 'time-table-panel', 'column', className)}>
       <header className="center-row">
         <span className="title">{title}</span>
         <div className="btn-row center-row">

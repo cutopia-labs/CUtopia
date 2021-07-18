@@ -15,7 +15,7 @@ import {
   REVIEWS_QUERY,
   GET_USER,
 } from '../../constants/queries';
-import Loading from '../Loading';
+import Loading from '../atoms/Loading';
 import ReviewCard from './ReviewCard';
 import { NotificationContext, UserContext } from '../../store';
 import copyToClipboard from '../../helpers/copyToClipboard';
@@ -107,7 +107,10 @@ const CourseSummary = ({
 };
 
 const CoursePanel = () => {
-  const { id: courseId, reviewId } = useParams();
+  const { id: courseId, reviewId } = useParams<{
+    id?: string;
+    reviewId?: string;
+  }>();
   const [mode, setMode] = useState(
     courseId ? COURSE_PANEL_MODES.FETCH_REVIEWS : COURSE_PANEL_MODES.DEFAULT
   );

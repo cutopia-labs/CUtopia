@@ -14,7 +14,7 @@ import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { nanoid } from 'nanoid';
 
 import './LoginPanel.scss';
-import TextField from '../TextField';
+import TextField from '../atoms/TextField';
 import {
   PreferenceContext,
   UserContext,

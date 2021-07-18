@@ -3,11 +3,11 @@ import { Link, useHistory, useLocation } from 'react-router-dom';
 import { useMediaQuery, IconButton, Menu, MenuItem } from '@material-ui/core';
 import { Menu as MenuIcon } from '@material-ui/icons';
 
-import { UserContext } from '../store';
-import { SearchResult } from './forum/SearchPanel';
+import { UserContext } from '../../store';
+import { SearchResult } from '../forum/SearchPanel';
 import './Header.scss';
-import Logo from './Logo';
-import SearchInput from './SearchInput';
+import Logo from '../atoms/Logo';
+import SearchInput from '../molecules/SearchInput';
 
 const SECTIONS = [
   {

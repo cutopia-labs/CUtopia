@@ -14,7 +14,7 @@ import {
 import { GoVerified } from 'react-icons/go';
 
 import './UserCard.scss';
-import ListItem from '../ListItem';
+import ListItem from '../molecules/ListItem';
 import {
   NotificationContext,
   PreferenceContext,

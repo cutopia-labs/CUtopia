@@ -1,10 +1,10 @@
 import { observer } from 'mobx-react-lite';
 
 import { CoursePanel, SearchPanel } from '../components/forum';
-import Page from '../components/Page';
+import Page from '../components/atoms/Page';
 
 const ForumPage = () => (
-  <Page>
+  <Page className="forum-page" center padding>
     <SearchPanel />
     <CoursePanel />
   </Page>

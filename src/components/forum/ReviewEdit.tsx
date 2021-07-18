@@ -30,10 +30,10 @@ import { GET_USER, GET_REVIEW } from '../../constants/queries';
 import { ADD_REVIEW } from '../../constants/mutations';
 import { GRADES, RATING_FIELDS } from '../../constants/states';
 import colors from '../../constants/colors';
-import TextField from '../TextField';
-import Loading from '../Loading';
+import TextField from '../atoms/TextField';
+import Loading from '../atoms/Loading';
 import INSTRUCTORS from '../../constants/instructors';
-import ListItem from '../ListItem';
+import ListItem from '../molecules/ListItem';
 import { TARGET_REVIEW_WORD_COUNT } from '../../constants/configs';
 import { Grade, RatingFieldWithOverall, ReviewDetails } from '../../types';
 
