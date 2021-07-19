@@ -23,7 +23,7 @@ import HomePanel from './HomePanel';
 import ReviewEdit from './ReviewEdit';
 import { FULL_MEMBER_REVIEWS } from '../../constants/states';
 import useDebounce from '../../helpers/useDebounce';
-import { FAB_HIDE_BUFFER } from '../../constants/configs';
+import { LAZY_LOAD_BUFFER } from '../../constants/configs';
 import { ReviewsFilter, ReviewsResult } from '../../types';
 
 export const COURSE_PANEL_MODES = Object.freeze({
@@ -140,12 +140,12 @@ const CoursePanel = () => {
   ]);
 
   const { data: userData, loading: userDataLoading } = useQuery(GET_USER, {
-    skip: Boolean((user.reviews?.length || 0) >= FULL_MEMBER_REVIEWS),
+    skip: Boolean((user.user.reviewIds?.length || 0) >= FULL_MEMBER_REVIEWS),
     variables: {
       username: user.cutopiaUsername,
     },
     onCompleted: (data) => {
-      user.saveReviews(data.user);
+      user.saveUser(data?.user);
     },
   });
 
@@ -172,7 +172,7 @@ const CoursePanel = () => {
   } = useQuery<ReviewsResult, ReviewsFilter>(REVIEWS_QUERY, {
     skip:
       userDataLoading ||
-      (((userData.user?.reviewIds || user.reviews)?.length || 0) <
+      (((userData?.user?.reviewIds || user.user.reviewIds)?.length || 0) <
         FULL_MEMBER_REVIEWS &&
         user.exceedLimit),
     variables: {
@@ -214,9 +214,9 @@ const CoursePanel = () => {
     const distanceFromBottom =
       document.documentElement.scrollHeight -
       document.documentElement.scrollTop -
-      document.documentElement.clientHeight;
+      window.innerHeight;
     console.log(distanceFromBottom);
-    if (distanceFromBottom <= FAB_HIDE_BUFFER) {
+    if (distanceFromBottom <= LAZY_LOAD_BUFFER) {
       // Fetch more here;
       if (lastEvaluatedKey && courseId && !reviewId) {
         console.log('Refetching');
@@ -308,8 +308,8 @@ const CoursePanel = () => {
             writeAction={() => history.push(`/review/${courseId}/compose`)}
             exceedLimit={
               !userDataLoading &&
-              ((userData.user?.reviewIds || user.reviews)?.length || 0) <
-                FULL_MEMBER_REVIEWS &&
+              ((userData?.user?.reviewIds || user.user.reviewIds)?.length ||
+                0) < FULL_MEMBER_REVIEWS &&
               user.exceedLimit
             }
           />

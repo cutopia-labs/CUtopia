@@ -5,114 +5,99 @@
   background-color: var(--background-secondary);
   border-radius: var(--border-radius);
   flex-wrap: wrap;
-  & > div {
-    &:first-child {
-      height: 33px;
-      & > div {
-        margin: 6px;
-      }
-    }
+  > div:first-child {
+    height: 33px;
   }
   svg {
     color: #3b3b3bbf;
   }
+  > div:first-child > div {
+    margin: 6px;
+  }
+}
+
+.grade-indicator.course-summary-grade-indicator.overall {
+  margin: -10px 6px -10px 0px !important;
+  height: 50px;
+  border-radius: 0;
+}
+
+.rating-container {
+  cursor: pointer;
+  padding: 0 10px;
+  height: 30px;
+  > .course-summary-label {
+    margin: 0 10px 0 0;
+  }
+}
+
+.grade-row {
   &.review-header {
-    & > div {
-      & > .rating-container {
-        height: 38px;
+    > div > .rating-container {
+      height: 38px;
+    }
+    .rating-container.active {
+      border-bottom: 2px solid var(--accent);
+    }
+  }
+  &.concise {
+    margin-bottom: var(--card-padding);
+    > .center-row {
+      height: auto;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+
+      > {
+        * {
+          flex: 1;
+          justify-content: space-between;
+        }
+
+        :first-child {
+          display: none;
+        }
+      }
+    }
+  }
+  &.review-header {
+    .center-row {
+      height: auto;
+    }
+
+    > div:first-child > div {
+      margin: 0;
+    }
+  }
+}
+
+@media only screen and (max-width: 1260px) {
+  .grade-row.review-header {
+    .center-row:first-child {
+      height: 56px;
+      width: 100%;
+      margin-bottom: 6px;
+    }
+  
+    > div {
+      &:first-child > div:first-child {
+        display: none;
+      }
+  
+      > .rating-container {
         flex-direction: column;
         height: 56px;
         justify-content: center;
         flex: 1;
       }
-      &:first-child {
-        & > div {
-          margin: 0;
-          &:first-child {
-            display: none;
-          }
-        }
-      }
     }
+  
     .rating-container {
-      &.active {
-        border-bottom: 2px solid var(--accent);
-        border: none;
-      }
-      & > .course-summary-label {
+      > .course-summary-label {
         margin: 0 0 10px 0;
       }
-    }
-    .center-row {
-      height: auto;
-    }
-  }
-  &.concise {
-    margin-bottom: var(--card-padding);
-    & > .center-row {
-      height: auto;
-      flex-wrap: wrap;
-      justify-content: flex-start;
-      & > * {
-        flex: 1;
-        justify-content: space-between;
-      }
-      & > :first-child {
-        display: none;
-      }
-    }
-  }
-}
-.grade-indicator {
-  &.course-summary-grade-indicator {
-    &.overall {
-      margin: -10px 6px -10px 0px !important;
-      height: 50px;
-      border-radius: 0;
-    }
-  }
-}
-.rating-container {
-  cursor: pointer;
-  padding: 0 10px;
-  height: 30px;
-  & > .course-summary-label {
-    margin: 0 10px 0 0;
-  }
-}
-
-@media only screen and (max-width: 1260px) {
-  .grade-row {
-    &.review-header {
-      .center-row {
-        &:first-child {
-          height: 56px;
-          width: 100%;
-          margin-bottom: 6px;
-        }
-      }
-      & > div {
-        &:first-child {
-          & > div {
-            &:first-child {
-              display: none;
-            }
-          }
-        }
-        & > .rating-container {
-          flex-direction: column;
-          height: 56px;
-          justify-content: center;
-          flex: 1;
-        }
-      }
-      .rating-container {
-        & > .course-summary-label {
-          margin: 0 0 10px 0;
-        }
-        &.active {
-          border: none;
-        }
+  
+      &.active {
+        border: none;
       }
     }
   }

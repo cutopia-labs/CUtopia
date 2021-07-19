@@ -8,7 +8,7 @@
 .header-container {
   height: var(--headerHeight);
   min-height: var(--headerHeight);
-  padding: 10px 20px;
+  padding: 10px 0;
   justify-content: space-between;
   max-width: var(--max-width);
   margin-left: auto;
@@ -82,11 +82,8 @@
 }
 
 @media only screen and (max-width: 1260px) {
-  .header-background-container {
-    overflow-x: hidden;
-    overflow-y: hidden;
-  }
   .header-container {
+    padding: 10px var(--card-padding);
     & > .header-logo {
       margin-left: 12px;
     }
@@ -96,7 +93,7 @@
       input {
         width: 0;
         &:focus {
-          width: 330px;
+          width: calc(100vw - 2 * var(--card-padding) - 38px); // 38px for padding & searchIcon
         }
       }
     }
@@ -105,10 +102,9 @@
     }
   }
   .header-search-result {
-    width: 100vw;
     left: 0;
     & > .list-item-container {
-      width: 100vw;
+      width: calc(100vw - 2px); // 2px for border width
     }
   }
 }

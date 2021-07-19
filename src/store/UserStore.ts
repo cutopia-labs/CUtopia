@@ -1,6 +1,6 @@
 import { makeObservable, observable, action } from 'mobx';
 
-import { CourseConcise, CourseTableEntry, LoginState } from '../types';
+import { CourseConcise, CourseTableEntry, LoginState, User } from '../types';
 import { storeData, getStoreData, removeStoreItem } from '../helpers/store';
 
 import { TOKEN_EXPIRE_DAYS, VIEWS_LIMIT } from '../constants/states';
@@ -14,7 +14,7 @@ class UserStore {
   // User Saved Data
   @observable favoriteCourses: CourseConcise[] = [];
   @observable timetable: CourseTableEntry[];
-  @observable reviews: string[];
+  @observable user: Partial<User>;
 
   // CUtopia
   @observable cutopiaUsername: string;
@@ -39,7 +39,7 @@ class UserStore {
     await this.applyTimeTable();
     await this.applyPlannerCourses();
     await this.applyFavoriteCourses();
-    await this.applyReviews();
+    await this.applyUser();
     // CUtopia
     await this.applyCutopiaAccount();
   }
@@ -119,28 +119,24 @@ class UserStore {
     await storeData('timetable', courses);
   }
 
-  // Reviews
-  @action async applyReviews() {
-    const reviews = await getStoreData('reviews');
-    this.setReviews(reviews);
+  // User
+  @action async applyUser() {
+    const user = await getStoreData('user');
+    this.setUser(user || {});
   }
 
-  @action async saveReviews(reviews) {
-    this.setReviews(reviews);
-    await storeData('reviews', reviews);
+  @action async saveUser(user) {
+    this.setUser(user);
+    await storeData('user', user);
   }
 
-  @action async clearReviews() {
-    await removeStoreItem('reviews');
-    this.setReviews([]);
+  @action async clearUser() {
+    await removeStoreItem('user');
+    this.setUser([]);
   }
 
-  @action async addReview(review) {
-    this.saveReviews([...this.reviews, review]);
-  }
-
-  @action.bound setReviews(reviews) {
-    this.reviews = reviews;
+  @action.bound setUser(user) {
+    this.user = user;
   }
 
   // User Fav Courses

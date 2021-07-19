@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { PropsWithChildren } from 'react';
 
 import { RATING_FIELDS } from '../../constants/states';
@@ -25,18 +26,15 @@ const GradeRow = ({
   additionalChildClassName,
   isMobile,
 }: PropsWithChildren<GradeRowProps>) => (
-  <div
-    className={`grade-row${
-      additionalClassName ? ` ${additionalClassName}` : ''
-    }`}
-  >
+  <div className={clsx('grade-row', additionalClassName)}>
     <div className="center-row">
       {!isReview && (
         <GradeIndicator
           grade={rating.overall}
-          additionalClassName={`course-summary-grade-indicator${
-            isReview ? '' : ' overall'
-          }`}
+          additionalClassName={clsx(
+            'course-summary-grade-indicator',
+            !isReview && 'overall'
+          )}
         />
       )}
       {[isReview ? 'overall' : '', ...RATING_FIELDS]
@@ -44,9 +42,11 @@ const GradeRow = ({
         .map((field) => (
           <div
             key={field}
-            className={`center-row rating-container${
-              selected === field ? ' active' : ''
-            }${additionalChildClassName ? ` ${additionalChildClassName}` : ''}`}
+            className={clsx(
+              'center-row rating-container',
+              selected === field && 'active',
+              additionalChildClassName
+            )}
             onClick={() => {
               if (setSelected && !isMobile) {
                 setSelected(field);

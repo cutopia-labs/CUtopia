@@ -90,7 +90,7 @@ const ReviewCard = ({
         <GradeRow
           rating={review}
           isReview
-          additionalClassName="review-header tabs-row"
+          additionalClassName="grade-row review-header tabs-row"
           additionalChildClassName="tab"
           selected={selectedCriteria}
           setSelected={setSelectedCriteria}

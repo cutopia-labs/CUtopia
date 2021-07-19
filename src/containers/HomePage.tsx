@@ -86,7 +86,7 @@ const HomePage = () => {
       username: user.cutopiaUsername,
     },
     onCompleted: (data) => {
-      user.saveReviews(data.user);
+      user.saveUser(data?.user);
     },
   });
 
@@ -129,7 +129,7 @@ const HomePage = () => {
   return (
     <Page className="home-page" center padding>
       <div className="home-page-left">
-        {!userDataLoading && <UserCard userData={userData.user} />}
+        {!userDataLoading && <UserCard userData={userData?.user} />}
         <LinksCard />
       </div>
       <div className="home-page-right">

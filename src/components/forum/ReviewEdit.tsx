@@ -266,13 +266,13 @@ const ReviewEdit = ({ courseId }) => {
   // Check userData to see if user already posted review
   useEffect(() => {
     if (userData && !userLoading) {
-      if (!userData.user) {
+      if (!userData?.user) {
         alert('Invalid Login Information!');
         history.push(`/review/${courseId}`);
-      } else if (userData.user.reviewIds && userData.user.reviewIds.length) {
-        for (let i = 0; i < userData.user.reviewIds.length; i++) {
-          if (userData.user.reviewIds[i].startsWith(courseId)) {
-            const parts = userData.user.reviewIds[i].split('#');
+      } else if (userData?.user.reviewIds && userData?.user.reviewIds.length) {
+        for (let i = 0; i < userData?.user.reviewIds.length; i++) {
+          if (userData?.user.reviewIds[i].startsWith(courseId)) {
+            const parts = userData?.user.reviewIds[i].split('#');
             setTargetReview(parts[1]);
             setMode(MODES.MODAL);
           }
