@@ -65,10 +65,6 @@ textarea[type=number] {
 .App {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
-    max-height: 100vh;
-    overflow-y: scroll;
-    overflow-x: hidden;
 }
 
 .page {
@@ -88,6 +84,7 @@ textarea[type=number] {
     flex: 1;
     display: flex;
     padding: var(--card-padding);
+    margin-left: var(--card-padding);
 }
 
 .row, .center-row {
@@ -197,7 +194,6 @@ textarea[type=number] {
         --page-margin: 5vw;
     }
     .App {
-        overflow-y: scroll;
     }
     .center-page {
         width: 100%;
@@ -205,11 +201,14 @@ textarea[type=number] {
     .panel {
         margin: 0 !important;
         overflow-y: initial !important;
-        max-width: calc(100% - 2 * var(--card-padding));
         border: 0;
+        margin-left: 0;
     }
     .page {
         padding: 0;
+        flex-direction: column;
+        padding: var(--card-padding);
+        max-width: calc(100% - 2 * var(--card-padding));
     }
 }
 

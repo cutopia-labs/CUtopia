@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { Grid, Typography } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import {
   ChatBubbleOutlineOutlined,
   SchoolOutlined,
@@ -128,21 +128,14 @@ const HomePage = () => {
 
   return (
     <Page className="home-page" center padding>
-      <Grid className="home-page-left" container spacing={2}>
-        <Grid item xs={12} sm={3}>
-          {!userDataLoading && <UserCard userData={userData.user} />}
-          <LinksCard />
-        </Grid>
-        <Grid item xs={12} sm={9}>
-          <TabsContainer
-            mb
-            items={SELECTIONS}
-            selected={tab}
-            onSelect={setTab}
-          />
-          {renderTab()}
-        </Grid>
-      </Grid>
+      <div className="home-page-left">
+        {!userDataLoading && <UserCard userData={userData.user} />}
+        <LinksCard />
+      </div>
+      <div className="home-page-right">
+        <TabsContainer mb items={SELECTIONS} selected={tab} onSelect={setTab} />
+        {renderTab()}
+      </div>
     </Page>
   );
 };

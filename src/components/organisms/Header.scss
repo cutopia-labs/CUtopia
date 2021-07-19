@@ -82,8 +82,11 @@
 }
 
 @media only screen and (max-width: 1260px) {
+  .header-background-container {
+    overflow-x: hidden;
+    overflow-y: hidden;
+  }
   .header-container {
-    overflow: hidden;
     & > .header-logo {
       margin-left: 12px;
     }

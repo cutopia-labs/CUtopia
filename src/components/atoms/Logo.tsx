@@ -1,20 +1,5 @@
-import { makeStyles } from '@material-ui/core';
+import './Logo.scss';
 
-const useStyles = makeStyles(() => ({
-  logoContainer: {
-    fontFamily: 'Futura, sans-serif',
-    fontWeight: 900,
-    fontSize: '22px',
-    letterSpacing: '2px',
-    floatDistance: '6px',
-    cursor: 'default',
-  },
-}));
-
-const Logo = () => {
-  const classes = useStyles();
-
-  return <div className={classes.logoContainer}>cutopia</div>;
-};
+const Logo = () => <div className="logo-container">cutopia</div>;
 
 export default Logo;

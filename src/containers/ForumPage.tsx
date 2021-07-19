@@ -1,5 +1,6 @@
 import { observer } from 'mobx-react-lite';
 
+import './ForumPage.scss';
 import { CoursePanel, SearchPanel } from '../components/forum';
 import Page from '../components/atoms/Page';
 

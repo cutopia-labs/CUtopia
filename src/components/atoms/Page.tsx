@@ -1,8 +1,6 @@
 import { PropsWithChildren } from 'react';
 import clsx from 'clsx';
 
-import './Page.scss';
-
 type PageProps = {
   className?: string;
   center?: boolean;

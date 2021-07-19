@@ -1,5 +1,6 @@
 .review-home-panel {
   flex-direction: column;
+  padding: 0;
   .chips-row {
     margin-top: var(--card-padding);
     margin-right: auto;
@@ -60,6 +61,10 @@
 }
 
 @media only screen and (max-width: 1260px) {
+  .review-home-panel {
+    padding: var(--card-padding);
+    max-width: calc(100% - 2 * var(--card-padding));
+  }
   .review-home-row {
     flex-direction: column;
   }
