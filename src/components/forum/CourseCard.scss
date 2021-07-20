@@ -32,6 +32,17 @@
 }
 .sub-heading-container {
   width: 100%;
+  .past-papers-container {
+    display: flex;
+    align-items: center;
+    .open-icon {
+      width: 20px;
+      height: 20px;
+    }
+    .past-papers-link {
+      margin-left: 4px;
+    }
+  }
 }
 .course-card p,
 .caption,
