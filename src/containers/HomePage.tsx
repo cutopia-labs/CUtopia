@@ -8,7 +8,6 @@ import {
 } from '@material-ui/icons';
 import { observer } from 'mobx-react-lite';
 import { useQuery } from '@apollo/client';
-import { FiExternalLink } from 'react-icons/fi';
 
 import './HomePage.scss';
 import UserCard from '../components/home/UserCard';
@@ -19,6 +18,7 @@ import { MY_TIMETABLE_QUERY, GET_USER } from '../constants/queries';
 import TabsContainer from '../components/molecules/TabsContainer';
 import Page from '../components/atoms/Page';
 import Card from '../components/atoms/Card';
+import Link from '../components/molecules/Link';
 
 const LINKS = [
   {
@@ -39,12 +39,7 @@ const LinksCard = () => (
   <Card className="links-card">
     <Typography gutterBottom>Links</Typography>
     {LINKS.map((link) => (
-      <div className="link-container center-row" key={link.url}>
-        <FiExternalLink />
-        <a href={link.url} target="_blank" rel="noreferrer">
-          {link.name}
-        </a>
-      </div>
+      <Link url={link.url} label={link.name} key={link.url} />
     ))}
   </Card>
 );
@@ -77,7 +72,7 @@ const HomePage = () => {
       username: user.cutopiaUsername,
     },
     onCompleted: (data) => {
-      user.saveTimeTable(data.user.timetable);
+      user.saveTimeTable(data?.user?.timetable);
     },
   });
 
@@ -129,7 +124,7 @@ const HomePage = () => {
   return (
     <Page className="home-page" center padding>
       <div className="home-page-left">
-        {!userDataLoading && <UserCard userData={userData?.user} />}
+        {!userDataLoading && userData && <UserCard userData={userData?.user} />}
         <LinksCard />
       </div>
       <div className="home-page-right">

@@ -29,6 +29,10 @@
       }
     }
   }
+  .link-container {
+    font-size: initial;
+    width: fit-content;
+  }
 }
 .sub-heading-container {
   width: 100%;
@@ -55,6 +59,7 @@
   width: 100%;
   justify-content: space-between;
   margin-top: -10px;
+  margin-bottom: 4px;
   &.left {
     display: flex;
     flex-direction: column;

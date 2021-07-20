@@ -43,7 +43,7 @@ const UserCard = ({ userData }: UserCardProps) => {
               {user.cutopiaUsername}
               <Tooltip
                 title={
-                  userData.reviewIds.length >= 3
+                  userData?.reviewIds?.length >= 3
                     ? 'Full Member'
                     : 'Post 3 reviews to be a full member!'
                 }
@@ -69,11 +69,11 @@ const UserCard = ({ userData }: UserCardProps) => {
         </div>
         <div className="user-about-card center-row">
           <div className="user-about-card-item column">
-            <div className="sub-title">{userData.reviewIds.length}</div>
+            <div className="sub-title">{userData?.reviewIds?.length}</div>
             <div className="light-caption">Reviews</div>
           </div>
           <div className="user-about-card-item column">
-            <div className="sub-title">{userData.upvotesCount}</div>
+            <div className="sub-title">{userData?.upvotesCount}</div>
             <div className="light-caption">Upvotes</div>
           </div>
         </div>

@@ -1,6 +1,12 @@
 import { makeObservable, observable, action } from 'mobx';
 
-import { CourseConcise, CourseTableEntry, LoginState, User } from '../types';
+import {
+  CourseConcise,
+  CourseTableEntry,
+  LoginState,
+  PlannerCourse,
+  User,
+} from '../types';
 import { storeData, getStoreData, removeStoreItem } from '../helpers/store';
 
 import { TOKEN_EXPIRE_DAYS, VIEWS_LIMIT } from '../constants/states';
@@ -23,7 +29,7 @@ class UserStore {
 
   // Planner
   @observable plannerTerm: string;
-  @observable plannerCourses = []; // To Add Type
+  @observable plannerCourses: PlannerCourse[] = []; // To Add Type
 
   notificationStore: NotificationStore;
 
@@ -231,6 +237,19 @@ class UserStore {
 
   /* Planner */
 
+  @action.bound findIndexInPlanner = (courseId) => {
+    return this.plannerCourses.findIndex((item) => item.courseId === courseId);
+  };
+
+  @action sectionInPlanner = (courseId, sectionId) => {
+    const index = this.findIndexInPlanner(courseId);
+    if (index === -1) {
+      return false;
+    } else {
+      return sectionId in this.plannerCourses[index].sections;
+    }
+  };
+
   @action async applyPlannerCourses() {
     const courses = await getStoreData('plannerCourses');
     console.table(courses);
@@ -253,10 +272,8 @@ class UserStore {
     await storeData('plannerCourses', this.plannerCourses);
   }
 
-  @action async addToPlannerCourses(course) {
-    const index = this.plannerCourses.findIndex(
-      (item) => item.courseId === course.courseId
-    );
+  @action async addToPlannerCourses(course: PlannerCourse) {
+    const index = this.findIndexInPlanner(course.courseId);
     if (index !== -1) {
       this.plannerCourses[index] = {
         // not update sections directly to trigger update
@@ -273,9 +290,7 @@ class UserStore {
   }
 
   @action async deleteSectionInPlannerCourses({ courseId, sectionId }) {
-    const index = this.plannerCourses.findIndex(
-      (course) => course.courseId === courseId
-    );
+    const index = this.findIndexInPlanner(courseId);
     if (index !== -1) {
       const UNDO_COPY = JSON.stringify(this.plannerCourses);
       const sectionCopy = { ...this.plannerCourses[index].sections };
@@ -298,9 +313,7 @@ class UserStore {
   }
 
   @action async deleteInPlannerCourses(courseId) {
-    const index = this.plannerCourses.findIndex(
-      (course) => course.courseId === courseId
-    );
+    const index = this.findIndexInPlanner(courseId);
     if (index !== -1) {
       const UNDO_COPY = [...this.plannerCourses];
       this.plannerCourses.splice(index, 1);

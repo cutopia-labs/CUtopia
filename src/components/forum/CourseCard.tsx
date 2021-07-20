@@ -1,7 +1,7 @@
 import { useState, useContext } from 'react';
 import { observer } from 'mobx-react-lite';
-import { IconButton, Link, useMediaQuery } from '@material-ui/core';
-import { Favorite, FavoriteBorder, OpenInNew } from '@material-ui/icons';
+import { IconButton, useMediaQuery } from '@material-ui/core';
+import { Favorite, FavoriteBorder } from '@material-ui/icons';
 
 import './CourseCard.scss';
 import GradeRow from './GradeRow';
@@ -12,6 +12,7 @@ import CourseSections from './CourseSections';
 import Points from './Points';
 import { COURSE_CARD_MAX_HEIGHT } from '../../constants/configs';
 import { CourseInfo } from '../../types';
+import Link from '../molecules/Link';
 
 type CourseCardProps = {
   courseInfo: CourseInfo;
@@ -129,19 +130,6 @@ const CourseCard = ({ courseInfo, concise }: CourseCardProps) => {
         visible={!showMore}
         onShowMore={() => [setShowMore(true), setSkipHeightCheck(true)]}
       />
-      <div className="sub-heading-container">
-        <p className="sub-heading">Past Papers</p>
-        <div className="past-papers-container">
-          <OpenInNew className="open-icon" color="primary" />
-          <Link
-            href={`https://julac.hosted.exlibrisgroup.com/primo-explore/search?query=any,contains,${courseInfo.courseId}&tab=default_tab&search_scope=Exam&sortby=date&vid=CUHK&lang=en_US`}
-            target="_blank"
-            className="past-papers-link"
-          >
-            Search on CUHK library
-          </Link>
-        </div>
-      </div>
       {!concise &&
         ['requirements', 'outcome', 'required_readings']
           .filter((key) => courseInfo[key] && courseInfo[key] !== '') // filter off empty strings
@@ -151,6 +139,13 @@ const CourseCard = ({ courseInfo, concise }: CourseCardProps) => {
               <Points text={courseInfo[key]} />
             </div>
           ))}
+      <div className="sub-heading-container">
+        <p className="sub-heading">Past Papers</p>
+        <Link
+          url={`https://julac.hosted.exlibrisgroup.com/primo-explore/search?query=any,contains,${courseInfo.courseId}&tab=default_tab&search_scope=Exam&sortby=date&vid=CUHK&lang=en_US`}
+          label="Search on CUHK library"
+        />
+      </div>
     </div>
   );
 };

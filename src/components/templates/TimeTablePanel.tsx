@@ -15,7 +15,7 @@ import './TimeTablePanel.scss';
 import CourseList from '../planner/CourseList';
 import copyToClipboard from '../../helpers/copyToClipboard';
 import Card from '../atoms/Card';
-import { CourseTableEntry } from '../../types';
+import { CourseTableEntry, PlannerCourse } from '../../types';
 import clsx from 'clsx';
 
 enum MODAL_MODES {
@@ -26,7 +26,7 @@ enum MODAL_MODES {
 
 type TimeTablePanelProps = {
   title?: string;
-  courses?: CourseTableEntry[];
+  courses?: CourseTableEntry[] | PlannerCourse[];
   onImport?: (...args: any[]) => any;
   onExport?: (...args: any[]) => any;
   onClear?: (...args: any[]) => any;
@@ -75,7 +75,7 @@ const TimeTablePanel = ({
           ))}
         </div>
       </header>
-      <CourseList courses={courses?.slice()} />
+      <CourseList courses={courses?.slice() as any} />
       <Dialog
         open={modalMode === MODAL_MODES.IMPORT_MODAL}
         onClose={() => setModalMode(MODAL_MODES.NO_MODAL)}

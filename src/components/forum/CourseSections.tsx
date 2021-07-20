@@ -11,9 +11,17 @@ import { CourseInfo, CourseSection } from '../../types';
 type SectionCardProps = {
   section: CourseSection;
   addSection: (section: CourseSection) => void;
+  deleteSection: (sectionId) => void;
+  added: boolean;
 };
 
-const SectionCard = ({ section, addSection }: SectionCardProps) => {
+const SectionCard = ({
+  section,
+  addSection,
+  deleteSection,
+  added,
+}: SectionCardProps) => {
+  // TODO: Delete if added not yet implemented since plannerCourses observable is not deep enough to observe such change
   const SECTION_CARD_ITEMS = [
     {
       icon: <PersonOutline />,
@@ -33,8 +41,15 @@ const SectionCard = ({ section, addSection }: SectionCardProps) => {
     <div className="course-section-card">
       <span className="section-header course-term-label">
         {section.name}
-        <IconButton size="small" onClick={() => addSection(section)}>
+        <IconButton
+          size="small"
+          onClick={() => {
+            addSection(section);
+            // added ? deleteSection(section.name) : addSection(section)
+          }}
+        >
           <Add />
+          {/* added ? <Delete /> : <Add /> */}
         </IconButton>
       </span>
       <div className="section-detail">
@@ -72,14 +87,19 @@ const CourseSections = ({
       title,
     });
   };
+  const deleteInPlanner = (sectionId) => {
+    user.deleteSectionInPlannerCourses({ courseId, sectionId });
+  };
   return (
-    <div className="course-sections-card">
+    <div className="course-sections">
       <div className="course-section-wrapper">
         <span className="course-term-label">{`${courseTerms[currentTermIndex].name} Sections:`}</span>
         {courseTerms[currentTermIndex].course_sections.map((section) => (
           <SectionCard
             key={section.name}
             addSection={addToPlanner}
+            deleteSection={deleteInPlanner}
+            added={user.sectionInPlanner(courseId, section.name)}
             section={section}
           />
         ))}

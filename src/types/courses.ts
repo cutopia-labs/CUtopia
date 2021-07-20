@@ -51,6 +51,14 @@ type Term = {
   course_sections?: [CourseSection];
 };
 
+type PlannerCourse = {
+  courseId: string;
+  title: string;
+  sections: {
+    [sectionName: string]: CourseSection;
+  };
+};
+
 type CourseSection = {
   name: string;
   startTimes: string[];
@@ -92,4 +100,5 @@ export type {
   AssessementComponent,
   CourseSearchItem,
   CourseConcise,
+  PlannerCourse,
 };
