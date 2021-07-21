@@ -16,8 +16,14 @@ const PlannerPage = () => {
         title="My Schedule"
         courses={planner.plannerCourses}
         previewCourse={planner.previewPlannerCourse}
-        onImport={(parsedData) => planner.setAndSavePlannerCourses(parsedData)}
+        onImport={(parsedData) => planner.addPlannerCourses(parsedData)}
         onClear={() => planner.clearPlannerCourses()}
+        selections={planner.plannerList}
+        onSelect={(key) => planner.updateCurrentPlanner(key)}
+        selected={{
+          key: planner.currentPlanner,
+          label: planner.planners[planner.currentPlanner]?.label,
+        }}
       />
     </Page>
   );

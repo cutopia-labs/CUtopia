@@ -1,15 +1,21 @@
-import { makeObservable, observable, action } from 'mobx';
+import { makeObservable, observable, action, toJS } from 'mobx';
 
-import { PlannerCourse } from '../types';
+import { PlannerCourse, Planner, PlannerItem } from '../types';
 import { storeData, getStoreData, removeStoreItem } from '../helpers/store';
 
 import NotificationStore from './NotificationStore';
+import { PLANNER_CONFIGS } from '../constants/configs';
+
+const LOCAL_STORAGE_KEYS = ['planners', 'plannerTerm', 'currentPlanner'];
 
 class PlannerStore {
   // Planner
+  @observable planners: Record<string | number, Planner> = {};
   @observable plannerTerm: string;
-  @observable plannerCourses: PlannerCourse[] = []; // To Add Type
   @observable previewPlannerCourse: PlannerCourse;
+  @observable currentPlanner: number;
+  @observable plannerCourses: PlannerCourse[] = [];
+  @observable initiated: boolean = false; // prevent reaction of null timetable override planners
 
   notificationStore: NotificationStore;
 
@@ -19,27 +25,72 @@ class PlannerStore {
   }
 
   @action async init() {
-    await this.applyPlannerCourses();
+    await this.applyPlannerStore();
+    if (!this.currentPlanner) {
+      console.log('Creating new planners');
+      const now = +new Date();
+      this.setPlannerStore('currentPlanner', now);
+      this.setPlannerStore('planners', {
+        [now]: {
+          key: now,
+          courses: [],
+        },
+      });
+    }
+    this.plannerCourses = this.planners[this.currentPlanner]?.courses;
+    this.initiated = true;
   }
 
-  @action.bound setPlannerStore(key: string, value: any) {
+  get plannerList() {
+    return Object.values(this.planners).map((planner) => ({
+      key: planner.key,
+      label: planner.label || PLANNER_CONFIGS.DEFAULT_TABLE_NAME,
+    })) as PlannerItem[];
+  }
+
+  @action.bound updatePlannerStore(key: string, value: any) {
     this[key] = value;
   }
+
+  @action setPlannerStore = async (key: string, value: any) => {
+    this.updatePlannerStore(key, value);
+    await storeData(key, value);
+  };
 
   // reset
   @action async reset() {
     this.init();
     // Clear user related asyncstorage
     await Promise.all(
-      ['plannerCourses'].map(async (key) => {
+      LOCAL_STORAGE_KEYS.map(async (key) => {
         await removeStoreItem(key);
       })
     );
   }
 
-  /* Planner */
   @action.bound findIndexInPlanner = (courseId) => {
     return this.plannerCourses.findIndex((item) => item.courseId === courseId);
+  };
+
+  @action.bound validKey = (key: number) =>
+    Boolean(this.initiated && this.planners && key in this.planners);
+
+  @action updateCurrentPlanner = (key: number) => {
+    let label = PLANNER_CONFIGS.DEFAULT_TABLE_NAME;
+    if (this.validKey(key)) {
+      this.plannerCourses = this.planners[key].courses;
+      this.currentPlanner = key;
+      label = this.planners[key].label || label;
+    } else {
+      this.planners[key] = {
+        key,
+        courses: [],
+      };
+      storeData('planners', this.planners);
+      this.plannerCourses = [];
+    }
+    this.setPlannerStore('currentPlanner', key);
+    this.notificationStore.setSnackBar(`Switched to ${label}`);
   };
 
   @action sectionInPlanner = (courseId, sectionId) => {
@@ -51,16 +102,38 @@ class PlannerStore {
     }
   };
 
-  @action async applyPlannerCourses() {
-    const courses = await getStoreData('plannerCourses');
-    console.table(courses);
-    this.setPlannerStore('plannerCourses', courses || []);
-    const term = await getStoreData('plannerTerm');
-    this.setPlannerStore('plannerTerm', term || null);
+  @action async applyPlannerStore() {
+    await Promise.all(
+      LOCAL_STORAGE_KEYS.map(async (key) => {
+        const retrieved = await getStoreData(key);
+        this.updatePlannerStore(key, retrieved);
+      })
+    );
+    console.log(toJS(this));
+  }
+
+  @action async addPlannerCourses(plannerCourses: PlannerCourse[]) {
+    this.addPlanner({
+      key: +new Date(),
+      courses: plannerCourses,
+    });
+  }
+
+  @action async updatePlanners(key: number, plannerCourses: PlannerCourse[]) {
+    if (this.validKey(key)) {
+      this.planners[key].courses = plannerCourses;
+      await storeData('planners', this.planners);
+    }
+  }
+
+  @action async addPlanner(planner: Planner) {
+    this.planners[planner.key] = planner;
+    console.log(`Updated planner with ${toJS(this.planners)}`);
+    await storeData('planners', this.planners);
   }
 
   @action async savePlannerCourses(courses) {
-    this.setPlannerStore('plannerCourses', courses);
+    this.updatePlannerStore('plannerCourses', courses);
     await storeData('plannerCourses', courses);
   }
 
@@ -109,7 +182,7 @@ class PlannerStore {
         this.plannerCourses.splice(index, 1);
       }
       await this.notificationStore.setSnackBar('1 item deleted', 'UNDO', () => {
-        this.setPlannerStore('plannerCourses', JSON.parse(UNDO_COPY));
+        this.updatePlannerStore('plannerCourses', JSON.parse(UNDO_COPY));
       });
       await storeData('plannerCourses', this.plannerCourses);
     } else {
@@ -123,23 +196,13 @@ class PlannerStore {
       const UNDO_COPY = [...this.plannerCourses];
       this.plannerCourses.splice(index, 1);
       await this.notificationStore.setSnackBar('1 item deleted', 'UNDO', () => {
-        this.setPlannerStore('plannerCourses', UNDO_COPY);
+        this.updatePlannerStore('plannerCourses', UNDO_COPY);
       });
       // Update AsyncStorage after undo valid period passed.
       await storeData('plannerCourses', this.plannerCourses);
     } else {
       this.notificationStore.setSnackBar('Error... OuO');
     }
-  }
-
-  @action async setAndSavePlannerCourses(courses) {
-    this.setPlannerStore('plannerCourses', courses);
-    await storeData('plannerCourses', this.plannerCourses);
-  }
-
-  @action async setPlannerTerm(term) {
-    await storeData('plannerTerm', term);
-    this.setPlannerStore('plannerTerm', term);
   }
 }
 

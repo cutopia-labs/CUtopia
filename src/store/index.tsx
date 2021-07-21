@@ -4,11 +4,23 @@ import PreferenceStore from './PreferenceStore';
 import UserStore from './UserStore';
 import NotificationStore from './NotificationStore';
 import PlannerStore from './PlannerStore';
+import { reaction, toJS } from 'mobx';
+import { storeData } from '../helpers/store';
 
 const notificationStore = new NotificationStore();
 const preferenceStore = new PreferenceStore();
 const userStore = new UserStore(notificationStore);
 const plannerStore = new PlannerStore(notificationStore);
+
+reaction(
+  () => ({
+    plannerCourses: plannerStore.plannerCourses.map((course) => course),
+    key: plannerStore.currentPlanner,
+  }),
+  ({ plannerCourses, key }) => {
+    plannerStore.updatePlanners(key, plannerCourses);
+  }
+);
 
 export const PreferenceContext = createContext(null as PreferenceStore);
 export const UserContext = createContext(null as UserStore);

@@ -59,6 +59,12 @@ type PlannerCourse = {
   };
 };
 
+type Planner = {
+  label?: string;
+  key: number; // timestamp
+  courses: PlannerCourse[];
+};
+
 type CourseSection = {
   name: string;
   startTimes: string[];
@@ -101,4 +107,5 @@ export type {
   CourseSearchItem,
   CourseConcise,
   PlannerCourse,
+  Planner,
 };
