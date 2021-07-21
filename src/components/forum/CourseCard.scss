@@ -88,3 +88,11 @@
     margin-top: 6px;
   }
 }
+
+@media only screen and (max-width: 1260px) {
+  .course-card {
+    .grade-row {
+      overflow: initial;
+    }
+  }
+}

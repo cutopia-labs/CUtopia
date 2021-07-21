@@ -6,7 +6,7 @@ import { observer } from 'mobx-react-lite';
 import './CourseCard.scss';
 import { TIMETABLE_CONSTANTS } from '../../constants/configs';
 import updateOpacity from '../../helpers/updateOpacity';
-import { UserContext } from '../../store';
+import { PlannerContext } from '../../store';
 
 const { START_HOUR, NO_OF_DAYS, NO_OF_HOURS } = TIMETABLE_CONSTANTS;
 
@@ -55,7 +55,7 @@ const CourseCard = ({ course }) => {
     textColor,
     course.day
   );
-  const user = useContext(UserContext);
+  const planner = useContext(PlannerContext);
 
   return (
     <div className="timetable-course-card" style={styles.courseCard}>
@@ -80,7 +80,7 @@ const CourseCard = ({ course }) => {
             color: textColor,
           }}
           onClick={() =>
-            user.deleteSectionInPlannerCourses({
+            planner.deleteSectionInPlannerCourses({
               courseId: course.courseId,
               sectionId: course.section,
             })

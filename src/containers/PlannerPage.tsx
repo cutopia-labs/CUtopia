@@ -3,20 +3,20 @@ import { observer } from 'mobx-react-lite';
 
 import { SearchPanel } from '../components/forum';
 import TimeTablePanel from '../components/templates/TimeTablePanel';
-import { UserContext } from '../store';
+import { PlannerContext } from '../store';
 import Page from '../components/atoms/Page';
 
 const PlannerPage = () => {
-  const user = useContext(UserContext);
+  const planner = useContext(PlannerContext);
 
   return (
     <Page center padding>
       <SearchPanel />
       <TimeTablePanel
         title="My Schedule"
-        courses={user.plannerCourses}
-        onImport={(parsedData) => user.setAndSavePlannerCourses(parsedData)}
-        onClear={() => user.clearPlannerCourses()}
+        courses={planner.plannerCourses}
+        onImport={(parsedData) => planner.setAndSavePlannerCourses(parsedData)}
+        onClear={() => planner.clearPlannerCourses()}
       />
     </Page>
   );

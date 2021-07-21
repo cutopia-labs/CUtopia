@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react';
 import clsx from 'clsx';
-import { BoxProps, Box } from '@material-ui/core';
+import { BoxProps } from '@material-ui/core';
 
 type CardProps = {
   className?: string;
@@ -11,9 +11,9 @@ const Card = ({
   children,
   ...props
 }: PropsWithChildren<BoxProps & CardProps>) => (
-  <Box className={clsx('card', className)} {...props}>
+  <div className={clsx('card', className)} {...props}>
     {children}
-  </Box>
+  </div>
 );
 
 export default Card;

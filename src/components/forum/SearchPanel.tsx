@@ -73,7 +73,7 @@ const getCoursesFromQuery = ({
         t: course.title,
       }));
     case 'My Courses':
-      return user.plannerCourses.map((course) => ({
+      return user.timetable.map((course) => ({
         c: course.courseId,
         t: course.title,
       }));
@@ -283,7 +283,7 @@ const SearchPanel = () => {
   }, [historyList]);
 
   return (
-    <Card className="search-panel" mb={2}>
+    <Card className="search-panel">
       <div className="search-input-container row">
         {searchPayload &&
         (searchPayload.mode !== 'query' || searchPayload.text) ? (

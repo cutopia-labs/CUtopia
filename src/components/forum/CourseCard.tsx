@@ -130,22 +130,25 @@ const CourseCard = ({ courseInfo, concise }: CourseCardProps) => {
         visible={!showMore}
         onShowMore={() => [setShowMore(true), setSkipHeightCheck(true)]}
       />
-      {!concise &&
-        ['requirements', 'outcome', 'required_readings']
-          .filter((key) => courseInfo[key] && courseInfo[key] !== '') // filter off empty strings
-          .map((key) => (
-            <div className="sub-heading-container" key={key}>
-              <p className="sub-heading">{key.replaceAll('_', ' ')}</p>
-              <Points text={courseInfo[key]} />
-            </div>
-          ))}
-      <div className="sub-heading-container">
-        <p className="sub-heading">Past Papers</p>
-        <Link
-          url={`https://julac.hosted.exlibrisgroup.com/primo-explore/search?query=any,contains,${courseInfo.courseId}&tab=default_tab&search_scope=Exam&sortby=date&vid=CUHK&lang=en_US`}
-          label="Search on CUHK library"
-        />
-      </div>
+      {!concise && (
+        <>
+          {['requirements', 'outcome', 'required_readings']
+            .filter((key) => courseInfo[key] && courseInfo[key] !== '') // filter off empty strings
+            .map((key) => (
+              <div className="sub-heading-container" key={key}>
+                <p className="sub-heading">{key.replaceAll('_', ' ')}</p>
+                <Points text={courseInfo[key]} />
+              </div>
+            ))}
+          <div className="sub-heading-container">
+            <p className="sub-heading">Past Papers</p>
+            <Link
+              url={`https://julac.hosted.exlibrisgroup.com/primo-explore/search?query=any,contains,${courseInfo.courseId}&tab=default_tab&search_scope=Exam&sortby=date&vid=CUHK&lang=en_US`}
+              label="Search on CUHK library"
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 };

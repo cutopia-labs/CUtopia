@@ -4,7 +4,7 @@ import { IconButton } from '@material-ui/core';
 import { Add, PersonOutline, Schedule } from '@material-ui/icons';
 
 import './CourseSections.scss';
-import { UserContext } from '../../store';
+import { PlannerContext, UserContext } from '../../store';
 import { WEEKDAYS_TWO_ABBR } from '../../constants/states';
 import { CourseInfo, CourseSection } from '../../types';
 
@@ -76,10 +76,11 @@ const CourseSections = ({
     courseTerms.length - 1
   );
   const user = useContext(UserContext);
+  const planner = useContext(PlannerContext);
   const addToPlanner = (section: CourseSection) => {
     const copy = { ...section };
     delete copy.name;
-    user.addToPlannerCourses({
+    planner.addToPlannerCourses({
       sections: {
         [section.name]: copy,
       },
@@ -88,7 +89,7 @@ const CourseSections = ({
     });
   };
   const deleteInPlanner = (sectionId) => {
-    user.deleteSectionInPlannerCourses({ courseId, sectionId });
+    planner.deleteSectionInPlannerCourses({ courseId, sectionId });
   };
   return (
     <div className="course-sections">
@@ -99,7 +100,7 @@ const CourseSections = ({
             key={section.name}
             addSection={addToPlanner}
             deleteSection={deleteInPlanner}
-            added={user.sectionInPlanner(courseId, section.name)}
+            added={planner.sectionInPlanner(courseId, section.name)}
             section={section}
           />
         ))}

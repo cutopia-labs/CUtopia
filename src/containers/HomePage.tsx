@@ -11,7 +11,7 @@ import { useQuery } from '@apollo/client';
 
 import './HomePage.scss';
 import UserCard from '../components/home/UserCard';
-import { UserContext } from '../store';
+import { PlannerContext, UserContext } from '../store';
 import { CoursesList, ReviewsList } from '../components/home/HomePageTabs';
 import TimeTablePanel from '../components/templates/TimeTablePanel';
 import { MY_TIMETABLE_QUERY, GET_USER } from '../constants/queries';
@@ -65,6 +65,7 @@ const SELECTIONS = [
 
 const HomePage = () => {
   const user = useContext(UserContext);
+  const planner = useContext(PlannerContext);
   const [tab, setTab] = useState('Courses');
 
   const { loading: timetableLoading } = useQuery(MY_TIMETABLE_QUERY, {
@@ -101,7 +102,7 @@ const HomePage = () => {
           <TimeTablePanel
             className="home-page-timetable"
             title="Planner"
-            courses={user.plannerCourses}
+            courses={planner.plannerCourses}
             onImport={(parsedData) => user.setAndSaveTimeTable(parsedData)}
             onClear={() => user.clearTimeTable()}
           />
