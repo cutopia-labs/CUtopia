@@ -15,6 +15,7 @@ const PlannerPage = () => {
       <TimeTablePanel
         title="My Schedule"
         courses={planner.plannerCourses}
+        previewCourse={planner.previewPlannerCourse}
         onImport={(parsedData) => planner.setAndSavePlannerCourses(parsedData)}
         onClear={() => planner.clearPlannerCourses()}
       />

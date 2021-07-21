@@ -55,17 +55,34 @@ const WeekdayText = ({ withDate }: WeekdayTextProps) => {
 
 type CourseListProps = {
   courses: CourseTableEntry[];
+  previewCourse?: CourseTableEntry;
 };
 
-export default function CourseList({ courses }: CourseListProps) {
+const CourseList = ({ courses, previewCourse }: CourseListProps) => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const courseViews = [];
   let colorIndex = 0;
+  let previewColorIndex = 0;
   let earlistGrid = NO_OF_HOURS; // Auto vertical scroll to earlistGrid
   let weekendCourse = false;
 
   try {
-    courses.forEach((course) => {
+    const filteredCourses = [...courses, previewCourse].filter(
+      (course) => course // filter undefined/null preview course
+    );
+
+    filteredCourses.forEach((course, i) => {
+      if (course.courseId === previewCourse?.courseId) {
+        if (i !== filteredCourses.length - 1) {
+          // Save color index of course with the same id with preview course
+          previewColorIndex = colorIndex;
+        } else {
+          // Set color index of preview course
+          // If no course has the same id with preview course, set it to the last color index
+          colorIndex = previewColorIndex ? previewColorIndex : colorIndex;
+        }
+      }
+
       Object.entries(course.sections).forEach(([k, v]) => {
         (v.days || []).forEach((day, i) => {
           const sTime = v.startTimes[i].split(':');
@@ -137,4 +154,6 @@ export default function CourseList({ courses }: CourseListProps) {
       </div>
     </div>
   );
-}
+};
+
+export default CourseList;

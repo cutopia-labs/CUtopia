@@ -1,10 +1,10 @@
-import { useState, useContext } from 'react';
+import { useContext } from 'react';
 import { observer } from 'mobx-react-lite';
 import { IconButton } from '@material-ui/core';
 import { Add, PersonOutline, Schedule } from '@material-ui/icons';
 
 import './CourseSections.scss';
-import { PlannerContext, UserContext } from '../../store';
+import { PlannerContext } from '../../store';
 import { WEEKDAYS_TWO_ABBR } from '../../constants/states';
 import { CourseInfo, CourseSection } from '../../types';
 
@@ -13,6 +13,7 @@ type SectionCardProps = {
   addSection: (section: CourseSection) => void;
   deleteSection: (sectionId) => void;
   added: boolean;
+  onAddHoverChange?: (hover: boolean, section: CourseSection) => void;
 };
 
 const SectionCard = ({
@@ -20,6 +21,7 @@ const SectionCard = ({
   addSection,
   deleteSection,
   added,
+  onAddHoverChange,
 }: SectionCardProps) => {
   // TODO: Delete if added not yet implemented since plannerCourses observable is not deep enough to observe such change
   const SECTION_CARD_ITEMS = [
@@ -47,6 +49,8 @@ const SectionCard = ({
             addSection(section);
             // added ? deleteSection(section.name) : addSection(section)
           }}
+          onMouseEnter={() => onAddHoverChange(true, section)}
+          onMouseLeave={() => onAddHoverChange(false, section)}
         >
           <Add />
           {/* added ? <Delete /> : <Add /> */}
@@ -66,23 +70,19 @@ const SectionCard = ({
 
 type CourseSectionsProps = {
   courseInfo: CourseInfo;
+  onAddHoverChange?: (hover: boolean, courseSection: CourseSection) => void;
 };
 
 const CourseSections = ({
   courseInfo: { terms: courseTerms, courseId, title },
 }: CourseSectionsProps) => {
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [currentTermIndex, setCurrentTermIndex] = useState(
-    courseTerms.length - 1
-  );
-  const user = useContext(UserContext);
+  const currentTermIndex = courseTerms.length - 1;
   const planner = useContext(PlannerContext);
   const addToPlanner = (section: CourseSection) => {
-    const copy = { ...section };
-    delete copy.name;
+    const { name, ...sectionData } = section;
     planner.addToPlannerCourses({
       sections: {
-        [section.name]: copy,
+        [name]: section,
       },
       courseId,
       title,
@@ -91,6 +91,18 @@ const CourseSections = ({
   const deleteInPlanner = (sectionId) => {
     planner.deleteSectionInPlannerCourses({ courseId, sectionId });
   };
+  const handlePreviewCourse = (hover: boolean, section: CourseSection) => {
+    const previewCourse = hover
+      ? {
+          sections: {
+            [section.name]: section,
+          },
+          courseId,
+          title,
+        }
+      : null;
+    planner.setPreviewPlannerCourse(previewCourse);
+  };
   return (
     <div className="course-sections">
       <div className="course-section-wrapper">
@@ -98,10 +110,11 @@ const CourseSections = ({
         {courseTerms[currentTermIndex].course_sections.map((section) => (
           <SectionCard
             key={section.name}
+            section={section}
             addSection={addToPlanner}
             deleteSection={deleteInPlanner}
             added={planner.sectionInPlanner(courseId, section.name)}
-            section={section}
+            onAddHoverChange={handlePreviewCourse}
           />
         ))}
       </div>

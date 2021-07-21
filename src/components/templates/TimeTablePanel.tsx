@@ -27,6 +27,7 @@ enum MODAL_MODES {
 type TimeTablePanelProps = {
   title?: string;
   courses?: CourseTableEntry[] | PlannerCourse[];
+  previewCourse?: CourseTableEntry | PlannerCourse;
   onImport?: (...args: any[]) => any;
   onExport?: (...args: any[]) => any;
   onClear?: (...args: any[]) => any;
@@ -36,6 +37,7 @@ type TimeTablePanelProps = {
 const TimeTablePanel = ({
   title,
   courses,
+  previewCourse,
   onImport,
   onExport,
   onClear,
@@ -75,7 +77,10 @@ const TimeTablePanel = ({
           ))}
         </div>
       </header>
-      <CourseList courses={courses?.slice() as any} />
+      <CourseList
+        courses={courses?.slice() as any}
+        previewCourse={previewCourse as any}
+      />
       <Dialog
         open={modalMode === MODAL_MODES.IMPORT_MODAL}
         onClose={() => setModalMode(MODAL_MODES.NO_MODAL)}

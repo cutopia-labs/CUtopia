@@ -9,6 +9,7 @@ class PlannerStore {
   // Planner
   @observable plannerTerm: string;
   @observable plannerCourses: PlannerCourse[] = []; // To Add Type
+  @observable previewPlannerCourse: PlannerCourse;
 
   notificationStore: NotificationStore;
 
@@ -87,6 +88,10 @@ class PlannerStore {
     } else {
       this.savePlannerCourses([...this.plannerCourses, course]);
     }
+  }
+
+  @action async setPreviewPlannerCourse(course: PlannerCourse) {
+    this.previewPlannerCourse = course;
   }
 
   @action async deleteSectionInPlannerCourses({ courseId, sectionId }) {
