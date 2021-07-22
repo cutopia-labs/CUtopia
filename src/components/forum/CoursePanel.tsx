@@ -171,6 +171,7 @@ const CoursePanel = () => {
     refetch: reviewsRefetch,
   } = useQuery<ReviewsResult, ReviewsFilter>(REVIEWS_QUERY, {
     skip:
+      !courseId ||
       userDataLoading ||
       (((userData?.user?.reviewIds || user.user.reviewIds)?.length || 0) <
         FULL_MEMBER_REVIEWS &&

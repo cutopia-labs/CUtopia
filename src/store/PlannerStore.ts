@@ -73,7 +73,7 @@ class PlannerStore {
   };
 
   @action.bound validKey = (key: number) =>
-    Boolean(this.initiated && this.planners && key in this.planners);
+    Boolean(this.initiated && this.planners && key && key in this.planners);
 
   @action updateCurrentPlanner = (key: number) => {
     let label = PLANNER_CONFIGS.DEFAULT_TABLE_NAME;
@@ -82,6 +82,7 @@ class PlannerStore {
       this.currentPlanner = key;
       label = this.planners[key].label || label;
     } else {
+      key = key || +new Date();
       this.planners[key] = {
         key,
         courses: [],
@@ -130,6 +131,21 @@ class PlannerStore {
     this.planners[planner.key] = planner;
     console.log(`Updated planner with ${toJS(this.planners)}`);
     await storeData('planners', this.planners);
+  }
+
+  @action async deletePlanner(key: number) {
+    if (this.validKey(key)) {
+      const UNDO_COPY = { ...this.planners };
+      delete this.planners[key];
+      this.updateCurrentPlanner(parseInt(Object.keys(this.planners)[0], 10));
+      await this.notificationStore.setSnackBar('1 item deleted', 'UNDO', () => {
+        this.setPlannerStore('planners', UNDO_COPY);
+      });
+      // Update AsyncStorage after undo valid period passed.
+      await storeData('planners', this.planners);
+    } else {
+      this.notificationStore.setSnackBar('Error... OuO');
+    }
   }
 
   @action async savePlannerCourses(courses) {
@@ -203,6 +219,11 @@ class PlannerStore {
     } else {
       this.notificationStore.setSnackBar('Error... OuO');
     }
+  }
+
+  @action async setPlannerLabel(label: string) {
+    this.planners[this.currentPlanner].label = label;
+    await storeData('planners', this.planners);
   }
 }
 

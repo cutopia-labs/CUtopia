@@ -11,6 +11,7 @@ import {
   TextField,
   Divider,
   IconButton,
+  InputBase,
 } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 
@@ -23,13 +24,17 @@ import { CourseTableEntry, PlannerCourse, PlannerItem } from '../../types';
 import clsx from 'clsx';
 import { PLANNER_CONFIGS } from '../../constants/configs';
 import {
+  Check,
   Delete,
+  DeleteOutline,
+  Edit,
   ExpandMore,
   GetApp,
   MoreVert,
   Publish,
   Share,
 } from '@material-ui/icons';
+import { useEffect } from 'react';
 
 enum MODAL_MODES {
   NO_MODAL,
@@ -47,6 +52,8 @@ type TimeTablePanelProps = {
   onImport?: (...args: any[]) => any;
   onExport?: (...args: any[]) => any;
   onClear?: (...args: any[]) => any;
+  setLabel?: (label: string) => any;
+  deleteTable?: (key: number) => any;
   className?: string;
 };
 
@@ -60,13 +67,20 @@ const TimeTablePanel = ({
   selections,
   selected,
   onSelect,
+  setLabel,
+  deleteTable,
   className,
 }: TimeTablePanelProps) => {
   const notification = useContext(NotificationContext);
   const [modalMode, setModalMode] = useState(MODAL_MODES.NO_MODAL);
   const [importInput, setImportInput] = useState('');
+  const [labelInput, setLabelInput] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
   const [moreBtnAnchor, setMoreBtnAnchor] = useState(null);
+
+  useEffect(() => {
+    setLabelInput(selected?.label);
+  }, [selected]);
 
   const FUNCTION_BUTTONS = [
     {
@@ -123,18 +137,54 @@ const TimeTablePanel = ({
               {selected.label || PLANNER_CONFIGS.DEFAULT_TABLE_NAME}
             </Button>
             <Menu
+              className="planner-timetable-selection-menu"
               anchorEl={anchorEl}
-              keepMounted
               open={Boolean(anchorEl)}
               onClose={() => setAnchorEl(null)}
             >
+              <h4 className="subheading">Title</h4>
+              <form
+                className="timetable-label-input-container"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (labelInput !== selected.label) {
+                    setLabel(labelInput);
+                  }
+                }}
+              >
+                <InputBase
+                  placeholder="Enter Label"
+                  value={labelInput}
+                  onChange={(e) => {
+                    setLabelInput(e.target.value);
+                  }}
+                  inputProps={{ 'aria-label': 'search' }}
+                />
+                <IconButton type="submit" size="small">
+                  {labelInput === selected.label ? <Edit /> : <Check />}
+                </IconButton>
+              </form>
+              <Divider />
+              <h4 className="subheading">TimeTables</h4>
               {selections.map((item) => (
                 <MenuItem
+                  className="timetable-select-item"
                   key={item.key}
                   onClick={() => [onSelect(item.key), setAnchorEl(null)]}
                   selected={selected.key === item.key}
                 >
                   {item.label}
+                  <IconButton
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      deleteTable(item.key);
+                    }}
+                    size="small"
+                    color="primary"
+                  >
+                    <DeleteOutline />
+                  </IconButton>
                 </MenuItem>
               ))}
               <Divider />

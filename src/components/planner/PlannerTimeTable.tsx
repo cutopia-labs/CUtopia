@@ -3,6 +3,7 @@ import { observer } from 'mobx-react-lite';
 
 import TimeTablePanel from '../templates/TimeTablePanel';
 import { PlannerContext } from '../../store';
+import { PLANNER_CONFIGS } from '../../constants/configs';
 
 type PlannerTimeTableProps = {
   className?: string;
@@ -24,8 +25,12 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
       onSelect={(key) => planner.updateCurrentPlanner(key)}
       selected={{
         key: planner.currentPlanner,
-        label: planner.planners[planner.currentPlanner]?.label,
+        label:
+          planner.planners[planner.currentPlanner]?.label ||
+          PLANNER_CONFIGS.DEFAULT_TABLE_NAME,
       }}
+      setLabel={(label: string) => planner.setPlannerLabel(label)}
+      deleteTable={(key: number) => planner.deletePlanner(key)}
     />
   );
 };

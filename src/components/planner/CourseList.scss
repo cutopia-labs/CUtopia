@@ -34,8 +34,9 @@
   flex: 1;
   position: relative;
   display: flex;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
 }
-
 
 @media only screen and (max-width: 560px) {
   .timetable-container {

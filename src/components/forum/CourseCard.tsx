@@ -13,6 +13,8 @@ import Points from './Points';
 import { COURSE_CARD_MAX_HEIGHT } from '../../constants/configs';
 import { CourseInfo } from '../../types';
 import Link from '../molecules/Link';
+import { useHistory, Link as RouterLink } from 'react-router-dom';
+import { FiExternalLink } from 'react-icons/fi';
 
 type CourseCardProps = {
   courseInfo: CourseInfo;
@@ -24,6 +26,7 @@ const CourseCard = ({ courseInfo, concise }: CourseCardProps) => {
   const [skipHeightCheck, setSkipHeightCheck] = useState(concise);
   const user = useContext(UserContext);
   const isMobile = useMediaQuery('(max-width:1260px)');
+  const history = useHistory();
 
   const isFavorited = user.favoriteCourses.some(
     (course) => course.courseId === courseInfo.courseId
@@ -95,10 +98,21 @@ const CourseCard = ({ courseInfo, concise }: CourseCardProps) => {
             </div>
           )}
           {courseInfo.rating && (
-            <GradeRow
-              rating={courseInfo.rating}
-              additionalClassName="concise"
-            />
+            <>
+              <div className="sub-heading-container">
+                <RouterLink
+                  to={`/review/${courseInfo.courseId}`}
+                  className="reviews-link-heading sub-heading center-row"
+                >
+                  Reviews
+                  <FiExternalLink />
+                </RouterLink>
+              </div>
+              <GradeRow
+                rating={courseInfo.rating}
+                additionalClassName="concise"
+              />
+            </>
           )}
           {courseInfo.terms && <CourseSections courseInfo={courseInfo} />}
         </>

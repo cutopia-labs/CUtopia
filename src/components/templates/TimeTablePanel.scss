@@ -1,3 +1,30 @@
+.planner-timetable-selection-menu {
+  --menu-padding-horizontal: 16px;
+  --menu-padding-vertical: 6px;
+  & .MuiPaper-root { // Menu contianer
+    .MuiSvgIcon-root {
+      font-size: 22px;
+    }
+    .MuiList-root {
+      padding: 0;
+    }
+    h4 {
+      margin: 12px var(--menu-padding-horizontal);
+      color: var(--primary);
+    }
+  }
+  & .timetable-label-input-container {
+    margin: 0 var(--menu-padding-horizontal) var(--menu-padding-vertical) var(--menu-padding-horizontal);
+  }
+  & .MuiButtonBase-root:last-child {
+    color: var(--primary);
+    font-weight: bold;
+  }
+  & .timetable-select-item .MuiIconButton-root {
+    margin-left: auto;
+  }
+}
+
 .time-table-panel {
   & > header {
     justify-content: space-between;
