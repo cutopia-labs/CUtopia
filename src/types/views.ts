@@ -8,12 +8,11 @@ export type SearchPayload = {
 export interface MenuItem {
   icon?: string | JSX.Element;
   label: string;
-};
+}
 
 export interface PlannerItem extends MenuItem {
   key: number;
-};
-
+}
 
 export type SnackBar = {
   message: string;

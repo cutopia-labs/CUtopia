@@ -137,7 +137,7 @@ const CourseList = ({ courses, previewCourse }: CourseListProps) => {
                 patternUnits="userSpaceOnUse"
               >
                 <path
-                  d="M 300 1 L 1 1 1 300"
+                  d="M 500 1 L 1 1 1 5500"
                   fill="none"
                   stroke={
                     prefersDarkMode

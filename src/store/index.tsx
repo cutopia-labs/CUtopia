@@ -4,8 +4,7 @@ import PreferenceStore from './PreferenceStore';
 import UserStore from './UserStore';
 import NotificationStore from './NotificationStore';
 import PlannerStore from './PlannerStore';
-import { reaction, toJS } from 'mobx';
-import { storeData } from '../helpers/store';
+import { reaction } from 'mobx';
 
 const notificationStore = new NotificationStore();
 const preferenceStore = new PreferenceStore();

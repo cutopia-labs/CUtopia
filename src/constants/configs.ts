@@ -18,7 +18,7 @@ const TIMETABLE_CONSTANTS = Object.freeze({
 
 const PLANNER_CONFIGS = {
   DEFAULT_TABLE_NAME: 'New Timetable',
-}
+};
 
 export {
   LAZY_LOAD_BUFFER,

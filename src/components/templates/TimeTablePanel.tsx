@@ -10,18 +10,26 @@ import {
   MenuItem,
   TextField,
   Divider,
+  IconButton,
 } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 
+import copy from 'copy-to-clipboard';
 import { NotificationContext } from '../../store';
 import './TimeTablePanel.scss';
 import CourseList from '../planner/CourseList';
-import copyToClipboard from '../../helpers/copyToClipboard';
 import Card from '../atoms/Card';
 import { CourseTableEntry, PlannerCourse, PlannerItem } from '../../types';
 import clsx from 'clsx';
 import { PLANNER_CONFIGS } from '../../constants/configs';
-import { ExpandMore } from '@material-ui/icons';
+import {
+  Delete,
+  ExpandMore,
+  GetApp,
+  MoreVert,
+  Publish,
+  Share,
+} from '@material-ui/icons';
 
 enum MODAL_MODES {
   NO_MODAL,
@@ -58,22 +66,47 @@ const TimeTablePanel = ({
   const [modalMode, setModalMode] = useState(MODAL_MODES.NO_MODAL);
   const [importInput, setImportInput] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
+  const [moreBtnAnchor, setMoreBtnAnchor] = useState(null);
 
   const FUNCTION_BUTTONS = [
     {
       label: 'import',
       action: () => setModalMode(MODAL_MODES.IMPORT_MODAL),
+      icon: <GetApp />,
     },
     {
       label: 'export',
       action: () => {
-        copyToClipboard(JSON.stringify(courses));
-        notification.setSnackBar('Copied the timetable to clipboard!');
+        const result = copy(JSON.stringify(courses));
+        notification.setSnackBar(
+          result
+            ? 'Copied the timetable to clipboard!'
+            : 'Failed to copy QAQ, please report the issue to us'
+        );
       },
+      icon: <Publish />,
+    },
+  ];
+
+  const MORE_SELECTIONS = [
+    {
+      label: 'Share',
+      action: () => {
+        const result = copy(JSON.stringify(courses));
+        notification.setSnackBar(
+          result
+            ? 'Copied the timetable to clipboard!'
+            : 'Failed to copy QAQ, please report the issue to us'
+        );
+      },
+      icon: <Share />,
     },
     {
-      label: 'clear',
-      action: onClear,
+      label: 'Clear',
+      action: () => {
+        onClear();
+      },
+      icon: <Delete />,
     },
   ];
 
@@ -90,7 +123,6 @@ const TimeTablePanel = ({
               {selected.label || PLANNER_CONFIGS.DEFAULT_TABLE_NAME}
             </Button>
             <Menu
-              id="simple-menu"
               anchorEl={anchorEl}
               keepMounted
               open={Boolean(anchorEl)}
@@ -122,6 +154,34 @@ const TimeTablePanel = ({
               {item.label}
             </Button>
           ))}
+          <Menu
+            className="timetable-more-menu"
+            anchorEl={moreBtnAnchor}
+            open={Boolean(moreBtnAnchor)}
+            onClose={() => setMoreBtnAnchor(null)}
+          >
+            {MORE_SELECTIONS.map((item) => (
+              <MenuItem
+                key={item.label}
+                onClick={() => {
+                  item.action();
+                  setMoreBtnAnchor(null);
+                }}
+              >
+                <span className="menu-icon-container center-box">
+                  {item.icon}
+                </span>
+                {item.label}
+              </MenuItem>
+            ))}
+          </Menu>
+          <IconButton
+            onClick={(e) => setMoreBtnAnchor(e.currentTarget)}
+            size="small"
+            color="default"
+          >
+            <MoreVert />
+          </IconButton>
         </div>
       </header>
       <CourseList

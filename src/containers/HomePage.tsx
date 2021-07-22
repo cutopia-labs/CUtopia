@@ -19,6 +19,7 @@ import TabsContainer from '../components/molecules/TabsContainer';
 import Page from '../components/atoms/Page';
 import Card from '../components/atoms/Card';
 import Link from '../components/molecules/Link';
+import PlannerTimeTable from '../components/planner/PlannerTimeTable';
 
 const LINKS = [
   {
@@ -98,15 +99,7 @@ const HomePage = () => {
           />
         );
       case 'Planner':
-        return (
-          <TimeTablePanel
-            className="home-page-timetable"
-            title="Planner"
-            courses={planner.plannerCourses}
-            onImport={(parsedData) => user.setAndSaveTimeTable(parsedData)}
-            onClear={() => user.clearTimeTable()}
-          />
-        );
+        return <PlannerTimeTable className="home-page-timetable" />;
       case 'Timetable':
         return (
           <TimeTablePanel

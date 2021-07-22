@@ -7,13 +7,14 @@
   letter-spacing: 2px;
   cursor: pointer;
   .logo-beta {
-    font-size: 14px;
+    font-size: 11px;
     color: white;
-    border-radius: 12px;
-    padding: 2px 12px;
-    background-color: rgb(255, 125, 116);
-    margin-left: var(--card-padding);
-    font-weight: 600;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    background-color: #ff7d74;
+    margin-left: 6px;
+    margin-bottom: 10px;
     letter-spacing: 1px;
   }
 }

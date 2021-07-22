@@ -189,6 +189,12 @@ textarea[type=number] {
   background-color: var(--border) !important;
 }
 
+.center-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* Scrollbar styles */
 
 /* Mobile Styles */
