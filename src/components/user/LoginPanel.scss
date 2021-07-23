@@ -25,12 +25,18 @@
     font-size: 14px;
     cursor: pointer;
     margin-left: 12px;
-    color: var(--primary);
+    color: var(--landing-page-btn-color);
     font-weight: bold;
+  }
+  .text-filed-label {
+    margin-left: 0;
+    color: var(--text);
+    margin-bottom: 0;
   }
 }
 .qrcode-row {
   justify-content: space-between;
+  padding-bottom: 12px;
   canvas {
     padding: 2px;
     background-color: white;

@@ -1,19 +1,23 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Audiowide&family=Caveat&family=Monoton&display=swap');
+
+
+@import url('https://fonts.googleapis.com/css2?family=Audiowide&family=Caveat&family=Monoton&family=Pacifico&display=swap');
+
+
 .logo-container {
   display: flex;
   align-items: center;
-  font-family: Futura, sans-serif;
-  font-weight: 900;
+  font-family: 'Pacifico', cursive;
   font-size: 22px;
   letter-spacing: 2px;
   cursor: pointer;
   .logo-beta {
     font-size: 11px;
-    color: white;
     border-radius: 50%;
     width: 16px;
     height: 16px;
-    background-color: #ff7d74;
-    margin-left: 6px;
+    margin-left: 8px;
     margin-bottom: 10px;
     letter-spacing: 1px;
   }

@@ -9,6 +9,7 @@ type TextFieldProps = {
   value: string;
   type?: string;
   ref?: React.RefObject<HTMLInputElement | HTMLTextAreaElement>;
+  label?: string;
 };
 
 const TextField = ({
@@ -20,6 +21,7 @@ const TextField = ({
   type,
   Tag,
   ref,
+  label,
   onBlur,
   onFocus,
 }: React.HTMLAttributes<HTMLInputElement | HTMLTextAreaElement> &
@@ -27,6 +29,9 @@ const TextField = ({
   const TagName = Tag || 'input';
   return (
     <>
+      {Boolean(label) && (
+        <span className="label text-filed-label">{label}</span>
+      )}
       <TagName
         ref={ref as any}
         className="input-container"
@@ -38,7 +43,7 @@ const TextField = ({
         onFocus={onFocus}
         onBlur={onBlur}
       />
-      {error && <div className="error-label">{error}</div>}
+      {Boolean(error) && <div className="error-label">{error}</div>}
     </>
   );
 };

@@ -52,9 +52,7 @@ const RankingCard = ({
           to={`/review/${course.courseId}`}
         >
           <ListItem
-            left={
-              <span className="ranking-label center-flex-box">{i + 1}</span>
-            }
+            left={<span className="ranking-label center-box">{i + 1}</span>}
             right={
               course[sortKey] ? (
                 <GradeIndicator grade={course[sortKey]} />

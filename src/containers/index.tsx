@@ -7,7 +7,7 @@ import { UserContext } from '../store';
 import Header from '../components/organisms/Header';
 import HomePage from './HomePage';
 import ForumPage from './ForumPage';
-import LoginPage from './LoginPage';
+import LandingPage from './LandingPage';
 import PlannerPage from './PlannerPage';
 import { LoginState } from '../types';
 
@@ -17,7 +17,7 @@ const Navigator = () => {
     return (
       <>
         <SnackBar />
-        <LoginPage />
+        <LandingPage />
       </>
     );
   }

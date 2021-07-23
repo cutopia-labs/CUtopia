@@ -34,14 +34,14 @@ const CUHK_EMAIL_SUFFIX = '@link.cuhk.edu.hk';
 const MODE_ITEMS = {
   [LoginPageMode.CUTOPIA_LOGIN]: {
     title: 'Log In',
-    caption: 'Log in to unlock course reviews',
+    caption: 'Welcome back',
     username: 'Your username for CUtopia',
     password: 'Password for CUtopia Account',
     button: 'Log In',
   },
   [LoginPageMode.CUTOPIA_SIGNUP]: {
     title: 'Sign Up',
-    caption: 'Sign up now to unlock course reviews',
+    caption: 'A few steps away from unlimited course reviews',
     userId: 'Your CUHK SID (For Verification)',
     username: 'Your username for CUtopia',
     password: 'Password for CUtopia Account',
@@ -323,6 +323,7 @@ const LoginPanel = () => {
           type="number"
           value={userId}
           onChangeText={(text) => setUserId(text)}
+          label="CUHK SID"
         />
       )}
       {MODE_ITEMS[mode].verificationCode && (
@@ -331,6 +332,7 @@ const LoginPanel = () => {
           placeholder={MODE_ITEMS[mode].verificationCode}
           value={verificationCode}
           onChangeText={(text) => setVerificationCode(text)}
+          label="Verification Code"
         />
       )}
       {MODE_ITEMS[mode].username && (
@@ -339,6 +341,7 @@ const LoginPanel = () => {
           placeholder={MODE_ITEMS[mode].username}
           value={username}
           onChangeText={(text) => setUsername(text)}
+          label="Username"
         />
       )}
       {MODE_ITEMS[mode].password && (
@@ -349,6 +352,7 @@ const LoginPanel = () => {
           value={password}
           onChangeText={(text) => setPassword(text)}
           type={invisible ? 'password' : 'text'}
+          label="Password"
         />
       )}
       {mode === LoginPageMode.CUTOPIA_LOGIN && (

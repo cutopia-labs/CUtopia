@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat&display=swap');
 body {
     --primary: #01579b;
     --accent: #ff8a65;
@@ -6,6 +7,7 @@ body {
     --background-dark: rgba(5,5,5,1);
     --background-secondary: rgb(250, 251, 252);
     --background-tertiary: rgb(246, 248, 250);
+    --background-warm: rgb(243, 243, 244);
     --text: rgba(12,12,12,1);
     --reversed-text: rgba(255,255,255,1);
     --button: rgba(21, 121, 193, 1);
@@ -97,10 +99,9 @@ textarea[type=number] {
     align-items: center;
 }
 
-.center-flex-box {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+.center {
+  align-items: center;
+  justify-content: center;
 }
 
 .column {
