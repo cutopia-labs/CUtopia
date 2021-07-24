@@ -1,6 +1,7 @@
 import { PropsWithChildren } from 'react';
 
 import './ListItem.scss';
+import clsx from 'clsx';
 import colors from '../../constants/colors';
 
 type ListItemProps = {
@@ -13,6 +14,7 @@ type ListItemProps = {
   left?: JSX.Element;
   right?: JSX.Element;
   className?: string;
+  noHover?: boolean;
   onMouseDown?: (...args: any[]) => any;
 };
 
@@ -28,11 +30,15 @@ const ListItem = ({
   right,
   className,
   onMouseDown,
+  noHover,
 }: PropsWithChildren<ListItemProps>) => (
   <div
-    className={`list-item-container${!noBorder ? ' border' : ''} row${
-      className ? ` ${className}` : ''
-    }`}
+    className={clsx(
+      'list-item-container',
+      !noBorder && 'border',
+      className && className,
+      !noHover && 'hover'
+    )}
     onClick={onClick}
     onMouseDown={onMouseDown}
   >

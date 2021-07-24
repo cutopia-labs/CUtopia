@@ -3,6 +3,7 @@ export type SearchMode = 'subject' | 'query' | 'Pins' | 'My Courses';
 export type SearchPayload = {
   mode: SearchMode | null;
   text?: string;
+  showAvalibility?: boolean;
 };
 
 export interface MenuItem {

@@ -86,6 +86,7 @@ type DepartmentCourses = {
 type CourseSearchItem = {
   c: string;
   t: string;
+  o?: number;
 };
 
 type CourseConcise = {

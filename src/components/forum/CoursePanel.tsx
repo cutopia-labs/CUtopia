@@ -1,8 +1,8 @@
 import { useState, useEffect, useContext } from 'react';
 import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
-import { Sort, Edit, Share } from '@material-ui/icons';
+import { Edit, Share, ExpandMore } from '@material-ui/icons';
 import { useQuery } from '@apollo/client';
-import { Button, IconButton, Menu, MenuItem } from '@material-ui/core';
+import { Button, Menu, MenuItem } from '@material-ui/core';
 import { SpeedDial, SpeedDialIcon, SpeedDialAction } from '@material-ui/lab';
 import { observer } from 'mobx-react-lite';
 
@@ -22,17 +22,15 @@ import useDebounce from '../../helpers/useDebounce';
 import { LAZY_LOAD_BUFFER } from '../../constants/configs';
 import { ReviewsFilter, ReviewsResult } from '../../types';
 import ReviewEdit from './ReviewEdit';
-import HomePanel from './HomePanel';
 import ReviewCard from './ReviewCard';
 import CourseCard from './CourseCard';
 
-export const COURSE_PANEL_MODES = Object.freeze({
-  DEFAULT: 1, // i.e. card to show recent reviews & rankings
-  WITH_REVIEW: 2,
-  GET_TARGET_REVIEW: 3,
-  FETCH_REVIEWS: 4,
-  EDIT_REVIEW: 5,
-});
+export enum COURSE_PANEL_MODES {
+  WITH_REVIEW,
+  GET_TARGET_REVIEW,
+  FETCH_REVIEWS,
+  EDIT_REVIEW,
+}
 
 const SORTING_FIELDS = Object.freeze(['date', 'upvotes']);
 
@@ -55,13 +53,13 @@ const CourseSummary = ({
       {courseInfo.rating ? (
         <>
           <div className="center-row">
-            <IconButton
-              aria-label="sort"
+            <Button
               size="small"
               onClick={(e) => setAnchorEl(e.currentTarget)}
+              endIcon={<ExpandMore />}
             >
-              <Sort />
-            </IconButton>
+              {sorting}
+            </Button>
             <div className="course-summary-label">
               {exceedLimit &&
                 `Limit exceeded (post ${FULL_MEMBER_REVIEWS} reviews to unlock)`}
@@ -76,7 +74,7 @@ const CourseSummary = ({
             anchorEl={anchorEl}
             keepMounted
             open={Boolean(anchorEl)}
-            onClose={handleClose}
+            onClose={() => setAnchorEl(null)}
           >
             {SORTING_FIELDS.map((field) => (
               <MenuItem
@@ -109,9 +107,7 @@ const CoursePanel = () => {
     id?: string;
     reviewId?: string;
   }>();
-  const [mode, setMode] = useState(
-    courseId ? COURSE_PANEL_MODES.FETCH_REVIEWS : COURSE_PANEL_MODES.DEFAULT
-  );
+  const [mode, setMode] = useState(COURSE_PANEL_MODES.FETCH_REVIEWS);
   const [sorting, setSorting] = useState('date');
   const history = useHistory();
   const [FABOpen, setFABOpen] = useState(false);
@@ -170,7 +166,6 @@ const CoursePanel = () => {
     refetch: reviewsRefetch,
   } = useQuery<ReviewsResult, ReviewsFilter>(REVIEWS_QUERY, {
     skip:
-      !courseId ||
       userDataLoading ||
       (((userData?.user?.reviewIds || user.user.reviewIds)?.length || 0) <
         FULL_MEMBER_REVIEWS &&
@@ -258,35 +253,26 @@ const CoursePanel = () => {
 
   useEffect(() => {
     console.log(`Current id: ${courseId}`);
-    setFABHidden(false);
-    // To clear previous lastEvaluatedKey
-    if (lastEvaluatedKey !== undefined) {
-      console.log(`Cleared lastEvaluatedKey ${lastEvaluatedKey}, refetch now`);
-      reviewsRefetch({
-        courseId,
-        ascendingDate: sorting === 'date' ? false : null,
-        ascendingVote: sorting === 'upvotes' ? false : null,
-        lastEvaluatedKey: null,
-      });
-    }
     if (reviews.length) {
       setReviews([]);
     }
     if (validCourse(courseId)) {
       setMode(COURSE_PANEL_MODES.FETCH_REVIEWS);
       user.increaseViewCount();
-    } else if (mode !== COURSE_PANEL_MODES.DEFAULT)
-      setMode(COURSE_PANEL_MODES.DEFAULT);
+    } else {
+      // Display ERROR PAGE
+    }
   }, [courseId]);
 
   useEffect(() => {
     console.log(`Reviews loading: ${reviewsLoading}`);
   }, [reviewsLoading]);
 
-  if (mode === COURSE_PANEL_MODES.DEFAULT) {
-    return <HomePanel />;
-  }
+  useEffect(() => {
+    console.log(`Initiated with course ${courseId}`);
+  }, []);
 
+  // Place edit here is to save another courseInfo query
   if (isEdit) {
     return (
       <div className="review-edit-panel course-panel panel card">

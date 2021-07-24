@@ -8,17 +8,14 @@ import {
   Divider,
   Collapse,
   IconButton,
+  Tooltip,
 } from '@material-ui/core';
 import {
   Search,
   ExpandLess,
   ExpandMore,
-  School,
   ArrowBack,
-  Bookmark,
-  Class,
   ClassOutlined,
-  BookmarkOutlined,
   SchoolOutlined,
   BookmarkBorderOutlined,
 } from '@material-ui/icons';
@@ -152,20 +149,36 @@ export const SearchResult = ({
         user,
         limit: limit || MAX_SEARCH_RESULT_LENGTH,
       }) || []
-    ).map((course, i) => (
-      <ListItem
-        key={`listitem-${course.c}`}
-        ribbonIndex={i}
-        chevron
-        onClick={() => onClick(course.c)}
-        onMouseDown={() => (onMouseDown ? onMouseDown(course.c) : {})}
-      >
-        <div className="search-list-item column">
-          <span className="title">{course.c}</span>
-          <span className="caption">{course.t}</span>
-        </div>
-      </ListItem>
-    ))}
+    )
+      .sort((a, b) => (a.o ? -1 : 1))
+      .map((course, i) =>
+        searchPayload.showAvalibility && !course.o ? (
+          <Tooltip title="Unavaliable for current semester" placement="right">
+            <div
+              className="list-item-container disabled"
+              key={`listitem-${course.c}`}
+            >
+              <div className="search-list-item column">
+                <span className="title">{course.c}</span>
+                <span className="caption">{course.t}</span>
+              </div>
+            </div>
+          </Tooltip>
+        ) : (
+          <ListItem
+            key={`listitem-${course.c}`}
+            ribbonIndex={i}
+            chevron
+            onClick={() => onClick(course.c)}
+            onMouseDown={() => (onMouseDown ? onMouseDown(course.c) : {})}
+          >
+            <div className="search-list-item column">
+              <span className="title">{course.c}</span>
+              <span className="caption">{course.t}</span>
+            </div>
+          </ListItem>
+        )
+      )}
   </>
 );
 
@@ -216,7 +229,7 @@ const DepartmentList = ({ setSearchPayload }) => {
 };
 
 const SearchPanel = () => {
-  const [searchPayload, setSearchPayload] = useState<SearchPayload | null>(
+  const [searchPayload, setSearchPayloadState] = useState<SearchPayload | null>(
     null
   );
   const [historyList, setHistoryList] = useState([]);
@@ -244,6 +257,17 @@ const SearchPanel = () => {
       },
     }),
   });
+
+  const setSearchPayload = (payload: SearchPayload) => {
+    setSearchPayloadState(
+      payload
+        ? {
+            ...payload,
+            showAvalibility: Boolean(isPlanner),
+          }
+        : null
+    );
+  };
 
   useEffect(() => {
     console.log(isPlanner);

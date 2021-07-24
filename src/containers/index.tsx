@@ -29,15 +29,7 @@ const Navigator = () => {
           <Route exact path="/">
             <HomePage />
           </Route>
-          <Route
-            exact
-            path={[
-              '/review',
-              '/review/:id',
-              '/review/:id/compose',
-              '/review/:id/:reviewId',
-            ]}
-          >
+          <Route path="/review">
             <ForumPage />
           </Route>
           <Route exact path="/planner">
