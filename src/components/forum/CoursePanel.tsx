@@ -51,7 +51,7 @@ const CourseSummary = ({
     setAnchorEl(null);
   };
   return (
-    <div className="course-summary">
+    <div className="panel card course-summary row">
       {courseInfo.rating ? (
         <>
           <div className="center-row">
@@ -307,15 +307,23 @@ const CoursePanel = () => {
   }
 
   return (
-    <div className="course-panel panel card">
-      {courseInfo && courseInfo.subjects && courseInfo.subjects[0] ? (
+    <div className="column">
+      <div className="course-panel panel card">
+        {!courseInfoLoading ? (
+          <>
+            <CourseCard
+              courseInfo={{
+                ...courseInfo.subjects[0].courses[0],
+                courseId,
+              }}
+            />
+          </>
+        ) : (
+          <Loading />
+        )}
+      </div>
+      {!courseInfoLoading && (
         <>
-          <CourseCard
-            courseInfo={{
-              ...courseInfo.subjects[0].courses[0],
-              courseId,
-            }}
-          />
           <CourseSummary
             courseInfo={courseInfo.subjects[0].courses[0]}
             sorting={sorting}
@@ -331,22 +339,6 @@ const CoursePanel = () => {
               user.exceedLimit
             }
           />
-          {(reviewsLoading || reviewLoading) && <Loading fixed />}
-          {(review ? [review.review] : reviews).map((item) => (
-            <ReviewCard
-              key={item.createdDate}
-              review={item}
-              shareAction={() => {
-                copy(
-                  reviewId
-                    ? window.location.href
-                    : `${window.location.href}/${item.createdDate}`
-                );
-                notification.setSnackBar('Copied sharelink to clipboard!');
-              }}
-              showAll={Boolean(reviewId)}
-            />
-          ))}
           <SpeedDial
             ariaLabel="SpeedDial"
             hidden={FABHidden}
@@ -375,9 +367,23 @@ const CoursePanel = () => {
             ))}
           </SpeedDial>
         </>
-      ) : (
-        <Loading />
       )}
+      {(reviewsLoading || reviewLoading) && <Loading fixed />}
+      {(review ? [review.review] : reviews).map((item) => (
+        <ReviewCard
+          key={item.createdDate}
+          review={item}
+          shareAction={() => {
+            copy(
+              reviewId
+                ? window.location.href
+                : `${window.location.href}/${item.createdDate}`
+            );
+            notification.setSnackBar('Copied sharelink to clipboard!');
+          }}
+          showAll={Boolean(reviewId)}
+        />
+      ))}
     </div>
   );
 };
