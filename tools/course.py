@@ -8,11 +8,15 @@ import sys
 import os
 import pytesseract
 import json
+import time
+import traceback
 
 FLUSH = '\x1b[1K\r'
+CURRENT_TERM = "2021-22 Term 1"
+
 
 class Course:
-    def __init__(self, dirname=''):
+    def __init__(self, dirname='', save_captchas=False):
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9'
@@ -28,13 +32,40 @@ class Course:
         self.courses = {}
         self.form_body = {}
         self.dirname = dirname
+        self.save_captchas = save_captchas
         if not os.path.isdir(dirname):
             os.mkdir(dirname)
+        if not os.path.isdir("captchas"):
+            os.mkdir("captchas")
+        if not os.path.isdir("logs"):
+            os.mkdir("logs")
+        self.log_file = open(os.path.join('logs', f'parser-{str(int(time.time()))}.log'), 'w')
         try:
             with open(os.path.join(self.dirname, 'subjects.json'), 'r') as f:
                 self.faculty_subjects = json.load(f)
         except FileNotFoundError:
             self.faculty_subjects = {}
+
+    def post_processing(self):
+        self.log_file.close()
+
+    def with_course(self, fn):
+        with os.scandir(self.dirname) as it:
+            for entry in it:
+                with open(entry.path, 'r') as f:
+                    filename = entry.path[(len(self.dirname)+1):-5]
+                    if(len(filename) == 4): # i.e. filename is a valid subject code
+                        courses = json.load(f)
+                        fn(courses, filename, f)
+
+    def with_course_section(self, fn):
+        def append_to_sections(courses, subject, f):
+            for course in courses:
+                if 'terms' in course:
+                    for term in course['terms'].values():
+                        for section in term.values():
+                            fn(section, course)
+        self.with_course(append_to_sections)
 
     # Get all department codes
     def process_faculty_subjects(self):
@@ -49,21 +80,26 @@ class Course:
             json.dump(subjects_under_department, f)
 
     # Get all courses under a subject, and save Id and title only
-    def process_subjects(self):
+    def process_subjects(self, label_availability = False, concise=False):
         all_courses = {}
-        with os.scandir(self.dirname) as it:
-            for entry in it:
-                with open(entry.path, 'r') as f:
-                    filename = entry.path[(len(self.dirname)+1):-5]
-                    if(len(filename) == 4): # i.e. filename is a valid subject code
-                        course_list = []
-                        courses = json.load(f)
-                        for course in courses:
-                            course_list.append({
-                                'courseId': filename + course['code'],
-                                'title': course['title']
-                            })
-                        all_courses[filename] = course_list
+        def append_to_subjects(courses, subject, f):
+            course_list = []
+            for course in courses:
+                course_concise = {
+                    'courseId' if not concise else 'c': subject + course['code'],
+                    'title' if not concise else 't': course['title']
+                }
+                if label_availability:
+                    avaliable = False
+                    if 'terms' in course:
+                        for term in course['terms'].keys():
+                            if term == CURRENT_TERM:
+                                avaliable = True
+                                break
+                    course_concise['offerring' if not concise else 'o'] = 1 if avaliable else 0
+                course_list.append(course_concise)
+            all_courses[subject] = course_list
+        self.with_course(append_to_subjects)
         with open(os.path.join(self.dirname, 'subjcet_courses.json'), 'w') as f:
             json.dump(all_courses, f)
 
@@ -74,53 +110,55 @@ class Course:
         CLEANING_REGEX = r'|'.join(map(re.escape, ['.', '\n\r'] + list(map(lambda x: f"{x} ", TITLE_PREFIXS))))
         occurrence = {}
         instructors=[]
-        with os.scandir(self.dirname) as it:
-            for entry in it:
-                with open(entry.path, 'r') as f:
-                    filename = entry.path[(len(self.dirname)+1):-5]
-                    if(len(filename) == 4): # i.e. filename is a valid subject code
-                        course_list = []
-                        courses = json.load(f)
-                        for course in courses:
-                            if 'terms' in course:
-                                for term in course['terms'].values():
-                                    for section in term.values():
-                                        for instructor in section['instructors']:
-                                            # Remove the title
-                                            instructor = re.sub(REMOVE_TITLE_REGEX, '', instructor)
-                                            instructor = re.sub(CLEANING_REGEX, '', instructor).strip()
-                                            # Split for multiple instructors in one section
-                                            for part in instructor.split(', '):    
-                                                if part in occurrence:
-                                                    continue
-                                                instructors.append(part)
-                                                occurrence[part] = True
+        def append_to_instructors(section, course):
+           for instructor in section['instructors']:
+                # Remove the title
+                instructor = re.sub(REMOVE_TITLE_REGEX, '', instructor)
+                instructor = re.sub(CLEANING_REGEX, '', instructor).strip()
+                # Split for multiple instructors in one section
+                for part in instructor.split(', '):    
+                    if part in occurrence:
+                        continue
+                    instructors.append(part)
+                    occurrence[part] = True
+        self.with_course_section(append_to_instructors)
         print(f"Found {len(instructors)} instructors")
         with open(os.path.join(self.dirname, 'instructors.json'), 'w') as f:
             json.dump(instructors, f)
+    
+    def remove_empty_courses(self):
+        def append_to_remove(courses, subject, f):
+            if not courses or len(courses) == 0:
+                self.log_file.write(f'Removed empty {subject}.json')
+                os.remove(os.path.join(self.dirname, f'{subject}.json'))
+        self.with_course(append_to_remove)
 
-
-    def parse_all(self, save=True, manual=True):
+    def parse_all(self, save=True, manual=True, skip_parsed=False):
         self.get_code_list()
-        print(f'Parsing courses for all {len(self.code_list)} subjects')
+        print(f'Parsing courses for all {len(self.code_list)} subjects, {"skip if already existed" if skip_parsed else ""}')
+        parsed_subjects = {}
+        if skip_parsed:
+            with os.scandir(self.dirname) as it:
+                for entry in it:
+                    subject = entry.path[(len(self.dirname)+1):-5]
+                    parsed_subjects[subject] = True
         for code in self.code_list:
-            subject = code.split()[0]
-            with closing(self.sess.get(self.course_url, headers=self.headers)) as res:
-                soup = BeautifulSoup(res.text, 'html.parser')
-                subjects_elements = soup.select('#ddl_subject option')[1:] # the first one element is not valid
-                for element in subjects_elements:
-                    subject = element.get('value')
-                    self.search_subject(subject, save, manual)
+            if skip_parsed and code in parsed_subjects:
+                print(f'{code} found in dir, skipped parsing')
+                continue
+            self.search_subject(code, save, manual)
+        print("Parsing finished!")
 
     def get_code_list(self):
         with closing(requests.get(self.course_url, headers=self.headers)) as res:
             soup = BeautifulSoup(res.text, 'html.parser')
             code_list = []
-            for node in soup.select('option'):
-                code_list.append(node.text)
+            for node in soup.select('#ddl_subject option')[1:]:
+                code_list.append(node.get('value'))
+            print(list(filter(None, code_list)))
             self.code_list = list(filter(None, code_list))
 
-    def get_captcha(self, soup:BeautifulSoup, manual=True):
+    def get_captcha(self, soup:BeautifulSoup, manual=True) -> Image:
         captcha_id = soup.select_one('#hf_Captcha')['value']
         captcha_url = f'http://rgsntl.rgs.cuhk.edu.hk/aqs_prd_applx/Public/BuildCaptcha.aspx?captchaname={captcha_id}&len=4'
         with closing(self.sess.get(captcha_url, headers=self.headers)) as captcha_res:
@@ -136,6 +174,7 @@ class Course:
                 'hf_Captcha': captcha_id,
                 'txt_captcha': captcha,
             })
+            return im
 
     def update_form(self, soup: BeautifulSoup, update=True, additional_keys=None) -> dict:
         form_body = {'__VIEWSTATEFIELDCOUNT': soup.select_one('#__VIEWSTATEFIELDCOUNT')['value']}
@@ -162,12 +201,16 @@ class Course:
                 'hf_search_iteration': '1',
             })
             while True:
-                self.get_captcha(soup, manual)
+                im = self.get_captcha(soup, manual)
                 form_body = { 'btn_search': 'Search' }
                 form_body.update(self.form_body)
                 with closing(self.sess.post(self.course_url, headers=self.form_headers, data=form_body)) as res:
                     correct_captcha = self.parse_subject_courses(subject, res.text, save)
                     if correct_captcha:
+                        if self.save_captchas:
+                            # Save image & label here as training dataset
+                            filename = str(int(time.time()))
+                            im.save(f"captchas/{self.form_body['txt_captcha']}_{filename}.png")   
                         break
                     else:
                         print('Wrong captcha!' if manual else 'Unable to decode the captcha, please enter manually!')
@@ -196,7 +239,7 @@ class Course:
             }
             form_body.update(self.form_body)
             with closing(self.sess.post(self.course_url, headers=self.headers, data=form_body)) as res:
-                course_detail = self.parse_course_detail(res.text)
+                course_detail = self.parse_course_detail(res.text, subject + course['code'])
                 if not subject in self.faculty_subjects and 'academic_group' in course_detail:
                     self.faculty_subjects[subject] = course_detail['academic_group']
                     with open(os.path.join(self.dirname, 'subjects.json'), 'w') as f:
@@ -211,7 +254,7 @@ class Course:
         self.courses[subject] = course_list
         return True
 
-    def parse_course_detail(self, html) -> dict:
+    def parse_course_detail(self, html, course_id) -> dict:
         # Get general information about the course
         soup = BeautifulSoup(html, 'html.parser')
         try:
@@ -230,8 +273,10 @@ class Course:
                 'recommended_readings': '',
             }
             course_detail['requirements'] = soup.select_one('#uc_course_tc_enrl_requirement').get_text(';') if course_detail['requirements'] else ''
-        except AttributeError:
-            print('Unknown error parsing this course')
+        except AttributeError as e:
+            print('Error parsing information for this course')
+            self.log_file.write(f'Error parsing course info for {course_id}: {str(e)}\n')
+            self.log_file.write(traceback.format_exc())
             return {}
         
         # Get sections of the course
@@ -279,7 +324,12 @@ class Course:
                     assessments[td_nodes[1].text] = td_nodes[2].text
                 course_detail['assessments'] = assessments
         except AttributeError:
-            # print('No section / outcome for this course')
+            # Probably just missing some non-mandatory fields
+            pass
+        except Exception as e:
+            print('Error parsing section / outcome for this course')
+            self.log_file.write(f'Error parsing course details for {course_id}: {str(e)}\n')
+            self.log_file.write(traceback.format_exc())
             pass
         return course_detail
 
@@ -309,12 +359,12 @@ class Course:
                 'endTimes': end_times,
                 'days': days,
                 'locations': locations,
-                'instructors': instructors
+                'instructors': instructors,
+                'meetingDates': list(filter(None, meeting_dates.split(', '))),
             }
         return course_sections
 
-    @staticmethod
-    def parse_days_and_times(s: str) -> tuple:
+    def parse_days_and_times(self, s: str) -> tuple:
         if s == 'TBA':
             return ('TBA', 'TBA', 'TBA')
         def to_24_hours(s: str):
@@ -339,15 +389,18 @@ class Course:
         raw = list(filter(lambda x: x!='-', s.split())) # first is 2-letter weekday abbr, second is start time, last is end time
         return (days_dict[raw[0]], to_24_hours(raw[1]), to_24_hours(raw[2]))
 
-cusis = Course(dirname='../lambda/graphql/data/courses')
-cusis.process_instructors_name()
-# cusis.search_subject('AIST')
 
-# cusis.parse_all()
-# cusis.process_subjects()
+
+cusis = Course(dirname='courses', save_captchas=True)
+# cusis.parse_all(skip_parsed=True)
+# cusis.search_subject('NURS', manual=False)
+# cusis.process_subjects(label_availability=True, concise=True)
 # cusis.process_faculty_subjects()
-# cusis.process_instructor_names()
+# cusis.process_instructors_name()
 # print(cusis.courses)
+# cusis.remove_empty_courses()
+# cusis.label_non_current_term_courses()
+cusis.post_processing()
 
 '''
 TODO
