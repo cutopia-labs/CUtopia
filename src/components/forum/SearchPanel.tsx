@@ -17,6 +17,10 @@ import {
   ArrowBack,
   Bookmark,
   Class,
+  ClassOutlined,
+  BookmarkOutlined,
+  SchoolOutlined,
+  BookmarkBorderOutlined,
 } from '@material-ui/icons';
 import { useQuery } from '@apollo/client';
 import { observer } from 'mobx-react-lite';
@@ -47,11 +51,11 @@ t: title
 const LIST_ITEMS = Object.freeze([
   {
     label: 'Pins' as SearchMode,
-    icon: <Bookmark />,
+    icon: <BookmarkBorderOutlined />,
   },
   {
     label: 'My Courses' as SearchMode,
-    icon: <School />,
+    icon: <SchoolOutlined />,
   },
 ]);
 
@@ -182,7 +186,7 @@ const DepartmentList = ({ setSearchPayload }) => {
             }}
           >
             <ListItemIcon>
-              <Class />
+              <ClassOutlined />
             </ListItemIcon>
             <ListItemText primary={k} />
             {k === currentSchool ? <ExpandLess /> : <ExpandMore />}

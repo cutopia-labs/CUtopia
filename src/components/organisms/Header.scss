@@ -37,7 +37,7 @@
 }
 .header-container button,
 .header-container .logo-container,
-.header-container .nav-label,
+.header-container .nav-label-container,
 .header-container .search-input-container > button,
 .header-container .search-input-container > .search-input {
   color: var(--headerTextColor);
@@ -59,28 +59,23 @@
 .header-nav {
   margin-left: auto;
 }
-.nav-label-container,
-.nav-label-container-active {
+.nav-label-container {
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 0 20px;
-  font-size: 18px;
   font-weight: bold;
   transition: all 0.1s ease-in-out;
-}
-.nav-label-container-active {
-  opacity: 1;
-}
-.nav-label-container {
+  text-transform: capitalize;
   &:hover {
     opacity: 0.6;
   }
+  &.active {
+    &:hover {
+      opacity: 1;
+    }
+  }
 }
-.nav-label {
-  text-transform: capitalize;
-}
-
 @media only screen and (max-width: 1260px) {
   .header-container {
     padding: 10px var(--card-padding);

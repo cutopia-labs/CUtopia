@@ -92,7 +92,7 @@ const CourseSummary = ({
       ) : (
         <span>No review yet</span>
       )}
-      <Button size="small" onClick={writeAction}>
+      <Button size="small" color="primary" onClick={writeAction}>
         Write One!
       </Button>
       {courseInfo.rating && fetchAllAction && (
@@ -160,6 +160,7 @@ const CoursePanel = () => {
         code: courseId.substring(4),
       },
     }),
+    fetchPolicy: 'cache-first',
   });
 
   // Fetch all reviews
@@ -180,7 +181,11 @@ const CoursePanel = () => {
       ascendingVote: sorting === 'upvotes' ? false : null,
     },
     onCompleted: (data) => {
-      console.log(`Fetched ${courseId}`);
+      console.log(
+        `Fetched ${courseId} with ${lastEvaluatedKey}, updated ${JSON.stringify(
+          data.reviews.lastEvaluatedKey
+        )}`
+      );
       console.table(data);
       setReviews((prevReviews) =>
         prevReviews
@@ -193,9 +198,10 @@ const CoursePanel = () => {
       setLastEvaluatedKey(data.reviews.lastEvaluatedKey);
     },
     onError: (e) => {
-      console.log(e);
+      alert(e);
     },
     notifyOnNetworkStatusChange: true,
+    fetchPolicy: 'cache-first',
   });
 
   // Fetch a review based on reviewId
@@ -253,7 +259,16 @@ const CoursePanel = () => {
   useEffect(() => {
     console.log(`Current id: ${courseId}`);
     setFABHidden(false);
-    setLastEvaluatedKey(undefined);
+    // To clear previous lastEvaluatedKey
+    if (lastEvaluatedKey !== undefined) {
+      console.log(`Cleared lastEvaluatedKey ${lastEvaluatedKey}, refetch now`);
+      reviewsRefetch({
+        courseId,
+        ascendingDate: sorting === 'date' ? false : null,
+        ascendingVote: sorting === 'upvotes' ? false : null,
+        lastEvaluatedKey: null,
+      });
+    }
     if (reviews.length) {
       setReviews([]);
     }

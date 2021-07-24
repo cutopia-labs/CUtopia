@@ -10,6 +10,9 @@
   max-height: calc(100vh - var(--headerHeight) - 51px);
   overflow-y: scroll;
   overflow-x: hidden;
+  svg {
+    color: var(--text);
+  }
   &::-webkit-scrollbar {
     display: none;
   }

@@ -2,6 +2,7 @@ import { useState, useContext, useRef } from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { useMediaQuery, IconButton, Menu, MenuItem } from '@material-ui/core';
 import { Menu as MenuIcon } from '@material-ui/icons';
+import clsx from 'clsx';
 
 import { UserContext } from '../../store';
 import { SearchResult } from '../forum/SearchPanel';
@@ -43,14 +44,14 @@ const Header = () => {
     <Link
       key={section.link}
       to={section.link}
-      className={`nav-label-container${
+      className={clsx(
+        'nav-label-container',
         location.pathname.startsWith(section.link) &&
-        (section.link.length > 1 || section.link === location.pathname)
-          ? '-active'
-          : ''
-      }`}
+          (section.link.length > 1 || section.link === location.pathname) &&
+          'active'
+      )}
     >
-      <span className="nav-label">{section.label}</span>
+      {section.label}
     </Link>
   ));
 
