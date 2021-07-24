@@ -18,6 +18,9 @@
   }
   .search-input-container {
     padding: 6px 16px;
+    position: sticky;
+    top: 0;
+    z-index: 2;
   }
   & > .list-item-container {
     height: auto;

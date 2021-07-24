@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { observer } from 'mobx-react-lite';
 import { IconButton } from '@material-ui/core';
-import { Add, PersonOutline, Schedule } from '@material-ui/icons';
+import { Add, PersonOutline, Schedule, RoomOutlined } from '@material-ui/icons';
 
 import './CourseSections.scss';
 import { PlannerContext } from '../../store';
@@ -34,9 +34,13 @@ const SectionCard = ({
       val: section.days
         .map(
           (day, i) =>
-            `${WEEKDAYS_TWO_ABBR[day]} ${section.startTimes[i]}-${section.endTimes[i]}`
+            `${WEEKDAYS_TWO_ABBR[day]} ${section.startTimes[i]} - ${section.endTimes[i]}`
         )
         .join(', '),
+    },
+    {
+      icon: <RoomOutlined />,
+      val: section.locations[0],
     },
   ];
   return (
@@ -106,7 +110,7 @@ const CourseSections = ({
   return (
     <div className="course-sections">
       <div className="course-section-wrapper">
-        <span className="course-term-label">{`${courseTerms[currentTermIndex].name} Sections:`}</span>
+        <span className="course-term-label">{`${courseTerms[currentTermIndex].name}`}</span>
         {courseTerms[currentTermIndex].course_sections.map((section) => (
           <SectionCard
             key={section.name}

@@ -7,7 +7,7 @@ import { SpeedDial, SpeedDialIcon, SpeedDialAction } from '@material-ui/lab';
 import { observer } from 'mobx-react-lite';
 
 import './CoursePanel.scss';
-import CourseCard from './CourseCard';
+import copy from 'copy-to-clipboard';
 import { validCourse } from '../../helpers/marcos';
 import {
   COURSE_INFO_QUERY,
@@ -16,15 +16,15 @@ import {
   GET_USER,
 } from '../../constants/queries';
 import Loading from '../atoms/Loading';
-import ReviewCard from './ReviewCard';
 import { NotificationContext, UserContext } from '../../store';
-import copyToClipboard from '../../helpers/copyToClipboard';
-import HomePanel from './HomePanel';
-import ReviewEdit from './ReviewEdit';
 import { FULL_MEMBER_REVIEWS } from '../../constants/states';
 import useDebounce from '../../helpers/useDebounce';
 import { LAZY_LOAD_BUFFER } from '../../constants/configs';
 import { ReviewsFilter, ReviewsResult } from '../../types';
+import ReviewEdit from './ReviewEdit';
+import HomePanel from './HomePanel';
+import ReviewCard from './ReviewCard';
+import CourseCard from './CourseCard';
 
 export const COURSE_PANEL_MODES = Object.freeze({
   DEFAULT: 1, // i.e. card to show recent reviews & rankings
@@ -92,11 +92,9 @@ const CourseSummary = ({
       ) : (
         <span>No review yet</span>
       )}
-      {!courseInfo.rating && (
-        <Button size="small" color="primary" onClick={writeAction}>
-          Write One!
-        </Button>
-      )}
+      <Button size="small" onClick={writeAction}>
+        Write One!
+      </Button>
       {courseInfo.rating && fetchAllAction && (
         <Button size="small" color="primary" onClick={fetchAllAction}>
           Fetch All
@@ -133,7 +131,7 @@ const CoursePanel = () => {
       icon: <Share />,
       name: 'Share',
       action: () => {
-        copyToClipboard(window.location.href);
+        copy(window.location.href);
         notification.setSnackBar('Copied share link to clipboard!');
       },
     },
@@ -182,6 +180,7 @@ const CoursePanel = () => {
       ascendingVote: sorting === 'upvotes' ? false : null,
     },
     onCompleted: (data) => {
+      console.log(`Fetched ${courseId}`);
       console.table(data);
       setReviews((prevReviews) =>
         prevReviews
@@ -211,7 +210,7 @@ const CoursePanel = () => {
     },
   });
 
-  const listenToScroll = useDebounce(() => {
+  const listenToScroll = useDebounce(async () => {
     const distanceFromBottom =
       document.documentElement.scrollHeight -
       document.documentElement.scrollTop -
@@ -227,7 +226,7 @@ const CoursePanel = () => {
           ascendingVote: sorting === 'upvotes' ? false : null,
           lastEvaluatedKey,
         });
-        reviewsRefetch({
+        await reviewsRefetch({
           courseId,
           ascendingDate: sorting === 'date' ? false : null,
           ascendingVote: sorting === 'upvotes' ? false : null,
@@ -237,8 +236,10 @@ const CoursePanel = () => {
             upvotes: lastEvaluatedKey.upvotes,
           },
         });
+        setFABHidden(false);
+      } else {
+        setFABHidden(true);
       }
-      setFABHidden(true);
     } else {
       setFABHidden(false);
     }
@@ -252,6 +253,7 @@ const CoursePanel = () => {
   useEffect(() => {
     console.log(`Current id: ${courseId}`);
     setFABHidden(false);
+    setLastEvaluatedKey(undefined);
     if (reviews.length) {
       setReviews([]);
     }
@@ -320,7 +322,7 @@ const CoursePanel = () => {
               key={item.createdDate}
               review={item}
               shareAction={() => {
-                copyToClipboard(
+                copy(
                   reviewId
                     ? window.location.href
                     : `${window.location.href}/${item.createdDate}`

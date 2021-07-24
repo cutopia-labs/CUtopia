@@ -3,8 +3,8 @@ import { makeObservable, observable, action, toJS } from 'mobx';
 import { PlannerCourse, Planner, PlannerItem } from '../types';
 import { storeData, getStoreData, removeStoreItem } from '../helpers/store';
 
-import NotificationStore from './NotificationStore';
 import { PLANNER_CONFIGS } from '../constants/configs';
+import NotificationStore from './NotificationStore';
 
 const LOCAL_STORAGE_KEYS = ['planners', 'plannerTerm', 'currentPlanner'];
 

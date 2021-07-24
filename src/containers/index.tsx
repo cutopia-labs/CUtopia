@@ -5,11 +5,11 @@ import './index.scss';
 import SnackBar from '../components/molecules/SnackBar';
 import { UserContext } from '../store';
 import Header from '../components/organisms/Header';
+import { LoginState } from '../types';
 import HomePage from './HomePage';
 import ForumPage from './ForumPage';
 import LandingPage from './LandingPage';
 import PlannerPage from './PlannerPage';
-import { LoginState } from '../types';
 
 const Navigator = () => {
   const user = useContext(UserContext);

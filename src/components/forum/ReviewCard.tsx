@@ -10,10 +10,10 @@ import './ReviewCard.scss';
 import { RATING_FIELDS, VOTE_ACTIONS } from '../../constants/states';
 import { VOTE_REVIEW } from '../../constants/mutations';
 import { getMMMDDYY } from '../../helpers/getTime';
-import GradeRow from './GradeRow';
-import LikeButtonsRow from './LikeButtonRow';
 import ShowMoreOverlay from '../molecules/ShowMoreOverlay';
 import { Review } from '../../types';
+import GradeRow from './GradeRow';
+import LikeButtonsRow from './LikeButtonRow';
 
 type ReviewCardProps = {
   review: Review;

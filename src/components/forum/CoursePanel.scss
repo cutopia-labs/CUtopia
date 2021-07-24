@@ -11,7 +11,7 @@
   flex-wrap: wrap;
   justify-content: space-between;
   svg {
-    color: var(--CAPTION);
+    color: var(--text);
   }
 }
 .course-summary-ratings {
@@ -21,7 +21,7 @@
   text-transform: capitalize;
   margin: 0 10px;
   font-size: 14px;
-  color: var(--CAPTION);
+  color: var(--text);
 }
 .grade-indicator {
   &.course-summary-grade-indicator {

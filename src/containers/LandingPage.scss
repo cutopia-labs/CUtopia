@@ -22,12 +22,12 @@
     display: flex;
     width: 35vw;
     max-width: 420px;
-    background: #f1cdd7;
-    color: #865c6c;
+    background: var(--landing-page-bg-color);
+    color: var(--landing-page-color);
     padding: 42px;
 
     > .logo-container {
-      color: #bb7a93;
+      color: var(--landing-page-logo-color);
       margin-right: auto;
       font-size: 26px;
       opacity: 1;

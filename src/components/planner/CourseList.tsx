@@ -2,11 +2,11 @@ import React from 'react';
 import { useMediaQuery } from '@material-ui/core';
 
 import './CourseList.scss';
-import CourseCard from './CourseCard';
 import colors from '../../constants/colors';
 import { WEEKDAYS } from '../../constants/states';
 import { TIMETABLE_CONSTANTS } from '../../constants/configs';
 import { CourseTableEntry } from '../../types';
+import CourseCard from './CourseCard';
 
 const { NO_OF_DAYS, NO_OF_HOURS, START_HOUR, END_HOUR } = TIMETABLE_CONSTANTS;
 

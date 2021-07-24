@@ -29,7 +29,6 @@ import { UserContext } from '../../store';
 import COURSES from '../../constants/courses';
 import { COURSE_SECTIONS_QUERY } from '../../constants/queries';
 import { validCourse } from '../../helpers/marcos';
-import CourseCard from './CourseCard';
 import Loading from '../atoms/Loading';
 import {
   HISTORY_MAX_LENGTH,
@@ -38,6 +37,7 @@ import {
 import { CourseSearchItem, SearchMode, SearchPayload } from '../../types';
 import UserStore from '../../store/UserStore';
 import Card from '../atoms/Card';
+import CourseCard from './CourseCard';
 
 /*
 c: courseId

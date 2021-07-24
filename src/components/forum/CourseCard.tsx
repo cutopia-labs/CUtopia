@@ -1,20 +1,21 @@
 import { useState, useContext } from 'react';
 import { observer } from 'mobx-react-lite';
-import { IconButton, useMediaQuery } from '@material-ui/core';
-import { Favorite, FavoriteBorder } from '@material-ui/icons';
+import { IconButton, useMediaQuery, Tooltip } from '@material-ui/core';
+import { ErrorOutline, Favorite, FavoriteBorder } from '@material-ui/icons';
 
 import './CourseCard.scss';
-import GradeRow from './GradeRow';
+import { useHistory, Link as RouterLink } from 'react-router-dom';
+import { FiExternalLink } from 'react-icons/fi';
+import clsx from 'clsx';
 import ShowMoreOverlay from '../molecules/ShowMoreOverlay';
 import Badge from '../atoms/Badge';
 import { UserContext } from '../../store';
-import CourseSections from './CourseSections';
-import Points from './Points';
 import { COURSE_CARD_MAX_HEIGHT } from '../../constants/configs';
 import { CourseInfo } from '../../types';
 import Link from '../molecules/Link';
-import { useHistory, Link as RouterLink } from 'react-router-dom';
-import { FiExternalLink } from 'react-icons/fi';
+import Points from './Points';
+import CourseSections from './CourseSections';
+import GradeRow from './GradeRow';
 
 type CourseCardProps = {
   courseInfo: CourseInfo;
@@ -51,9 +52,11 @@ const CourseCard = ({ courseInfo, concise }: CourseCardProps) => {
   };
   return (
     <div
-      className={`course-card${concise ? ' concise' : ''}${
-        showMore ? '' : ' retracted'
-      }`}
+      className={clsx(
+        'course-card',
+        concise && 'concise',
+        !showMore && 'retracted'
+      )}
       ref={(ref) => {
         // Wrap if course-card is too long
         if (
@@ -69,13 +72,24 @@ const CourseCard = ({ courseInfo, concise }: CourseCardProps) => {
         <div className="center-row">
           <p className="title">{courseInfo.courseId}</p>
           <IconButton
-            className={isFavorited ? 'active' : ''}
+            className={isFavorited && 'active'}
             onClick={() => setFavorited()}
             aria-label="favourite"
             size="medium"
           >
             {isFavorited ? <Favorite /> : <FavoriteBorder />}
           </IconButton>
+          <Tooltip title="Report inaccurate information" placement="top" arrow>
+            <IconButton
+              onClick={() => {
+                console.log('Report wrong course info');
+              }}
+              aria-label="report"
+              size="medium"
+            >
+              <ErrorOutline />
+            </IconButton>
+          </Tooltip>
         </div>
         {concise && (
           <Badge
@@ -114,7 +128,14 @@ const CourseCard = ({ courseInfo, concise }: CourseCardProps) => {
               />
             </>
           )}
-          {courseInfo.terms && <CourseSections courseInfo={courseInfo} />}
+          <div className="sub-heading-container">
+            <p className="sub-heading">Sections</p>
+            {courseInfo.terms ? (
+              <CourseSections courseInfo={courseInfo} />
+            ) : (
+              <p className="caption">No opening for current semester</p>
+            )}
+          </div>
         </>
       ) : (
         <div className="course-badge-row">

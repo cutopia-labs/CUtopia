@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import {
   Button,
   Dialog,
@@ -16,13 +16,6 @@ import {
 import { observer } from 'mobx-react-lite';
 
 import copy from 'copy-to-clipboard';
-import { NotificationContext } from '../../store';
-import './TimeTablePanel.scss';
-import CourseList from '../planner/CourseList';
-import Card from '../atoms/Card';
-import { CourseTableEntry, PlannerCourse, PlannerItem } from '../../types';
-import clsx from 'clsx';
-import { PLANNER_CONFIGS } from '../../constants/configs';
 import {
   Check,
   Delete,
@@ -34,7 +27,13 @@ import {
   Publish,
   Share,
 } from '@material-ui/icons';
-import { useEffect } from 'react';
+import clsx from 'clsx';
+import { NotificationContext } from '../../store';
+import './TimeTablePanel.scss';
+import CourseList from '../planner/CourseList';
+import Card from '../atoms/Card';
+import { CourseTableEntry, PlannerCourse, PlannerItem } from '../../types';
+import { PLANNER_CONFIGS } from '../../constants/configs';
 
 enum MODAL_MODES {
   NO_MODAL,

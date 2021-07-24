@@ -15,6 +15,7 @@
   }
   &.concise {
     padding: var(--card-padding);
+    overflow: initial;
     & > .course-card-title-container {
       align-items: center;
       & > .badge {
