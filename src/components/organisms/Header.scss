@@ -1,13 +1,13 @@
 .header-background-container {
-  background-color: var(--headerColor);
+  background-color: var(--header-color);
   position: sticky;
   top: 0;
   z-index: 10;
-  max-height: calc(var(--headerHeight) + 20px);
+  max-height: var(--header-height);
 }
 .header-container {
-  height: var(--headerHeight);
-  min-height: var(--headerHeight);
+  height: var(--header-content-height);
+  min-height: var(--header-content-height);
   padding: 10px 0;
   justify-content: space-between;
   max-width: var(--max-width);
@@ -40,11 +40,11 @@
 .header-container .nav-label-container,
 .header-container .search-input-container > button,
 .header-container .search-input-container > .search-input {
-  color: var(--headerTextColor);
+  color: var(--header-text-color);
 }
 .header-search-result {
   position: absolute;
-  margin-top: calc(var(--headerHeight) + 10px);
+  margin-top: calc(var(--header-content-height) + 10px);
   height: fit-content;
   z-index: 10;
   border-bottom: none;

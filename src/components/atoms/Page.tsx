@@ -21,7 +21,6 @@ const Page = ({
         'page',
         center && 'center-page',
         padding && 'padding',
-        column ? 'column' : 'row',
         className
       )}
     >
