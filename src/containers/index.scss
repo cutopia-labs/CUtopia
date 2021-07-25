@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Caveat&display=swap");
 body {
   --primary: #01579b;
-  --accent: #ff8a65;
+  --accent: #ff7146;
   --surface: rgba(255, 255, 255, 1);
   --background: rgb(250, 249, 248, 1);
   --background-dark: rgba(5, 5, 5, 1);
@@ -77,7 +77,7 @@ textarea[type="number"] {
   /* header - header padding - margin */
   flex: 1;
   display: grid;
-  grid-template-columns: min-content minmax(0, 1fr);
+  grid-template-columns: min-content minmax(0, 1fr) min-content;
   grid-column-gap: var(--card-padding);
   min-height: 0;
   min-width: 0;
@@ -207,6 +207,20 @@ textarea[type="number"] {
 
 .disabled {
   cursor: not-allowed;
+}
+
+.hover {
+  &:hover {
+    color: var(--primary);
+    cursor: pointer;
+  }
+}
+
+.hover-bg {
+  &:hover {
+    background-color: var(--background-secondary);
+    cursor: pointer;
+  }
 }
 
 /* Scrollbar styles */

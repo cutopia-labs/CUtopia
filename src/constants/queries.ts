@@ -153,8 +153,8 @@ const GET_REVIEW = gql`
 
 // User Info Query
 const GET_USER = gql`
-  query ($username: String!) {
-    user(input: { username: $username }) {
+  query {
+    me {
       reviewIds
       upvotesCount
     }

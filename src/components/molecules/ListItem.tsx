@@ -36,8 +36,8 @@ const ListItem = ({
     className={clsx(
       'list-item-container',
       !noBorder && 'border',
-      className && className,
-      !noHover && 'hover'
+      className,
+      !noHover && 'hover-bg'
     )}
     onClick={onClick}
     onMouseDown={onMouseDown}

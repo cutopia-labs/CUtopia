@@ -27,48 +27,46 @@ const GradeRow = ({
   isMobile,
 }: PropsWithChildren<GradeRowProps>) => (
   <div className={clsx('grade-row', additionalClassName)}>
-    <div className="center-row">
-      {!isReview && (
-        <GradeIndicator
-          grade={rating.overall}
-          additionalClassName={clsx(
-            'course-summary-grade-indicator',
-            !isReview && 'overall'
+    {!isReview && (
+      <GradeIndicator
+        grade={rating.overall}
+        additionalClassName={clsx(
+          'course-summary-grade-indicator',
+          !isReview && 'overall'
+        )}
+      />
+    )}
+    {[isReview ? 'overall' : '', ...RATING_FIELDS]
+      .filter((x) => x)
+      .map((field) => (
+        <div
+          key={field}
+          className={clsx(
+            'center-row rating-container',
+            selected === field && 'active',
+            additionalChildClassName
           )}
-        />
-      )}
-      {[isReview ? 'overall' : '', ...RATING_FIELDS]
-        .filter((x) => x)
-        .map((field) => (
-          <div
-            key={field}
-            className={clsx(
-              'center-row rating-container',
-              selected === field && 'active',
-              additionalChildClassName
-            )}
-            onClick={() => {
-              if (setSelected && !isMobile) {
-                setSelected(field);
-              }
-            }}
-          >
-            {field !== 'overall' && (
-              <div className="course-summary-label" key={field}>
-                {`${field}${isMobile ? '' : ':'}`}
-              </div>
-            )}
-            <GradeIndicator
-              grade={
-                isReview && field !== 'overall'
-                  ? rating[field].grade
-                  : rating[field]
-              }
-              additionalClassName="course-summary-grade-indicator"
-            />
-          </div>
-        ))}
-    </div>
+          onClick={() => {
+            if (setSelected && !isMobile) {
+              setSelected(field);
+            }
+          }}
+        >
+          {field !== 'overall' && (
+            <div className="course-summary-label" key={field}>
+              {`${field}${isMobile ? '' : ':'}`}
+            </div>
+          )}
+          <GradeIndicator
+            grade={
+              isReview && field !== 'overall'
+                ? rating[field].grade
+                : rating[field]
+            }
+            additionalClassName="course-summary-grade-indicator"
+          />
+        </div>
+      ))}
     {children}
   </div>
 );

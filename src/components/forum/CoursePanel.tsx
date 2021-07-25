@@ -129,11 +129,8 @@ const CoursePanel = () => {
 
   const { data: userData, loading: userDataLoading } = useQuery(GET_USER, {
     skip: Boolean((user.user.reviewIds?.length || 0) >= FULL_MEMBER_REVIEWS),
-    variables: {
-      username: user.cutopiaUsername,
-    },
     onCompleted: (data) => {
-      user.saveUser(data?.user);
+      user.saveUser(data?.me);
     },
   });
 
@@ -159,12 +156,11 @@ const CoursePanel = () => {
     loading: reviewsLoading,
     refetch: reviewsRefetch,
   } = useQuery<ReviewsResult, ReviewsFilter>(REVIEWS_QUERY, {
-    skip:
-      userDataLoading ||
+    skip: false,
+    /* userDataLoading ||
       (((userData?.user?.reviewIds || user.user.reviewIds)?.length || 0) <
         FULL_MEMBER_REVIEWS &&
-        user.exceedLimit),
-    variables: {
+        user.exceedLimit)*/ variables: {
       courseId,
       ascendingDate: sorting === 'date' ? false : null,
       ascendingVote: sorting === 'upvotes' ? false : null,
@@ -267,78 +263,82 @@ const CoursePanel = () => {
   }, []);
 
   return (
-    <div className="column">
-      <div className="course-panel panel card">
-        {!courseInfoLoading ? (
-          <CourseCard
-            courseInfo={{
-              ...courseInfo?.subjects[0]?.courses[0],
-              courseId,
-            }}
-          />
-        ) : (
-          <Loading />
+    <>
+      <div className="column">
+        <div className="course-panel panel card">
+          {!courseInfoLoading ? (
+            <CourseCard
+              courseInfo={{
+                ...courseInfo?.subjects[0]?.courses[0],
+                courseId,
+              }}
+            />
+          ) : (
+            <Loading />
+          )}
+        </div>
+        {!courseInfoLoading && (
+          <>
+            <CourseSummary
+              courseInfo={courseInfo.subjects[0].courses[0]}
+              sorting={sorting}
+              setSorting={setSorting}
+              fetchAllAction={
+                Boolean(reviewId) && (() => history.push(`/review/${courseId}`))
+              }
+              writeAction={() => history.push(`/review/${courseId}/compose`)}
+              exceedLimit={
+                false /*
+                !userDataLoading &&
+                ((userData?.user?.reviewIds || user.user.reviewIds)?.length ||
+                  0) < FULL_MEMBER_REVIEWS &&
+                user.exceedLimit
+              */
+              }
+            />
+            <SpeedDial
+              ariaLabel="SpeedDial"
+              hidden={FABHidden}
+              icon={
+                <SpeedDialIcon
+                  onClick={() => history.push(`/review/${courseId}/compose`)}
+                  openIcon={<Edit />}
+                />
+              }
+              onClose={() => setFABOpen(false)}
+              onOpen={() => setFABOpen(true)}
+              open={FABOpen}
+              className="course-panel-fab"
+            >
+              {FAB_GROUP_ACTIONS.map((action) => (
+                <SpeedDialAction
+                  key={action.name}
+                  icon={action.icon}
+                  tooltipTitle={action.name}
+                  onClick={action.action}
+                />
+              ))}
+            </SpeedDial>
+          </>
         )}
-      </div>
-      {!courseInfoLoading && (
-        <>
-          <CourseSummary
-            courseInfo={courseInfo.subjects[0].courses[0]}
-            sorting={sorting}
-            setSorting={setSorting}
-            fetchAllAction={
-              Boolean(reviewId) && (() => history.push(`/review/${courseId}`))
-            }
-            writeAction={() => history.push(`/review/${courseId}/compose`)}
-            exceedLimit={
-              !userDataLoading &&
-              ((userData?.user?.reviewIds || user.user.reviewIds)?.length ||
-                0) < FULL_MEMBER_REVIEWS &&
-              user.exceedLimit
-            }
+        {(reviewsLoading || reviewLoading) && <Loading fixed />}
+        {(review ? [review.review] : reviews).map((item) => (
+          <ReviewCard
+            key={item.createdDate}
+            review={item}
+            shareAction={() => {
+              copy(
+                reviewId
+                  ? window.location.href
+                  : `${window.location.href}/${item.createdDate}`
+              );
+              notification.setSnackBar('Copied sharelink to clipboard!');
+            }}
+            showAll={Boolean(reviewId)}
           />
-          <SpeedDial
-            ariaLabel="SpeedDial"
-            hidden={FABHidden}
-            icon={
-              <SpeedDialIcon
-                onClick={() => history.push(`/review/${courseId}/compose`)}
-                openIcon={<Edit />}
-              />
-            }
-            onClose={() => setFABOpen(false)}
-            onOpen={() => setFABOpen(true)}
-            open={FABOpen}
-            className="course-panel-fab"
-          >
-            {FAB_GROUP_ACTIONS.map((action) => (
-              <SpeedDialAction
-                key={action.name}
-                icon={action.icon}
-                tooltipTitle={action.name}
-                onClick={action.action}
-              />
-            ))}
-          </SpeedDial>
-        </>
-      )}
-      {(reviewsLoading || reviewLoading) && <Loading fixed />}
-      {(review ? [review.review] : reviews).map((item) => (
-        <ReviewCard
-          key={item.createdDate}
-          review={item}
-          shareAction={() => {
-            copy(
-              reviewId
-                ? window.location.href
-                : `${window.location.href}/${item.createdDate}`
-            );
-            notification.setSnackBar('Copied sharelink to clipboard!');
-          }}
-          showAll={Boolean(reviewId)}
-        />
-      ))}
-    </div>
+        ))}
+      </div>
+    </>
   );
 };
 

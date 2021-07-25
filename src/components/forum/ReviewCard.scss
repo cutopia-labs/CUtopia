@@ -2,33 +2,46 @@
   border-radius: var(--border-radius);
   margin-top: 24px;
   padding: 0;
-  --review-card-inner-padding-horizontal: 12px;
+  --review-card-inner-padding-horizontal: 18px;
   --review-card-inner-padding-vertical: 12px;
   position: relative;
 }
 .review-title {
   display: flex;
-  width: 100%;
   padding: var(--review-card-inner-padding-vertical) var(--review-card-inner-padding-horizontal);
   text-align: start;
   svg {
     margin-right: 6px;
   }
 }
+
+.review-title-header {
+
+}
+.review-title {
+  .course-summary-label {
+    margin-bottom: var(--review-card-inner-padding-vertical);
+  }
+}
+
 .course-summary {
   &.review {
     margin: 0;
     padding: 0;
     border-radius: 0;
+    background-color: var(--background-secondary);
   }
 }
 .grade-row {
-  &.review-header {
-    margin-top: 0;
+  &.review-grade-row {
     background-color: transparent;
     border-radius: 0;
-    .like-btn-row {
-      margin-left: auto;
+    .rating-container {
+      height: 48px;
+      padding: 0 10px;
+      &:hover {
+        padding-top: 0;
+      }
     }
   }
 }
@@ -75,13 +88,12 @@
 .review-text-label {
   text-align: start;
   text-transform: capitalize;
-  color: var(--primary);
+  color: var(--accent);
   padding: var(--review-card-inner-padding-horizontal) var(--review-card-inner-padding-horizontal);
   font-weight: bold;
 }
 .review-bottom-row {
-  margin: 6px var(--review-card-inner-padding-horizontal) 0 var(--review-card-inner-padding-horizontal);
-  padding: 8px 0;
+  padding: 8px var(--review-card-inner-padding-horizontal);
   border-top: 1px solid var(--border);
   &.retracted {
     margin-top: 0;
@@ -118,6 +130,25 @@
       &:hover {
         padding-top: none;
         border-bottom: none;
+      }
+    }
+  }
+  .grade-row.review-grade-row {
+    & > div:first-child {
+      display: none;
+    }
+    .rating-container {
+      flex-direction: column;
+      height: 62px;
+      justify-content: center;
+      flex: 1;
+    }
+    .rating-container {
+      > .course-summary-label {
+        margin-bottom: 10px;
+      }
+      &.active {
+        border: none;
       }
     }
   }

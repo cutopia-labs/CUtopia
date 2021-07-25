@@ -42,21 +42,16 @@
   }
   &.concise {
     margin-bottom: var(--card-padding);
-    > .center-row {
-      height: auto;
-      flex-wrap: wrap;
-      justify-content: flex-start;
-
-      > {
-        * {
-          flex: 1;
-          justify-content: space-between;
-        }
-
-        :first-child {
-          display: none;
-        }
-      }
+    height: auto;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    > .rating-container {
+      flex: 1;
+      justify-content: space-between;
+      margin: 6px;
+    }
+    .overall {
+      display: none;
     }
   }
   &.review-header {
@@ -66,39 +61,6 @@
 
     > div:first-child > div {
       margin: 0;
-    }
-  }
-}
-
-@media only screen and (max-width: 1260px) {
-  .grade-row.review-header {
-    .center-row:first-child {
-      height: 56px;
-      width: 100%;
-      margin-bottom: 6px;
-    }
-  
-    > div {
-      &:first-child > div:first-child {
-        display: none;
-      }
-  
-      > .rating-container {
-        flex-direction: column;
-        height: 56px;
-        justify-content: center;
-        flex: 1;
-      }
-    }
-  
-    .rating-container {
-      > .course-summary-label {
-        margin: 0 0 10px 0;
-      }
-  
-      &.active {
-        border: none;
-      }
     }
   }
 }

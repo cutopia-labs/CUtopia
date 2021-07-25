@@ -38,21 +38,21 @@ const FOOTER_ITEMS = [
 const renderItem = (item: MultiTypeLink) => {
   if (item.to) {
     return (
-      <Link key={item.to} className="footer-link" to={item.to}>
+      <Link key={item.to} className="footer-link hover" to={item.to}>
         {item.label}
       </Link>
     );
   }
   if (item.url) {
     return (
-      <a className="footer-link" href={item.url}>
+      <a className="footer-link hover" href={item.url}>
         {item.label}
       </a>
     );
   }
   if (item.onClick) {
     return (
-      <span className="footer-link" onClick={item.onClick}>
+      <span className="footer-link hover" onClick={item.onClick}>
         {item.label}
       </span>
     );

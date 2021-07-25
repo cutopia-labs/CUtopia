@@ -7,12 +7,12 @@ import { useMutation } from '@apollo/client';
 import { IconButton, useMediaQuery } from '@material-ui/core';
 
 import './ReviewCard.scss';
+import clsx from 'clsx';
 import { RATING_FIELDS, VOTE_ACTIONS } from '../../constants/states';
 import { VOTE_REVIEW } from '../../constants/mutations';
 import { getMMMDDYY } from '../../helpers/getTime';
 import ShowMoreOverlay from '../molecules/ShowMoreOverlay';
 import { Review } from '../../types';
-import { MIN_DESKTOP_WIDTH } from '../../constants/configs';
 import GradeRow from './GradeRow';
 import LikeButtonsRow from './LikeButtonRow';
 
@@ -32,7 +32,7 @@ const ReviewCard = ({
   const [selectedCriteria, setSelectedCriteria] = useState('overall');
   const [voteReview, { loading, error }] = useMutation(VOTE_REVIEW);
   const [liked, setLiked] = useState(review.myVote); // null for unset, false for dislike, true for like
-  const isMobile = useMediaQuery(`(max-width:${MIN_DESKTOP_WIDTH}px)`);
+  const isMobile = useMediaQuery('(max-width:1260px)');
   const [showMore, setShowMore] = useState(true);
   const [skipHeightCheck, setSkipHeightCheck] = useState(showAll);
 
@@ -70,17 +70,12 @@ const ReviewCard = ({
     return <div />;
   }
   return (
-    <div className={`review-card${showMore ? '' : ' retracted'} panel card`}>
+    <div className={clsx('review-card card', !showMore && 'retracted')}>
       <div className="course-summary review">
         {Boolean(review.title) && (
           <div className="review-title center-row">
             <BiMessageRounded />
             {review.title}
-            <p className="course-summary-label author">
-              @<span>{review.anonymous ? 'Anonymous' : review.username}</span>
-              {' . '}
-              {getMMMDDYY(review.createdDate)}
-            </p>
           </div>
         )}
         <div className="review-info-row">
@@ -96,7 +91,7 @@ const ReviewCard = ({
         <GradeRow
           rating={review}
           isReview
-          additionalClassName="grade-row review-header tabs-row"
+          additionalClassName="grade-row tabs-row review-grade-row"
           additionalChildClassName="tab"
           selected={selectedCriteria}
           setSelected={setSelectedCriteria}
@@ -140,8 +135,8 @@ const ReviewCard = ({
         }`}
       >
         <p className="course-summary-label author">
-          @<span>{review.anonymous ? 'Anonymous' : review.username}</span>
-          {' . '}
+          By <span>{review.anonymous ? 'Anonymous' : review.username}</span>
+          {' on '}
           {getMMMDDYY(review.createdDate)}
         </p>
         <div className="right center-row">

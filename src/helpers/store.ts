@@ -25,4 +25,8 @@ async function storeData(key: string, value: any) {
   }
 }
 
-export { removeStoreItem, getStoreData, storeData };
+async function clearStore() {
+  localStorage.clear();
+}
+
+export { removeStoreItem, getStoreData, storeData, clearStore };

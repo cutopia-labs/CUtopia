@@ -82,11 +82,8 @@ const HomePage = () => {
   });
 
   const { data: userData, loading: userDataLoading } = useQuery(GET_USER, {
-    variables: {
-      username: user.cutopiaUsername,
-    },
     onCompleted: (data) => {
-      user.saveUser(data?.user);
+      user.saveUser(data?.me);
     },
   });
 
@@ -98,7 +95,7 @@ const HomePage = () => {
         return (
           <ReviewsList
             loading={userDataLoading}
-            reviewIds={userData?.user?.reviewIds}
+            reviewIds={userData?.me?.reviewIds}
           />
         );
       case 'Planner':
@@ -121,7 +118,7 @@ const HomePage = () => {
   return (
     <Page className="home-page" center padding>
       <div className="home-page-left">
-        {!userDataLoading && userData && <UserCard userData={userData?.user} />}
+        <UserCard userData={userData?.me} loading={userDataLoading} />
         <LinksCard />
         {!isMobile && <Footer />}
       </div>
