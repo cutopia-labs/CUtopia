@@ -75,7 +75,13 @@ const updateCourseRating = async (courseId, calculateRatingFn, increaseNumReview
   const coursesRating = rankingCache.get('courses-rating');
   const academicGroupsRating = rankingCache.get('academic-groups-rating');
 
-  const course = coursesRating[courseId];
+  let course = coursesRating[courseId];
+  let isFirstRating = course === undefined;
+  if (isFirstRating) {
+    course = {
+      "numReviews": 0,
+    };
+  }
   let overall = 0;
   criterions.forEach(criterion => {
     const newAvg = calculateRatingFn(course, criterion);
@@ -86,12 +92,21 @@ const updateCourseRating = async (courseId, calculateRatingFn, increaseNumReview
   if (increaseNumReviews) {
     course["numReviews"]++;
   }
+  if (isFirstRating) {
+    coursesRating[courseId] = course;
+  }
   rankingCache.set('courses-rating', coursesRating);
 
-  overall = 0;
+  // TODO: refactor the following logic?
   const { academic_group } = this.getCourseById(courseId);
-  const group = academicGroupsRating[academic_group];
-
+  let group = academicGroupsRating[academic_group];
+  overall = 0;
+  isFirstRating = group === undefined;
+  if (isFirstRating) {
+    group = {
+      "numReviews": 0,
+    };
+  }
   criterions.forEach(criterion => {
     const newAvg = calculateRatingFn(group, criterion);
     group[criterion] = newAvg;
@@ -100,6 +115,9 @@ const updateCourseRating = async (courseId, calculateRatingFn, increaseNumReview
   group["overall"] = overall / criterions.length;
   if (increaseNumReviews) {
     group["numReviews"]++;
+  }
+  if (isFirstRating) {
+    academicGroupsRating[academic_group] = group;
   }
   rankingCache.set('academic-groups-rating', academicGroupsRating);
 
@@ -217,6 +235,7 @@ exports.calculateTopRatedCourses = async (type) => {
 
 exports.recalWithNewReview = async (review) => {
   const { courseId, ...reviewData } = review;
+  await this.calculateTopRatedCourses('courses-rating'); // calculate top rated courses in case it does not exist in cache
   const popularCourses = await this.calculatePopularCourses();
   let index = popularCourses.findIndex(course => course.courseId === courseId);
   if (index === -1) {
@@ -229,12 +248,15 @@ exports.recalWithNewReview = async (review) => {
       numReviews: 1,
     });
     rankingCache.set('popular-courses', popularCourses);
-    return;
+
+    const calculateRating = (course, criterion) => (
+      reviewData[criterion]["grade"]
+    );
+    return updateCourseRating(courseId, calculateRating, true);
   }
+
   popularCourses[index].numReviews++;
   rankingCache.set('popular-courses', popularCourses);
-
-  await this.calculateTopRatedCourses('courses-rating'); // calculate top rated courses in case it does not exist in cache
   const calculateRating = (course, criterion) => (
     (course[criterion] * course["numReviews"] + reviewData[criterion]["grade"]) / (course["numReviews"] + 1)
   );

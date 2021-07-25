@@ -5,8 +5,8 @@ type Mutation {
 }
 
 type Query {
-  reviews(input: ReviewsFilter): ReviewsResult!
-  review(input: ReviewFilter!): Review
+  reviews(input: ReviewsFilter): ReviewsResult! @auth
+  review(input: ReviewFilter!): Review @auth
 }
 
 type ReviewsResult {

@@ -12,6 +12,8 @@ type User {
   verified: Boolean!
   reviewIds: [String]!
   upvotesCount: Int!
+  exp: Int!
+  level: Int!
 }
 
 type Mutation {

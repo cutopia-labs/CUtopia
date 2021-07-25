@@ -1,7 +1,7 @@
 const { nanoid } = require('nanoid');
 const NodeCache = require('node-cache');
 const AWS = require('aws-sdk');
-const { incrementUpvotesCount } = require('./user-db');
+const { incrementUpvotesCount, getUser } = require('./user-db');
 
 const db = new AWS.DynamoDB.DocumentClient();
 
@@ -51,18 +51,29 @@ exports.createReview = async (input, user) => {
     Item: latestReview,
   };
 
+  // TODO: any way to update exp without querying the user item?
+  const { reviewIds } = await getUser({
+    username,
+    requiredFields: ['reviewIds'],
+  });
+  // give extra review for writing the first review
+  // there is an empty string in reviewIds to initialize the reviewIds field
+  const exp = reviewIds.values.length === 1 ? 5 : 3;
   const addToMyReviewsParams = {
     TableName: process.env.UserTableName,
     Key: {
       username,
     },
-    UpdateExpression: 'add reviewIds :reviewId',
+    UpdateExpression: 'add reviewIds :reviewId set exp = if_not_exists(exp, :defaultExp) + :exp',
     ExpressionAttributeValues: {
+      ':defaultExp': 0,
+      ':exp': exp,
       ':reviewId': db.createSet(`${courseId}#${now}`),
     },
   };
 
   try {
+    // TODO: TransactWriteItems?
     await Promise.all([
       db.put(addReviewParams).promise(),
       db.put(addLatestReviewParams).promise(),

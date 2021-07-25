@@ -29,6 +29,9 @@ exports.createUser = async (input) => {
       "verificationCode": verificationCode,
       "reviewIds": db.createSet([""]),
       "upvotesCount": 0,
+      "fullAccess": false,
+      "exp": 0,
+      "viewsCount": 10,
     },
   };
 
@@ -243,10 +246,30 @@ exports.incrementUpvotesCount = async (input) => {
     Key: {
       "username": username,
     },
-    UpdateExpression: "set upvotesCount = upvotesCount + :value",
+    UpdateExpression: "set upvotesCount = upvotesCount + :value, exp = if_not_exists(exp, :defaultExp) + :delta",
     ExpressionAttributeValues: {
       ":value": 1,
+      ":defaultExp": 0,
+      ":delta": 1,
     },
   };
   await db.update(params).promise();
+};
+
+exports.adjustExp = async (input) => {
+  const { delta } = input;
+  const params = {
+    TableName: process.env.UserTableName,
+    Key: {
+      "username": username,
+    },
+    UpdateExpression: "set exp = if_not_exists(exp, :defaultExp) + :delta",
+    ExpressionAttributeValues: {
+      ":defaultExp": 0,
+      ":delta": delta,
+    },
+    ReturnValues:"UPDATED_NEW",
+  };
+  const result = await db.update(params).promise();
+  return result.Attributes.exp;
 };

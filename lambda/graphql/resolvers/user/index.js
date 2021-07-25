@@ -1,6 +1,16 @@
 const AWS = require("aws-sdk");
 const SNS = new AWS.SNS({ apiVersion: "2010-03-31" });
-const { createUser, verifyUser, updateUser, getUser, getResetPasswordCodeAndEmail, resetPassword, login, LOGIN_CODES, GET_PASSWORD_CODE_CODES } = require("dynamodb");
+const {
+  createUser,
+  verifyUser,
+  updateUser,
+  getUser,
+  getResetPasswordCodeAndEmail,
+  resetPassword,
+  login,
+  LOGIN_CODES,
+  GET_PASSWORD_CODE_CODES,
+} = require("dynamodb");
 const { sign } = require("../../jwt");
 
 const sendEmail = async (message) => {
@@ -18,8 +28,15 @@ exports.Query = {
 };
 
 exports.User = {
-  reviewIds: ({ reviewIds }) => { // reviewIds is a set
-    return reviewIds.values.filter(reviewId => reviewId); // filter out empty string
+  reviewIds: ({ reviewIds }) => {
+    // reviewIds is a set
+    return reviewIds.values.filter((reviewId) => reviewId); // filter out empty string
+  },
+  exp: ({ exp }) => {
+    return exp === undefined ? 0 : exp;
+  },
+  level: ({ exp }) => {
+    return exp === undefined ? 0 : Math.floor(exp / 5);
   },
 };
 
