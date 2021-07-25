@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { FaChalkboardTeacher, FaRegCalendarAlt } from 'react-icons/fa';
+import { FaRegCalendar } from 'react-icons/fa';
 import { BiMessageRounded } from 'react-icons/bi';
-import { IoMdShareAlt } from 'react-icons/io';
+import { RiShareForwardLine } from 'react-icons/ri';
 import { useMutation } from '@apollo/client';
 import { IconButton, useMediaQuery } from '@material-ui/core';
 
@@ -78,14 +78,19 @@ const ReviewCard = ({
             {review.title}
           </div>
         )}
-        <div className="review-info-row">
+        <div
+          className={clsx(
+            'review-info-row',
+            !Boolean(review.title) && 'no-title'
+          )}
+        >
           <div className="center-row">
-            <FaRegCalendarAlt />
-            <p className="course-summary-label">{review.term}</p>
-          </div>
-          <div className="center-row">
-            <FaChalkboardTeacher />
-            <p className="course-summary-label">{review.lecturer}</p>
+            <FaRegCalendar />
+            <span className="course-summary-label term">{review.term}</span>
+            <span className="course-summary-label separator">/</span>
+            <span className="course-summary-label lecturer">
+              {review.lecturer}
+            </span>
           </div>
         </div>
         <GradeRow
@@ -134,12 +139,13 @@ const ReviewCard = ({
           showMore ? '' : ' retracted'
         }`}
       >
-        <p className="course-summary-label author">
-          By <span>{review.anonymous ? 'Anonymous' : review.username}</span>
-          {' on '}
+        <span className="review-title-author">
+          {`@`}
+          <span>{review.anonymous ? 'Anonymous' : review.username}</span>
+          {' • '}
           {getMMMDDYY(review.createdDate)}
-        </p>
-        <div className="right center-row">
+        </span>
+        <div className="review-bottom-btn-row right center-row">
           <LikeButtonsRow
             liked={liked}
             myVote={review.myVote}
@@ -161,7 +167,7 @@ const ReviewCard = ({
             onClick={shareAction}
             color="primary"
           >
-            <IoMdShareAlt />
+            <RiShareForwardLine />
           </IconButton>
         </div>
       </div>

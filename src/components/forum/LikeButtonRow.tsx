@@ -1,5 +1,6 @@
+import { Divider } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
-import { ThumbUp, ThumbDown } from '@material-ui/icons';
+import { BiDownvote, BiUpvote } from 'react-icons/bi';
 
 import './LikeButtonRow.scss';
 
@@ -8,7 +9,7 @@ const LikeButton = ({ isLike, selected, disabled, caption, onClick }) => (
     size="small"
     onClick={onClick}
     variant={selected ? 'outlined' : 'text'}
-    startIcon={isLike ? <ThumbUp /> : <ThumbDown />}
+    startIcon={isLike ? <BiUpvote /> : <BiDownvote />}
     className={`like-btn${selected ? ' active' : ''}`}
     disabled={disabled}
   >
@@ -26,14 +27,17 @@ export default function LikeButtonsRow({
   return (
     <div className="like-btn-row center-row">
       {[1, 0].map((label) => (
-        <LikeButton
-          key={label}
-          isLike={Boolean(label)}
-          selected={liked === label || myVote === label}
-          disabled={liked !== null || myVote !== null}
-          caption={label ? likeCaption : dislikeCaption}
-          onClick={() => updateVote(label)}
-        />
+        <>
+          <LikeButton
+            key={label}
+            isLike={Boolean(label)}
+            selected={liked === label || myVote === label}
+            disabled={liked !== null || myVote !== null}
+            caption={label ? likeCaption : dislikeCaption}
+            onClick={() => updateVote(label)}
+          />
+          {Boolean(label) && <Divider orientation="horizontal" />}
+        </>
       ))}
     </div>
   );

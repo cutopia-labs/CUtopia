@@ -21,6 +21,7 @@ import { FULL_MEMBER_REVIEWS } from '../../constants/states';
 import useDebounce from '../../helpers/useDebounce';
 import { LAZY_LOAD_BUFFER } from '../../constants/configs';
 import { ReviewsFilter, ReviewsResult } from '../../types';
+import Footer from '../molecules/Footer';
 import ReviewCard from './ReviewCard';
 import CourseCard from './CourseCard';
 
@@ -111,7 +112,7 @@ const CoursePanel = () => {
   const history = useHistory();
   const [FABOpen, setFABOpen] = useState(false);
   const [FABHidden, setFABHidden] = useState(false);
-  const [lastEvaluatedKey, setLastEvaluatedKey] = useState(null);
+  const [lastEvaluatedKey, setLastEvaluatedKey] = useState(undefined);
   const [reviews, setReviews] = useState([]);
   const notification = useContext(NotificationContext);
   const user = useContext(UserContext);
@@ -264,17 +265,16 @@ const CoursePanel = () => {
 
   return (
     <>
+      {(reviewsLoading || courseInfoLoading) && <Loading fixed />}
       <div className="column">
         <div className="course-panel panel card">
-          {!courseInfoLoading ? (
+          {!courseInfoLoading && (
             <CourseCard
               courseInfo={{
                 ...courseInfo?.subjects[0]?.courses[0],
                 courseId,
               }}
             />
-          ) : (
-            <Loading />
           )}
         </div>
         {!courseInfoLoading && (
@@ -337,6 +337,7 @@ const CoursePanel = () => {
             showAll={Boolean(reviewId)}
           />
         ))}
+        {lastEvaluatedKey === null && <Footer mt />}
       </div>
     </>
   );

@@ -5,23 +5,27 @@
   --review-card-inner-padding-horizontal: 18px;
   --review-card-inner-padding-vertical: 12px;
   position: relative;
+  overflow: hidden;
+  svg {
+    color: var(--caption);
+  }
 }
 .review-title {
   display: flex;
   padding: var(--review-card-inner-padding-vertical) var(--review-card-inner-padding-horizontal);
   text-align: start;
+  font-size: 14px;
+  font-weight: 500;
   svg {
+    font-size: 18px;
     margin-right: 6px;
+    color: var(--text);
   }
 }
-
-.review-title-header {
-
-}
-.review-title {
-  .course-summary-label {
-    margin-bottom: var(--review-card-inner-padding-vertical);
-  }
+.review-title-author {
+  color: var(--caption);
+  font-weight: normal;
+  font-size: 14px;
 }
 
 .course-summary {
@@ -58,6 +62,27 @@
   justify-content: flex-start;
   padding: var(--review-card-inner-padding-vertical) var(--review-card-inner-padding-horizontal);
   width: 100%;
+  .course-summary-label {
+    margin: 0;
+  }
+  .term {
+    font-weight: 500;
+    font-size: 15px;
+    color: var(--primary);
+    margin-left: 10px;
+    margin-right: 6px;
+  }
+  .separator {
+    margin-right: 6px;
+  }
+  .lecturer {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--primary);
+  }
+  &.no-title {
+    margin-top: 8px;
+  }
   & > :nth-child(2) {
     flex: 1;
     margin-left: 16px;
@@ -84,11 +109,15 @@
       padding-bottom: 10px;
     }
   }
+  overflow: hidden;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 .review-text-label {
   text-align: start;
   text-transform: capitalize;
-  color: var(--accent);
+  color: var(--primary);
   padding: var(--review-card-inner-padding-horizontal) var(--review-card-inner-padding-horizontal);
   font-weight: bold;
 }
@@ -104,10 +133,13 @@
   .share-icon-btn {
     color: var(--text);
     opacity: 0.8;
-    margin-left: 4px;
   }
 }
-
+.review-bottom-btn-row {
+  display: grid;
+  grid-template-columns: min-content min-content;
+  grid-column-gap: var(--card-padding);
+}
 @media only screen and (max-width: 1260px) {
   .course-summary-label {
     &.author {

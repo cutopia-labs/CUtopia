@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 import './Footer.scss';
 
@@ -60,8 +61,14 @@ const renderItem = (item: MultiTypeLink) => {
   return null;
 };
 
-const Footer = () => (
-  <div className="footer">{FOOTER_ITEMS.map((item) => renderItem(item))}</div>
+type FooterProps = {
+  mt?: boolean;
+};
+
+const Footer = ({ mt }: FooterProps) => (
+  <div className={clsx('footer', mt && 'mt')}>
+    {FOOTER_ITEMS.map((item) => renderItem(item))}
+  </div>
 );
 
 export default Footer;
