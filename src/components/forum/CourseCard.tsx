@@ -10,7 +10,10 @@ import clsx from 'clsx';
 import ShowMoreOverlay from '../molecules/ShowMoreOverlay';
 import Badge from '../atoms/Badge';
 import { UserContext } from '../../store';
-import { COURSE_CARD_MAX_HEIGHT } from '../../constants/configs';
+import {
+  COURSE_CARD_MAX_HEIGHT,
+  MIN_DESKTOP_WIDTH,
+} from '../../constants/configs';
 import { CourseInfo } from '../../types';
 import Link from '../molecules/Link';
 import Points from './Points';
@@ -26,7 +29,7 @@ const CourseCard = ({ courseInfo, concise }: CourseCardProps) => {
   const [showMore, setShowMore] = useState(true);
   const [skipHeightCheck, setSkipHeightCheck] = useState(concise);
   const user = useContext(UserContext);
-  const isMobile = useMediaQuery('(max-width:1260px)');
+  const isMobile = useMediaQuery(`(max-width:${MIN_DESKTOP_WIDTH}px)`);
   const history = useHistory();
 
   const isFavorited = user.favoriteCourses.some(

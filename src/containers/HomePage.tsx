@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { Typography } from '@material-ui/core';
+import { Typography, useMediaQuery } from '@material-ui/core';
 import {
   ChatBubbleOutlineOutlined,
   SchoolOutlined,
@@ -20,6 +20,8 @@ import Page from '../components/atoms/Page';
 import Card from '../components/atoms/Card';
 import Link from '../components/molecules/Link';
 import PlannerTimeTable from '../components/planner/PlannerTimeTable';
+import Footer from '../components/molecules/Footer';
+import { MIN_DESKTOP_WIDTH } from '../constants/configs';
 
 const LINKS = [
   {
@@ -68,6 +70,7 @@ const HomePage = () => {
   const user = useContext(UserContext);
   const planner = useContext(PlannerContext);
   const [tab, setTab] = useState('Courses');
+  const isMobile = useMediaQuery(`(max-width:${MIN_DESKTOP_WIDTH}px)`);
 
   const { loading: timetableLoading } = useQuery(MY_TIMETABLE_QUERY, {
     variables: {
@@ -120,10 +123,12 @@ const HomePage = () => {
       <div className="home-page-left">
         {!userDataLoading && userData && <UserCard userData={userData?.user} />}
         <LinksCard />
+        {!isMobile && <Footer />}
       </div>
       <div className="home-page-right">
         <TabsContainer mb items={SELECTIONS} selected={tab} onSelect={setTab} />
         {renderTab()}
+        {isMobile && <Footer />}
       </div>
     </Page>
   );

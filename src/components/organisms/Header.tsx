@@ -9,6 +9,7 @@ import { SearchResult } from '../forum/SearchPanel';
 import './Header.scss';
 import Logo from '../atoms/Logo';
 import SearchInput from '../molecules/SearchInput';
+import { MIN_DESKTOP_WIDTH } from '../../constants/configs';
 
 const SECTIONS = [
   {
@@ -30,7 +31,7 @@ const Header = () => {
   const history = useHistory();
   const [searchQuery, setSearchQuery] = useState('');
   const [visible, setVisible] = useState(false);
-  const isMobile = useMediaQuery('(max-width:1260px)');
+  const isMobile = useMediaQuery(`(max-width:${MIN_DESKTOP_WIDTH}px)`);
   const [anchorEl, setAnchorEl] = useState(null);
 
   const inputRef = useRef(null);

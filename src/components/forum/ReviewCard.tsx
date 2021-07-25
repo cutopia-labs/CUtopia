@@ -12,6 +12,7 @@ import { VOTE_REVIEW } from '../../constants/mutations';
 import { getMMMDDYY } from '../../helpers/getTime';
 import ShowMoreOverlay from '../molecules/ShowMoreOverlay';
 import { Review } from '../../types';
+import { MIN_DESKTOP_WIDTH } from '../../constants/configs';
 import GradeRow from './GradeRow';
 import LikeButtonsRow from './LikeButtonRow';
 
@@ -31,7 +32,7 @@ const ReviewCard = ({
   const [selectedCriteria, setSelectedCriteria] = useState('overall');
   const [voteReview, { loading, error }] = useMutation(VOTE_REVIEW);
   const [liked, setLiked] = useState(review.myVote); // null for unset, false for dislike, true for like
-  const isMobile = useMediaQuery('(max-width:1260px)');
+  const isMobile = useMediaQuery(`(max-width:${MIN_DESKTOP_WIDTH}px)`);
   const [showMore, setShowMore] = useState(true);
   const [skipHeightCheck, setSkipHeightCheck] = useState(showAll);
 

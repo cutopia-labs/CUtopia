@@ -5,9 +5,10 @@ import './LandingPage.scss';
 import LoginPanel from '../components/user/LoginPanel';
 import Logo from '../components/atoms/Logo';
 import Illustration from '../images/meditation.svg';
+import { MIN_DESKTOP_WIDTH } from '../constants/configs';
 
 const LandingPage = () => {
-  const isMobile = useMediaQuery('(max-width:1260px)');
+  const isMobile = useMediaQuery(`(max-width:${MIN_DESKTOP_WIDTH}px)`);
   return (
     <div className="landing-page">
       {!isMobile && (

@@ -30,7 +30,10 @@ import TextField from '../atoms/TextField';
 import Loading from '../atoms/Loading';
 import INSTRUCTORS from '../../constants/instructors';
 import ListItem from '../molecules/ListItem';
-import { TARGET_REVIEW_WORD_COUNT } from '../../constants/configs';
+import {
+  MIN_DESKTOP_WIDTH,
+  TARGET_REVIEW_WORD_COUNT,
+} from '../../constants/configs';
 import { RatingFieldWithOverall, ReviewDetails } from '../../types';
 import SelectionGroup, { FormSection } from '../molecules/SectionGroup';
 import CourseCard from './CourseCard';
@@ -133,7 +136,7 @@ const ReviewEdit = ({ courseId }) => {
     useMutation(ADD_REVIEW);
   const [editReview, { loading: editReviewLoading, error: editReviewError }] =
     useMutation(EDIT_REVIEW);
-  const isMobile = useMediaQuery('(max-width:1260px)');
+  const isMobile = useMediaQuery(`(max-width:${MIN_DESKTOP_WIDTH}px)`);
   const [formData, dispatchFormData] = useReducer(
     (state, action) => ({ ...state, ...action }),
     {
