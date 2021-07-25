@@ -89,6 +89,34 @@ const ADD_REVIEW = gql`
   }
 `;
 
+const EDIT_REVIEW = gql`
+  mutation (
+    $anonymous: Boolean!
+    $courseId: String!
+    $overall: Int!
+    $grading: ReviewDetailsInput!
+    $teaching: ReviewDetailsInput!
+    $difficulty: ReviewDetailsInput!
+    $content: ReviewDetailsInput!
+    $createdDate: String!
+  ) {
+    editReview(
+      input: {
+        anonymous: $anonymous
+        courseId: $courseId
+        overall: $overall
+        grading: $grading
+        teaching: $teaching
+        difficulty: $difficulty
+        content: $content
+        createdDate: $createdDate
+      }
+    ) {
+      modifiedDate
+    }
+  }
+`;
+
 const VOTE_REVIEW = gql`
   mutation ($courseId: String!, $createdDate: String!, $vote: Int!) {
     voteReview(
@@ -106,5 +134,6 @@ export {
   SEND_RESET_PASSWORD_CODE,
   RESET_PASSWORD,
   ADD_REVIEW,
+  EDIT_REVIEW,
   VOTE_REVIEW,
 };

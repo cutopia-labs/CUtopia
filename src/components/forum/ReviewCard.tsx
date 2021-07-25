@@ -75,11 +75,11 @@ const ReviewCard = ({
           <div className="review-title center-row">
             <BiMessageRounded />
             {review.title}
-        <p className="course-summary-label author">
-          @<span>{review.anonymous ? 'Anonymous' : review.username}</span>
-          {' . '}
-          {getMMMDDYY(review.createdDate)}
-        </p>
+            <p className="course-summary-label author">
+              @<span>{review.anonymous ? 'Anonymous' : review.username}</span>
+              {' . '}
+              {getMMMDDYY(review.createdDate)}
+            </p>
           </div>
         )}
         <div className="review-info-row">

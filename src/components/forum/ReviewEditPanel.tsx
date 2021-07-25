@@ -1,11 +1,4 @@
-import {
-  useState,
-  useEffect,
-  useContext,
-  useReducer,
-  useRef,
-  PropsWithChildren,
-} from 'react';
+import { useState, useEffect, useContext, useReducer, useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   Menu,
@@ -21,21 +14,32 @@ import {
   useMediaQuery,
 } from '@material-ui/core';
 import { useMutation, useQuery } from '@apollo/client';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 
 import './ReviewEdit.scss';
 import { NotificationContext, UserContext } from '../../store';
-import { GET_USER, GET_REVIEW } from '../../constants/queries';
-import { ADD_REVIEW } from '../../constants/mutations';
+import {
+  GET_USER,
+  GET_REVIEW,
+  COURSE_INFO_QUERY,
+} from '../../constants/queries';
+import { ADD_REVIEW, EDIT_REVIEW } from '../../constants/mutations';
 import { GRADES, RATING_FIELDS } from '../../constants/states';
-import colors from '../../constants/colors';
 import TextField from '../atoms/TextField';
 import Loading from '../atoms/Loading';
 import INSTRUCTORS from '../../constants/instructors';
 import ListItem from '../molecules/ListItem';
 import { TARGET_REVIEW_WORD_COUNT } from '../../constants/configs';
-import { Grade, RatingFieldWithOverall, ReviewDetails } from '../../types';
+import { RatingFieldWithOverall, ReviewDetails } from '../../types';
+import SelectionGroup, { FormSection } from '../molecules/SectionGroup';
+import CourseCard from './CourseCard';
+
+enum MODES {
+  INITIAL,
+  EDIT,
+  MODAL, // to ask if need to edit or exit
+}
 
 const now = new Date();
 const EARLIEST_YEAR = now.getFullYear() - 3; // most ppl writing reviews are current students?
@@ -52,12 +56,6 @@ const DEFAULT_REVIEW = Object.freeze({
   text: '',
 });
 
-enum MODES {
-  INITIAL,
-  EDIT,
-  MODAL, // to ask if need to edit or exit
-}
-
 const TERMS_OPTIONS = [
   ...academicYears.flatMap((year) =>
     ['Term 1', 'Term 2', 'Summer'].map(
@@ -72,53 +70,6 @@ const wordCount = (str: string) => {
   const matches = str.match(/[\u00ff-\uffff]|\S+/g);
   return matches ? matches.length : 0;
 };
-
-type FormSectionProps = {
-  title: string;
-  className?: string;
-};
-
-const FormSection = ({
-  title,
-  className,
-  children,
-}: PropsWithChildren<FormSectionProps>) => (
-  <>
-    <span className={`form-section-title ${className}`}>{title}</span>
-    {children}
-  </>
-);
-
-type SelectionGroupProps = {
-  selections: Grade[];
-  selectedIndex: number;
-  onSelect: (index: number) => any;
-};
-
-const SelectionGroup = ({
-  selections,
-  selectedIndex,
-  onSelect,
-}: SelectionGroupProps) => (
-  <div className="selection-group center-row">
-    {selections.map((selection, i) => (
-      <span
-        key={selection}
-        className={`selecion-item${selectedIndex === i ? ' selected' : ''}`}
-        onClick={() => onSelect(i)}
-        style={
-          selectedIndex === i
-            ? {
-                backgroundColor: colors.gradeColors[selection],
-              }
-            : null
-        }
-      >
-        {selection}
-      </span>
-    ))}
-  </div>
-);
 
 const searchLecturers = ({
   payload,
@@ -178,7 +129,10 @@ const ReviewEdit = ({ courseId }) => {
   const [progress, setProgress] = useState(0);
   const [anchorEl, setAnchorEl] = useState(null);
   const [showLecturers, setShowLecturers] = useState(false);
-  const [addReview, { loading, error }] = useMutation(ADD_REVIEW);
+  const [addReview, { loading: addReviewLoading, error: addReviewError }] =
+    useMutation(ADD_REVIEW);
+  const [editReview, { loading: editReviewLoading, error: editReviewError }] =
+    useMutation(EDIT_REVIEW);
   const isMobile = useMediaQuery('(max-width:1260px)');
   const [formData, dispatchFormData] = useReducer(
     (state, action) => ({ ...state, ...action }),
@@ -225,19 +179,29 @@ const ReviewEdit = ({ courseId }) => {
       return;
     }
     // below are temp b4 server schema updated
-    console.log(JSON.stringify(formData));
-
-    const res = await addReview({
-      variables: formData,
-    });
+    let res;
+    if (mode === MODES.EDIT) {
+      const { title, term, section, lecturer, ...editReviewForm } = formData;
+      console.log(JSON.stringify(editReviewForm));
+      res = await editReview({
+        variables: {
+          ...editReviewForm,
+        },
+      });
+    } else {
+      console.log(JSON.stringify(formData));
+      res = await addReview({
+        variables: formData,
+      });
+    }
     console.log(res);
-    if (
-      res &&
-      res.data &&
-      res.data.createReview &&
-      res.data.createReview.createdDate
-    ) {
-      history.push(`/review/${courseId}/${res.data.createReview.createdDate}`);
+    const id =
+      mode === MODES.EDIT
+        ? res?.data?.editReview?.modifiedDate
+        : res?.data?.createReview?.createdDate;
+
+    if (id) {
+      history.push(`/review/${courseId}/${id}`);
       notification.setSnackBar('Review added!');
     }
   };
@@ -290,8 +254,9 @@ const ReviewEdit = ({ courseId }) => {
   }, [review]);
 
   useEffect(() => {
-    error && alert(error);
-  }, [error]);
+    const e = addReviewError || editReviewError;
+    e && alert(e);
+  }, [addReviewError, editReviewError]);
 
   useEffect(
     () => {
@@ -450,8 +415,8 @@ const ReviewEdit = ({ courseId }) => {
             background: `linear-gradient(to right, var(--accent) ${progress}%, transparent ${progress}%)`,
           }}
         >
-          {loading ? (
-            <CircularProgress color="secondary" size={24} />
+          {addReviewLoading || editReviewLoading ? (
+            <CircularProgress color="inherit" size={24} />
           ) : progress < 100 ? (
             'write more!'
           ) : (
@@ -463,4 +428,41 @@ const ReviewEdit = ({ courseId }) => {
   );
 };
 
-export default observer(ReviewEdit);
+const ReviewEditPanel = () => {
+  const { id: courseId, reviewId } = useParams<{
+    id?: string;
+    reviewId?: string;
+  }>();
+  // Fetch course info
+  const { data: courseInfo, loading: courseInfoLoading } = useQuery(
+    COURSE_INFO_QUERY,
+    {
+      skip: !courseId,
+      ...(courseId && {
+        variables: {
+          subject: courseId.substring(0, 4),
+          code: courseId.substring(4),
+        },
+      }),
+      fetchPolicy: 'cache-first',
+    }
+  );
+  return (
+    <div className="review-edit-panel course-panel panel card">
+      {!courseInfoLoading &&
+        courseInfo &&
+        courseInfo.subjects &&
+        courseInfo.subjects[0] && (
+          <CourseCard
+            courseInfo={{
+              ...courseInfo.subjects[0].courses[0],
+              courseId,
+            }}
+          />
+        )}
+      <ReviewEdit courseId={courseId} />
+    </div>
+  );
+};
+
+export default observer(ReviewEditPanel);

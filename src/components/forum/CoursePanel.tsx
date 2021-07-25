@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { Edit, Share, ExpandMore } from '@material-ui/icons';
 import { useQuery } from '@apollo/client';
 import { Button, Menu, MenuItem } from '@material-ui/core';
@@ -21,7 +21,6 @@ import { FULL_MEMBER_REVIEWS } from '../../constants/states';
 import useDebounce from '../../helpers/useDebounce';
 import { LAZY_LOAD_BUFFER } from '../../constants/configs';
 import { ReviewsFilter, ReviewsResult } from '../../types';
-import ReviewEdit from './ReviewEdit';
 import ReviewCard from './ReviewCard';
 import CourseCard from './CourseCard';
 
@@ -116,11 +115,6 @@ const CoursePanel = () => {
   const [reviews, setReviews] = useState([]);
   const notification = useContext(NotificationContext);
   const user = useContext(UserContext);
-  const isEdit = useRouteMatch({
-    path: '/review/:id/compose',
-    strict: true,
-    exact: true,
-  });
 
   const FAB_GROUP_ACTIONS = Object.freeze([
     {
@@ -272,38 +266,16 @@ const CoursePanel = () => {
     console.log(`Initiated with course ${courseId}`);
   }, []);
 
-  // Place edit here is to save another courseInfo query
-  if (isEdit) {
-    return (
-      <div className="review-edit-panel course-panel panel card">
-        {!courseInfoLoading &&
-          courseInfo &&
-          courseInfo.subjects &&
-          courseInfo.subjects[0] && (
-            <CourseCard
-              courseInfo={{
-                ...courseInfo.subjects[0].courses[0],
-                courseId,
-              }}
-            />
-          )}
-        <ReviewEdit courseId={courseId} />
-      </div>
-    );
-  }
-
   return (
     <div className="column">
       <div className="course-panel panel card">
         {!courseInfoLoading ? (
-          <>
-            <CourseCard
-              courseInfo={{
-                ...courseInfo.subjects[0].courses[0],
-                courseId,
-              }}
-            />
-          </>
+          <CourseCard
+            courseInfo={{
+              ...courseInfo?.subjects[0]?.courses[0],
+              courseId,
+            }}
+          />
         ) : (
           <Loading />
         )}
@@ -330,11 +302,7 @@ const CoursePanel = () => {
             hidden={FABHidden}
             icon={
               <SpeedDialIcon
-                onClick={() => {
-                  if (!isEdit) {
-                    history.push(`/review/${courseId}/compose`);
-                  }
-                }}
+                onClick={() => history.push(`/review/${courseId}/compose`)}
                 openIcon={<Edit />}
               />
             }
