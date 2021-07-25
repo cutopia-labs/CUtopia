@@ -22,8 +22,8 @@ const sendEmail = async (message) => {
 };
 
 exports.Query = {
-  user: async (parent, { input }) => {
-    return await getUser(input);
+  me: async (parent, args, { user }) => {
+    return await getUser({ username: user.username });
   },
 };
 

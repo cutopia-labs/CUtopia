@@ -1,9 +1,5 @@
 type Query {
-  user(input: GetUserInput!): User
-}
-
-input GetUserInput {
-  username: String!
+  me: User! @auth
 }
 
 type User {

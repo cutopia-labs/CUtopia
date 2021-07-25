@@ -1,10 +1,20 @@
-const { getReviews, getReview, createReview, editReview, voteReview, VOTE_ACTIONS } = require('dynamodb');
-const { recalWithNewReview, recalWithEdittedReview } = require('../ranking/impl');
+const {
+  getReviews,
+  getReview,
+  createReview,
+  editReview,
+  voteReview,
+  VOTE_ACTIONS,
+} = require('dynamodb');
+const {
+  recalWithNewReview,
+  recalWithEdittedReview,
+} = require('../ranking/impl');
 
 exports.Mutation = {
   createReview: async (parent, { input }, { user }) => {
-    const { courseRatings, groupRatings } = await recalWithNewReview(input);
     const { id, createdDate } = await createReview(input, user);
+    const { courseRatings, groupRatings } = await recalWithNewReview(input);
     return {
       id,
       createdDate,
@@ -15,11 +25,19 @@ exports.Mutation = {
   voteReview: async (parent, { input }, { user }) => {
     return await voteReview(input, user);
   },
-  editReview: async (parent, { input }) => {
+  editReview: async (parent, { input }, { validateOwner }) => {
     const { courseId, createdDate } = input;
     const oldReviewData = await getReview({ courseId, createdDate });
-    const { courseRatings, groupRatings } = await recalWithEdittedReview({ oldReviewData, ...input });
-    const modifiedDate = await editReview({ oldReviewData, newReviewData: input });
+    validateOwner(oldReviewData.username);
+
+    const modifiedDate = await editReview({
+      oldReviewData,
+      newReviewData: input,
+    });
+    const { courseRatings, groupRatings } = await recalWithEdittedReview({
+      oldReviewData,
+      ...input,
+    });
     return {
       modifiedDate,
       courseRatings,
@@ -32,9 +50,10 @@ exports.Review = {
   username: ({ username, anonymous }) => {
     return anonymous ? 'Anonymous' : username;
   },
-  myVote: ({ upvotesUserIds, downvotesUserIds }, args, { user }) => { // upvotesUserIds and downvotesUserIds are sets
+  myVote: ({ upvotesUserIds, downvotesUserIds }, args, { user }) => {
     if (user) {
       const { username } = user;
+      // upvotesUserIds and downvotesUserIds are sets
       if (upvotesUserIds.values.includes(username)) {
         return VOTE_ACTIONS.UPVOTE;
       }

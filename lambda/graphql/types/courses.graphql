@@ -1,5 +1,5 @@
 type Query {
-  subjects(filter: SubjectFilter): [Subject]!
+  subjects(filter: SubjectFilter): [Subject]! @auth
 }
 
 input SubjectFilter {

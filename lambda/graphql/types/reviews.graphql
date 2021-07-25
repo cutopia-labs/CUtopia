@@ -1,7 +1,7 @@
 type Mutation {
   createReview(input: CreateReviewInput!): CreateReviewResult @auth
   voteReview(input: VoteReviewInput!): VoteReviewResult @auth
-  editReview(input: EditReviewInput!): EditReviewResult @auth
+  editReview(input: EditReviewInput!): EditReviewResult @auth(role: OWNER)
 }
 
 type Query {
@@ -49,7 +49,7 @@ input CreateReviewInput {
   term: String!
   section: String!
   lecturer: String!
-  overall: Int!
+  overall: Int! @constrain(minValue: 0, maxValue: 4)
   grading: ReviewDetailsInput!
   teaching: ReviewDetailsInput!
   difficulty: ReviewDetailsInput!
@@ -68,7 +68,7 @@ input EditReviewInput {
   courseId: String!
   createdDate: String!
   anonymous: Boolean!
-  overall: Int!
+  overall: Int! @constrain(minValue: 0, maxValue: 4)
   grading: ReviewDetailsInput!
   teaching: ReviewDetailsInput!
   difficulty: ReviewDetailsInput!
@@ -128,6 +128,6 @@ type ReviewDetails {
 }
 
 input ReviewDetailsInput {
-  grade: Int!
-  text: String!
+  grade: Int! @constrain(minValue: 0, maxValue: 4)
+  text: String @constrain(minLen: 10, maxLen: 500)
 }
