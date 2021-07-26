@@ -13,7 +13,6 @@ import {
   COURSE_INFO_QUERY,
   GET_REVIEW,
   REVIEWS_QUERY,
-  GET_USER,
 } from '../../constants/queries';
 import Loading from '../atoms/Loading';
 import { NotificationContext, UserContext } from '../../store';
@@ -54,6 +53,7 @@ const CourseSummary = ({
         <>
           <div className="center-row">
             <Button
+              className="reviews-sort"
               size="small"
               onClick={(e) => setAnchorEl(e.currentTarget)}
               endIcon={<ExpandMore />}
@@ -127,13 +127,6 @@ const CoursePanel = () => {
       },
     },
   ]);
-
-  const { data: userData, loading: userDataLoading } = useQuery(GET_USER, {
-    skip: Boolean((user.user.reviewIds?.length || 0) >= FULL_MEMBER_REVIEWS),
-    onCompleted: (data) => {
-      user.saveUser(data?.me);
-    },
-  });
 
   // Fetch course info
   const {

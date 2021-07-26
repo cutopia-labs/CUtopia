@@ -5,20 +5,15 @@ import { storeData, getStoreData, removeStoreItem } from '../helpers/store';
 
 import { TOKEN_EXPIRE_DAYS, VIEWS_LIMIT } from '../constants/states';
 import NotificationStore from './NotificationStore';
+import StorePrototype from './StorePrototype';
 
-const LOAD_KEYS = [
-  'cutopiaUsername',
-  'cutopiaPassword',
-  'favoriteCourses',
-  'timetable',
-  'viewCount',
-];
+const LOAD_KEYS = ['username', 'favoriteCourses', 'timetable', 'viewCount'];
 
 const RESET_KEYS = [...LOAD_KEYS, 'token'];
 
-const LOGOUT_KEYS = ['cutopiaUsername', 'cutopiaPassword', 'token'];
+const LOGOUT_KEYS = ['username', 'token'];
 
-class UserStore {
+class UserStore extends StorePrototype {
   // General State
   @observable viewCount: number;
   @observable loginState: LoginState;
@@ -26,18 +21,20 @@ class UserStore {
   // User Saved Data
   @observable favoriteCourses: CourseConcise[] = [];
   @observable timetable: CourseTableEntry[];
-  @observable user: Partial<User>;
+
+  // User Session Data (Reload everytime init)
+  @observable data: User;
 
   // CUtopia
-  @observable cutopiaUsername: string;
-  @observable cutopiaPassword: string;
+  @observable username: string;
   @observable token: string;
 
   notificationStore: NotificationStore;
 
   constructor(notificationStore: NotificationStore) {
-    makeObservable(this);
+    super();
     this.notificationStore = notificationStore;
+    makeObservable(this);
   }
 
   @action async init() {
@@ -45,20 +42,15 @@ class UserStore {
     await this.applyUserStore();
     await this.applyToken();
     console.table(this.timetable);
-    this.user = this.user || {};
     this.favoriteCourses = this.favoriteCourses || [];
     this.viewCount = this.viewCount || 0;
-  }
-
-  @action.bound updateUserStore(key: string, value: any) {
-    this[key] = value;
   }
 
   @action async applyUserStore() {
     await Promise.all(
       LOAD_KEYS.map(async (key) => {
         const retrieved = await getStoreData(key);
-        this.updateUserStore(key, retrieved);
+        this.updateStore(key, retrieved);
       })
     );
   }
@@ -122,20 +114,6 @@ class UserStore {
     await storeData('timetable', courses);
   }
 
-  @action async saveUser(user) {
-    this.setUser(user);
-    await storeData('user', user);
-  }
-
-  @action async clearUser() {
-    await removeStoreItem('user');
-    this.setUser({});
-  }
-
-  @action.bound setUser(user) {
-    this.user = user;
-  }
-
   // User Fav Courses
   @action async saveFavoriteCourses(courses: CourseConcise[]) {
     await storeData('favoriteCourses', courses);
@@ -147,13 +125,10 @@ class UserStore {
   }
 
   // CUtopia
-  @action async saveCutopiaAccount(username, sid, password, token) {
-    this.updateUserStore('cutopiaUsername', username);
-    this.updateUserStore('cutopiaPassword', password);
-    username && (await storeData('cutopiaUsername', username));
-    password && (await storeData('cutopiaPassword', password));
+  @action async saveUser(username, token) {
+    this.setStore('username', username);
     await this.saveToken(token);
-    this.notificationStore.setSnackBar('Successfully logged in !');
+    this.notificationStore.setSnackBar(`Logged in as ${username}`);
   }
 
   @action async applyToken() {
@@ -196,8 +171,7 @@ class UserStore {
 
   @action.bound setLogout() {
     this.loginState = LoginState.LOGGED_OUT;
-    this.cutopiaPassword = null;
-    this.cutopiaUsername = null;
+    this.username = null;
     this.token = null;
   }
 

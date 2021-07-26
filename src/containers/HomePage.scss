@@ -16,10 +16,6 @@
 	width: 300px;
 	position: sticky;
 	top: calc(var(--header-height) + var(--page-margin));
-	height: 0;
-  display: grid;
-  grid-auto-rows: auto;
-  grid-row-gap: var(--card-padding);
 }
 .home-page-right {
 	flex: 1;

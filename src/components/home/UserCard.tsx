@@ -21,38 +21,27 @@ import {
   UserContext,
 } from '../../store';
 import { User } from '../../types';
-import Card from '../atoms/Card';
-import Loading from '../atoms/Loading';
 import { clearStore } from '../../helpers/store';
 
 type UserCardProps = {
   userData: User;
-  loading: boolean;
 };
 
-const UserCard = ({ userData, loading }: UserCardProps) => {
+const UserCard = ({ userData }: UserCardProps) => {
   const user = useContext(UserContext);
   const preference = useContext(PreferenceContext);
   const notification = useContext(NotificationContext);
   const [openSettings, SetOpenSetting] = useState(false);
 
-  if (loading) {
-    return (
-      <Card>
-        <Loading />
-      </Card>
-    );
-  }
-
   return (
     <div className="user-card card">
       <div className="user-card-header center-row">
         <Avatar className="char-icon">
-          {user?.cutopiaUsername ? user?.cutopiaUsername?.charAt(0) : ''}
+          {user?.username ? user?.username?.charAt(0) : ''}
         </Avatar>
         <div className="user-card-header-details column">
           <div className="title center-row">
-            {user?.cutopiaUsername}
+            {user?.username}
             <Tooltip
               title={
                 userData?.reviewIds?.length >= 3

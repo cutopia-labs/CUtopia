@@ -157,6 +157,9 @@ const GET_USER = gql`
     me {
       reviewIds
       upvotesCount
+      username
+      exp
+      level
     }
   }
 `;

@@ -33,32 +33,25 @@ const CoursesList = ({ loading, courses }: CoursesListProps) => (
 );
 
 type ReviewsListProps = {
-  loading: boolean;
   reviewIds: string[];
 };
 
-const ReviewsList = ({ loading, reviewIds }: ReviewsListProps) => (
-  <>
-    {loading ? (
-      <Loading />
-    ) : (
-      <div className="home-course-container card">
-        {reviewIds?.map((id) => {
-          const [courseId, createdDate] = id.split('#');
-          return (
-            <Link key={id} to={`/review/${courseId}/${createdDate}`}>
-              <ListItem
-                className="search-list-item column home-course-list-item"
-                label={courseId}
-                caption={getMMMDDYY(createdDate)}
-                noBorder
-              />
-            </Link>
-          );
-        })}
-      </div>
-    )}
-  </>
+const ReviewsList = ({ reviewIds }: ReviewsListProps) => (
+  <div className="home-course-container card">
+    {reviewIds?.map((id) => {
+      const [courseId, createdDate] = id.split('#');
+      return (
+        <Link key={id} to={`/review/${courseId}/${createdDate}`}>
+          <ListItem
+            className="search-list-item column home-course-list-item"
+            label={courseId}
+            caption={getMMMDDYY(createdDate)}
+            noBorder
+          />
+        </Link>
+      );
+    })}
+  </div>
 );
 
 export { CoursesList, ReviewsList };

@@ -1,10 +1,5 @@
 import { useState, useContext, useEffect, useRef } from 'react';
-import {
-  Button,
-  IconButton,
-  Checkbox,
-  CircularProgress,
-} from '@material-ui/core';
+import { Button, IconButton, CircularProgress } from '@material-ui/core';
 import { ArrowBack } from '@material-ui/icons';
 import QRCode from 'qrcode.react';
 
@@ -43,8 +38,8 @@ const MODE_ITEMS = {
     title: 'Sign Up',
     caption: 'A few steps away from unlimited course reviews',
     userId: 'Your CUHK SID (For Verification)',
-    username: 'Your username for CUtopia',
-    password: 'Password for CUtopia Account',
+    username: 'Username',
+    password: 'Password',
     button: 'Sign Up',
   },
   [LoginPageMode.VERIFY]: {
@@ -132,7 +127,7 @@ const LoginPanel = () => {
       }
 
       if (data.type === 'token') {
-        user.saveCutopiaAccount(data.username, data.userId, null, data.token);
+        user.saveUser(data.username, data.token);
       }
     } catch (err) {
       console.warn(err);
@@ -161,12 +156,7 @@ const LoginPanel = () => {
     const { data } = await loginCUtopia(loginPayload);
     if (data?.login.code === LoginCode.SUCCEEDED) {
       console.log(`Login success with token ${data.login.token}`);
-      await user.saveCutopiaAccount(
-        username,
-        userId,
-        rememberMe && password,
-        data.login.token
-      );
+      await user.saveUser(username, data.login.token);
     } else if (data?.login.code === LoginCode.FAILED) {
       alert('Wrong Password!');
     } else {
@@ -297,7 +287,7 @@ const LoginPanel = () => {
   };
 
   return (
-    <div className="login-panel">
+    <div className="login-panel grid-auto-row">
       <div className="center-row qrcode-row">
         <div>
           {mode !== LoginPageMode.CUTOPIA_LOGIN &&
@@ -356,18 +346,9 @@ const LoginPanel = () => {
         />
       )}
       {mode === LoginPageMode.CUTOPIA_LOGIN && (
-        <div className="center-row check-box-row">
-          <div className="center-row check-box-container">
-            <Checkbox
-              className="check-box"
-              color="primary"
-              checked={rememberMe}
-              onChange={(e) => setRememberMe(e.target.checked)}
-            />
-            <span className="caption check-box-label">Remember Me</span>
-          </div>
+        <div className="center-row forgot-password-row">
           <span
-            className="label"
+            className="label forgot-password"
             onClick={() => setMode(LoginPageMode.RESET_PASSWORD)}
           >
             Forgot Password?

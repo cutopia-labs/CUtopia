@@ -13,6 +13,18 @@
     color: var(--text);
   }
   flex-direction: row;
+  .reviews-sort {
+    background-color: var(--background-secondary);
+    border-radius: 50px;
+    padding: 4px 12px;
+    .MuiButton-label {
+      font-weight: bold;
+      color: var(--primary);
+    }
+    svg {
+      color: var(--primary);
+    }
+  }
 }
 .course-summary-ratings {
   align-items: center;

@@ -14,7 +14,7 @@ import UserCard from '../components/home/UserCard';
 import { PlannerContext, UserContext } from '../store';
 import { CoursesList, ReviewsList } from '../components/home/HomePageTabs';
 import TimeTablePanel from '../components/templates/TimeTablePanel';
-import { MY_TIMETABLE_QUERY, GET_USER } from '../constants/queries';
+import { MY_TIMETABLE_QUERY } from '../constants/queries';
 import TabsContainer from '../components/molecules/TabsContainer';
 import Page from '../components/atoms/Page';
 import Card from '../components/atoms/Card';
@@ -74,16 +74,10 @@ const HomePage = () => {
 
   const { loading: timetableLoading } = useQuery(MY_TIMETABLE_QUERY, {
     variables: {
-      username: user.cutopiaUsername,
+      username: user.username,
     },
     onCompleted: (data) => {
       user.saveTimeTable(data?.user?.timetable);
-    },
-  });
-
-  const { data: userData, loading: userDataLoading } = useQuery(GET_USER, {
-    onCompleted: (data) => {
-      user.saveUser(data?.me);
     },
   });
 
@@ -92,12 +86,7 @@ const HomePage = () => {
       case 'Courses':
         return <CoursesList loading={false} courses={user.favoriteCourses} />;
       case 'Reviews':
-        return (
-          <ReviewsList
-            loading={userDataLoading}
-            reviewIds={userData?.me?.reviewIds}
-          />
-        );
+        return <ReviewsList reviewIds={user.data?.reviewIds} />;
       case 'Planner':
         return <PlannerTimeTable className="home-page-timetable" />;
       case 'Timetable':
@@ -117,13 +106,13 @@ const HomePage = () => {
 
   return (
     <Page className="home-page" center padding>
-      <div className="home-page-left">
-        <UserCard userData={userData?.me} loading={userDataLoading} />
+      <div className="home-page-left grid-auto-row">
+        <UserCard userData={user.data} />
         <LinksCard />
         {!isMobile && <Footer />}
       </div>
-      <div className="home-page-right">
-        <TabsContainer mb items={SELECTIONS} selected={tab} onSelect={setTab} />
+      <div className="home-page-right grid-auto-row">
+        <TabsContainer items={SELECTIONS} selected={tab} onSelect={setTab} />
         {renderTab()}
         {isMobile && <Footer />}
       </div>

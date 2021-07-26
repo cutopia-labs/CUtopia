@@ -19,11 +19,7 @@ import { Visibility, VisibilityOff } from '@material-ui/icons';
 
 import './ReviewEdit.scss';
 import { NotificationContext, UserContext } from '../../store';
-import {
-  GET_USER,
-  GET_REVIEW,
-  COURSE_INFO_QUERY,
-} from '../../constants/queries';
+import { GET_REVIEW, COURSE_INFO_QUERY } from '../../constants/queries';
 import { ADD_REVIEW, EDIT_REVIEW } from '../../constants/mutations';
 import { GRADES, RATING_FIELDS } from '../../constants/states';
 import TextField from '../atoms/TextField';
@@ -128,7 +124,7 @@ const ReviewSection = ({
 
 const ReviewEdit = ({ courseId }) => {
   const [mode, setMode] = useState(MODES.INITIAL);
-  const [targetReview, setTargetReview] = useState();
+  const [targetReview, setTargetReview] = useState('');
   const [progress, setProgress] = useState(0);
   const [anchorEl, setAnchorEl] = useState(null);
   const [showLecturers, setShowLecturers] = useState(false);
@@ -156,13 +152,6 @@ const ReviewEdit = ({ courseId }) => {
   const user = useContext(UserContext);
   const history = useHistory();
   const lecturerInputRef = useRef();
-
-  // Get user's reviewIds to see if he already reviewed this course
-  const { data: userData, loading: userLoading } = useQuery(GET_USER, {
-    variables: {
-      username: user.cutopiaUsername,
-    },
-  });
 
   // Fetch a review based on reviewId
   const { data: review, loading: reviewLoading } = useQuery(GET_REVIEW, {
@@ -232,21 +221,18 @@ const ReviewEdit = ({ courseId }) => {
 
   // Check userData to see if user already posted review
   useEffect(() => {
-    if (userData && !userLoading) {
-      if (!userData?.user) {
-        alert('Invalid Login Information!');
-        history.push(`/review/${courseId}`);
-      } else if (userData?.user.reviewIds && userData?.user.reviewIds.length) {
-        for (let i = 0; i < userData?.user.reviewIds.length; i++) {
-          if (userData?.user.reviewIds[i].startsWith(courseId)) {
-            const parts = userData?.user.reviewIds[i].split('#');
-            setTargetReview(parts[1]);
-            setMode(MODES.MODAL);
-          }
+    const reviewIds = user?.data?.reviewIds;
+    if (reviewIds && reviewIds?.length) {
+      const reviewIds = user.data?.reviewIds;
+      for (let i = 0; i < reviewIds.length; i++) {
+        if (reviewIds[i].startsWith(courseId)) {
+          const parts = reviewIds[i].split('#');
+          setTargetReview(parts[1]);
+          setMode(MODES.MODAL);
         }
       }
     }
-  }, [userData]);
+  }, [user.data.reviewIds]);
 
   // to fillin posted review if choose to edit
   useEffect(() => {

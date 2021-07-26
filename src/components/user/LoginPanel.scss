@@ -1,12 +1,8 @@
 .login-panel {
-  display: flex;
-  flex-direction: column;
+  height: auto;
   width: 50%;
   max-width: 400px;
   font-size: 16px;
-  & > * {
-    margin-bottom: 20px;
-  }
   h2 {
     margin-top: 0;
     margin-bottom: 0;
@@ -27,28 +23,34 @@
     margin-left: 12px;
     color: var(--landing-page-btn-color);
     font-weight: bold;
+    &.forgot-password {
+      margin-left: auto;
+    }
   }
   .text-filed-label {
     margin-left: 0;
     color: var(--text);
-    margin-bottom: 0;
+    margin-bottom: -6px;
+  }
+  .input-container {
+    margin-top: 0;
   }
 }
 .qrcode-row {
   justify-content: space-between;
-  padding-bottom: 12px;
+  margin-bottom: 8px;
   canvas {
     padding: 2px;
     background-color: white;
   }
 }
-.check-box-row {
+.forgot-password-row {
   margin-top: 4px;
   align-items: center;
   flex-direction: row;
   justify-content: space-between;
 }
-.check-box-container {
+.forgot-password-container {
   flex-direction: row;
 }
 .login-btn {
@@ -66,7 +68,7 @@
   }
 }
 .switch-container {
-  margin-top: 26px;
+  margin-top: 10px;
   color: #00000066;
   font-size: 14px;
 }

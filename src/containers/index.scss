@@ -84,7 +84,6 @@ textarea[type="number"] {
 }
 
 .center-page {
-  padding: var(--page-margin-top) var(--page-margin);
   max-width: var(--max-width);
   width: var(--max-width);
   margin-left: auto;
@@ -227,6 +226,13 @@ textarea[type="number"] {
   }
 }
 
+.grid-auto-row {
+  height: 0;
+  display: grid;
+  grid-auto-rows: auto;
+  grid-row-gap: var(--card-padding);
+}
+
 /* Scrollbar styles */
 
 /* Mobile Styles */
@@ -238,12 +244,11 @@ textarea[type="number"] {
   }
   .center-page {
     width: 100%;
+    margin-left: 0;
+    margin-right: 0;
   }
   .panel {
-    margin: 0 !important;
     overflow-y: initial !important;
-    border: 0;
-    margin-left: 0;
   }
   .page {
     flex: 1;
@@ -251,9 +256,11 @@ textarea[type="number"] {
     grid-template-columns: none;
     grid-template-rows: min-content 1fr;
     min-height: calc(100vh - var(--header-height) - 2 * var(--card-padding));
-    padding: var(--card-padding);
-    max-width: calc(100% - 2 * var(--card-padding));
+    padding: 0;
     // min-height: var(--page-content-height);
+  }
+  .card {
+    border-radius: 0;
   }
 }
 
