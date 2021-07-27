@@ -142,6 +142,7 @@ const CoursePanel = () => {
       },
     }),
     fetchPolicy: 'cache-first',
+    onError: notification.handleError,
   });
 
   // Fetch all reviews
@@ -176,9 +177,7 @@ const CoursePanel = () => {
       );
       setLastEvaluatedKey(data.reviews.lastEvaluatedKey);
     },
-    onError: (e) => {
-      alert(e);
-    },
+    onError: notification.handleError,
     notifyOnNetworkStatusChange: true,
     fetchPolicy: 'cache-first',
   });

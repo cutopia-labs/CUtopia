@@ -26,7 +26,7 @@ import './SearchPanel.scss';
 import ListItem from '../molecules/ListItem';
 import { storeData, getStoreData } from '../../helpers/store';
 import COURSE_CODES from '../../constants/courseCodes';
-import { UserContext } from '../../store';
+import { NotificationContext, UserContext } from '../../store';
 import COURSES from '../../constants/courses';
 import { COURSE_SECTIONS_QUERY } from '../../constants/queries';
 import { validCourse } from '../../helpers/marcos';
@@ -235,6 +235,7 @@ const SearchPanel = () => {
   const [historyList, setHistoryList] = useState([]);
   const [currentCourse, setCurrentCourse] = useState(null);
   const history = useHistory();
+  const notification = useContext(NotificationContext);
 
   const user = useContext(UserContext);
   const isPlanner = useRouteMatch({
@@ -256,6 +257,7 @@ const SearchPanel = () => {
         code: currentCourse.substring(4),
       },
     }),
+    onError: notification.handleError,
   });
 
   const setSearchPayload = (payload: SearchPayload) => {

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { ThumbUpOutlined, WhatshotOutlined } from '@material-ui/icons';
 import { useQuery } from '@apollo/client';
@@ -17,6 +17,8 @@ import Badge from '../atoms/Badge';
 import ChipsRow from '../molecules/ChipsRow';
 import TabsContainer from '../molecules/TabsContainer';
 import { PopularCourse, TopRatedCourse } from '../../types';
+
+import { NotificationContext } from '../../store';
 
 const MENU_ITEMS = [
   {
@@ -75,17 +77,20 @@ const RankingCard = ({
 const HomePanel = () => {
   const [tab, setTab] = useState('Top Rated');
   const [sortKey, setSortKey] = useState('overall');
+  const notification = useContext(NotificationContext);
 
   const { data: reviews, loading: recentReviewsLoading } = useQuery(
     RECENT_REVIEWS_QUERY,
     {
       skip: tab !== 'Recent',
+      onError: notification.handleError,
     }
   );
   const { data: popularCourses, loading: popularCoursesLoading } = useQuery(
     POPULAR_COURSES_QUERY,
     {
       skip: tab !== 'Popular',
+      onError: notification.handleError,
     }
   );
   const { data: topRatedCourses, loading: topRatedCoursesLoading } = useQuery(
@@ -95,6 +100,7 @@ const HomePanel = () => {
         criteria: sortKey,
       },
       skip: tab !== 'Top Rated',
+      onError: notification.handleError,
     }
   );
   return (

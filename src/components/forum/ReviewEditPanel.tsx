@@ -123,15 +123,20 @@ const ReviewSection = ({
 );
 
 const ReviewEdit = ({ courseId }) => {
+  const notification = useContext(NotificationContext);
   const [mode, setMode] = useState(MODES.INITIAL);
   const [targetReview, setTargetReview] = useState('');
   const [progress, setProgress] = useState(0);
   const [anchorEl, setAnchorEl] = useState(null);
   const [showLecturers, setShowLecturers] = useState(false);
   const [addReview, { loading: addReviewLoading, error: addReviewError }] =
-    useMutation(ADD_REVIEW);
+    useMutation(ADD_REVIEW, {
+      onError: notification.handleError,
+    });
   const [editReview, { loading: editReviewLoading, error: editReviewError }] =
-    useMutation(EDIT_REVIEW);
+    useMutation(EDIT_REVIEW, {
+      onError: notification.handleError,
+    });
   const isMobile = useMediaQuery(`(max-width:${MIN_DESKTOP_WIDTH}px)`);
   const [formData, dispatchFormData] = useReducer(
     (state, action) => ({ ...state, ...action }),
@@ -148,7 +153,6 @@ const ReviewEdit = ({ courseId }) => {
       ),
     }
   );
-  const notification = useContext(NotificationContext);
   const user = useContext(UserContext);
   const history = useHistory();
   const lecturerInputRef = useRef();
@@ -160,6 +164,7 @@ const ReviewEdit = ({ courseId }) => {
       createdDate: targetReview,
     },
     skip: mode !== MODES.EDIT || !targetReview,
+    onError: notification.handleError,
   });
 
   const submit = async (e) => {
@@ -422,6 +427,7 @@ const ReviewEditPanel = () => {
     id?: string;
     reviewId?: string;
   }>();
+  const notification = useContext(NotificationContext);
   // Fetch course info
   const { data: courseInfo, loading: courseInfoLoading } = useQuery(
     COURSE_INFO_QUERY,
@@ -434,6 +440,7 @@ const ReviewEditPanel = () => {
         },
       }),
       fetchPolicy: 'cache-first',
+      onError: notification.handleError,
     }
   );
   return (

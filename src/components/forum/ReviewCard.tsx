@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { observer } from 'mobx-react-lite';
 import { FaRegCalendar } from 'react-icons/fa';
 import { BiMessageRounded } from 'react-icons/bi';
@@ -13,6 +13,7 @@ import { VOTE_REVIEW } from '../../constants/mutations';
 import { getMMMDDYY } from '../../helpers/getTime';
 import ShowMoreOverlay from '../molecules/ShowMoreOverlay';
 import { Review } from '../../types';
+import { NotificationContext } from '../../store';
 import GradeRow from './GradeRow';
 import LikeButtonsRow from './LikeButtonRow';
 
@@ -30,7 +31,10 @@ const ReviewCard = ({
   shareAction,
 }: ReviewCardProps) => {
   const [selectedCriteria, setSelectedCriteria] = useState('overall');
-  const [voteReview, { loading, error }] = useMutation(VOTE_REVIEW);
+  const notification = useContext(NotificationContext);
+  const [voteReview, { loading, error }] = useMutation(VOTE_REVIEW, {
+    onError: notification.handleError,
+  });
   const [liked, setLiked] = useState(review.myVote); // null for unset, false for dislike, true for like
   const isMobile = useMediaQuery('(max-width:1260px)');
   const [showMore, setShowMore] = useState(true);

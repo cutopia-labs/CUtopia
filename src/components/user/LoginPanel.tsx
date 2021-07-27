@@ -136,17 +136,28 @@ const LoginPanel = () => {
 
   const [createUser, { loading: creatingUser, error: createError }] =
     useMutation(SEND_VERIFICATION, {
-      onError: (e: any) => console.log(e),
+      onError: notification.handleError,
     });
-  const [verifyUser, { loading: verifying, error: verifyError }] =
-    useMutation(VERIFY_USER);
+  const [verifyUser, { loading: verifying, error: verifyError }] = useMutation(
+    VERIFY_USER,
+    {
+      onError: notification.handleError,
+    }
+  );
   const [loginCUtopia, { loading: loggingInCUtopia }] =
     useMutation(LOGIN_CUTOPIA);
   const [sendResetPasswordCode, { loading: sendingResetCode }] = useMutation(
-    SEND_RESET_PASSWORD_CODE
+    SEND_RESET_PASSWORD_CODE,
+    {
+      onError: notification.handleError,
+    }
   );
-  const [resetPassword, { loading: resettingPassword }] =
-    useMutation(RESET_PASSWORD);
+  const [resetPassword, { loading: resettingPassword }] = useMutation(
+    RESET_PASSWORD,
+    {
+      onError: notification.handleError,
+    }
+  );
 
   const loginAndRedirect = async () => {
     const loginPayload = {

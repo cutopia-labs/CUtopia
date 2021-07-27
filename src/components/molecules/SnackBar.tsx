@@ -4,6 +4,8 @@ import { Check } from '@material-ui/icons';
 import { observer } from 'mobx-react-lite';
 
 import './SnackBar.scss';
+import { Alert } from '@material-ui/lab';
+import clsx from 'clsx';
 import { NotificationContext } from '../../store';
 
 const SnackBar = () => {
@@ -17,24 +19,37 @@ const SnackBar = () => {
   return (
     <Portal>
       <Grow in={Boolean(notification.snackbar.message)}>
-        <div className="snackbar-container">
-          <span className="snack-text">{notification.snackbar.message}</span>
-          {Boolean(notification.snackbar.label) && (
-            <Button
-              color="secondary"
-              className="btn-container"
-              onClick={() => {
-                notification.snackbar.onClick();
-                setButtonClicked(true);
-              }}
-              disabled={buttonClicked}
-            >
-              {buttonClicked ? (
-                <Check color="secondary" className="snackbar-check-icon" />
-              ) : (
-                notification.snackbar.label
+        <div
+          className={clsx(
+            'snackbar-container',
+            !notification.snackbar.isAlert && 'snackbar-toast'
+          )}
+        >
+          {notification.snackbar.isAlert ? (
+            <Alert severity="error">{notification.snackbar.message}</Alert>
+          ) : (
+            <>
+              <span className="snack-text">
+                {notification.snackbar.message}
+              </span>
+              {Boolean(notification.snackbar.label) && (
+                <Button
+                  color="secondary"
+                  className="btn-container"
+                  onClick={() => {
+                    notification.snackbar.onClick();
+                    setButtonClicked(true);
+                  }}
+                  disabled={buttonClicked}
+                >
+                  {buttonClicked ? (
+                    <Check color="secondary" className="snackbar-check-icon" />
+                  ) : (
+                    notification.snackbar.label
+                  )}
+                </Button>
               )}
-            </Button>
+            </>
           )}
         </div>
       </Grow>

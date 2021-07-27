@@ -1,5 +1,6 @@
 import { makeObservable, observable, action } from 'mobx';
 import { SNACKBAR_TIMEOUT } from '../constants/configs';
+import handleError from '../helpers/handleError';
 import { SnackBar, SnackBarProps } from '../types';
 
 class NotificationStore {
@@ -19,6 +20,8 @@ class NotificationStore {
     makeObservable(this);
     this.init();
   }
+
+  @action handleError = (e) => handleError(e, this);
 
   @action async setSnackBar(prop: string | SnackBarProps) {
     const snackbar = typeof prop === 'string' ? { message: prop } : prop;
@@ -46,6 +49,7 @@ class NotificationStore {
       label,
       onClick,
       id,
+      isAlert,
     };
   }
 }
