@@ -5,10 +5,11 @@ import { storeData, getStoreData, removeStoreItem } from '../helpers/store';
 
 import { PLANNER_CONFIGS } from '../constants/configs';
 import NotificationStore from './NotificationStore';
+import StorePrototype from './StorePrototype';
 
 const LOCAL_STORAGE_KEYS = ['planners', 'plannerTerm', 'currentPlanner'];
 
-class PlannerStore {
+class PlannerStore extends StorePrototype {
   // Planner
   @observable planners: Record<string | number, Planner> = {};
   @observable plannerTerm: string;
@@ -20,6 +21,7 @@ class PlannerStore {
   notificationStore: NotificationStore;
 
   constructor(notificationStore: NotificationStore) {
+    super();
     makeObservable(this);
     this.notificationStore = notificationStore;
   }
@@ -29,8 +31,8 @@ class PlannerStore {
     if (!this.currentPlanner) {
       console.log('Creating new planners');
       const now = +new Date();
-      this.setPlannerStore('currentPlanner', now);
-      this.setPlannerStore('planners', {
+      this.setStore('currentPlanner', now);
+      this.setStore('planners', {
         [now]: {
           key: now,
           courses: [],
@@ -47,15 +49,6 @@ class PlannerStore {
       label: planner.label || PLANNER_CONFIGS.DEFAULT_TABLE_NAME,
     })) as PlannerItem[];
   }
-
-  @action.bound updatePlannerStore(key: string, value: any) {
-    this[key] = value;
-  }
-
-  @action setPlannerStore = async (key: string, value: any) => {
-    this.updatePlannerStore(key, value);
-    await storeData(key, value);
-  };
 
   // reset
   @action async reset() {
@@ -90,7 +83,7 @@ class PlannerStore {
       storeData('planners', this.planners);
       this.plannerCourses = [];
     }
-    this.setPlannerStore('currentPlanner', key);
+    this.setStore('currentPlanner', key);
     this.notificationStore.setSnackBar(`Switched to ${label}`);
   };
 
@@ -107,7 +100,7 @@ class PlannerStore {
     await Promise.all(
       LOCAL_STORAGE_KEYS.map(async (key) => {
         const retrieved = await getStoreData(key);
-        this.updatePlannerStore(key, retrieved);
+        this.updateStore(key, retrieved);
       })
     );
     console.log(toJS(this));
@@ -139,7 +132,7 @@ class PlannerStore {
       delete this.planners[key];
       this.updateCurrentPlanner(parseInt(Object.keys(this.planners)[0], 10));
       await this.notificationStore.setSnackBar('1 item deleted', 'UNDO', () => {
-        this.setPlannerStore('planners', UNDO_COPY);
+        this.setStore('planners', UNDO_COPY);
       });
       // Update AsyncStorage after undo valid period passed.
       await storeData('planners', this.planners);
@@ -149,7 +142,7 @@ class PlannerStore {
   }
 
   @action async savePlannerCourses(courses) {
-    this.updatePlannerStore('plannerCourses', courses);
+    this.updateStore('plannerCourses', courses);
     await storeData('plannerCourses', courses);
   }
 
@@ -198,7 +191,7 @@ class PlannerStore {
         this.plannerCourses.splice(index, 1);
       }
       await this.notificationStore.setSnackBar('1 item deleted', 'UNDO', () => {
-        this.updatePlannerStore('plannerCourses', JSON.parse(UNDO_COPY));
+        this.updateStore('plannerCourses', JSON.parse(UNDO_COPY));
       });
       await storeData('plannerCourses', this.plannerCourses);
     } else {
@@ -212,7 +205,7 @@ class PlannerStore {
       const UNDO_COPY = [...this.plannerCourses];
       this.plannerCourses.splice(index, 1);
       await this.notificationStore.setSnackBar('1 item deleted', 'UNDO', () => {
-        this.updatePlannerStore('plannerCourses', UNDO_COPY);
+        this.updateStore('plannerCourses', UNDO_COPY);
       });
       // Update AsyncStorage after undo valid period passed.
       await storeData('plannerCourses', this.plannerCourses);

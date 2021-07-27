@@ -7,14 +7,12 @@ import {
   CalendarTodayOutlined,
 } from '@material-ui/icons';
 import { observer } from 'mobx-react-lite';
-import { useQuery } from '@apollo/client';
 
 import './HomePage.scss';
 import UserCard from '../components/home/UserCard';
 import { PlannerContext, UserContext } from '../store';
 import { CoursesList, ReviewsList } from '../components/home/HomePageTabs';
 import TimeTablePanel from '../components/templates/TimeTablePanel';
-import { MY_TIMETABLE_QUERY } from '../constants/queries';
 import TabsContainer from '../components/molecules/TabsContainer';
 import Page from '../components/atoms/Page';
 import Card from '../components/atoms/Card';
@@ -72,15 +70,6 @@ const HomePage = () => {
   const [tab, setTab] = useState('Courses');
   const isMobile = useMediaQuery(`(max-width:${MIN_DESKTOP_WIDTH}px)`);
 
-  const { loading: timetableLoading } = useQuery(MY_TIMETABLE_QUERY, {
-    variables: {
-      username: user.username,
-    },
-    onCompleted: (data) => {
-      user.saveTimeTable(data?.user?.timetable);
-    },
-  });
-
   const renderTab = () => {
     switch (tab) {
       case 'Courses':
@@ -95,8 +84,8 @@ const HomePage = () => {
             className="home-page-timetable"
             title="Timetable"
             courses={user.timetable}
-            onImport={(parsedData) => user.setAndSaveTimeTable(parsedData)}
-            onClear={() => user.clearTimeTable()}
+            onImport={(parsedData) => user.setStore('timetable', parsedData)}
+            onClear={() => user.setStore('timetable', {})}
           />
         );
       default:

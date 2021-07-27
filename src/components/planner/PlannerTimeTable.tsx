@@ -17,9 +17,7 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
       className={className}
       courses={planner.plannerCourses}
       previewCourse={planner.previewPlannerCourse}
-      onImport={(parsedData) =>
-        planner.setPlannerStore('plannerCourses', parsedData)
-      }
+      onImport={(parsedData) => planner.setStore('plannerCourses', parsedData)}
       onClear={() => planner.clearPlannerCourses()}
       selections={planner.plannerList}
       onSelect={(key) => planner.updateCurrentPlanner(key)}

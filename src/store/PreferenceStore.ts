@@ -2,12 +2,14 @@ import { makeObservable, observable, action } from 'mobx';
 
 import { storeData, getStoreData } from '../helpers/store';
 import { THEME, DARK_THEME } from '../constants/colors';
+import StorePrototype from './StorePrototype';
 
-class PreferenceStore {
+class PreferenceStore extends StorePrototype {
   @observable darkTheme = false;
   @observable theme = THEME;
 
   constructor() {
+    super();
     makeObservable(this);
   }
 

@@ -135,7 +135,9 @@ const LoginPanel = () => {
   }, [lastMessage]);
 
   const [createUser, { loading: creatingUser, error: createError }] =
-    useMutation(SEND_VERIFICATION);
+    useMutation(SEND_VERIFICATION, {
+      onError: (e: any) => console.log(e),
+    });
   const [verifyUser, { loading: verifying, error: verifyError }] =
     useMutation(VERIFY_USER);
   const [loginCUtopia, { loading: loggingInCUtopia }] =
@@ -207,8 +209,9 @@ const LoginPanel = () => {
             password,
           },
         };
-        const { data } = await createUser(createUserPayload);
-        !data || data.error ? alert(data.error) : setMode(LoginPageMode.VERIFY);
+        const { data, errors } = await createUser(createUserPayload);
+        console.log(JSON.stringify(errors));
+        !data || errors ? alert(errors) : setMode(LoginPageMode.VERIFY);
         break;
       }
       case LoginPageMode.VERIFY: {

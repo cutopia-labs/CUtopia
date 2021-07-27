@@ -37,7 +37,8 @@ const CourseCard = ({ courseInfo, concise }: CourseCardProps) => {
   );
   const setFavorited = async () => {
     if (isFavorited) {
-      await user.saveFavoriteCourses(
+      await user.setStore(
+        'favoriteCourses',
         [...user.favoriteCourses].filter(
           (course) => course.courseId !== courseInfo.courseId
         )
@@ -48,7 +49,8 @@ const CourseCard = ({ courseInfo, concise }: CourseCardProps) => {
         courseId: courseInfo.courseId,
         title: courseInfo.title,
       };
-      await user.saveFavoriteCourses(
+      await user.setStore(
+        'favoriteCourses',
         user.favoriteCourses.length ? [...user.favoriteCourses, temp] : [temp]
       );
     }

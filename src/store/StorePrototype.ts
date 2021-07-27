@@ -3,12 +3,14 @@ import { action } from 'mobx';
 import { storeData } from '../helpers/store';
 
 class StorePrototype {
-  @action updateStore = (key, value) => {
+  @action.bound updateStore(key: string, value: any) {
     this[key] = value;
-  };
-  @action setStore = (key, value) => {
+    console.log(`Updated ${key} with value ${JSON.stringify(value)}`);
+  }
+
+  @action setStore = async (key: string, value: any) => {
     this.updateStore(key, value);
-    storeData(key, value);
+    await storeData(key, value);
   };
 }
 

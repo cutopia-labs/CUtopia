@@ -31,3 +31,9 @@ export enum LoginCode {
   FAILED,
   USER_DNE,
 }
+
+export enum ErrorCardMode {
+  NULL,
+  ERROR,
+  NOT_FOUND,
+}
