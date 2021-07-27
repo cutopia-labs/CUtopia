@@ -59,11 +59,7 @@ const ReviewCard = ({
       },
     });
     console.log(res);
-    if (res && !res.data.voteReview.error) {
-      setLiked(vote);
-    } else {
-      alert(res.data.voteReview.error);
-    }
+    setLiked(vote);
   };
 
   useEffect(() => {

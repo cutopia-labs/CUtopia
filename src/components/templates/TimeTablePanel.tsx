@@ -90,12 +90,16 @@ const TimeTablePanel = ({
     {
       label: 'export',
       action: () => {
-        const result = copy(JSON.stringify(courses));
-        notification.setSnackBar(
-          result
-            ? 'Copied the timetable to clipboard!'
-            : 'Failed to copy QAQ, please report the issue to us'
-        );
+        if (!onExport) {
+          const result = copy(JSON.stringify(courses));
+          notification.setSnackBar(
+            result
+              ? 'Copied the timetable to clipboard!'
+              : 'Failed to copy QAQ, please report the issue to us'
+          );
+        } else {
+          onExport(courses);
+        }
       },
       icon: <Publish />,
     },

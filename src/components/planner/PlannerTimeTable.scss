@@ -1,0 +1,31 @@
+.planner-share-dialog {
+  .grid-auto-row {
+    width: 260px;
+    height: auto;
+    padding: var(--card-padding);
+  }
+  .sub-title {
+  }
+  .share-btn-row {
+    width: 100%;
+    justify-content: center;
+    .share {
+      background-color: var(--text);
+      color: var(--reversed-text);
+      padding: auto 12px;
+      width: 100%;
+      margin-top: 6px;
+    }
+  }
+}
+
+.section-container {
+  display: flex;
+  flex-direction: column;
+  .label {
+    font-weight: 500;
+    color: var(--caption);
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+}

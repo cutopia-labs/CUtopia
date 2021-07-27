@@ -6,9 +6,17 @@ type ChipsRowProps = {
   items: string[];
   select: string;
   setSelect: (item: string) => any;
+  variant?: string;
+  selectedColor?: string;
 };
 
-const ChipsRow = ({ items, select, setSelect }: ChipsRowProps) => (
+const ChipsRow = ({
+  items,
+  select,
+  setSelect,
+  variant,
+  selectedColor,
+}: ChipsRowProps) => (
   <div className="chips-row">
     {items.map((item) => (
       <Chip
@@ -16,8 +24,10 @@ const ChipsRow = ({ items, select, setSelect }: ChipsRowProps) => (
         className={`chip-item center-row${item === select ? ' active' : ''}`}
         onClick={() => setSelect(item)}
         label={item}
-        variant="outlined"
-        color={select === item ? 'secondary' : 'default'}
+        variant={(variant as any) || 'outlined'}
+        color={
+          select === item ? (selectedColor as any) || 'secondary' : 'default'
+        }
       />
     ))}
   </div>

@@ -170,10 +170,6 @@ const LoginPanel = () => {
     if (data?.login.code === LoginCode.SUCCEEDED) {
       console.log(`Login success with token ${data.login.token}`);
       await user.saveUser(username, data.login.token);
-    } else if (data?.login.code === LoginCode.FAILED) {
-      alert('Wrong Password!');
-    } else {
-      alert("User doesn't exist!");
     }
   };
 

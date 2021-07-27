@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 // CUTOPIA LOGIN Mutations
-const LOGIN_CUTOPIA = gql`
+export const LOGIN_CUTOPIA = gql`
   mutation ($username: String!, $password: String!) {
     login(input: { username: $username, password: $password }) {
       code
@@ -11,7 +11,7 @@ const LOGIN_CUTOPIA = gql`
 `;
 
 // CUTOPIA SIGNUP Mutations
-const SEND_VERIFICATION = gql`
+export const SEND_VERIFICATION = gql`
   mutation ($email: String!, $password: String!, $username: String!) {
     createUser(
       input: { username: $username, email: $email, password: $password }
@@ -21,7 +21,7 @@ const SEND_VERIFICATION = gql`
   }
 `;
 
-const VERIFY_USER = gql`
+export const VERIFY_USER = gql`
   mutation ($username: String!, $code: String!) {
     verifyUser(input: { username: $username, code: $code }) {
       code
@@ -30,7 +30,7 @@ const VERIFY_USER = gql`
 `;
 
 // CUTOPIA PASSWORD RESET Mutations
-const SEND_RESET_PASSWORD_CODE = gql`
+export const SEND_RESET_PASSWORD_CODE = gql`
   mutation ($username: String!) {
     sendResetPasswordCode(input: { username: $username }) {
       code
@@ -39,7 +39,7 @@ const SEND_RESET_PASSWORD_CODE = gql`
   }
 `;
 
-const RESET_PASSWORD = gql`
+export const RESET_PASSWORD = gql`
   mutation ($username: String!, $newPassword: String!, $resetCode: String!) {
     resetPassword(
       input: {
@@ -55,7 +55,7 @@ const RESET_PASSWORD = gql`
 `;
 
 // REVIEW Mutations
-const ADD_REVIEW = gql`
+export const ADD_REVIEW = gql`
   mutation (
     $anonymous: Boolean!
     $courseId: String!
@@ -89,7 +89,7 @@ const ADD_REVIEW = gql`
   }
 `;
 
-const EDIT_REVIEW = gql`
+export const EDIT_REVIEW = gql`
   mutation (
     $anonymous: Boolean!
     $courseId: String!
@@ -117,7 +117,7 @@ const EDIT_REVIEW = gql`
   }
 `;
 
-const VOTE_REVIEW = gql`
+export const VOTE_REVIEW = gql`
   mutation ($courseId: String!, $createdDate: String!, $vote: Int!) {
     voteReview(
       input: { courseId: $courseId, createdDate: $createdDate, vote: $vote }
@@ -127,13 +127,17 @@ const VOTE_REVIEW = gql`
   }
 `;
 
-export {
-  LOGIN_CUTOPIA,
-  SEND_VERIFICATION,
-  VERIFY_USER,
-  SEND_RESET_PASSWORD_CODE,
-  RESET_PASSWORD,
-  ADD_REVIEW,
-  EDIT_REVIEW,
-  VOTE_REVIEW,
-};
+export const SHARE_TIMETABLE = gql`
+  mutation (
+    $entries: [CourseTableEntryInput]!
+    $anonymous: Boolean!
+    $expire: Int!
+  ) {
+    shareTimetable(
+      input: { entries: $entries, anonymous: $anonymous, expire: $expire }
+    ) {
+      id
+      token
+    }
+  }
+`;
