@@ -37,3 +37,20 @@ export enum ErrorCardMode {
   ERROR,
   NOT_FOUND,
 }
+
+export enum ReviewReportMode {
+  OTHER,
+  HATE_SPEECH,
+  PERSONAL_ATTACK,
+  SPAM,
+  MISLEADING,
+}
+
+export enum CourseInfoReportMode {
+  OTHER,
+  COURSE_TITLE,
+  CREDITS,
+  ASSESSMENTS,
+  REQUIREMENTS,
+  DESCRIPTION,
+}

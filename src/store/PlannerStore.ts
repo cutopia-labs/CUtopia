@@ -131,8 +131,12 @@ class PlannerStore extends StorePrototype {
       const UNDO_COPY = { ...this.planners };
       delete this.planners[key];
       this.updateCurrentPlanner(parseInt(Object.keys(this.planners)[0], 10));
-      await this.notificationStore.setSnackBar('1 item deleted', 'UNDO', () => {
-        this.setStore('planners', UNDO_COPY);
+      await this.notificationStore.setSnackBar({
+        message: '1 item deleted',
+        label: 'UNDO',
+        onClick: () => {
+          this.setStore('planners', UNDO_COPY);
+        },
       });
       // Update AsyncStorage after undo valid period passed.
       await storeData('planners', this.planners);
@@ -149,8 +153,12 @@ class PlannerStore extends StorePrototype {
   @action async clearPlannerCourses() {
     const UNDO_COPY = [...this.plannerCourses];
     this.plannerCourses = [];
-    await this.notificationStore.setSnackBar('Cleared planner!', 'UNDO', () => {
-      this.plannerCourses = UNDO_COPY;
+    await this.notificationStore.setSnackBar({
+      message: 'Cleared planner!',
+      label: 'UNDO',
+      onClick: () => {
+        this.plannerCourses = UNDO_COPY;
+      },
     });
     await storeData('plannerCourses', this.plannerCourses);
   }
@@ -190,8 +198,12 @@ class PlannerStore extends StorePrototype {
       } else {
         this.plannerCourses.splice(index, 1);
       }
-      await this.notificationStore.setSnackBar('1 item deleted', 'UNDO', () => {
-        this.updateStore('plannerCourses', JSON.parse(UNDO_COPY));
+      await this.notificationStore.setSnackBar({
+        message: '1 item deleted',
+        label: 'UNDO',
+        onClick: () => {
+          this.setStore('plannerCourses', JSON.parse(UNDO_COPY));
+        },
       });
       await storeData('plannerCourses', this.plannerCourses);
     } else {
@@ -204,8 +216,12 @@ class PlannerStore extends StorePrototype {
     if (index !== -1) {
       const UNDO_COPY = [...this.plannerCourses];
       this.plannerCourses.splice(index, 1);
-      await this.notificationStore.setSnackBar('1 item deleted', 'UNDO', () => {
-        this.updateStore('plannerCourses', UNDO_COPY);
+      await this.notificationStore.setSnackBar({
+        message: '1 item deleted',
+        label: 'UNDO',
+        onClick: () => {
+          this.updateStore('plannerCourses', UNDO_COPY);
+        },
       });
       // Update AsyncStorage after undo valid period passed.
       await storeData('plannerCourses', this.plannerCourses);

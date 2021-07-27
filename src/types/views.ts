@@ -15,9 +15,13 @@ export interface PlannerItem extends MenuItem {
   key: number;
 }
 
-export type SnackBar = {
+export interface SnackBarProps {
   message: string;
-  id: number | undefined;
   label?: string;
   onClick?: (...args: any[]) => any;
-};
+  isAlert?: boolean;
+}
+
+export interface SnackBar extends SnackBarProps {
+  id: number | undefined;
+}

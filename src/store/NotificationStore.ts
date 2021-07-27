@@ -1,6 +1,6 @@
 import { makeObservable, observable, action } from 'mobx';
 import { SNACKBAR_TIMEOUT } from '../constants/configs';
-import { SnackBar } from '../types';
+import { SnackBar, SnackBarProps } from '../types';
 
 class NotificationStore {
   @observable snackbar: SnackBar;
@@ -9,6 +9,7 @@ class NotificationStore {
     this.snackbar = {
       message: '',
       label: '',
+      isAlert: false,
       onClick: null,
       id: undefined,
     };
@@ -19,13 +20,10 @@ class NotificationStore {
     this.init();
   }
 
-  @action async setSnackBar(
-    message: string,
-    label?: string,
-    onClick?: (...args: any[]) => any
-  ) {
-    const id = message ? +new Date() : undefined;
-    this.updateSnackBar({ message, label, onClick, id });
+  @action async setSnackBar(prop: string | SnackBarProps) {
+    const snackbar = typeof prop === 'string' ? { message: prop } : prop;
+    const id = snackbar?.message ? +new Date() : undefined;
+    this.updateSnackBar(prop ? { ...snackbar, id } : null);
     await new Promise((resolve) => setTimeout(resolve, SNACKBAR_TIMEOUT));
     if (this.needsClear(id)) {
       this.updateSnackBar({ message: '', id: undefined });
@@ -39,6 +37,7 @@ class NotificationStore {
   @action.bound updateSnackBar({
     message,
     label,
+    isAlert,
     onClick,
     id,
   }: SnackBar | null) {
