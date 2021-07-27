@@ -3,20 +3,39 @@ const { nanoid } = require('nanoid');
 
 const db = new AWS.DynamoDB.DocumentClient();
 
-const categories = Object.freeze({
+exports.REPORT_CATEGORIES = Object.freeze({
   ERROR: 0,
   FEEDBACK: 1,
+  COURSE: 2,
+  REVIEW: 3,
 });
 
-exports.reportError = async (input) => {
-  const { type, description, username } = input;
+exports.REVIEW_REPORT_TYPES = Object.freeze({
+  OTHER: 0,
+  HATE_SPEECH: 1,
+  PERSONAL_ATTACK: 2,
+  SPAM: 3,
+  MISLEADING: 4,
+})
+
+exports.COURSE_REPORT_TYPES = Object.freeze({
+  OTHER: 0,
+  COURSE_TITLE: 1,
+  CREDITS: 2,
+  ASSESSMENTS: 3,
+  REQUIREMENTS: 4,
+  DESCRIPTION: 5,
+});
+
+exports.report = async (input) => {
+  const { cat, type, description, username } = input;
   const now = new Date().getTime();
   const reportId = nanoid(5);
 
   const params = {
     TableName: process.env.ReportTableName,
     Item: {
-      cat: categories.ERROR,
+      cat,
       createdDate: now,
       id: reportId,
       type,
@@ -33,12 +52,6 @@ exports.reportFeedback = async (input) => {
   const { feedbackRatings, username } = input;
   const now = new Date().getTime();
   const reportId = nanoid(5);
-
-  feedbackRatings.forEach(feedback => {
-    if (feedback.rating < 0 || feedback.rating > 4) {
-      throw Error('rating must fall within the inclusive range of 0 to 4.');
-    }
-  });
 
   const params = {
     TableName: process.env.ReportTableName,

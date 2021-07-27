@@ -25,11 +25,16 @@ const {
   getTimetable,
   addTimetable,
   removeTimetable,
+  shareTimetable,
+  getSharedTimetable,
 } = require('./databases/timetable-db');
 
 const {
-  reportError,
+  report,
   reportFeedback,
+  REPORT_CATEGORIES,
+  REVIEW_REPORT_TYPES,
+  COURSE_REPORT_TYPES,
 } = require('./databases/report-db');
 
 module.exports = {
@@ -48,8 +53,13 @@ module.exports = {
   getTimetable,
   addTimetable,
   removeTimetable,
-  reportError,
+  shareTimetable,
+  getSharedTimetable,
+  report,
   reportFeedback,
+  REPORT_CATEGORIES,
+  REVIEW_REPORT_TYPES,
+  COURSE_REPORT_TYPES,
   VOTE_ACTIONS,
   LOGIN_CODES,
   VERIFICATION_CODES,

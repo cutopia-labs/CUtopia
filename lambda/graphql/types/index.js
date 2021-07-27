@@ -1,5 +1,6 @@
 const { loadFilesSync } = require("@graphql-tools/load-files");
 const { mergeTypeDefs } = require("@graphql-tools/merge");
+const { typeDefs: scalarTypeDefs } = require("graphql-scalars");
 const { join } = require("path");
 
 const graphqlFiles = [
@@ -15,4 +16,4 @@ const graphqlFiles = [
 
 const typesArray = loadFilesSync(graphqlFiles);
 
-module.exports = mergeTypeDefs(typesArray);
+module.exports = mergeTypeDefs([scalarTypeDefs, ...typesArray]);

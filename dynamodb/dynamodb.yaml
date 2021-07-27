@@ -11,6 +11,8 @@ Parameters:
     Type: String
   ReportTableName:
     Type: String
+  TimetableTableName:
+    Type: String
   ReadCapacityUnits:
     Description: Provisioned read throughput
     Type: Number
@@ -109,6 +111,19 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: !Ref ReadCapacityUnits
         WriteCapacityUnits: !Ref WriteCapacityUnits
+  TimetableDB:
+    Type: "AWS::DynamoDB::Table"
+    Properties:
+      TableName: !Ref TimetableTableName
+      AttributeDefinitions:
+        - AttributeName: "id"
+          AttributeType: S
+      KeySchema:
+        - AttributeName: "id"
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: !Ref ReadCapacityUnits
+        WriteCapacityUnits: !Ref WriteCapacityUnits
 Outputs:
   UserDBArn:
     Value: !GetAtt UserDB.Arn
@@ -118,3 +133,5 @@ Outputs:
     Value: !GetAtt LatestReviewsDB.Arn
   ReportDBArn:
     Value: !GetAtt ReportDB.Arn
+  TimetableDBArn:
+    Value: !GetAtt TimetableDB.Arn

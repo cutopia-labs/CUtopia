@@ -1,6 +1,8 @@
 type Mutation {
-  addTimetable(input: AddTimetableInput!): [CourseTableEntry]
-  removeTimetable(input: RemoveTimetableInput!): [CourseTableEntry]
+  addTimetable(input: AddTimetableInput!): [CourseTableEntry] @auth
+  removeTimetable(input: RemoveTimetableInput!): [CourseTableEntry] @auth
+  shareTimetable(input: ShareTimetableInput!): ShareTimetableResult @auth
+  getSharedTimetable(input: GetSharedTimetableInput!): GetTimetableResult @auth
 }
 
 type User {
@@ -34,4 +36,29 @@ input CourseSectionInput {
   days: [String]!
   locations: [String]!
   instructors: [String]!
+}
+
+input ShareTimetableInput {
+  entries: [CourseTableEntryInput]!
+  anonymous: Boolean!
+  """in minutes"""
+  expire: Int!
+}
+
+type ShareTimetableResult {
+  id: String!
+  token: String!
+  createdDate: Int!
+}
+
+input GetSharedTimetableInput {
+  id: String!
+  token: String!
+}
+
+type GetTimetableResult {
+  entries: [CourseTableEntry]!
+  name: String!
+  createdDate: Timestamp!
+  expireDate: Timestamp!
 }
