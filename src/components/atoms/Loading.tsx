@@ -1,15 +1,25 @@
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress, {
+  CircularProgressProps,
+} from '@material-ui/core/CircularProgress';
+import clsx from 'clsx';
 
 import './Loading.scss';
 
 type LoadingProps = {
   fixed?: boolean;
+  padding?: boolean;
 };
 
-export default function Loading({ fixed }: LoadingProps) {
+export default function Loading({
+  fixed,
+  padding = true,
+  ...props
+}: LoadingProps & CircularProgressProps) {
   return (
-    <div className={`loading-view${fixed ? ' fixed' : ''}`}>
-      <CircularProgress color="secondary" />
+    <div
+      className={clsx('loading-view', fixed && 'fixed', padding && 'padding')}
+    >
+      <CircularProgress color="secondary" {...props} />
     </div>
   );
 }

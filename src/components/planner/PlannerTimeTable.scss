@@ -1,6 +1,7 @@
 .planner-share-dialog {
-  .grid-auto-row {
-    width: 260px;
+  .content-container {
+    width: 40vw;
+    max-width: 400px;
     height: auto;
     padding: var(--card-padding);
   }
@@ -9,12 +10,22 @@
   .share-btn-row {
     width: 100%;
     justify-content: center;
-    .share {
+    .share, .copy {
       background-color: var(--text);
       color: var(--reversed-text);
+    }
+    .share {
       padding: auto 12px;
       width: 100%;
       margin-top: 6px;
+    }
+    .copy {
+      height: 100%;
+      margin-left: 6px;
+      width: 72px;
+    }
+    .input-container {
+      flex: 1;
     }
   }
 }
@@ -27,5 +38,16 @@
     color: var(--caption);
     font-size: 12px;
     margin-bottom: 6px;
+  }
+}
+
+@media only screen and (max-width: 1260px) {
+  .planner-share-dialog {
+    .MuiPaper-root {
+      margin: 0;
+    }
+    .content-container {
+      width: calc(90vw - 2 * var(--card-padding));
+    }
   }
 }

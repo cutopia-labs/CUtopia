@@ -10,6 +10,7 @@ type TextFieldProps = {
   type?: string;
   ref?: React.RefObject<HTMLInputElement | HTMLTextAreaElement>;
   label?: string;
+  disabled?: boolean;
 };
 
 const TextField = ({
@@ -24,6 +25,7 @@ const TextField = ({
   label,
   onBlur,
   onFocus,
+  disabled,
 }: React.HTMLAttributes<HTMLInputElement | HTMLTextAreaElement> &
   TextFieldProps) => {
   const TagName = Tag || 'input';
@@ -42,6 +44,7 @@ const TextField = ({
         onChange={(e) => onChangeText(e.target.value)}
         onFocus={onFocus}
         onBlur={onBlur}
+        disabled={disabled}
       />
       {Boolean(error) && <div className="error-label">{error}</div>}
     </>

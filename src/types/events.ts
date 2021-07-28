@@ -1,9 +1,12 @@
 import { CourseSection } from './courses';
 
-type CourseTableEntry = {
+export type CourseTableEntry = {
   courseId: string;
   title: string;
   sections?: CourseSection[];
 };
 
-export type { CourseTableEntry };
+export type ShareTimeTable = {
+  id: string;
+  token: string;
+};

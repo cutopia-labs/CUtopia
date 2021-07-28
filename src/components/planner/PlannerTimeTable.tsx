@@ -4,12 +4,15 @@ import { observer } from 'mobx-react-lite';
 import './PlannerTimeTable.scss';
 import { useMutation } from '@apollo/client';
 import { Button, Dialog } from '@material-ui/core';
+import copy from 'copy-to-clipboard';
 import TimeTablePanel from '../templates/TimeTablePanel';
 import { NotificationContext, PlannerContext } from '../../store';
 import { PLANNER_CONFIGS } from '../../constants/configs';
 import { SHARE_TIMETABLE } from '../../constants/mutations';
-import { PlannerCourse } from '../../types';
+import { PlannerCourse, ShareTimeTable } from '../../types';
 import ChipsRow from '../molecules/ChipsRow';
+import Loading from '../atoms/Loading';
+import TextField from '../atoms/TextField';
 
 type PlannerTimeTableProps = {
   className?: string;
@@ -48,6 +51,9 @@ const Section = ({ title, children }: PropsWithChildren<SectionProps>) => (
   </div>
 );
 
+const generateShareURL = (sharedTimeTable: ShareTimeTable) =>
+  `${window.location.protocol}//${window.location.host}/planner/${sharedTimeTable.id}-${sharedTimeTable.token}`;
+
 const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
   const planner = useContext(PlannerContext);
   const notification = useContext(NotificationContext);
@@ -69,6 +75,35 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
       shareLink: '',
     }
   );
+  const onShareTimetTable = async (e) => {
+    e.preventDefault();
+    if (!shareCourses?.length) {
+      notification.setSnackBar(
+        'Empty TimeTable, please add some courses before Sharing!'
+      );
+    }
+    if (shareCourses?.length) {
+      const data = {
+        entries: shareCourses.map((course) => ({
+          ...course,
+          sections: Object.values(course.sections),
+        })),
+        anonymous: shareConfig.anonymous === 'Yes',
+        expire: parseInt(shareConfig.expire[0], 10) * 60 * 24,
+      };
+      const res = await shareTimeTable({
+        variables: data,
+      });
+      const sharedTimeTable = res?.data?.shareTimetable;
+      if (sharedTimeTable && sharedTimeTable?.id && sharedTimeTable?.token) {
+        dispatchShareConfig({
+          shareLink: generateShareURL(sharedTimeTable),
+        });
+        console.log(generateShareURL(sharedTimeTable));
+      }
+      console.log(res);
+    }
+  };
 
   return (
     <>
@@ -97,12 +132,11 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
         onClose={() => setShareCourses(null)}
         open={Boolean(shareCourses)}
       >
-        <div className="grid-auto-row">
+        <div className="content-container grid-auto-row">
           <div className="sub-title">Share</div>
           {SECTIONS.map((section) => (
             <Section title={section.label} key={section.key}>
               <ChipsRow
-                variant="default"
                 items={section.chips}
                 select={shareConfig[section.key]}
                 setSelect={(item) =>
@@ -111,11 +145,31 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
               />
             </Section>
           ))}
-          {shareConfig.shareLink ? null : (
-            <div className="share-btn-row center-row">
-              <Button className="share">Share</Button>
-            </div>
-          )}
+          <div className="share-btn-row center-row">
+            {shareConfig.shareLink ? (
+              <>
+                <TextField
+                  value={shareConfig.shareLink}
+                  onChangeText={() => {}}
+                  disabled
+                />
+                <Button
+                  className="copy"
+                  onClick={() => copy(shareConfig.shareLink)}
+                >
+                  Copy
+                </Button>
+              </>
+            ) : (
+              <Button className="share loading-btn" onClick={onShareTimetTable}>
+                {shareTimeTableLoading ? (
+                  <Loading padding={false} size={24} />
+                ) : (
+                  'Share'
+                )}
+              </Button>
+            )}
+          </div>
         </div>
       </Dialog>
     </>
