@@ -10,9 +10,8 @@ class NotificationStore {
     this.snackbar = {
       message: '',
       label: '',
-      isAlert: false,
       onClick: null,
-      id: undefined,
+      snackbarId: undefined,
     };
   }
 
@@ -25,32 +24,20 @@ class NotificationStore {
 
   @action async setSnackBar(prop: string | SnackBarProps) {
     const snackbar = typeof prop === 'string' ? { message: prop } : prop;
-    const id = snackbar?.message ? +new Date() : undefined;
-    this.updateSnackBar(prop ? { ...snackbar, id } : null);
+    const snackbarId = snackbar?.message ? +new Date() : undefined;
+    this.updateSnackBar(prop ? { ...snackbar, snackbarId } : null);
     await new Promise((resolve) => setTimeout(resolve, SNACKBAR_TIMEOUT));
-    if (this.needsClear(id)) {
-      this.updateSnackBar({ message: '', id: undefined });
+    if (this.needsClear(snackbarId)) {
+      this.updateSnackBar({ message: '', snackbarId: undefined });
     }
   }
 
-  @action.bound needsClear(id: number) {
-    return this.snackbar.id === id;
+  @action.bound needsClear(snackbarId: number) {
+    return this.snackbar.snackbarId === snackbarId;
   }
 
-  @action.bound updateSnackBar({
-    message,
-    label,
-    isAlert,
-    onClick,
-    id,
-  }: SnackBar | null) {
-    this.snackbar = {
-      message: message,
-      label,
-      onClick,
-      id,
-      isAlert,
-    };
+  @action.bound updateSnackBar(snackbar: SnackBar | null) {
+    this.snackbar = snackbar;
   }
 }
 

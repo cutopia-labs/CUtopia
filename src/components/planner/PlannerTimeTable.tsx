@@ -5,6 +5,7 @@ import './PlannerTimeTable.scss';
 import { useMutation } from '@apollo/client';
 import { Button, Dialog } from '@material-ui/core';
 import copy from 'copy-to-clipboard';
+import clsx from 'clsx';
 import TimeTablePanel from '../templates/TimeTablePanel';
 import { NotificationContext, PlannerContext } from '../../store';
 import { PLANNER_CONFIGS } from '../../constants/configs';
@@ -25,6 +26,7 @@ enum PlannerTimeTableMode {
 
 type SectionProps = {
   title: string;
+  className?: string;
 };
 
 const ANONYMOUS_LABELS = ['Yes', 'No'];
@@ -44,8 +46,12 @@ const SECTIONS = [
   },
 ];
 
-const Section = ({ title, children }: PropsWithChildren<SectionProps>) => (
-  <div className="section-container">
+const Section = ({
+  title,
+  children,
+  className,
+}: PropsWithChildren<SectionProps>) => (
+  <div className={clsx('section-container', className)}>
     <div className="label">{title}</div>
     {children}
   </div>
@@ -96,10 +102,18 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
       });
       const sharedTimeTable = res?.data?.shareTimetable;
       if (sharedTimeTable && sharedTimeTable?.id && sharedTimeTable?.token) {
+        const shareURL = generateShareURL(sharedTimeTable);
         dispatchShareConfig({
-          shareLink: generateShareURL(sharedTimeTable),
+          shareLink: shareURL,
         });
-        console.log(generateShareURL(sharedTimeTable));
+        console.log(shareURL);
+        copy(shareURL);
+        notification.setSnackBar('Copied share link to your clipboard!');
+      } else {
+        notification.setSnackBar({
+          message: 'Cannot generate timetable QAQ...',
+          severity: 'error',
+        });
       }
       console.log(res);
     }
@@ -133,7 +147,7 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
         open={Boolean(shareCourses)}
       >
         <div className="content-container grid-auto-row">
-          <div className="sub-title">Share</div>
+          <div className="sub-title">Share Planner</div>
           {SECTIONS.map((section) => (
             <Section title={section.label} key={section.key}>
               <ChipsRow
@@ -145,9 +159,9 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
               />
             </Section>
           ))}
-          <div className="share-btn-row center-row">
-            {shareConfig.shareLink ? (
-              <>
+          {shareConfig.shareLink ? (
+            <Section title="Share Link">
+              <div className="share-btn-row center-row share-link-row">
                 <TextField
                   value={shareConfig.shareLink}
                   onChangeText={() => {}}
@@ -159,8 +173,10 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
                 >
                   Copy
                 </Button>
-              </>
-            ) : (
+              </div>
+            </Section>
+          ) : (
+            <div className="share-btn-row center-row">
               <Button className="share loading-btn" onClick={onShareTimetTable}>
                 {shareTimeTableLoading ? (
                   <Loading padding={false} size={24} />
@@ -168,8 +184,8 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
                   'Share'
                 )}
               </Button>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </Dialog>
     </>

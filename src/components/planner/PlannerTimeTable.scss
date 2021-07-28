@@ -18,7 +18,11 @@
       padding: auto 12px;
       width: 100%;
       margin-top: 6px;
+      height: 40px;
     }
+  }
+  .share-link-row {
+    height: 46px;
     .copy {
       height: 100%;
       margin-left: 6px;
@@ -48,6 +52,9 @@
     }
     .content-container {
       width: calc(90vw - 2 * var(--card-padding));
+    }
+    .input-container {
+      width: 100%;
     }
   }
 }

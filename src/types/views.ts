@@ -1,3 +1,5 @@
+import { AlertProps } from '@material-ui/lab';
+
 export type SearchMode = 'subject' | 'query' | 'Pins' | 'My Courses';
 
 export type SearchPayload = {
@@ -15,13 +17,12 @@ export interface PlannerItem extends MenuItem {
   key: number;
 }
 
-export interface SnackBarProps {
+export interface SnackBarProps extends AlertProps {
   message: string;
   label?: string;
   onClick?: (...args: any[]) => any;
-  isAlert?: boolean;
 }
 
 export interface SnackBar extends SnackBarProps {
-  id: number | undefined;
+  snackbarId: number | undefined;
 }

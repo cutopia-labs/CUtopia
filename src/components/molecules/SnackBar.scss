@@ -10,21 +10,6 @@
   left: 2.5%;
 }
 
-.snackbar-toast {
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 20px;
-  height: 54px;
-  border-radius: 4px;
-  width: 300px;
-  background-color: var(--snackbar);
-  color: var(--background);
-  & > .btn-container {
-    display: flex;
-    justify-content: center;
-  }
-}
-
 .btn-container {
   margin-left: auto;
 }

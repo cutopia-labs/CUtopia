@@ -4,7 +4,7 @@ import NotificationStore from '../store/NotificationStore';
 const handleError = (e: ApolloError, notification: NotificationStore) => {
   notification.setSnackBar({
     message: e.message,
-    isAlert: true,
+    severity: 'error',
   });
 };
 
