@@ -13,7 +13,7 @@ const SnackBar = () => {
 
   useEffect(() => {
     setButtonClicked(false);
-  }, [notification.snackbar.id]);
+  }, [notification.snackbar.snackbarId]);
 
   return (
     <Portal>

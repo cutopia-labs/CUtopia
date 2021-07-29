@@ -108,7 +108,7 @@ const CourseSections = ({
           title,
         }
       : null;
-    planner.setPreviewPlannerCourse(previewCourse);
+    planner.updateStore('previewPlannerCourse', previewCourse);
   };
   return (
     <div className="course-sections">

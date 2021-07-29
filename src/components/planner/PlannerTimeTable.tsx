@@ -134,8 +134,9 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
     <>
       <TimeTablePanel
         className={className}
-        courses={planner.plannerCourses}
-        previewCourse={planner.previewPlannerCourse}
+        courses={planner.plannerCourses
+          .filter((course) => !course.hide)
+          .concat(planner.previewPlannerCourse)}
         onImport={(parsedData) =>
           planner.setStore('plannerCourses', parsedData)
         }

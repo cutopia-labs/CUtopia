@@ -1,0 +1,29 @@
+.planner-cart {
+  width: 260px;
+  height: fit-content;
+  padding-top: var(--card-padding);
+  overflow: hidden;
+  header {
+    padding: 0 var(--card-padding) 6px var(--card-padding);
+    .title {
+      font-size: 16px;
+      font-weight: normal;
+    }
+    button {
+      margin-left: auto;
+      color: var(--text);
+    }
+  }
+  .list-item-container {
+    --list-item-inner-padding: var(--card-padding);
+    &:last-of-type {
+      border-bottom: 0;
+    }
+    .planner-cart-checkbox {
+      margin-left: 6px;
+    }
+    .list-item-title-container {
+      margin-left: 6px;
+    }
+  }
+}

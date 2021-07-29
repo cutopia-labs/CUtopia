@@ -6,6 +6,7 @@ import { SearchPanel } from '../components/forum';
 import { PlannerContext } from '../store';
 import Page from '../components/atoms/Page';
 import PlannerTimeTable from '../components/planner/PlannerTimeTable';
+import PlannerCart from '../components/planner/PlannerCart';
 
 const PlannerPage = () => {
   const planner = useContext(PlannerContext);
@@ -13,6 +14,7 @@ const PlannerPage = () => {
   return (
     <Page className="planner-page" center padding>
       <SearchPanel />
+      <PlannerCart />
       <PlannerTimeTable />
     </Page>
   );

@@ -145,16 +145,28 @@ class PlannerStore extends StorePrototype {
     }
   }
 
-  @action async savePlannerCourses(courses) {
-    this.updateStore('plannerCourses', courses);
-    await storeData('plannerCourses', courses);
-  }
-
   @action async clearPlannerCourses() {
     const UNDO_COPY = [...this.plannerCourses];
     this.plannerCourses = [];
     await this.notificationStore.setSnackBar({
       message: 'Cleared planner!',
+      label: 'UNDO',
+      onClick: () => {
+        this.plannerCourses = UNDO_COPY;
+      },
+    });
+    await storeData('plannerCourses', this.plannerCourses);
+  }
+
+  @action async updatePlannerCourse(course: PlannerCourse, index: number) {
+    this.plannerCourses[index] = course;
+  }
+
+  @action async removeHidedCourses() {
+    const UNDO_COPY = [...this.plannerCourses];
+    this.plannerCourses = this.plannerCourses.filter((course) => !course.hide);
+    await this.notificationStore.setSnackBar({
+      message: 'Removed unchecked courses',
       label: 'UNDO',
       onClick: () => {
         this.plannerCourses = UNDO_COPY;
@@ -176,12 +188,8 @@ class PlannerStore extends StorePrototype {
       };
       await storeData('plannerCourses', this.plannerCourses);
     } else {
-      this.savePlannerCourses([...this.plannerCourses, course]);
+      this.setStore('plannerCourses', [...this.plannerCourses, course]);
     }
-  }
-
-  @action async setPreviewPlannerCourse(course: PlannerCourse) {
-    this.previewPlannerCourse = course;
   }
 
   @action async deleteSectionInPlannerCourses({ courseId, sectionId }) {

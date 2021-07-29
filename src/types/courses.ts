@@ -57,6 +57,7 @@ type PlannerCourse = {
   sections: {
     [sectionName: string]: CourseSection;
   };
+  hide?: boolean;
 };
 
 type Planner = {
