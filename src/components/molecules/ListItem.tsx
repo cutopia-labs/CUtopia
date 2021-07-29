@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import colors from '../../constants/colors';
 
 type ListItemProps = {
-  label?: string;
+  title?: string;
   caption?: string;
   onClick?: (...args: any[]) => any;
   chevron?: boolean;
@@ -19,7 +19,7 @@ type ListItemProps = {
 };
 
 const ListItem = ({
-  label,
+  title,
   caption,
   onClick,
   chevron,
@@ -55,12 +55,14 @@ const ListItem = ({
         }}
       />
     )}
-    {label && <span className="list-item-label title">{label}</span>}
-    {caption && <span className="list-item-caption caption">{caption}</span>}
     {left}
+    <span className="list-item-title-container column">
+      {title && <span className="list-item-title title">{title}</span>}
+      {caption && <span className="list-item-caption caption">{caption}</span>}
+    </span>
     {children}
     {right}
-    {chevron && <span className="list-item-label chevron">{'\u203A'}</span>}
+    {chevron && <span className="list-item-title chevron">{'\u203A'}</span>}
   </div>
 );
 

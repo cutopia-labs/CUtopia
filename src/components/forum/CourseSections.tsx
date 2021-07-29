@@ -16,6 +16,14 @@ type SectionCardProps = {
   onAddHoverChange?: (hover: boolean, section: CourseSection) => void;
 };
 
+export const getSectionTime = (section: CourseSection) =>
+  section.days
+    .map(
+      (day, i) =>
+        `${WEEKDAYS_TWO_ABBR[day]} ${section.startTimes[i]} - ${section.endTimes[i]}`
+    )
+    .join(', ');
+
 const SectionCard = ({
   section,
   addSection,
@@ -31,12 +39,7 @@ const SectionCard = ({
     },
     {
       icon: <Schedule />,
-      val: section.days
-        .map(
-          (day, i) =>
-            `${WEEKDAYS_TWO_ABBR[day]} ${section.startTimes[i]} - ${section.endTimes[i]}`
-        )
-        .join(', '),
+      val: getSectionTime(section),
     },
     {
       icon: <RoomOutlined />,

@@ -2,7 +2,6 @@
   position: relative;
   display: flex;
   align-items: center;
-  height: 40px;
   width: 100%;
   cursor: pointer;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
@@ -21,15 +20,20 @@
 }
 .chevron {
   font-size: 16;
+  flex: 0;
+  margin-right: 12px;
 }
-.list-item-label {
+.list-item-title-container {
   flex: 1;
   display: flex;
-  font-size: 14px;
-  margin-left: 12px;
-  font-weight: bold;
-  &.chevron {
-    flex: 0;
-    margin-right: 12px;
+  margin: 0 12px;
+  padding: 12px 0;
+  .title {
+    font-size: 14px;
+  }
+  .caption {
+    margin-top: 8px;
+    font-size: 14px;
+    opacity: 0.8;
   }
 }

@@ -102,9 +102,8 @@ const UserCard = ({ userData }: UserCardProps) => {
             user.logout();
             clearStore();
           }}
-        >
-          <span className=" center-row">Reset</span>
-        </ListItem>
+          title="Reset"
+        />
         <Divider />
         <ListItem
           noBorder
@@ -114,9 +113,8 @@ const UserCard = ({ userData }: UserCardProps) => {
             notification.setSnackBar('Successfully logged out!');
             SetOpenSetting(false);
           }}
-        >
-          <span className=" center-row">Log Out</span>
-        </ListItem>
+          title="Log Out"
+        />
       </Dialog>
     </div>
   );

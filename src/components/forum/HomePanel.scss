@@ -24,7 +24,8 @@
     height: auto;
     border-bottom: none;
     border-right: none;
-    &:last-of-type {
+    .list-item-title-container {
+      margin-left: 0;
     }
     & > :last-child {
       margin-right: 8px;
@@ -34,9 +35,6 @@
   .grade-indicator {
     width: 57px;
     height: 25px;
-  }
-  .search-list-item {
-    padding: 10px 0;
   }
 }
 .ranking-card-header {

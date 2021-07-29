@@ -1,4 +1,10 @@
-import { PropsWithChildren, useContext, useReducer, useState } from 'react';
+import {
+  PropsWithChildren,
+  useContext,
+  useReducer,
+  useState,
+  useEffect,
+} from 'react';
 import { observer } from 'mobx-react-lite';
 
 import './PlannerTimeTable.scss';
@@ -58,7 +64,7 @@ const Section = ({
 );
 
 const generateShareURL = (sharedTimeTable: ShareTimeTable) =>
-  `${window.location.protocol}//${window.location.host}/planner/${sharedTimeTable.id}-${sharedTimeTable.token}`;
+  `${window.location.protocol}//${window.location.host}/planner/${sharedTimeTable.id}`;
 
 const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
   const planner = useContext(PlannerContext);
@@ -75,18 +81,15 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
   );
   const [shareConfig, dispatchShareConfig] = useReducer(
     (state, action) => ({ ...state, ...action }),
-    {
-      anonymous: 'Yes',
-      expire: '7 days',
-      shareLink: '',
-    }
+    {}
   );
   const onShareTimetTable = async (e) => {
     e.preventDefault();
     if (!shareCourses?.length) {
-      notification.setSnackBar(
-        'Empty TimeTable, please add some courses before Sharing!'
-      );
+      notification.setSnackBar({
+        message: 'Empty TimeTable, please add some courses before Sharing!',
+        severity: 'error',
+      });
     }
     if (shareCourses?.length) {
       const data = {
@@ -97,11 +100,12 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
         anonymous: shareConfig.anonymous === 'Yes',
         expire: parseInt(shareConfig.expire[0], 10) * 60 * 24,
       };
+      console.log(JSON.stringify(data));
       const res = await shareTimeTable({
         variables: data,
       });
       const sharedTimeTable = res?.data?.shareTimetable;
-      if (sharedTimeTable && sharedTimeTable?.id && sharedTimeTable?.token) {
+      if (sharedTimeTable && sharedTimeTable?.id) {
         const shareURL = generateShareURL(sharedTimeTable);
         dispatchShareConfig({
           shareLink: shareURL,
@@ -118,6 +122,13 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
       console.log(res);
     }
   };
+  useEffect(() => {
+    dispatchShareConfig({
+      anonymous: 'Yes',
+      expire: '7 days',
+      shareLink: '',
+    });
+  }, [planner.currentPlanner]);
 
   return (
     <>
@@ -169,7 +180,12 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
                 />
                 <Button
                   className="copy"
-                  onClick={() => copy(shareConfig.shareLink)}
+                  onClick={() => [
+                    copy(shareConfig.shareLink),
+                    notification.setSnackBar(
+                      'Copied share link to your clipboard!'
+                    ),
+                  ]}
                 >
                   Copy
                 </Button>

@@ -137,7 +137,6 @@ export const SHARE_TIMETABLE = gql`
       input: { entries: $entries, anonymous: $anonymous, expire: $expire }
     ) {
       id
-      token
     }
   }
 `;

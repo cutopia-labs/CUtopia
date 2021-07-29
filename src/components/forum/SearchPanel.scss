@@ -82,14 +82,8 @@
 .search-list-item {
   align-items: flex-start;
   flex: 1;
-  padding: 12px 22px;
-  .title {
-    font-size: 16px;
-  }
-  .caption {
-    margin-top: 8px;
-    font-size: 14px;
-    opacity: 0.8;
+  .list-item-title-container {
+    margin-left: 24px;
   }
 }
 

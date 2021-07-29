@@ -155,10 +155,10 @@ export const SearchResult = ({
         searchPayload.showAvalibility && !course.o ? (
           <Tooltip title="Unavaliable for current semester" placement="right">
             <div
-              className="list-item-container disabled"
+              className="list-item-container search-list-item disabled"
               key={`listitem-${course.c}`}
             >
-              <div className="search-list-item column">
+              <div className="list-item-title-container column">
                 <span className="title">{course.c}</span>
                 <span className="caption">{course.t}</span>
               </div>
@@ -166,17 +166,15 @@ export const SearchResult = ({
           </Tooltip>
         ) : (
           <ListItem
+            className="search-list-item"
             key={`listitem-${course.c}`}
             ribbonIndex={i}
             chevron
             onClick={() => onClick(course.c)}
             onMouseDown={() => (onMouseDown ? onMouseDown(course.c) : {})}
-          >
-            <div className="search-list-item column">
-              <span className="title">{course.c}</span>
-              <span className="caption">{course.t}</span>
-            </div>
-          </ListItem>
+            title={course.c}
+            caption={course.t}
+          />
         )
       )}
   </>
@@ -209,7 +207,7 @@ const DepartmentList = ({ setSearchPayload }) => {
               {v.map((code, i) => (
                 <ListItem
                   key={code}
-                  label={code}
+                  title={code}
                   ribbonIndex={i}
                   chevron
                   onClick={() =>

@@ -65,8 +65,8 @@ const Navigator = () => {
             <PlannerPage />
           </Route>
         </Switch>
-        <SnackBar />
       </div>
+      <SnackBar />
     </Router>
   );
 };

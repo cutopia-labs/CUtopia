@@ -26,7 +26,7 @@ export const CoursesList = ({ loading, courses }: CoursesListProps) => {
             <Link key={course.courseId} to={`/review/${course.courseId}`}>
               <ListItem
                 className="search-list-item column home-course-list-item"
-                label={course.courseId}
+                title={course.courseId}
                 caption={course.title}
                 noBorder
               />
@@ -54,7 +54,7 @@ export const ReviewsList = ({ reviewIds }: ReviewsListProps) => {
           <Link key={id} to={`/review/${courseId}/${createdDate}`}>
             <ListItem
               className="search-list-item column home-course-list-item"
-              label={courseId}
+              title={courseId}
               caption={getMMMDDYY(createdDate)}
               noBorder
             />

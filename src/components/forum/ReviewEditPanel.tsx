@@ -369,11 +369,8 @@ const ReviewEdit = ({ courseId }) => {
                 <ListItem
                   key={`listitem-${lecturer}`}
                   onMouseDown={() => dispatchFormData({ lecturer })}
-                >
-                  <div className="search-list-item column">
-                    <span className="title">{lecturer}</span>
-                  </div>
-                </ListItem>
+                  title={lecturer}
+                />
               ))}
           </div>
         )}

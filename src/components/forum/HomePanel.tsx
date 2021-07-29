@@ -62,12 +62,9 @@ const RankingCard = ({
                 <Badge index={0} text={`${course.numReviews} reviews`} />
               )
             }
-          >
-            <div className="search-list-item column">
-              <span className="title">{course.courseId}</span>
-              <span className="caption">{course.course.title}</span>
-            </div>
-          </ListItem>
+            title={course.courseId}
+            caption={course.course.title}
+          />
         </Link>
       ))}
     </div>
