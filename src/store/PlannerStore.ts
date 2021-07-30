@@ -1,6 +1,6 @@
 import { makeObservable, observable, action, toJS } from 'mobx';
 
-import { PlannerCourse, Planner, PlannerItem } from '../types';
+import { PlannerCourse, Planner, PlannerItem, CourseSection } from '../types';
 import { storeData, getStoreData, removeStoreItem } from '../helpers/store';
 
 import { PLANNER_CONFIGS } from '../constants/configs';
@@ -162,17 +162,38 @@ class PlannerStore extends StorePrototype {
     this.plannerCourses[index] = course;
   }
 
+  @action async updatePlannerSection(
+    section: CourseSection,
+    index: number,
+    sectionKey: string
+  ) {
+    this.plannerCourses[index] = {
+      ...this.plannerCourses[index],
+      sections: {
+        ...this.plannerCourses[index].sections,
+        [sectionKey]: section,
+      },
+    };
+  }
+
   @action async removeHidedCourses() {
-    const UNDO_COPY = [...this.plannerCourses];
-    this.plannerCourses = this.plannerCourses.filter((course) => !course.hide);
+    const UNDO_COPY = JSON.stringify(this.plannerCourses);
+    const UPDATE_COPY: PlannerCourse[] = JSON.parse(UNDO_COPY);
+    UPDATE_COPY.forEach((course, courseIndex) => {
+      Object.entries(course.sections).forEach(([k, v]) => {
+        if (v.hide) {
+          delete UPDATE_COPY[courseIndex].sections[k];
+        }
+      });
+    });
+    this.setStore('plannerCourses', UPDATE_COPY);
     await this.notificationStore.setSnackBar({
       message: 'Removed unchecked courses',
       label: 'UNDO',
       onClick: () => {
-        this.plannerCourses = UNDO_COPY;
+        this.setStore('plannerCourses', JSON.parse(UNDO_COPY));
       },
     });
-    await storeData('plannerCourses', this.plannerCourses);
   }
 
   @action async addToPlannerCourses(course: PlannerCourse) {

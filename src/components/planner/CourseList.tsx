@@ -85,31 +85,35 @@ const CourseList = ({ courses, previewCourse }: CourseListProps) => {
 
       Object.entries(course.sections).forEach(([k, v]) => {
         (v.days || []).forEach((day, i) => {
-          const sTime = v.startTimes[i].split(':');
-          const timeGrid =
-            parseInt(sTime[0], 10) + parseInt(sTime[1], 10) / 60 - 8;
-          if (timeGrid < earlistGrid) {
-            earlistGrid = timeGrid;
+          if (!v.hide) {
+            const sTime = v.startTimes[i].split(':');
+            const timeGrid =
+              parseInt(sTime[0], 10) + parseInt(sTime[1], 10) / 60 - 8;
+            if (timeGrid < earlistGrid) {
+              earlistGrid = timeGrid;
+            }
+            if (day > 5) {
+              weekendCourse = true;
+            }
+            courseViews.push(
+              <CourseCard
+                key={`${course.courseId}-${k}-${day}`}
+                course={{
+                  courseId: course.courseId,
+                  title: course.title,
+                  section: k,
+                  day,
+                  startTime: v.startTimes[i],
+                  endTime: v.endTimes[i],
+                  location: v.locations[i],
+                  color:
+                    colors.randomColors[
+                      colorIndex % colors.randomColors.length
+                    ],
+                }}
+              />
+            );
           }
-          if (day > 5) {
-            weekendCourse = true;
-          }
-          courseViews.push(
-            <CourseCard
-              key={`${course.courseId}-${k}-${day}`}
-              course={{
-                courseId: course.courseId,
-                title: course.title,
-                section: k,
-                day,
-                startTime: v.startTimes[i],
-                endTime: v.endTimes[i],
-                location: v.locations[i],
-                color:
-                  colors.randomColors[colorIndex % colors.randomColors.length],
-              }}
-            />
-          );
         });
       });
       colorIndex++;

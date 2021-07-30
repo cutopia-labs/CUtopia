@@ -57,7 +57,6 @@ type PlannerCourse = {
   sections: {
     [sectionName: string]: CourseSection;
   };
-  hide?: boolean;
 };
 
 type Planner = {
@@ -73,6 +72,7 @@ type CourseSection = {
   days: number[];
   locations: string[];
   instructors: string[];
+  hide?: boolean;
 };
 
 type AssessementComponent = {

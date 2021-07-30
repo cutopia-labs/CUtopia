@@ -1,6 +1,6 @@
 .planner-page {
   min-height: calc(100vh - var(--header-height) - 2 * var(--page-margin));
-  grid-template-columns: min-content min-content 1fr;
+  grid-template-columns: min-content 1fr min-content;
 }
 
 @media only screen and (max-width: 1260px) {

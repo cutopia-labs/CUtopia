@@ -10,9 +10,32 @@ import { LoginState, User } from '../types';
 import { GET_USER } from '../constants/queries';
 import Loading from '../components/atoms/Loading';
 import HomePage from './HomePage';
-import ForumPage from './ForumPage';
 import LandingPage from './LandingPage';
 import PlannerPage from './PlannerPage';
+import ForumPage from './ForumPage';
+
+const ROUTES = [
+  {
+    props: {
+      exact: true,
+      path: '/',
+    },
+    children: <HomePage />,
+  },
+  {
+    props: {
+      path: '/review',
+    },
+    children: <ForumPage />,
+  },
+  {
+    props: {
+      exact: true,
+      path: ['/planner', '/planner/:id'],
+    },
+    children: <PlannerPage />,
+  },
+];
 
 const Navigator = () => {
   const user = useContext(UserContext);
@@ -52,18 +75,11 @@ const Navigator = () => {
       <div className="App">
         <Header />
         <Switch>
-          <Route exact path="/">
-            <HomePage />
-          </Route>
-          <Route path="/review">
-            <ForumPage />
-          </Route>
-          <Route exact path="/planner">
-            <PlannerPage />
-          </Route>
-          <Route exact path="/planner/:id">
-            <PlannerPage />
-          </Route>
+          {ROUTES.map((route) => (
+            <Route key={JSON.stringify(route.props.path)} {...route.props}>
+              {route.children}
+            </Route>
+          ))}
         </Switch>
       </div>
       <SnackBar />

@@ -10,19 +10,25 @@ import { PlannerContext } from '../../store';
 import Card from '../atoms/Card';
 import ListItem from '../molecules/ListItem';
 import { getSectionTime } from '../forum/CourseSections';
-import { PlannerCourse } from '../../types';
+import { CourseSection } from '../../types';
 
 const PlannerCart = () => {
   const planner = useContext(PlannerContext);
   const [moreBtnAnchor, setMoreBtnAnchor] = useState(null);
-  const toggleHide = (course: PlannerCourse, i: number) =>
-    planner.updatePlannerCourse(
+  const toggleHide = (
+    section: CourseSection,
+    index: number,
+    sectionKey: string
+  ) => {
+    planner.updatePlannerSection(
       {
-        ...course,
-        hide: !course.hide,
+        ...section,
+        hide: !section.hide,
       },
-      i
+      index,
+      sectionKey
     );
+  };
   const MORE_SELECTIONS = [
     {
       label: 'Clear hidden courses',
@@ -42,17 +48,17 @@ const PlannerCart = () => {
           <MoreVert />
         </IconButton>
       </header>
-      {planner.plannerCourses.map((course, i) =>
-        Object.values(course.sections).map((section) => (
+      {planner.plannerCourses.map((course, index) =>
+        Object.entries(course.sections).map(([k, section], sectionIndex) => (
           <ListItem
             key={`cart-${`${course.title} ${section.name}`}`}
             title={`${course.courseId} ${section.name}`}
             caption={getSectionTime(section)}
-            onClick={() => toggleHide(course, i)}
+            onClick={() => toggleHide(section, index, k)}
             left={
               <Checkbox
                 className="planner-cart-checkbox"
-                checked={!course.hide}
+                checked={!section.hide}
                 size="small"
                 disableTouchRipple
                 disableFocusRipple

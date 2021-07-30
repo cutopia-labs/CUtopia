@@ -91,11 +91,14 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
         severity: 'error',
       });
     }
+    console.table(shareCourses);
     if (shareCourses?.length) {
       const data = {
         entries: shareCourses.map((course) => ({
           ...course,
-          sections: Object.values(course.sections),
+          sections: Object.values(course?.sections || {}).filter(
+            (section) => section && !section.hide
+          ),
         })),
         anonymous: shareConfig.anonymous === 'Yes',
         expire: parseInt(shareConfig.expire[0], 10) * 60 * 24,
@@ -134,9 +137,7 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
     <>
       <TimeTablePanel
         className={className}
-        courses={planner.plannerCourses
-          .filter((course) => !course.hide)
-          .concat(planner.previewPlannerCourse)}
+        courses={planner.plannerCourses.concat(planner.previewPlannerCourse)}
         onImport={(parsedData) =>
           planner.setStore('plannerCourses', parsedData)
         }

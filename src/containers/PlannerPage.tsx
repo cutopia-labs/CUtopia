@@ -14,8 +14,8 @@ const PlannerPage = () => {
   return (
     <Page className="planner-page" center padding>
       <SearchPanel />
-      <PlannerCart />
       <PlannerTimeTable />
+      <PlannerCart />
     </Page>
   );
 };
