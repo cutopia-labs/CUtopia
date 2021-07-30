@@ -1,5 +1,6 @@
 const { SchemaDirectiveVisitor } = require('apollo-server-lambda');
 const { GraphQLScalarType, GraphQLNonNull } = require('graphql');
+const { ERROR_CODES } = require('error-codes');
 
 /**
  * references:
@@ -43,7 +44,7 @@ class ConstrainType extends GraphQLScalarType {
           (minLen !== undefined && value.length < minLen) ||
           (maxLen !== undefined && value.length > maxLen)
         ) {
-          throw Error(`Invalid length returned: ${value.length}.`);
+          throw Error(ERROR_CODES.INPUT_INVALID_LENGTH);
         }
         return value;
       },
@@ -59,13 +60,13 @@ class ConstrainType extends GraphQLScalarType {
           (minLen !== undefined && ast.value.length < minLen) ||
           (maxLen !== undefined && ast.value.length > maxLen)
         ) {
-          throw Error(`Invalid length received: ${ast.value.length}.`);
+          throw Error(ERROR_CODES.INPUT_INVALID_LENGTH);
         }
         if (
           (minValue !== undefined && ast.value < minValue) ||
           (maxValue !== undefined && ast.value > maxValue)
         ) {
-          throw Error(`Invalid value received: ${ast.value}.`);
+          throw Error(ERROR_CODES.INPUT_INVALID_VALUE);
         }
         return type.parseLiteral(ast);
       },

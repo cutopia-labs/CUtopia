@@ -1,5 +1,6 @@
 const { SchemaDirectiveVisitor } = require('apollo-server-lambda');
 const { defaultFieldResolver } = require('graphql');
+const { ERROR_CODES } = require('error-codes');
 
 class AuthDirective extends SchemaDirectiveVisitor {
   visitFieldDefinition(field) {
@@ -9,12 +10,12 @@ class AuthDirective extends SchemaDirectiveVisitor {
     field.resolve = async (...params) => {
       const [parent, args, context, info] = params;
       if (!context.authenticated) {
-        throw Error('Unauthorized: requires login.');
+        throw Error(ERROR_CODES.AUTHORIZATION_REQUIRES_LOGIN);
       }
 
       const validateOwner = (owner) => {
         if (role === 'OWNER' && owner !== context.user.username) {
-          throw Error('Unauthorized: not owner.');
+          throw Error(ERROR_CODES.AUTHORIZATION_REQUIRES_OWNER);
         }
       };
 

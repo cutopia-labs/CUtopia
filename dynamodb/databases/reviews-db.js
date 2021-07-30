@@ -2,6 +2,7 @@ const { nanoid } = require('nanoid');
 const NodeCache = require('node-cache');
 const AWS = require('aws-sdk');
 const { incrementUpvotesCount, getUser } = require('./user-db');
+const { ERROR_CODES } = require('error-codes');
 
 const db = new AWS.DynamoDB.DocumentClient();
 
@@ -119,7 +120,8 @@ exports.voteReview = async (input, user) => {
   const { courseId, createdDate, vote } = input;
   const { username } = user;
   if (vote !== 0 && vote !== 1) {
-    throw Error('Vote must be either 0 or 1');
+    // vote must be either 0 or 1
+    throw Error(ERROR_CODES.VOTE_REVIEW_INVALID_VALUE);
   }
 
   const isUpvote = vote === this.VOTE_ACTIONS.UPVOTE;
@@ -140,30 +142,25 @@ exports.voteReview = async (input, user) => {
     },
     ReturnValues: 'ALL_NEW',
   };
-  try {
-    const result = await db.update(params).promise();
-    const { reviewId, ...reviewData } = result.Attributes;
-    if (isUpvote) {
-      const reviewAuthor = reviewData.username;
-      await incrementUpvotesCount({ username: reviewAuthor });
-    }
 
-    return {
-      review: {
-        id: reviewId,
-        ...reviewData,
-      },
-    };
+  let result;
+  try {
+    result = await db.update(params).promise();
   } catch (e) {
     if (e.code === 'ConditionalCheckFailedException') {
-      return {
-        error: 'Voted already',
-      };
+      throw Error(ERROR_CODES.VOTE_REVIEW_VOTED_ALREADY);
     }
-    return {
-      error: e,
-    };
   }
+  const { reviewId, ...reviewData } = result.Attributes;
+  if (isUpvote) {
+    const reviewAuthor = reviewData.username;
+    await incrementUpvotesCount({ username: reviewAuthor });
+  }
+
+  return {
+    id: reviewId,
+    ...reviewData,
+  };
 };
 
 const mapReview = review => {
@@ -174,14 +171,15 @@ const mapReview = review => {
   };
 };
 exports.getReviews = async (input) => {
-  const { courseId, getLatest, getAll, limit = 2, ascendingDate, ascendingVote, lastEvaluatedKey = null } = { ...input };
+  const { courseId, getLatest, getAll, limit = 10, ascendingDate, ascendingVote, lastEvaluatedKey = null } = { ...input };
 
   if (courseId) {
     // return reviews of a course
     const sortByVotes = ascendingVote !== null;
     const sortByDate = ascendingDate !== null;
     if (sortByVotes && sortByDate) {
-      throw Error('Either sort by votes or date.');
+      // either sort by votes or date
+      throw Error(ERROR_CODES.GET_REVIEW_INVALID_SORTING);
     }
     if (lastEvaluatedKey !== null && !sortByVotes) {
       delete lastEvaluatedKey.upvotes;
@@ -213,24 +211,20 @@ exports.getReviews = async (input) => {
       };
     }
 
-    try {
-      const result = await db.query(params).promise();
-      const reviews = result.Items.map(review => {
-        const { courseId, reviewId, ...rest } = review;
-        return {
-          ...rest,
-          id: reviewId,
-          courseId: courseId,
-        };
-      });
-      const lastEvaluatedKey = result.LastEvaluatedKey;
+    const result = await db.query(params).promise();
+    const reviews = result.Items.map(review => {
+      const { courseId, reviewId, ...rest } = review;
       return {
-        reviews,
-        lastEvaluatedKey,
+        ...rest,
+        id: reviewId,
+        courseId: courseId,
       };
-    } catch (e) {
-      console.warn(e);
-    }
+    });
+    lastEvaluatedKey = result.LastEvaluatedKey;
+    return {
+      reviews,
+      lastEvaluatedKey,
+    };
   }
 
   if (getLatest) {
@@ -254,16 +248,12 @@ exports.getReviews = async (input) => {
       Limit: numOfLatestReviews,
     };
 
-    try {
-      const latestReviews = (await db.query(params).promise()).Items.map(mapReview);
-      latestReviewsCache.set('reviews-latest', latestReviews);
-      return {
-        reviews: ascendingDate ? latestReviews.reverse() : latestReviews,
-        lastEvaluatedKey: null,
-      };
-    } catch (e) {
-      console.trace(e);
-    }
+    const latestReviews = (await db.query(params).promise()).Items.map(mapReview);
+    latestReviewsCache.set('reviews-latest', latestReviews);
+    return {
+      reviews: ascendingDate ? latestReviews.reverse() : latestReviews,
+      lastEvaluatedKey: null,
+    };
   }
 
   if (getAll) {

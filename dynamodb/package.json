@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "error-codes": "file:../modules/error-codes",
     "nanoid": "^3.1.20",
     "node-cache": "^5.1.2"
   }

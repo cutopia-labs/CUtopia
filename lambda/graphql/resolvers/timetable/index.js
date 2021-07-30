@@ -13,6 +13,12 @@ exports.User = {
   },
 };
 
+exports.Query = {
+  timetable: async (parent, { id }) => {
+    return await getSharedTimetable({ id });
+  },
+};
+
 exports.Mutation = {
   addTimetable: async (parent, { input }, { user }) => {
     const { username } = user;
@@ -28,10 +34,6 @@ exports.Mutation = {
     const { username } = user;
     const { entries, anonymous, expire } = input;
     return await shareTimetable({ username, entries, anonymous, expire });
-  },
-  getSharedTimetable: async (parent, { input }, { user }) => {
-    const { id, token } = input;
-    return await getSharedTimetable({ id, token });
   },
 };
 

@@ -2,7 +2,10 @@ type Mutation {
   addTimetable(input: AddTimetableInput!): [CourseTableEntry] @auth
   removeTimetable(input: RemoveTimetableInput!): [CourseTableEntry] @auth
   shareTimetable(input: ShareTimetableInput!): ShareTimetableResult @auth
-  getSharedTimetable(input: GetSharedTimetableInput!): GetTimetableResult @auth
+}
+
+type Query {
+  timetable(id: String!): Timetable
 }
 
 type User {
@@ -51,12 +54,7 @@ type ShareTimetableResult {
   createdDate: Int!
 }
 
-input GetSharedTimetableInput {
-  id: String!
-  token: String!
-}
-
-type GetTimetableResult {
+type Timetable {
   entries: [CourseTableEntry]!
   name: String!
   createdDate: Timestamp!

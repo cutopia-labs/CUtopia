@@ -13,11 +13,11 @@ type User {
 }
 
 type Mutation {
-  createUser(input: CreateUserInput!): CreateUserResult!
+  createUser(input: CreateUserInput!): Void
   verifyUser(input: VerifyUserInput!): VerifyUserResult!
-  updateUser(input: UpdateUserInput!): UpdateUserResult!
+  updateUser(input: UpdateUserInput!): Void
   login(input: LoginInput!): LoginResult!
-  sendResetPasswordCode(input: SendResetPasswordCodeIbnput!): SendResetPasswordCodeResult!
+  sendResetPasswordCode(input: SendResetPasswordCodeIbnput!): Void
   resetPassword(input: ResetPasswordInput!): ResetPasswordResult!
 }
 
@@ -25,10 +25,6 @@ input CreateUserInput {
   username: String!
   email: String!
   password: String!
-}
-
-type CreateUserResult {
-  error: String
 }
 
 input VerifyUserInput {
@@ -43,10 +39,6 @@ type VerifyUserResult {
 input UpdateUserInput {
   username: String!
   password: String
-}
-
-type UpdateUserResult {
-  error: String
 }
 
 input LoginInput {
@@ -64,11 +56,6 @@ input SendResetPasswordCodeIbnput {
   username: String!
 }
 
-type SendResetPasswordCodeResult {
-  code: Int
-  error: String
-}
-
 input ResetPasswordInput {
   username: String!
   newPassword: String!
@@ -76,6 +63,5 @@ input ResetPasswordInput {
 }
 
 type ResetPasswordResult {
-  code: Int
-  error: String
+  code: Int!
 }

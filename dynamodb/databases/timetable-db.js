@@ -1,5 +1,6 @@
 const AWS = require("aws-sdk");
 const { nanoid } = require("nanoid");
+const { ERROR_CODES } = require("error-codes");
 
 const db = new AWS.DynamoDB.DocumentClient();
 
@@ -60,8 +61,7 @@ exports.removeTimetable = async (input) => {
 
 exports.shareTimetable = async (input) => {
   const { username, entries, anonymous, expire } = input;
-  const id = nanoid(10);
-  const token = nanoid(5);
+  const id = nanoid(8);
   const now = new Date().getTime();
 
   const params = {
@@ -69,7 +69,6 @@ exports.shareTimetable = async (input) => {
     Item: {
       id,
       createdDate: now,
-      token,
       username,
       entries,
       anonymous,
@@ -80,13 +79,12 @@ exports.shareTimetable = async (input) => {
   await db.put(params).promise();
   return {
     id,
-    token,
     createdDate: now,
   };
 };
 
 exports.getSharedTimetable = async (input) => {
-  const { id, token } = input;
+  const { id } = input;
   const now = new Date().getTime();
 
   const params = {
@@ -99,21 +97,17 @@ exports.getSharedTimetable = async (input) => {
   const result = (await db.get(params).promise()).Item;
 
   if (result === undefined) {
-    throw Error("Invalid id.");
-  }
-
-  if (result.token !== token) {
-    throw Error("Invalid token.");
+    throw Error(ERROR_CODES.GET_TIMETABLE_INVALID_ID);
   }
 
   const expireDate = result.createdDate + result.expire * 60 * 1000;
   if (expireDate - now < 0) {
-    throw Error(`Timetable expired at ${new Date(expireDate).toString()}.`);
+    throw Error(ERROR_CODES.GET_TIMETABLE_EXPIRED);
   }
 
   return {
     entries: result.entries,
-    name: result.anonymous ? 'anonymous' : result.username,
+    name: result.anonymous ? 'Anonymous' : result.username,
     createdDate: result.createdDate,
     expireDate,
   };

@@ -9,7 +9,6 @@ const {
   resetPassword,
   login,
   LOGIN_CODES,
-  GET_PASSWORD_CODE_CODES,
 } = require("dynamodb");
 const { sign } = require("../../jwt");
 
@@ -43,19 +42,12 @@ exports.User = {
 exports.Mutation = {
   createUser: async (parent, { input }) => {
     const { email } = input;
-    try {
-      const verificationCode = await createUser(input);
-      await sendEmail({
-        action: "create",
-        email,
-        verificationCode,
-      });
-      return {};
-    } catch (e) {
-      return {
-        error: e,
-      };
-    }
+    const verificationCode = await createUser(input);
+    await sendEmail({
+      action: "create",
+      email,
+      verificationCode,
+    });
   },
   verifyUser: async (parent, { input }) => {
     const result = await verifyUser(input);
@@ -64,46 +56,30 @@ exports.Mutation = {
     };
   },
   updateUser: async (parent, { input }) => {
-    const result = await updateUser(input);
-    return result;
+    await updateUser(input);
   },
   login: async (parent, { input }) => {
-    const result = await login(input);
-    if (result[0] === LOGIN_CODES.SUCCEEDED) {
+    const { code, data } = await login(input);
+    if (code === LOGIN_CODES.SUCCEEDED) {
       const { username } = input;
       const token = sign({ username });
       return {
-        code: result[0],
+        code,
         token,
-        me: result[1],
+        me: data,
       };
     }
     return {
-      code: result[0],
+      code,
     };
   },
   sendResetPasswordCode: async (parent, { input }) => {
-    try {
-      const result = await getResetPasswordCodeAndEmail(input);
-      if (result[0] === GET_PASSWORD_CODE_CODES.SUCCEEDED) {
-        await sendEmail({
-          action: "resetPwd",
-          resetPwdCode: result[1],
-          email: result[2],
-        });
-        return {
-          code: GET_PASSWORD_CODE_CODES.SUCCEEDED,
-        };
-      }
-      return {
-        code: result[0],
-      };
-    } catch (e) {
-      console.trace(e);
-      return {
-        error: e,
-      };
-    }
+    const { code, email } = await getResetPasswordCodeAndEmail(input);
+    await sendEmail({
+      action: "resetPwd",
+      resetPwdCode: code,
+      email,
+    });
   },
   resetPassword: async (parent, { input }) => {
     const result = await resetPassword(input);
