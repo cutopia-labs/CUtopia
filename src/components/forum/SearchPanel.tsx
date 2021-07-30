@@ -35,9 +35,15 @@ import {
   HISTORY_MAX_LENGTH,
   MAX_SEARCH_RESULT_LENGTH,
 } from '../../constants/configs';
-import { CourseSearchItem, SearchMode, SearchPayload } from '../../types';
+import {
+  ErrorCardMode,
+  CourseSearchItem,
+  SearchMode,
+  SearchPayload,
+} from '../../types';
 import UserStore from '../../store/UserStore';
 import Card from '../atoms/Card';
+import ErrorCard from '../molecules/ErrorCard';
 import CourseCard from './CourseCard';
 
 /*
@@ -74,7 +80,7 @@ const getCoursesFromQuery = ({
         t: course.title,
       }));
     case 'My Courses':
-      return user.timetable.map((course) => ({
+      return user.timetable?.map((course) => ({
         c: course.courseId,
         t: course.title,
       }));
@@ -141,44 +147,54 @@ export const SearchResult = ({
   onClick,
   onMouseDown,
   limit,
-}: SearchResultProps) => (
-  <>
-    {(
-      getCoursesFromQuery({
-        payload: searchPayload,
-        user,
-        limit: limit || MAX_SEARCH_RESULT_LENGTH,
-      }) || []
-    )
-      .sort((a, b) => (a.o ? -1 : 1))
-      .map((course, i) =>
-        searchPayload.showAvalibility && !course.o ? (
-          <Tooltip title="Unavaliable for current semester" placement="right">
-            <div
-              className="list-item-container search-list-item disabled"
-              key={`listitem-${course.c}`}
-            >
-              <div className="list-item-title-container column">
-                <span className="title">{course.c}</span>
-                <span className="caption">{course.t}</span>
+}: SearchResultProps) => {
+  if (
+    (searchPayload.mode == 'Pins' && user.favoriteCourses.length == 0) ||
+    (searchPayload.mode == 'My Courses' && user.timetable?.length == 0) ||
+    (searchPayload.mode == 'My Courses' && user.timetable == null)
+  ) {
+    return <ErrorCard mode={ErrorCardMode.NULL} />;
+  }
+
+  return (
+    <>
+      {(
+        getCoursesFromQuery({
+          payload: searchPayload,
+          user,
+          limit: limit || MAX_SEARCH_RESULT_LENGTH,
+        }) || []
+      )
+        .sort((a, b) => (a.o ? -1 : 1))
+        .map((course, i) =>
+          searchPayload.showAvalibility && !course.o ? (
+            <Tooltip title="Unavaliable for current semester" placement="right">
+              <div
+                className="list-item-container search-list-item disabled"
+                key={`listitem-${course.c}`}
+              >
+                <div className="list-item-title-container column">
+                  <span className="title">{course.c}</span>
+                  <span className="caption">{course.t}</span>
+                </div>
               </div>
-            </div>
-          </Tooltip>
-        ) : (
-          <ListItem
-            className="search-list-item"
-            key={`listitem-${course.c}`}
-            ribbonIndex={i}
-            chevron
-            onClick={() => onClick(course.c)}
-            onMouseDown={() => (onMouseDown ? onMouseDown(course.c) : {})}
-            title={course.c}
-            caption={course.t}
-          />
-        )
-      )}
-  </>
-);
+            </Tooltip>
+          ) : (
+            <ListItem
+              className="search-list-item"
+              key={`listitem-${course.c}`}
+              ribbonIndex={i}
+              chevron
+              onClick={() => onClick(course.c)}
+              onMouseDown={() => (onMouseDown ? onMouseDown(course.c) : {})}
+              title={course.c}
+              caption={course.t}
+            />
+          )
+        )}
+    </>
+  );
+};
 
 const DepartmentList = ({ setSearchPayload }) => {
   const [currentSchool, setCurrentSchool] = useState(null);
