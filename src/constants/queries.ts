@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 // Course Information Query
-const COURSE_INFO_QUERY = gql`
+export const COURSE_INFO_QUERY = gql`
   query ($subject: String!, $code: String!) {
     subjects(filter: { requiredSubjects: [$subject] }) {
       courses(filter: { requiredCourses: [$code] }) {
@@ -33,7 +33,7 @@ const COURSE_INFO_QUERY = gql`
 `;
 
 // Review Queries
-const REVIEWS_QUERY = gql`
+export const REVIEWS_QUERY = gql`
   query (
     $courseId: String
     $ascendingVote: Boolean
@@ -86,7 +86,7 @@ const REVIEWS_QUERY = gql`
   }
 `;
 
-const RECENT_REVIEWS_QUERY = gql`
+export const RECENT_REVIEWS_QUERY = gql`
   query {
     reviews(input: { getLatest: true }) {
       courseId
@@ -117,7 +117,7 @@ const RECENT_REVIEWS_QUERY = gql`
   }
 `;
 
-const GET_REVIEW = gql`
+export const GET_REVIEW = gql`
   query ($courseId: String!, $createdDate: String!) {
     review(input: { courseId: $courseId, createdDate: $createdDate }) {
       courseId
@@ -152,7 +152,7 @@ const GET_REVIEW = gql`
 `;
 
 // User Info Query
-const GET_USER = gql`
+export const GET_USER = gql`
   query {
     me {
       reviewIds
@@ -165,7 +165,7 @@ const GET_USER = gql`
 `;
 
 // Top Rated Courses Query
-const TOP_RATED_COURSES_QUERY = gql`
+export const TOP_RATED_COURSES_QUERY = gql`
   query ($criteria: String!) {
     ranking {
       topRatedCourses(filter: { limit: 10, sortBy: $criteria }) {
@@ -184,7 +184,7 @@ const TOP_RATED_COURSES_QUERY = gql`
 `;
 
 // Popular Courses Query
-const POPULAR_COURSES_QUERY = gql`
+export const POPULAR_COURSES_QUERY = gql`
   query {
     ranking {
       popularCourses(filter: { limit: 10 }) {
@@ -198,7 +198,7 @@ const POPULAR_COURSES_QUERY = gql`
   }
 `;
 
-const COURSE_SECTIONS_QUERY = gql`
+export const COURSE_SECTIONS_QUERY = gql`
   query ($subject: String!, $code: String!) {
     subjects(filter: { requiredSubjects: [$subject] }) {
       courses(filter: { requiredCourses: [$code] }) {
@@ -230,7 +230,7 @@ const COURSE_SECTIONS_QUERY = gql`
   }
 `;
 
-const MY_TIMETABLE_QUERY = gql`
+export const MY_TIMETABLE_QUERY = gql`
   query ($username: String!) {
     user(input: { username: $username }) {
       timetable {
@@ -249,14 +249,24 @@ const MY_TIMETABLE_QUERY = gql`
   }
 `;
 
-export {
-  COURSE_INFO_QUERY,
-  REVIEWS_QUERY,
-  RECENT_REVIEWS_QUERY,
-  GET_REVIEW,
-  GET_USER,
-  TOP_RATED_COURSES_QUERY,
-  POPULAR_COURSES_QUERY,
-  COURSE_SECTIONS_QUERY,
-  MY_TIMETABLE_QUERY,
-};
+export const GET_SHARE_TIMETABLE = gql`
+  query ($id: String!) {
+    timetable(id: $id) {
+      entries {
+        courseId
+        title
+        sections {
+          name
+          startTimes
+          endTimes
+          days
+          locations
+          instructors
+        }
+      }
+      name
+      createdDate
+      expireDate
+    }
+  }
+`;

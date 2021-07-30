@@ -15,9 +15,7 @@ export const SEND_VERIFICATION = gql`
   mutation ($email: String!, $password: String!, $username: String!) {
     createUser(
       input: { username: $username, email: $email, password: $password }
-    ) {
-      error
-    }
+    )
   }
 `;
 
@@ -32,10 +30,7 @@ export const VERIFY_USER = gql`
 // CUTOPIA PASSWORD RESET Mutations
 export const SEND_RESET_PASSWORD_CODE = gql`
   mutation ($username: String!) {
-    sendResetPasswordCode(input: { username: $username }) {
-      code
-      error
-    }
+    sendResetPasswordCode(input: { username: $username })
   }
 `;
 
@@ -49,7 +44,6 @@ export const RESET_PASSWORD = gql`
       }
     ) {
       code
-      error
     }
   }
 `;
@@ -122,7 +116,7 @@ export const VOTE_REVIEW = gql`
     voteReview(
       input: { courseId: $courseId, createdDate: $createdDate, vote: $vote }
     ) {
-      error
+      myVote
     }
   }
 `;

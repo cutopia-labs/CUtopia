@@ -10,11 +10,7 @@ import { nanoid } from 'nanoid';
 
 import './LoginPanel.scss';
 import TextField from '../atoms/TextField';
-import {
-  PreferenceContext,
-  UserContext,
-  NotificationContext,
-} from '../../store';
+import { UserContext, NotificationContext } from '../../store';
 import {
   LOGIN_CUTOPIA,
   SEND_VERIFICATION,
@@ -22,7 +18,8 @@ import {
   SEND_RESET_PASSWORD_CODE,
   RESET_PASSWORD,
 } from '../../constants/mutations';
-import { LoginPageMode, LoginCode, VerificationCode } from '../../types';
+import { LoginPageMode, LoginCode } from '../../types';
+import handleCompleted from '../../helpers/handleCompleted';
 
 const LOGIN_ACCENT = '#873AFD';
 const CUHK_EMAIL_SUFFIX = '@link.cuhk.edu.hk';
@@ -72,7 +69,6 @@ const LoginPanel = () => {
   const [verificationCode, setVerificationCode] = useState('');
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
   const [invisible, setInvisible] = useState(true);
   const [errors, setErrors] = useState({
     verification: null,
@@ -81,7 +77,6 @@ const LoginPanel = () => {
     password: null,
   });
 
-  const preference = useContext(PreferenceContext);
   const user = useContext(UserContext);
   const notification = useContext(NotificationContext);
 
@@ -136,25 +131,44 @@ const LoginPanel = () => {
 
   const [createUser, { loading: creatingUser, error: createError }] =
     useMutation(SEND_VERIFICATION, {
+      onCompleted: handleCompleted(() => setMode(LoginPageMode.VERIFY), {
+        message: 'Verification code send to your CUHK email',
+        notification,
+      }),
       onError: notification.handleError,
     });
   const [verifyUser, { loading: verifying, error: verifyError }] = useMutation(
     VERIFY_USER,
     {
+      onCompleted: handleCompleted(() => loginAndRedirect(), {
+        notification,
+      }),
       onError: notification.handleError,
     }
   );
-  const [loginCUtopia, { loading: loggingInCUtopia }] =
-    useMutation(LOGIN_CUTOPIA);
+  const [loginCUtopia, { loading: loggingInCUtopia }] = useMutation(
+    LOGIN_CUTOPIA,
+    { onError: notification.handleError }
+  );
   const [sendResetPasswordCode, { loading: sendingResetCode }] = useMutation(
     SEND_RESET_PASSWORD_CODE,
     {
+      onCompleted: handleCompleted(
+        () => setMode(LoginPageMode.RESET_PASSWORD_VERIFY),
+        {
+          message: 'Verification code has been send to your CUHK email',
+          notification,
+        }
+      ),
       onError: notification.handleError,
     }
   );
   const [resetPassword, { loading: resettingPassword }] = useMutation(
     RESET_PASSWORD,
     {
+      onCompleted: handleCompleted(() => setMode(LoginPageMode.CUTOPIA_LOGIN), {
+        notification,
+      }),
       onError: notification.handleError,
     }
   );
@@ -177,7 +191,7 @@ const LoginPanel = () => {
     mode !== null && console.log(mode);
   }, [mode]);
 
-  const onSubmit = async () => {
+  const validate = (): boolean => {
     const errorsFound = {
       verification:
         MODE_ITEMS[mode].verificationCode &&
@@ -199,8 +213,11 @@ const LoginPanel = () => {
         }password`,
     };
     setErrors(errorsFound);
-    const hasError = Object.values(errorsFound).some((e) => e);
-    if (hasError) {
+    return !Object.values(errorsFound).some((e) => e);
+  };
+
+  const onSubmit = async () => {
+    if (!validate()) {
       return;
     }
     switch (mode) {
@@ -216,9 +233,7 @@ const LoginPanel = () => {
             password,
           },
         };
-        const { data, errors } = await createUser(createUserPayload);
-        console.log(JSON.stringify(errors));
-        !data || errors ? alert(errors) : setMode(LoginPageMode.VERIFY);
+        await createUser(createUserPayload);
         break;
       }
       case LoginPageMode.VERIFY: {
@@ -228,23 +243,7 @@ const LoginPanel = () => {
             code: verificationCode,
           },
         };
-        const res = await verifyUser(verifyPayload);
-        switch (res.data.verifyUser.code) {
-          case VerificationCode.SUCCEEDED:
-            loginAndRedirect();
-            break;
-          case VerificationCode.FAILED:
-            alert('Failed to verify');
-            break;
-          case VerificationCode.ALREADY_VERIFIED:
-            alert('CUHK SID already verified!');
-            break;
-          case VerificationCode.USER_DNE:
-            alert("User doesn't exist!");
-            break;
-          default:
-            break;
-        }
+        await verifyUser(verifyPayload);
         break;
       }
       case LoginPageMode.RESET_PASSWORD: {
@@ -253,11 +252,7 @@ const LoginPanel = () => {
             username,
           },
         };
-        const res = (await sendResetPasswordCode(resetPasswordPayload)).data
-          .sendResetPasswordCode;
-        res.error
-          ? alert(res.error)
-          : setMode(LoginPageMode.RESET_PASSWORD_VERIFY);
+        await sendResetPasswordCode(resetPasswordPayload);
         break;
       }
       case LoginPageMode.RESET_PASSWORD_VERIFY:
@@ -269,10 +264,7 @@ const LoginPanel = () => {
               resetCode: verificationCode,
             },
           };
-          console.log(resetPasswordVerifyPayload);
-          const res = (await resetPassword(resetPasswordVerifyPayload)).data
-            .resetPassword;
-          res.error ? alert(res.error) : setMode(LoginPageMode.CUTOPIA_LOGIN);
+          await resetPassword(resetPasswordVerifyPayload);
         }
         break;
       default:
