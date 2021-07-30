@@ -238,8 +238,7 @@ const TimeTablePanel = ({
         </div>
       </header>
       <CourseList
-        courses={courses?.slice() as any}
-        previewCourse={previewCourse as any}
+        courses={((courses?.slice() || []) as any).concat(previewCourse) as any}
       />
       <Dialog
         open={modalMode === MODAL_MODES.IMPORT_MODAL}

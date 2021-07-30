@@ -4,6 +4,7 @@ import { PlannerCourse, Planner, PlannerItem, CourseSection } from '../types';
 import { storeData, getStoreData, removeStoreItem } from '../helpers/store';
 
 import { PLANNER_CONFIGS } from '../constants/configs';
+import withUndo from '../helpers/withUndo';
 import NotificationStore from './NotificationStore';
 import StorePrototype from './StorePrototype';
 
@@ -128,34 +129,38 @@ class PlannerStore extends StorePrototype {
 
   @action async deletePlanner(key: number) {
     if (this.validKey(key)) {
-      const UNDO_COPY = { ...this.planners };
-      delete this.planners[key];
-      this.updateCurrentPlanner(parseInt(Object.keys(this.planners)[0], 10));
-      await this.notificationStore.setSnackBar({
-        message: '1 item deleted',
-        label: 'UNDO',
-        onClick: () => {
-          this.setStore('planners', UNDO_COPY);
+      withUndo(
+        {
+          prevData: this.planners,
+          setData: (prevData) => this.setStore('planners', prevData),
+          message: 'Deleted planner!',
+          stringify: true,
+          notificationStore: this.notificationStore,
         },
-      });
-      // Update AsyncStorage after undo valid period passed.
-      await storeData('planners', this.planners);
+        () => {
+          delete this.planners[key];
+          this.updateCurrentPlanner(
+            parseInt(Object.keys(this.planners)[0], 10)
+          );
+        }
+      );
     } else {
       this.notificationStore.setSnackBar('Error... OuO');
     }
   }
 
   @action async clearPlannerCourses() {
-    const UNDO_COPY = [...this.plannerCourses];
-    this.plannerCourses = [];
-    await this.notificationStore.setSnackBar({
-      message: 'Cleared planner!',
-      label: 'UNDO',
-      onClick: () => {
-        this.plannerCourses = UNDO_COPY;
+    withUndo(
+      {
+        prevData: [...this.plannerCourses],
+        setData: (prevData) => this.setStore('plannerCourses', prevData),
+        message: 'Cleared planner!',
+        notificationStore: this.notificationStore,
       },
-    });
-    await storeData('plannerCourses', this.plannerCourses);
+      () => {
+        this.setStore('plannerCourses', []);
+      }
+    );
   }
 
   @action async updatePlannerCourse(course: PlannerCourse, index: number) {
@@ -177,23 +182,28 @@ class PlannerStore extends StorePrototype {
   }
 
   @action async removeHidedCourses() {
-    const UNDO_COPY = JSON.stringify(this.plannerCourses);
-    const UPDATE_COPY: PlannerCourse[] = JSON.parse(UNDO_COPY);
-    UPDATE_COPY.forEach((course, courseIndex) => {
-      Object.entries(course.sections).forEach(([k, v]) => {
-        if (v.hide) {
-          delete UPDATE_COPY[courseIndex].sections[k];
-        }
-      });
-    });
-    this.setStore('plannerCourses', UPDATE_COPY);
-    await this.notificationStore.setSnackBar({
-      message: 'Removed unchecked courses',
-      label: 'UNDO',
-      onClick: () => {
-        this.setStore('plannerCourses', JSON.parse(UNDO_COPY));
+    withUndo(
+      {
+        prevData: this.plannerCourses,
+        setData: (prevData) => this.setStore('plannerCourses', prevData),
+        message: 'Removed unchecked courses',
+        stringify: true,
+        notificationStore: this.notificationStore,
       },
-    });
+      () => {
+        const UPDATE_COPY: PlannerCourse[] = JSON.parse(
+          JSON.stringify(this.plannerCourses)
+        );
+        UPDATE_COPY.forEach((course, courseIndex) => {
+          Object.entries(course.sections).forEach(([k, v]) => {
+            if (v.hide) {
+              delete UPDATE_COPY[courseIndex].sections[k];
+            }
+          });
+        });
+        this.setStore('plannerCourses', UPDATE_COPY);
+      }
+    );
   }
 
   @action async addToPlannerCourses(course: PlannerCourse) {
@@ -216,25 +226,28 @@ class PlannerStore extends StorePrototype {
   @action async deleteSectionInPlannerCourses({ courseId, sectionId }) {
     const index = this.findIndexInPlanner(courseId);
     if (index !== -1) {
-      const UNDO_COPY = JSON.stringify(this.plannerCourses);
-      const sectionCopy = { ...this.plannerCourses[index].sections };
-      delete sectionCopy[sectionId];
-      if (sectionCopy) {
-        this.plannerCourses[index] = {
-          ...this.plannerCourses[index],
-          sections: sectionCopy,
-        };
-      } else {
-        this.plannerCourses.splice(index, 1);
-      }
-      await this.notificationStore.setSnackBar({
-        message: '1 item deleted',
-        label: 'UNDO',
-        onClick: () => {
-          this.setStore('plannerCourses', JSON.parse(UNDO_COPY));
+      withUndo(
+        {
+          prevData: this.plannerCourses,
+          setData: (prevData) => this.setStore('plannerCourses', prevData),
+          message: 'Section deleted!',
+          stringify: true,
+          notificationStore: this.notificationStore,
         },
-      });
-      await storeData('plannerCourses', this.plannerCourses);
+        () => {
+          const sectionCopy = { ...this.plannerCourses[index].sections };
+          delete sectionCopy[sectionId];
+          if (sectionCopy) {
+            this.plannerCourses[index] = {
+              ...this.plannerCourses[index],
+              sections: sectionCopy,
+            };
+          } else {
+            this.plannerCourses.splice(index, 1);
+          }
+          storeData('plannerCourses', this.plannerCourses);
+        }
+      );
     } else {
       this.notificationStore.setSnackBar('Error... OuO');
     }
@@ -243,17 +256,18 @@ class PlannerStore extends StorePrototype {
   @action async deleteInPlannerCourses(courseId) {
     const index = this.findIndexInPlanner(courseId);
     if (index !== -1) {
-      const UNDO_COPY = [...this.plannerCourses];
-      this.plannerCourses.splice(index, 1);
-      await this.notificationStore.setSnackBar({
-        message: '1 item deleted',
-        label: 'UNDO',
-        onClick: () => {
-          this.updateStore('plannerCourses', UNDO_COPY);
+      withUndo(
+        {
+          prevData: [...this.plannerCourses],
+          setData: (prevData) => this.setStore('plannerCourses', prevData),
+          message: 'Course deleted!',
+          notificationStore: this.notificationStore,
         },
-      });
-      // Update AsyncStorage after undo valid period passed.
-      await storeData('plannerCourses', this.plannerCourses);
+        () => {
+          this.plannerCourses.splice(index, 1);
+          storeData('plannerCourses', this.plannerCourses);
+        }
+      );
     } else {
       this.notificationStore.setSnackBar('Error... OuO');
     }
