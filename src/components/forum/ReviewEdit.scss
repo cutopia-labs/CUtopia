@@ -33,7 +33,6 @@
 }
 
 .form-section-title {
-  margin-top: var(--card-padding);
   font-weight: bold;
   text-transform: uppercase;
   font-size: 14px;
@@ -52,7 +51,6 @@
   width: 100%;
   justify-content: space-between;
   align-items: center;
-  margin-top: var(--card-padding);
 }
 
 .review-section-title {
@@ -92,7 +90,6 @@
   width: 100%;
   justify-content: space-between;
   align-items: center;
-  margin-top: var(--card-padding);
   margin-bottom: 6px;
 
   > .review-section-container {

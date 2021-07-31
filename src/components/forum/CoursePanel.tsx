@@ -19,9 +19,8 @@ import { NotificationContext, UserContext } from '../../store';
 import { FULL_MEMBER_REVIEWS } from '../../constants/states';
 import useDebounce from '../../helpers/useDebounce';
 import { LAZY_LOAD_BUFFER } from '../../constants/configs';
-import { ErrorCardMode, ReviewsFilter, ReviewsResult } from '../../types';
+import { ReviewsFilter, ReviewsResult } from '../../types';
 import Footer from '../molecules/Footer';
-import ErrorCard from '../molecules/ErrorCard';
 import ReviewCard from './ReviewCard';
 import CourseCard from './CourseCard';
 
@@ -48,19 +47,9 @@ const CourseSummary = ({
     setSorting(field);
     setAnchorEl(null);
   };
-  if (!courseInfo.rating) {
-    return (
-      <div className="course-error-card">
-        <ErrorCard mode={ErrorCardMode.NULL} />
-        <Button size="medium" color="primary" onClick={writeAction}>
-          Write One!
-        </Button>
-      </div>
-    );
-  }
   return (
     <div className="panel card course-summary row">
-      {courseInfo.rating && (
+      {courseInfo.rating ? (
         <>
           <div className="center-row">
             <Button
@@ -71,7 +60,7 @@ const CourseSummary = ({
             >
               {sorting}
             </Button>
-            <div className="course-summary-label">
+            <div className="course-summary-label caption">
               {exceedLimit &&
                 `Limit exceeded (post ${FULL_MEMBER_REVIEWS} reviews to unlock)`}
               {!exceedLimit &&
@@ -98,7 +87,12 @@ const CourseSummary = ({
             ))}
           </Menu>
         </>
+      ) : (
+        <span>No review yet</span>
       )}
+      <Button size="small" color="primary" onClick={writeAction}>
+        Write One!
+      </Button>
       {courseInfo.rating && fetchAllAction && (
         <Button size="small" color="primary" onClick={fetchAllAction}>
           Fetch All

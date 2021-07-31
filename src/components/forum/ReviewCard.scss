@@ -107,6 +107,9 @@
     max-height: 360px;
     .show-more-overlay {
       padding-bottom: 10px;
+      svg {
+        color: var(--primary);
+      }
     }
   }
   overflow: hidden;

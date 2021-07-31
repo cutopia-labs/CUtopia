@@ -27,7 +27,6 @@ import ListItem from '../molecules/ListItem';
 import { storeData, getStoreData } from '../../helpers/store';
 import COURSE_CODES from '../../constants/courseCodes';
 import { NotificationContext, UserContext } from '../../store';
-import COURSES from '../../constants/courses';
 import { COURSE_SECTIONS_QUERY } from '../../constants/queries';
 import { validCourse } from '../../helpers/marcos';
 import Loading from '../atoms/Loading';
@@ -35,15 +34,11 @@ import {
   HISTORY_MAX_LENGTH,
   MAX_SEARCH_RESULT_LENGTH,
 } from '../../constants/configs';
-import {
-  ErrorCardMode,
-  CourseSearchItem,
-  SearchMode,
-  SearchPayload,
-} from '../../types';
+import { ErrorCardMode, SearchMode, SearchPayload } from '../../types';
 import UserStore from '../../store/UserStore';
 import Card from '../atoms/Card';
 import ErrorCard from '../molecules/ErrorCard';
+import getCoursesFromQuery from '../../helpers/getCoursesFromQuery';
 import CourseCard from './CourseCard';
 
 /*
@@ -61,77 +56,6 @@ const LIST_ITEMS = Object.freeze([
     icon: <SchoolOutlined />,
   },
 ]);
-
-const getCoursesFromQuery = ({
-  payload,
-  user,
-  limit,
-}: {
-  payload: SearchPayload;
-  user?: UserStore;
-  limit?: number;
-}): CourseSearchItem[] => {
-  // load local courselist
-  const { mode, text } = payload;
-  switch (mode) {
-    case 'Pins':
-      return user.favoriteCourses.map((course) => ({
-        c: course.courseId,
-        t: course.title,
-      }));
-    case 'My Courses':
-      return user.timetable?.map((course) => ({
-        c: course.courseId,
-        t: course.title,
-      }));
-    case 'subject':
-      return COURSES[text];
-    case 'query':
-      const condensed = text.replace(/[^a-zA-Z0-9]/g, '');
-      try {
-        // valid search contains suject and code
-        const subject = condensed.match(/[a-zA-Z]{4}/)[0].toUpperCase();
-        const rawCode = condensed.match(/\d{4}$/) || condensed.match(/\d+/g);
-        const code = rawCode ? rawCode[0] : null;
-        if (!(subject in COURSES)) {
-          throw 'Wrong subject, searching for title';
-        }
-        if (subject && code) {
-          const results = [];
-          for (
-            let i = 0;
-            i < COURSES[subject].length && results.length < limit;
-            i++
-          ) {
-            if (COURSES[subject][i].c.includes(code)) {
-              if (code.length === 4) {
-                return [COURSES[subject][i]].slice(0, limit);
-              }
-              results.push(COURSES[subject][i]);
-            }
-          }
-          return results;
-        }
-        if (subject) {
-          return COURSES[subject].slice(0, limit);
-        }
-      } catch (error) {
-        // search for titles
-        const results = [];
-        for (const [, courses] of Object.entries(COURSES)) {
-          for (let i = 0; i < courses.length && results.length < limit; i++) {
-            if (courses[i].t.toLowerCase().includes(text.toLowerCase())) {
-              results.push(courses[i]);
-            }
-          }
-        }
-        return results;
-      }
-      return [];
-    default:
-      return null;
-  }
-};
 
 type SearchResultProps = {
   searchPayload: SearchPayload;

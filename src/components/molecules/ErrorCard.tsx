@@ -1,4 +1,3 @@
-import { Typography } from '@material-ui/core';
 import Card from '../atoms/Card';
 import emptyPhoto from '../../images/undraw_empty_xct9.svg';
 import errorPhoto from '../../images/undraw_server_down_s4lk.svg';
@@ -26,17 +25,13 @@ type ErrorCardProps = {
 };
 
 const ErrorCard = ({ mode }: ErrorCardProps) => (
-  <Card>
-    <div className="null-card-container">
-      <img
-        src={CARD_ITEMS[mode]?.image}
-        alt="Empty!"
-        className="null-card-photo"
-      />
-      <Typography className="null-card-word" variant="subtitle1">
-        {CARD_ITEMS[mode]?.caption}
-      </Typography>
-    </div>
+  <Card className="null-card-container center column">
+    <img
+      src={CARD_ITEMS[mode]?.image}
+      alt="Empty!"
+      className="null-card-photo"
+    />
+    <span className="null-card-word caption">{CARD_ITEMS[mode]?.caption}</span>
   </Card>
 );
 

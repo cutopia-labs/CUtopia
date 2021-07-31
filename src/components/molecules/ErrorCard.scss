@@ -1,7 +1,5 @@
 .null-card-container {
-  padding-top: 5%;
-  padding-bottom: 5%;
-  text-align: center;
+  padding: 5% 0;
 }
 
 .null-card-photo {
@@ -9,6 +7,6 @@
 }
 
 .null-card-word {
-  color: #3d3d3d;
   padding-top: 4%;
+  opacity: 0.7;
 }

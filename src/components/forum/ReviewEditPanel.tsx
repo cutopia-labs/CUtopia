@@ -101,7 +101,7 @@ const ReviewSection = ({
   onChangeText,
   onChangeGrade,
 }: ReviewSectionProps) => (
-  <div className="review-section-container">
+  <div className="review-section-container grid-auto-row">
     <div className="review-section-header center-row">
       <span className="review-section-title form-section-title">{type}</span>
       <SelectionGroup
@@ -275,7 +275,7 @@ const ReviewEdit = ({ courseId }) => {
   );
 
   return (
-    <div className="review-edit">
+    <div className="review-edit grid-auto-row">
       {reviewLoading && <Loading fixed />}
       <Dialog
         open={mode === MODES.MODAL}
@@ -375,7 +375,7 @@ const ReviewEdit = ({ courseId }) => {
           </div>
         )}
       </FormSection>
-      <div className="review-sections-container">
+      <div className="review-sections-container grid-auto-row">
         {RATING_FIELDS.map((type) => (
           <ReviewSection
             key={type}
