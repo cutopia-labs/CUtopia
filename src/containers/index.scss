@@ -12,6 +12,7 @@ body {
   --reversed-text: rgba(255, 255, 255, 1);
   --button: rgba(21, 121, 193, 1);
   --border: #dedede80;
+  --border-light: #dedede2f;
   --underlay: #dddddd;
   --statusBar: rgba(21, 101, 192, 1);
   --bottomBar: rgba(255, 255, 255, 1);
@@ -24,6 +25,7 @@ body {
   --grey-text: rgba(0, 0, 0, 0.5);
   --snackbar: rgba(31, 31, 31, 1);
   --caption: #494949;
+  --caption-light: #494949bb;
   --highlight-on-surface: #dedede60;
   --scrollbar: rgb(204, 204, 204);
   --max-width: 1260px;
@@ -230,6 +232,30 @@ textarea[type="number"] {
   display: grid;
   grid-auto-rows: auto;
   grid-row-gap: var(--card-padding);
+}
+
+.grid-auto-column {
+  display: grid;
+  grid-auto-flow: column;
+  grid-column-gap: calc(var(--card-padding) / 2);
+}
+
+.capsule-btn.MuiButton-root {
+  --capsule-font-color: var(--caption);
+  &.selected {
+    --capsule-font-color: var(--primary);
+    background-color: var(--background-secondary);
+    border-color: var(--background-tertiary);
+  }
+  border-radius: 50px;
+  padding: 4px 12px;
+  .MuiButton-label {
+    font-weight: bold;
+  }
+  .MuiButton-label,
+  svg {
+    color: var(--capsule-font-color);
+  }
 }
 
 /* Scrollbar styles */

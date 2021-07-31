@@ -1,6 +1,6 @@
 import { useState, useContext, useRef } from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
-import { useMediaQuery, IconButton, Menu, MenuItem } from '@material-ui/core';
+import { IconButton, Menu, MenuItem } from '@material-ui/core';
 import { Menu as MenuIcon } from '@material-ui/icons';
 import clsx from 'clsx';
 
@@ -9,7 +9,7 @@ import { SearchResult } from '../forum/SearchPanel';
 import './Header.scss';
 import Logo from '../atoms/Logo';
 import SearchInput from '../molecules/SearchInput';
-import { MIN_DESKTOP_WIDTH } from '../../constants/configs';
+import useMobileQuery from '../../helpers/useMobileQuery';
 
 const SECTIONS = [
   {
@@ -31,7 +31,7 @@ const Header = () => {
   const history = useHistory();
   const [searchQuery, setSearchQuery] = useState('');
   const [visible, setVisible] = useState(false);
-  const isMobile = useMediaQuery(`(max-width:${MIN_DESKTOP_WIDTH}px)`);
+  const isMobile = useMobileQuery();
   const [anchorEl, setAnchorEl] = useState(null);
 
   const inputRef = useRef(null);

@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react';
 import { observer } from 'mobx-react-lite';
-import { IconButton, useMediaQuery, Tooltip } from '@material-ui/core';
+import { IconButton, Tooltip } from '@material-ui/core';
 import { ErrorOutline, Favorite, FavoriteBorder } from '@material-ui/icons';
 
 import './CourseCard.scss';
@@ -10,12 +10,10 @@ import clsx from 'clsx';
 import ShowMoreOverlay from '../molecules/ShowMoreOverlay';
 import Badge from '../atoms/Badge';
 import { UserContext } from '../../store';
-import {
-  COURSE_CARD_MAX_HEIGHT,
-  MIN_DESKTOP_WIDTH,
-} from '../../constants/configs';
+import { COURSE_CARD_MAX_HEIGHT } from '../../constants/configs';
 import { CourseInfo } from '../../types';
 import Link from '../molecules/Link';
+import useMobileQuery from '../../helpers/useMobileQuery';
 import Points from './Points';
 import CourseSections from './CourseSections';
 import GradeRow from './GradeRow';
@@ -29,7 +27,7 @@ const CourseCard = ({ courseInfo, concise }: CourseCardProps) => {
   const [showMore, setShowMore] = useState(true);
   const [skipHeightCheck, setSkipHeightCheck] = useState(concise);
   const user = useContext(UserContext);
-  const isMobile = useMediaQuery(`(max-width:${MIN_DESKTOP_WIDTH}px)`);
+  const isMobile = useMobileQuery();
   const history = useHistory();
 
   const isFavorited = user.favoriteCourses.some(

@@ -1,14 +1,13 @@
 import { observer } from 'mobx-react-lite';
-import { useMediaQuery } from '@material-ui/core';
 
 import './LandingPage.scss';
 import LoginPanel from '../components/user/LoginPanel';
 import Logo from '../components/atoms/Logo';
 import Illustration from '../images/meditation.svg';
-import { MIN_DESKTOP_WIDTH } from '../constants/configs';
+import useMobileQuery from '../helpers/useMobileQuery';
 
 const LandingPage = () => {
-  const isMobile = useMediaQuery(`(max-width:${MIN_DESKTOP_WIDTH}px)`);
+  const isMobile = useMobileQuery();
   return (
     <div className="landing-page">
       {!isMobile && (

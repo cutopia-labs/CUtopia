@@ -31,7 +31,7 @@ const GradeRow = ({
       <GradeIndicator
         grade={rating.overall}
         additionalClassName={clsx(
-          'course-summary-grade-indicator',
+          'reviews-filter-grade-indicator',
           !isReview && 'overall'
         )}
       />
@@ -53,7 +53,7 @@ const GradeRow = ({
           }}
         >
           {field !== 'overall' && (
-            <div className="course-summary-label" key={field}>
+            <div className="reviews-filter-label" key={field}>
               {`${field}${isMobile ? '' : ':'}`}
             </div>
           )}
@@ -63,7 +63,7 @@ const GradeRow = ({
                 ? rating[field].grade
                 : rating[field]
             }
-            additionalClassName="course-summary-grade-indicator"
+            additionalClassName="reviews-filter-grade-indicator"
           />
         </div>
       ))}

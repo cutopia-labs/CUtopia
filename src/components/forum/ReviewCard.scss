@@ -28,7 +28,7 @@
   font-size: 14px;
 }
 
-.course-summary {
+.reviews-filter {
   &.review {
     margin: 0;
     padding: 0;
@@ -62,7 +62,7 @@
   justify-content: flex-start;
   padding: var(--review-card-inner-padding-vertical) var(--review-card-inner-padding-horizontal);
   width: 100%;
-  .course-summary-label {
+  .reviews-filter-label {
     margin: 0;
   }
   .term {
@@ -88,7 +88,7 @@
     margin-left: 16px;
   }
 }
-.course-summary-label {
+.reviews-filter-label {
   &.author {
     text-transform: none;
     margin: 0;
@@ -144,7 +144,7 @@
   grid-column-gap: var(--card-padding);
 }
 @media only screen and (max-width: 1260px) {
-  .course-summary-label {
+  .reviews-filter-label {
     &.author {
       font-size: 12px;
     }
@@ -179,7 +179,7 @@
       flex: 1;
     }
     .rating-container {
-      > .course-summary-label {
+      > .reviews-filter-label {
         margin-bottom: 10px;
       }
       &.active {

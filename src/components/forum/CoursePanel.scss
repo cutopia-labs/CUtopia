@@ -1,7 +1,7 @@
 .course-panel {
   height: fit-content;
 }
-.course-summary {
+.reviews-filter {
   display: flex;
   margin-top: 20px;
   padding: 12px 8px;
@@ -14,29 +14,19 @@
   }
   flex-direction: row;
   .reviews-sort {
-    background-color: var(--background-secondary);
-    border-radius: 50px;
-    padding: 4px 12px;
-    .MuiButton-label {
-      font-weight: bold;
-      color: var(--primary);
-    }
-    svg {
-      color: var(--primary);
-    }
   }
 }
-.course-summary-ratings {
+.reviews-filter-ratings {
   align-items: center;
 }
-.course-summary-label {
+.reviews-filter-label {
   text-transform: capitalize;
   margin: 0 10px;
   font-size: 14px;
   color: var(--text);
 }
 .grade-indicator {
-  &.course-summary-grade-indicator {
+  &.reviews-filter-grade-indicator {
     border-radius: 8px;
     height: auto;
     width: auto;

@@ -11,7 +11,6 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  useMediaQuery,
 } from '@material-ui/core';
 import { useMutation, useQuery } from '@apollo/client';
 import { useHistory, useParams } from 'react-router-dom';
@@ -26,12 +25,10 @@ import TextField from '../atoms/TextField';
 import Loading from '../atoms/Loading';
 import INSTRUCTORS from '../../constants/instructors';
 import ListItem from '../molecules/ListItem';
-import {
-  MIN_DESKTOP_WIDTH,
-  TARGET_REVIEW_WORD_COUNT,
-} from '../../constants/configs';
+import { TARGET_REVIEW_WORD_COUNT } from '../../constants/configs';
 import { RatingFieldWithOverall, ReviewDetails } from '../../types';
 import SelectionGroup, { FormSection } from '../molecules/SectionGroup';
+import useMobileQuery from '../../helpers/useMobileQuery';
 import CourseCard from './CourseCard';
 
 enum MODES {
@@ -137,7 +134,7 @@ const ReviewEdit = ({ courseId }) => {
     useMutation(EDIT_REVIEW, {
       onError: notification.handleError,
     });
-  const isMobile = useMediaQuery(`(max-width:${MIN_DESKTOP_WIDTH}px)`);
+  const isMobile = useMobileQuery();
   const [formData, dispatchFormData] = useReducer(
     (state, action) => ({ ...state, ...action }),
     {
@@ -237,7 +234,7 @@ const ReviewEdit = ({ courseId }) => {
         }
       }
     }
-  }, [user.data.reviewIds]);
+  }, [user.data?.reviewIds]);
 
   // to fillin posted review if choose to edit
   useEffect(() => {

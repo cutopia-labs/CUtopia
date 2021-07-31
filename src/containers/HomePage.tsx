@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { Typography, useMediaQuery } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import {
   ChatBubbleOutlineOutlined,
   SchoolOutlined,
@@ -19,7 +19,7 @@ import Card from '../components/atoms/Card';
 import Link from '../components/molecules/Link';
 import PlannerTimeTable from '../components/planner/PlannerTimeTable';
 import Footer from '../components/molecules/Footer';
-import { MIN_DESKTOP_WIDTH } from '../constants/configs';
+import useMobileQuery from '../helpers/useMobileQuery';
 
 const LINKS = [
   {
@@ -68,7 +68,7 @@ const HomePage = () => {
   const user = useContext(UserContext);
   const planner = useContext(PlannerContext);
   const [tab, setTab] = useState('Courses');
-  const isMobile = useMediaQuery(`(max-width:${MIN_DESKTOP_WIDTH}px)`);
+  const isMobile = useMobileQuery();
 
   const renderTab = () => {
     switch (tab) {

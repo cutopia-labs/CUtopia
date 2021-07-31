@@ -1,13 +1,17 @@
 import { useState, useEffect, useContext } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { Edit, Share, ExpandMore } from '@material-ui/icons';
+import { Edit, Share, ExpandMore, MoreHoriz } from '@material-ui/icons';
 import { useQuery } from '@apollo/client';
-import { Button, Menu, MenuItem } from '@material-ui/core';
+import { Button, IconButton, Menu, MenuItem } from '@material-ui/core';
 import { SpeedDial, SpeedDialIcon, SpeedDialAction } from '@material-ui/lab';
 import { observer } from 'mobx-react-lite';
+import { TiArrowSortedUp } from 'react-icons/ti';
+import { AiTwotoneCalendar } from 'react-icons/ai';
+import { FaUserAlt } from 'react-icons/fa';
 
 import './CoursePanel.scss';
 import copy from 'copy-to-clipboard';
+import { FiEdit } from 'react-icons/fi';
 import { validCourse } from '../../helpers/marcos';
 import {
   COURSE_INFO_QUERY,
@@ -48,25 +52,41 @@ const CourseSummary = ({
     setAnchorEl(null);
   };
   return (
-    <div className="panel card course-summary row">
+    <div className="panel card reviews-filter row">
       {courseInfo.rating ? (
         <>
-          <div className="center-row">
+          <div className="center-row grid-auto-column">
             <Button
-              className="reviews-sort"
+              className="capsule-btn reviews-sort selected"
               size="small"
               onClick={(e) => setAnchorEl(e.currentTarget)}
+              startIcon={<TiArrowSortedUp />}
               endIcon={<ExpandMore />}
             >
               {sorting}
             </Button>
-            <div className="course-summary-label caption">
+            <Button
+              className="capsule-btn reviews-sort"
+              size="small"
+              onClick={(e) => setAnchorEl(e.currentTarget)}
+              startIcon={<FaUserAlt size={12} />}
+              endIcon={<ExpandMore />}
+            >
+              All
+            </Button>
+            <Button
+              className="capsule-btn reviews-sort"
+              size="small"
+              onClick={(e) => setAnchorEl(e.currentTarget)}
+              startIcon={<AiTwotoneCalendar />}
+              endIcon={<ExpandMore />}
+            >
+              All
+            </Button>
+            <div className="reviews-filter-label caption">
               {exceedLimit &&
                 `Limit exceeded (post ${FULL_MEMBER_REVIEWS} reviews to unlock)`}
-              {!exceedLimit &&
-                (fetchAllAction
-                  ? 'Showing 1 review only!'
-                  : `${courseInfo.rating.numReviews} reviews`)}
+              {!exceedLimit && fetchAllAction && 'Showing 1 review only!'}
             </div>
           </div>
           <Menu
@@ -90,9 +110,14 @@ const CourseSummary = ({
       ) : (
         <span>No review yet</span>
       )}
-      <Button size="small" color="primary" onClick={writeAction}>
-        Write One!
-      </Button>
+      <span className="right grid-auto-column">
+        <IconButton className="edit" size="small">
+          <FiEdit />
+        </IconButton>
+        <IconButton className="more" size="small">
+          <MoreHoriz />
+        </IconButton>
+      </span>
       {courseInfo.rating && fetchAllAction && (
         <Button size="small" color="primary" onClick={fetchAllAction}>
           Fetch All

@@ -4,7 +4,7 @@ import { FaRegCalendar } from 'react-icons/fa';
 import { BiMessageRounded } from 'react-icons/bi';
 import { RiShareForwardLine } from 'react-icons/ri';
 import { useMutation } from '@apollo/client';
-import { IconButton, useMediaQuery } from '@material-ui/core';
+import { IconButton } from '@material-ui/core';
 
 import './ReviewCard.scss';
 import clsx from 'clsx';
@@ -14,6 +14,7 @@ import { getMMMDDYY } from '../../helpers/getTime';
 import ShowMoreOverlay from '../molecules/ShowMoreOverlay';
 import { Review } from '../../types';
 import { NotificationContext } from '../../store';
+import useMobileQuery from '../../helpers/useMobileQuery';
 import GradeRow from './GradeRow';
 import LikeButtonsRow from './LikeButtonRow';
 
@@ -36,7 +37,7 @@ const ReviewCard = ({
     onError: notification.handleError,
   });
   const [liked, setLiked] = useState(review.myVote); // null for unset, false for dislike, true for like
-  const isMobile = useMediaQuery('(max-width:1260px)');
+  const isMobile = useMobileQuery();
   const [showMore, setShowMore] = useState(true);
   const [skipHeightCheck, setSkipHeightCheck] = useState(showAll);
 
@@ -71,7 +72,7 @@ const ReviewCard = ({
   }
   return (
     <div className={clsx('review-card card', !showMore && 'retracted')}>
-      <div className="course-summary review">
+      <div className="reviews-filter review">
         {Boolean(review.title) && (
           <div className="review-title center-row">
             <BiMessageRounded />
@@ -86,9 +87,9 @@ const ReviewCard = ({
         >
           <div className="center-row">
             <FaRegCalendar />
-            <span className="course-summary-label term">{review.term}</span>
-            <span className="course-summary-label separator">/</span>
-            <span className="course-summary-label lecturer">
+            <span className="reviews-filter-label term">{review.term}</span>
+            <span className="reviews-filter-label separator">/</span>
+            <span className="reviews-filter-label lecturer">
               {review.lecturer}
             </span>
           </div>
