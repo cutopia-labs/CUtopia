@@ -6,8 +6,11 @@ const { ERROR_CODES } = require("error-codes");
 
 const db = new AWS.DynamoDB.DocumentClient();
 
+const VERIFY_EXPIRATION_TIME = 24 * 60 * 1000;
+
 exports.createUser = async (input) => {
   const { username, email, password } = input;
+  const now = new Date().getTime();
 
   // Ensure username and email do not exist
   const usernameResult = await this.getUser({
@@ -31,6 +34,7 @@ exports.createUser = async (input) => {
       "username": username,
       "password": hash,
       "email": email,
+      "createdDate": now,
       "verified": false,
       "verificationCode": verificationCode,
       "reviewIds": db.createSet([""]),
@@ -100,45 +104,52 @@ exports.updateUser = async (input) => {
   const params = {
     TableName: process.env.UserTableName,
     Key: {
-      "username": username,
+      username,
     },
     UpdateExpression: updateExpression,
     ExpressionAttributeValues: expressionValues,
   };
   await db.update(params).promise();
 };
+exports.deleteUser = async (input) => {
+  const { username } = input;
+  const params = {
+      TableName: process.env.UserTableName,
+      Key:{
+          username
+      },
+  };
+  await db.delete(params).promise();
+};
 
-exports.VERIFICATION_CODES = Object.freeze({
-  SUCCEEDED: 0,
-  FAILED: 1,
-});
 exports.verifyUser = async (input) => {
   const { username, code } = input;
   const result = await this.getUser({
     username,
-    requiredFields: ["verified", "verificationCode"],
+    requiredFields: ["createdDate", "verified", "verificationCode"],
   });
 
   if (result) {
     if (result.verified) {
       throw Error(ERROR_CODES.VERIFICATION_ALREADY_VERIFIED);
     }
+    if (result.createdDate + VERIFY_EXPIRATION_TIME - new Date().getTime() < 0) {
+      await this.deleteUser({ username });
+      throw Error(ERROR_CODES.VERIFICATION_EXPIRED);
+    }
     if (result.verificationCode === code) {
       await this.updateUser({
         username,
         verified: true,
       });
-      return this.VERIFICATION_CODES.SUCCEEDED;
+      // successfully verified
+      return true;
     }
-    return this.VERIFICATION_CODES.FAILED;
+    throw Error(ERROR_CODES.VERIFICATION_FAILED);
   }
   throw Error(ERROR_CODES.VERIFICATION_USER_DNE);
 };
 
-exports.LOGIN_CODES = Object.freeze({
-  SUCCEEDED: 0,
-  FAILED: 1,
-});
 exports.login = async (input) => {
   const { username, password } = input;
   const result = await this.getUser({
@@ -148,10 +159,12 @@ exports.login = async (input) => {
   if (!result) {
     throw Error(ERROR_CODES.LOGIN_USER_DNE);
   }
-  const correct = await bcrypt.compare(password, result.password);
+  if (!await bcrypt.compare(password, result.password)) {
+    throw Error(ERROR_CODES.LOGIN_FAILED);
+  }
+
   const { password: pwd, ...remainedFields } = result
   return {
-    code: correct ? this.LOGIN_CODES.SUCCEEDED : this.LOGIN_CODES.FAILED,
     data: remainedFields,
   };
 };
@@ -180,10 +193,6 @@ exports.getResetPasswordCodeAndEmail = async (input) => {
   };
 };
 
-exports.RESET_PASSWORD_CODES = Object.freeze({
-  SUCCEEDED: 0,
-  FAILED: 1,
-});
 exports.resetPassword = async (input) => {
   const { username, newPassword, resetCode } = input;
   const data = await this.getUser({
@@ -205,9 +214,10 @@ exports.resetPassword = async (input) => {
       password: newPassword,
       resetPwdCode: "",
     });
-    return this.RESET_PASSWORD_CODES.SUCCEEDED;
+    // successfully reset password
+    return true;
   }
-  return this.RESET_PASSWORD_CODES.FAILED;
+  throw Error(ERROR_CODES.RESET_PASSWORD_FAILED);
 };
 
 exports.incrementUpvotesCount = async (input) => {

@@ -11,15 +11,14 @@ OAuth2Client.setCredentials({
   refresh_token: process.env.GmailRefreshToken,
 });
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
+  service: "gmail",
   auth: {
     type: "OAuth2",
     user: process.env.GmailAddress,
     clientId: process.env.GamilClientID,
     clientSecret: process.env.GmailClientSecret,
     refreshToken: process.env.GmailRefreshToken,
+    accessToken: OAuth2Client.getAccessToken(),
   },
 });
 transporter.set('oauth2_provision_cb', (user, renew, callback) => {

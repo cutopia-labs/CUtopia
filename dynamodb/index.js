@@ -15,10 +15,6 @@ const {
   getResetPasswordCodeAndEmail,
   resetPassword,
   login,
-  LOGIN_CODES,
-  VERIFICATION_CODES,
-  GET_PASSWORD_CODE_CODES,
-  RESET_PASSWORD_CODES,
 } = require('./databases/user-db');
 
 const {
@@ -61,8 +57,4 @@ module.exports = {
   REVIEW_REPORT_TYPES,
   COURSE_REPORT_TYPES,
   VOTE_ACTIONS,
-  LOGIN_CODES,
-  VERIFICATION_CODES,
-  GET_PASSWORD_CODE_CODES,
-  RESET_PASSWORD_CODES,
 };

@@ -220,10 +220,10 @@ exports.getReviews = async (input) => {
         courseId: courseId,
       };
     });
-    lastEvaluatedKey = result.LastEvaluatedKey;
+
     return {
       reviews,
-      lastEvaluatedKey,
+      lastEvaluatedKey: result.LastEvaluatedKey,
     };
   }
 

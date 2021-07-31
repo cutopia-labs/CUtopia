@@ -8,7 +8,6 @@ const {
   getResetPasswordCodeAndEmail,
   resetPassword,
   login,
-  LOGIN_CODES,
 } = require("dynamodb");
 const { sign } = require("../../jwt");
 
@@ -50,27 +49,18 @@ exports.Mutation = {
     });
   },
   verifyUser: async (parent, { input }) => {
-    const result = await verifyUser(input);
-    return {
-      code: result,
-    };
+    await verifyUser(input);
   },
   updateUser: async (parent, { input }) => {
     await updateUser(input);
   },
   login: async (parent, { input }) => {
-    const { code, data } = await login(input);
-    if (code === LOGIN_CODES.SUCCEEDED) {
-      const { username } = input;
-      const token = sign({ username });
-      return {
-        code,
-        token,
-        me: data,
-      };
-    }
+    const { data } = await login(input);
+    const { username } = input;
+    const token = sign({ username });
     return {
-      code,
+      token,
+      me: data,
     };
   },
   sendResetPasswordCode: async (parent, { input }) => {
@@ -82,9 +72,6 @@ exports.Mutation = {
     });
   },
   resetPassword: async (parent, { input }) => {
-    const result = await resetPassword(input);
-    return {
-      code: result,
-    };
+    await resetPassword(input);
   },
 };

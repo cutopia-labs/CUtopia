@@ -97,6 +97,7 @@ Resources:
                   - dynamodb:Scan
                   - dynamodb:UpdateItem
                   - dynamodb:GetItem
+                  - dynamodb:DeleteItem
                 Effect: Allow
                 Resource:
                   - !Ref ReviewsDBArn
