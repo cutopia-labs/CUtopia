@@ -18,7 +18,7 @@ import {
   SEND_RESET_PASSWORD_CODE,
   RESET_PASSWORD,
 } from '../../constants/mutations';
-import { LoginPageMode, LoginCode } from '../../types';
+import { LoginPageMode } from '../../types';
 import handleCompleted from '../../helpers/handleCompleted';
 
 const LOGIN_ACCENT = '#873AFD';
@@ -148,7 +148,12 @@ const LoginPanel = () => {
   );
   const [loginCUtopia, { loading: loggingInCUtopia }] = useMutation(
     LOGIN_CUTOPIA,
-    { onError: notification.handleError }
+    {
+      onCompleted: handleCompleted(
+        async (data) => await user.saveUser(username, data.login?.token)
+      ),
+      onError: notification.handleError,
+    }
   );
   const [sendResetPasswordCode, { loading: sendingResetCode }] = useMutation(
     SEND_RESET_PASSWORD_CODE,
@@ -180,11 +185,7 @@ const LoginPanel = () => {
         password,
       },
     };
-    const { data } = await loginCUtopia(loginPayload);
-    if (data?.login.code === LoginCode.SUCCEEDED) {
-      console.log(`Login success with token ${data.login.token}`);
-      await user.saveUser(username, data.login.token);
-    }
+    await loginCUtopia(loginPayload);
   };
 
   useEffect(() => {
@@ -216,7 +217,8 @@ const LoginPanel = () => {
     return !Object.values(errorsFound).some((e) => e);
   };
 
-  const onSubmit = async () => {
+  const onSubmit = async (e) => {
+    e.preventDefault();
     if (!validate()) {
       return;
     }
@@ -308,78 +310,80 @@ const LoginPanel = () => {
             <CircularProgress />
           ))}
       </div>
-      {MODE_ITEMS[mode].userId && (
-        <TextField
-          error={errors.userId}
-          placeholder={MODE_ITEMS[mode].userId}
-          type="number"
-          value={userId}
-          onChangeText={(text) => setUserId(text)}
-          label="CUHK SID"
-        />
-      )}
-      {MODE_ITEMS[mode].verificationCode && (
-        <TextField
-          error={errors.verification}
-          placeholder={MODE_ITEMS[mode].verificationCode}
-          value={verificationCode}
-          onChangeText={(text) => setVerificationCode(text)}
-          label="Verification Code"
-        />
-      )}
-      {MODE_ITEMS[mode].username && (
-        <TextField
-          error={errors.username}
-          placeholder={MODE_ITEMS[mode].username}
-          value={username}
-          onChangeText={(text) => setUsername(text)}
-          label="Username"
-        />
-      )}
-      {MODE_ITEMS[mode].password && (
-        <TextField
-          error={errors.password}
-          placeholder={MODE_ITEMS[mode].password}
-          defaultValue=""
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-          type={invisible ? 'password' : 'text'}
-          label="Password"
-        />
-      )}
-      {mode === LoginPageMode.CUTOPIA_LOGIN && (
-        <div className="center-row forgot-password-row">
-          <span
-            className="label forgot-password"
-            onClick={() => setMode(LoginPageMode.RESET_PASSWORD)}
-          >
-            Forgot Password?
-          </span>
-        </div>
-      )}
-      <Button
-        variant="contained"
-        className="login-btn"
-        color="primary"
-        onClick={onSubmit}
-        disabled={
-          loggingInCUtopia ||
+      <form className="grid-auto-row" onSubmit={onSubmit}>
+        {MODE_ITEMS[mode].userId && (
+          <TextField
+            error={errors.userId}
+            placeholder={MODE_ITEMS[mode].userId}
+            type="number"
+            value={userId}
+            onChangeText={(text) => setUserId(text)}
+            label="CUHK SID"
+          />
+        )}
+        {MODE_ITEMS[mode].verificationCode && (
+          <TextField
+            error={errors.verification}
+            placeholder={MODE_ITEMS[mode].verificationCode}
+            value={verificationCode}
+            onChangeText={(text) => setVerificationCode(text)}
+            label="Verification Code"
+          />
+        )}
+        {MODE_ITEMS[mode].username && (
+          <TextField
+            error={errors.username}
+            placeholder={MODE_ITEMS[mode].username}
+            value={username}
+            onChangeText={(text) => setUsername(text)}
+            label="Username"
+          />
+        )}
+        {MODE_ITEMS[mode].password && (
+          <TextField
+            error={errors.password}
+            placeholder={MODE_ITEMS[mode].password}
+            defaultValue=""
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+            type={invisible ? 'password' : 'text'}
+            label="Password"
+          />
+        )}
+        {mode === LoginPageMode.CUTOPIA_LOGIN && (
+          <div className="center-row forgot-password-row">
+            <span
+              className="label forgot-password"
+              onClick={() => setMode(LoginPageMode.RESET_PASSWORD)}
+            >
+              Forgot Password?
+            </span>
+          </div>
+        )}
+        <Button
+          variant="contained"
+          className="login-btn"
+          color="primary"
+          type="submit"
+          disabled={
+            loggingInCUtopia ||
+            creatingUser ||
+            verifying ||
+            sendingResetCode ||
+            resettingPassword
+          }
+        >
+          {loggingInCUtopia ||
           creatingUser ||
           verifying ||
           sendingResetCode ||
-          resettingPassword
-        }
-      >
-        {loggingInCUtopia ||
-        creatingUser ||
-        verifying ||
-        sendingResetCode ||
-        resettingPassword ? (
-          <CircularProgress size={24} />
-        ) : (
-          MODE_ITEMS[mode].button
-        )}
-      </Button>
+          resettingPassword ? (
+            <CircularProgress size={24} />
+          ) : (
+            MODE_ITEMS[mode].button
+          )}
+        </Button>
+      </form>
       {(mode === LoginPageMode.CUTOPIA_LOGIN ||
         mode === LoginPageMode.CUTOPIA_SIGNUP) && (
         <div className="switch-container center-row">

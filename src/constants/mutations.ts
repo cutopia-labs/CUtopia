@@ -4,7 +4,6 @@ import { gql } from '@apollo/client';
 export const LOGIN_CUTOPIA = gql`
   mutation ($username: String!, $password: String!) {
     login(input: { username: $username, password: $password }) {
-      code
       token
     }
   }
@@ -21,9 +20,7 @@ export const SEND_VERIFICATION = gql`
 
 export const VERIFY_USER = gql`
   mutation ($username: String!, $code: String!) {
-    verifyUser(input: { username: $username, code: $code }) {
-      code
-    }
+    verifyUser(input: { username: $username, code: $code })
   }
 `;
 
@@ -42,9 +39,7 @@ export const RESET_PASSWORD = gql`
         newPassword: $newPassword
         resetCode: $resetCode
       }
-    ) {
-      code
-    }
+    )
   }
 `;
 

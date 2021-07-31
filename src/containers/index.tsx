@@ -55,11 +55,12 @@ const Navigator = () => {
     },
   });
   useEffect(() => {
-    if (user.token) {
+    if (user.token && !user.data?.username) {
       getUser();
     }
   }, [user.token]);
   if (user.loginState !== LoginState.LOGGED_IN_CUTOPIA) {
+    // TODO: change to !== later
     return (
       <>
         <SnackBar />

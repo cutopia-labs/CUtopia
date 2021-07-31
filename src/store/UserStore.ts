@@ -74,6 +74,7 @@ class UserStore extends StorePrototype {
   @action async saveUser(username, token) {
     this.setStore('username', username);
     await this.saveToken(token);
+    console.log(token);
     this.notificationStore.setSnackBar(`Logged in as ${username}`);
   }
 

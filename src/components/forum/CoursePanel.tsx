@@ -25,6 +25,7 @@ import useDebounce from '../../helpers/useDebounce';
 import { LAZY_LOAD_BUFFER } from '../../constants/configs';
 import { ReviewsFilter, ReviewsResult } from '../../types';
 import Footer from '../molecules/Footer';
+import useMobileQuery from '../../helpers/useMobileQuery';
 import ReviewCard from './ReviewCard';
 import CourseCard from './CourseCard';
 
@@ -141,6 +142,7 @@ const CoursePanel = () => {
   const [reviews, setReviews] = useState([]);
   const notification = useContext(NotificationContext);
   const user = useContext(UserContext);
+  const isMobile = useMobileQuery();
 
   const FAB_GROUP_ACTIONS = Object.freeze([
     {
@@ -283,7 +285,7 @@ const CoursePanel = () => {
   return (
     <>
       {(reviewsLoading || courseInfoLoading) && <Loading fixed />}
-      <div className="column">
+      <div className="course-panel-container column">
         <div className="course-panel panel card">
           {!courseInfoLoading && (
             <CourseCard
