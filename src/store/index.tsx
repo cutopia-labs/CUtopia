@@ -14,7 +14,7 @@ const plannerStore = new PlannerStore(notificationStore);
 reaction(
   () => ({
     plannerCourses: plannerStore.plannerCourses.map((course) => course),
-    key: plannerStore.currentPlanner,
+    key: plannerStore.currentPlannerKey,
   }),
   ({ plannerCourses, key }) => {
     plannerStore.updatePlanners(key, plannerCourses);

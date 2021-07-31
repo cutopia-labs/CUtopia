@@ -8,14 +8,14 @@ import withUndo from '../helpers/withUndo';
 import NotificationStore from './NotificationStore';
 import StorePrototype from './StorePrototype';
 
-const LOCAL_STORAGE_KEYS = ['planners', 'plannerTerm', 'currentPlanner'];
+const LOCAL_STORAGE_KEYS = ['planners', 'plannerTerm', 'currentPlannerKey'];
 
 class PlannerStore extends StorePrototype {
   // Planner
   @observable planners: Record<string | number, Planner> = {};
   @observable plannerTerm: string;
   @observable previewPlannerCourse: PlannerCourse;
-  @observable currentPlanner: number;
+  @observable currentPlannerKey: number;
   @observable plannerCourses: PlannerCourse[] = [];
   @observable initiated: boolean = false; // prevent reaction of null timetable override planners
 
@@ -29,10 +29,10 @@ class PlannerStore extends StorePrototype {
 
   @action async init() {
     await this.applyPlannerStore();
-    if (!this.currentPlanner) {
+    if (!this.currentPlannerKey) {
       console.log('Creating new planners');
       const now = +new Date();
-      this.setStore('currentPlanner', now);
+      this.setStore('currentPlannerKey', now);
       this.setStore('planners', {
         [now]: {
           key: now,
@@ -40,7 +40,7 @@ class PlannerStore extends StorePrototype {
         },
       });
     }
-    this.plannerCourses = this.planners[this.currentPlanner]?.courses;
+    this.plannerCourses = this.planners[this.currentPlannerKey]?.courses;
     this.initiated = true;
   }
 
@@ -49,6 +49,10 @@ class PlannerStore extends StorePrototype {
       key: planner.key,
       label: planner.label || PLANNER_CONFIGS.DEFAULT_TABLE_NAME,
     })) as PlannerItem[];
+  }
+
+  get currentPlanner() {
+    return this.planners[this.currentPlannerKey];
   }
 
   // reset
@@ -73,7 +77,7 @@ class PlannerStore extends StorePrototype {
     let label = PLANNER_CONFIGS.DEFAULT_TABLE_NAME;
     if (this.validKey(key)) {
       this.plannerCourses = this.planners[key].courses;
-      this.currentPlanner = key;
+      this.currentPlannerKey = key;
       label = this.planners[key].label || label;
     } else {
       key = key || +new Date();
@@ -84,7 +88,7 @@ class PlannerStore extends StorePrototype {
       storeData('planners', this.planners);
       this.plannerCourses = [];
     }
-    this.setStore('currentPlanner', key);
+    this.setStore('currentPlannerKey', key);
     this.notificationStore.setSnackBar(`Switched to ${label}`);
   };
 
@@ -274,7 +278,7 @@ class PlannerStore extends StorePrototype {
   }
 
   @action async setPlannerLabel(label: string) {
-    this.planners[this.currentPlanner].label = label;
+    this.planners[this.currentPlannerKey].label = label;
     await storeData('planners', this.planners);
   }
 }

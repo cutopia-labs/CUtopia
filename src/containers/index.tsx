@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './index.scss';
 import { useLazyQuery } from '@apollo/client';
 import SnackBar from '../components/molecules/SnackBar';
-import { UserContext } from '../store';
+import { NotificationContext, UserContext } from '../store';
 import Header from '../components/organisms/Header';
 import { LoginState, User } from '../types';
 import { GET_USER } from '../constants/queries';
@@ -39,6 +39,7 @@ const ROUTES = [
 
 const Navigator = () => {
   const user = useContext(UserContext);
+  const notification = useContext(NotificationContext);
   const [getUser, { data: userData, loading: userDataLoading }] = useLazyQuery<{
     me: User;
   }>(GET_USER, {
@@ -50,7 +51,8 @@ const Navigator = () => {
         user.updateStore('loginState', LoginState.LOGGED_OUT);
       }
     },
-    onError: () => {
+    onError: (e) => {
+      notification.handleError(e);
       user.updateStore('loginState', LoginState.LOGGED_OUT);
     },
   });
@@ -60,7 +62,6 @@ const Navigator = () => {
     }
   }, [user.token]);
   if (user.loginState !== LoginState.LOGGED_IN_CUTOPIA) {
-    // TODO: change to !== later
     return (
       <>
         <SnackBar />

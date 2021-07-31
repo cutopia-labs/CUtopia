@@ -264,7 +264,7 @@ export const GET_SHARE_TIMETABLE = gql`
           instructors
         }
       }
-      name
+      tableName
       createdDate
       expireDate
     }

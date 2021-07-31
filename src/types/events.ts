@@ -6,7 +6,13 @@ export type CourseTableEntry = {
   sections?: CourseSection[];
 };
 
-export type ShareTimeTable = {
+export type ShareTimeTableResponse = {
   id: string;
-  token: string;
+};
+
+export type ShareTimeTable = {
+  entries: CourseTableEntry[];
+  tableName?: string;
+  createdDate: number;
+  expireDate: number;
 };

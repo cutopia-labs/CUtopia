@@ -119,11 +119,11 @@ export const VOTE_REVIEW = gql`
 export const SHARE_TIMETABLE = gql`
   mutation (
     $entries: [CourseTableEntryInput]!
-    $anonymous: Boolean!
     $expire: Int!
+    $tableName: String
   ) {
     shareTimetable(
-      input: { entries: $entries, anonymous: $anonymous, expire: $expire }
+      input: { entries: $entries, tableName: $tableName, expire: $expire }
     ) {
       id
     }

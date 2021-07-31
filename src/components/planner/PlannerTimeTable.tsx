@@ -8,18 +8,27 @@ import {
 import { observer } from 'mobx-react-lite';
 
 import './PlannerTimeTable.scss';
-import { useMutation } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { Button, Dialog } from '@material-ui/core';
 import copy from 'copy-to-clipboard';
 import clsx from 'clsx';
+import { useParams } from 'react-router-dom';
 import TimeTablePanel from '../templates/TimeTablePanel';
 import { NotificationContext, PlannerContext } from '../../store';
 import { PLANNER_CONFIGS } from '../../constants/configs';
 import { SHARE_TIMETABLE } from '../../constants/mutations';
-import { PlannerCourse, ShareTimeTable } from '../../types';
+import {
+  Planner,
+  PlannerCourse,
+  ShareTimeTable,
+  ShareTimeTableResponse,
+} from '../../types';
 import ChipsRow from '../molecules/ChipsRow';
-import Loading from '../atoms/Loading';
 import TextField from '../atoms/TextField';
+import handleCompleted from '../../helpers/handleCompleted';
+import { GET_SHARE_TIMETABLE } from '../../constants/queries';
+import LoadingButton from '../atoms/LoadingButton';
+import Loading from '../atoms/Loading';
 
 type PlannerTimeTableProps = {
   className?: string;
@@ -41,11 +50,6 @@ const EXPIRE_LABELS = ['1 day', '3 days', '7 days'];
 
 const SECTIONS = [
   {
-    label: 'Anonymous',
-    chips: ANONYMOUS_LABELS,
-    key: 'anonymous',
-  },
-  {
     label: 'Expire In',
     chips: EXPIRE_LABELS,
     key: 'expire',
@@ -63,19 +67,122 @@ const Section = ({
   </div>
 );
 
-const generateShareURL = (sharedTimeTable: ShareTimeTable) =>
+const generateShareURL = (sharedTimeTable: ShareTimeTableResponse) =>
   `${window.location.protocol}//${window.location.host}/planner/${sharedTimeTable.id}`;
 
+const TimeTableShareDialogContent = ({
+  shareConfig,
+  dispatchShareConfig,
+  notification,
+  onShareTimetTable,
+  shareTimeTableLoading,
+}) => (
+  <>
+    {SECTIONS.map((section) => (
+      <Section title={section.label} key={section.key}>
+        <ChipsRow
+          items={section.chips}
+          select={shareConfig[section.key]}
+          setSelect={(item) => dispatchShareConfig({ [section.key]: item })}
+        />
+      </Section>
+    ))}
+    {shareConfig.shareLink ? (
+      <Section title="Share Link">
+        <div className="share-btn-row center-row share-link-row">
+          <TextField
+            value={shareConfig.shareLink}
+            onChangeText={() => {}}
+            disabled
+          />
+          <Button
+            className="copy"
+            onClick={() => [
+              copy(shareConfig.shareLink),
+              notification.setSnackBar('Copied share link to your clipboard!'),
+            ]}
+          >
+            Copy
+          </Button>
+        </div>
+      </Section>
+    ) : (
+      <div className="share-btn-row center-row">
+        <LoadingButton
+          loading={shareTimeTableLoading}
+          className="share loading-btn"
+          onClick={onShareTimetTable}
+        >
+          Share
+        </LoadingButton>
+      </div>
+    )}
+  </>
+);
+
 const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
+  const { id: shareTimeTableId } = useParams<{
+    id?: string;
+  }>();
   const planner = useContext(PlannerContext);
   const notification = useContext(NotificationContext);
   const [mode, setMode] = useState(PlannerTimeTableMode.INITIAL);
   const [shareCourses, setShareCourses] = useState<PlannerCourse[] | null>(
     null
   );
+  const { loading: getShareTimeTableLoading } = useQuery(GET_SHARE_TIMETABLE, {
+    skip: !shareTimeTableId,
+    variables: {
+      id: shareTimeTableId,
+    },
+    onCompleted: async (data: { timetable: ShareTimeTable }) => {
+      if (planner.validKey(data?.timetable?.createdDate)) {
+        notification.setSnackBar({
+          message: 'Shared planner already loaded!',
+          severity: 'warning',
+        });
+        return;
+      }
+      const importedPlanner: Planner = {
+        key: data.timetable.createdDate,
+        label: data.timetable.tableName,
+        courses:
+          data.timetable.entries.map((course) => ({
+            ...course,
+            sections: Object.fromEntries(
+              course.sections.map((section) => [section.name, section])
+            ),
+          })) || [],
+      };
+      await planner.addPlanner(importedPlanner);
+      planner.updateCurrentPlanner(importedPlanner.key);
+    },
+    onError: notification.handleError,
+  });
   const [shareTimeTable, { loading: shareTimeTableLoading }] = useMutation(
     SHARE_TIMETABLE,
     {
+      onCompleted: handleCompleted(
+        (data) => {
+          const sharedTimeTable = data?.shareTimetable;
+          if (sharedTimeTable && sharedTimeTable?.id) {
+            const shareURL = generateShareURL(sharedTimeTable);
+            dispatchShareConfig({
+              shareLink: shareURL,
+            });
+            copy(shareURL);
+          } else {
+            notification.setSnackBar({
+              message: 'Cannot generate timetable QAQ...',
+              severity: 'error',
+            });
+          }
+        },
+        {
+          notification,
+          message: 'Copied share link to your clipboard!',
+        }
+      ),
       onError: notification.handleError,
     }
   );
@@ -94,35 +201,29 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
     console.table(shareCourses);
     if (shareCourses?.length) {
       const data = {
-        entries: shareCourses.map((course) => ({
-          ...course,
-          sections: Object.values(course?.sections || {}).filter(
-            (section) => section && !section.hide
-          ),
-        })),
-        anonymous: shareConfig.anonymous === 'Yes',
+        entries: shareCourses
+          .filter(
+            (course) =>
+              course &&
+              course.sections &&
+              Object.values(course.sections)?.length
+          )
+          .map((course) => ({
+            ...course,
+            sections: Object.values(course?.sections || {})
+              .filter((section) => section && !section.hide)
+              .map((section) => {
+                const { hide, ...shareSection } = section;
+                return shareSection;
+              }),
+          })),
         expire: parseInt(shareConfig.expire[0], 10) * 60 * 24,
+        tableName: planner.currentPlanner.label,
       };
       console.log(JSON.stringify(data));
-      const res = await shareTimeTable({
+      await shareTimeTable({
         variables: data,
       });
-      const sharedTimeTable = res?.data?.shareTimetable;
-      if (sharedTimeTable && sharedTimeTable?.id) {
-        const shareURL = generateShareURL(sharedTimeTable);
-        dispatchShareConfig({
-          shareLink: shareURL,
-        });
-        console.log(shareURL);
-        copy(shareURL);
-        notification.setSnackBar('Copied share link to your clipboard!');
-      } else {
-        notification.setSnackBar({
-          message: 'Cannot generate timetable QAQ...',
-          severity: 'error',
-        });
-      }
-      console.log(res);
     }
   };
   useEffect(() => {
@@ -131,10 +232,11 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
       expire: '7 days',
       shareLink: '',
     });
-  }, [planner.currentPlanner]);
+  }, [planner.currentPlannerKey]);
 
   return (
     <>
+      {getShareTimeTableLoading && <Loading fixed />}
       <TimeTablePanel
         className={className}
         courses={planner.plannerCourses.concat(planner.previewPlannerCourse)}
@@ -146,10 +248,9 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
         selections={planner.plannerList}
         onSelect={(key) => planner.updateCurrentPlanner(key)}
         selected={{
-          key: planner.currentPlanner,
+          key: planner.currentPlannerKey,
           label:
-            planner.planners[planner.currentPlanner]?.label ||
-            PLANNER_CONFIGS.DEFAULT_TABLE_NAME,
+            planner.currentPlanner?.label || PLANNER_CONFIGS.DEFAULT_TABLE_NAME,
         }}
         setLabel={(label: string) => planner.setPlannerLabel(label)}
         deleteTable={(key: number) => planner.deletePlanner(key)}
@@ -161,49 +262,17 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
       >
         <div className="content-container grid-auto-row">
           <div className="sub-title">Share Planner</div>
-          {SECTIONS.map((section) => (
-            <Section title={section.label} key={section.key}>
-              <ChipsRow
-                items={section.chips}
-                select={shareConfig[section.key]}
-                setSelect={(item) =>
-                  dispatchShareConfig({ [section.key]: item })
-                }
-              />
-            </Section>
-          ))}
-          {shareConfig.shareLink ? (
-            <Section title="Share Link">
-              <div className="share-btn-row center-row share-link-row">
-                <TextField
-                  value={shareConfig.shareLink}
-                  onChangeText={() => {}}
-                  disabled
-                />
-                <Button
-                  className="copy"
-                  onClick={() => [
-                    copy(shareConfig.shareLink),
-                    notification.setSnackBar(
-                      'Copied share link to your clipboard!'
-                    ),
-                  ]}
-                >
-                  Copy
-                </Button>
-              </div>
-            </Section>
-          ) : (
-            <div className="share-btn-row center-row">
-              <Button className="share loading-btn" onClick={onShareTimetTable}>
-                {shareTimeTableLoading ? (
-                  <Loading padding={false} size={24} />
-                ) : (
-                  'Share'
-                )}
-              </Button>
-            </div>
-          )}
+          <div className="dialog-caption caption">{`${
+            planner.currentPlanner?.label || PLANNER_CONFIGS.DEFAULT_TABLE_NAME
+          } (${planner.currentPlanner.courses?.length} courses)`}</div>
+
+          <TimeTableShareDialogContent
+            shareConfig={shareConfig}
+            dispatchShareConfig={dispatchShareConfig}
+            notification={notification}
+            onShareTimetTable={onShareTimetTable}
+            shareTimeTableLoading={shareTimeTableLoading}
+          />
         </div>
       </Dialog>
     </>
