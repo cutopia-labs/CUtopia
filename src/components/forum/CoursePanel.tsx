@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { Edit, Share, ExpandMore, MoreHoriz } from '@material-ui/icons';
 import { useQuery } from '@apollo/client';
@@ -12,6 +12,8 @@ import { FaUserAlt } from 'react-icons/fa';
 import './CoursePanel.scss';
 import copy from 'copy-to-clipboard';
 import { FiEdit } from 'react-icons/fi';
+import clsx from 'clsx';
+
 import { validCourse } from '../../helpers/marcos';
 import {
   COURSE_INFO_QUERY,
@@ -38,25 +40,31 @@ export enum COURSE_PANEL_MODES {
 
 const SORTING_FIELDS = Object.freeze(['date', 'upvotes']);
 
-const CourseSummary = ({
+const ReviewFilterBar = ({
+  forwardedRef,
   courseInfo,
   sorting,
   setSorting,
   fetchAllAction,
   writeAction,
   exceedLimit,
-}) => {
+  className,
+}: any) => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const isMobile = useMobileQuery();
   const handleClose = (field) => {
     console.log(`Setted to ${field}`);
     setSorting(field);
     setAnchorEl(null);
   };
   return (
-    <div className="panel card reviews-filter row">
+    <div
+      ref={forwardedRef}
+      className={clsx('panel card reviews-filter row', className)}
+    >
       {courseInfo.rating ? (
         <>
-          <div className="center-row grid-auto-column">
+          <div className="filter-row center-row grid-auto-column">
             <Button
               className="capsule-btn reviews-sort selected"
               size="small"
@@ -64,7 +72,7 @@ const CourseSummary = ({
               startIcon={<TiArrowSortedUp />}
               endIcon={<ExpandMore />}
             >
-              {sorting}
+              {!isMobile && sorting}
             </Button>
             <Button
               className="capsule-btn reviews-sort"
@@ -73,7 +81,7 @@ const CourseSummary = ({
               startIcon={<FaUserAlt size={12} />}
               endIcon={<ExpandMore />}
             >
-              All
+              {!isMobile && 'All'}
             </Button>
             <Button
               className="capsule-btn reviews-sort"
@@ -82,7 +90,7 @@ const CourseSummary = ({
               startIcon={<AiTwotoneCalendar />}
               endIcon={<ExpandMore />}
             >
-              All
+              {!isMobile && 'All'}
             </Button>
             <div className="reviews-filter-label caption">
               {exceedLimit &&
@@ -137,12 +145,13 @@ const CoursePanel = () => {
   const [sorting, setSorting] = useState('date');
   const history = useHistory();
   const [FABOpen, setFABOpen] = useState(false);
-  const [FABHidden, setFABHidden] = useState(false);
   const [lastEvaluatedKey, setLastEvaluatedKey] = useState(undefined);
   const [reviews, setReviews] = useState([]);
   const notification = useContext(NotificationContext);
   const user = useContext(UserContext);
   const isMobile = useMobileQuery();
+  const [FABHidden, setFABHidden] = useState(!isMobile);
+  const reviewFilterBarRef = useRef<HTMLDivElement | null>(null);
 
   const FAB_GROUP_ACTIONS = Object.freeze([
     {
@@ -227,6 +236,19 @@ const CoursePanel = () => {
       document.documentElement.scrollTop -
       window.innerHeight;
     console.log(distanceFromBottom);
+    // Set Function Bar for Desktop
+    if (!isMobile) {
+      const reviewFilterBarTop =
+        reviewFilterBarRef?.current?.getBoundingClientRect()?.top;
+
+      console.log(
+        `Scroll height ${document.documentElement.scrollHeight} ${document.documentElement.scrollTop} ${reviewFilterBarTop}`
+      );
+
+      const desktopFABHidden = !(reviewFilterBarTop < 0);
+      setFABHidden(desktopFABHidden);
+    }
+    // Load and setFAB
     if (distanceFromBottom <= LAZY_LOAD_BUFFER) {
       // Fetch more here;
       if (lastEvaluatedKey && courseId && !reviewId) {
@@ -247,12 +269,12 @@ const CoursePanel = () => {
             upvotes: lastEvaluatedKey.upvotes,
           },
         });
-        setFABHidden(false);
+        isMobile && setFABHidden(false);
       } else {
         setFABHidden(true);
       }
     } else {
-      setFABHidden(false);
+      isMobile && setFABHidden(false);
     }
   }, 300);
 
@@ -260,6 +282,11 @@ const CoursePanel = () => {
     window.addEventListener('scroll', listenToScroll);
     return () => window.removeEventListener('scroll', listenToScroll);
   }, [listenToScroll]);
+
+  useEffect(() => {
+    console.log('Ref!');
+    console.log(reviewFilterBarRef);
+  }, [reviewFilterBarRef]);
 
   useEffect(() => {
     console.log(`Current id: ${courseId}`);
@@ -282,6 +309,10 @@ const CoursePanel = () => {
     console.log(`Initiated with course ${courseId}`);
   }, []);
 
+  useEffect(() => {
+    console.log(`in: ${!isMobile && !FABHidden}`);
+  }, [isMobile, FABHidden]);
+
   return (
     <>
       {(reviewsLoading || courseInfoLoading) && <Loading fixed />}
@@ -298,7 +329,8 @@ const CoursePanel = () => {
         </div>
         {!courseInfoLoading && (
           <>
-            <CourseSummary
+            <ReviewFilterBar
+              forwardedRef={reviewFilterBarRef}
               courseInfo={courseInfo.subjects[0].courses[0]}
               sorting={sorting}
               setSorting={setSorting}
@@ -306,18 +338,11 @@ const CoursePanel = () => {
                 Boolean(reviewId) && (() => history.push(`/review/${courseId}`))
               }
               writeAction={() => history.push(`/review/${courseId}/compose`)}
-              exceedLimit={
-                false /*
-                !userDataLoading &&
-                ((userData?.user?.reviewIds || user.user.reviewIds)?.length ||
-                  0) < FULL_MEMBER_REVIEWS &&
-                user.exceedLimit
-              */
-              }
+              exceedLimit={false}
             />
             <SpeedDial
               ariaLabel="SpeedDial"
-              hidden={FABHidden}
+              hidden={!isMobile || FABHidden}
               icon={
                 <SpeedDialIcon
                   onClick={() => history.push(`/review/${courseId}/compose`)}
@@ -338,6 +363,20 @@ const CoursePanel = () => {
                 />
               ))}
             </SpeedDial>
+            {!isMobile && !FABHidden && (
+              <ReviewFilterBar
+                className="float"
+                courseInfo={courseInfo.subjects[0].courses[0]}
+                sorting={sorting}
+                setSorting={setSorting}
+                fetchAllAction={
+                  Boolean(reviewId) &&
+                  (() => history.push(`/review/${courseId}`))
+                }
+                writeAction={() => history.push(`/review/${courseId}/compose`)}
+                exceedLimit={false}
+              />
+            )}
           </>
         )}
         {(reviewsLoading || reviewLoading) && <Loading fixed />}

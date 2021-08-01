@@ -120,6 +120,8 @@ const TimeTableShareDialogContent = ({
   </>
 );
 
+const validShareId = (id: string) => id && /^[a-zA-Z0-9]{8}$/i.test(id);
+
 const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
   const { id: shareTimeTableId } = useParams<{
     id?: string;
@@ -131,7 +133,7 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
     null
   );
   const { loading: getShareTimeTableLoading } = useQuery(GET_SHARE_TIMETABLE, {
-    skip: !shareTimeTableId,
+    skip: !validShareId(shareTimeTableId),
     variables: {
       id: shareTimeTableId,
     },
@@ -228,11 +230,19 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
   };
   useEffect(() => {
     dispatchShareConfig({
-      anonymous: 'Yes',
       expire: '7 days',
       shareLink: '',
     });
   }, [planner.currentPlannerKey]);
+
+  useEffect(() => {
+    if (shareTimeTableId && !validShareId(shareTimeTableId)) {
+      notification.setSnackBar({
+        message: 'Invalid shared timetable!',
+        severity: 'warning',
+      });
+    }
+  }, [shareTimeTableId]);
 
   return (
     <>

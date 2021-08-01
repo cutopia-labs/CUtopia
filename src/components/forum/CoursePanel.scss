@@ -1,6 +1,12 @@
-.course-panel {
+.course-panel-container {
   height: fit-content;
+  position: relative;
 }
+
+.course-panel {
+  position: relative;
+}
+
 .reviews-filter {
   display: flex;
   margin-top: 20px;
@@ -14,6 +20,14 @@
   }
   flex-direction: row;
   .reviews-sort {
+  }
+  &.float {
+    position: fixed;
+    z-index: 20;
+    bottom: 0;
+    right: 0;
+    width: inherit;
+    box-shadow: 0 4px 10px rgba(46, 43, 43, 0.1);
   }
 }
 .reviews-filter-ratings {
@@ -60,5 +74,12 @@
   }
   .course-panel-fab {
     right: 20px;
+  }
+  .filter-row {
+    button {
+      .MuiButton-endIcon {
+        margin-left: 0;
+      }
+    }
   }
 }
