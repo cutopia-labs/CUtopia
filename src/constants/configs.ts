@@ -4,7 +4,7 @@ export const SNACKBAR_TIMEOUT = 3000;
 export const COURSE_CARD_MAX_HEIGHT = 580;
 export const TARGET_REVIEW_WORD_COUNT = 80;
 export const HISTORY_MAX_LENGTH = 3;
-export const MAX_SEARCH_RESULT_LENGTH = 20;
+export const MAX_SEARCH_RESULT_LENGTH = 40;
 export const SENTRY_SAMPLING_RATE = 0.4;
 
 export const TIMETABLE_CONSTANTS = Object.freeze({

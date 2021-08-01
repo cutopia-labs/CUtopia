@@ -6,6 +6,7 @@ export type SearchPayload = {
   mode: SearchMode | null;
   text?: string;
   showAvalibility?: boolean;
+  offerredOnly?: boolean;
 };
 
 export interface MenuItem {

@@ -72,23 +72,20 @@ export const SearchResult = ({
   onMouseDown,
   limit,
 }: SearchResultProps) => {
-  if (
-    (searchPayload.mode == 'Pins' && user.favoriteCourses.length == 0) ||
-    (searchPayload.mode == 'My Courses' && user.timetable?.length == 0) ||
-    (searchPayload.mode == 'My Courses' && user.timetable == null)
-  ) {
+  const results = getCoursesFromQuery({
+    payload: searchPayload,
+    user,
+    limit: limit || MAX_SEARCH_RESULT_LENGTH,
+    offerredOnly: searchPayload.offerredOnly,
+  });
+
+  if (!results?.length) {
     return <ErrorCard mode={ErrorCardMode.NULL} />;
   }
 
   return (
     <>
-      {(
-        getCoursesFromQuery({
-          payload: searchPayload,
-          user,
-          limit: limit || MAX_SEARCH_RESULT_LENGTH,
-        }) || []
-      )
+      {results
         .sort((a, b) => (a.o ? -1 : 1))
         .map((course, i) =>
           searchPayload.showAvalibility && !course.o ? (
@@ -203,7 +200,8 @@ const SearchPanel = () => {
       payload
         ? {
             ...payload,
-            showAvalibility: Boolean(isPlanner),
+            showAvalibility: Boolean(isPlanner && payload.mode === 'query'),
+            offerredOnly: Boolean(isPlanner),
           }
         : null
     );

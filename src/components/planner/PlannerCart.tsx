@@ -3,8 +3,14 @@ import { useContext, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 
 import './PlannerCart.scss';
-import { Checkbox, IconButton, Menu, MenuItem } from '@material-ui/core';
-import { Delete, MoreVert } from '@material-ui/icons';
+import {
+  Checkbox,
+  IconButton,
+  Menu,
+  MenuItem,
+  Tooltip,
+} from '@material-ui/core';
+import { Delete, MoreVert, Warning } from '@material-ui/icons';
 import { PlannerContext } from '../../store';
 
 import Card from '../atoms/Card';
@@ -49,24 +55,37 @@ const PlannerCart = () => {
         </IconButton>
       </header>
       {planner.plannerCourses.map((course, index) =>
-        Object.entries(course.sections).map(([k, section], sectionIndex) => (
-          <ListItem
-            key={`cart-${`${course.title} ${section.name}`}`}
-            title={`${course.courseId} ${section.name}`}
-            caption={getSectionTime(section)}
-            onClick={() => toggleHide(section, index, k)}
-            left={
-              <Checkbox
-                className="planner-cart-checkbox"
-                checked={!section.hide}
-                size="small"
-                disableTouchRipple
-                disableFocusRipple
-                disableRipple
-              />
-            }
-          />
-        ))
+        Object.entries(course.sections).map(([k, section], sectionIndex) => {
+          const sectionLabel = `${course.courseId} ${section.name}`;
+          const overlap = planner.overlapSections[sectionLabel];
+          return (
+            <ListItem
+              key={`cart-${sectionLabel}`}
+              title={sectionLabel}
+              caption={getSectionTime(section)}
+              onClick={() => toggleHide(section, index, k)}
+              left={
+                overlap ? (
+                  <Tooltip
+                    className="planner-cart-list-icon"
+                    title={`Overlap with ${overlap.name}`}
+                  >
+                    <Warning />
+                  </Tooltip>
+                ) : (
+                  <Checkbox
+                    className="planner-cart-checkbox"
+                    checked={!section.hide}
+                    size="small"
+                    disableTouchRipple
+                    disableFocusRipple
+                    disableRipple
+                  />
+                )
+              }
+            />
+          );
+        })
       )}
       <Menu
         className="timetable-more-menu"

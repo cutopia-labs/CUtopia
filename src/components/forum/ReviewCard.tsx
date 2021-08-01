@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from 'react';
 import { observer } from 'mobx-react-lite';
-import { FaRegCalendar } from 'react-icons/fa';
+import { AiTwotoneCalendar } from 'react-icons/ai';
 import { BiMessageRounded } from 'react-icons/bi';
 import { RiShareForwardLine } from 'react-icons/ri';
 import { useMutation } from '@apollo/client';
@@ -86,7 +86,7 @@ const ReviewCard = ({
           )}
         >
           <div className="center-row">
-            <FaRegCalendar />
+            <AiTwotoneCalendar />
             <span className="reviews-filter-label term">{review.term}</span>
             <span className="reviews-filter-label separator">/</span>
             <span className="reviews-filter-label lecturer">

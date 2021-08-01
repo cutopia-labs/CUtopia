@@ -6,10 +6,12 @@ const getCoursesFromQuery = ({
   payload,
   user,
   limit,
+  offerredOnly,
 }: {
   payload: SearchPayload;
   user?: UserStore;
   limit?: number;
+  offerredOnly?: boolean;
 }): CourseSearchItem[] => {
   // load local courselist
   const { mode, text } = payload;
@@ -43,7 +45,10 @@ const getCoursesFromQuery = ({
             i < COURSES[subject].length && results.length < limit;
             i++
           ) {
-            if (COURSES[subject][i].c.includes(code)) {
+            if (
+              COURSES[subject][i].c.includes(code) &&
+              (!offerredOnly || COURSES[subject][i].o)
+            ) {
               if (code.length === 4) {
                 return [COURSES[subject][i]].slice(0, limit);
               }
@@ -53,14 +58,18 @@ const getCoursesFromQuery = ({
           return results;
         }
         if (subject) {
-          return COURSES[subject].slice(0, limit);
+          return COURSES[subject];
         }
       } catch (error) {
         // search for titles
         const results = [];
+        const queryString = text.toLowerCase().trim();
         for (const [, courses] of Object.entries(COURSES)) {
           for (let i = 0; i < courses.length && results.length < limit; i++) {
-            if (courses[i].t.toLowerCase().includes(text.toLowerCase())) {
+            if (
+              courses[i].t.toLowerCase().includes(queryString) &&
+              (!offerredOnly || courses[i].o)
+            ) {
               results.push(courses[i]);
             }
           }

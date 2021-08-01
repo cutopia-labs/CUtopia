@@ -1,10 +1,17 @@
 import { makeObservable, observable, action, toJS } from 'mobx';
 
-import { PlannerCourse, Planner, PlannerItem, CourseSection } from '../types';
+import {
+  PlannerCourse,
+  Planner,
+  PlannerItem,
+  CourseSection,
+  OverlapSections,
+} from '../types';
 import { storeData, getStoreData, removeStoreItem } from '../helpers/store';
 
 import { PLANNER_CONFIGS } from '../constants/configs';
 import withUndo from '../helpers/withUndo';
+import timeInRange from '../helpers/timeInRange';
 import NotificationStore from './NotificationStore';
 import StorePrototype from './StorePrototype';
 
@@ -53,6 +60,48 @@ class PlannerStore extends StorePrototype {
 
   get currentPlanner() {
     return this.planners[this.currentPlannerKey];
+  }
+
+  get overlapSections() {
+    const sections = [];
+    this.plannerCourses.forEach((course, i) =>
+      Object.values(course.sections).forEach((section) => {
+        if (section && !section.hide) {
+          sections.push({
+            ...section,
+            courseId: course.courseId,
+            courseIndex: i,
+          });
+        }
+      })
+    );
+    const overlapSections: OverlapSections = {};
+    sections.forEach((sectionX, i) => {
+      sections.forEach((sectionY, j) => {
+        if (i === j || !sectionX || !sectionY) {
+          return;
+        }
+        const sectionXKey = `${sectionX.courseId} ${sectionX.name}`;
+        const sectionYKey = `${sectionY.courseId} ${sectionY.name}`;
+        if (sectionXKey in overlapSections || sectionYKey in overlapSections) {
+          return;
+        }
+        const overlapTime = timeInRange(sectionX, sectionY); // overlapped sectionY time
+        if (overlapTime) {
+          overlapSections[sectionXKey] = {
+            name: sectionYKey,
+            courseIndex: sectionY.courseIndex,
+            sectionKey: sectionY.key,
+          };
+          overlapSections[sectionYKey] = {
+            name: sectionXKey,
+            courseIndex: sectionX.courseIndex,
+            sectionKey: sectionX.key,
+          };
+        }
+      });
+    });
+    return overlapSections;
   }
 
   // reset

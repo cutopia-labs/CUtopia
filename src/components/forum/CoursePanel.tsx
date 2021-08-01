@@ -49,9 +49,9 @@ const ReviewFilterBar = ({
   writeAction,
   exceedLimit,
   className,
+  isMobile,
 }: any) => {
   const [anchorEl, setAnchorEl] = useState(null);
-  const isMobile = useMobileQuery();
   const handleClose = (field) => {
     console.log(`Setted to ${field}`);
     setSorting(field);
@@ -104,6 +104,7 @@ const ReviewFilterBar = ({
             keepMounted
             open={Boolean(anchorEl)}
             onClose={() => setAnchorEl(null)}
+            disableScrollLock={true}
           >
             {SORTING_FIELDS.map((field) => (
               <MenuItem
@@ -339,6 +340,7 @@ const CoursePanel = () => {
               }
               writeAction={() => history.push(`/review/${courseId}/compose`)}
               exceedLimit={false}
+              isMobile={isMobile}
             />
             <SpeedDial
               ariaLabel="SpeedDial"
@@ -366,6 +368,7 @@ const CoursePanel = () => {
             {!isMobile && !FABHidden && (
               <ReviewFilterBar
                 className="float"
+                isMobile={true}
                 courseInfo={courseInfo.subjects[0].courses[0]}
                 sorting={sorting}
                 setSorting={setSorting}

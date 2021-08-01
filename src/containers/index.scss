@@ -29,6 +29,8 @@ body {
   --highlight-on-surface: #dedede60;
   --scrollbar: rgb(204, 204, 204);
   --max-width: 1260px;
+  --warn: #ff9800;
+  --error: #dc004e;
   --card-padding: 16px;
   --page-margin: 20px;
   --page-magrgin-top: 0;
@@ -296,6 +298,8 @@ textarea[type="number"] {
   body {
     --primary: #ff8a65;
     --accent: #ff8a65;
+    --warn: #f57c00;
+    --error: #9a0036;
     --surface: rgba(31, 31, 31, 1);
     --background: rgba(5, 5, 5, 1);
     --text: rgba(255, 255, 255, 1);

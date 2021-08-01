@@ -16,3 +16,13 @@ export type ShareTimeTable = {
   createdDate: number;
   expireDate: number;
 };
+
+export type OverlapSection = {
+  name: string;
+  courseIndex: number;
+  sectionKey: string;
+};
+
+export type OverlapSections = {
+  [key: string]: OverlapSection;
+};
