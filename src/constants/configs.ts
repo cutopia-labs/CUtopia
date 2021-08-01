@@ -6,6 +6,10 @@ export const TARGET_REVIEW_WORD_COUNT = 80;
 export const HISTORY_MAX_LENGTH = 3;
 export const MAX_SEARCH_RESULT_LENGTH = 40;
 export const SENTRY_SAMPLING_RATE = 0.4;
+export const FULL_MEMBER_LEVEL = 3;
+export const LEVEL_UP_EXP = 5;
+export const FULL_MEMBER_EXP = (FULL_MEMBER_LEVEL - 1) * LEVEL_UP_EXP;
+export const REVIEW_EXP = 3;
 
 export const TIMETABLE_CONSTANTS = Object.freeze({
   START_HOUR: 8,

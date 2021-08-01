@@ -71,41 +71,50 @@ const CourseCard = ({ courseInfo, concise }: CourseCardProps) => {
         }
       }}
     >
-      <div className="course-card-title-container">
+      <header className="course-card-header">
         <div className="center-row">
-          <p className="title">{courseInfo.courseId}</p>
-          <IconButton
-            className={isFavorited && 'active'}
-            onClick={() => setFavorited()}
-            aria-label="favourite"
-            size="medium"
-          >
-            {isFavorited ? <Favorite /> : <FavoriteBorder />}
-          </IconButton>
-          <Tooltip title="Report inaccurate information" placement="top" arrow>
-            <IconButton
-              onClick={() => {
-                console.log('Report wrong course info');
-              }}
-              aria-label="report"
-              size="medium"
-            >
-              <ErrorOutline />
-            </IconButton>
-          </Tooltip>
+          <div className="course-card-title-container column">
+            <span className="center-row">
+              <span className="title">{courseInfo.courseId}</span>
+              <IconButton
+                className={isFavorited && 'active'}
+                onClick={() => setFavorited()}
+                aria-label="favourite"
+                size="small"
+              >
+                {isFavorited ? <Favorite /> : <FavoriteBorder />}
+              </IconButton>
+              <Tooltip
+                title="Report inaccurate information"
+                placement="top"
+                arrow
+              >
+                <IconButton
+                  onClick={() => {
+                    console.log('Report wrong course info');
+                  }}
+                  aria-label="report"
+                  size="small"
+                >
+                  <ErrorOutline />
+                </IconButton>
+              </Tooltip>
+              {concise && (
+                <Badge
+                  className="right"
+                  index={0}
+                  text={`${parseInt(courseInfo.units, 10)} credits`}
+                  value={null}
+                />
+              )}
+            </span>
+            <span className="course-title caption">{courseInfo.title}</span>
+          </div>
         </div>
-        {concise && (
-          <Badge
-            index={0}
-            text={`${parseInt(courseInfo.units, 10)} credits`}
-            value={null}
-          />
-        )}
         {courseInfo.rating && !concise && !isMobile && (
           <GradeRow rating={courseInfo.rating} />
         )}
-      </div>
-      <p className="caption">{courseInfo.title}</p>
+      </header>
       {concise ? (
         <>
           {courseInfo.requirements && (

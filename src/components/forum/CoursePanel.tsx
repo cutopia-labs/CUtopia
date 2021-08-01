@@ -121,7 +121,7 @@ const ReviewFilterBar = ({
         <span>No review yet</span>
       )}
       <span className="right grid-auto-column">
-        <IconButton className="edit" size="small">
+        <IconButton className="edit" size="small" onClick={writeAction}>
           <FiEdit />
         </IconButton>
         <IconButton className="more" size="small">

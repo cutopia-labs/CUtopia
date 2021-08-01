@@ -2,10 +2,12 @@ import { CourseTableEntry } from './events';
 
 type User = {
   username: string;
-  email: string;
   verified: boolean;
   reviewIds: string[];
   upvotesCount: number;
+  exp: number;
+  level: number;
+  email?: string;
   timetable?: CourseTableEntry[];
 };
 

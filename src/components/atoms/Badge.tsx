@@ -1,4 +1,5 @@
 import './Badge.scss';
+import clsx from 'clsx';
 import updateOpacity from '../../helpers/updateOpacity';
 import colors from '../../constants/colors';
 
@@ -10,7 +11,14 @@ type BadgeProps = {
   color?: string;
 };
 
-const Badge = ({ index, text, value, isGrade, color }: BadgeProps) => {
+const Badge = ({
+  index,
+  text,
+  value,
+  isGrade,
+  color,
+  className,
+}: BadgeProps & React.HTMLAttributes<HTMLSpanElement>) => {
   const badgeColor = isGrade
     ? colors.gradeColors[value]
     : colors.randomColors[
@@ -19,15 +27,15 @@ const Badge = ({ index, text, value, isGrade, color }: BadgeProps) => {
           : index
       ];
   return (
-    <div
-      className="badge"
+    <span
+      className={clsx('badge', className)}
       style={{
         backgroundColor: color || updateOpacity(badgeColor, isGrade ? 1 : 0.7),
       }}
     >
-      <p className="badge-text">{text}</p>
+      <span className="badge-text">{text}</span>
       {Boolean(value) && <p className="badge-text-value">{`${value}`}</p>}
-    </div>
+    </span>
   );
 };
 

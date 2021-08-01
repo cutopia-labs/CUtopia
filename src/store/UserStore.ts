@@ -4,6 +4,7 @@ import { CourseConcise, CourseTableEntry, LoginState, User } from '../types';
 import { storeData, getStoreData, removeStoreItem } from '../helpers/store';
 
 import { TOKEN_EXPIRE_DAYS, VIEWS_LIMIT } from '../constants/states';
+import { FULL_MEMBER_LEVEL } from '../constants/configs';
 import NotificationStore from './NotificationStore';
 import StorePrototype from './StorePrototype';
 
@@ -59,6 +60,10 @@ class UserStore extends StorePrototype {
 
   get exceedLimit() {
     return this.viewCount > VIEWS_LIMIT;
+  }
+
+  get isFullMember() {
+    return this.data?.level >= FULL_MEMBER_LEVEL;
   }
 
   @action increaseViewCount = async () => {

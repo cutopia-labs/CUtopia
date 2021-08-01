@@ -29,6 +29,13 @@
     width: inherit;
     box-shadow: 0 4px 10px rgba(46, 43, 43, 0.1);
   }
+  button {
+    &.edit {
+      font-size: 18px;
+      width: 32px;
+      height: 32px;
+    }
+  }
 }
 .reviews-filter-ratings {
   align-items: center;

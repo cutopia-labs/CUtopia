@@ -4,6 +4,9 @@
   align-items: flex-start;
   position: relative;
   overflow: hidden;
+  .course-title {
+    margin-top: -2px;
+  }
   &.retracted {
     max-height: 580px;
   }
@@ -16,9 +19,9 @@
   &.concise {
     padding: var(--card-padding);
     overflow: initial;
-    & > .course-card-title-container {
+    & > .course-card-header {
       align-items: center;
-      & > .badge {
+      & .badge {
         margin-right: 0;
         margin-bottom: 0;
       }
@@ -54,12 +57,11 @@
 .sub-heading {
   text-align: left;
 }
-.course-card-title-container {
+.course-card-header {
   display: flex;
   flex: 1;
   width: 100%;
   justify-content: space-between;
-  margin-top: -10px;
   margin-bottom: 4px;
   &.left {
     display: flex;

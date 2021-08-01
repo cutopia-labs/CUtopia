@@ -11,7 +11,7 @@ import {
   Divider,
   Tooltip,
 } from '@material-ui/core';
-import { GoVerified } from 'react-icons/go';
+import { GoUnverified, GoVerified } from 'react-icons/go';
 
 import './UserCard.scss';
 import ListItem from '../molecules/ListItem';
@@ -22,6 +22,11 @@ import {
 } from '../../store';
 import { User } from '../../types';
 import { clearStore } from '../../helpers/store';
+import {
+  FULL_MEMBER_EXP,
+  LEVEL_UP_EXP,
+  REVIEW_EXP,
+} from '../../constants/configs';
 
 type UserCardProps = {
   userData: User;
@@ -44,24 +49,28 @@ const UserCard = ({ userData }: UserCardProps) => {
             {user?.username}
             <Tooltip
               title={
-                userData?.reviewIds?.length >= 3
+                user.isFullMember
                   ? 'Full Member'
-                  : 'Post 3 reviews to be a full member!'
+                  : `${Math.ceil(
+                      (FULL_MEMBER_EXP - user.data?.exp) / REVIEW_EXP
+                    )} reviews to go to be a full member`
               }
               placement="top"
               arrow
             >
               <span className="center-row">
-                <GoVerified />
+                {user.isFullMember ? <GoVerified /> : <GoUnverified />}
               </span>
             </Tooltip>
           </div>
           <Tooltip
-            title="3 reviews to go to upgrade to Lv. 2"
+            title={`${
+              LEVEL_UP_EXP - (user.data?.exp % LEVEL_UP_EXP)
+            } more exp to level up to Lv. ${user.data?.level + 1}`}
             placement="bottom-start"
             arrow
           >
-            <div className="caption">Contributor Lv. 1</div>
+            <div className="caption">{`Contributor Lv. ${user.data?.level}`}</div>
           </Tooltip>
         </div>
         <IconButton size="small" onClick={() => SetOpenSetting(true)}>
