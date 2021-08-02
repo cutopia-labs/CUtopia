@@ -9,6 +9,7 @@ import Header from '../components/organisms/Header';
 import { LoginState, User } from '../types';
 import { GET_USER } from '../constants/queries';
 import Loading from '../components/atoms/Loading';
+import Dialog from '../components/templates/Dialog';
 import HomePage from './HomePage';
 import LandingPage from './LandingPage';
 import PlannerPage from './PlannerPage';
@@ -85,6 +86,7 @@ const Navigator = () => {
         </Switch>
       </div>
       <SnackBar />
+      <Dialog />
     </Router>
   );
 };

@@ -2,22 +2,12 @@ import { useContext, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import Avatar from '@material-ui/core/Avatar';
 import { SettingsOutlined } from '@material-ui/icons';
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  Switch,
-  Divider,
-  Tooltip,
-} from '@material-ui/core';
+import { IconButton, Tooltip } from '@material-ui/core';
 import { GoUnverified, GoVerified } from 'react-icons/go';
 
 import './UserCard.scss';
-import ListItem from '../molecules/ListItem';
 import { ViewContext, PreferenceContext, UserContext } from '../../store';
 import { User } from '../../types';
-import { clearStore } from '../../helpers/store';
 import {
   FULL_MEMBER_EXP,
   LEVEL_UP_EXP,
@@ -69,7 +59,14 @@ const UserCard = ({ userData }: UserCardProps) => {
             <div className="caption">{`Contributor Lv. ${user.data?.level}`}</div>
           </Tooltip>
         </div>
-        <IconButton size="small" onClick={() => SetOpenSetting(true)}>
+        <IconButton
+          size="small"
+          onClick={() =>
+            view.setDialog({
+              key: 'userSettings',
+            })
+          }
+        >
           <SettingsOutlined />
         </IconButton>
       </div>
@@ -83,44 +80,6 @@ const UserCard = ({ userData }: UserCardProps) => {
           <div className="light-caption">Upvotes</div>
         </div>
       </div>
-      <Dialog
-        className="settings-modal-container"
-        open={openSettings}
-        onClose={() => SetOpenSetting(false)}
-      >
-        <DialogTitle id="form-dialog-title">Settings</DialogTitle>
-        <DialogContent className="settings-modal">
-          <div className="toggle-row center-row">
-            Dark Mode
-            <Switch
-              checked={preference.darkTheme}
-              onChange={() => preference.setDarkTheme(!preference.darkTheme)}
-              name="checkedA"
-              inputProps={{ 'aria-label': 'secondary checkbox' }}
-            />
-          </div>
-        </DialogContent>
-        <ListItem
-          noBorder
-          className="log-out-row"
-          onClick={() => {
-            user.logout();
-            clearStore();
-          }}
-          title="Reset"
-        />
-        <Divider />
-        <ListItem
-          noBorder
-          className="log-out-row"
-          onClick={() => {
-            user.logout();
-            view.setSnackBar('Successfully logged out!');
-            SetOpenSetting(false);
-          }}
-          title="Log Out"
-        />
-      </Dialog>
     </div>
   );
 };

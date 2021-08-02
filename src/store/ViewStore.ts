@@ -1,10 +1,12 @@
 import { makeObservable, observable, action } from 'mobx';
 import { SNACKBAR_TIMEOUT } from '../constants/configs';
 import handleError from '../helpers/handleError';
-import { SnackBar, SnackBarProps } from '../types';
+import { Dialog, SnackBar, SnackBarProps } from '../types';
+import StorePrototype from './StorePrototype';
 
-class ViewStore {
+class ViewStore extends StorePrototype {
   @observable snackbar: SnackBar;
+  @observable dialog: Dialog | null;
 
   @action.bound init() {
     this.snackbar = {
@@ -13,9 +15,11 @@ class ViewStore {
       onClick: null,
       snackbarId: undefined,
     };
+    this.dialog = null;
   }
 
   constructor() {
+    super();
     makeObservable(this);
     this.init();
   }
@@ -31,6 +35,9 @@ class ViewStore {
       this.updateSnackBar({ message: '', snackbarId: undefined });
     }
   }
+
+  @action setDialog = (dialog: Dialog | null) =>
+    this.updateStore('dialog', dialog);
 
   @action.bound needsClear(snackbarId: number) {
     return this.snackbar.snackbarId === snackbarId;

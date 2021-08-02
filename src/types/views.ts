@@ -1,3 +1,4 @@
+import { DialogProps } from '@material-ui/core';
 import { AlertProps } from '@material-ui/lab';
 
 export type SearchMode = 'subject' | 'query' | 'Pins' | 'My Courses';
@@ -27,3 +28,9 @@ export interface SnackBarProps extends AlertProps {
 export interface SnackBar extends SnackBarProps {
   snackbarId: number | undefined;
 }
+
+export type Dialog = {
+  key: string;
+  props?: Partial<DialogProps>;
+  contentProps?: Record<string, any>;
+};

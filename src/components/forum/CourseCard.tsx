@@ -1,7 +1,7 @@
 import { useState, useContext } from 'react';
 import { observer } from 'mobx-react-lite';
-import { IconButton } from '@material-ui/core';
-import { Favorite, FavoriteBorder } from '@material-ui/icons';
+import { IconButton, Tooltip } from '@material-ui/core';
+import { ErrorOutline, Favorite, FavoriteBorder } from '@material-ui/icons';
 
 import './CourseCard.scss';
 import { useHistory, Link as RouterLink } from 'react-router-dom';
@@ -84,6 +84,21 @@ const CourseCard = ({ courseInfo, concise }: CourseCardProps) => {
               >
                 {isFavorited ? <Favorite /> : <FavoriteBorder />}
               </IconButton>
+              <Tooltip
+                title="Report inaccurate information"
+                placement="top"
+                arrow
+              >
+                <IconButton
+                  onClick={() => {
+                    console.log('Report wrong course info');
+                  }}
+                  aria-label="report"
+                  size="small"
+                >
+                  <ErrorOutline />
+                </IconButton>
+              </Tooltip>
               {concise && (
                 <Badge
                   className="right"
