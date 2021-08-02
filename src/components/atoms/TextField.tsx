@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import './TextField.scss';
 
 type Tag = 'input' | 'textarea';
@@ -26,6 +27,7 @@ const TextField = ({
   onBlur,
   onFocus,
   disabled,
+  className,
 }: React.HTMLAttributes<HTMLInputElement | HTMLTextAreaElement> &
   TextFieldProps) => {
   const TagName = Tag || 'input';
@@ -36,7 +38,7 @@ const TextField = ({
       )}
       <TagName
         ref={ref as any}
-        className="input-container"
+        className={clsx('input-container', className)}
         placeholder={placeholder}
         defaultValue={defaultValue}
         type={type}

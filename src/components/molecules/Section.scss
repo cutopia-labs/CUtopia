@@ -1,0 +1,10 @@
+.section-container {
+  display: flex;
+  flex-direction: column;
+  .label {
+    font-weight: 500;
+    color: var(--text);
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+}

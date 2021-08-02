@@ -1,18 +1,4 @@
 .planner-share-dialog {
-  .share-btn-row {
-    width: 100%;
-    justify-content: center;
-    .share, .copy {
-      background-color: var(--text);
-      color: var(--reversed-text);
-    }
-    .share {
-      padding: auto 12px;
-      width: 100%;
-      margin-top: 2px;
-      height: 40px;
-    }
-  }
   .share-link-row {
     height: 46px;
     .copy {
@@ -26,14 +12,26 @@
   }
 }
 
-.section-container {
-  display: flex;
-  flex-direction: column;
-  .label {
-    font-weight: 500;
-    color: var(--text);
-    font-size: 14px;
-    margin-bottom: 8px;
+.share-btn-row {
+  width: 100%;
+  justify-content: center;
+  .share, .copy {
+    background-color: var(--text);
+    color: var(--reversed-text);
+  }
+  .share {
+    padding: auto 12px;
+    width: 100%;
+    margin-top: 2px;
+    height: 40px;
+    &.Mui-disabled {
+      cursor: not-allowed;
+      background-color: var(--caption-light);
+      color: var(--reversed-text);
+    }
+    &:hover {
+      background-color: var(--text);
+    }
   }
 }
 

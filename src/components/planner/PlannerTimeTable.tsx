@@ -1,17 +1,10 @@
-import {
-  PropsWithChildren,
-  useContext,
-  useReducer,
-  useState,
-  useEffect,
-} from 'react';
+import { useContext, useReducer, useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 
 import './PlannerTimeTable.scss';
 import { useMutation, useQuery } from '@apollo/client';
 import { Button, Dialog } from '@material-ui/core';
 import copy from 'copy-to-clipboard';
-import clsx from 'clsx';
 import { useParams } from 'react-router-dom';
 import TimeTablePanel from '../templates/TimeTablePanel';
 import { ViewContext, PlannerContext } from '../../store';
@@ -30,6 +23,7 @@ import { GET_SHARE_TIMETABLE } from '../../constants/queries';
 import LoadingButton from '../atoms/LoadingButton';
 import Loading from '../atoms/Loading';
 import DialogContentTemplate from '../templates/DialogContentTemplate';
+import Section from '../molecules/Section';
 
 type PlannerTimeTableProps = {
   className?: string;
@@ -39,11 +33,6 @@ enum PlannerTimeTableMode {
   INITIAL,
   SHARE_MODAL,
 }
-
-type SectionProps = {
-  title: string;
-  className?: string;
-};
 
 const ANONYMOUS_LABELS = ['Yes', 'No'];
 
@@ -56,17 +45,6 @@ const SECTIONS = [
     key: 'expire',
   },
 ];
-
-const Section = ({
-  title,
-  children,
-  className,
-}: PropsWithChildren<SectionProps>) => (
-  <div className={clsx('section-container', className)}>
-    <div className="label">{title}</div>
-    {children}
-  </div>
-);
 
 const generateShareURL = (sharedTimeTable: ShareTimeTableResponse) =>
   `${window.location.protocol}//${window.location.host}/planner/${sharedTimeTable.id}`;

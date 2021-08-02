@@ -129,3 +129,9 @@ export const SHARE_TIMETABLE = gql`
     }
   }
 `;
+
+export const REPORT = gql`
+  mutation ($cat: ReportCategory!, $type: Int!, $description: String!) {
+    report(input: { cat: $cat, type: $type, description: $description })
+  }
+`;

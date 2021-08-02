@@ -9,9 +9,9 @@ import { FiExternalLink } from 'react-icons/fi';
 import clsx from 'clsx';
 import ShowMoreOverlay from '../molecules/ShowMoreOverlay';
 import Badge from '../atoms/Badge';
-import { UserContext } from '../../store';
+import { UserContext, ViewContext } from '../../store';
 import { COURSE_CARD_MAX_HEIGHT } from '../../constants/configs';
-import { CourseInfo } from '../../types';
+import { CourseInfo, ReportCategory } from '../../types';
 import Link from '../molecules/Link';
 import useMobileQuery from '../../helpers/useMobileQuery';
 import Points from './Points';
@@ -29,6 +29,7 @@ const CourseCard = ({ courseInfo, concise }: CourseCardProps) => {
   const user = useContext(UserContext);
   const isMobile = useMobileQuery();
   const history = useHistory();
+  const view = useContext(ViewContext);
 
   const isFavorited = user.favoriteCourses.some(
     (course) => course.courseId === courseInfo.courseId
@@ -91,7 +92,13 @@ const CourseCard = ({ courseInfo, concise }: CourseCardProps) => {
               >
                 <IconButton
                   onClick={() => {
-                    console.log('Report wrong course info');
+                    view.setDialog({
+                      key: 'reportIssues',
+                      contentProps: {
+                        reportCategory: ReportCategory.COURSE,
+                        id: courseInfo.courseId,
+                      },
+                    });
                   }}
                   aria-label="report"
                   size="small"

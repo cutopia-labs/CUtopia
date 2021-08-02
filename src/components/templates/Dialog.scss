@@ -1,0 +1,20 @@
+.issue-report-dialog {
+  .report-issue-category {
+    height: 42px;
+    text-transform: capitalize;
+    font-size: 14px;
+    &.caption {
+      color: var(--caption);
+    }
+  }
+}
+
+.category-menu {
+  .MuiListItem-root {
+    text-transform: capitalize;
+  }
+}
+.dialog-description.input-container {
+  height: 36px;
+  font-size: 14px;
+}
