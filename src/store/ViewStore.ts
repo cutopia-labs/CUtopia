@@ -3,7 +3,7 @@ import { SNACKBAR_TIMEOUT } from '../constants/configs';
 import handleError from '../helpers/handleError';
 import { SnackBar, SnackBarProps } from '../types';
 
-class NotificationStore {
+class ViewStore {
   @observable snackbar: SnackBar;
 
   @action.bound init() {
@@ -41,4 +41,4 @@ class NotificationStore {
   }
 }
 
-export default NotificationStore;
+export default ViewStore;

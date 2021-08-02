@@ -14,7 +14,7 @@ import copy from 'copy-to-clipboard';
 import clsx from 'clsx';
 import { useParams } from 'react-router-dom';
 import TimeTablePanel from '../templates/TimeTablePanel';
-import { NotificationContext, PlannerContext } from '../../store';
+import { ViewContext, PlannerContext } from '../../store';
 import { PLANNER_CONFIGS } from '../../constants/configs';
 import { SHARE_TIMETABLE } from '../../constants/mutations';
 import {
@@ -73,7 +73,7 @@ const generateShareURL = (sharedTimeTable: ShareTimeTableResponse) =>
 const TimeTableShareDialogContent = ({
   shareConfig,
   dispatchShareConfig,
-  notification,
+  view,
   onShareTimetTable,
   shareTimeTableLoading,
 }) => (
@@ -99,7 +99,7 @@ const TimeTableShareDialogContent = ({
             className="copy"
             onClick={() => [
               copy(shareConfig.shareLink),
-              notification.setSnackBar('Copied share link to your clipboard!'),
+              view.setSnackBar('Copied share link to your clipboard!'),
             ]}
           >
             Copy
@@ -127,7 +127,7 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
     id?: string;
   }>();
   const planner = useContext(PlannerContext);
-  const notification = useContext(NotificationContext);
+  const view = useContext(ViewContext);
   const [mode, setMode] = useState(PlannerTimeTableMode.INITIAL);
   const [shareCourses, setShareCourses] = useState<PlannerCourse[] | null>(
     null
@@ -139,7 +139,7 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
     },
     onCompleted: async (data: { timetable: ShareTimeTable }) => {
       if (planner.validKey(data?.timetable?.createdDate)) {
-        notification.setSnackBar({
+        view.setSnackBar({
           message: 'Shared planner already loaded!',
           severity: 'warning',
         });
@@ -159,7 +159,7 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
       await planner.addPlanner(importedPlanner);
       planner.updateCurrentPlanner(importedPlanner.key);
     },
-    onError: notification.handleError,
+    onError: view.handleError,
   });
   const [shareTimeTable, { loading: shareTimeTableLoading }] = useMutation(
     SHARE_TIMETABLE,
@@ -174,18 +174,18 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
             });
             copy(shareURL);
           } else {
-            notification.setSnackBar({
+            view.setSnackBar({
               message: 'Cannot generate timetable QAQ...',
               severity: 'error',
             });
           }
         },
         {
-          notification,
+          view,
           message: 'Copied share link to your clipboard!',
         }
       ),
-      onError: notification.handleError,
+      onError: view.handleError,
     }
   );
   const [shareConfig, dispatchShareConfig] = useReducer(
@@ -195,7 +195,7 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
   const onShareTimetTable = async (e) => {
     e.preventDefault();
     if (!shareCourses?.length) {
-      notification.setSnackBar({
+      view.setSnackBar({
         message: 'Empty TimeTable, please add some courses before Sharing!',
         severity: 'error',
       });
@@ -237,7 +237,7 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
 
   useEffect(() => {
     if (shareTimeTableId && !validShareId(shareTimeTableId)) {
-      notification.setSnackBar({
+      view.setSnackBar({
         message: 'Invalid shared timetable!',
         severity: 'warning',
       });
@@ -279,7 +279,7 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
           <TimeTableShareDialogContent
             shareConfig={shareConfig}
             dispatchShareConfig={dispatchShareConfig}
-            notification={notification}
+            view={view}
             onShareTimetTable={onShareTimetTable}
             shareTimeTableLoading={shareTimeTableLoading}
           />

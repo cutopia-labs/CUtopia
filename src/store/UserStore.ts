@@ -5,7 +5,7 @@ import { storeData, getStoreData, removeStoreItem } from '../helpers/store';
 
 import { TOKEN_EXPIRE_DAYS, VIEWS_LIMIT } from '../constants/states';
 import { FULL_MEMBER_LEVEL } from '../constants/configs';
-import NotificationStore from './NotificationStore';
+import ViewStore from './ViewStore';
 import StorePrototype from './StorePrototype';
 
 const LOAD_KEYS = ['username', 'favoriteCourses', 'timetable', 'viewCount'];
@@ -30,11 +30,11 @@ class UserStore extends StorePrototype {
   @observable username: string;
   @observable token: string;
 
-  notificationStore: NotificationStore;
+  viewStore: ViewStore;
 
-  constructor(notificationStore: NotificationStore) {
+  constructor(viewStore: ViewStore) {
     super();
-    this.notificationStore = notificationStore;
+    this.viewStore = viewStore;
     makeObservable(this);
   }
 
@@ -80,7 +80,7 @@ class UserStore extends StorePrototype {
     this.setStore('username', username);
     await this.saveToken(token);
     console.log(token);
-    this.notificationStore.setSnackBar(`Logged in as ${username}`);
+    this.viewStore.setSnackBar(`Logged in as ${username}`);
   }
 
   @action async applyToken() {

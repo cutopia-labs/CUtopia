@@ -10,7 +10,7 @@ import { nanoid } from 'nanoid';
 
 import './LoginPanel.scss';
 import TextField from '../atoms/TextField';
-import { UserContext, NotificationContext } from '../../store';
+import { UserContext, ViewContext } from '../../store';
 import {
   LOGIN_CUTOPIA,
   SEND_VERIFICATION,
@@ -78,7 +78,7 @@ const LoginPanel = () => {
   });
 
   const user = useContext(UserContext);
-  const notification = useContext(NotificationContext);
+  const view = useContext(ViewContext);
 
   const { sendMessage, lastMessage, readyState } = useWebSocket(
     'wss://1rys6xiqvk.execute-api.ap-northeast-1.amazonaws.com/Prod'
@@ -133,17 +133,17 @@ const LoginPanel = () => {
     useMutation(SEND_VERIFICATION, {
       onCompleted: handleCompleted(() => setMode(LoginPageMode.VERIFY), {
         message: 'Verification code send to your CUHK email',
-        notification,
+        view,
       }),
-      onError: notification.handleError,
+      onError: view.handleError,
     });
   const [verifyUser, { loading: verifying, error: verifyError }] = useMutation(
     VERIFY_USER,
     {
       onCompleted: handleCompleted(() => loginAndRedirect(), {
-        notification,
+        view,
       }),
-      onError: notification.handleError,
+      onError: view.handleError,
     }
   );
   const [loginCUtopia, { loading: loggingInCUtopia }] = useMutation(
@@ -152,7 +152,7 @@ const LoginPanel = () => {
       onCompleted: handleCompleted(
         async (data) => await user.saveUser(username, data.login?.token)
       ),
-      onError: notification.handleError,
+      onError: view.handleError,
     }
   );
   const [sendResetPasswordCode, { loading: sendingResetCode }] = useMutation(
@@ -162,19 +162,19 @@ const LoginPanel = () => {
         () => setMode(LoginPageMode.RESET_PASSWORD_VERIFY),
         {
           message: 'Verification code has been send to your CUHK email',
-          notification,
+          view,
         }
       ),
-      onError: notification.handleError,
+      onError: view.handleError,
     }
   );
   const [resetPassword, { loading: resettingPassword }] = useMutation(
     RESET_PASSWORD,
     {
       onCompleted: handleCompleted(() => setMode(LoginPageMode.CUTOPIA_LOGIN), {
-        notification,
+        view,
       }),
-      onError: notification.handleError,
+      onError: view.handleError,
     }
   );
 

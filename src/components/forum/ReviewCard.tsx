@@ -13,7 +13,7 @@ import { VOTE_REVIEW } from '../../constants/mutations';
 import { getMMMDDYY } from '../../helpers/getTime';
 import ShowMoreOverlay from '../molecules/ShowMoreOverlay';
 import { Review } from '../../types';
-import { NotificationContext } from '../../store';
+import { ViewContext } from '../../store';
 import useMobileQuery from '../../helpers/useMobileQuery';
 import GradeRow from './GradeRow';
 import LikeButtonsRow from './LikeButtonRow';
@@ -32,9 +32,9 @@ const ReviewCard = ({
   shareAction,
 }: ReviewCardProps) => {
   const [selectedCriteria, setSelectedCriteria] = useState('overall');
-  const notification = useContext(NotificationContext);
+  const view = useContext(ViewContext);
   const [voteReview, { loading, error }] = useMutation(VOTE_REVIEW, {
-    onError: notification.handleError,
+    onError: view.handleError,
   });
   const [liked, setLiked] = useState(review.myVote); // null for unset, false for dislike, true for like
   const isMobile = useMobileQuery();

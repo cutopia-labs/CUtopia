@@ -38,6 +38,13 @@ export enum ErrorCardMode {
   NOT_FOUND,
 }
 
+export enum ReportCategory {
+  ERROR,
+  FEEDBACK,
+  COURSE,
+  REVIEW,
+}
+
 export enum ReviewReportMode {
   OTHER,
   HATE_SPEECH,

@@ -6,5 +6,11 @@
 @media only screen and (max-width: 1260px) {
   .planner-page {
     grid-template-rows: auto auto max-content;
+    & > .search-panel {
+      display: flex;
+    }
+    .time-table-panel {
+      width: 95vw;
+    }
   }
 }

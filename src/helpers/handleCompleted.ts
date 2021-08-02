@@ -1,19 +1,19 @@
-import NotificationStore from '../store/NotificationStore';
+import ViewStore from '../store/ViewStore';
 
 type HandleCompletedConfigs = {
   message?: string;
-  notification?: NotificationStore;
+  view?: ViewStore;
 };
 
 const handleCompleted =
   (callback?: (data?: any) => any, options?: HandleCompletedConfigs) =>
   (data: any) => {
     callback(data);
-    if (!options.notification) {
+    if (!options.view) {
       return;
     }
     const msg = options.message || 'Success';
-    options.notification.setSnackBar(msg);
+    options.view.setSnackBar(msg);
   };
 
 export default handleCompleted;

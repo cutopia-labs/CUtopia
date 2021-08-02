@@ -12,7 +12,7 @@ import { storeData, getStoreData, removeStoreItem } from '../helpers/store';
 import { PLANNER_CONFIGS } from '../constants/configs';
 import withUndo from '../helpers/withUndo';
 import timeInRange from '../helpers/timeInRange';
-import NotificationStore from './NotificationStore';
+import ViewStore from './ViewStore';
 import StorePrototype from './StorePrototype';
 
 const LOCAL_STORAGE_KEYS = ['planners', 'plannerTerm', 'currentPlannerKey'];
@@ -26,12 +26,12 @@ class PlannerStore extends StorePrototype {
   @observable plannerCourses: PlannerCourse[] = [];
   @observable initiated: boolean = false; // prevent reaction of null timetable override planners
 
-  notificationStore: NotificationStore;
+  viewStore: ViewStore;
 
-  constructor(notificationStore: NotificationStore) {
+  constructor(viewStore: ViewStore) {
     super();
     makeObservable(this);
-    this.notificationStore = notificationStore;
+    this.viewStore = viewStore;
   }
 
   @action async init() {
@@ -138,7 +138,7 @@ class PlannerStore extends StorePrototype {
       this.plannerCourses = [];
     }
     this.setStore('currentPlannerKey', key);
-    this.notificationStore.setSnackBar(`Switched to ${label}`);
+    this.viewStore.setSnackBar(`Switched to ${label}`);
   };
 
   @action sectionInPlanner = (courseId, sectionId) => {
@@ -188,7 +188,7 @@ class PlannerStore extends StorePrototype {
           setData: (prevData) => this.setStore('planners', prevData),
           message: 'Deleted planner!',
           stringify: true,
-          notificationStore: this.notificationStore,
+          viewStore: this.viewStore,
         },
         () => {
           delete this.planners[key];
@@ -198,7 +198,7 @@ class PlannerStore extends StorePrototype {
         }
       );
     } else {
-      this.notificationStore.setSnackBar('Error... OuO');
+      this.viewStore.setSnackBar('Error... OuO');
     }
   }
 
@@ -208,7 +208,7 @@ class PlannerStore extends StorePrototype {
         prevData: [...this.plannerCourses],
         setData: (prevData) => this.setStore('plannerCourses', prevData),
         message: 'Cleared planner!',
-        notificationStore: this.notificationStore,
+        viewStore: this.viewStore,
       },
       () => {
         this.setStore('plannerCourses', []);
@@ -241,7 +241,7 @@ class PlannerStore extends StorePrototype {
         setData: (prevData) => this.setStore('plannerCourses', prevData),
         message: 'Removed unchecked courses',
         stringify: true,
-        notificationStore: this.notificationStore,
+        viewStore: this.viewStore,
       },
       () => {
         const UPDATE_COPY: PlannerCourse[] = JSON.parse(
@@ -285,7 +285,7 @@ class PlannerStore extends StorePrototype {
           setData: (prevData) => this.setStore('plannerCourses', prevData),
           message: 'Section deleted!',
           stringify: true,
-          notificationStore: this.notificationStore,
+          viewStore: this.viewStore,
         },
         () => {
           const sectionCopy = { ...this.plannerCourses[index].sections };
@@ -302,7 +302,7 @@ class PlannerStore extends StorePrototype {
         }
       );
     } else {
-      this.notificationStore.setSnackBar('Error... OuO');
+      this.viewStore.setSnackBar('Error... OuO');
     }
   }
 
@@ -314,7 +314,7 @@ class PlannerStore extends StorePrototype {
           prevData: [...this.plannerCourses],
           setData: (prevData) => this.setStore('plannerCourses', prevData),
           message: 'Course deleted!',
-          notificationStore: this.notificationStore,
+          viewStore: this.viewStore,
         },
         () => {
           this.plannerCourses.splice(index, 1);
@@ -322,7 +322,7 @@ class PlannerStore extends StorePrototype {
         }
       );
     } else {
-      this.notificationStore.setSnackBar('Error... OuO');
+      this.viewStore.setSnackBar('Error... OuO');
     }
   }
 

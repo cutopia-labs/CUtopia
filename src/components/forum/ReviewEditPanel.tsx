@@ -17,7 +17,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 
 import './ReviewEdit.scss';
-import { NotificationContext, UserContext } from '../../store';
+import { ViewContext, UserContext } from '../../store';
 import { GET_REVIEW, COURSE_INFO_QUERY } from '../../constants/queries';
 import { ADD_REVIEW, EDIT_REVIEW } from '../../constants/mutations';
 import { GRADES, RATING_FIELDS } from '../../constants/states';
@@ -120,7 +120,7 @@ const ReviewSection = ({
 );
 
 const ReviewEdit = ({ courseId }) => {
-  const notification = useContext(NotificationContext);
+  const view = useContext(ViewContext);
   const [mode, setMode] = useState(MODES.INITIAL);
   const [targetReview, setTargetReview] = useState('');
   const [progress, setProgress] = useState(0);
@@ -128,11 +128,11 @@ const ReviewEdit = ({ courseId }) => {
   const [showLecturers, setShowLecturers] = useState(false);
   const [addReview, { loading: addReviewLoading, error: addReviewError }] =
     useMutation(ADD_REVIEW, {
-      onError: notification.handleError,
+      onError: view.handleError,
     });
   const [editReview, { loading: editReviewLoading, error: editReviewError }] =
     useMutation(EDIT_REVIEW, {
-      onError: notification.handleError,
+      onError: view.handleError,
     });
   const isMobile = useMobileQuery();
   const [formData, dispatchFormData] = useReducer(
@@ -161,13 +161,13 @@ const ReviewEdit = ({ courseId }) => {
       createdDate: targetReview,
     },
     skip: mode !== MODES.EDIT || !targetReview,
-    onError: notification.handleError,
+    onError: view.handleError,
   });
 
   const submit = async (e) => {
     e.preventDefault();
     if (progress < 100) {
-      notification.setSnackBar(
+      view.setSnackBar(
         `Please write at least ${TARGET_REVIEW_WORD_COUNT} words before submit~`
       );
       return;
@@ -196,7 +196,7 @@ const ReviewEdit = ({ courseId }) => {
 
     if (id) {
       history.push(`/review/${courseId}/${id}`);
-      notification.setSnackBar('Review added!');
+      view.setSnackBar('Review added!');
     }
   };
 
@@ -421,7 +421,7 @@ const ReviewEditPanel = () => {
     id?: string;
     reviewId?: string;
   }>();
-  const notification = useContext(NotificationContext);
+  const view = useContext(ViewContext);
   // Fetch course info
   const { data: courseInfo, loading: courseInfoLoading } = useQuery(
     COURSE_INFO_QUERY,
@@ -434,7 +434,7 @@ const ReviewEditPanel = () => {
         },
       }),
       fetchPolicy: 'cache-first',
-      onError: notification.handleError,
+      onError: view.handleError,
     }
   );
   return (

@@ -1,5 +1,5 @@
-export interface NotificationStore {}
+export interface ViewStore {}
 
 export interface UserStore {
-  notificationStore: NotificationStore;
+  viewStore: ViewStore;
 }

@@ -5,31 +5,29 @@ import { observer } from 'mobx-react-lite';
 
 import './SnackBar.scss';
 import { Alert } from '@material-ui/lab';
-import { NotificationContext } from '../../store';
+import { ViewContext } from '../../store';
 
 const SnackBar = () => {
-  const notification = useContext(NotificationContext);
+  const view = useContext(ViewContext);
   const [buttonClicked, setButtonClicked] = useState(false);
 
   useEffect(() => {
     setButtonClicked(false);
-  }, [notification.snackbar.snackbarId]);
+  }, [view.snackbar.snackbarId]);
 
   return (
     <Portal>
-      {Boolean(notification.snackbar.message) && (
+      {Boolean(view.snackbar.message) && (
         <Alert
           className="snackbar-container"
-          severity={notification.snackbar.severity}
+          severity={view.snackbar.severity}
           action={
-            Boolean(
-              notification.snackbar.label && notification.snackbar.onClick
-            ) && (
+            Boolean(view.snackbar.label && view.snackbar.onClick) && (
               <Button
                 color="secondary"
                 className="btn-container"
                 onClick={() => {
-                  notification.snackbar.onClick();
+                  view.snackbar.onClick();
                   setButtonClicked(true);
                 }}
                 disabled={buttonClicked}
@@ -37,13 +35,13 @@ const SnackBar = () => {
                 {buttonClicked ? (
                   <Check color="secondary" className="snackbar-check-icon" />
                 ) : (
-                  notification.snackbar.label
+                  view.snackbar.label
                 )}
               </Button>
             )
           }
         >
-          {notification.snackbar.message}
+          {view.snackbar.message}
         </Alert>
       )}
     </Portal>

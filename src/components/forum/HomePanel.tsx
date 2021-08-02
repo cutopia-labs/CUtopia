@@ -18,7 +18,7 @@ import ChipsRow from '../molecules/ChipsRow';
 import TabsContainer from '../molecules/TabsContainer';
 import { PopularCourse, TopRatedCourse } from '../../types';
 
-import { NotificationContext } from '../../store';
+import { ViewContext } from '../../store';
 
 const MENU_ITEMS = [
   {
@@ -74,20 +74,20 @@ const RankingCard = ({
 const HomePanel = () => {
   const [tab, setTab] = useState('Top Rated');
   const [sortKey, setSortKey] = useState('overall');
-  const notification = useContext(NotificationContext);
+  const view = useContext(ViewContext);
 
   const { data: reviews, loading: recentReviewsLoading } = useQuery(
     RECENT_REVIEWS_QUERY,
     {
       skip: tab !== 'Recent',
-      onError: notification.handleError,
+      onError: view.handleError,
     }
   );
   const { data: popularCourses, loading: popularCoursesLoading } = useQuery(
     POPULAR_COURSES_QUERY,
     {
       skip: tab !== 'Popular',
-      onError: notification.handleError,
+      onError: view.handleError,
     }
   );
   const { data: topRatedCourses, loading: topRatedCoursesLoading } = useQuery(
@@ -97,7 +97,7 @@ const HomePanel = () => {
         criteria: sortKey,
       },
       skip: tab !== 'Top Rated',
-      onError: notification.handleError,
+      onError: view.handleError,
     }
   );
   return (

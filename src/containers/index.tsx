@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './index.scss';
 import { useLazyQuery } from '@apollo/client';
 import SnackBar from '../components/molecules/SnackBar';
-import { NotificationContext, UserContext } from '../store';
+import { ViewContext, UserContext } from '../store';
 import Header from '../components/organisms/Header';
 import { LoginState, User } from '../types';
 import { GET_USER } from '../constants/queries';
@@ -39,7 +39,7 @@ const ROUTES = [
 
 const Navigator = () => {
   const user = useContext(UserContext);
-  const notification = useContext(NotificationContext);
+  const view = useContext(ViewContext);
   const [getUser, { data: userData, loading: userDataLoading }] = useLazyQuery<{
     me: User;
   }>(GET_USER, {
@@ -52,7 +52,7 @@ const Navigator = () => {
       }
     },
     onError: (e) => {
-      notification.handleError(e);
+      view.handleError(e);
       user.updateStore('loginState', LoginState.LOGGED_OUT);
     },
   });

@@ -28,7 +28,7 @@ import {
   Share,
 } from '@material-ui/icons';
 import clsx from 'clsx';
-import { NotificationContext } from '../../store';
+import { ViewContext } from '../../store';
 import './TimeTablePanel.scss';
 import CourseList from '../planner/CourseList';
 import Card from '../atoms/Card';
@@ -70,7 +70,7 @@ const TimeTablePanel = ({
   deleteTable,
   className,
 }: TimeTablePanelProps) => {
-  const notification = useContext(NotificationContext);
+  const view = useContext(ViewContext);
   const [modalMode, setModalMode] = useState(MODAL_MODES.NO_MODAL);
   const [importInput, setImportInput] = useState('');
   const [labelInput, setLabelInput] = useState('');
@@ -92,7 +92,7 @@ const TimeTablePanel = ({
       action: () => {
         if (!onExport) {
           const result = copy(JSON.stringify(courses));
-          notification.setSnackBar(
+          view.setSnackBar(
             result
               ? 'Copied the timetable to clipboard!'
               : 'Failed to copy QAQ, please report the issue to us'
@@ -110,7 +110,7 @@ const TimeTablePanel = ({
       label: 'Share',
       action: () => {
         const result = copy(JSON.stringify(courses));
-        notification.setSnackBar(
+        view.setSnackBar(
           result
             ? 'Copied the timetable to clipboard!'
             : 'Failed to copy QAQ, please report the issue to us'

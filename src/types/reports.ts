@@ -1,7 +1,7 @@
 import { CourseInfoReportMode, ReviewReportMode } from './enums';
 
 type Report<T> = {
-  mode: T;
+  type: T;
   description: string;
 };
 

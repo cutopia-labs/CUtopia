@@ -52,8 +52,9 @@
 .review-text {
   text-align: start;
   font-size: 14px;
+  line-height: 20px;
   margin: 0;
-  padding: 4px var(--review-card-inner-padding-horizontal) var(--review-card-inner-padding-vertical)
+  padding: 0 var(--review-card-inner-padding-horizontal) var(--review-card-inner-padding-vertical)
     var(--review-card-inner-padding-horizontal);
 }
 .review-info-row {
@@ -121,7 +122,7 @@
   text-align: start;
   text-transform: capitalize;
   color: var(--primary);
-  padding: var(--review-card-inner-padding-horizontal) var(--review-card-inner-padding-horizontal);
+  padding: var(--review-card-inner-padding-vertical) var(--review-card-inner-padding-horizontal);
   font-weight: bold;
 }
 .review-bottom-row {

@@ -3,13 +3,13 @@ import { createContext } from 'react';
 import { reaction } from 'mobx';
 import PreferenceStore from './PreferenceStore';
 import UserStore from './UserStore';
-import NotificationStore from './NotificationStore';
+import ViewStore from './ViewStore';
 import PlannerStore from './PlannerStore';
 
-const notificationStore = new NotificationStore();
+const viewStore = new ViewStore();
 const preferenceStore = new PreferenceStore();
-const userStore = new UserStore(notificationStore);
-const plannerStore = new PlannerStore(notificationStore);
+const userStore = new UserStore(viewStore);
+const plannerStore = new PlannerStore(viewStore);
 
 reaction(
   () => ({
@@ -23,7 +23,7 @@ reaction(
 
 export const PreferenceContext = createContext(null as PreferenceStore);
 export const UserContext = createContext(null as UserStore);
-export const NotificationContext = createContext(null as NotificationStore);
+export const ViewContext = createContext(null as ViewStore);
 export const PlannerContext = createContext(null as PlannerStore);
 
 export default function StoreProvider({ children }) {
@@ -31,9 +31,9 @@ export default function StoreProvider({ children }) {
     <PreferenceContext.Provider value={preferenceStore}>
       <UserContext.Provider value={userStore}>
         <PlannerContext.Provider value={plannerStore}>
-          <NotificationContext.Provider value={notificationStore}>
+          <ViewContext.Provider value={viewStore}>
             {children}
-          </NotificationContext.Provider>
+          </ViewContext.Provider>
         </PlannerContext.Provider>
       </UserContext.Provider>
     </PreferenceContext.Provider>

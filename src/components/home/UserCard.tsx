@@ -15,11 +15,7 @@ import { GoUnverified, GoVerified } from 'react-icons/go';
 
 import './UserCard.scss';
 import ListItem from '../molecules/ListItem';
-import {
-  NotificationContext,
-  PreferenceContext,
-  UserContext,
-} from '../../store';
+import { ViewContext, PreferenceContext, UserContext } from '../../store';
 import { User } from '../../types';
 import { clearStore } from '../../helpers/store';
 import {
@@ -35,7 +31,7 @@ type UserCardProps = {
 const UserCard = ({ userData }: UserCardProps) => {
   const user = useContext(UserContext);
   const preference = useContext(PreferenceContext);
-  const notification = useContext(NotificationContext);
+  const view = useContext(ViewContext);
   const [openSettings, SetOpenSetting] = useState(false);
 
   return (
@@ -119,7 +115,7 @@ const UserCard = ({ userData }: UserCardProps) => {
           className="log-out-row"
           onClick={() => {
             user.logout();
-            notification.setSnackBar('Successfully logged out!');
+            view.setSnackBar('Successfully logged out!');
             SetOpenSetting(false);
           }}
           title="Log Out"

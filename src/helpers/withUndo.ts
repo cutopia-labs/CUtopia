@@ -1,20 +1,20 @@
-import NotificationStore from '../store/NotificationStore';
+import ViewStore from '../store/ViewStore';
 
 type UndoConfigs = {
   prevData: any;
   setData: (prevData: any) => void;
-  notificationStore: NotificationStore;
+  viewStore: ViewStore;
   stringify?: boolean;
   message?: string;
 };
 
 const withUndo = async (
-  { prevData, setData, notificationStore, stringify, message }: UndoConfigs,
+  { prevData, setData, viewStore, stringify, message }: UndoConfigs,
   fn?: (...args: any[]) => void
 ) => {
   prevData = stringify ? JSON.stringify(prevData) : prevData;
   fn && fn();
-  await notificationStore.setSnackBar({
+  await viewStore.setSnackBar({
     message: message || 'Success',
     label: 'UNDO',
     onClick: () => {

@@ -21,7 +21,7 @@ import {
   REVIEWS_QUERY,
 } from '../../constants/queries';
 import Loading from '../atoms/Loading';
-import { NotificationContext, UserContext } from '../../store';
+import { ViewContext, UserContext } from '../../store';
 import { FULL_MEMBER_REVIEWS } from '../../constants/states';
 import useDebounce from '../../helpers/useDebounce';
 import { LAZY_LOAD_BUFFER } from '../../constants/configs';
@@ -148,7 +148,7 @@ const CoursePanel = () => {
   const [FABOpen, setFABOpen] = useState(false);
   const [lastEvaluatedKey, setLastEvaluatedKey] = useState(undefined);
   const [reviews, setReviews] = useState([]);
-  const notification = useContext(NotificationContext);
+  const view = useContext(ViewContext);
   const user = useContext(UserContext);
   const isMobile = useMobileQuery();
   const [FABHidden, setFABHidden] = useState(!isMobile);
@@ -160,7 +160,7 @@ const CoursePanel = () => {
       name: 'Share',
       action: () => {
         copy(window.location.href);
-        notification.setSnackBar('Copied share link to clipboard!');
+        view.setSnackBar('Copied share link to clipboard!');
       },
     },
   ]);
@@ -179,7 +179,7 @@ const CoursePanel = () => {
       },
     }),
     fetchPolicy: 'cache-first',
-    onError: notification.handleError,
+    onError: view.handleError,
   });
 
   // Fetch all reviews
@@ -214,7 +214,7 @@ const CoursePanel = () => {
       );
       setLastEvaluatedKey(data.reviews.lastEvaluatedKey);
     },
-    onError: notification.handleError,
+    onError: view.handleError,
     notifyOnNetworkStatusChange: true,
     fetchPolicy: 'cache-first',
   });
@@ -314,6 +314,14 @@ const CoursePanel = () => {
     console.log(`in: ${!isMobile && !FABHidden}`);
   }, [isMobile, FABHidden]);
 
+  useEffect(() => {
+    // Reset to reload the reviews once sortkey / filter changed
+    if (reviews?.length) {
+      setReviews([]);
+      setLastEvaluatedKey(undefined);
+    }
+  }, [sorting]);
+
   return (
     <>
       {(reviewsLoading || courseInfoLoading) && <Loading fixed />}
@@ -393,7 +401,7 @@ const CoursePanel = () => {
                   ? window.location.href
                   : `${window.location.href}/${item.createdDate}`
               );
-              notification.setSnackBar('Copied sharelink to clipboard!');
+              view.setSnackBar('Copied sharelink to clipboard!');
             }}
             showAll={Boolean(reviewId)}
           />
