@@ -29,8 +29,10 @@ export interface SnackBar extends SnackBarProps {
   snackbarId: number | undefined;
 }
 
+export type DialogKeys = 'userSettings' | 'reportIssues';
+
 export type Dialog = {
-  key: string;
+  key: DialogKeys;
   props?: Partial<DialogProps>;
   contentProps?: Record<string, any>;
 };

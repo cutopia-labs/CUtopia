@@ -6,11 +6,13 @@ import {
   Switch,
   Divider,
 } from '@material-ui/core';
+import { observer } from 'mobx-react-lite';
+
 import ListItem from '../molecules/ListItem';
 import { PreferenceContext, UserContext, ViewContext } from '../../store';
 import './Dialog.scss';
 import { clearStore } from '../../helpers/store';
-import { observer } from 'mobx-react-lite';
+import DialogContentTemplate from './DialogContentTemplate';
 
 const UserSettingsDialogContent = observer(() => {
   const preference = useContext(PreferenceContext);
@@ -54,8 +56,13 @@ const UserSettingsDialogContent = observer(() => {
   );
 });
 
+const ReportIssuesDialogContent = observer(() => {
+  return <DialogContentTemplate title="Report Issues" caption="" />;
+});
+
 const DialogContentMap = {
   userSettings: UserSettingsDialogContent,
+  reportIssues: ReportIssuesDialogContent,
 };
 
 const Dialog = () => {
@@ -70,7 +77,7 @@ const Dialog = () => {
         view.setDialog(null);
       }}
     >
-      {Boolean(ContentFC) && <ContentFC {...view.dialog.contentProps} />}
+      {Boolean(ContentFC) && <ContentFC {...view.dialog?.contentProps} />}
     </MUIDialog>
   );
 };

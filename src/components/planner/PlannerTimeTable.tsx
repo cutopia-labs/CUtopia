@@ -29,6 +29,7 @@ import handleCompleted from '../../helpers/handleCompleted';
 import { GET_SHARE_TIMETABLE } from '../../constants/queries';
 import LoadingButton from '../atoms/LoadingButton';
 import Loading from '../atoms/Loading';
+import DialogContentTemplate from '../templates/DialogContentTemplate';
 
 type PlannerTimeTableProps = {
   className?: string;
@@ -270,12 +271,12 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
         onClose={() => setShareCourses(null)}
         open={Boolean(shareCourses)}
       >
-        <div className="content-container grid-auto-row">
-          <div className="sub-title">Share Planner</div>
-          <div className="dialog-caption caption">{`${
+        <DialogContentTemplate
+          title="Share Planner"
+          caption={`${
             planner.currentPlanner?.label || PLANNER_CONFIGS.DEFAULT_TABLE_NAME
-          } (${planner.currentPlanner.courses?.length} courses)`}</div>
-
+          } (${planner.currentPlanner.courses?.length} courses)`}
+        >
           <TimeTableShareDialogContent
             shareConfig={shareConfig}
             dispatchShareConfig={dispatchShareConfig}
@@ -283,7 +284,7 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
             onShareTimetTable={onShareTimetTable}
             shareTimeTableLoading={shareTimeTableLoading}
           />
-        </div>
+        </DialogContentTemplate>
       </Dialog>
     </>
   );
