@@ -80,7 +80,7 @@ export const SearchResult = ({
   });
 
   if (!results?.length) {
-    return <ErrorCard mode={ErrorCardMode.NULL} />;
+    return <ErrorCard mode={ErrorCardMode.NULL} inPlace />;
   }
 
   return (

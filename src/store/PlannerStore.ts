@@ -288,14 +288,17 @@ class PlannerStore extends StorePrototype {
           viewStore: this.viewStore,
         },
         () => {
-          const sectionCopy = { ...this.plannerCourses[index].sections };
+          const sectionCopy = JSON.parse(
+            JSON.stringify(this.plannerCourses[index].sections)
+          );
           delete sectionCopy[sectionId];
-          if (sectionCopy) {
+          if (JSON.stringify(sectionCopy) !== JSON.stringify({})) {
             this.plannerCourses[index] = {
               ...this.plannerCourses[index],
               sections: sectionCopy,
             };
           } else {
+            console.log('Delete the planner course');
             this.plannerCourses.splice(index, 1);
           }
           storeData('plannerCourses', this.plannerCourses);

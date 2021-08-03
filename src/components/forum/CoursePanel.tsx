@@ -325,7 +325,7 @@ const CoursePanel = () => {
   return (
     <>
       {(reviewsLoading || courseInfoLoading) && <Loading fixed />}
-      <div className="course-panel-container column">
+      <div className="course-panel-container grid-auto-row">
         <div className="course-panel panel card">
           {!courseInfoLoading && (
             <CourseCard
@@ -406,7 +406,7 @@ const CoursePanel = () => {
             showAll={Boolean(reviewId)}
           />
         ))}
-        {lastEvaluatedKey === null && <Footer mt />}
+        {lastEvaluatedKey === null && <Footer />}
       </div>
     </>
   );

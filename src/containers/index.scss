@@ -3,7 +3,7 @@ body {
   --primary: #01579b;
   --accent: #ff7146;
   --surface: rgba(255, 255, 255, 1);
-  --background: rgb(250, 249, 248, 1);
+  --background: rgb(247, 246, 245, 1);
   --background-dark: rgba(5, 5, 5, 1);
   --background-secondary: rgb(250, 251, 252);
   --background-tertiary: rgb(246, 248, 250);
@@ -11,7 +11,7 @@ body {
   --text: rgba(12, 12, 12, 1);
   --reversed-text: rgba(255, 255, 255, 1);
   --button: rgba(21, 121, 193, 1);
-  --border: #dedede80;
+  --border: #dedede75;
   --border-light: #dedede2f;
   --underlay: #dddddd;
   --statusBar: rgba(21, 101, 192, 1);
@@ -284,11 +284,11 @@ textarea[type="number"] {
     grid-template-rows: min-content 1fr;
     min-height: calc(100vh - var(--header-height) - 2 * var(--card-padding));
     padding: 0;
-    margin: var(--card-padding) 0;
     // min-height: var(--page-content-height);
   }
   .card {
     border-radius: 0;
+    border: 0;
   }
 }
 

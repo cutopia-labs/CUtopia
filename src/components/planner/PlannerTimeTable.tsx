@@ -99,7 +99,7 @@ const TimeTableShareDialogContent = ({
   </>
 );
 
-const validShareId = (id: string) => id && /^[a-zA-Z0-9]{8}$/i.test(id);
+const validShareId = (id: string) => id && /^[A-Za-z0-9_-]{8}$/i.test(id);
 
 const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
   const { id: shareTimeTableId } = useParams<{

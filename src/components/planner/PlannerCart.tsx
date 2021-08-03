@@ -16,7 +16,8 @@ import { PlannerContext } from '../../store';
 import Card from '../atoms/Card';
 import ListItem from '../molecules/ListItem';
 import { getSectionTime } from '../forum/CourseSections';
-import { CourseSection } from '../../types';
+import { CourseSection, ErrorCardMode } from '../../types';
+import ErrorCard from '../molecules/ErrorCard';
 
 const PlannerCart = () => {
   const planner = useContext(PlannerContext);
@@ -54,38 +55,42 @@ const PlannerCart = () => {
           <MoreVert />
         </IconButton>
       </header>
-      {planner.plannerCourses.map((course, index) =>
-        Object.entries(course.sections).map(([k, section], sectionIndex) => {
-          const sectionLabel = `${course.courseId} ${section.name}`;
-          const overlap = planner.overlapSections[sectionLabel];
-          return (
-            <ListItem
-              key={`cart-${sectionLabel}`}
-              title={sectionLabel}
-              caption={getSectionTime(section)}
-              onClick={() => toggleHide(section, index, k)}
-              left={
-                overlap ? (
-                  <Tooltip
-                    className="planner-cart-list-icon"
-                    title={`Overlap with ${overlap.name}`}
-                  >
-                    <Warning />
-                  </Tooltip>
-                ) : (
-                  <Checkbox
-                    className="planner-cart-checkbox"
-                    checked={!section.hide}
-                    size="small"
-                    disableTouchRipple
-                    disableFocusRipple
-                    disableRipple
-                  />
-                )
-              }
-            />
-          );
-        })
+      {planner.plannerCourses?.length ? (
+        planner.plannerCourses.map((course, index) =>
+          Object.entries(course.sections).map(([k, section], sectionIndex) => {
+            const sectionLabel = `${course.courseId} ${section.name}`;
+            const overlap = planner.overlapSections[sectionLabel];
+            return (
+              <ListItem
+                key={`cart-${sectionLabel}`}
+                title={sectionLabel}
+                caption={getSectionTime(section)}
+                onClick={() => toggleHide(section, index, k)}
+                left={
+                  overlap ? (
+                    <Tooltip
+                      className="planner-cart-list-icon"
+                      title={`Overlap with ${overlap.name}`}
+                    >
+                      <Warning />
+                    </Tooltip>
+                  ) : (
+                    <Checkbox
+                      className="planner-cart-checkbox"
+                      checked={!section.hide}
+                      size="small"
+                      disableTouchRipple
+                      disableFocusRipple
+                      disableRipple
+                    />
+                  )
+                }
+              />
+            );
+          })
+        )
+      ) : (
+        <ErrorCard mode={ErrorCardMode.NULL} inPlace />
       )}
       <Menu
         className="timetable-more-menu"

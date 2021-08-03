@@ -88,7 +88,7 @@ const ReviewCard = ({
           <div className="center-row">
             <AiTwotoneCalendar />
             <span className="reviews-filter-label term">{review.term}</span>
-            <span className="reviews-filter-label separator">/</span>
+            <span className="reviews-filter-label separator">•</span>
             <span className="reviews-filter-label lecturer">
               {review.lecturer}
             </span>

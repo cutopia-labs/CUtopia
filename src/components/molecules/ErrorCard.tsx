@@ -22,10 +22,11 @@ const CARD_ITEMS = {
 
 type ErrorCardProps = {
   mode: ErrorCardMode;
+  inPlace?: boolean;
 };
 
-const ErrorCard = ({ mode }: ErrorCardProps) => (
-  <Card className="null-card-container center column">
+const ErrorCard = ({ mode, inPlace }: ErrorCardProps) => (
+  <Card inPlace className="null-card-container center column">
     <img
       src={CARD_ITEMS[mode]?.image}
       alt="Empty!"

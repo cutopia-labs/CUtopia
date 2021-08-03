@@ -3,14 +3,16 @@ import clsx from 'clsx';
 
 type CardProps = {
   className?: string;
+  inPlace?: boolean;
 };
 
 const Card = ({
   className,
   children,
+  inPlace,
   ...props
 }: PropsWithChildren<CardProps>) => (
-  <div className={clsx('card', className)} {...props}>
+  <div className={clsx(inPlace ? 'column' : 'card', className)} {...props}>
     {children}
   </div>
 );

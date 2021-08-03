@@ -4,7 +4,7 @@ import { IconButton } from '@material-ui/core';
 import { Add, PersonOutline, Schedule, RoomOutlined } from '@material-ui/icons';
 
 import './CourseSections.scss';
-import { PlannerContext } from '../../store';
+import { PlannerContext, ViewContext } from '../../store';
 import { WEEKDAYS_TWO_ABBR } from '../../constants/states';
 import { CourseInfo, CourseSection } from '../../types';
 
@@ -85,6 +85,7 @@ const CourseSections = ({
 }: CourseSectionsProps) => {
   const currentTermIndex = courseTerms.length - 1;
   const planner = useContext(PlannerContext);
+  const view = useContext(ViewContext);
   const addToPlanner = (section: CourseSection) => {
     const { name, ...sectionData } = section;
     planner.addToPlannerCourses({
@@ -94,6 +95,7 @@ const CourseSections = ({
       courseId,
       title,
     });
+    view.setSnackBar(`Added ${courseId} ${name}`);
   };
   const deleteInPlanner = (sectionId) => {
     planner.deleteSectionInPlannerCourses({ courseId, sectionId });

@@ -12,10 +12,8 @@
 
 .reviews-filter {
   display: flex;
-  margin-top: 20px;
   padding: 12px 8px;
   align-items: center;
-  border-radius: var(--border-radius);
   flex-wrap: wrap;
   justify-content: space-between;
   svg {
@@ -61,7 +59,6 @@
 }
 
 .course-error-card {
-  margin-top: 16px;
   display: flex;
   flex-direction: column;
 }
@@ -80,7 +77,6 @@
 @media only screen and (max-width: 1260px) {
   .course-panel {
     max-height: none;
-    border-radius: 0;
   }
   .course-panel-fab {
     right: 20px;

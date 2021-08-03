@@ -156,7 +156,7 @@ const ReportIssuesDialogContent = observer(
               loading={reportLoading}
               className="share loading-btn"
               type="submit"
-              disabled={!issueData.type || !issueData.description}
+              disabled={issueData.type === null || !issueData.description}
             >
               Report
             </LoadingButton>
