@@ -9,6 +9,7 @@ type User = {
   level: number;
   email?: string;
   timetable?: CourseTableEntry[];
+  fullAccess?: boolean;
 };
 
 type CreateUserResult = {

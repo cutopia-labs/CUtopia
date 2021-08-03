@@ -15,12 +15,20 @@
   }
   .caption {
     margin: 0;
+    overflow-wrap: anywhere;
+    line-height: 20px;
   }
   &.concise {
     padding: var(--card-padding);
     overflow: initial;
     & > .course-card-header {
       align-items: center;
+      & > .center-row {
+        width: 100%;
+        .course-card-title-container {
+          width: 100%;
+        }
+      }
       & .badge {
         margin-right: 0;
         margin-bottom: 0;

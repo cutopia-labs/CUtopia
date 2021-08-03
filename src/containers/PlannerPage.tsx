@@ -63,7 +63,7 @@ const PlannerMobileFab = ({ targetMode, setMode }) => {
 
 const PlannerPage = () => {
   const isPlannerShare = useRouteMatch({
-    path: '/planner/:id',
+    path: '/planner/share/:shareId',
     strict: true,
     exact: true,
   });

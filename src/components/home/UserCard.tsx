@@ -8,11 +8,7 @@ import { GoUnverified, GoVerified } from 'react-icons/go';
 import './UserCard.scss';
 import { ViewContext, PreferenceContext, UserContext } from '../../store';
 import { User } from '../../types';
-import {
-  FULL_MEMBER_EXP,
-  LEVEL_UP_EXP,
-  REVIEW_EXP,
-} from '../../constants/configs';
+import { LEVEL_UP_EXP } from '../../constants/configs';
 
 type UserCardProps = {
   userData: User;
@@ -36,16 +32,14 @@ const UserCard = ({ userData }: UserCardProps) => {
             <Tooltip
               title={
                 user.isFullMember
-                  ? 'Full Member'
-                  : `${Math.ceil(
-                      (FULL_MEMBER_EXP - user.data?.exp) / REVIEW_EXP
-                    )} reviews to go to be a full member`
+                  ? 'Full Access'
+                  : 'Post 1 review to unlock full access for current semester'
               }
               placement="top"
               arrow
             >
               <span className="center-row">
-                {user.isFullMember ? <GoVerified /> : <GoUnverified />}
+                {user.data?.fullAccess ? <GoVerified /> : <GoUnverified />}
               </span>
             </Tooltip>
           </div>

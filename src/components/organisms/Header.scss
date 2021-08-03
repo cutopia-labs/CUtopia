@@ -79,6 +79,7 @@
 @media only screen and (max-width: 1260px) {
   .header-container {
     padding: 10px var(--card-padding);
+    max-width: 100%;
     & > .header-logo {
       margin-left: 12px;
     }

@@ -82,6 +82,7 @@ const ReportIssuesDialogContent = observer(
       {
         type: null,
         description: '',
+        identifier: id,
       }
     );
 

@@ -131,7 +131,19 @@ export const SHARE_TIMETABLE = gql`
 `;
 
 export const REPORT = gql`
-  mutation ($cat: ReportCategory!, $type: Int!, $description: String!) {
-    report(input: { cat: $cat, type: $type, description: $description })
+  mutation (
+    $cat: Int!
+    $type: Int!
+    $description: String!
+    $identifier: String
+  ) {
+    report(
+      input: {
+        cat: $cat
+        type: $type
+        description: $description
+        identifier: $identifier
+      }
+    )
   }
 `;

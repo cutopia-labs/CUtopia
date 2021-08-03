@@ -10,14 +10,14 @@
     height: fit-content;
     & > .search-panel {
       display: flex;
-      width: calc(100vw - 2px);
+      width: 100vw;
       position: relative;
       top: auto;
       height: fit-content;
       overflow: visible;
     }
     .time-table-panel {
-      width: calc(100vw - 2px);
+      width: 100vw;
     }
   }
   #planner-draggable-fab-container {

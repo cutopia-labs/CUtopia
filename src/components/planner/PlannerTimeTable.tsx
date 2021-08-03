@@ -47,7 +47,7 @@ const SECTIONS = [
 ];
 
 const generateShareURL = (sharedTimeTable: ShareTimeTableResponse) =>
-  `${window.location.protocol}//${window.location.host}/planner/${sharedTimeTable.id}`;
+  `${window.location.protocol}//${window.location.host}/planner/share/${sharedTimeTable.id}`;
 
 const TimeTableShareDialogContent = ({
   shareConfig,
@@ -102,8 +102,8 @@ const TimeTableShareDialogContent = ({
 const validShareId = (id: string) => id && /^[A-Za-z0-9_-]{8}$/i.test(id);
 
 const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
-  const { id: shareTimeTableId } = useParams<{
-    id?: string;
+  const { shareId } = useParams<{
+    shareId?: string;
   }>();
   const planner = useContext(PlannerContext);
   const view = useContext(ViewContext);
@@ -112,9 +112,9 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
     null
   );
   const { loading: getShareTimeTableLoading } = useQuery(GET_SHARE_TIMETABLE, {
-    skip: !validShareId(shareTimeTableId),
+    skip: !validShareId(shareId),
     variables: {
-      id: shareTimeTableId,
+      id: shareId,
     },
     onCompleted: async (data: { timetable: ShareTimeTable }) => {
       if (planner.validKey(data?.timetable?.createdDate)) {
@@ -215,13 +215,13 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
   }, [planner.currentPlannerKey]);
 
   useEffect(() => {
-    if (shareTimeTableId && !validShareId(shareTimeTableId)) {
+    if (shareId && !validShareId(shareId)) {
       view.setSnackBar({
         message: 'Invalid shared timetable!',
         severity: 'warning',
       });
     }
-  }, [shareTimeTableId]);
+  }, [shareId]);
 
   return (
     <>

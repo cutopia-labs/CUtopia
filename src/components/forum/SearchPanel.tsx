@@ -1,5 +1,5 @@
 import { useState, useEffect, Fragment, useContext } from 'react';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
 import {
   InputBase,
   ListItem as MUIListItem,
@@ -175,9 +175,16 @@ const SearchPanel = () => {
   const user = useContext(UserContext);
   const isPlanner = useRouteMatch({
     path: '/planner',
-    strict: true,
-    exact: true,
   });
+  const { courseId } = useParams<{
+    courseId?: string;
+  }>();
+
+  useEffect(() => {
+    if (validCourse(courseId)) {
+      setCurrentCourse(courseId);
+    }
+  }, [courseId]);
 
   // Fetch course info
   const {
@@ -313,11 +320,9 @@ const SearchPanel = () => {
               user={user}
               onClick={(courseId) => {
                 saveHistory(courseId);
-                if (isPlanner) {
-                  setCurrentCourse(courseId);
-                } else {
-                  history.push(`/review/${courseId}`);
-                }
+                history.push(
+                  `/${isPlanner ? 'planner' : 'review'}/${courseId}`
+                );
               }}
             />
           </>

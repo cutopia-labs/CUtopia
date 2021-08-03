@@ -160,6 +160,7 @@ export const GET_USER = gql`
       username
       exp
       level
+      fullAccess
     }
   }
 `;

@@ -1,6 +1,7 @@
 .search-panel {
-  width: 326px;
-  min-width: 326px;
+  --search-panel-width: 326px;
+  width: var(--search-panel-width);
+  min-width: var(--search-panel-width);
   border-right: 1px solid var(--border);
   position: sticky;
   top: calc(var(--header-height) + var(--page-margin));
@@ -91,6 +92,5 @@
   .search-panel {
     display: none;
     border-right: 0;
-    border-top: 1px solid var(--border);
   }
 }

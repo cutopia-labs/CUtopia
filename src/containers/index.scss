@@ -290,6 +290,9 @@ textarea[type="number"] {
     border-radius: 0;
     border: 0;
   }
+  .list-item-container.border {
+    border-right: none !important;
+  }
 }
 
 /* Dark Mode Colors */

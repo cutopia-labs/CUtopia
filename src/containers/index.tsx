@@ -32,7 +32,7 @@ const ROUTES = [
   {
     props: {
       exact: true,
-      path: ['/planner', '/planner/:id'],
+      path: ['/planner', '/planner/:courseId', '/planner/share/:shareId'],
     },
     children: <PlannerPage />,
   },
