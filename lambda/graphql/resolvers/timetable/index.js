@@ -32,8 +32,8 @@ exports.Mutation = {
   },
   shareTimetable: async (parent, { input }, { user }) => {
     const { username } = user;
-    const { entries, anonymous, expire } = input;
-    return await shareTimetable({ username, entries, anonymous, expire });
+    const { entries, tableName, expire } = input;
+    return await shareTimetable({ username, entries, tableName, expire });
   },
 };
 

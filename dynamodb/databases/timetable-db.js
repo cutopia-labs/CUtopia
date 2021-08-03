@@ -1,6 +1,6 @@
 const AWS = require("aws-sdk");
 const { nanoid } = require("nanoid");
-const { ERROR_CODES } = require("error-codes");
+const { ERROR_CODES } = require("codes");
 
 const db = new AWS.DynamoDB.DocumentClient();
 
@@ -60,7 +60,7 @@ exports.removeTimetable = async (input) => {
 };
 
 exports.shareTimetable = async (input) => {
-  const { username, entries, anonymous, expire } = input;
+  const { username, entries, tableName, expire } = input;
   const id = nanoid(8);
   const now = new Date().getTime();
 
@@ -70,8 +70,8 @@ exports.shareTimetable = async (input) => {
       id,
       createdDate: now,
       username,
+      tableName,
       entries,
-      anonymous,
       expire,
     },
   };
@@ -107,7 +107,7 @@ exports.getSharedTimetable = async (input) => {
 
   return {
     entries: result.entries,
-    name: result.anonymous ? 'Anonymous' : result.username,
+    tableName: result.tableName,
     createdDate: result.createdDate,
     expireDate,
   };

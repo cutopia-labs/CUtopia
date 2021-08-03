@@ -4,15 +4,12 @@ const {
   createReview,
   editReview,
   voteReview,
-  REPORT_CATEGORIES,
-  REVIEW_REPORT_TYPES,
-  COURSE_REPORT_TYPES,
-  VOTE_ACTIONS,
 } = require('dynamodb');
 const {
   recalWithNewReview,
   recalWithEdittedReview,
 } = require('../ranking/impl');
+const { VOTE_ACTIONS } = require('codes');
 
 exports.Mutation = {
   createReview: async (parent, { input }, { user }) => {
@@ -78,23 +75,3 @@ exports.Query = {
 };
 
 exports.ReviewDetails = {};
-/**
- * seems union of scalars and input with union are still under discussion now: 
- * https://github.com/graphql/graphql-spec/issues/215
- * https://github.com/graphql/graphql-spec/issues/488
- * 
- * exports.ReportType = {
- *   __resolveType: (report) => {
- *     switch(report.cat) {
- *       case 'COURSE': return 'CourseInfoReportType';
- *       case 'REVIEW': return 'ReviewReportType';
- *     }
- *   },
- * };
- * 
- * exports.CourseInfoReportType = COURSE_REPORT_TYPES;
- * 
- * exports.ReviewReportType = REVIEW_REPORT_TYPES;
- */
-
-exports.ReportCategory = REPORT_CATEGORIES;

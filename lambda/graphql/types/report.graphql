@@ -3,41 +3,10 @@ type Mutation {
   reportFeedback(input: [ReportFeedbackInput]!): String! @auth
 }
 
-enum ReportCategory {
-  ERROR
-  FEEDBACK
-  COURSE
-  REVIEW
-}
-
-"""
-# seems union of scalars and input with union are still under discussion now: 
-# https://github.com/graphql/graphql-spec/issues/215
-# https://github.com/graphql/graphql-spec/issues/488
-
-union ReportType = CourseInfoReportType | ReviewReportType
-
-enum CourseInfoReportType {
-  OTHER
-  COURSE_TITLE
-  CREDITS
-  ASSESSMENTS
-  REQUIREMENTS
-  DESCRIPTION
-}
-
-enum ReviewReportType {
-  OTHER
-  HATE_SPEECH
-  PERSONAL_ATTACK
-  SPAM
-  MISLEADING
-}
-"""
-
 input ReportInput {
-  cat: ReportCategory!
-  # type: ReportType!
+  cat: Int!
+  "review id or course id"
+  identifier: String
   type: Int!
   description: String! @constrain(minLen: 10, maxLen: 500)
 }

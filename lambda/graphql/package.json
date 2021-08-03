@@ -10,8 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "apollo-server-lambda": "^2.19.1",
+    "codes": "file:../../modules/codes",
     "dynamodb": "file:../../dynamodb",
-    "error-codes": "file:../../modules/error-codes",
     "fuse.js": "^6.4.6",
     "graphql": "^15.4.0",
     "graphql-scalars": "^1.10.0",

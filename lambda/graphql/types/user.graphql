@@ -10,6 +10,7 @@ type User {
   upvotesCount: Int!
   exp: Int!
   level: Int!
+  fullAccess: Boolean!
 }
 
 type Mutation {

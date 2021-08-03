@@ -1,6 +1,6 @@
 const { SchemaDirectiveVisitor } = require('apollo-server-lambda');
 const { defaultFieldResolver } = require('graphql');
-const { ERROR_CODES } = require('error-codes');
+const { ERROR_CODES } = require('codes');
 
 class AuthDirective extends SchemaDirectiveVisitor {
   visitFieldDefinition(field) {

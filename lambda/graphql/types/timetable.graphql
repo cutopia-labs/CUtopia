@@ -43,20 +43,19 @@ input CourseSectionInput {
 
 input ShareTimetableInput {
   entries: [CourseTableEntryInput]!
-  anonymous: Boolean!
+  tableName: String
   """in minutes"""
   expire: Int!
 }
 
 type ShareTimetableResult {
   id: String!
-  token: String!
-  createdDate: Int!
+  createdDate: Timestamp!
 }
 
 type Timetable {
   entries: [CourseTableEntry]!
-  name: String!
+  tableName: String
   createdDate: Timestamp!
   expireDate: Timestamp!
 }

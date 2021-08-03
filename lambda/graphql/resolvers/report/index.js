@@ -2,9 +2,9 @@ const { report, reportFeedback } = require('dynamodb');
 
 exports.Mutation = {
   report: async (parent, { input }, { user }) => {
-    const { cat, type, description } = input;
+    const { cat, identifier, type, description } = input;
     const { username } = user;
-    const reportId = await report({ cat, type, description, username });
+    const reportId = await report({ cat, identifier, type, description, username });
     return reportId
   },
   reportFeedback: async (parent, { input }, { user }) => {

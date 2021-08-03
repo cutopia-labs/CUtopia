@@ -2,7 +2,7 @@ const { nanoid } = require('nanoid');
 const NodeCache = require('node-cache');
 const AWS = require('aws-sdk');
 const { incrementUpvotesCount, getUser } = require('./user-db');
-const { ERROR_CODES } = require('error-codes');
+const { ERROR_CODES, VOTE_ACTIONS } = require('codes');
 
 const db = new AWS.DynamoDB.DocumentClient();
 
@@ -52,7 +52,6 @@ exports.createReview = async (input, user) => {
     Item: latestReview,
   };
 
-  // TODO: any way to update exp without querying the user item?
   const { reviewIds } = await getUser({
     username,
     requiredFields: ['reviewIds'],
@@ -65,11 +64,13 @@ exports.createReview = async (input, user) => {
     Key: {
       username,
     },
-    UpdateExpression: 'add reviewIds :reviewId set exp = if_not_exists(exp, :defaultExp) + :exp',
+    // TODO: delete full access each semester
+    UpdateExpression: 'add reviewIds :reviewId set exp = if_not_exists(exp, :defaultExp) + :exp, fullAccess = :fullAccess',
     ExpressionAttributeValues: {
       ':defaultExp': 0,
       ':exp': exp,
       ':reviewId': db.createSet(`${courseId}#${now}`),
+      ':fullAccess': true,
     },
   };
 
@@ -112,10 +113,6 @@ exports.editReview = async (input) => {
   return now;
 };
 
-exports.VOTE_ACTIONS = Object.freeze({
-  DOWNVOTE: 0,
-  UPVOTE: 1,
-});
 exports.voteReview = async (input, user) => {
   const { courseId, createdDate, vote } = input;
   const { username } = user;
@@ -124,7 +121,7 @@ exports.voteReview = async (input, user) => {
     throw Error(ERROR_CODES.VOTE_REVIEW_INVALID_VALUE);
   }
 
-  const isUpvote = vote === this.VOTE_ACTIONS.UPVOTE;
+  const isUpvote = vote === VOTE_ACTIONS.UPVOTE;
   const params = {
     TableName: process.env.ReviewsTableName,
     Key: {

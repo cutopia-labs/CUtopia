@@ -4,7 +4,6 @@ const {
   getReviews,
   getReview,
   voteReview,
-  VOTE_ACTIONS,
 } = require('./databases/reviews-db');
 
 const {
@@ -28,9 +27,6 @@ const {
 const {
   report,
   reportFeedback,
-  REPORT_CATEGORIES,
-  REVIEW_REPORT_TYPES,
-  COURSE_REPORT_TYPES,
 } = require('./databases/report-db');
 
 module.exports = {
@@ -53,8 +49,4 @@ module.exports = {
   getSharedTimetable,
   report,
   reportFeedback,
-  REPORT_CATEGORIES,
-  REVIEW_REPORT_TYPES,
-  COURSE_REPORT_TYPES,
-  VOTE_ACTIONS,
 };

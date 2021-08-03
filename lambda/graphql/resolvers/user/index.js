@@ -36,6 +36,9 @@ exports.User = {
   level: ({ exp }) => {
     return exp === undefined ? 0 : Math.floor(exp / 5);
   },
+  fullAccess: ({ fullAccess }) => {
+    return fullAccess === undefined ? false : fullAccess;
+  },
 };
 
 exports.Mutation = {

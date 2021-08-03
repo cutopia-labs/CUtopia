@@ -1,12 +1,19 @@
 const AWS = require("aws-sdk");
 const bcrypt = require("bcryptjs");
+const NodeCache = require("node-cache");
 const saltRounds = 10;
 const { nanoid } = require("nanoid");
-const { ERROR_CODES } = require("error-codes");
+const { ERROR_CODES } = require("codes");
 
 const db = new AWS.DynamoDB.DocumentClient();
+/*
+const uesrCache = new NodeCache({
+  stdTTL: 3600,
+});
+const uncacheableUserFields = ["reviewIds", "resetPwdCode"];
+*/
 
-const VERIFY_EXPIRATION_TIME = 24 * 60 * 1000;
+const VERIFY_EXPIRATION_TIME = 24 * 60 * 60 * 1000;
 
 exports.createUser = async (input) => {
   const { username, email, password } = input;
@@ -28,24 +35,27 @@ exports.createUser = async (input) => {
   const hash = await bcrypt.hash(password, saltRounds);
   const verificationCode = nanoid(5);
 
+  const user = {
+    "username": username,
+    "password": hash,
+    "email": email,
+    "createdDate": now,
+    "verified": false,
+    "verificationCode": verificationCode,
+    "reviewIds": db.createSet([""]),
+    "upvotesCount": 0,
+    "fullAccess": false,
+    "exp": 0,
+    "viewsCount": 10,
+  };
+
   const params = {
     TableName: process.env.UserTableName,
-    Item: {
-      "username": username,
-      "password": hash,
-      "email": email,
-      "createdDate": now,
-      "verified": false,
-      "verificationCode": verificationCode,
-      "reviewIds": db.createSet([""]),
-      "upvotesCount": 0,
-      "fullAccess": false,
-      "exp": 0,
-      "viewsCount": 10,
-    },
+    Item: user,
   };
 
   await db.put(params).promise();
+  // uesrCache.set(username, user);
   return verificationCode;
 };
 
@@ -54,16 +64,23 @@ const generateProjectionExpression = (fieldNames) => {
 };
 exports.getUser = async (input) => {
   const { username, requiredFields } = input;
-  const params = {
-    TableName: process.env.UserTableName,
-    Key: {
-      "username": username,
-    },
-    ...(requiredFields && { ProjectionExpression: generateProjectionExpression(requiredFields) }),
-  };
+  const user = undefined; // uesrCache.get(username);
 
-  const result = (await db.get(params).promise()).Item;
-  return result;
+  if (user === undefined || (requiredFields && uncacheableUserFields.some(f => requiredFields.includes(f)))) {
+    const params = {
+      TableName: process.env.UserTableName,
+      Key: {
+        username,
+      },
+      // ...(requiredFields && { ProjectionExpression: generateProjectionExpression(requiredFields) }),
+    };
+    const result = (await db.get(params).promise()).Item;
+    // if (result) {
+    //  uesrCache.set(username, result);
+    // }
+    return result;
+  }
+  return user;
 };
 
 exports.getUsernameByEmail = async (input) => {
@@ -108,11 +125,15 @@ exports.updateUser = async (input) => {
     },
     UpdateExpression: updateExpression,
     ExpressionAttributeValues: expressionValues,
+    ReturnValues: "ALL_NEW",
   };
-  await db.update(params).promise();
+  const result = await db.update(params).promise();
+  // uesrCache.set(username, result.Attributes);
 };
+
 exports.deleteUser = async (input) => {
   const { username } = input;
+  // uesrCache.del(username);
   const params = {
       TableName: process.env.UserTableName,
       Key:{
@@ -233,8 +254,10 @@ exports.incrementUpvotesCount = async (input) => {
       ":defaultExp": 0,
       ":delta": 1,
     },
+    ReturnValues: "ALL_NEW",
   };
-  await db.update(params).promise();
+  const result = await db.update(params).promise();
+  // uesrCache.set(username, result.Attributes);
 };
 
 exports.adjustExp = async (input) => {
@@ -249,8 +272,9 @@ exports.adjustExp = async (input) => {
       ":defaultExp": 0,
       ":delta": delta,
     },
-    ReturnValues:"UPDATED_NEW",
+    ReturnValues:"ALL_NEW",
   };
   const result = await db.update(params).promise();
+  // uesrCache.set(username, result.Attributes);
   return result.Attributes.exp;
 };
