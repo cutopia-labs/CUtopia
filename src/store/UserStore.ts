@@ -39,9 +39,13 @@ class UserStore extends StorePrototype {
   }
 
   @action async init() {
-    this.loginState = LoginState.LOGGED_OUT;
+    this.loginState = LoginState.INIT;
     await this.applyUserStore();
     await this.applyToken();
+    if (this.loginState === LoginState.INIT) {
+      console.log('No token found');
+      this.loginState = LoginState.LOGGED_OUT;
+    }
     console.table(this.timetable);
     this.favoriteCourses = this.favoriteCourses || [];
     this.viewCount = this.viewCount || 0;
@@ -109,7 +113,7 @@ class UserStore extends StorePrototype {
 
   @action.bound setToken(token) {
     this.token = token;
-    this.loginState = LoginState.LOGGED_IN_CUTOPIA;
+    this.loginState = LoginState.LOGGED_IN;
   }
 
   @action async logout() {

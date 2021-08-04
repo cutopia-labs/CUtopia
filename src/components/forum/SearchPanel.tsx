@@ -182,6 +182,8 @@ const SearchPanel = () => {
 
   useEffect(() => {
     if (validCourse(courseId)) {
+      console.log('Current course');
+      console.log(courseId);
       setCurrentCourse(courseId);
     }
   }, [courseId]);
@@ -258,8 +260,9 @@ const SearchPanel = () => {
   return (
     <Card className="search-panel">
       <div className="search-input-container row">
-        {searchPayload &&
-        (searchPayload.mode !== 'query' || searchPayload.text) ? (
+        {(searchPayload &&
+          (searchPayload.mode !== 'query' || searchPayload.text)) ||
+        currentCourse ? (
           <IconButton
             size="small"
             className="go-back-btn"

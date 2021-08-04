@@ -18,7 +18,6 @@ import StoreProvider, {
 
 import Navigator from './containers';
 import { DARK_THEME, THEME } from './constants/colors';
-import { LoginState } from './types';
 
 const AppWrapper = observer(() => {
   const [ready, setReady] = useState(false);
@@ -27,9 +26,8 @@ const AppWrapper = observer(() => {
   const planner = useContext(PlannerContext);
 
   const init = async () => {
-    await user.init();
-    await preference.init();
-    await planner.init();
+    await Promise.all([user.init(), preference.init(), planner.init()]);
+    console.log('Ready');
     setReady(true);
   };
 
@@ -63,14 +61,6 @@ const AppWrapper = observer(() => {
       }),
     });
   }, [user.token]);
-
-  if (user.loginState !== undefined) {
-    console.log(
-      user.loginState === LoginState.LOGGED_IN_CUTOPIA
-        ? 'Logged in'
-        : 'Not Logged in'
-    );
-  }
 
   if (!ready) {
     return null;

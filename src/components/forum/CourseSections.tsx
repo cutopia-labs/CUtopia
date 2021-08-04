@@ -20,7 +20,9 @@ export const getSectionTime = (section: CourseSection) =>
   section.days
     .map(
       (day, i) =>
-        `${WEEKDAYS_TWO_ABBR[day]} ${section.startTimes[i]} - ${section.endTimes[i]}`
+        `${WEEKDAYS_TWO_ABBR[day] || 'TBA'} ${section.startTimes[i]} - ${
+          section.endTimes[i]
+        }`
     )
     .join(', ');
 

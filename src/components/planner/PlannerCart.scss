@@ -19,10 +19,10 @@
     }
   }
   .list-item-container {
+    height: auto;
+    justify-content: space-between;
+    position: relative;
     --list-item-inner-padding: var(--card-padding);
-    &:last-of-type {
-      border-bottom: 0;
-    }
     .planner-cart-list-icon {
       margin-right: 8px;
       margin-left: 16px;

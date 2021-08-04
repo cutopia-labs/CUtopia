@@ -13,7 +13,7 @@ const plannerStore = new PlannerStore(viewStore);
 
 reaction(
   () => ({
-    plannerCourses: plannerStore.plannerCourses.map((course) => course),
+    plannerCourses: plannerStore.plannerCourses?.map((course) => course),
     key: plannerStore.currentPlannerKey,
   }),
   ({ plannerCourses, key }) => {

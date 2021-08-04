@@ -5,7 +5,7 @@ import './PlannerTimeTable.scss';
 import { useMutation, useQuery } from '@apollo/client';
 import { Button, Dialog } from '@material-ui/core';
 import copy from 'copy-to-clipboard';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import TimeTablePanel from '../templates/TimeTablePanel';
 import { ViewContext, PlannerContext } from '../../store';
 import { PLANNER_CONFIGS } from '../../constants/configs';
@@ -106,6 +106,7 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
     shareId?: string;
   }>();
   const planner = useContext(PlannerContext);
+  const history = useHistory();
   const view = useContext(ViewContext);
   const [mode, setMode] = useState(PlannerTimeTableMode.INITIAL);
   const [shareCourses, setShareCourses] = useState<PlannerCourse[] | null>(
@@ -122,6 +123,7 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
           message: 'Shared planner already loaded!',
           severity: 'warning',
         });
+        history.push('/planner');
         return;
       }
       const importedPlanner: Planner = {
@@ -199,7 +201,7 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
               }),
           })),
         expire: parseInt(shareConfig.expire[0], 10) * 60 * 24,
-        tableName: planner.currentPlanner.label,
+        tableName: planner.currentPlanner?.label,
       };
       console.log(JSON.stringify(data));
       await shareTimeTable({
@@ -228,7 +230,7 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
       {getShareTimeTableLoading && <Loading fixed />}
       <TimeTablePanel
         className={className}
-        courses={planner.plannerCourses.concat(planner.previewPlannerCourse)}
+        courses={planner.plannerCourses?.concat(planner.previewPlannerCourse)}
         onImport={(parsedData) =>
           planner.setStore('plannerCourses', parsedData)
         }
@@ -253,7 +255,7 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
           title="Share Planner"
           caption={`${
             planner.currentPlanner?.label || PLANNER_CONFIGS.DEFAULT_TABLE_NAME
-          } (${planner.currentPlanner.courses?.length} courses)`}
+          } (${planner.currentPlanner?.courses?.length} courses)`}
         >
           <TimeTableShareDialogContent
             shareConfig={shareConfig}

@@ -14,9 +14,9 @@ export enum CheckUserExistCode {
 }
 
 export enum LoginState {
+  INIT,
   LOGGED_OUT,
-  LOGGED_IN_CUSIS,
-  LOGGED_IN_CUTOPIA,
+  LOGGED_IN,
 }
 
 export enum VerificationCode {

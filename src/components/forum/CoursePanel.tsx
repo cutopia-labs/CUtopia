@@ -22,7 +22,6 @@ import {
 } from '../../constants/queries';
 import Loading from '../atoms/Loading';
 import { ViewContext, UserContext } from '../../store';
-import { FULL_MEMBER_REVIEWS } from '../../constants/states';
 import useDebounce from '../../helpers/useDebounce';
 import { LAZY_LOAD_BUFFER } from '../../constants/configs';
 import { ReviewsFilter, ReviewsResult } from '../../types';
@@ -93,8 +92,7 @@ const ReviewFilterBar = ({
               {!isMobile && 'All'}
             </Button>
             <div className="reviews-filter-label caption">
-              {exceedLimit &&
-                `Limit exceeded (post ${FULL_MEMBER_REVIEWS} reviews to unlock)`}
+              {exceedLimit && `Limit exceeded (post 1 reviews to unlock)`}
               {!exceedLimit && fetchAllAction && 'Showing 1 review only!'}
             </div>
           </div>
@@ -189,10 +187,7 @@ const CoursePanel = () => {
     refetch: reviewsRefetch,
   } = useQuery<ReviewsResult, ReviewsFilter>(REVIEWS_QUERY, {
     skip: false,
-    /* userDataLoading ||
-      (((userData?.user?.reviewIds || user.user.reviewIds)?.length || 0) <
-        FULL_MEMBER_REVIEWS &&
-        user.exceedLimit)*/ variables: {
+    variables: {
       courseId,
       ascendingDate: sorting === 'date' ? false : null,
       ascendingVote: sorting === 'upvotes' ? false : null,
@@ -347,7 +342,7 @@ const CoursePanel = () => {
                 Boolean(reviewId) && (() => history.push(`/review/${courseId}`))
               }
               writeAction={() => history.push(`/review/${courseId}/compose`)}
-              exceedLimit={false}
+              exceedLimit={!user.data.fullAccess}
               isMobile={isMobile}
             />
             <SpeedDial

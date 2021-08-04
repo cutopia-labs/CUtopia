@@ -47,7 +47,7 @@ class PlannerStore extends StorePrototype {
         },
       });
     }
-    this.plannerCourses = this.planners[this.currentPlannerKey]?.courses;
+    this.plannerCourses = this.planners[this.currentPlannerKey]?.courses || [];
     this.initiated = true;
   }
 
@@ -64,7 +64,7 @@ class PlannerStore extends StorePrototype {
 
   get overlapSections() {
     const sections = [];
-    this.plannerCourses.forEach((course, i) =>
+    this.plannerCourses?.forEach((course, i) =>
       Object.values(course.sections).forEach((section) => {
         if (section && !section.hide) {
           sections.push({
@@ -116,7 +116,7 @@ class PlannerStore extends StorePrototype {
   }
 
   @action.bound findIndexInPlanner = (courseId) => {
-    return this.plannerCourses.findIndex((item) => item.courseId === courseId);
+    return this.plannerCourses?.findIndex((item) => item.courseId === courseId);
   };
 
   @action.bound validKey = (key: number) =>
@@ -143,7 +143,7 @@ class PlannerStore extends StorePrototype {
 
   @action sectionInPlanner = (courseId, sectionId) => {
     const index = this.findIndexInPlanner(courseId);
-    if (index === -1) {
+    if (index === -1 || !this.plannerCourses) {
       return false;
     } else {
       return sectionId in this.plannerCourses[index].sections;
@@ -234,6 +234,13 @@ class PlannerStore extends StorePrototype {
     };
   }
 
+  @action.bound filterEmptySectionCourses = (
+    plannerCourses?: PlannerCourse[]
+  ) =>
+    (plannerCourses || this.plannerCourses).filter(
+      (course) => Object.keys(course.sections)?.length
+    );
+
   @action async removeHidedCourses() {
     withUndo(
       {
@@ -254,7 +261,10 @@ class PlannerStore extends StorePrototype {
             }
           });
         });
-        this.setStore('plannerCourses', UPDATE_COPY);
+        this.setStore(
+          'plannerCourses',
+          this.filterEmptySectionCourses(UPDATE_COPY)
+        );
       }
     );
   }
@@ -299,7 +309,7 @@ class PlannerStore extends StorePrototype {
             };
           } else {
             console.log('Delete the planner course');
-            this.plannerCourses.splice(index, 1);
+            this.plannerCourses?.splice(index, 1);
           }
           storeData('plannerCourses', this.plannerCourses);
         }
@@ -320,7 +330,7 @@ class PlannerStore extends StorePrototype {
           viewStore: this.viewStore,
         },
         () => {
-          this.plannerCourses.splice(index, 1);
+          this.plannerCourses?.splice(index, 1);
           storeData('plannerCourses', this.plannerCourses);
         }
       );

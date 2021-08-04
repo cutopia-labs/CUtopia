@@ -11,8 +11,8 @@ const timeInRange = (s1: CourseSection, s2: CourseSection): string | null => {
       if (s1.days[i] === s2.days[j]) {
         const s1StartTime = timeStrToInt(s1.startTimes[i]);
         const s1EndTime = timeStrToInt(s1.endTimes[i]);
-        const s2StartTime = timeStrToInt(s2.startTimes[i]);
-        const s2EndTime = timeStrToInt(s2.endTimes[i]);
+        const s2StartTime = timeStrToInt(s2.startTimes[j]);
+        const s2EndTime = timeStrToInt(s2.endTimes[j]);
         if (s1StartTime < s2EndTime && s1EndTime > s2StartTime) {
           console.log(s1);
           console.log(s2);

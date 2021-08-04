@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import './index.scss';
 import { useLazyQuery } from '@apollo/client';
+import { observer } from 'mobx-react-lite';
 import SnackBar from '../components/molecules/SnackBar';
 import { ViewContext, UserContext } from '../store';
 import Header from '../components/organisms/Header';
@@ -62,16 +63,19 @@ const Navigator = () => {
       getUser();
     }
   }, [user.token]);
-  if (user.loginState !== LoginState.LOGGED_IN_CUTOPIA) {
+  if (
+    (userDataLoading || !user.data) &&
+    user.loginState === LoginState.LOGGED_IN
+  ) {
+    return <Loading fixed />;
+  }
+  if (user.loginState !== LoginState.LOGGED_IN) {
     return (
       <>
         <SnackBar />
         <LandingPage />
       </>
     );
-  }
-  if (userDataLoading) {
-    return <Loading fixed />;
   }
   return (
     <Router>
@@ -91,4 +95,4 @@ const Navigator = () => {
   );
 };
 
-export default Navigator;
+export default observer(Navigator);
