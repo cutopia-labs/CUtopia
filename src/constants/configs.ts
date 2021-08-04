@@ -1,6 +1,6 @@
 export const LAZY_LOAD_BUFFER = 50;
 export const COURSE_PANEL_FUNCTION_BAR_FLOAT_BUFFER = window.innerHeight * 2;
-export const SNACKBAR_TIMEOUT = 3000;
+export const SNACKBAR_TIMEOUT = 5000;
 export const COURSE_CARD_MAX_HEIGHT = 580;
 export const TARGET_REVIEW_WORD_COUNT = 80;
 export const HISTORY_MAX_LENGTH = 3;

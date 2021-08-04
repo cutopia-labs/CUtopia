@@ -76,6 +76,8 @@ const TimeTableShareDialogContent = ({
           />
           <Button
             className="copy"
+            variant="contained"
+            color="inherit"
             onClick={() => [
               copy(shareConfig.shareLink),
               view.setSnackBar('Copied share link to your clipboard!'),
@@ -91,6 +93,7 @@ const TimeTableShareDialogContent = ({
           loading={shareTimeTableLoading}
           className="share loading-btn"
           onClick={onShareTimetTable}
+          variant="contained"
         >
           Share
         </LoadingButton>

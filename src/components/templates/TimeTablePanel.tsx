@@ -16,18 +16,9 @@ import {
 import { observer } from 'mobx-react-lite';
 
 import copy from 'copy-to-clipboard';
-import {
-  Check,
-  Delete,
-  DeleteOutline,
-  Edit,
-  ExpandMore,
-  GetApp,
-  MoreVert,
-  Publish,
-  Share,
-} from '@material-ui/icons';
+import { Check, DeleteOutline, Edit, ExpandMore } from '@material-ui/icons';
 import clsx from 'clsx';
+import { FiShare } from 'react-icons/fi';
 import { ViewContext } from '../../store';
 import './TimeTablePanel.scss';
 import CourseList from '../planner/CourseList';
@@ -75,7 +66,6 @@ const TimeTablePanel = ({
   const [importInput, setImportInput] = useState('');
   const [labelInput, setLabelInput] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
-  const [moreBtnAnchor, setMoreBtnAnchor] = useState(null);
 
   useEffect(() => {
     setLabelInput(selected?.label);
@@ -83,12 +73,6 @@ const TimeTablePanel = ({
 
   const FUNCTION_BUTTONS = [
     {
-      label: 'import',
-      action: () => setModalMode(MODAL_MODES.IMPORT_MODAL),
-      icon: <GetApp />,
-    },
-    {
-      label: 'export',
       action: () => {
         if (!onExport) {
           const result = copy(JSON.stringify(courses));
@@ -101,32 +85,17 @@ const TimeTablePanel = ({
           onExport(courses);
         }
       },
-      icon: <Publish />,
-    },
-  ];
-
-  const MORE_SELECTIONS = [
-    {
-      label: 'Share',
-      action: () => {
-        const result = copy(JSON.stringify(courses));
-        view.setSnackBar(
-          result
-            ? 'Copied the timetable to clipboard!'
-            : 'Failed to copy QAQ, please report the issue to us'
-        );
-      },
-      icon: <Share />,
+      icon: <FiShare />,
+      key: 'export',
     },
     {
-      label: 'Clear',
+      key: 'Clear',
       action: () => {
         onClear();
       },
-      icon: <Delete />,
+      icon: <DeleteOutline />,
     },
   ];
-
   return (
     <Card className={clsx('panel time-table-panel column', className)}>
       <header className="center-row">
@@ -203,38 +172,10 @@ const TimeTablePanel = ({
         )}
         <div className="btn-row center-row">
           {FUNCTION_BUTTONS.map((item) => (
-            <Button key={item.label} onClick={item.action}>
-              {item.label}
-            </Button>
+            <IconButton key={item.key} size="small" onClick={item.action}>
+              {item.icon}
+            </IconButton>
           ))}
-          <Menu
-            className="timetable-more-menu"
-            anchorEl={moreBtnAnchor}
-            open={Boolean(moreBtnAnchor)}
-            onClose={() => setMoreBtnAnchor(null)}
-          >
-            {MORE_SELECTIONS.map((item) => (
-              <MenuItem
-                key={item.label}
-                onClick={() => {
-                  item.action();
-                  setMoreBtnAnchor(null);
-                }}
-              >
-                <span className="menu-icon-container center-box">
-                  {item.icon}
-                </span>
-                {item.label}
-              </MenuItem>
-            ))}
-          </Menu>
-          <IconButton
-            onClick={(e) => setMoreBtnAnchor(e.currentTarget)}
-            size="small"
-            color="default"
-          >
-            <MoreVert />
-          </IconButton>
         </div>
       </header>
       <CourseList

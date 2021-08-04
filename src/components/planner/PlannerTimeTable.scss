@@ -18,6 +18,9 @@
   .share, .copy {
     background-color: var(--text);
     color: var(--reversed-text);
+    &:hover {
+      background-color: var(--text);
+    }
   }
   .share {
     padding: auto 12px;
@@ -28,9 +31,6 @@
       cursor: not-allowed;
       background-color: var(--caption-light);
       color: var(--reversed-text);
-    }
-    &:hover {
-      background-color: var(--text);
     }
   }
 }

@@ -1,16 +1,10 @@
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 
 import { observer } from 'mobx-react-lite';
 
 import './PlannerCart.scss';
-import {
-  Checkbox,
-  IconButton,
-  Menu,
-  MenuItem,
-  Tooltip,
-} from '@material-ui/core';
-import { Delete, MoreVert, Warning } from '@material-ui/icons';
+import { Checkbox, IconButton, Tooltip } from '@material-ui/core';
+import { ClearAllRounded, Warning } from '@material-ui/icons';
 import { PlannerContext } from '../../store';
 
 import Card from '../atoms/Card';
@@ -21,7 +15,6 @@ import ErrorCard from '../molecules/ErrorCard';
 
 const PlannerCart = () => {
   const planner = useContext(PlannerContext);
-  const [moreBtnAnchor, setMoreBtnAnchor] = useState(null);
   const toggleHide = (
     section: CourseSection,
     index: number,
@@ -36,24 +29,15 @@ const PlannerCart = () => {
       sectionKey
     );
   };
-  const MORE_SELECTIONS = [
-    {
-      label: 'Clear hidden courses',
-      action: () => planner.removeHidedCourses(),
-      icon: <Delete />,
-    },
-  ];
   return (
     <Card className="planner-cart">
       <header className="planner-cart-header center-row">
         <span className="title">Cart</span>
-        <IconButton
-          onClick={(e) => setMoreBtnAnchor(e.currentTarget)}
-          size="small"
-          color="default"
-        >
-          <MoreVert />
-        </IconButton>
+        <Tooltip title="Clear unchecked sections">
+          <IconButton onClick={() => planner.removeHidedCourses()} size="small">
+            <ClearAllRounded />
+          </IconButton>
+        </Tooltip>
       </header>
       {planner.plannerCourses?.length ? (
         planner.plannerCourses.map((course, index) =>
@@ -92,25 +76,6 @@ const PlannerCart = () => {
       ) : (
         <ErrorCard mode={ErrorCardMode.NULL} inPlace />
       )}
-      <Menu
-        className="timetable-more-menu"
-        anchorEl={moreBtnAnchor}
-        open={Boolean(moreBtnAnchor)}
-        onClose={() => setMoreBtnAnchor(null)}
-      >
-        {MORE_SELECTIONS.map((item) => (
-          <MenuItem
-            key={item.label}
-            onClick={() => {
-              item.action();
-              setMoreBtnAnchor(null);
-            }}
-          >
-            <span className="menu-icon-container center-box">{item.icon}</span>
-            {item.label}
-          </MenuItem>
-        ))}
-      </Menu>
     </Card>
   );
 };

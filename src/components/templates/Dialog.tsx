@@ -87,10 +87,15 @@ const ReportIssuesDialogContent = observer(
     );
 
     const [report, { loading: reportLoading }] = useMutation(REPORT, {
-      onCompleted: handleCompleted(() => {}, {
-        view,
-        message: 'Thank you for your feedback!',
-      }),
+      onCompleted: handleCompleted(
+        () => {
+          view.setDialog(null);
+        },
+        {
+          view,
+          message: 'Thank you for your feedback!',
+        }
+      ),
       onError: view.handleError,
     });
     const submit = async (e) => {
