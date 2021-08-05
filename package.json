@@ -186,15 +186,5 @@
   "bugs": {
     "url": "https://github.com/cutility/CUtopia-backend/issues"
   },
-  "homepage": "https://github.com/cutility/CUtopia-backend#readme",
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run pretest"
-    }
-  },
-  "lint-staged": {
-    "*.js": [
-      "eslint --fix ."
-    ]
-  }
+  "homepage": "https://github.com/cutility/CUtopia-backend#readme"
 }
