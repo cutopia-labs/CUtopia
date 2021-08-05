@@ -1,10 +1,9 @@
-import { PropsWithChildren } from 'react';
-
 import './ListItem.scss';
 import clsx from 'clsx';
+import { PropsWithChildren } from 'react';
 import colors from '../../constants/colors';
 
-type ListItemProps = {
+export type ListItemProps = {
   title?: string;
   caption?: string;
   onClick?: (...args: any[]) => any;
@@ -23,7 +22,6 @@ const ListItem = ({
   caption,
   onClick,
   chevron,
-  children,
   noBorder,
   ribbonIndex,
   left,
@@ -31,39 +29,56 @@ const ListItem = ({
   className,
   onMouseDown,
   noHover,
-}: PropsWithChildren<ListItemProps>) => (
-  <div
-    className={clsx(
-      'list-item-container',
-      !noBorder && 'border',
-      className,
-      !noHover && 'hover-bg'
-    )}
-    onClick={onClick}
-    onMouseDown={onMouseDown}
-  >
-    {ribbonIndex !== undefined && (
-      <span
-        className="list-item-color-bar"
-        style={{
-          backgroundColor:
-            colors.randomColors[
-              ribbonIndex >= colors.randomColors.length
-                ? ribbonIndex % colors.randomColors.length
-                : ribbonIndex
-            ],
-        }}
-      />
-    )}
-    {left}
-    <span className="list-item-title-container column">
-      {title && <span className="list-item-title title">{title}</span>}
-      {caption && <span className="list-item-caption caption">{caption}</span>}
-    </span>
-    {children}
-    {right}
-    {chevron && <span className="list-item-title chevron">{'\u203A'}</span>}
-  </div>
-);
+  children,
+}: PropsWithChildren<ListItemProps>) => {
+  const listContent = (
+    <>
+      {ribbonIndex !== undefined && (
+        <span
+          className="list-item-color-bar"
+          style={{
+            backgroundColor:
+              colors.randomColors[
+                ribbonIndex >= colors.randomColors.length
+                  ? ribbonIndex % colors.randomColors.length
+                  : ribbonIndex
+              ],
+          }}
+        />
+      )}
+      {left}
+      <span className="list-item-title-container column">
+        {title && <span className="list-item-title title">{title}</span>}
+        {caption && (
+          <span className="list-item-caption caption">{caption}</span>
+        )}
+      </span>
+      {right}
+      {chevron && <span className="list-item-title chevron">{'\u203A'}</span>}
+    </>
+  );
+  return (
+    <div
+      className={clsx(
+        'list-item-container',
+        !noBorder && 'border',
+        className,
+        !noHover && 'hover-bg',
+        children && 'column'
+      )}
+      onClick={onClick}
+      onMouseDown={onMouseDown}
+    >
+      {children ? (
+        <>
+          <div className="center-row list-content-row">{listContent}</div>
+          {children}
+        </>
+      ) : (
+        listContent
+      )}
+    </div>
+  );
+};
 
 export default ListItem;

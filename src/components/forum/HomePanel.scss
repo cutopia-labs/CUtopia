@@ -1,8 +1,7 @@
 .review-home-panel {
-  flex-direction: column;
   padding: 0;
+  grid-auto-rows: min-content;
   .chips-row {
-    margin-top: var(--card-padding);
     margin-right: auto;
   }
 }
@@ -13,7 +12,6 @@
   overflow: hidden;
   border-bottom: 0;
   width: 100%;
-  margin-top: var(--card-padding);
   & > * {
     border-bottom: 1px solid var(--border);
   }
@@ -56,6 +54,23 @@
 }
 .sort-menu {
   text-transform: capitalize;
+}
+
+.recent-review {
+  width: calc(100% - 2 * var(--card-padding));
+  padding: 0 var(--card-padding) 12px var(--card-padding);
+  .list-item-title-container {
+    margin-left: 0;
+    .title {
+      color: var(--primary);
+    }
+  }
+  .recent-review-text {
+    line-height: var(--line-height);
+    max-height: calc(var(--line-height) * 3);
+    overflow: hidden;
+    width: 100%;
+  }
 }
 
 @media only screen and (max-width: 1260px) {

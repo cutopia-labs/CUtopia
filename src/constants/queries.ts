@@ -87,29 +87,15 @@ export const REVIEWS_QUERY = gql`
 export const RECENT_REVIEWS_QUERY = gql`
   query {
     reviews(input: { getLatest: true }) {
-      courseId
-      username
-      title
-      createdDate
-      term
-      section
-      lecturer
-      overall
-      content {
-        text
-        grade
-      }
-      grading {
-        text
-        grade
-      }
-      teaching {
-        text
-        grade
-      }
-      difficulty {
-        text
-        grade
+      reviews {
+        courseId
+        username
+        title
+        createdDate
+        overall
+        grading {
+          text
+        }
       }
     }
   }

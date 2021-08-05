@@ -2,7 +2,6 @@ import { PropsWithChildren } from 'react';
 import clsx from 'clsx';
 
 type CardProps = {
-  className?: string;
   inPlace?: boolean;
 };
 
@@ -11,7 +10,7 @@ const Card = ({
   children,
   inPlace,
   ...props
-}: PropsWithChildren<CardProps>) => (
+}: PropsWithChildren<CardProps & React.HTMLProps<HTMLDivElement>>) => (
   <div className={clsx(inPlace ? 'column' : 'card', className)} {...props}>
     {children}
   </div>

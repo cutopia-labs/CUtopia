@@ -30,12 +30,15 @@ export function getMMMDDYY(
   showMinutes?: boolean,
   hideYear?: boolean
 ) {
+  const currentYear = new Date().getFullYear();
   const date = new Date(parseInt(timestamp, 10));
   const day = date.getDay();
+  const timestampYear = date.getFullYear();
+  hideYear = hideYear === undefined ? currentYear === timestampYear : hideYear;
   return `${showWeekday ? `${WEEKDAYS[day ? day - 1 : 6]}, ` : ''}${
     MONTHS[date.getMonth()]
   } ${date.getDate()}${hideYear ? '' : `, ${date.getFullYear()}`}${
-    showMinutes ? `, ${getHHMM(date)}` : ''
+    showMinutes ? `, ${getHHMM(timestamp)}` : ''
   }`;
 }
 

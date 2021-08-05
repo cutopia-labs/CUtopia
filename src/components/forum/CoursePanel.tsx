@@ -157,7 +157,7 @@ const ReviewFilterBar = ({
             className="reviews-filter-menu"
             anchorEl={anchorEl}
             open={Boolean(anchorEl)}
-            onClose={() => [setAnchorEl(null)]}
+            onClose={() => setAnchorEl(null)}
             TransitionProps={{
               onExited: () => setMode(ReviewFilterBarMode.INITIAL),
             }}

@@ -16,7 +16,7 @@
   .caption {
     margin: 0;
     overflow-wrap: anywhere;
-    line-height: 20px;
+    line-height: var(--line-height-caption);
   }
   &.concise {
     padding: var(--card-padding);

@@ -49,7 +49,7 @@
 .review-text {
   text-align: start;
   font-size: 14px;
-  line-height: 20px;
+  line-height: var(--line-height-caption);
   margin: 0;
   padding: 0 var(--review-card-inner-padding-horizontal) var(--review-card-inner-padding-vertical)
     var(--review-card-inner-padding-horizontal);

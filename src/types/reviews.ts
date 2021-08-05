@@ -1,6 +1,16 @@
-type Grade = 'F' | 'D' | 'C' | 'B' | 'A';
+export type Grade = 'F' | 'D' | 'C' | 'B' | 'A';
 
-type Review = {
+export type RecentReview = {
+  id: string;
+  courseId: string;
+  username: string;
+  title?: string;
+  createdDate: string;
+  overall: number;
+  grading: ReviewDetails;
+};
+
+export type Review = {
   id: string;
   courseId: string;
   username: string;
@@ -21,51 +31,40 @@ type Review = {
   myVote?: number;
 };
 
-type ReviewDetails = {
+export type ReviewDetails = {
   grade: number;
   text: string;
 };
 
-type ReviewsResult = {
+export type ReviewsResult = {
   reviews: {
     reviews: Review[];
     lastEvaluatedKey?: LastEvaluatedKey;
   };
 };
 
-type LastEvaluatedKey = {
+export type LastEvaluatedKey = {
   courseId: string;
   createdDate: string;
   upvotes?: number;
 };
 
-type CreateReviewResult = {
+export type CreateReviewResult = {
   id?: string;
   createdDate?: string;
   error?: string;
 };
 
-type VoteReviewResult = {
+export type VoteReviewResult = {
   review?: Review;
   error?: string;
 };
 
-type ReviewsFilter = {
+export type ReviewsFilter = {
   courseId: string;
   getLatest?: boolean;
   ascendingDate?: boolean;
   ascendingVote?: boolean;
   lastEvaluatedKey?: LastEvaluatedKey;
   lecturer?: string;
-};
-
-export type {
-  Grade,
-  Review,
-  ReviewDetails,
-  ReviewsResult,
-  ReviewsFilter,
-  LastEvaluatedKey,
-  CreateReviewResult,
-  VoteReviewResult,
 };

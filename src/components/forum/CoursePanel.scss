@@ -6,7 +6,7 @@
 .course-panel {
   position: relative;
   p {
-    line-height: 22px;
+    line-height: var(--line-height);
   }
 }
 
