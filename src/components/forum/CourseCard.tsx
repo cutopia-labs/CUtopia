@@ -14,6 +14,7 @@ import { COURSE_CARD_MAX_HEIGHT } from '../../constants/configs';
 import { CourseInfo, ReportCategory } from '../../types';
 import Link from '../molecules/Link';
 import useMobileQuery from '../../helpers/useMobileQuery';
+import Loading from '../atoms/Loading';
 import Points from './Points';
 import CourseSections from './CourseSections';
 import GradeRow from './GradeRow';
@@ -21,15 +22,20 @@ import GradeRow from './GradeRow';
 type CourseCardProps = {
   courseInfo: CourseInfo;
   concise?: boolean;
+  loading?: boolean;
 };
 
-const CourseCard = ({ courseInfo, concise }: CourseCardProps) => {
+const CourseCard = ({ courseInfo, concise, loading }: CourseCardProps) => {
   const [showMore, setShowMore] = useState(true);
   const [skipHeightCheck, setSkipHeightCheck] = useState(concise);
   const user = useContext(UserContext);
   const isMobile = useMobileQuery();
   const history = useHistory();
   const view = useContext(ViewContext);
+
+  if (loading) {
+    return <Loading />;
+  }
 
   const isFavorited = user.favoriteCourses.some(
     (course) => course.courseId === courseInfo.courseId

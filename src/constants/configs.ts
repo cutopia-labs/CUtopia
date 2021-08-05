@@ -26,3 +26,7 @@ export const PLANNER_CONFIGS = {
 };
 
 export const MIN_DESKTOP_WIDTH = 1260;
+
+export const SERVER_CONFIG = {
+  URI: 'https://uqtx8qgnz5.execute-api.ap-northeast-1.amazonaws.com/Stage/graphql',
+};

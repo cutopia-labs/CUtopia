@@ -18,6 +18,7 @@ import StoreProvider, {
 
 import Navigator from './containers';
 import { DARK_THEME, THEME } from './constants/colors';
+import { SERVER_CONFIG } from './constants/configs';
 
 const AppWrapper = observer(() => {
   const [ready, setReady] = useState(false);
@@ -43,7 +44,7 @@ const AppWrapper = observer(() => {
 
   const client = useMemo(() => {
     const httpLink = createHttpLink({
-      uri: 'https://uqtx8qgnz5.execute-api.ap-northeast-1.amazonaws.com/Stage/graphql',
+      uri: SERVER_CONFIG.URI,
     });
     const authLink = setContext((_, { headers }) => {
       const { token } = user;

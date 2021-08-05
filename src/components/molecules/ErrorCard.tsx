@@ -31,6 +31,7 @@ const ErrorCard = ({ mode, inPlace }: ErrorCardProps) => (
       src={CARD_ITEMS[mode]?.image}
       alt="Empty!"
       className="null-card-photo"
+      draggable={false}
     />
     <span className="null-card-word caption">{CARD_ITEMS[mode]?.caption}</span>
   </Card>

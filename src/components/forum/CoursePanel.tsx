@@ -128,29 +128,30 @@ const ReviewFilterBar = ({
       {courseInfo.rating ? (
         <>
           <div className="filter-row center-row grid-auto-column">
-            {Object.entries(REVIEWS_CONFIGS).map(([k, v]) => (
-              <Button
-                key={v.key}
-                className={clsx(
-                  'capsule-btn reviews-sort',
-                  (reviewsPayload[v.key] ||
-                    parseInt(k, 10) === ReviewFilterBarMode.SORTING) &&
-                    'selected'
-                )}
-                size="small"
-                onClick={(e) => [
-                  setMode(parseInt(k, 10)),
-                  setAnchorEl(e.currentTarget),
-                ]}
-                startIcon={v.icon}
-                endIcon={<ExpandMore />}
-              >
-                {getLabel(parseInt(k, 10), reviewsPayload)}
-              </Button>
-            ))}
+            {!fetchAllAction &&
+              Object.entries(REVIEWS_CONFIGS).map(([k, v]) => (
+                <Button
+                  key={v.key}
+                  className={clsx(
+                    'capsule-btn reviews-sort',
+                    (reviewsPayload[v.key] ||
+                      parseInt(k, 10) === ReviewFilterBarMode.SORTING) &&
+                      'selected'
+                  )}
+                  size="small"
+                  onClick={(e) => [
+                    setMode(parseInt(k, 10)),
+                    setAnchorEl(e.currentTarget),
+                  ]}
+                  startIcon={v.icon}
+                  endIcon={<ExpandMore />}
+                >
+                  {getLabel(parseInt(k, 10), reviewsPayload)}
+                </Button>
+              ))}
             <div className="reviews-filter-label caption">
               {exceedLimit && `Limit exceeded (post 1 reviews to unlock)`}
-              {!exceedLimit && fetchAllAction && 'Showing 1 review only!'}
+              {fetchAllAction && 'Showing 1 review only!'}
             </div>
           </div>
           <Menu
@@ -185,15 +186,16 @@ const ReviewFilterBar = ({
         <span>No review yet</span>
       )}
       <span className="right grid-auto-column">
-        <IconButton className="edit" size="small" onClick={writeAction}>
-          <FiEdit />
-        </IconButton>
+        {fetchAllAction ? (
+          <Button size="small" color="primary" onClick={fetchAllAction}>
+            Fetch All
+          </Button>
+        ) : (
+          <IconButton className="edit" size="small" onClick={writeAction}>
+            <FiEdit />
+          </IconButton>
+        )}
       </span>
-      {courseInfo.rating && fetchAllAction && (
-        <Button size="small" color="primary" onClick={fetchAllAction}>
-          Fetch All
-        </Button>
-      )}
     </div>
   );
 };
@@ -384,7 +386,6 @@ const CoursePanel = () => {
 
   return (
     <>
-      {(reviewsLoading || courseInfoLoading) && <Loading fixed />}
       <div className="course-panel-container grid-auto-row">
         <div className="course-panel panel card">
           {!courseInfoLoading && (
@@ -393,6 +394,7 @@ const CoursePanel = () => {
                 ...courseInfo?.subjects[0]?.courses[0],
                 courseId,
               }}
+              loading={courseInfoLoading}
             />
           )}
         </div>
@@ -450,22 +452,24 @@ const CoursePanel = () => {
             )}
           </>
         )}
-        {(reviewsLoading || reviewLoading) && <Loading fixed />}
-        {(review ? [review.review] : reviews).map((item) => (
-          <ReviewCard
-            key={item.createdDate}
-            review={item}
-            shareAction={() => {
-              copy(
-                reviewId
-                  ? window.location.href
-                  : `${window.location.href}/${item.createdDate}`
-              );
-              view.setSnackBar('Copied sharelink to clipboard!');
-            }}
-            showAll={Boolean(reviewId)}
-          />
-        ))}
+        <div className="grid-auto-row reviews-container">
+          {(review ? [review.review] : reviews).map((item) => (
+            <ReviewCard
+              key={item.createdDate}
+              review={item}
+              shareAction={() => {
+                copy(
+                  reviewId
+                    ? window.location.href
+                    : `${window.location.href}/${item.createdDate}`
+                );
+                view.setSnackBar('Copied sharelink to clipboard!');
+              }}
+              showAll={Boolean(reviewId)}
+            />
+          ))}
+          {(reviewLoading || reviewsLoading) && <Loading />}
+        </div>
         {lastEvaluatedKey === null && <Footer />}
       </div>
     </>

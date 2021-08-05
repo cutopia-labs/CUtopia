@@ -1,13 +1,13 @@
 import { Grade, RatingField } from '../types';
 
-const RATING_FIELDS = [
+export const RATING_FIELDS = [
   'grading',
   'teaching',
   'difficulty',
   'content',
 ] as RatingField[];
 
-const LETTER_TO_VALUE = Object.freeze({
+export const LETTER_TO_VALUE = Object.freeze({
   'A': 4,
   'A-': 3.7,
   'B+': 3.3,
@@ -20,7 +20,7 @@ const LETTER_TO_VALUE = Object.freeze({
   'F': 0,
 });
 
-const VALUE_TO_LETTER = Object.freeze({
+export const VALUE_TO_LETTER = Object.freeze({
   4: 'A',
   3.7: 'A-',
   3.3: 'B+',
@@ -33,11 +33,13 @@ const VALUE_TO_LETTER = Object.freeze({
   0: 'F',
 });
 
-const GRADES = Object.freeze(['F', 'D', 'C', 'B', 'A']) as Grade[];
+export const GRADES = Object.freeze(['F', 'D', 'C', 'B', 'A']) as Grade[];
 
-const GRADE_VALUES = Object.freeze([4, 3.7, 3.3, 3, 2.7, 2.3, 2, 1.7, 1, 0]);
+export const GRADE_VALUES = Object.freeze([
+  4, 3.7, 3.3, 3, 2.7, 2.3, 2, 1.7, 1, 0,
+]);
 
-const LETTER_TO_FIVE_VALUES = Object.freeze({
+export const LETTER_TO_FIVE_VALUES = Object.freeze({
   A: 4,
   B: 3,
   C: 2,
@@ -45,29 +47,14 @@ const LETTER_TO_FIVE_VALUES = Object.freeze({
   F: 0,
 });
 
-const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-const WEEKDAYS_TWO_ABBR = ['', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
+export const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+export const WEEKDAYS_TWO_ABBR = ['', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
 
-const VOTE_ACTIONS = Object.freeze({
+export const VOTE_ACTIONS = Object.freeze({
   UPVOTE: 1,
   DOWNVOTE: 0,
 });
 
-const TOKEN_EXPIRE_DAYS = 7;
-const VIEWS_LIMIT = 5;
-const FULL_MEMBER_REVIEWS = 3;
-
-export {
-  RATING_FIELDS,
-  LETTER_TO_VALUE,
-  VALUE_TO_LETTER,
-  WEEKDAYS,
-  WEEKDAYS_TWO_ABBR,
-  GRADES,
-  GRADE_VALUES,
-  LETTER_TO_FIVE_VALUES,
-  VOTE_ACTIONS,
-  TOKEN_EXPIRE_DAYS,
-  VIEWS_LIMIT,
-  FULL_MEMBER_REVIEWS,
-};
+export const TOKEN_EXPIRE_DAYS = 7;
+export const VIEWS_LIMIT = 5;
+export const FULL_MEMBER_REVIEWS = 3;
