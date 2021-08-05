@@ -11,6 +11,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Tooltip,
 } from '@material-ui/core';
 import { useMutation, useQuery } from '@apollo/client';
 import { useHistory, useParams } from 'react-router-dom';
@@ -303,13 +304,15 @@ const ReviewEdit = ({ courseId }) => {
       <div className="review-header-container center-row">
         <span className="title">Your Review</span>
         <span className="caption">前人種樹，後人乘涼--</span>
-        <IconButton
-          className="anonymous-switch"
-          aria-label="anonymous"
-          onClick={() => dispatchFormData({ anonymous: !formData.anonymous })}
-        >
-          {formData.anonymous ? <VisibilityOff /> : <Visibility />}
-        </IconButton>
+        <Tooltip title="Anonymity">
+          <IconButton
+            className="anonymous-switch"
+            aria-label="anonymous"
+            onClick={() => dispatchFormData({ anonymous: !formData.anonymous })}
+          >
+            {formData.anonymous ? <VisibilityOff /> : <Visibility />}
+          </IconButton>
+        </Tooltip>
       </div>
       <FormSection title="term">
         <div

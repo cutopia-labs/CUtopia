@@ -1,6 +1,6 @@
-import { useState, useEffect, useContext, useRef } from 'react';
+import { useState, useEffect, useContext, useRef, useReducer } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { Edit, Share, ExpandMore, MoreHoriz } from '@material-ui/icons';
+import { Edit, Share, ExpandMore } from '@material-ui/icons';
 import { useQuery } from '@apollo/client';
 import { Button, IconButton, Menu, MenuItem } from '@material-ui/core';
 import { SpeedDial, SpeedDialIcon, SpeedDialAction } from '@material-ui/lab';
@@ -24,7 +24,7 @@ import Loading from '../atoms/Loading';
 import { ViewContext, UserContext } from '../../store';
 import useDebounce from '../../helpers/useDebounce';
 import { LAZY_LOAD_BUFFER } from '../../constants/configs';
-import { ReviewsFilter, ReviewsResult } from '../../types';
+import { CourseInfo, ReviewsFilter, ReviewsResult } from '../../types';
 import Footer from '../molecules/Footer';
 import useMobileQuery from '../../helpers/useMobileQuery';
 import ReviewCard from './ReviewCard';
@@ -37,25 +37,89 @@ export enum COURSE_PANEL_MODES {
   EDIT_REVIEW,
 }
 
-const SORTING_FIELDS = Object.freeze(['date', 'upvotes']);
+const SORTING_FIELDS = { date: 'ascendingDate', upvotes: 'ascendingVote' };
+
+type ReviewFilterBarProps = {
+  forwardedRef?: any;
+  courseInfo: CourseInfo;
+  reviewsPayload: Partial<ReviewsFilter>;
+  dispatchReviewsPayload;
+  fetchAllAction?: any;
+  writeAction?: any;
+  exceedLimit?: any;
+  className?: any;
+  isMobile?: any;
+};
+
+enum ReviewFilterBarMode {
+  INITIAL,
+  SORTING,
+  LECTURER,
+  TERM,
+}
 
 const ReviewFilterBar = ({
   forwardedRef,
   courseInfo,
-  sorting,
-  setSorting,
+  reviewsPayload,
+  dispatchReviewsPayload,
   fetchAllAction,
   writeAction,
   exceedLimit,
   className,
   isMobile,
-}: any) => {
+}: ReviewFilterBarProps) => {
+  const [mode, setMode] = useState(ReviewFilterBarMode.INITIAL);
   const [anchorEl, setAnchorEl] = useState(null);
-  const handleClose = (field) => {
+
+  const getLabel = (
+    mode: ReviewFilterBarMode,
+    reviewsPayload: Partial<ReviewsFilter>
+  ) => {
+    if (isMobile) {
+      return '';
+    }
+    if (mode === ReviewFilterBarMode.SORTING) {
+      console.log(reviewsPayload);
+      return reviewsPayload.ascendingDate === null ? 'vote' : 'date';
+    }
+    return reviewsPayload[REVIEWS_CONFIGS[mode].key] || 'All';
+  };
+
+  const onSelect = (field: string, selected: boolean) => {
     console.log(`Setted to ${field}`);
-    setSorting(field);
+    if (mode === ReviewFilterBarMode.SORTING) {
+      field = selected ? (field === 'date' ? 'upvotes' : 'date') : field;
+      dispatchReviewsPayload({
+        ascendingDate: field === 'date' ? false : null,
+        ascendingVote: field === 'upvotes' ? false : null,
+      });
+    } else {
+      dispatchReviewsPayload({
+        [REVIEWS_CONFIGS[mode].key]: selected ? '' : field,
+      });
+    }
     setAnchorEl(null);
   };
+
+  const REVIEWS_CONFIGS = {
+    [ReviewFilterBarMode.SORTING]: {
+      key: 'sorting',
+      selections: Object.keys(SORTING_FIELDS),
+      icon: <TiArrowSortedUp />,
+    },
+    [ReviewFilterBarMode.LECTURER]: {
+      key: 'lecturer',
+      selections: courseInfo.lecturers || [],
+      icon: <FaUserAlt size={12} />,
+    },
+    [ReviewFilterBarMode.TERM]: {
+      key: 'term',
+      selections: courseInfo.avaliableTerms || ['Test Term 1', 'Test Term 2'],
+      icon: <AiTwotoneCalendar />,
+    },
+  };
+
   return (
     <div
       ref={forwardedRef}
@@ -64,55 +128,57 @@ const ReviewFilterBar = ({
       {courseInfo.rating ? (
         <>
           <div className="filter-row center-row grid-auto-column">
-            <Button
-              className="capsule-btn reviews-sort selected"
-              size="small"
-              onClick={(e) => setAnchorEl(e.currentTarget)}
-              startIcon={<TiArrowSortedUp />}
-              endIcon={<ExpandMore />}
-            >
-              {!isMobile && sorting}
-            </Button>
-            <Button
-              className="capsule-btn reviews-sort"
-              size="small"
-              onClick={(e) => setAnchorEl(e.currentTarget)}
-              startIcon={<FaUserAlt size={12} />}
-              endIcon={<ExpandMore />}
-            >
-              {!isMobile && 'All'}
-            </Button>
-            <Button
-              className="capsule-btn reviews-sort"
-              size="small"
-              onClick={(e) => setAnchorEl(e.currentTarget)}
-              startIcon={<AiTwotoneCalendar />}
-              endIcon={<ExpandMore />}
-            >
-              {!isMobile && 'All'}
-            </Button>
+            {Object.entries(REVIEWS_CONFIGS).map(([k, v]) => (
+              <Button
+                key={v.key}
+                className={clsx(
+                  'capsule-btn reviews-sort',
+                  (reviewsPayload[v.key] ||
+                    parseInt(k, 10) === ReviewFilterBarMode.SORTING) &&
+                    'selected'
+                )}
+                size="small"
+                onClick={(e) => [
+                  setMode(parseInt(k, 10)),
+                  setAnchorEl(e.currentTarget),
+                ]}
+                startIcon={v.icon}
+                endIcon={<ExpandMore />}
+              >
+                {getLabel(parseInt(k, 10), reviewsPayload)}
+              </Button>
+            ))}
             <div className="reviews-filter-label caption">
               {exceedLimit && `Limit exceeded (post 1 reviews to unlock)`}
               {!exceedLimit && fetchAllAction && 'Showing 1 review only!'}
             </div>
           </div>
           <Menu
-            id="simple-menu"
+            className="reviews-filter-menu"
             anchorEl={anchorEl}
-            keepMounted
             open={Boolean(anchorEl)}
-            onClose={() => setAnchorEl(null)}
+            onClose={() => [setAnchorEl(null)]}
+            TransitionProps={{
+              onExited: () => setMode(ReviewFilterBarMode.INITIAL),
+            }}
             disableScrollLock={true}
           >
-            {SORTING_FIELDS.map((field) => (
-              <MenuItem
-                key={field}
-                onClick={() => handleClose(field)}
-                selected={sorting === field}
-              >
-                {field}
-              </MenuItem>
-            ))}
+            {(REVIEWS_CONFIGS[mode]?.selections || []).map((field: string) => {
+              console.log(`sorting ${SORTING_FIELDS[field]}`);
+              const selected =
+                mode === ReviewFilterBarMode.SORTING
+                  ? reviewsPayload[SORTING_FIELDS[field]] !== null
+                  : reviewsPayload[REVIEWS_CONFIGS[mode].key] === field;
+              return (
+                <MenuItem
+                  key={field}
+                  onClick={() => onSelect(field, selected)}
+                  selected={selected}
+                >
+                  {field}
+                </MenuItem>
+              );
+            })}
           </Menu>
         </>
       ) : (
@@ -121,9 +187,6 @@ const ReviewFilterBar = ({
       <span className="right grid-auto-column">
         <IconButton className="edit" size="small" onClick={writeAction}>
           <FiEdit />
-        </IconButton>
-        <IconButton className="more" size="small">
-          <MoreHoriz />
         </IconButton>
       </span>
       {courseInfo.rating && fetchAllAction && (
@@ -141,7 +204,6 @@ const CoursePanel = () => {
     reviewId?: string;
   }>();
   const [mode, setMode] = useState(COURSE_PANEL_MODES.FETCH_REVIEWS);
-  const [sorting, setSorting] = useState('date');
   const history = useHistory();
   const [FABOpen, setFABOpen] = useState(false);
   const [lastEvaluatedKey, setLastEvaluatedKey] = useState(undefined);
@@ -151,6 +213,17 @@ const CoursePanel = () => {
   const isMobile = useMobileQuery();
   const [FABHidden, setFABHidden] = useState(!isMobile);
   const reviewFilterBarRef = useRef<HTMLDivElement | null>(null);
+  const [reviewsPayload, dispatchReviewsPayload] = useReducer(
+    (state: Partial<ReviewsFilter>, action: Partial<ReviewsFilter>) =>
+      ({
+        ...state,
+        ...action,
+      } as Partial<ReviewsFilter>),
+    {
+      ascendingDate: false,
+      ascendingVote: null,
+    } as Partial<ReviewsFilter>
+  );
 
   const FAB_GROUP_ACTIONS = Object.freeze([
     {
@@ -162,6 +235,14 @@ const CoursePanel = () => {
       },
     },
   ]);
+
+  useEffect(() => {
+    // Reset to reload the reviews once sortkey / filter changed
+    if (reviews?.length) {
+      setReviews([]);
+      setLastEvaluatedKey(undefined);
+    }
+  }, [reviewsPayload]);
 
   // Fetch course info
   const {
@@ -189,8 +270,7 @@ const CoursePanel = () => {
     skip: false,
     variables: {
       courseId,
-      ascendingDate: sorting === 'date' ? false : null,
-      ascendingVote: sorting === 'upvotes' ? false : null,
+      ...reviewsPayload,
     },
     onCompleted: (data) => {
       console.log(
@@ -249,16 +329,9 @@ const CoursePanel = () => {
       // Fetch more here;
       if (lastEvaluatedKey && courseId && !reviewId) {
         console.log('Refetching');
-        console.log({
-          courseId,
-          ascendingDate: sorting === 'date' ? false : null,
-          ascendingVote: sorting === 'upvotes' ? false : null,
-          lastEvaluatedKey,
-        });
         await reviewsRefetch({
           courseId,
-          ascendingDate: sorting === 'date' ? false : null,
-          ascendingVote: sorting === 'upvotes' ? false : null,
+          ...reviewsPayload,
           lastEvaluatedKey: {
             courseId: lastEvaluatedKey.courseId,
             createdDate: lastEvaluatedKey.createdDate,
@@ -309,14 +382,6 @@ const CoursePanel = () => {
     console.log(`in: ${!isMobile && !FABHidden}`);
   }, [isMobile, FABHidden]);
 
-  useEffect(() => {
-    // Reset to reload the reviews once sortkey / filter changed
-    if (reviews?.length) {
-      setReviews([]);
-      setLastEvaluatedKey(undefined);
-    }
-  }, [sorting]);
-
   return (
     <>
       {(reviewsLoading || courseInfoLoading) && <Loading fixed />}
@@ -336,8 +401,8 @@ const CoursePanel = () => {
             <ReviewFilterBar
               forwardedRef={reviewFilterBarRef}
               courseInfo={courseInfo.subjects[0].courses[0]}
-              sorting={sorting}
-              setSorting={setSorting}
+              reviewsPayload={reviewsPayload}
+              dispatchReviewsPayload={dispatchReviewsPayload}
               fetchAllAction={
                 Boolean(reviewId) && (() => history.push(`/review/${courseId}`))
               }
@@ -373,8 +438,8 @@ const CoursePanel = () => {
                 className="float"
                 isMobile={true}
                 courseInfo={courseInfo.subjects[0].courses[0]}
-                sorting={sorting}
-                setSorting={setSorting}
+                reviewsPayload={reviewsPayload}
+                dispatchReviewsPayload={dispatchReviewsPayload}
                 fetchAllAction={
                   Boolean(reviewId) &&
                   (() => history.push(`/review/${courseId}`))

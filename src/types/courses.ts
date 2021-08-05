@@ -31,6 +31,8 @@ interface Course {
   terms?: Term[];
   assessments?: AssessementComponent[];
   rating?: CourseRating;
+  lecturers?: string[];
+  avaliableTerms?: string[]; //temp
 }
 
 interface CourseInfo extends Course {

@@ -56,6 +56,7 @@ type ReviewsFilter = {
   ascendingDate?: boolean;
   ascendingVote?: boolean;
   lastEvaluatedKey?: LastEvaluatedKey;
+  lecturer?: string;
 };
 
 export type {

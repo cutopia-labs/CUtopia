@@ -11,9 +11,7 @@ export const COURSE_INFO_QUERY = gql`
         requirements
         description
         syllabus
-        outcome
-        required_readings
-        recommended_readings
+        lecturers
         academic_group
         assessments {
           name
