@@ -15,11 +15,10 @@ type ReviewsResult {
 }
 
 input ReviewsFilter {
-  """
-    Either set courseId or getLatest
-  """
+  "Either set courseId or getLatest"
   courseId: String
   getLatest: Boolean
+  lecturer: String
   ascendingDate: Boolean
   ascendingVote: Boolean
   lastEvaluatedKey: LastEvaluatedKeyInput

@@ -1,4 +1,5 @@
 const { subjects, subjectNames } = require('../../data/courses');
+const { getCourseLecturers } = require('dynamodb');
 
 exports.Query = {
   subjects: (parent, { filter }) => {
@@ -40,6 +41,10 @@ exports.Subject = {
 exports.Course = {
   code: ({ course }) => course.code,
   title: ({ course }) => course.title,
+  lecturers: async ({ idsContext, course }) => {
+    const courseId = idsContext.subject + course.code;
+    return await getCourseLecturers({ courseId });
+  },
   career: ({ course }) => course.career,
   units: ({ course }) => course.units,
   grading: ({ course }) => course.grading,

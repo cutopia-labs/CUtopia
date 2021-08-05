@@ -3,6 +3,8 @@ Parameters:
     Type: String
   UserEmailMappingIndexName:
     Type: String
+  CourseTableName:
+    Type: String
   ReviewsTableName:
     Type: String
   ReviewsByVoteIndexName:
@@ -49,6 +51,19 @@ Resources:
           ProvisionedThroughput:
             ReadCapacityUnits: !Ref ReadCapacityUnits
             WriteCapacityUnits: !Ref WriteCapacityUnits
+  CourseDB:
+    Type: "AWS::DynamoDB::Table"
+    Properties:
+      TableName: !Ref CourseTableName
+      AttributeDefinitions:
+        - AttributeName: "courseId"
+          AttributeType: S
+      KeySchema:
+        - AttributeName: "courseId"
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: !Ref ReadCapacityUnits
+        WriteCapacityUnits: !Ref WriteCapacityUnits
   ReviewsDB:
     Type: "AWS::DynamoDB::Table"
     Properties:
@@ -127,6 +142,8 @@ Resources:
 Outputs:
   UserDBArn:
     Value: !GetAtt UserDB.Arn
+  CourseDBArn:
+    Value: !GetAtt CourseDB.Arn
   ReviewsDBArn:
     Value: !GetAtt ReviewsDB.Arn
   LatestReviewsDBArn:

@@ -4,7 +4,9 @@ Parameters:
   UserTableName:
     Type: String
   UserEmailMappingIndexName:
-    Type: String 
+    Type: String
+  CourseTableName:
+    Type: String
   ReviewsTableName:
     Type: String
   ReviewsByVoteIndexName:
@@ -33,6 +35,9 @@ Resources:
           - ${AWS::StackName}-${DBName}
           - { DBName: !Ref UserTableName }
         UserEmailMappingIndexName: !Ref UserEmailMappingIndexName
+        CourseTableName: !Sub
+          - ${AWS::StackName}-${DBName}
+          - { DBName: !Ref CourseTableName }
         ReviewsTableName: !Sub
           - ${AWS::StackName}-${DBName}
           - { DBName: !Ref ReviewsTableName }
@@ -57,6 +62,9 @@ Resources:
           - ${AWS::StackName}-${DBName}
           - { DBName: !Ref UserTableName }
         UserEmailMappingIndexName: !Ref UserEmailMappingIndexName
+        CourseTableName: !Sub
+          - ${AWS::StackName}-${DBName}
+          - { DBName: !Ref CourseTableName }
         ReviewsTableName: !Sub
           - ${AWS::StackName}-${DBName}
           - { DBName: !Ref ReviewsTableName }
@@ -71,6 +79,7 @@ Resources:
           - ${AWS::StackName}-${DBName}
           - { DBName: !Ref TimetableTableName }
         UserDBArn: !GetAtt DynamoDB.Outputs.UserDBArn
+        CourseDBArn: !GetAtt DynamoDB.Outputs.CourseDBArn
         ReviewsDBArn: !GetAtt DynamoDB.Outputs.ReviewsDBArn
         LatestReviewsDBArn: !GetAtt DynamoDB.Outputs.LatestReviewsDBArn
         ReportDBArn: !GetAtt DynamoDB.Outputs.ReportDBArn

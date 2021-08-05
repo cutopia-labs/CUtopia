@@ -5,6 +5,8 @@ Parameters:
     Type: String
   UserEmailMappingIndexName:
     Type: String
+  CourseTableName:
+    Type: String
   ReviewsTableName:
     Type: String
   ReviewsByVoteIndexName:
@@ -16,6 +18,8 @@ Parameters:
   TimetableTableName:
     Type: String
   UserDBArn:
+    Type: String
+  CourseDBArn:
     Type: String
   ReviewsDBArn:
     Type: String
@@ -58,11 +62,12 @@ Resources:
           Type: Api
       Environment:
         Variables:
+          UserTableName: !Ref UserTableName
+          UserEmailMappingIndexName: !Ref UserEmailMappingIndexName
+          CourseTableName: !Ref CourseTableName
           ReviewsTableName: !Ref ReviewsTableName
           ReviewsByVoteIndexName: !Ref ReviewsByVoteIndexName
           LatestReviewsTableName: !Ref LatestReviewsTableName
-          UserTableName: !Ref UserTableName
-          UserEmailMappingIndexName: !Ref UserEmailMappingIndexName
           ReportTableName: !Ref ReportTableName
           TimetableTableName: !Ref TimetableTableName
           UserSNSTopic: !Ref UserSNSTopic
@@ -100,11 +105,12 @@ Resources:
                   - dynamodb:DeleteItem
                 Effect: Allow
                 Resource:
+                  - !Ref UserDBArn
+                  - !Sub ${UserDBArn}/index/${UserEmailMappingIndexName}
+                  - !Ref CourseDBArn
                   - !Ref ReviewsDBArn
                   - !Sub ${ReviewsDBArn}/index/${ReviewsByVoteIndexName}
                   - !Ref LatestReviewsDBArn
-                  - !Ref UserDBArn
-                  - !Sub ${UserDBArn}/index/${UserEmailMappingIndexName}
                   - !Ref ReportDBArn
                   - !Ref TimetableDBArn
               - Action:
