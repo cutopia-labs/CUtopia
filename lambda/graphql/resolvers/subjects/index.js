@@ -1,3 +1,5 @@
+/* eslint-disable camelcase */ // course_sections is not in camelcase when parsing the data
+
 const { subjects, subjectNames } = require('../../data/courses');
 const { getCourseLecturers } = require('dynamodb');
 
@@ -11,9 +13,9 @@ exports.Query = {
     }
     return filteredSubjects.map(subName => ({
       name: subName,
-      courses: subjects[subName],
+      courses: subjects[subName]
     }));
-  },
+  }
 };
 
 exports.Subject = {
@@ -22,7 +24,7 @@ exports.Subject = {
       subject: name,
       courseCode: null,
       term: null,
-      section: null,
+      section: null
     };
 
     const { requiredCourses = null } = { ...filter };
@@ -33,9 +35,9 @@ exports.Subject = {
     }
     return filteredCourses.map(course => ({
       idsContext,
-      course,
+      course
     }));
-  },
+  }
 };
 
 exports.Course = {
@@ -68,9 +70,9 @@ exports.Course = {
       idsContext: {
         ...idsContext,
         courseCode: code,
-        term,
+        term
       },
-      course_sections: terms[term],
+      course_sections: terms[term]
     }));
   },
   assessments: ({ course }) => {
@@ -81,9 +83,9 @@ exports.Course = {
 
     return Object.keys(assessments).map(assessment => ({
       name: assessment,
-      percentage: assessments[assessment],
+      percentage: assessments[assessment]
     }));
-  },
+  }
 };
 
 exports.Term = {
@@ -93,15 +95,15 @@ exports.Term = {
     return sectionsNames.map(section => ({
       idsContext: {
         ...idsContext,
-        section,
+        section
       },
-      ...course_sections[section],
+      ...course_sections[section]
     }));
   }
 };
 
 exports.CourseSection = {
-  name: ({ idsContext }) => idsContext.section,
+  name: ({ idsContext }) => idsContext.section
 };
 
 exports.AssessementComponent = {};

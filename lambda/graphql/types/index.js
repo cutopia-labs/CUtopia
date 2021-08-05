@@ -1,6 +1,8 @@
 const { loadFilesSync } = require('@graphql-tools/load-files');
 const { mergeTypeDefs } = require('@graphql-tools/merge');
 const { typeDefs: scalarTypeDefs } = require('graphql-scalars');
+const { range, stringLength, ValidateDirectiveVisitor } = require('@profusion/apollo-validation-directives');
+
 const { join } = require('path');
 
 const graphqlFiles = [
@@ -16,4 +18,10 @@ const graphqlFiles = [
 
 const typesArray = loadFilesSync(graphqlFiles);
 
-module.exports = mergeTypeDefs([scalarTypeDefs, ...typesArray]);
+module.exports = mergeTypeDefs([
+  scalarTypeDefs,
+  ...ValidateDirectiveVisitor.getMissingCommonTypeDefs(),
+  ...range.getTypeDefs(),
+  ...stringLength.getTypeDefs(),
+  ...typesArray
+]);

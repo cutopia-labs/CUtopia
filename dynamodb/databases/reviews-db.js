@@ -57,6 +57,10 @@ exports.createReview = async (input, user) => {
     username,
     requiredFields: ['reviewIds']
   });
+  if (reviewIds.values.some(id => id.includes(courseId))) {
+    throw Error(ERROR_CODES.CREATE_REVIEW_ALREADY_CREATED);
+  }
+
   // give extra review for writing the first review
   // there is an empty string in reviewIds to initialize the reviewIds field
   const exp = reviewIds.values.length === 1 ? 5 : 3;

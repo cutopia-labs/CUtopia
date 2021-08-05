@@ -4,10 +4,3 @@ enum Role {
   USER
   OWNER
 }
-
-directive @constrain(
-  minValue: Int,
-  maxValue: Int,
-  minLen: Int,
-  maxLen: Int
-) on FIELD_DEFINITION | INPUT_FIELD_DEFINITION

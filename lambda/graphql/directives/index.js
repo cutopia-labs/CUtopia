@@ -1,7 +1,8 @@
 const { AuthDirective } = require('./auth-directive');
-const { ConstrainDirective } = require('./constrain-directive');
+const { range, stringLength } = require('@profusion/apollo-validation-directives');
 
 module.exports = {
   auth: AuthDirective,
-  constrain: ConstrainDirective
+  range,
+  stringLength
 };

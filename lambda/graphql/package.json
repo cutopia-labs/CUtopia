@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@profusion/apollo-validation-directives": "^2.1.5",
     "apollo-server-lambda": "^2.19.1",
     "codes": "file:../../modules/codes",
     "dynamodb": "file:../../dynamodb",

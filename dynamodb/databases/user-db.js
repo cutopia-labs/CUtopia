@@ -19,17 +19,21 @@ exports.createUser = async (input) => {
   const { username, email, password } = input;
   const now = new Date().getTime();
 
+  if (!email.endsWith('@link.cuhk.edu.hk')) {
+    throw Error(ERROR_CODES.CREATE_USER_INVALID_EMAIL);
+  }
+
   // Ensure username and email do not exist
   const usernameResult = await this.getUser({
     username,
     requiredFields: ['email']
   });
   if (usernameResult) {
-    throw Error(ERROR_CODES.CHECK_USER_USERNAME_EXISTS);
+    throw Error(ERROR_CODES.CREATE_USER_USERNAME_EXISTS);
   }
   const emailResult = await this.getUsernameByEmail({ email });
   if (emailResult.length !== 0) {
-    throw Error(ERROR_CODES.CHECK_USER_EMAIL_EXISTS);
+    throw Error(ERROR_CODES.CREATE_USER_EMAIL_EXISTS);
   }
 
   const hash = await bcrypt.hash(password, saltRounds);

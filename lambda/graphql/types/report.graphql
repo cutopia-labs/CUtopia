@@ -8,10 +8,10 @@ input ReportInput {
   "review id or course id"
   identifier: String
   type: Int!
-  description: String! @constrain(minLen: 10, maxLen: 500)
+  description: String! @stringLength(min: 10, max: 500)
 }
 
 input ReportFeedbackInput {
   type: String!
-  rating: Int! @constrain(minValue: 0, maxValue: 4)
+  rating: Int! @range(min: 0, max: 4)
 }
