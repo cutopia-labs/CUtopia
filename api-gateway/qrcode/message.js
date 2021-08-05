@@ -2,7 +2,7 @@ const AWS = require('aws-sdk');
 
 const apigwManagementApi = new AWS.ApiGatewayManagementApi({
   apiVersion: '2018-11-29',
-  endpoint: process.env.WSArn,
+  endpoint: process.env.WSArn
 });
 
 exports.handler = async event => {
@@ -11,15 +11,15 @@ exports.handler = async event => {
     await apigwManagementApi.postToConnection({
       ConnectionId: event.requestContext.connectionId,
       Data: JSON.stringify({
-        "connectionId": event.requestContext.connectionId,
-      }),
+        connectionId: event.requestContext.connectionId
+      })
     }).promise();
     return { statusCode: 200, body: 'Data sent.' };
   }
 
   await apigwManagementApi.postToConnection({
     ConnectionId: postData.connectionId,
-    Data: JSON.stringify(postData.data),
+    Data: JSON.stringify(postData.data)
   }).promise();
   return { statusCode: 200, body: 'Data sent.' };
 };

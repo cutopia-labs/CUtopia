@@ -17,14 +17,15 @@ exports.report = async (input) => {
       identifier,
       type,
       username,
-      description,
-    },
+      description
+    }
   };
 
   await db.put(params).promise();
   return reportId;
 };
 
+// TODO: maybe remove this function?
 exports.reportFeedback = async (input) => {
   const { feedbackRatings, username } = input;
   const now = new Date().getTime();
@@ -33,12 +34,12 @@ exports.reportFeedback = async (input) => {
   const params = {
     TableName: process.env.ReportTableName,
     Item: {
-      cat: categories.FEEDBACK,
+      cat: 1, // categories.FEEDBACK,
       createdDate: now,
       id: reportId,
       username,
-      feedbackRatings,
-    },
+      feedbackRatings
+    }
   };
 
   await db.put(params).promise();

@@ -1,7 +1,7 @@
-const { searchCourses } = require('../../data/courses');
+const { subjects, searchCourses } = require('../../data/courses');
 
 exports.Query = {
-  search: () => ({}),
+  search: () => ({})
 };
 
 exports.SearchTable = {
@@ -11,16 +11,16 @@ exports.SearchTable = {
       subject: result.subject,
       course: result.course,
       idsContext: {
-        subject: result.subject,
-      },
+        subject: result.subject
+      }
     }));
     return courses;
-  },
+  }
 };
 
 exports.Course = {
   subject: ({ subject }) => ({
     name: subject,
-    courses: subjects[subject],
-  }),
+    courses: subjects[subject]
+  })
 };

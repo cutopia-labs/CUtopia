@@ -3,11 +3,11 @@ const {
   getReview,
   createReview,
   editReview,
-  voteReview,
+  voteReview
 } = require('dynamodb');
 const {
   recalWithNewReview,
-  recalWithEdittedReview,
+  recalWithEdittedReview
 } = require('../ranking/impl');
 const { VOTE_ACTIONS } = require('codes');
 
@@ -19,7 +19,7 @@ exports.Mutation = {
       id,
       createdDate,
       courseRatings,
-      groupRatings,
+      groupRatings
     };
   },
   voteReview: async (parent, { input }, { user }) => {
@@ -32,18 +32,18 @@ exports.Mutation = {
 
     const modifiedDate = await editReview({
       oldReviewData,
-      newReviewData: input,
+      newReviewData: input
     });
     const { courseRatings, groupRatings } = await recalWithEdittedReview({
       oldReviewData,
-      ...input,
+      ...input
     });
     return {
       modifiedDate,
       courseRatings,
-      groupRatings,
+      groupRatings
     };
-  },
+  }
 };
 
 exports.Review = {
@@ -62,7 +62,7 @@ exports.Review = {
       }
     }
     return null;
-  },
+  }
 };
 
 exports.Query = {
@@ -71,7 +71,7 @@ exports.Query = {
   },
   review: async (parent, { input }) => {
     return await getReview(input);
-  },
+  }
 };
 
 exports.ReviewDetails = {};

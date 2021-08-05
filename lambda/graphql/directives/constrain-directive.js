@@ -8,15 +8,15 @@ const { ERROR_CODES } = require('error-codes');
  * https://github.com/ardatan/graphql-tools/issues/858#issuecomment-426590591
  */
 class ConstrainDirective extends SchemaDirectiveVisitor {
-  visitInputFieldDefinition(field) {
+  visitInputFieldDefinition (field) {
     this.wrapType(field);
   }
 
-  visitFieldDefinition(field) {
+  visitFieldDefinition (field) {
     this.wrapType(field);
   }
 
-  wrapType(field) {
+  wrapType (field) {
     if (
       field.type instanceof GraphQLNonNull &&
       field.type.ofType instanceof GraphQLScalarType
@@ -33,12 +33,12 @@ class ConstrainDirective extends SchemaDirectiveVisitor {
 }
 
 class ConstrainType extends GraphQLScalarType {
-  constructor(type, { minLen, maxLen, minValue, maxValue }) {
+  constructor (type, { minLen, maxLen, minValue, maxValue }) {
     super({
-      name: `Constrain`,
+      name: 'Constrain',
 
       // server -> client
-      serialize(value) {
+      serialize (value) {
         value = type.serialize(value);
         if (
           (minLen !== undefined && value.length < minLen) ||
@@ -50,12 +50,12 @@ class ConstrainType extends GraphQLScalarType {
       },
 
       // client (variable) -> server
-      parseValue(value) {
+      parseValue (value) {
         return type.parseValue(value);
       },
 
       // client (param) -> server
-      parseLiteral(ast) {
+      parseLiteral (ast) {
         if (
           (minLen !== undefined && ast.value.length < minLen) ||
           (maxLen !== undefined && ast.value.length > maxLen)
@@ -69,11 +69,11 @@ class ConstrainType extends GraphQLScalarType {
           throw Error(ERROR_CODES.INPUT_INVALID_VALUE);
         }
         return type.parseLiteral(ast);
-      },
+      }
     });
   }
 }
 
 module.exports = {
-  ConstrainDirective,
+  ConstrainDirective
 };

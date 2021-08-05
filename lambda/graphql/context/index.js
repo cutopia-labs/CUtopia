@@ -1,16 +1,16 @@
-const { verify } = require("../jwt");
+const { verify } = require('../jwt');
 
 const DEFAULT_CONTEXT = {
   authenticated: false,
-  user: null,
+  user: null
 };
 
 module.exports = async ({
   event: lambdaEvent,
-  context: lambdaContext,
+  context: lambdaContext
 }) => {
   try {
-    const split = (lambdaEvent.headers.Authorization || "").split("Bearer ");
+    const split = (lambdaEvent.headers.Authorization || '').split('Bearer ');
 
     // length === 1: Missing auth
     // length > 2: Bad request
@@ -20,10 +20,12 @@ module.exports = async ({
     const token = split[1];
     const userContext = verify(token);
 
-    return userContext ? {
-      authenticated: true,
-      user: userContext,
-    } : DEFAULT_CONTEXT;
+    return userContext
+      ? {
+          authenticated: true,
+          user: userContext
+        }
+      : DEFAULT_CONTEXT;
   } catch (e) {
     console.error(e);
     throw e;

@@ -1,9 +1,9 @@
-const AWS = require("aws-sdk");
-const bcrypt = require("bcryptjs");
-const NodeCache = require("node-cache");
+const AWS = require('aws-sdk');
+const bcrypt = require('bcryptjs');
+// const NodeCache = require('node-cache');
 const saltRounds = 10;
-const { nanoid } = require("nanoid");
-const { ERROR_CODES } = require("codes");
+const { nanoid } = require('nanoid');
+const { ERROR_CODES } = require('codes');
 
 const db = new AWS.DynamoDB.DocumentClient();
 /*
@@ -22,7 +22,7 @@ exports.createUser = async (input) => {
   // Ensure username and email do not exist
   const usernameResult = await this.getUser({
     username,
-    requiredFields: ["email"],
+    requiredFields: ['email']
   });
   if (usernameResult) {
     throw Error(ERROR_CODES.CHECK_USER_USERNAME_EXISTS);
@@ -36,22 +36,22 @@ exports.createUser = async (input) => {
   const verificationCode = nanoid(5);
 
   const user = {
-    "username": username,
-    "password": hash,
-    "email": email,
-    "createdDate": now,
-    "verified": false,
-    "verificationCode": verificationCode,
-    "reviewIds": db.createSet([""]),
-    "upvotesCount": 0,
-    "fullAccess": false,
-    "exp": 0,
-    "viewsCount": 10,
+    username: username,
+    password: hash,
+    email: email,
+    createdDate: now,
+    verified: false,
+    verificationCode: verificationCode,
+    reviewIds: db.createSet(['']),
+    upvotesCount: 0,
+    fullAccess: false,
+    exp: 0,
+    viewsCount: 10
   };
 
   const params = {
     TableName: process.env.UserTableName,
-    Item: user,
+    Item: user
   };
 
   await db.put(params).promise();
@@ -59,19 +59,21 @@ exports.createUser = async (input) => {
   return verificationCode;
 };
 
+/*
 const generateProjectionExpression = (fieldNames) => {
-  return fieldNames.join(", ");
+  return fieldNames.join(', ');
 };
+*/
 exports.getUser = async (input) => {
-  const { username, requiredFields } = input;
+  const { username /* , requiredFields */ } = input;
   const user = undefined; // uesrCache.get(username);
 
-  if (user === undefined || (requiredFields && uncacheableUserFields.some(f => requiredFields.includes(f)))) {
+  if (user === undefined /* || (requiredFields && uncacheableUserFields.some(f => requiredFields.includes(f))) */) {
     const params = {
       TableName: process.env.UserTableName,
       Key: {
-        username,
-      },
+        username
+      }
       // ...(requiredFields && { ProjectionExpression: generateProjectionExpression(requiredFields) }),
     };
     const result = (await db.get(params).promise()).Item;
@@ -89,10 +91,10 @@ exports.getUsernameByEmail = async (input) => {
   const params = {
     TableName: process.env.UserTableName,
     IndexName: process.env.UserEmailMappingIndexName,
-    KeyConditionExpression: "email = :email",
+    KeyConditionExpression: 'email = :email',
     ExpressionAttributeValues: {
-      ":email": email,
-    },
+      ':email': email
+    }
   };
 
   const result = (await db.query(params).promise()).Items;
@@ -100,34 +102,35 @@ exports.getUsernameByEmail = async (input) => {
 };
 
 const generateUpdateParams = (fields) => {
-  let expression = "set ";
+  let expression = 'set ';
   const values = {};
 
   let i = 0;
   const length = Object.keys(fields).length;
   for (const [key, value] of Object.entries(fields)) {
     i += 1;
-    expression += `${key} = :${key}` + (i !== length ? ", " : "");
+    expression += `${key} = :${key}` + (i !== length ? ', ' : '');
     values[`:${key}`] = value;
   }
   return [expression, values];
 };
 exports.updateUser = async (input) => {
   const { username, ...updatedFields } = input; // Disallow updating username
-  if ("password" in updatedFields) {
-    updatedFields["password"] = await bcrypt.hash(updatedFields["password"], saltRounds);
+  if ('password' in updatedFields) {
+    updatedFields.password = await bcrypt.hash(updatedFields.password, saltRounds);
   }
   const [updateExpression, expressionValues] = generateUpdateParams(updatedFields);
   const params = {
     TableName: process.env.UserTableName,
     Key: {
-      username,
+      username
     },
     UpdateExpression: updateExpression,
     ExpressionAttributeValues: expressionValues,
-    ReturnValues: "ALL_NEW",
+    ReturnValues: 'ALL_NEW'
   };
-  const result = await db.update(params).promise();
+  await db.update(params).promise();
+  // const result = await db.update(params).promise();
   // uesrCache.set(username, result.Attributes);
 };
 
@@ -135,10 +138,10 @@ exports.deleteUser = async (input) => {
   const { username } = input;
   // uesrCache.del(username);
   const params = {
-      TableName: process.env.UserTableName,
-      Key:{
-          username
-      },
+    TableName: process.env.UserTableName,
+    Key: {
+      username
+    }
   };
   await db.delete(params).promise();
 };
@@ -147,7 +150,7 @@ exports.verifyUser = async (input) => {
   const { username, code } = input;
   const result = await this.getUser({
     username,
-    requiredFields: ["createdDate", "verified", "verificationCode"],
+    requiredFields: ['createdDate', 'verified', 'verificationCode']
   });
 
   if (result) {
@@ -161,7 +164,7 @@ exports.verifyUser = async (input) => {
     if (result.verificationCode === code) {
       await this.updateUser({
         username,
-        verified: true,
+        verified: true
       });
       // successfully verified
       return true;
@@ -175,7 +178,7 @@ exports.login = async (input) => {
   const { username, password } = input;
   const result = await this.getUser({
     username,
-    requiredFields: ["username", "password", "email", "verified", "reviewIds"],
+    requiredFields: ['username', 'password', 'email', 'verified', 'reviewIds']
   });
   if (!result) {
     throw Error(ERROR_CODES.LOGIN_USER_DNE);
@@ -184,9 +187,9 @@ exports.login = async (input) => {
     throw Error(ERROR_CODES.LOGIN_FAILED);
   }
 
-  const { password: pwd, ...remainedFields } = result
+  const { password: pwd, ...remainedFields } = result;
   return {
-    data: remainedFields,
+    data: remainedFields
   };
 };
 
@@ -194,7 +197,7 @@ exports.getResetPasswordCodeAndEmail = async (input) => {
   const { username } = input;
   const data = await this.getUser({
     username,
-    requiredFields: ["email", "verified"],
+    requiredFields: ['email', 'verified']
   });
 
   if (!data) {
@@ -206,11 +209,11 @@ exports.getResetPasswordCodeAndEmail = async (input) => {
   const resetPwdCode = nanoid(5);
   await this.updateUser({
     username,
-    resetPwdCode,
+    resetPwdCode
   });
   return {
-    code: resetPwdCode, 
-    email: data.email,
+    code: resetPwdCode,
+    email: data.email
   };
 };
 
@@ -218,7 +221,7 @@ exports.resetPassword = async (input) => {
   const { username, newPassword, resetCode } = input;
   const data = await this.getUser({
     username,
-    requiredFields: ["verified", "resetPwdCode"],
+    requiredFields: ['verified', 'resetPwdCode']
   });
 
   if (!data) {
@@ -228,12 +231,12 @@ exports.resetPassword = async (input) => {
     throw Error(ERROR_CODES.RESET_PASSWORD_NOT_VERIFIED);
   }
 
-  const correct = resetCode !== "" && data.resetPwdCode === resetCode;
+  const correct = resetCode !== '' && data.resetPwdCode === resetCode;
   if (correct) {
     await this.updateUser({
       username,
       password: newPassword,
-      resetPwdCode: "",
+      resetPwdCode: ''
     });
     // successfully reset password
     return true;
@@ -246,33 +249,34 @@ exports.incrementUpvotesCount = async (input) => {
   const params = {
     TableName: process.env.UserTableName,
     Key: {
-      "username": username,
+      username: username
     },
-    UpdateExpression: "set upvotesCount = upvotesCount + :value, exp = if_not_exists(exp, :defaultExp) + :delta",
+    UpdateExpression: 'set upvotesCount = upvotesCount + :value, exp = if_not_exists(exp, :defaultExp) + :delta',
     ExpressionAttributeValues: {
-      ":value": 1,
-      ":defaultExp": 0,
-      ":delta": 1,
+      ':value': 1,
+      ':defaultExp': 0,
+      ':delta': 1
     },
-    ReturnValues: "ALL_NEW",
+    ReturnValues: 'ALL_NEW'
   };
-  const result = await db.update(params).promise();
+  await db.update(params).promise();
+  // const result = await db.update(params).promise();
   // uesrCache.set(username, result.Attributes);
 };
 
 exports.adjustExp = async (input) => {
-  const { delta } = input;
+  const { username, delta } = input;
   const params = {
     TableName: process.env.UserTableName,
     Key: {
-      "username": username,
+      username
     },
-    UpdateExpression: "set exp = if_not_exists(exp, :defaultExp) + :delta",
+    UpdateExpression: 'set exp = if_not_exists(exp, :defaultExp) + :delta',
     ExpressionAttributeValues: {
-      ":defaultExp": 0,
-      ":delta": delta,
+      ':defaultExp': 0,
+      ':delta': delta
     },
-    ReturnValues:"ALL_NEW",
+    ReturnValues: 'ALL_NEW'
   };
   const result = await db.update(params).promise();
   // uesrCache.set(username, result.Attributes);

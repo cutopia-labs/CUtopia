@@ -1,5 +1,5 @@
-const AWS = require("aws-sdk");
-const SNS = new AWS.SNS({ apiVersion: "2010-03-31" });
+const AWS = require('aws-sdk');
+const SNS = new AWS.SNS({ apiVersion: '2010-03-31' });
 const {
   createUser,
   verifyUser,
@@ -7,14 +7,14 @@ const {
   getUser,
   getResetPasswordCodeAndEmail,
   resetPassword,
-  login,
-} = require("dynamodb");
-const { sign } = require("../../jwt");
+  login
+} = require('dynamodb');
+const { sign } = require('../../jwt');
 
 const sendEmail = async (message) => {
   const params = {
     TopicArn: process.env.UserSNSTopic,
-    Message: JSON.stringify(message),
+    Message: JSON.stringify(message)
   };
   await SNS.publish(params).promise();
 };
@@ -22,7 +22,7 @@ const sendEmail = async (message) => {
 exports.Query = {
   me: async (parent, args, { user }) => {
     return await getUser({ username: user.username });
-  },
+  }
 };
 
 exports.User = {
@@ -38,7 +38,7 @@ exports.User = {
   },
   fullAccess: ({ fullAccess }) => {
     return fullAccess === undefined ? false : fullAccess;
-  },
+  }
 };
 
 exports.Mutation = {
@@ -46,9 +46,9 @@ exports.Mutation = {
     const { email } = input;
     const verificationCode = await createUser(input);
     await sendEmail({
-      action: "create",
+      action: 'create',
       email,
-      verificationCode,
+      verificationCode
     });
   },
   verifyUser: async (parent, { input }) => {
@@ -63,18 +63,18 @@ exports.Mutation = {
     const token = sign({ username });
     return {
       token,
-      me: data,
+      me: data
     };
   },
   sendResetPasswordCode: async (parent, { input }) => {
     const { code, email } = await getResetPasswordCodeAndEmail(input);
     await sendEmail({
-      action: "resetPwd",
+      action: 'resetPwd',
       resetPwdCode: code,
-      email,
+      email
     });
   },
   resetPassword: async (parent, { input }) => {
     await resetPassword(input);
-  },
+  }
 };

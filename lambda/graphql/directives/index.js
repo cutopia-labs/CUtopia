@@ -3,5 +3,5 @@ const { ConstrainDirective } = require('./constrain-directive');
 
 module.exports = {
   auth: AuthDirective,
-  constrain: ConstrainDirective,
+  constrain: ConstrainDirective
 };

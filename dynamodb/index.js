@@ -3,7 +3,7 @@ const {
   editReview,
   getReviews,
   getReview,
-  voteReview,
+  voteReview
 } = require('./databases/reviews-db');
 
 const {
@@ -13,20 +13,25 @@ const {
   getUser,
   getResetPasswordCodeAndEmail,
   resetPassword,
-  login,
+  login
 } = require('./databases/user-db');
+
+const {
+  addLecturerToCourse,
+  getCourseLecturers
+} = require('./databases/course-db');
 
 const {
   getTimetable,
   addTimetable,
   removeTimetable,
   shareTimetable,
-  getSharedTimetable,
+  getSharedTimetable
 } = require('./databases/timetable-db');
 
 const {
   report,
-  reportFeedback,
+  reportFeedback
 } = require('./databases/report-db');
 
 module.exports = {
@@ -42,11 +47,13 @@ module.exports = {
   getResetPasswordCodeAndEmail,
   resetPassword,
   login,
+  addLecturerToCourse,
+  getCourseLecturers,
   getTimetable,
   addTimetable,
   removeTimetable,
   shareTimetable,
   getSharedTimetable,
   report,
-  reportFeedback,
+  reportFeedback
 };

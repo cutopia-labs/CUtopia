@@ -1,9 +1,9 @@
-const { ApolloServer } = require("apollo-server-lambda");
+const { ApolloServer } = require('apollo-server-lambda');
 
-const typeDefs = require("./types");
-const resolvers = require("./resolvers");
-const schemaDirectives = require("./directives");
-const createContext = require("./context");
+const typeDefs = require('./types');
+const resolvers = require('./resolvers');
+const schemaDirectives = require('./directives');
+const createContext = require('./context');
 
 const server = new ApolloServer({
   typeDefs,
@@ -11,8 +11,8 @@ const server = new ApolloServer({
   schemaDirectives,
   context: createContext,
   playground: {
-    endpoint: "/graphql",
-  },
+    endpoint: '/graphql'
+  }
 });
 
 exports.graphqlHandler = server.createHandler({
@@ -20,6 +20,6 @@ exports.graphqlHandler = server.createHandler({
     origin: '*',
     methods: ['get', 'post'],
     credentials: true,
-    maxAge: 3600,
-  },
+    maxAge: 3600
+  }
 });

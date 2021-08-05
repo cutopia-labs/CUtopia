@@ -3,7 +3,7 @@ const { defaultFieldResolver } = require('graphql');
 const { ERROR_CODES } = require('codes');
 
 class AuthDirective extends SchemaDirectiveVisitor {
-  visitFieldDefinition(field) {
+  visitFieldDefinition (field) {
     const { resolve = defaultFieldResolver } = field;
     const { role } = this.args;
 
@@ -23,12 +23,12 @@ class AuthDirective extends SchemaDirectiveVisitor {
         parent,
         args,
         { validateOwner, ...context },
-        info,
+        info
       ]);
     };
   }
 }
 
 module.exports = {
-  AuthDirective,
+  AuthDirective
 };

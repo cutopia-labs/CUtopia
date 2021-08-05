@@ -14,14 +14,14 @@ fs.readdirSync(`${__dirname}/courses`).forEach(subjectFileName => {
 
     courses.map(course => flattenCourses.push({
       subject: subjectName,
-      course,
+      course
     }));
   }
 });
 
 const fuse = new Fuse(flattenCourses, {
   keys: ['subject', 'course.code', 'course.title'],
-  distance: 10,
+  distance: 10
 });
 
 const searchCourses = (text, limit) => {
@@ -32,5 +32,5 @@ const searchCourses = (text, limit) => {
 module.exports = {
   subjects,
   subjectNames,
-  searchCourses,
+  searchCourses
 };

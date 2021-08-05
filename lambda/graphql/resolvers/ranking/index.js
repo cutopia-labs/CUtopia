@@ -1,7 +1,7 @@
 const { calculatePopularCourses, calculateTopRatedCourses, getCourseRating } = require('./impl');
 
 exports.Query = {
-  ranking: () => ({}),
+  ranking: () => ({})
 };
 
 exports.RankTable = {
@@ -19,7 +19,7 @@ exports.RankTable = {
     const { limit, sortBy } = filter;
     const academicGroups = await calculateTopRatedCourses('top-rated-academic-groups-by-criterion');
     return academicGroups[sortBy].slice(0, limit);
-  },
+  }
 };
 
 exports.Course = {
@@ -27,5 +27,5 @@ exports.Course = {
     const courseId = idsContext.subject + course.code;
     const rating = await getCourseRating(courseId);
     return rating;
-  },
+  }
 };
