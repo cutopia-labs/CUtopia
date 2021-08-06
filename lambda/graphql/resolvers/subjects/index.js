@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */ // course_sections is not in camelcase when parsing the data
 
 const { subjects, subjectNames } = require('../../data/courses');
-const { getCourseLecturers } = require('dynamodb');
+const { getCourseData } = require('dynamodb');
 
 exports.Query = {
   subjects: (parent, { filter }) => {
@@ -43,9 +43,16 @@ exports.Subject = {
 exports.Course = {
   code: ({ course }) => course.code,
   title: ({ course }) => course.title,
-  lecturers: async ({ idsContext, course }) => {
+  reviewLecturers: async ({ idsContext, course }) => {
+    // TODO: reviewLecturers and reviewTerms query database twice instead of once before getting cached
     const courseId = idsContext.subject + course.code;
-    return await getCourseLecturers({ courseId });
+    const result = await getCourseData({ courseId });
+    return result === undefined ? null : result.lecturers.values;
+  },
+  reviewTerms: async ({ idsContext, course }) => {
+    const courseId = idsContext.subject + course.code;
+    const result = await getCourseData({ courseId });
+    return result === undefined ? null : result.terms.values;
   },
   career: ({ course }) => course.career,
   units: ({ course }) => course.units,

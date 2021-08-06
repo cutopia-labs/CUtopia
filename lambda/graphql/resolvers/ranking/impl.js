@@ -131,7 +131,7 @@ exports.getCourseById = (courseId) => {
   const subjectName = courseId.slice(0, 4);
   const courseCode = courseId.slice(4, 8);
   const courses = subjects[subjectName];
-  return courses.filter(course => course.code === courseCode)[0];
+  return courses.find(course => course.code === courseCode);
 };
 
 exports.getCourseRating = async (courseId) => {
@@ -184,7 +184,12 @@ exports.calculateTopRatedCourses = async (type) => {
 
   // calculate sum of each criterion of reviews
   reviews.forEach(review => {
-    const { academic_group } = this.getCourseById(review.courseId);
+    const result = this.getCourseById(review.courseId);
+    if (result === undefined) {
+      // in case some bygone courses no longer exist in the current semester
+      return;
+    }
+    const { academic_group } = result;
 
     criterions.forEach(criterion => {
       const floatValue = review[criterion].grade;

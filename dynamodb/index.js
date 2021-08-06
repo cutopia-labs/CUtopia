@@ -17,8 +17,8 @@ const {
 } = require('./databases/user-db');
 
 const {
-  addLecturerToCourse,
-  getCourseLecturers
+  addCourseData,
+  getCourseData
 } = require('./databases/course-db');
 
 const {
@@ -47,8 +47,8 @@ module.exports = {
   getResetPasswordCodeAndEmail,
   resetPassword,
   login,
-  addLecturerToCourse,
-  getCourseLecturers,
+  addCourseData,
+  getCourseData,
   getTimetable,
   addTimetable,
   removeTimetable,

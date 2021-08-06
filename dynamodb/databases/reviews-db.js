@@ -2,7 +2,7 @@ const { nanoid } = require('nanoid');
 const NodeCache = require('node-cache');
 const AWS = require('aws-sdk');
 const { incrementUpvotesCount, getUser } = require('./user-db');
-const { addLecturerToCourse } = require('./course-db');
+const { addCourseData } = require('./course-db');
 const { ERROR_CODES, VOTE_ACTIONS } = require('codes');
 
 const db = new AWS.DynamoDB.DocumentClient();
@@ -79,9 +79,10 @@ exports.createReview = async (input, user) => {
     }
   };
 
-  await addLecturerToCourse({
+  await addCourseData({
     courseId,
-    lecturer: reviewData.lecturer
+    lecturer: reviewData.lecturer,
+    term: reviewData.term
   });
 
   try {
@@ -183,6 +184,7 @@ exports.getReviews = async (input) => {
     getLatest,
     getAll,
     lecturer,
+    term,
     ascendingDate,
     ascendingVote,
     lastEvaluatedKey = null,
@@ -201,29 +203,27 @@ exports.getReviews = async (input) => {
       delete lastEvaluatedKey.upvotes;
     }
 
-    let params = null;
+    let params = {
+      TableName: process.env.ReviewsTableName,
+      KeyConditionExpression: 'courseId = :courseId',
+      ExpressionAttributeValues: {
+        ':courseId': courseId
+      },
+      ...(lastEvaluatedKey !== null && { ExclusiveStartKey: lastEvaluatedKey }),
+      Limit: limit
+
+    };
+
     if (sortByDate) {
       params = {
-        TableName: process.env.ReviewsTableName,
-        KeyConditionExpression: 'courseId = :courseId',
-        ExpressionAttributeValues: {
-          ':courseId': courseId
-        },
-        ScanIndexForward: ascendingDate,
-        ...(lastEvaluatedKey !== null && { ExclusiveStartKey: lastEvaluatedKey }),
-        Limit: limit
+        ...params,
+        ScanIndexForward: ascendingDate
       };
     } else if (sortByVotes) {
       params = {
-        TableName: process.env.ReviewsTableName,
+        ...params,
         IndexName: process.env.ReviewsByVoteIndexName,
-        KeyConditionExpression: 'courseId = :courseId',
-        ExpressionAttributeValues: {
-          ':courseId': courseId
-        },
-        ScanIndexForward: ascendingVote,
-        ...(lastEvaluatedKey !== null && { ExclusiveStartKey: lastEvaluatedKey }),
-        Limit: limit
+        ScanIndexForward: ascendingVote
       };
     }
 
@@ -234,6 +234,17 @@ exports.getReviews = async (input) => {
         ExpressionAttributeValues: {
           ...params.ExpressionAttributeValues,
           ':lecturer': lecturer
+        }
+      };
+    }
+
+    if (term !== undefined) {
+      params = {
+        ...params,
+        FilterExpression: `${params.FilterExpression ? params.FilterExpression + ' and ' : ''}term = :term`,
+        ExpressionAttributeValues: {
+          ...params.ExpressionAttributeValues,
+          ':term': term
         }
       };
     }

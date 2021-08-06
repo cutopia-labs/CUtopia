@@ -19,6 +19,7 @@ input ReviewsFilter {
   courseId: String
   getLatest: Boolean
   lecturer: String
+  term: String
   ascendingDate: Boolean
   ascendingVote: Boolean
   lastEvaluatedKey: LastEvaluatedKeyInput

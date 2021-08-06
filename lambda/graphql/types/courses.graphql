@@ -19,7 +19,8 @@ type Course {
   subject: Subject!
   code: String!
   title: String!
-  lecturers: [String]!
+  reviewLecturers: [String]!
+  reviewTerms: [String]!
   career: String!
   units: String!
   grading: String!
