@@ -74,6 +74,13 @@
 }
 
 @media only screen and (max-width: 1260px) {
+  .review-home-panel {
+    .tabs-row {
+      position: sticky;
+      top: var(--header-height);
+      z-index: 10;
+    }
+  }
   .review-home-row {
     flex-direction: column;
   }

@@ -46,14 +46,18 @@ const renderItem = (item: MultiTypeLink) => {
   }
   if (item.url) {
     return (
-      <a className="footer-link hover" href={item.url}>
+      <a key={item.url} className="footer-link hover" href={item.url}>
         {item.label}
       </a>
     );
   }
   if (item.onClick) {
     return (
-      <span className="footer-link hover" onClick={item.onClick}>
+      <span
+        key={item.label}
+        className="footer-link hover"
+        onClick={item.onClick}
+      >
         {item.label}
       </span>
     );

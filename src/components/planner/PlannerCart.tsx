@@ -33,11 +33,16 @@ const PlannerCart = () => {
     <Card className="planner-cart">
       <header className="planner-cart-header center-row">
         <span className="title">Cart</span>
-        <Tooltip title="Clear unchecked sections">
-          <IconButton onClick={() => planner.removeHidedCourses()} size="small">
-            <ClearAllRounded />
-          </IconButton>
-        </Tooltip>
+        {Boolean(planner.hidedSections?.length) && (
+          <Tooltip title="Clear unchecked sections">
+            <IconButton
+              onClick={() => planner.removeHidedCourses()}
+              size="small"
+            >
+              <ClearAllRounded />
+            </IconButton>
+          </Tooltip>
+        )}
       </header>
       {planner.plannerCourses?.length ? (
         planner.plannerCourses.map((course, index) =>

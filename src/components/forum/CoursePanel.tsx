@@ -2,12 +2,13 @@ import { useState, useEffect, useContext, useRef, useReducer } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { Edit, Share, ExpandMore } from '@material-ui/icons';
 import { useQuery } from '@apollo/client';
-import { Button, IconButton, Menu, MenuItem } from '@material-ui/core';
+import { Button, Divider, IconButton, Menu, MenuItem } from '@material-ui/core';
 import { SpeedDial, SpeedDialIcon, SpeedDialAction } from '@material-ui/lab';
 import { observer } from 'mobx-react-lite';
 import { TiArrowSortedUp } from 'react-icons/ti';
 import { AiTwotoneCalendar } from 'react-icons/ai';
 import { FaUserAlt } from 'react-icons/fa';
+import pluralize from 'pluralize';
 
 import './CoursePanel.scss';
 import copy from 'copy-to-clipboard';
@@ -72,6 +73,10 @@ const ReviewFilterBar = ({
   const [mode, setMode] = useState(ReviewFilterBarMode.INITIAL);
   const [anchorEl, setAnchorEl] = useState(null);
 
+  if (!courseInfo) {
+    return null;
+  }
+
   const getLabel = (
     mode: ReviewFilterBarMode,
     reviewsPayload: Partial<ReviewsFilter>
@@ -110,12 +115,12 @@ const ReviewFilterBar = ({
     },
     [ReviewFilterBarMode.LECTURER]: {
       key: 'lecturer',
-      selections: courseInfo.lecturers || [],
+      selections: courseInfo.reviewLecturers || [],
       icon: <FaUserAlt size={12} />,
     },
     [ReviewFilterBarMode.TERM]: {
       key: 'term',
-      selections: courseInfo.avaliableTerms || ['Test Term 1', 'Test Term 2'],
+      selections: courseInfo.reviewTerms || [],
       icon: <AiTwotoneCalendar />,
     },
   };
@@ -402,7 +407,7 @@ const CoursePanel = () => {
           <>
             <ReviewFilterBar
               forwardedRef={reviewFilterBarRef}
-              courseInfo={courseInfo.subjects[0].courses[0]}
+              courseInfo={courseInfo?.subjects[0]?.courses[0]}
               reviewsPayload={reviewsPayload}
               dispatchReviewsPayload={dispatchReviewsPayload}
               fetchAllAction={
@@ -439,7 +444,7 @@ const CoursePanel = () => {
               <ReviewFilterBar
                 className="float"
                 isMobile={true}
-                courseInfo={courseInfo.subjects[0].courses[0]}
+                courseInfo={courseInfo?.subjects[0]?.courses[0]}
                 reviewsPayload={reviewsPayload}
                 dispatchReviewsPayload={dispatchReviewsPayload}
                 fetchAllAction={
@@ -451,6 +456,12 @@ const CoursePanel = () => {
               />
             )}
           </>
+        )}
+        {Boolean(reviews?.length) && (
+          <span className="review-count caption center-row">
+            {pluralize('review', reviews.length, true)}
+            <Divider />
+          </span>
         )}
         <div className="grid-auto-row reviews-container">
           {(review ? [review.review] : reviews).map((item) => (

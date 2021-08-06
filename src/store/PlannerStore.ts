@@ -51,6 +51,22 @@ class PlannerStore extends StorePrototype {
     this.initiated = true;
   }
 
+  get hidedSections() {
+    const sections = [];
+    this.plannerCourses?.forEach((course, i) =>
+      Object.values(course.sections).forEach((section) => {
+        if (section.hide) {
+          sections.push({
+            ...section,
+            courseId: course.courseId,
+            courseIndex: i,
+          });
+        }
+      })
+    );
+    return sections;
+  }
+
   get plannerList() {
     return Object.values(this.planners).map((planner) => ({
       key: planner.key,

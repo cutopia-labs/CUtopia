@@ -10,9 +10,19 @@
   }
 }
 
+.review-count {
+  font-size: 14px;
+  font-weight: 500;
+  margin-left: 2px;
+  .MuiDivider-root {
+    flex: 1;
+    margin-left: var(--card-padding);
+  }
+}
+
 .reviews-filter {
   display: flex;
-  padding: 12px 8px;
+  padding: 12px var(--card-padding);
   align-items: center;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -90,4 +100,7 @@
       }
     }
   }
+  .review-count {
+    margin: 0 6px;
+  }  
 }

@@ -11,8 +11,9 @@ export const COURSE_INFO_QUERY = gql`
         requirements
         description
         syllabus
-        lecturers
         academic_group
+        reviewLecturers
+        reviewTerms
         assessments {
           name
           percentage

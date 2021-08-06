@@ -84,7 +84,7 @@ const CourseCard = ({ courseInfo, concise, loading }: CourseCardProps) => {
             <span className="center-row">
               <span className="title">{courseInfo.courseId}</span>
               <IconButton
-                className={isFavorited && 'active'}
+                className={clsx(isFavorited && 'active')}
                 onClick={() => setFavorited()}
                 aria-label="favourite"
                 size="small"

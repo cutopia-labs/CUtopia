@@ -1,5 +1,6 @@
 import { Divider } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
+import { Fragment } from 'react';
 import { BiDownvote, BiUpvote } from 'react-icons/bi';
 
 import './LikeButtonRow.scss';
@@ -27,9 +28,8 @@ export default function LikeButtonsRow({
   return (
     <div className="like-btn-row center-row">
       {[1, 0].map((label) => (
-        <>
+        <Fragment key={label}>
           <LikeButton
-            key={label}
             isLike={Boolean(label)}
             selected={liked === label || myVote === label}
             disabled={liked !== null || myVote !== null}
@@ -37,7 +37,7 @@ export default function LikeButtonsRow({
             onClick={() => updateVote(label)}
           />
           {Boolean(label) && <Divider orientation="horizontal" />}
-        </>
+        </Fragment>
       ))}
     </div>
   );
