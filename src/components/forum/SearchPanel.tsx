@@ -216,14 +216,6 @@ const SearchPanel = () => {
     );
   };
 
-  useEffect(() => {
-    console.log(isPlanner);
-  }, [isPlanner]);
-
-  useEffect(() => {
-    console.log(courseInfo);
-  }, [courseInfo]);
-
   const saveHistory = async (courseId: string) => {
     let temp = [...historyList];
     if (temp.length >= HISTORY_MAX_LENGTH) {
@@ -252,10 +244,6 @@ const SearchPanel = () => {
     console.log(COURSE_CODES);
     loadHistory();
   }, []);
-
-  useEffect(() => {
-    console.log(historyList);
-  }, [historyList]);
 
   return (
     <Card className="search-panel">

@@ -32,10 +32,9 @@ import ReviewCard from './ReviewCard';
 import CourseCard from './CourseCard';
 
 export enum COURSE_PANEL_MODES {
-  WITH_REVIEW,
+  INITIAL,
   GET_TARGET_REVIEW,
   FETCH_REVIEWS,
-  EDIT_REVIEW,
 }
 
 const SORTING_FIELDS = { date: 'ascendingDate', upvotes: 'ascendingVote' };
@@ -210,7 +209,7 @@ const CoursePanel = () => {
     id?: string;
     reviewId?: string;
   }>();
-  const [mode, setMode] = useState(COURSE_PANEL_MODES.FETCH_REVIEWS);
+  const [mode, setMode] = useState(COURSE_PANEL_MODES.INITIAL);
   const history = useHistory();
   const [FABOpen, setFABOpen] = useState(false);
   const [lastEvaluatedKey, setLastEvaluatedKey] = useState(undefined);
@@ -269,12 +268,11 @@ const CoursePanel = () => {
   });
 
   // Fetch all reviews
-  const {
-    data,
-    loading: reviewsLoading,
-    refetch: reviewsRefetch,
-  } = useQuery<ReviewsResult, ReviewsFilter>(REVIEWS_QUERY, {
-    skip: false,
+  const { loading: reviewsLoading, refetch: reviewsRefetch } = useQuery<
+    ReviewsResult,
+    ReviewsFilter
+  >(REVIEWS_QUERY, {
+    skip: Boolean(reviewId),
     variables: {
       courseId,
       ...reviewsPayload,
@@ -302,7 +300,7 @@ const CoursePanel = () => {
   });
 
   // Fetch a review based on reviewId
-  const { data: review, loading: reviewLoading } = useQuery(GET_REVIEW, {
+  const { loading: reviewLoading } = useQuery(GET_REVIEW, {
     variables: {
       courseId,
       createdDate: reviewId,
@@ -311,9 +309,11 @@ const CoursePanel = () => {
     onCompleted: (data) => {
       setReviews([data.review]);
     },
+    onError: view.handleError,
   });
 
   const listenToScroll = useDebounce(async () => {
+    console.log(`Scroll dep ${reviewId}`);
     const distanceFromBottom =
       document.documentElement.scrollHeight -
       document.documentElement.scrollTop -
@@ -357,12 +357,7 @@ const CoursePanel = () => {
   useEffect(() => {
     window.addEventListener('scroll', listenToScroll);
     return () => window.removeEventListener('scroll', listenToScroll);
-  }, [listenToScroll]);
-
-  useEffect(() => {
-    console.log('Ref!');
-    console.log(reviewFilterBarRef);
-  }, [reviewFilterBarRef]);
+  }, [listenToScroll, reviewId]);
 
   useEffect(() => {
     console.log(`Current id: ${courseId}`);
@@ -378,16 +373,12 @@ const CoursePanel = () => {
   }, [courseId]);
 
   useEffect(() => {
-    console.log(`Reviews loading: ${reviewsLoading}`);
-  }, [reviewsLoading]);
-
-  useEffect(() => {
-    console.log(`Initiated with course ${courseId}`);
-  }, []);
-
-  useEffect(() => {
-    console.log(`in: ${!isMobile && !FABHidden}`);
-  }, [isMobile, FABHidden]);
+    setMode(
+      reviewId
+        ? COURSE_PANEL_MODES.GET_TARGET_REVIEW
+        : COURSE_PANEL_MODES.FETCH_REVIEWS
+    );
+  }, [reviewId]);
 
   return (
     <>
@@ -464,7 +455,7 @@ const CoursePanel = () => {
           </span>
         )}
         <div className="grid-auto-row reviews-container">
-          {(review ? [review.review] : reviews).map((item) => (
+          {(reviews || []).map((item) => (
             <ReviewCard
               key={item.createdDate}
               review={item}

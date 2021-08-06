@@ -153,7 +153,7 @@ const TimeTablePanel = ({
                       deleteTable(item.key);
                     }}
                     size="small"
-                    color="primary"
+                    color="secondary"
                   >
                     <DeleteOutline />
                   </IconButton>

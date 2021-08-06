@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 
 import './PlannerPage.scss';
@@ -80,10 +80,6 @@ const PlannerPage = () => {
         : PlannerMode.SEARCH
       : PlannerMode.INITIAL
   );
-
-  useEffect(() => {
-    console.log(`mode ${mode}`);
-  }, [mode]);
 
   const renderContent = () => {
     switch (mode) {

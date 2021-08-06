@@ -10,14 +10,14 @@
     }
     h4 {
       margin: 12px var(--menu-padding-horizontal);
-      color: var(--primary);
+      color: var(--accent);
     }
   }
   & .timetable-label-input-container {
     margin: 0 var(--menu-padding-horizontal) var(--menu-padding-vertical) var(--menu-padding-horizontal);
   }
   & .MuiButtonBase-root:last-child {
-    color: var(--primary);
+    color: var(--accent);
     font-weight: bold;
   }
   & .timetable-select-item .MuiIconButton-root {

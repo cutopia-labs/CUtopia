@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from 'react';
+import { useState, useContext } from 'react';
 import { observer } from 'mobx-react-lite';
 import { AiTwotoneCalendar } from 'react-icons/ai';
 import { BiMessageRounded } from 'react-icons/bi';
@@ -62,10 +62,6 @@ const ReviewCard = ({
     console.log(res);
     setLiked(vote);
   };
-
-  useEffect(() => {
-    console.log(review);
-  }, []);
 
   if (concise) {
     return <div />;

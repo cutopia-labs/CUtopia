@@ -4,7 +4,6 @@ import {
   ChatBubbleOutlineOutlined,
   SchoolOutlined,
   NoteOutlined,
-  CalendarTodayOutlined,
 } from '@material-ui/icons';
 import { observer } from 'mobx-react-lite';
 
@@ -12,7 +11,6 @@ import './HomePage.scss';
 import UserCard from '../components/home/UserCard';
 import { PlannerContext, UserContext } from '../store';
 import { CoursesList, ReviewsList } from '../components/home/HomePageTabs';
-import TimeTablePanel from '../components/templates/TimeTablePanel';
 import TabsContainer from '../components/molecules/TabsContainer';
 import Page from '../components/atoms/Page';
 import Card from '../components/atoms/Card';
@@ -58,10 +56,12 @@ const SELECTIONS = [
     label: 'Planner',
     icon: <NoteOutlined />,
   },
+  /*
   {
     label: 'Timetable',
     icon: <CalendarTodayOutlined />,
   },
+  */
 ];
 
 const HomePage = () => {
@@ -78,6 +78,7 @@ const HomePage = () => {
         return <ReviewsList reviewIds={user.data?.reviewIds} />;
       case 'Planner':
         return <PlannerTimeTable className="home-page-timetable" />;
+      /*
       case 'Timetable':
         return (
           <TimeTablePanel
@@ -88,6 +89,7 @@ const HomePage = () => {
             onClear={() => user.setStore('timetable', {})}
           />
         );
+      */
       default:
         return null;
     }

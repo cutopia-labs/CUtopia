@@ -1,12 +1,10 @@
-import { useState, useContext, useEffect, useRef } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { Button, IconButton, CircularProgress } from '@material-ui/core';
 import { ArrowBack } from '@material-ui/icons';
-import QRCode from 'qrcode.react';
 
 import { observer } from 'mobx-react-lite';
 import { useMutation } from '@apollo/client';
-import useWebSocket, { ReadyState } from 'react-use-websocket';
-import { nanoid } from 'nanoid';
+import useWebSocket from 'react-use-websocket';
 
 import './LoginPanel.scss';
 import TextField from '../atoms/TextField';
@@ -83,6 +81,8 @@ const LoginPanel = () => {
   const { sendMessage, lastMessage, readyState } = useWebSocket(
     'wss://1rys6xiqvk.execute-api.ap-northeast-1.amazonaws.com/Prod'
   );
+
+  /*
   const [QRCodeData, setQRCodeData] = useState('');
   const accessPwd = useRef('');
 
@@ -128,6 +128,7 @@ const LoginPanel = () => {
       console.warn(err);
     }
   }, [lastMessage]);
+  */
 
   const [createUser, { loading: creatingUser, error: createError }] =
     useMutation(SEND_VERIFICATION, {
@@ -303,12 +304,14 @@ const LoginPanel = () => {
           <h2 className="title">{MODE_ITEMS[mode].title}</h2>
           <span className="caption">{MODE_ITEMS[mode].caption}</span>
         </div>
-        {mode === LoginPageMode.CUTOPIA_LOGIN &&
+        {/*
+        mode === LoginPageMode.CUTOPIA_LOGIN &&
           (readyState === ReadyState.OPEN && QRCodeData ? (
             <QRCode value={QRCodeData} size={64} />
           ) : (
             <CircularProgress />
-          ))}
+          ))
+        */}
       </div>
       <form className="grid-auto-row" onSubmit={onSubmit}>
         {MODE_ITEMS[mode].userId && (

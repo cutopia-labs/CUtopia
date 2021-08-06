@@ -66,11 +66,10 @@
       overflow-x: hidden;
     }
     .tabs-row {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
       height: auto;
       flex-shrink: 0;
       width: 100%;
+      flex-wrap: nowrap;
       overflow-x: scroll;
     }
   }
