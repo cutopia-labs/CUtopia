@@ -162,7 +162,6 @@ textarea[type="number"] {
   padding-bottom: 6px;
   text-transform: capitalize;
   border-bottom: 1px solid var(--border);
-  margin-top: 16px;
   margin-bottom: 10px;
 }
 
@@ -242,6 +241,14 @@ textarea[type="number"] {
   display: grid;
   grid-auto-flow: column;
   grid-column-gap: calc(var(--card-padding) / 2);
+}
+
+.badges-row {
+  grid-gap: 10px;
+  font-weight: bold;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 
 .capsule-btn.MuiButton-root {

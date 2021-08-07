@@ -43,13 +43,13 @@
 }
 .links-card {
 	padding: var(--card-padding);
+  row-gap: 8px;
 	.sub-title {
 		margin-bottom: 8px;
 	}
 }
 .link-container {
 	font-size: 14px;
-	margin-top: 8px;
 	&:hover {
 		color: var(--primary);
 	}

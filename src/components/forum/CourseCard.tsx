@@ -16,6 +16,8 @@ import { CourseInfo } from '../../types';
 import Link from '../molecules/Link';
 import useMobileQuery from '../../helpers/useMobileQuery';
 import Loading from '../atoms/Loading';
+import Section from '../molecules/Section';
+import SectionText from '../molecules/SectionText';
 import Points from './Points';
 import CourseSections from './CourseSections';
 import GradeRow from './GradeRow';
@@ -64,7 +66,7 @@ const CourseCard = ({ courseInfo, concise, loading }: CourseCardProps) => {
   return (
     <div
       className={clsx(
-        'course-card',
+        'course-card grid-auto-row',
         concise && 'concise',
         !showMore && 'retracted'
       )}
@@ -132,10 +134,11 @@ const CourseCard = ({ courseInfo, concise, loading }: CourseCardProps) => {
       {concise ? (
         <>
           {courseInfo.requirements && (
-            <div className="requirement-section">
-              <p className="sub-heading">Requirements</p>
-              <p className="caption">{courseInfo.requirements}</p>
-            </div>
+            <SectionText
+              className="requirement-section"
+              title="Requirements"
+              caption={courseInfo.requirements}
+            />
           )}
           {courseInfo.rating && (
             <>
@@ -147,24 +150,19 @@ const CourseCard = ({ courseInfo, concise, loading }: CourseCardProps) => {
                   Reviews
                   <FiExternalLink />
                 </RouterLink>
+                <GradeRow
+                  rating={courseInfo.rating}
+                  additionalClassName="concise"
+                />
               </div>
-              <GradeRow
-                rating={courseInfo.rating}
-                additionalClassName="concise"
-              />
             </>
           )}
-          <div className="sub-heading-container">
-            <p className="sub-heading">Sections</p>
-            {courseInfo.terms ? (
-              <CourseSections courseInfo={courseInfo} />
-            ) : (
-              <p className="caption">No opening for current semester</p>
-            )}
-          </div>
+          <Section title="Sections" subheading>
+            <CourseSections courseInfo={courseInfo} />
+          </Section>
         </>
       ) : (
-        <div className="course-badge-row">
+        <div className="badges-row course-badge-row">
           {[
             [`${parseInt(courseInfo.units, 10)} Credits`],
             [courseInfo.academic_group],
@@ -196,18 +194,16 @@ const CourseCard = ({ courseInfo, concise, loading }: CourseCardProps) => {
           {['requirements', 'outcome']
             .filter((key) => courseInfo[key] && courseInfo[key] !== '') // filter off empty strings
             .map((key) => (
-              <div className="sub-heading-container" key={key}>
-                <p className="sub-heading">{key.replaceAll('_', ' ')}</p>
+              <Section key={key} title={key.replaceAll('_', ' ')} subheading>
                 <Points text={courseInfo[key]} />
-              </div>
+              </Section>
             ))}
-          <div className="sub-heading-container">
-            <p className="sub-heading">Past Papers</p>
+          <Section title="Past Paper" subheading>
             <Link
               url={`https://julac.hosted.exlibrisgroup.com/primo-explore/search?query=any,contains,${courseInfo.courseId}&tab=default_tab&search_scope=Exam&sortby=date&vid=CUHK&lang=en_US`}
               label="Search on CUHK library"
             />
-          </div>
+          </Section>
         </>
       )}
     </div>

@@ -53,7 +53,7 @@ export const ReviewsList = ({ reviewIds }: ReviewsListProps) => {
         return (
           <Link key={id} to={`/review/${courseId}/${createdDate}`}>
             <ListItem
-              className="search-list-item column home-course-list-item"
+              className="home-course-list-item"
               title={courseId}
               caption={getMMMDDYY(createdDate)}
               noBorder

@@ -1,7 +1,4 @@
 .course-card {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
   position: relative;
   overflow: hidden;
   .course-title {
@@ -12,6 +9,10 @@
   }
   .grade-row {
     margin: 10px 0;
+    &.concise {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
   }
   .caption {
     margin: 0;
@@ -31,12 +32,6 @@
       }
       & .badge {
         margin-right: 0;
-        margin-bottom: 0;
-      }
-    }
-    .grade-row {
-      &.concise {
-        margin-top: 0;
         margin-bottom: 0;
       }
     }
@@ -63,11 +58,6 @@
     }
   }
 }
-.course-card p,
-.caption,
-.sub-heading {
-  text-align: left;
-}
 .course-card-header {
   display: flex;
   flex: 1;
@@ -87,18 +77,6 @@
   }
   .title {
     margin: 0 6px 0 0;
-  }
-}
-.course-badge-row {
-  font-weight: bold;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  margin-top: var(--card-padding);
-}
-.caption {
-  &.description {
-    margin-top: 6px;
   }
 }
 
