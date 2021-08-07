@@ -17,7 +17,12 @@ const LandingPage = () => {
             Discover the courses that you want & plan your timetable.
           </h3>
           <div className="landing-image-container center-box">
-            <img className="landing-image" src={Illustration} alt="" />
+            <img
+              className="landing-image"
+              src={Illustration}
+              alt=""
+              draggable={false}
+            />
           </div>
         </div>
       )}

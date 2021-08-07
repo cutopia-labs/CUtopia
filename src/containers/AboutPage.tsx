@@ -1,7 +1,12 @@
-import { useState } from 'react';
-import { Info, History, Fingerprint, Description } from '@material-ui/icons';
+import {
+  History,
+  InfoOutlined,
+  LockOutlined,
+  DescriptionOutlined,
+} from '@material-ui/icons';
 
 import './AboutPage.scss';
+import { useHistory, useLocation } from 'react-router-dom';
 import {
   AboutTab,
   ChangelogTab,
@@ -11,45 +16,51 @@ import {
 import Page from '../components/atoms/Page';
 import TabsContainer from '../components/molecules/TabsContainer';
 
-const SELECTIONS = [
+export const ABOUT_PAGE_ROUTES = [
   {
-    label: 'About',
-    icon: <Info />,
+    label: 'about',
+    icon: <InfoOutlined />,
   },
   {
-    label: 'Changelog',
+    label: 'changelog',
     icon: <History />,
   },
   {
-    label: 'Privacy',
-    icon: <Fingerprint />,
+    label: 'privacy',
+    icon: <LockOutlined />,
   },
   {
-    label: 'Terms of Use',
-    icon: <Description />,
+    label: 'terms',
+    icon: <DescriptionOutlined />,
   },
 ];
 
 const AboutPage = () => {
-  const [tab, setTab] = useState('About');
+  const history = useHistory();
+  const location = useLocation();
 
   const renderTab = () => {
-    switch (tab) {
-      case 'About':
+    console.log(location.pathname);
+    switch (location?.pathname.slice(1)) {
+      case 'about':
         return <AboutTab />;
-      case 'Changelog':
+      case 'changelog':
         return <ChangelogTab />;
-      case 'Privacy':
+      case 'privacy':
         return <PrivacyTab />;
-      case 'Terms of Use':
+      case 'terms':
         return <TermsOfUseTab />;
     }
   };
 
   return (
     <Page className="about-page" center padding>
-      <div className="about-page-center grid-auto-row">
-        <TabsContainer items={SELECTIONS} selected={tab} onSelect={setTab} />
+      <div className="grid-auto-row">
+        <TabsContainer
+          items={ABOUT_PAGE_ROUTES}
+          selected={location.pathname.slice(1)}
+          onSelect={(label) => history.push(`/${label}`)}
+        />
         {renderTab()}
       </div>
     </Page>

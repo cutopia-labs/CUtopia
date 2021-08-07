@@ -24,10 +24,6 @@ const SECTIONS = [
     label: 'Planner',
     link: '/planner',
   },
-  {
-    label: 'About',
-    link: '/about',
-  },
 ];
 
 const Header = () => {

@@ -133,7 +133,7 @@
 
 @media only screen and (max-width: 1260px) {
   .review-sections-container {
-    display: block;
+    grid-template-columns: none;
   }
   .submit-btn-row {
     flex-direction: column;

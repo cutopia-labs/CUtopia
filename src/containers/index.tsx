@@ -17,7 +17,7 @@ import HomePage from './HomePage';
 import LandingPage from './LandingPage';
 import PlannerPage from './PlannerPage';
 import ForumPage from './ForumPage';
-import AboutPage from './AboutPage';
+import AboutPage, { ABOUT_PAGE_ROUTES } from './AboutPage';
 
 const ROUTES = [
   {
@@ -43,7 +43,7 @@ const ROUTES = [
   {
     props: {
       exact: true,
-      path: ['/about'],
+      path: ABOUT_PAGE_ROUTES.map((route) => `/${route.label}`),
     },
     children: <AboutPage />,
   },
@@ -100,7 +100,10 @@ const Navigator = () => {
         <Header />
         <Switch>
           {ROUTES.map((route) => (
-            <Route key={JSON.stringify(route.props.path)} {...route.props}>
+            <Route
+              key={JSON.stringify(route?.props?.path) || '404'}
+              {...route.props}
+            >
               {route.children}
             </Route>
           ))}

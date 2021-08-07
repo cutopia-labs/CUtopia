@@ -2,52 +2,40 @@ import { Link } from '@material-ui/core';
 
 import './Tab.scss';
 import Card from '../../atoms/Card';
+import AboutSection from '../AboutSection';
 
 const PrivacyTab = () => (
-  <Card className="tab-card">
-    <div className="section">
-      <p className="header">Privacy Policy</p>
-      <p className="paragraph">Last updated: Aug 8, 2021</p>
-    </div>
-
-    <div className="section">
-      <p className="header">Data Collection</p>
-      <div className="sub-section">
-        <p className="header">CUSIS data</p>
-        <p className="paragraph">
-          Your CUHK student ID is collected for student verification. You may
-          optionally log in your CUSIS to automatically fetch and save your
-          timetable locally. Other CUSIS data including name, password and
-          address are not collected in any form.
-        </p>
-      </div>
-      <div className="sub-section">
-        <p className="header">Errors</p>
-        <p className="paragraph">
-          Unexpected errors will be reproted to{' '}
-          <Link href="https://sentry.io/">Sentry</Link>. This is intended for
-          debugging and includes your username as the identifier.
-        </p>
-      </div>
-      <div className="sub-section">
-        <p className="header">Analytics</p>
-        <p className="paragraph">
-          Usage analytics will be collected through{' '}
-          <Link href="https://analytics.google.com/">Google Analytics</Link>. It
-          is intended for visualizing the page views, session duration, etc.
-        </p>
-      </div>
-    </div>
-
-    <div className="section">
-      <p className="header">Data Sharing</p>
-      <p className="paragraph">
-        We do not share your personal data, such as your CUSIS email, with third
-        parties. However, errors and analytics data will be collected through
-        Sentry and Google Analytics. Please read their privacy policies for
-        further details.
+  <Card className="about-card grid-auto-row">
+    <AboutSection title="Privacy" labelClassName="about-title sub-heading">
+      <p>
+        {' '}
+        We collect your student id for verification purposes only. Reviews are
+        being posted anonymously or with CUtopia username, but not student id.
+        Thus, your student id is only used in sign-up and password recovery
+        services.
       </p>
-    </div>
+      <p>
+        We will never share your personal data, such as your student id, with
+        any third parties. However, your username might be collected through
+        third party sites or services. Please read the details below.
+      </p>
+    </AboutSection>
+    <AboutSection title="Crash Report">
+      <p>
+        We use services provided by{' '}
+        <Link href="https://sentry.io/">Sentry</Link> for crash reporting. Your
+        crash log together with your identifier (username) will be automatically
+        send to us for troubleshooting.
+      </p>
+    </AboutSection>
+    <AboutSection title="Analytics">
+      <p>
+        We use{' '}
+        <Link href="https://analytics.google.com/">Google Analytics</Link> to
+        analyze the usage. Activities such as page views, session duration will
+        be collected anonymously.
+      </p>
+    </AboutSection>
   </Card>
 );
 

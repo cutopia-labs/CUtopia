@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Divider, Grid } from '@material-ui/core';
 
 import './Tab.scss';
 import Card from '../../atoms/Card';
 import ChangelogItem from '../ChangelogItem';
 import useMobileQuery from '../../../helpers/useMobileQuery';
+import Loading from '../../atoms/Loading';
 
 const ChangelogTab = () => {
   const [commits, setCommits] = useState(null);
@@ -19,51 +19,31 @@ const ChangelogTab = () => {
 
       const repoACommits = await (
         await fetch(
-          'https://api.github.com/repos/facebook/react/commits?per_page=5'
+          'https://api.github.com/repos/facebook/react/commits?per_page=10'
         )
       ).json();
-      const repoBCommits = await (
-        await fetch(
-          'https://api.github.com/repos/apollographql/apollo-server/commits?per_page=5'
-        )
-      ).json();
-      setCommits([repoACommits, repoBCommits]);
+      setCommits(repoACommits);
     };
 
     fetchCommits();
   }, []);
 
   return (
-    <Card className="tab-card">
-      <Grid container alignItems="center" justifyContent="space-evenly">
-        <Grid item>
-          <p className="header center-text">Frontend</p>
-          {commits &&
-            commits[0].map((commit) => (
-              <ChangelogItem
-                committer={commit.commit.author.name}
-                message={commit.commit.message}
-                url={commit.html_url}
-                date={commit.commit.author.date}
-                avatar_url={commit.author.avatar_url}
-              />
-            ))}
-        </Grid>
-        {!isMobile && <Divider orientation="vertical" flexItem />}
-        <Grid item>
-          <p className="header center-text">Backend</p>
-          {commits &&
-            commits[1].map((commit) => (
-              <ChangelogItem
-                committer={commit.commit.author.name}
-                message={commit.commit.message}
-                url={commit.html_url}
-                date={commit.commit.author.date}
-                avatar_url={commit.author.avatar_url}
-              />
-            ))}
-        </Grid>
-      </Grid>
+    <Card className="about-card">
+      {commits ? (
+        commits.map((commit) => (
+          <ChangelogItem
+            key={commit.html_url}
+            committer={commit.commit.author.name}
+            message={commit.commit.message}
+            url={commit.html_url}
+            date={commit.commit.author.date}
+            avatar_url={commit.author.avatar_url}
+          />
+        ))
+      ) : (
+        <Loading />
+      )}
     </Card>
   );
 };

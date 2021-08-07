@@ -5,6 +5,7 @@ import './Section.scss';
 export type SectionProps = {
   title: string;
   className?: string;
+  labelClassName?: string;
   subheading?: boolean;
 };
 
@@ -12,10 +13,13 @@ const Section = ({
   title,
   children,
   className,
+  labelClassName,
   subheading,
 }: PropsWithChildren<SectionProps>) => (
   <div className={clsx('section-container', className)}>
-    <div className={subheading ? 'sub-heading' : 'label'}>{title}</div>
+    <div className={labelClassName || (subheading ? 'sub-heading' : 'label')}>
+      {title}
+    </div>
     {children}
   </div>
 );

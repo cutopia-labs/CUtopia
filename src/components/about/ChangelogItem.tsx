@@ -1,8 +1,6 @@
 import { ListItem, ListItemAvatar, ListItemText } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
-
-import Link from '../molecules/Link';
-
+import './ChangelogItem.scss';
 type ChangelogProps = {
   committer: string;
   message: string;
@@ -19,19 +17,19 @@ const Changelog = ({
   avatar_url,
 }: ChangelogProps) => {
   return (
-    <div>
-      <ListItem alignItems="flex-start">
-        <ListItemAvatar>
-          <Avatar alt={committer} src={avatar_url} />
-        </ListItemAvatar>
-        <ListItemText
-          primary={
-            <Link url={url} label={message} truncate={250} icon={false} />
-          }
-          secondary={`${committer} commited in ${date.substring(0, 10)}`}
-        />
-      </ListItem>
-    </div>
+    <ListItem alignItems="flex-start" className="change-log">
+      <ListItemAvatar>
+        <Avatar alt={committer} src={avatar_url} />
+      </ListItemAvatar>
+      <ListItemText
+        onClick={() => window.open(url)}
+        primary={message.substring(
+          0,
+          message.indexOf('\n') + 1 || message.length
+        )}
+        secondary={`${committer} commited in ${date.substring(0, 10)}`}
+      />
+    </ListItem>
   );
 };
 

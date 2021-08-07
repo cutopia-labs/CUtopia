@@ -273,6 +273,10 @@ textarea[type="number"] {
   }
 }
 
+.row-gap {
+  row-gap: var(--card-padding);
+}
+
 /* Scrollbar styles */
 
 /* Mobile Styles */

@@ -1,0 +1,8 @@
+.change-log {
+  .MuiListItemText-root {
+    cursor: pointer;
+    &:hover {
+      color: var(--primary)
+    }
+  }
+}

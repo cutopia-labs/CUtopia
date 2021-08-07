@@ -1,8 +1,24 @@
 .landing-page {
-  --landing-page-color: #865c6c;
-  --landing-page-logo-color: #bb7a93;
-  --landing-page-bg-color: #f1cdd7;
-  --landing-page-btn-color: rgb(234, 76, 137);
+  --landing-page-color: #7E696A;
+  --landing-page-logo-color: #AF8F8F;
+  --landing-page-bg-color: #EAD8D5;
+  --landing-page-btn-color: #C08A81;
+  /*
+  --landing-page-color: #7E696A;
+  --landing-page-logo-color: #AF8F8F;
+  --landing-page-bg-color: #EAD8D5;
+  --landing-page-btn-color: #C08A81;
+  
+  --landing-page-color: #86675B;
+  --landing-page-logo-color: #BB8E7C;
+  --landing-page-bg-color: #F0DACB;
+  --landing-page-btn-color: #A48679;
+
+  --landing-page-color: #5B6B86;
+  --landing-page-logo-color: #7C94BB;
+  --landing-page-bg-color: #CBD6F0;
+  --landing-page-btn-color: #6D7E9C;
+  */
 
   display: flex;
   background-color: var(--surface);
