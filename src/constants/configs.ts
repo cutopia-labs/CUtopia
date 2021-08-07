@@ -28,11 +28,17 @@ export const PLANNER_CONFIGS = {
 
 export const MIN_DESKTOP_WIDTH = 1260;
 
+const SERVER_ID =
+  process.env.NODE_ENV === 'production' ? 'vqx877xyad' : 'uqtx8qgnz5';
+
 export const SERVER_CONFIG = {
-  URI: 'https://uqtx8qgnz5.execute-api.ap-northeast-1.amazonaws.com/Stage/graphql',
+  URI: `https://${SERVER_ID}.execute-api.ap-northeast-1.amazonaws.com/Stage/graphql`,
 };
 
 export const SentryConfigs: BrowserOptions = {
-  dsn: 'https://c38359448a5448a58971eeb211568473@o861810.ingest.sentry.io/5821571',
+  dsn:
+    process.env.NODE_ENV === 'production'
+      ? 'https://c38359448a5448a58971eeb211568473@o861810.ingest.sentry.io/5821571'
+      : '',
   tracesSampleRate: 0.3,
 };

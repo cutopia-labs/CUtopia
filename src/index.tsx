@@ -9,6 +9,12 @@ import { SentryConfigs } from './constants/configs';
 import ErrorCard from './components/molecules/ErrorCard';
 import { ErrorCardMode } from './types';
 
+if (process.env.NODE_ENV === 'production') {
+  console.log = () => {};
+  console.warn = () => {};
+  console.table = () => {};
+}
+
 Sentry.init({
   ...SentryConfigs,
   integrations: [new Integrations.BrowserTracing()],
