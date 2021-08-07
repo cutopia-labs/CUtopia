@@ -1,0 +1,10 @@
+.about-page {
+  background-color: var(--background);
+  height: 10%;
+  grid-template-columns: none;
+}
+
+.about-page-center {
+  flex: 1;
+	height: fit-content;
+}

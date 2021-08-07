@@ -17,6 +17,7 @@ import HomePage from './HomePage';
 import LandingPage from './LandingPage';
 import PlannerPage from './PlannerPage';
 import ForumPage from './ForumPage';
+import AboutPage from './AboutPage';
 
 const ROUTES = [
   {
@@ -38,6 +39,13 @@ const ROUTES = [
       path: ['/planner', '/planner/:courseId', '/planner/share/:shareId'],
     },
     children: <PlannerPage />,
+  },
+  {
+    props: {
+      exact: true,
+      path: ['/about'],
+    },
+    children: <AboutPage />,
   },
   {
     props: {},

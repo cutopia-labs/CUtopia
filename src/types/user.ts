@@ -25,7 +25,6 @@ type UpdateUserResult = {
 };
 
 type LoginResult = {
-  code: number;
   token?: string;
   me?: User;
 };
