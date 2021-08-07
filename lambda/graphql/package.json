@@ -11,14 +11,15 @@
   "dependencies": {
     "@profusion/apollo-validation-directives": "^2.1.5",
     "apollo-server-lambda": "^2.19.1",
-    "codes": "file:../../modules/codes",
+    "aws-sdk": "^2.963.0",
+    "cutopia-types": "^1.0.2",
     "dynamodb": "file:../../dynamodb",
     "fuse.js": "^6.4.6",
     "graphql": "^15.4.0",
     "graphql-scalars": "^1.10.0",
     "graphql-tools": "^7.0.2",
     "jsonwebtoken": "^8.5.1",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "node-cache": "^5.1.2"
   }
 }

@@ -1,6 +1,6 @@
 const AWS = require('aws-sdk');
 const { nanoid } = require('nanoid');
-const { ERROR_CODES } = require('codes');
+const { ErrorCode } = require('cutopia-types/lib/codes');
 
 const db = new AWS.DynamoDB.DocumentClient();
 
@@ -97,12 +97,12 @@ exports.getSharedTimetable = async (input) => {
   const result = (await db.get(params).promise()).Item;
 
   if (result === undefined) {
-    throw Error(ERROR_CODES.GET_TIMETABLE_INVALID_ID);
+    throw Error(ErrorCode.GET_TIMETABLE_INVALID_ID);
   }
 
   const expireDate = result.createdDate + result.expire * 60 * 1000;
   if (expireDate - now < 0) {
-    throw Error(ERROR_CODES.GET_TIMETABLE_EXPIRED);
+    throw Error(ErrorCode.GET_TIMETABLE_EXPIRED);
   }
 
   return {

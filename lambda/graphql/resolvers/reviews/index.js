@@ -9,7 +9,7 @@ const {
   recalWithNewReview,
   recalWithEdittedReview
 } = require('../ranking/impl');
-const { VOTE_ACTIONS } = require('codes');
+const { VoteAction } = require('cutopia-types/lib/codes');
 
 exports.Mutation = {
   createReview: async (parent, { input }, { user }) => {
@@ -55,10 +55,10 @@ exports.Review = {
       const { username } = user;
       // upvotesUserIds and downvotesUserIds are sets
       if (upvotesUserIds.values.includes(username)) {
-        return VOTE_ACTIONS.UPVOTE;
+        return VoteAction.UPVOTE;
       }
       if (downvotesUserIds.values.includes(username)) {
-        return VOTE_ACTIONS.DOWNVOTE;
+        return VoteAction.DOWNVOTE;
       }
     }
     return null;

@@ -3,7 +3,7 @@ const NodeCache = require('node-cache');
 const AWS = require('aws-sdk');
 const { incrementUpvotesCount, getUser } = require('./user-db');
 const { addCourseData } = require('./course-db');
-const { ERROR_CODES, VOTE_ACTIONS } = require('codes');
+const { ErrorCode, VoteAction } = require('cutopia-types/lib/codes');
 
 const db = new AWS.DynamoDB.DocumentClient();
 
@@ -58,7 +58,7 @@ exports.createReview = async (input, user) => {
     requiredFields: ['reviewIds']
   });
   if (reviewIds.values.some(id => id.includes(courseId))) {
-    throw Error(ERROR_CODES.CREATE_REVIEW_ALREADY_CREATED);
+    throw Error(ErrorCode.CREATE_REVIEW_ALREADY_CREATED);
   }
 
   // give extra review for writing the first review
@@ -129,10 +129,10 @@ exports.voteReview = async (input, user) => {
   const { username } = user;
   if (vote !== 0 && vote !== 1) {
     // vote must be either 0 or 1
-    throw Error(ERROR_CODES.VOTE_REVIEW_INVALID_VALUE);
+    throw Error(ErrorCode.VOTE_REVIEW_INVALID_VALUE);
   }
 
-  const isUpvote = vote === VOTE_ACTIONS.UPVOTE;
+  const isUpvote = vote === VoteAction.UPVOTE;
   const params = {
     TableName: process.env.ReviewsTableName,
     Key: {
@@ -156,7 +156,7 @@ exports.voteReview = async (input, user) => {
     result = await db.update(params).promise();
   } catch (e) {
     if (e.code === 'ConditionalCheckFailedException') {
-      throw Error(ERROR_CODES.VOTE_REVIEW_VOTED_ALREADY);
+      throw Error(ErrorCode.VOTE_REVIEW_VOTED_ALREADY);
     }
   }
   const { reviewId, ...reviewData } = result.Attributes;
@@ -197,7 +197,7 @@ exports.getReviews = async (input) => {
     const sortByDate = ascendingDate !== null;
     if (sortByVotes && sortByDate) {
       // either sort by votes or date
-      throw Error(ERROR_CODES.GET_REVIEW_INVALID_SORTING);
+      throw Error(ErrorCode.GET_REVIEW_INVALID_SORTING);
     }
     if (lastEvaluatedKey !== null && !sortByVotes) {
       delete lastEvaluatedKey.upvotes;

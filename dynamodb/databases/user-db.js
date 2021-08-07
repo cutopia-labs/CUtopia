@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 // const NodeCache = require('node-cache');
 const saltRounds = 10;
 const { nanoid } = require('nanoid');
-const { ERROR_CODES } = require('codes');
+const { ErrorCode } = require('cutopia-types/lib/codes');
 
 const db = new AWS.DynamoDB.DocumentClient();
 /*
@@ -20,7 +20,7 @@ exports.createUser = async (input) => {
   const now = new Date().getTime();
 
   if (!email.endsWith('@link.cuhk.edu.hk')) {
-    throw Error(ERROR_CODES.CREATE_USER_INVALID_EMAIL);
+    throw Error(ErrorCode.CREATE_USER_INVALID_EMAIL);
   }
 
   // Ensure username and email do not exist
@@ -29,11 +29,11 @@ exports.createUser = async (input) => {
     requiredFields: ['email']
   });
   if (usernameResult) {
-    throw Error(ERROR_CODES.CREATE_USER_USERNAME_EXISTS);
+    throw Error(ErrorCode.CREATE_USER_USERNAME_EXISTS);
   }
   const emailResult = await this.getUsernameByEmail({ email });
   if (emailResult.length !== 0) {
-    throw Error(ERROR_CODES.CREATE_USER_EMAIL_EXISTS);
+    throw Error(ErrorCode.CREATE_USER_EMAIL_EXISTS);
   }
 
   const hash = await bcrypt.hash(password, saltRounds);
@@ -159,11 +159,11 @@ exports.verifyUser = async (input) => {
 
   if (result) {
     if (result.verified) {
-      throw Error(ERROR_CODES.VERIFICATION_ALREADY_VERIFIED);
+      throw Error(ErrorCode.VERIFICATION_ALREADY_VERIFIED);
     }
     if (result.createdDate + VERIFY_EXPIRATION_TIME - new Date().getTime() < 0) {
       await this.deleteUser({ username });
-      throw Error(ERROR_CODES.VERIFICATION_EXPIRED);
+      throw Error(ErrorCode.VERIFICATION_EXPIRED);
     }
     if (result.verificationCode === code) {
       await this.updateUser({
@@ -173,9 +173,9 @@ exports.verifyUser = async (input) => {
       // successfully verified
       return true;
     }
-    throw Error(ERROR_CODES.VERIFICATION_FAILED);
+    throw Error(ErrorCode.VERIFICATION_FAILED);
   }
-  throw Error(ERROR_CODES.VERIFICATION_USER_DNE);
+  throw Error(ErrorCode.VERIFICATION_USER_DNE);
 };
 
 exports.login = async (input) => {
@@ -185,10 +185,10 @@ exports.login = async (input) => {
     requiredFields: ['username', 'password', 'email', 'verified', 'reviewIds']
   });
   if (!result) {
-    throw Error(ERROR_CODES.LOGIN_USER_DNE);
+    throw Error(ErrorCode.LOGIN_USER_DNE);
   }
   if (!await bcrypt.compare(password, result.password)) {
-    throw Error(ERROR_CODES.LOGIN_FAILED);
+    throw Error(ErrorCode.LOGIN_FAILED);
   }
 
   const { password: pwd, ...remainedFields } = result;
@@ -205,10 +205,10 @@ exports.getResetPasswordCodeAndEmail = async (input) => {
   });
 
   if (!data) {
-    throw Error(ERROR_CODES.GET_PASSWORD_USER_DNE);
+    throw Error(ErrorCode.GET_PASSWORD_USER_DNE);
   }
   if (!data.verified) {
-    throw Error(ERROR_CODES.GET_PASSWORD_NOT_VERIFIED);
+    throw Error(ErrorCode.GET_PASSWORD_NOT_VERIFIED);
   }
   const resetPwdCode = nanoid(5);
   await this.updateUser({
@@ -229,10 +229,10 @@ exports.resetPassword = async (input) => {
   });
 
   if (!data) {
-    throw Error(ERROR_CODES.RESET_PASSWORD_USER_DNE);
+    throw Error(ErrorCode.RESET_PASSWORD_USER_DNE);
   }
   if (!data.verified) {
-    throw Error(ERROR_CODES.RESET_PASSWORD_NOT_VERIFIED);
+    throw Error(ErrorCode.RESET_PASSWORD_NOT_VERIFIED);
   }
 
   const correct = resetCode !== '' && data.resetPwdCode === resetCode;
@@ -245,7 +245,7 @@ exports.resetPassword = async (input) => {
     // successfully reset password
     return true;
   }
-  throw Error(ERROR_CODES.RESET_PASSWORD_FAILED);
+  throw Error(ErrorCode.RESET_PASSWORD_FAILED);
 };
 
 exports.incrementUpvotesCount = async (input) => {
