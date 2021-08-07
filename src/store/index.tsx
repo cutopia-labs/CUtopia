@@ -6,10 +6,10 @@ import UserStore from './UserStore';
 import ViewStore from './ViewStore';
 import PlannerStore from './PlannerStore';
 
-const viewStore = new ViewStore();
-const preferenceStore = new PreferenceStore();
-const userStore = new UserStore(viewStore);
-const plannerStore = new PlannerStore(viewStore);
+export const viewStore = new ViewStore();
+export const preferenceStore = new PreferenceStore();
+export const userStore = new UserStore(viewStore);
+export const plannerStore = new PlannerStore(viewStore);
 
 reaction(
   () => ({

@@ -257,9 +257,13 @@ const SearchPanel = () => {
             onClick={() => {
               if (currentCourse) {
                 setCurrentCourse(null);
+                if (!searchPayload) {
+                  history.push('/planner');
+                }
                 return;
               }
               setSearchPayload(null);
+              history.push('/planner');
             }}
           >
             <ArrowBack />

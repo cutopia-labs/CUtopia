@@ -1,16 +1,18 @@
 import { useContext, useEffect } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-
-import './index.scss';
+import * as Sentry from '@sentry/react';
 import { useLazyQuery } from '@apollo/client';
 import { observer } from 'mobx-react-lite';
+
+import './index.scss';
 import SnackBar from '../components/molecules/SnackBar';
 import { ViewContext, UserContext } from '../store';
 import Header from '../components/organisms/Header';
-import { LoginState, User } from '../types';
+import { ErrorCardMode, LoginState, User } from '../types';
 import { GET_USER } from '../constants/queries';
 import Loading from '../components/atoms/Loading';
 import Dialog from '../components/templates/Dialog';
+import ErrorCard from '../components/molecules/ErrorCard';
 import HomePage from './HomePage';
 import LandingPage from './LandingPage';
 import PlannerPage from './PlannerPage';
@@ -37,6 +39,10 @@ const ROUTES = [
     },
     children: <PlannerPage />,
   },
+  {
+    props: {},
+    children: <ErrorCard mode={ErrorCardMode.NOT_FOUND} />,
+  },
 ];
 
 const Navigator = () => {
@@ -47,7 +53,10 @@ const Navigator = () => {
   }>(GET_USER, {
     onCompleted: (data) => {
       if (data?.me?.username) {
-        user.updateStore('data', data?.me);
+        user.updateStore('data', data.me);
+        Sentry.setUser({
+          username: data.me.username,
+        });
       } else {
         console.log(data);
         user.updateStore('loginState', LoginState.LOGGED_OUT);

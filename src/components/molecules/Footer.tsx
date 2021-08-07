@@ -1,6 +1,9 @@
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
+import * as Sentry from '@sentry/react';
 import './Footer.scss';
+import { userStore } from '../../store';
+import { SentryConfigs } from '../../constants/configs';
 
 type MultiTypeLink = {
   label: string;
@@ -28,7 +31,14 @@ const FOOTER_ITEMS = [
   },
   {
     label: 'Report Issues',
-    onClick: () => {},
+    onClick: () =>
+      Sentry.showReportDialog({
+        title: 'Please describe your issue',
+        user: {
+          name: userStore.username,
+        },
+        dsn: SentryConfigs.dsn,
+      }),
   },
   {
     label: 'Contact Us',

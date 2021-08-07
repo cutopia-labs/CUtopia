@@ -5,21 +5,30 @@ import { Integrations } from '@sentry/tracing';
 
 import './index.scss';
 import App from './App';
-import { SENTRY_SAMPLING_RATE } from './constants/configs';
+import { SentryConfigs } from './constants/configs';
+import ErrorCard from './components/molecules/ErrorCard';
+import { ErrorCardMode } from './types';
 
 Sentry.init({
-  dsn: 'https://c38359448a5448a58971eeb211568473@o861810.ingest.sentry.io/5821571',
+  ...SentryConfigs,
   integrations: [new Integrations.BrowserTracing()],
-
-  // Set tracesSampleRate to 1.0 to capture 100%
-  // of transactions for performance monitoring.
-  // We recommend adjusting this value in production
-  tracesSampleRate: SENTRY_SAMPLING_RATE,
+  beforeSend(event, hint) {
+    // Check if it is an exception, and if so, show the report dialog
+    if (event.exception) {
+      Sentry.showReportDialog({ eventId: event.event_id });
+    }
+    return event;
+  },
 });
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Sentry.ErrorBoundary
+      fallback={<ErrorCard mode={ErrorCardMode.ERROR} />}
+      showDialog
+    >
+      <App />
+    </Sentry.ErrorBoundary>
   </React.StrictMode>,
   document.getElementById('root')
 );

@@ -22,7 +22,7 @@
 
 .reviews-filter {
   display: flex;
-  padding: 12px var(--card-padding);
+  padding: 12px 8px;
   align-items: center;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -30,7 +30,11 @@
     color: var(--text);
   }
   flex-direction: row;
-  .reviews-sort {
+  .filter-row {
+    .reviews-filter-label {
+      margin: 0;
+      font-weight: 500;
+    }
   }
   &.float {
     position: fixed;
@@ -92,6 +96,9 @@
   }
   .course-panel-fab {
     right: 20px;
+  }
+  .reviews-filter {
+    padding: 12px var(--card-padding);
   }
   .filter-row {
     button {

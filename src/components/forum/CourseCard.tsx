@@ -132,7 +132,7 @@ const CourseCard = ({ courseInfo, concise, loading }: CourseCardProps) => {
       {concise ? (
         <>
           {courseInfo.requirements && (
-            <div>
+            <div className="requirement-section">
               <p className="sub-heading">Requirements</p>
               <p className="caption">{courseInfo.requirements}</p>
             </div>
