@@ -4679,6 +4679,11 @@ customize-cra@^1.0.0:
   dependencies:
     lodash.flow "^3.5.0"
 
+cutopia-types@^1.0.1:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/cutopia-types/-/cutopia-types-1.0.2.tgz#feebf9a7b481ad47f5d85ec174b353c078d105a4"
+  integrity sha512-qdKbdXfSbQ+zWMQ+wm1n5nVY65XRmFT5wmlsf1tZnUT5oaghlua+bevPznLv/v0JRtCxLs6xrHHSPCHhg+QRvQ==
+
 cyclist@^1.0.1:
   version "1.0.1"
   resolved "https://registry.npmjs.org/cyclist/-/cyclist-1.0.1.tgz"

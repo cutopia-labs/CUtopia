@@ -9,14 +9,14 @@ import {
   MenuItem,
 } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
-
 import clsx from 'clsx';
 import { useMutation } from '@apollo/client';
+import { ReportCategory } from 'cutopia-types/lib/codes';
+
 import ListItem from '../molecules/ListItem';
 import { PreferenceContext, UserContext, ViewContext } from '../../store';
 import './Dialog.scss';
 import { clearStore } from '../../helpers/store';
-import { ReportCategory } from '../../types';
 import { REPORT_ISSUES_MESSAGES, REPORT_MODES } from '../../constants/messages';
 import Section from '../molecules/Section';
 import TextField from '../atoms/TextField';
