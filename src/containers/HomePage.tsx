@@ -8,6 +8,7 @@ import {
 import { observer } from 'mobx-react-lite';
 
 import './HomePage.scss';
+import { useTitle } from 'react-use';
 import UserCard from '../components/home/UserCard';
 import { PlannerContext, UserContext } from '../store';
 import { CoursesList, ReviewsList } from '../components/home/HomePageTabs';
@@ -65,6 +66,7 @@ const SELECTIONS = [
 ];
 
 const HomePage = () => {
+  useTitle('CUTOPIA');
   const user = useContext(UserContext);
   const planner = useContext(PlannerContext);
   const [tab, setTab] = useState('Courses');

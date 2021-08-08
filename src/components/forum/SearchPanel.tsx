@@ -181,6 +181,12 @@ const SearchPanel = () => {
   }>();
 
   useEffect(() => {
+    if (currentCourse) {
+      document.title = `Planner | ${currentCourse}`;
+    }
+  }, [currentCourse]);
+
+  useEffect(() => {
     if (validCourse(courseId)) {
       console.log('Current course');
       console.log(courseId);

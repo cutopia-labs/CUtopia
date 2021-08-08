@@ -6,6 +6,7 @@ import Draggable from 'react-draggable';
 import { Fab } from '@material-ui/core';
 import { CalendarToday, Search } from '@material-ui/icons';
 import { useRouteMatch } from 'react-router-dom';
+import { useTitle } from 'react-use';
 import { SearchPanel } from '../components/forum';
 import Page from '../components/atoms/Page';
 import PlannerTimeTable from '../components/planner/PlannerTimeTable';
@@ -67,6 +68,7 @@ const PlannerPage = () => {
     strict: true,
     exact: true,
   });
+  useTitle('Planner');
   const isMobile = window.matchMedia(
     `(max-width:${MIN_DESKTOP_WIDTH}px)`
   ).matches;

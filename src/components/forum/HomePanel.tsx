@@ -8,6 +8,7 @@ import {
 import { useQuery } from '@apollo/client';
 
 import './HomePanel.scss';
+import { useTitle } from 'react-use';
 import GradeIndicator from '../atoms/GradeIndicator';
 import { RATING_FIELDS } from '../../constants/states';
 import {
@@ -126,6 +127,7 @@ const RankingCard = ({
 };
 
 const HomePanel = () => {
+  useTitle('Review');
   const [tab, setTab] = useState('Recents');
   const [sortKey, setSortKey] = useState('overall');
   const view = useContext(ViewContext);

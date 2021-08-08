@@ -46,13 +46,13 @@
   position: absolute;
   margin-top: calc(var(--header-content-height) + 10px);
   height: fit-content;
-  z-index: 10;
+  z-index: 30;
   border-bottom: none;
   border-right: none;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
+  width: 380px;
   & > .list-item-container {
-    width: 380px;
     height: auto;
   }
 }
@@ -99,8 +99,8 @@
   }
   .header-search-result {
     left: 0;
+    width: calc(100vw - 2px); // 2px for border width
     & > .list-item-container {
-      width: calc(100vw - 2px); // 2px for border width
     }
   }
 }

@@ -9,6 +9,7 @@ import { TiArrowSortedUp } from 'react-icons/ti';
 import { AiTwotoneCalendar } from 'react-icons/ai';
 import { FaUserAlt } from 'react-icons/fa';
 import pluralize from 'pluralize';
+import { useTitle } from 'react-use';
 
 import './CoursePanel.scss';
 import copy from 'copy-to-clipboard';
@@ -209,6 +210,7 @@ const CoursePanel = () => {
     id?: string;
     reviewId?: string;
   }>();
+  useTitle(courseId);
   const [mode, setMode] = useState(COURSE_PANEL_MODES.INITIAL);
   const history = useHistory();
   const [FABOpen, setFABOpen] = useState(false);
