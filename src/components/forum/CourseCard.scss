@@ -8,8 +8,12 @@
     max-height: 580px;
   }
   .grade-row {
-    margin: 10px 0;
+    height: 36px;
+    min-width: 550px;
+    margin-top: auto;
+    margin-bottom: auto;
     &.concise {
+      min-width: auto;
       margin-top: 0;
       margin-bottom: 0;
     }

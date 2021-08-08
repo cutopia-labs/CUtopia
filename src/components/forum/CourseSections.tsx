@@ -6,7 +6,8 @@ import { Add, PersonOutline, Schedule, RoomOutlined } from '@material-ui/icons';
 import './CourseSections.scss';
 import { PlannerContext, ViewContext } from '../../store';
 import { WEEKDAYS_TWO_ABBR } from '../../constants/states';
-import { CourseInfo, CourseSection } from '../../types';
+import { CourseInfo, CourseSection, ErrorCardMode } from '../../types';
+import ErrorCard from '../molecules/ErrorCard';
 
 type SectionCardProps = {
   section: CourseSection;
@@ -85,7 +86,10 @@ type CourseSectionsProps = {
 const CourseSections = ({
   courseInfo: { terms: courseTerms, courseId, title },
 }: CourseSectionsProps) => {
-  const currentTermIndex = courseTerms.length - 1;
+  if (!courseTerms?.length) {
+    return <ErrorCard mode={ErrorCardMode.NULL} />;
+  }
+  const currentTermIndex = courseTerms?.length - 1;
   const planner = useContext(PlannerContext);
   const view = useContext(ViewContext);
   const addToPlanner = (section: CourseSection) => {

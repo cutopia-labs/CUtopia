@@ -86,28 +86,26 @@ const Navigator = () => {
   ) {
     return <Loading fixed />;
   }
-  if (user.loginState !== LoginState.LOGGED_IN) {
-    return (
-      <>
-        <SnackBar />
-        <LandingPage />
-      </>
-    );
-  }
   return (
     <Router>
       <div className="App">
-        <Header />
-        <Switch>
-          {ROUTES.map((route) => (
-            <Route
-              key={JSON.stringify(route?.props?.path) || '404'}
-              {...route.props}
-            >
-              {route.children}
-            </Route>
-          ))}
-        </Switch>
+        {user.loginState === LoginState.LOGGED_IN ? (
+          <>
+            <Header />
+            <Switch>
+              {ROUTES.map((route) => (
+                <Route
+                  key={JSON.stringify(route?.props?.path) || '404'}
+                  {...route.props}
+                >
+                  {route.children}
+                </Route>
+              ))}
+            </Switch>
+          </>
+        ) : (
+          <LandingPage />
+        )}
       </div>
       <SnackBar />
       <Dialog />

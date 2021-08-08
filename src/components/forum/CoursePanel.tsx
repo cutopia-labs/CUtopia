@@ -155,7 +155,7 @@ const ReviewFilterBar = ({
                 </Button>
               ))}
             <div className="reviews-filter-label caption">
-              {exceedLimit && `Limit exceeded (post 1 reviews to unlock)`}
+              {/* exceedLimit && `Limit exceeded (post 1 reviews to unlock)` */}
               {fetchAllAction && 'Showing 1 review only!'}
             </div>
           </div>
