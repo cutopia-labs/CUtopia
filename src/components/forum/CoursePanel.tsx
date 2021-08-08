@@ -386,15 +386,13 @@ const CoursePanel = () => {
     <>
       <div className="course-panel-container grid-auto-row">
         <div className="course-panel panel card">
-          {!courseInfoLoading && (
-            <CourseCard
-              courseInfo={{
-                ...courseInfo?.subjects[0]?.courses[0],
-                courseId,
-              }}
-              loading={courseInfoLoading}
-            />
-          )}
+          <CourseCard
+            courseInfo={{
+              ...courseInfo?.subjects[0]?.courses[0],
+              courseId,
+            }}
+            loading={courseInfoLoading}
+          />
         </div>
         {!courseInfoLoading && (
           <>
