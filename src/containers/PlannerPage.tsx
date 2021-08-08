@@ -34,7 +34,7 @@ const PLANNER_MOBILE_FAB_ITEM = {
   },
 };
 
-const PlannerMobileFab = ({ targetMode, setMode }) => {
+const PlannerMobileFab = ({ targetMode, setMode }: PlannerMobileFabProps) => {
   const isDraggingRef = useRef(false);
   return (
     <Draggable

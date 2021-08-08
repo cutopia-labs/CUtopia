@@ -174,7 +174,7 @@ const SearchPanel = () => {
 
   const user = useContext(UserContext);
   const isPlanner = useRouteMatch({
-    path: '/planner',
+    path: ['/planner', '/planner/:courseId'],
   });
   const { courseId } = useParams<{
     courseId?: string;
@@ -215,7 +215,7 @@ const SearchPanel = () => {
       payload
         ? {
             ...payload,
-            showAvalibility: Boolean(isPlanner && payload.mode === 'query'),
+            showAvalibility: Boolean(isPlanner),
             offerredOnly: Boolean(isPlanner),
           }
         : null
@@ -263,13 +263,15 @@ const SearchPanel = () => {
             onClick={() => {
               if (currentCourse) {
                 setCurrentCourse(null);
-                if (!searchPayload) {
+                if (!searchPayload && isPlanner) {
                   history.push('/planner');
                 }
                 return;
               }
               setSearchPayload(null);
-              history.push('/planner');
+              if (isPlanner) {
+                history.push('/planner');
+              }
             }}
           >
             <ArrowBack />
