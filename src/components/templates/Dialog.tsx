@@ -59,6 +59,7 @@ const UserSettingsDialogContent = observer(() => {
         className="log-out-row"
         onClick={() => {
           user.logout();
+          view.setDialog(null);
           view.setSnackBar('Successfully logged out!');
         }}
         title="Log Out"

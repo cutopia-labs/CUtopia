@@ -192,7 +192,7 @@ const ReviewEdit = ({ courseId }) => {
     console.log(res);
     const id =
       mode === MODES.EDIT
-        ? res?.data?.editReview?.modifiedDate
+        ? formData.createdDate
         : res?.data?.createReview?.createdDate;
 
     if (id) {

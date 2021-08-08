@@ -4,9 +4,10 @@ import { ArrowBack } from '@material-ui/icons';
 
 import { observer } from 'mobx-react-lite';
 import { useMutation } from '@apollo/client';
-import useWebSocket from 'react-use-websocket';
 
 import './LoginPanel.scss';
+import { useLocation } from 'react-use';
+import { useHistory } from 'react-router-dom';
 import TextField from '../atoms/TextField';
 import { UserContext, ViewContext } from '../../store';
 import {
@@ -18,8 +19,9 @@ import {
 } from '../../constants/mutations';
 import { LoginPageMode } from '../../types';
 import handleCompleted from '../../helpers/handleCompleted';
+import reverseMapping from '../../helpers/reverseMapping';
 
-const LOGIN_ACCENT = '#873AFD';
+const INITIAL_MODE = LoginPageMode.CUTOPIA_SIGNUP;
 const CUHK_EMAIL_SUFFIX = '@link.cuhk.edu.hk';
 const MODE_ITEMS = {
   [LoginPageMode.CUTOPIA_LOGIN]: {
@@ -41,6 +43,7 @@ const MODE_ITEMS = {
     title: 'Verify',
     caption:
       'An verification code has been sent to CUHK email.\nPlease enter your code here:',
+    username: 'Username',
     verificationCode: 'Your Verification Code',
     button: 'Verify',
   },
@@ -59,10 +62,21 @@ const MODE_ITEMS = {
   },
 };
 
-const LoginPanel = () => {
-  const initialMode = LoginPageMode.CUTOPIA_SIGNUP;
+const PATH_MODE_LOOKUP = {
+  '/': INITIAL_MODE,
+  '/signup': LoginPageMode.CUTOPIA_SIGNUP,
+  '/login': LoginPageMode.CUTOPIA_LOGIN,
+  '/verify': LoginPageMode.VERIFY,
+  '/forgot': LoginPageMode.RESET_PASSWORD,
+  '/reset-pasword': LoginPageMode.RESET_PASSWORD_VERIFY,
+};
 
-  const [mode, setMode] = useState(initialMode);
+const MODE_PATH_LOOKUP = reverseMapping(PATH_MODE_LOOKUP);
+
+const LoginPanel = () => {
+  const location = useLocation();
+  const history = useHistory();
+  const [mode, setMode] = useState(INITIAL_MODE);
   const [username, setUsername] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
   const [userId, setUserId] = useState('');
@@ -78,11 +92,19 @@ const LoginPanel = () => {
   const user = useContext(UserContext);
   const view = useContext(ViewContext);
 
+  useEffect(() => {
+    const mode = PATH_MODE_LOOKUP[location.pathname];
+    if (!mode) {
+      history.push('/');
+    }
+    setMode(mode || INITIAL_MODE);
+  }, [location.pathname]);
+
+  /*
   const { sendMessage, lastMessage, readyState } = useWebSocket(
     'wss://1rys6xiqvk.execute-api.ap-northeast-1.amazonaws.com/Prod'
   );
 
-  /*
   const [QRCodeData, setQRCodeData] = useState('');
   const accessPwd = useRef('');
 
@@ -132,10 +154,13 @@ const LoginPanel = () => {
 
   const [createUser, { loading: creatingUser, error: createError }] =
     useMutation(SEND_VERIFICATION, {
-      onCompleted: handleCompleted(() => setMode(LoginPageMode.VERIFY), {
-        message: 'Verification code send to your CUHK email',
-        view,
-      }),
+      onCompleted: handleCompleted(
+        () => history.push(MODE_PATH_LOOKUP[LoginPageMode.VERIFY]),
+        {
+          message: 'Verification code send to your CUHK email',
+          view,
+        }
+      ),
       onError: view.handleError,
     });
   const [verifyUser, { loading: verifying, error: verifyError }] = useMutation(
@@ -150,9 +175,10 @@ const LoginPanel = () => {
   const [loginCUtopia, { loading: loggingInCUtopia }] = useMutation(
     LOGIN_CUTOPIA,
     {
-      onCompleted: handleCompleted(
-        async (data) => await user.saveUser(username, data.login?.token)
-      ),
+      onCompleted: handleCompleted(async (data) => {
+        history.push('/');
+        await user.saveUser(username, data.login?.token);
+      }),
       onError: view.handleError,
     }
   );
@@ -160,7 +186,8 @@ const LoginPanel = () => {
     SEND_RESET_PASSWORD_CODE,
     {
       onCompleted: handleCompleted(
-        () => setMode(LoginPageMode.RESET_PASSWORD_VERIFY),
+        () =>
+          history.push(MODE_PATH_LOOKUP[LoginPageMode.RESET_PASSWORD_VERIFY]),
         {
           message: 'Verification code has been send to your CUHK email',
           view,
@@ -172,9 +199,12 @@ const LoginPanel = () => {
   const [resetPassword, { loading: resettingPassword }] = useMutation(
     RESET_PASSWORD,
     {
-      onCompleted: handleCompleted(() => setMode(LoginPageMode.CUTOPIA_LOGIN), {
-        view,
-      }),
+      onCompleted: handleCompleted(
+        () => history.push(MODE_PATH_LOOKUP[LoginPageMode.CUTOPIA_LOGIN]),
+        {
+          view,
+        }
+      ),
       onError: view.handleError,
     }
   );
@@ -278,13 +308,13 @@ const LoginPanel = () => {
   const goBack = () => {
     switch (mode) {
       case LoginPageMode.VERIFY:
-        setMode(LoginPageMode.CUTOPIA_LOGIN);
+        history.push(MODE_PATH_LOOKUP[LoginPageMode.CUTOPIA_LOGIN]);
         break;
       case LoginPageMode.RESET_PASSWORD:
-        setMode(LoginPageMode.CUTOPIA_LOGIN);
+        history.push(MODE_PATH_LOOKUP[LoginPageMode.CUTOPIA_LOGIN]);
         break;
       case LoginPageMode.RESET_PASSWORD_VERIFY:
-        setMode(LoginPageMode.RESET_PASSWORD);
+        history.push(MODE_PATH_LOOKUP[LoginPageMode.RESET_PASSWORD]);
         break;
       default:
         break;
@@ -324,15 +354,6 @@ const LoginPanel = () => {
             label="CUHK SID"
           />
         )}
-        {MODE_ITEMS[mode].verificationCode && (
-          <TextField
-            error={errors.verification}
-            placeholder={MODE_ITEMS[mode].verificationCode}
-            value={verificationCode}
-            onChangeText={(text) => setVerificationCode(text)}
-            label="Verification Code"
-          />
-        )}
         {MODE_ITEMS[mode].username && (
           <TextField
             error={errors.username}
@@ -353,11 +374,22 @@ const LoginPanel = () => {
             label="Password"
           />
         )}
+        {MODE_ITEMS[mode].verificationCode && (
+          <TextField
+            error={errors.verification}
+            placeholder={MODE_ITEMS[mode].verificationCode}
+            value={verificationCode}
+            onChangeText={(text) => setVerificationCode(text)}
+            label="Verification Code"
+          />
+        )}
         {mode === LoginPageMode.CUTOPIA_LOGIN && (
           <div className="center-row forgot-password-row">
             <span
               className="label forgot-password"
-              onClick={() => setMode(LoginPageMode.RESET_PASSWORD)}
+              onClick={() =>
+                history.push(MODE_PATH_LOOKUP[LoginPageMode.RESET_PASSWORD])
+              }
             >
               Forgot Password?
             </span>
@@ -398,10 +430,12 @@ const LoginPanel = () => {
           <span
             className="label"
             onClick={() =>
-              setMode(
-                mode === LoginPageMode.CUTOPIA_LOGIN
-                  ? LoginPageMode.CUTOPIA_SIGNUP
-                  : LoginPageMode.CUTOPIA_LOGIN
+              history.push(
+                MODE_PATH_LOOKUP[
+                  mode === LoginPageMode.CUTOPIA_LOGIN
+                    ? LoginPageMode.CUTOPIA_SIGNUP
+                    : LoginPageMode.CUTOPIA_LOGIN
+                ]
               )
             }
           >
