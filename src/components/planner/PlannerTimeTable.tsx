@@ -29,13 +29,6 @@ type PlannerTimeTableProps = {
   className?: string;
 };
 
-enum PlannerTimeTableMode {
-  INITIAL,
-  SHARE_MODAL,
-}
-
-const ANONYMOUS_LABELS = ['Yes', 'No'];
-
 const EXPIRE_LABELS = ['1 day', '3 days', '7 days'];
 
 const SECTIONS = [
@@ -111,7 +104,6 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
   const planner = useContext(PlannerContext);
   const history = useHistory();
   const view = useContext(ViewContext);
-  const [mode, setMode] = useState(PlannerTimeTableMode.INITIAL);
   const [shareCourses, setShareCourses] = useState<PlannerCourse[] | null>(
     null
   );
@@ -142,6 +134,7 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
       };
       await planner.addPlanner(importedPlanner);
       planner.updateCurrentPlanner(importedPlanner.key);
+      history.push('/planner');
     },
     onError: view.handleError,
   });

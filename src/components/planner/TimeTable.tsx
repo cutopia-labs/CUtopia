@@ -152,7 +152,6 @@ const TimeTable = ({ courses }: TimeTableProps) => {
             </defs>
             <rect width="100%" height="100%" fill="url(#grid)" />
           </svg>
-
           {events.map((event, i) => (
             <CourseCard
               key={`${event.courseId}-${i}-${event.day}`}

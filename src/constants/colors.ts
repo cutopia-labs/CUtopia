@@ -41,6 +41,9 @@ export const THEME = createTheme({
     secondary: {
       main: '#ff8a65',
     },
+    background: {
+      paper: 'rgba(255, 255, 255, 1)',
+    },
   },
 });
 
@@ -52,6 +55,9 @@ export const DARK_THEME = createTheme({
     },
     secondary: {
       main: '#ff8a65',
+    },
+    background: {
+      paper: 'rgba(31, 31, 31, 1)',
     },
   },
 });

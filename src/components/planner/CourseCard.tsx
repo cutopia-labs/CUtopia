@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { IconButton } from '@material-ui/core';
+import { IconButton, useTheme } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
 import { observer } from 'mobx-react-lite';
 
@@ -7,6 +7,7 @@ import './CourseCard.scss';
 import updateOpacity from '../../helpers/updateOpacity';
 import { PlannerContext } from '../../store';
 import { Event } from '../../types';
+import colorMixing from '../../helpers/colorMixing';
 import { PropsWithConfig } from './TimeTable';
 
 const useStyles = (
@@ -18,13 +19,11 @@ const useStyles = (
   numOfDays: number
 ) => ({
   courseCard: {
-    width: `${99 / numOfDays}%`,
+    width: `calc(${99 / numOfDays}% - 12px)`,
     marginLeft: `${(100 / numOfDays) * (day - 1)}%`,
     height: durationHeight,
     minHeight: durationHeight, // For the use of hover height: fit-content
     top: topMarginValue,
-  },
-  innerCard: {
     backgroundColor: bgColor,
   },
   courseCardTitle: {
@@ -41,6 +40,7 @@ const CourseCard = ({
 }: PropsWithConfig<{
   course: Event;
 }>) => {
+  const theme = useTheme();
   console.log(`${course.courseId} ${course.section}`);
 
   const sTime = course.startTime.split(':');
@@ -53,7 +53,10 @@ const CourseCard = ({
     (100 / config.numOfHours) *
     (+eTime[0] - +sTime[0] + (+eTime[1] - +sTime[1]) / 60.0)
   }%`;
-  const bgColor = updateOpacity(course.color, 0.15);
+  const bgColor = colorMixing(
+    updateOpacity(course.color, 0.15),
+    theme.palette.background.paper
+  );
   const textColor = updateOpacity(course.color, 0.8);
   const styles = useStyles(
     durationHeight,
@@ -67,36 +70,34 @@ const CourseCard = ({
 
   return (
     <div className="timetable-course-card" style={styles.courseCard}>
-      <div className="timetable-inner-card" style={styles.innerCard}>
-        <span
-          className="timetable-course-card-title"
-          style={styles.courseCardTitle}
-        >
-          {`${course.courseId} ${course.section}`}
-        </span>
-        <span
-          className="timetable-course-card-location"
-          style={styles.courseCardLocation}
-        >
-          {course.location}
-        </span>
-        <IconButton
-          size="small"
-          color="primary"
-          className="timetable-course-card-delete"
-          style={{
-            color: textColor,
-          }}
-          onClick={() =>
-            planner.deleteSectionInPlannerCourses({
-              courseId: course.courseId,
-              sectionId: course.section,
-            })
-          }
-        >
-          <Delete />
-        </IconButton>
-      </div>
+      <span
+        className="timetable-course-card-title"
+        style={styles.courseCardTitle}
+      >
+        {`${course.courseId} ${course.section}`}
+      </span>
+      <span
+        className="timetable-course-card-location"
+        style={styles.courseCardLocation}
+      >
+        {course.location}
+      </span>
+      <IconButton
+        size="small"
+        color="primary"
+        className="timetable-course-card-delete"
+        style={{
+          color: textColor,
+        }}
+        onClick={() =>
+          planner.deleteSectionInPlannerCourses({
+            courseId: course.courseId,
+            sectionId: course.section,
+          })
+        }
+      >
+        <Delete />
+      </IconButton>
     </div>
   );
 };
