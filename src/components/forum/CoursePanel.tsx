@@ -73,10 +73,6 @@ const ReviewFilterBar = ({
   const [mode, setMode] = useState(ReviewFilterBarMode.INITIAL);
   const [anchorEl, setAnchorEl] = useState(null);
 
-  if (!courseInfo) {
-    return null;
-  }
-
   const getLabel = (
     mode: ReviewFilterBarMode,
     reviewsPayload: Partial<ReviewsFilter>
@@ -115,12 +111,12 @@ const ReviewFilterBar = ({
     },
     [ReviewFilterBarMode.LECTURER]: {
       key: 'lecturer',
-      selections: courseInfo.reviewLecturers || [],
+      selections: courseInfo?.reviewLecturers || [],
       icon: <FaUserAlt size={12} />,
     },
     [ReviewFilterBarMode.TERM]: {
       key: 'term',
-      selections: courseInfo.reviewTerms || [],
+      selections: courseInfo?.reviewTerms || [],
       icon: <AiTwotoneCalendar />,
     },
   };
@@ -130,7 +126,7 @@ const ReviewFilterBar = ({
       ref={forwardedRef}
       className={clsx('panel card reviews-filter row', className)}
     >
-      {courseInfo.rating ? (
+      {courseInfo?.rating ? (
         <>
           <div className="filter-row center-row grid-auto-column">
             {!fetchAllAction &&

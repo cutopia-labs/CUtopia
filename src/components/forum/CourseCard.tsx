@@ -12,12 +12,13 @@ import ShowMoreOverlay from '../molecules/ShowMoreOverlay';
 import Badge from '../atoms/Badge';
 import { UserContext, ViewContext } from '../../store';
 import { COURSE_CARD_MAX_HEIGHT } from '../../constants/configs';
-import { CourseInfo } from '../../types';
+import { CourseInfo, ErrorCardMode } from '../../types';
 import Link from '../molecules/Link';
 import useMobileQuery from '../../helpers/useMobileQuery';
 import Section from '../molecules/Section';
 import SectionText from '../molecules/SectionText';
 import { CourseCardSkeleton } from '../templates/Skeleton';
+import ErrorCard from '../molecules/ErrorCard';
 import Points from './Points';
 import CourseSections from './CourseSections';
 import GradeRow from './GradeRow';
@@ -162,7 +163,11 @@ const CourseCard = ({ courseInfo, concise, loading }: CourseCardProps) => {
       ) : (
         <div className="badges-row course-badge-row">
           {[
-            [`${parseInt(courseInfo.units, 10)} Credits`],
+            [
+              courseInfo.units
+                ? `${parseInt(courseInfo.units, 10)} Credits`
+                : undefined,
+            ],
             [courseInfo.academic_group],
             ...(Array.isArray(courseInfo.components)
               ? courseInfo.components
@@ -172,11 +177,14 @@ const CourseCard = ({ courseInfo, concise, loading }: CourseCardProps) => {
               assessment.name,
               parseInt(assessment.percentage, 10) || false,
             ]),
-          ].map(([k, v], i) => (
-            <Badge index={i} text={k} value={v} key={k + v} />
-          ))}
+          ]
+            .filter(([k, v]) => k !== undefined)
+            .map(([k, v], i) => (
+              <Badge index={i} text={k} value={v} key={k + v} />
+            ))}
         </div>
       )}
+      {!courseInfo?.units && <ErrorCard mode={ErrorCardMode.ERROR} />}
       {courseInfo.rating && isMobile && !concise && (
         <GradeRow rating={courseInfo.rating} additionalClassName="concise" />
       )}
