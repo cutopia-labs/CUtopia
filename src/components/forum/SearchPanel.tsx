@@ -89,7 +89,10 @@ export const SearchResult = ({
         .sort((a, b) => (a.o ? -1 : 1))
         .map((course, i) =>
           searchPayload.showAvalibility && !course.o ? (
-            <Tooltip title="Unavaliable for current semester" placement="right">
+            <Tooltip
+              title="No information for current semester, please check CUSIS"
+              placement="right"
+            >
               <div
                 className="list-item-container search-list-item disabled"
                 key={`listitem-${course.c}`}

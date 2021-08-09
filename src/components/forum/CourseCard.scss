@@ -88,39 +88,10 @@
   }
 }
 
-.course-card-skeleton {
-  header {
-    justify-content: space-between;
-    :first-child {
-      flex: 1;
-      margin-right: 20px;
-    }
-    :last-child {
-      width: 350px;
-    }
-  }
-  .content-skeleton {
-    transform: scale(1, 0.90);
-  }
-}
-
 @media only screen and (max-width: 1260px) {
   .course-card {
     .grade-row {
       overflow: initial;
-    }
-  }
-  .course-card-skeleton {
-    header {
-      justify-content: space-between;
-      flex-direction: column;
-      align-items: flex-start;
-      :last-child {
-        width: 100%;
-      }
-    }
-    .content-skeleton {
-      transform: scale(1, 0.90);
     }
   }
 }

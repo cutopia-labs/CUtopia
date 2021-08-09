@@ -8,7 +8,6 @@ import { useHistory, Link as RouterLink } from 'react-router-dom';
 import { FiExternalLink } from 'react-icons/fi';
 import clsx from 'clsx';
 import { ReportCategory } from 'cutopia-types/lib/codes';
-import { Skeleton } from '@material-ui/lab';
 import ShowMoreOverlay from '../molecules/ShowMoreOverlay';
 import Badge from '../atoms/Badge';
 import { UserContext, ViewContext } from '../../store';
@@ -18,6 +17,7 @@ import Link from '../molecules/Link';
 import useMobileQuery from '../../helpers/useMobileQuery';
 import Section from '../molecules/Section';
 import SectionText from '../molecules/SectionText';
+import { CourseCardSkeleton } from '../templates/Skeleton';
 import Points from './Points';
 import CourseSections from './CourseSections';
 import GradeRow from './GradeRow';
@@ -37,18 +37,7 @@ const CourseCard = ({ courseInfo, concise, loading }: CourseCardProps) => {
   const view = useContext(ViewContext);
 
   if (loading) {
-    return (
-      <div className="course-card-skeleton">
-        <header className="center-row">
-          <span className="column">
-            <Skeleton width={200} height={56} />
-            <Skeleton />
-          </span>
-          <Skeleton height={50} />
-        </header>
-        <Skeleton className="content-skeleton" height={280} />
-      </div>
-    );
+    return CourseCardSkeleton;
   }
 
   const isFavorited = user.favoriteCourses.some(
