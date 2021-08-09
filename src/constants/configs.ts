@@ -12,16 +12,6 @@ export const LEVEL_UP_EXP = 5;
 export const FULL_MEMBER_EXP = (FULL_MEMBER_LEVEL - 1) * LEVEL_UP_EXP;
 export const REVIEW_EXP = 3;
 
-export const TIMETABLE_CONSTANTS = Object.freeze({
-  START_HOUR: 8,
-  END_HOUR: 19,
-  NO_OF_HOURS: 12,
-  NO_OF_DAYS: 6,
-  LEFT_BAR_WIDTH: 52,
-  CELL_WIDTH: 52,
-  CELL_HEIGHT: 52,
-});
-
 export const PLANNER_CONFIGS = {
   DEFAULT_TABLE_NAME: 'New Timetable',
 };

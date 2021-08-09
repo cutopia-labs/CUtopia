@@ -21,7 +21,7 @@ import clsx from 'clsx';
 import { FiShare } from 'react-icons/fi';
 import { ViewContext } from '../../store';
 import './TimeTablePanel.scss';
-import CourseList from '../planner/CourseList';
+import TimeTable from '../planner/TimeTable';
 import Card from '../atoms/Card';
 import { CourseTableEntry, PlannerCourse, PlannerItem } from '../../types';
 import { PLANNER_CONFIGS } from '../../constants/configs';
@@ -178,7 +178,7 @@ const TimeTablePanel = ({
           ))}
         </div>
       </header>
-      <CourseList
+      <TimeTable
         courses={((courses?.slice() || []) as any).concat(previewCourse) as any}
       />
       <Dialog

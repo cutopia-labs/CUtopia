@@ -4,22 +4,22 @@ import { Delete } from '@material-ui/icons';
 import { observer } from 'mobx-react-lite';
 
 import './CourseCard.scss';
-import { TIMETABLE_CONSTANTS } from '../../constants/configs';
 import updateOpacity from '../../helpers/updateOpacity';
 import { PlannerContext } from '../../store';
-
-const { START_HOUR, NO_OF_DAYS, NO_OF_HOURS } = TIMETABLE_CONSTANTS;
+import { Event } from '../../types';
+import { PropsWithConfig } from './TimeTable';
 
 const useStyles = (
   durationHeight: string,
   topMarginValue: string,
   bgColor: string,
   textColor: string,
-  day: number
+  day: number,
+  numOfDays: number
 ) => ({
   courseCard: {
-    width: `${99 / NO_OF_DAYS}%`,
-    marginLeft: `${(100 / NO_OF_DAYS) * (day - 1)}%`,
+    width: `${99 / numOfDays}%`,
+    marginLeft: `${(100 / numOfDays) * (day - 1)}%`,
     height: durationHeight,
     minHeight: durationHeight, // For the use of hover height: fit-content
     top: topMarginValue,
@@ -35,16 +35,23 @@ const useStyles = (
   },
 });
 
-const CourseCard = ({ course }) => {
+const CourseCard = ({
+  course,
+  config,
+}: PropsWithConfig<{
+  course: Event;
+}>) => {
   console.log(`${course.courseId} ${course.section}`);
 
   const sTime = course.startTime.split(':');
   const eTime = course.endTime.split(':');
   const topMarginValue = `${
-    (sTime[0] - START_HOUR + sTime[1] / 60.0) * (100 / NO_OF_HOURS)
+    (+sTime[0] - config.startHour + +sTime[1] / 60.0) *
+    (100 / config.numOfHours)
   }%`;
   const durationHeight = `${
-    (100 / NO_OF_HOURS) * (eTime[0] - sTime[0] + (eTime[1] - sTime[1]) / 60.0)
+    (100 / config.numOfHours) *
+    (+eTime[0] - +sTime[0] + (+eTime[1] - +sTime[1]) / 60.0)
   }%`;
   const bgColor = updateOpacity(course.color, 0.15);
   const textColor = updateOpacity(course.color, 0.8);
@@ -53,7 +60,8 @@ const CourseCard = ({ course }) => {
     topMarginValue,
     bgColor,
     textColor,
-    course.day
+    course.day,
+    config.numOfDays
   );
   const planner = useContext(PlannerContext);
 

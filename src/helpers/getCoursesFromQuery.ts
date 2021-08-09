@@ -13,7 +13,7 @@ const getCoursesFromQuery = ({
   limit?: number;
   offerredOnly?: boolean;
 }): CourseSearchItem[] => {
-  // load local courselist
+  // load local TimeTable
   const { mode, text } = payload;
   switch (mode) {
     case 'Pins':
