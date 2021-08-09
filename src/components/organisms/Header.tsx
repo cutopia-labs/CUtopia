@@ -104,10 +104,11 @@ const Header = () => {
             setValue={setSearchQuery}
             onSubmit={onSubmitSearch}
             inputRef={inputRef}
+            visible={visible}
             setVisible={setVisible}
           />
-          <div className="header-search-result card">
-            {visible && Boolean(searchQuery) && (
+          {visible && Boolean(searchQuery) && (
+            <div className="header-search-result card">
               <SearchResult
                 searchPayload={{
                   text: searchQuery,
@@ -119,8 +120,8 @@ const Header = () => {
                   history.push(`/review/${courseId}`);
                 }}
               />
-            )}
-          </div>
+            </div>
+          )}
           {!isMobile && navSections}
         </nav>
       </div>

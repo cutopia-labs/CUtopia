@@ -1,14 +1,14 @@
 .header-background-container {
-  background-color: var(--header-color);
+  background-color: var(--surface);
   position: sticky;
   top: 0;
   z-index: 10;
   max-height: var(--header-height);
 }
 .header-container {
-  height: var(--header-content-height);
+  --header-search-background: var(--background);
+  height: var(--header-height);
   min-height: var(--header-content-height);
-  padding: 10px 0;
   justify-content: space-between;
   max-width: var(--max-width);
   margin-left: auto;
@@ -20,9 +20,11 @@
     opacity: 1;
   }
   .search-input-container {
-    border: 1px solid #444d56;
     border-radius: 6px;
     margin-right: 12px;
+    background-color: var(--header-search-background);
+    padding: 10px 0;
+    margin: 10px 12px 10px 0;
     input {
       width: 200px;
       transition: width 300ms cubic-bezier(0.7, 0, 0.3, 1) 0ms;
@@ -35,23 +37,16 @@
     }
   }
 }
-.header-container button,
-.header-container .logo-container,
-.header-container .nav-label-container,
-.header-container .search-input-container > button,
-.header-container .search-input-container > .search-input {
-  color: var(--header-text-color);
-}
 .header-search-result {
   position: absolute;
-  margin-top: calc(var(--header-content-height) + 10px);
+  margin-top: var(--header-height);
   height: fit-content;
   z-index: 30;
   border-bottom: none;
   border-right: none;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
-  width: 380px;
+  width: 370px;
   & > .list-item-container {
     height: auto;
   }
@@ -63,19 +58,20 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0 20px;
+  padding: 10px 20px;
   font-weight: bold;
   transition: all 0.1s ease-in-out;
   text-transform: capitalize;
+  opacity: 0.6;
   &:hover {
-    opacity: 0.6;
+    opacity: 1;
   }
   &.active {
-    &:hover {
-      opacity: 1;
-    }
+    opacity: 1;
+    border-bottom: 2px solid var(--text);
   }
 }
+
 @media only screen and (max-width: 1260px) {
   .header-container {
     padding: 10px var(--card-padding);
@@ -86,6 +82,10 @@
     .search-input-container {
       border: none;
       margin-right: 0;
+      background-color: transparent;
+      &.active {
+        background-color: var(--header-search-background);
+      }
       input {
         width: 0;
         &:focus {
@@ -100,7 +100,11 @@
   .header-search-result {
     left: 0;
     width: calc(100vw - 2px); // 2px for border width
-    & > .list-item-container {
-    }
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .header-container {
+    --header-search-background: var(--background-secondary);
   }
 }

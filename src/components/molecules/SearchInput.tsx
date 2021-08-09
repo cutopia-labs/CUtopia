@@ -3,18 +3,24 @@ import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
 
 import './SearchInput.scss';
+import clsx from 'clsx';
 
 export default function SearchInput({
   value,
   setValue,
   onSubmit,
+  visible,
   setVisible,
   isMobile,
   inputRef,
 }) {
   return (
     <form
-      className={`search-input-container${isMobile ? ' mobile' : ''}`}
+      className={clsx(
+        'search-input-container',
+        isMobile && 'mobile',
+        visible && 'active'
+      )}
       onSubmit={onSubmit}
     >
       <IconButton
@@ -36,7 +42,6 @@ export default function SearchInput({
         inputRef={inputRef}
         className="search-input"
         placeholder="Search for courses"
-        inputProps={{ 'aria-label': 'search google maps' }}
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onFocus={() => setVisible(true)}

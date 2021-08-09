@@ -1,8 +1,4 @@
-
-@import url('https://fonts.googleapis.com/css2?family=Audiowide&family=Caveat&family=Monoton&display=swap');
-
-
-@import url('https://fonts.googleapis.com/css2?family=Audiowide&family=Caveat&family=Monoton&family=Pacifico&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
 
 
 .logo-container {
@@ -12,6 +8,7 @@
   font-size: 22px;
   letter-spacing: 2px;
   cursor: pointer;
+  color: var(--text);
   .logo-beta {
     font-size: 11px;
     border-radius: 50%;
