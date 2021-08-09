@@ -245,11 +245,6 @@ const ReviewEdit = ({ courseId }) => {
     }
   }, [review]);
 
-  useEffect(() => {
-    const e = addReviewError || editReviewError;
-    e && alert(e);
-  }, [addReviewError, editReviewError]);
-
   useEffect(
     () => {
       const overallAverage =
