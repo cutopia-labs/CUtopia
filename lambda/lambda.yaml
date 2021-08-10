@@ -72,7 +72,7 @@ Resources:
           TimetableTableName: !Ref TimetableTableName
           UserSNSTopic: !Ref UserSNSTopic
       Role: !GetAtt GraphQLRole.Arn
-      Runtime: nodejs12.x
+      Runtime: nodejs14.x
       Timeout: 20
     Type: AWS::Serverless::Function
   GraphQLRole:
@@ -137,7 +137,7 @@ Resources:
           GmailClientSecret: !Ref GmailClientSecret
           GmailRefreshToken: !Ref GmailRefreshToken
       Role: !GetAtt EmailerRole.Arn
-      Runtime: nodejs12.x
+      Runtime: nodejs14.x
       Timeout: 20
     Type: AWS::Serverless::Function
   EmailerRole:
