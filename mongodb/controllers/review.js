@@ -1,4 +1,5 @@
 const { nanoid } = require('nanoid');
+const { courseRating } = require('../pipelines/reviews');
 const Review = require('../models/review.model');
 
 exports.createReview = async (input, user) => {
@@ -19,9 +20,7 @@ exports.createReview = async (input, user) => {
     downvotesUserIds: [],
     ...reviewData
   });
-
   // Update User
-
   try {
     await newReview.save();
     return {
@@ -33,38 +32,40 @@ exports.createReview = async (input, user) => {
   }
 };
 
-exports.getCourseRating = async (input) => {
+exports.getCourseRating = async input => {
   const { courseId } = input;
+  try {
+    const rating = await Review
+      .aggregate(courseRating(courseId));
+    return rating[0];
+  } catch (e) {
+    console.trace(e);
+  }
+};
+
+/*
+"filter": {
+  "lecturer": "Raymond CHUI",
+  "term": "2020 - 21 Term 1"
+},
+"sorting": {
+  "upvotes": -1
+}
+*/
+
+exports.getReviews = async (filter, sort) => {
   try {
     const rating = await Review
       .aggregate([
         {
-          $match: {
-            courseId
-          }
+          $match: filter
         },
+        sort &&
         {
-          $group: {
-            _id: '$courseId',
-            overall: {
-              $avg: '$overall'
-            },
-            grading: {
-              $avg: '$grading.grade'
-            },
-            teaching: {
-              $avg: '$teaching.grade'
-            },
-            difficulty: {
-              $avg: '$difficulty.grade'
-            },
-            content: {
-              $avg: '$content.grade'
-            }
-          }
+          $sort: sort
         }
-      ]);
-    return rating[0];
+      ].filter(item => item));
+    return rating;
   } catch (e) {
     console.trace(e);
   }
