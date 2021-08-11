@@ -18,6 +18,11 @@
     flex: 1;
     margin-left: var(--card-padding);
   }
+  .caption {
+    color: var(--caption);
+    font-size: 12px;
+    margin-left: 6px;
+  }
 }
 
 .reviews-filter {

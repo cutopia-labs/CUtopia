@@ -152,7 +152,11 @@ const ReviewFilterBar = ({
               ))}
             <div className="reviews-filter-label caption">
               {/* exceedLimit && `Limit exceeded (post 1 reviews to unlock)` */}
-              {fetchAllAction && 'Showing 1 review only!'}
+              {fetchAllAction && (
+                <Button size="small" color="primary" onClick={fetchAllAction}>
+                  Fetch All
+                </Button>
+              )}
             </div>
           </div>
           <Menu
@@ -187,15 +191,9 @@ const ReviewFilterBar = ({
         <span>No review yet</span>
       )}
       <span className="right grid-auto-column">
-        {fetchAllAction ? (
-          <Button size="small" color="primary" onClick={fetchAllAction}>
-            Fetch All
-          </Button>
-        ) : (
-          <IconButton className="edit" size="small" onClick={writeAction}>
-            <FiEdit />
-          </IconButton>
-        )}
+        <IconButton className="edit" size="small" onClick={writeAction}>
+          <FiEdit />
+        </IconButton>
       </span>
     </div>
   );
@@ -444,9 +442,20 @@ const CoursePanel = () => {
             )}
           </>
         )}
-        {Boolean(reviews?.length) && (
+        {Boolean(courseInfo?.subjects[0]?.courses[0]) && (
           <span className="review-count caption center-row">
-            {pluralize('review', reviews.length, true)}
+            {reviewId ? (
+              <>
+                {`Showing 1 review`}
+                <span className="caption">{`(${courseInfo?.subjects[0]?.courses[0]?.rating?.numReviews} total)`}</span>
+              </>
+            ) : (
+              `${pluralize(
+                'review',
+                courseInfo?.subjects[0]?.courses[0]?.rating?.numReviews || 0,
+                true
+              )}`
+            )}
             <Divider />
           </span>
         )}
