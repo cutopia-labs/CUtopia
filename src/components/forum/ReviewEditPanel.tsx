@@ -38,6 +38,8 @@ enum MODES {
   MODAL, // to ask if need to edit or exit
 }
 
+const WORD_COUNT_RULE = new RegExp('[\\u00ff-\\uffff]|\\S+', 'g');
+
 const now = new Date();
 const EARLIEST_YEAR = now.getFullYear() - 3; // most ppl writing reviews are current students?
 const currentAcademicYear =
@@ -64,7 +66,7 @@ const TERMS_OPTIONS = [
 ];
 
 const wordCount = (str: string) => {
-  const matches = str.match(/[\u00ff-\uffff]|\S+/g);
+  const matches = str.match(WORD_COUNT_RULE);
   return matches ? matches.length : 0;
 };
 

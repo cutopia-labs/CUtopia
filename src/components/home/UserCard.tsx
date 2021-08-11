@@ -24,11 +24,11 @@ const UserCard = ({ userData }: UserCardProps) => {
     <div className="user-card card">
       <div className="user-card-header center-row">
         <Avatar className="char-icon">
-          {user?.username ? user?.username?.charAt(0) : ''}
+          {user.data?.username?.charAt(0) || ''}
         </Avatar>
         <div className="user-card-header-details column">
           <div className="title center-row">
-            {user?.username}
+            {user.data?.username}
             <Tooltip
               title={
                 user.isFullMember

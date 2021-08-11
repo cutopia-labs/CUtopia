@@ -10,7 +10,7 @@ class StorePrototype {
 
   @action setStore = async (key: string, value: any) => {
     this.updateStore(key, value);
-    await storeData(key, value);
+    storeData(key, value);
   };
 }
 

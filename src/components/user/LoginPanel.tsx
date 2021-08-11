@@ -73,6 +73,8 @@ const PATH_MODE_LOOKUP = {
 
 const MODE_PATH_LOOKUP = reverseMapping(PATH_MODE_LOOKUP);
 
+const USER_ID_RULE = new RegExp('^[0-9]{10}$', 'i');
+
 const LoginPanel = () => {
   const location = useLocation();
   const history = useHistory();
@@ -235,7 +237,7 @@ const LoginPanel = () => {
         'Please choose your CUtopia username',
       userId:
         MODE_ITEMS[mode].userId &&
-        (!userId || !/^[0-9]{10}$/i.test(userId)) &&
+        (!userId || !USER_ID_RULE.test(userId)) &&
         'Please enter an valid CUHK SID (Not email)',
       password:
         MODE_ITEMS[mode].password &&

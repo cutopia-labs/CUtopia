@@ -1,8 +1,9 @@
 import { VALUE_TO_LETTER, GRADE_VALUES, GRADES } from '../constants/states';
 
+const VALID_COURSE_RULE = new RegExp('^[a-z]{4}\\d{4}$', 'i');
+
 const validCourse = (coursename: string) => {
-  const rules = new RegExp(/^[a-z]{4}\d{4}$/i);
-  return rules.test(coursename);
+  return VALID_COURSE_RULE.test(coursename);
 };
 
 const getLabel = (grade: number | string) => {

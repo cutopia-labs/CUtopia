@@ -95,7 +95,9 @@ const TimeTableShareDialogContent = ({
   </>
 );
 
-const validShareId = (id: string) => id && /^[A-Za-z0-9_-]{8}$/i.test(id);
+const SHARE_ID_RULE = new RegExp('^[A-Za-z0-9_-]{8}$', 'i');
+
+const validShareId = (id: string) => id && SHARE_ID_RULE.test(id);
 
 const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
   const { shareId } = useParams<{

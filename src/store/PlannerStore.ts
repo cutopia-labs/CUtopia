@@ -186,14 +186,14 @@ class PlannerStore extends StorePrototype {
   @action async updatePlanners(key: number, plannerCourses: PlannerCourse[]) {
     if (this.validKey(key)) {
       this.planners[key].courses = plannerCourses;
-      await storeData('planners', this.planners);
+      storeData('planners', this.planners);
     }
   }
 
   @action async addPlanner(planner: Planner) {
     this.planners[planner.key] = planner;
     console.log(`Updated planner with ${toJS(this.planners)}`);
-    await storeData('planners', this.planners);
+    storeData('planners', this.planners);
   }
 
   @action async deletePlanner(key: number) {
@@ -296,7 +296,7 @@ class PlannerStore extends StorePrototype {
           ...course.sections,
         },
       };
-      await storeData('plannerCourses', this.plannerCourses);
+      storeData('plannerCourses', this.plannerCourses);
     } else {
       this.setStore('plannerCourses', [...this.plannerCourses, course]);
     }
@@ -357,7 +357,7 @@ class PlannerStore extends StorePrototype {
 
   @action async setPlannerLabel(label: string) {
     this.planners[this.currentPlannerKey].label = label;
-    await storeData('planners', this.planners);
+    storeData('planners', this.planners);
   }
 }
 

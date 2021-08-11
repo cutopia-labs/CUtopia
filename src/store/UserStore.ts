@@ -81,9 +81,7 @@ class UserStore extends StorePrototype {
 
   // CUtopia
   @action async saveUser(username, token) {
-    this.setStore('username', username);
     await this.saveToken(token);
-    console.log(token);
     this.viewStore.setSnackBar(`Logged in as ${username}`);
   }
 
@@ -107,7 +105,7 @@ class UserStore extends StorePrototype {
       token,
       expire: new Date().setDate(new Date().getDate() + TOKEN_EXPIRE_DAYS),
     };
-    await storeData('token', savedToken);
+    storeData('token', savedToken);
     this.setToken(token);
   }
 

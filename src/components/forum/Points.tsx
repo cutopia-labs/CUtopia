@@ -1,11 +1,12 @@
-import { useMemo } from 'react';
-
 import './Points.scss';
 
 type PointsProps = {
   text: string;
 };
 
+// Disabled cuz the regex is not supported by safari
+
+/*
 const Points = ({ text }: PointsProps) => {
   const texts = useMemo(() => {
     // TODO: delimiter for PHED1031, CURE1009, UGEB2303
@@ -32,5 +33,8 @@ const Points = ({ text }: PointsProps) => {
     </>
   );
 };
+*/
+
+const Points = null;
 
 export default Points;

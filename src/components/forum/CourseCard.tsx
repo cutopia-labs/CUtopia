@@ -19,7 +19,6 @@ import Section from '../molecules/Section';
 import SectionText from '../molecules/SectionText';
 import { CourseCardSkeleton } from '../templates/Skeleton';
 import ErrorCard from '../molecules/ErrorCard';
-import Points from './Points';
 import CourseSections from './CourseSections';
 import GradeRow from './GradeRow';
 
@@ -200,9 +199,11 @@ const CourseCard = ({ courseInfo, concise, loading }: CourseCardProps) => {
           {['requirements', 'outcome']
             .filter((key) => courseInfo[key] && courseInfo[key] !== '') // filter off empty strings
             .map((key) => (
-              <Section key={key} title={key.replaceAll('_', ' ')} subheading>
-                <Points text={courseInfo[key]} />
-              </Section>
+              <SectionText
+                key={key}
+                title={key.replaceAll('_', ' ')}
+                caption={courseInfo[key]}
+              />
             ))}
           <Section title="Past Paper" subheading>
             <Link

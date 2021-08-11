@@ -2,6 +2,11 @@ import COURSES from '../constants/courses';
 import UserStore from '../store/UserStore';
 import { CourseSearchItem, SearchPayload } from '../types';
 
+const SUBJECT_RULE = new RegExp('[a-zA-Z]{4}');
+const CODE_RULE = new RegExp('\\d{4}$');
+const CODE_RULE_ALTER = new RegExp('\\d+', 'g');
+const CONDENSED_RULE = new RegExp('[^a-zA-Z0-9]', 'g');
+
 const getCoursesFromQuery = ({
   payload,
   user,
@@ -29,11 +34,12 @@ const getCoursesFromQuery = ({
     case 'subject':
       return COURSES[text];
     case 'query':
-      const condensed = text.replace(/[^a-zA-Z0-9]/g, '');
+      const condensed = text.replace(CONDENSED_RULE, '');
       try {
         // valid search contains suject and code
-        const subject = condensed.match(/[a-zA-Z]{4}/)[0].toUpperCase();
-        const rawCode = condensed.match(/\d{4}$/) || condensed.match(/\d+/g);
+        const subject = condensed.match(SUBJECT_RULE)[0].toUpperCase();
+        const rawCode =
+          condensed.match(CODE_RULE) || condensed.match(CODE_RULE_ALTER);
         const code = rawCode ? rawCode[0] : null;
         if (!(subject in COURSES)) {
           throw 'Wrong subject, searching for title';

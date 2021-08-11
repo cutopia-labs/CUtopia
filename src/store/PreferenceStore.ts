@@ -20,7 +20,7 @@ class PreferenceStore extends StorePrototype {
   @action async setDarkTheme(enabled: boolean) {
     this.darkTheme = enabled;
     this.theme = enabled ? DARK_THEME : THEME;
-    await storeData('theme', enabled ? 'dark' : 'default');
+    storeData('theme', enabled ? 'dark' : 'default');
   }
 
   @action async applyUserTheme() {

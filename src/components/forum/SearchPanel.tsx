@@ -232,7 +232,7 @@ const SearchPanel = () => {
     }
     temp = [courseId].concat(temp.filter((saved) => saved !== courseId));
     setHistoryList(temp);
-    await storeData('search_history', temp);
+    storeData('search_history', temp);
   };
 
   const loadHistory = async () => {
@@ -246,7 +246,7 @@ const SearchPanel = () => {
   const deleteHistory = async (courseId) => {
     const temp = historyList.filter((hist) => hist !== courseId);
     setHistoryList(temp);
-    await storeData('search_history', temp);
+    storeData('search_history', temp);
   };
 
   useEffect(() => {
