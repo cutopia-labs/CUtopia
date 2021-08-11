@@ -74,6 +74,7 @@ Resources:
       Role: !GetAtt GraphQLRole.Arn
       Runtime: nodejs14.x
       Timeout: 20
+      MemorySize: 512
     Type: AWS::Serverless::Function
   GraphQLRole:
     Properties:
@@ -139,6 +140,7 @@ Resources:
       Role: !GetAtt EmailerRole.Arn
       Runtime: nodejs14.x
       Timeout: 20
+      MemorySize: 512
     Type: AWS::Serverless::Function
   EmailerRole:
     Properties:

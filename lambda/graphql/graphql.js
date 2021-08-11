@@ -23,7 +23,12 @@ const server = new ApolloServer({
 
 exports.graphqlHandler = server.createHandler({
   cors: {
-    origin: '*',
+    origin: [
+      'https://cutopia.app',
+      'https://dev.cutopia.app',
+      // seems it does not support regex: /http:\/\/localhost:\d{4}/
+      'http://localhost:3000'
+    ],
     methods: ['get', 'post'],
     credentials: true,
     maxAge: 3600

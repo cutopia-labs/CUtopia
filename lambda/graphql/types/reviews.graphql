@@ -47,7 +47,6 @@ input CreateReviewInput {
   title: String
   courseId: String!
   term: String!
-  section: String!
   lecturer: String!
   overall: Int! @range(min: 0, max: 4)
   grading: ReviewDetailsInput!
@@ -105,7 +104,6 @@ type Review {
   createdDate: String!
   modifiedDate: String!
   term: String!
-  section: String!
   lecturer: String!
   overall: Int!
   grading: ReviewDetails!

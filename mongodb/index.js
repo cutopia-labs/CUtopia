@@ -11,7 +11,7 @@ let conn = null;
 
 exports.connect = async () => {
   if (conn === null) {
-    conn = mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true }).then(() => mongoose)
+    conn = mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true }).then(() => mongoose);
     await conn;
   }
   console.log('MongoDB database connection established successfully');

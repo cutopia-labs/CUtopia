@@ -47,12 +47,12 @@ exports.Course = {
     // TODO: reviewLecturers and reviewTerms query database twice instead of once before getting cached
     const courseId = idsContext.subject + course.code;
     const result = await getCourseData({ courseId });
-    return result === undefined ? null : result.lecturers.values;
+    return (result === undefined || result.lecturers === undefined) ? [] : result.lecturers.values;
   },
   reviewTerms: async ({ idsContext, course }) => {
     const courseId = idsContext.subject + course.code;
     const result = await getCourseData({ courseId });
-    return result === undefined ? null : result.terms.values;
+    return (result === undefined || result.terms === undefined) ? [] : result.terms.values;
   },
   career: ({ course }) => course.career,
   units: ({ course }) => course.units,
