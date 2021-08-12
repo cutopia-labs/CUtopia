@@ -6,12 +6,14 @@ import {
   PlannerItem,
   CourseSection,
   OverlapSections,
+  TimeTableInfo,
 } from '../types';
 import { storeData, getStoreData, removeStoreItem } from '../helpers/store';
 
 import { PLANNER_CONFIGS } from '../constants/configs';
 import withUndo from '../helpers/withUndo';
 import timeInRange from '../helpers/timeInRange';
+import { getDurationInHour } from '../helpers/timetable';
 import ViewStore from './ViewStore';
 import StorePrototype from './StorePrototype';
 
@@ -49,6 +51,34 @@ class PlannerStore extends StorePrototype {
     }
     this.plannerCourses = this.planners[this.currentPlannerKey]?.courses || [];
     this.initiated = true;
+  }
+
+  get timetableInfo(): TimeTableInfo {
+    let maxDay = 5;
+    const info: TimeTableInfo = {
+      totalCredits: 0,
+      averageHour: 0,
+      weekdayAverageHour: {},
+    };
+    this.plannerCourses?.forEach((course, i) => {
+      info.totalCredits += +course.credit;
+      Object.values(course.sections).forEach((section) => {
+        if (!section.hide) {
+          section.days.forEach((day, i) => {
+            if (day > maxDay) {
+              maxDay = day;
+            }
+            info.weekdayAverageHour[day] = info.weekdayAverageHour[day] || 0;
+            info.weekdayAverageHour[day] += getDurationInHour(section, i);
+          });
+        }
+      });
+      Object.values(info.weekdayAverageHour).forEach(
+        (hr) => (info.averageHour += hr)
+      );
+      info.averageHour /= maxDay;
+    });
+    return info;
   }
 
   get hidedSections() {

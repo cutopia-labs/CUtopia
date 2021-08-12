@@ -1,18 +1,20 @@
-type RatingField = 'grading' | 'content' | 'difficulty' | 'teaching';
+import { Events } from './events';
 
-type RatingFieldWithOverall =
+export type RatingField = 'grading' | 'content' | 'difficulty' | 'teaching';
+
+export type RatingFieldWithOverall =
   | 'overall'
   | 'grading'
   | 'content'
   | 'difficulty'
   | 'teaching';
 
-type Subject = {
+export type Subject = {
   name: string;
   courses: Course[];
 };
 
-interface Course {
+export interface Course {
   subject: Subject;
   code: string;
   title: string;
@@ -35,11 +37,11 @@ interface Course {
   reviewTerms?: string[]; //temp
 }
 
-interface CourseInfo extends Course {
+export interface CourseInfo extends Course {
   courseId: string;
 }
 
-type CourseRating = {
+export type CourseRating = {
   numReviews: number;
   overall: number;
   grading: number;
@@ -48,68 +50,54 @@ type CourseRating = {
   teaching: number;
 };
 
-type Term = {
+export type Term = {
   name: string;
   course_sections?: [CourseSection];
 };
 
-type PlannerCourse = {
+export type PlannerCourse = {
   courseId: string;
   title: string;
+  credit: string;
   sections: {
     [sectionName: string]: CourseSection;
   };
 };
 
-type Planner = {
+export type Planner = {
   label?: string;
   key: number; // timestamp
   courses: PlannerCourse[];
 };
 
-type CourseSection = {
-  name: string;
-  startTimes: string[];
-  endTimes: string[];
-  days: number[];
-  locations: string[];
-  instructors: string[];
-  hide?: boolean;
+export type TimeTableInfo = {
+  totalCredits: number;
+  averageHour: number;
+  weekdayAverageHour: Record<string, number>;
 };
 
-type AssessementComponent = {
+export interface CourseSection extends Events {
+  name: string;
+  instructors: string[];
+  hide?: boolean;
+}
+
+export type AssessementComponent = {
   name: string;
   percentage: string;
 };
 
-type DepartmentCourses = {
+export type DepartmentCourses = {
   [department: string]: CourseSearchItem[];
 };
 
-type CourseSearchItem = {
+export type CourseSearchItem = {
   c: string;
   t: string;
   o?: number;
 };
 
-type CourseConcise = {
+export type CourseConcise = {
   courseId: string;
   title: string;
-};
-
-export type {
-  RatingField,
-  RatingFieldWithOverall,
-  DepartmentCourses,
-  Subject,
-  Course,
-  CourseInfo,
-  CourseRating,
-  Term,
-  CourseSection,
-  AssessementComponent,
-  CourseSearchItem,
-  CourseConcise,
-  PlannerCourse,
-  Planner,
 };

@@ -23,7 +23,12 @@ import { ViewContext } from '../../store';
 import './TimeTablePanel.scss';
 import TimeTable from '../planner/TimeTable';
 import Card from '../atoms/Card';
-import { CourseTableEntry, PlannerCourse, PlannerItem } from '../../types';
+import {
+  CourseTableEntry,
+  PlannerCourse,
+  PlannerItem,
+  TimeTableInfo,
+} from '../../types';
 import { PLANNER_CONFIGS } from '../../constants/configs';
 
 enum MODAL_MODES {
@@ -38,6 +43,7 @@ type TimeTablePanelProps = {
   selected?: PlannerItem;
   onSelect?: (selected: any) => any;
   courses?: CourseTableEntry[] | PlannerCourse[];
+  timetableInfo?: TimeTableInfo;
   previewCourse?: CourseTableEntry | PlannerCourse;
   onImport?: (...args: any[]) => any;
   onExport?: (...args: any[]) => any;
@@ -50,6 +56,7 @@ type TimeTablePanelProps = {
 const TimeTablePanel = ({
   title,
   courses,
+  timetableInfo,
   previewCourse,
   onImport,
   onExport,
@@ -180,6 +187,7 @@ const TimeTablePanel = ({
       </header>
       <TimeTable
         courses={((courses?.slice() || []) as any).concat(previewCourse) as any}
+        timetableInfo={timetableInfo}
       />
       <Dialog
         open={modalMode === MODAL_MODES.IMPORT_MODAL}

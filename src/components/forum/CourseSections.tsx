@@ -85,7 +85,7 @@ type CourseSectionsProps = {
 };
 
 const CourseSections = ({
-  courseInfo: { terms: courseTerms, courseId, title },
+  courseInfo: { terms: courseTerms, courseId, title, units },
 }: CourseSectionsProps) => {
   const currentTermIndex = (courseTerms || []).findIndex(
     (term) => term.name === CURRENT_TERM
@@ -103,6 +103,7 @@ const CourseSections = ({
       },
       courseId,
       title,
+      credit: units,
     });
     view.setSnackBar(`Added ${courseId} ${name}`);
   };

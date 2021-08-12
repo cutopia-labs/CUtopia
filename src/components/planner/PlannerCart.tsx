@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import { observer } from 'mobx-react-lite';
 
 import './PlannerCart.scss';
-import { Checkbox, IconButton, Tooltip } from '@material-ui/core';
+import { Checkbox, Divider, IconButton, Tooltip } from '@material-ui/core';
 import { ClearAllRounded, Warning } from '@material-ui/icons';
 import { PlannerContext } from '../../store';
 
@@ -31,19 +31,36 @@ const PlannerCart = () => {
   };
   return (
     <Card className="planner-cart">
-      <header className="planner-cart-header center-row">
-        <span className="title">Cart</span>
-        {Boolean(planner.hidedSections?.length) && (
-          <Tooltip title="Clear unchecked sections">
-            <IconButton
-              onClick={() => planner.removeHidedCourses()}
-              size="small"
-            >
-              <ClearAllRounded />
-            </IconButton>
-          </Tooltip>
-        )}
+      <header className="planner-cart-header column">
+        <div className="center-row">
+          <span className="title">Cart</span>
+          {Boolean(planner.hidedSections?.length) && (
+            <Tooltip title="Clear unchecked sections">
+              <IconButton
+                onClick={() => planner.removeHidedCourses()}
+                size="small"
+              >
+                <ClearAllRounded />
+              </IconButton>
+            </Tooltip>
+          )}
+        </div>
+        <div className="timetable-info-row row">
+          <span className="column">
+            <span className="sub-title">
+              {planner.timetableInfo.totalCredits}
+            </span>
+            <span className="light-caption">Credit</span>
+          </span>
+          <span className="column">
+            <span className="sub-title">
+              {planner.timetableInfo.averageHour.toFixed(2)}
+            </span>
+            <span className="light-caption">Average Hour</span>
+          </span>
+        </div>
       </header>
+      <Divider />
       {planner.plannerCourses?.length ? (
         planner.plannerCourses.map((course, index) =>
           Object.entries(course.sections).map(([k, section], sectionIndex) => {

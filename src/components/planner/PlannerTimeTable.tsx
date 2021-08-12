@@ -7,7 +7,7 @@ import { Button, Dialog } from '@material-ui/core';
 import copy from 'copy-to-clipboard';
 import { useHistory, useParams } from 'react-router-dom';
 import TimeTablePanel from '../templates/TimeTablePanel';
-import { ViewContext, PlannerContext } from '../../store';
+import { ViewContext, PlannerContext, plannerStore } from '../../store';
 import { PLANNER_CONFIGS } from '../../constants/configs';
 import { SHARE_TIMETABLE } from '../../constants/mutations';
 import {
@@ -236,6 +236,7 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
       <TimeTablePanel
         className={className}
         courses={planner.plannerCourses?.concat(planner.previewPlannerCourse)}
+        timetableInfo={plannerStore.timetableInfo}
         onImport={(parsedData) =>
           planner.setStore('plannerCourses', parsedData)
         }

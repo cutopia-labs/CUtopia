@@ -8,11 +8,13 @@
     display: none;
   }
   header {
-    height: 30px;
-    padding: 0 var(--card-padding) 6px var(--card-padding);
+    padding: 0 var(--card-padding);
+    & > div:first-child {
+      height: 30px;
+    }
     .title {
       font-size: 16px;
-      font-weight: normal;
+      font-weight: 500;
     }
     button {
       margin-left: auto;
@@ -36,5 +38,12 @@
     .list-item-title-container {
       margin-left: 6px;
     }
+  }
+}
+
+.timetable-info-row {
+  margin: 14px 0;
+  span {
+    flex: 1;
   }
 }

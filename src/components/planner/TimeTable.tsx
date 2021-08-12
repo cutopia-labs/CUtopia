@@ -4,7 +4,12 @@ import { useMediaQuery } from '@material-ui/core';
 import './TimeTable.scss';
 import colors from '../../constants/colors';
 import { WEEKDAYS } from '../../constants/states';
-import { CourseTableEntry, Event, EventConfig } from '../../types';
+import {
+  CourseTableEntry,
+  Event,
+  EventConfig,
+  TimeTableInfo,
+} from '../../types';
 import { ViewContext } from '../../store';
 import CourseCard from './CourseCard';
 
@@ -31,11 +36,13 @@ const TimeTableTicks = ({ config }: PropsWithConfig<{}>) => {
 
 type WeekdayTextProps = {
   withDate?: boolean;
+  timetableInfo?: TimeTableInfo;
 };
 
 const WeekdayText = ({
   withDate,
   config,
+  timetableInfo,
 }: PropsWithConfig<WeekdayTextProps>) => {
   const currentDay = new Date();
   const currentWeekday = currentDay.getDay() ? currentDay.getDay() : 7;
@@ -48,8 +55,11 @@ const WeekdayText = ({
         thatDay.setDate(new Date().getDate() + differenceOfDate);
         return (
           <div className="weekday-cell" key={`weekday-${day}`}>
-            <span className="weekday-text">
+            <span className="weekday-text column center">
               {`${WEEKDAYS[day - 1]}${withDate ? ` ${thatDay.getDate()}` : ''}`}
+              <span className="caption">
+                {`(${timetableInfo?.weekdayAverageHour[day] || 0} hrs)`}
+              </span>
             </span>
           </div>
         );
@@ -60,9 +70,10 @@ const WeekdayText = ({
 
 type TimeTableProps = {
   courses: CourseTableEntry[];
+  timetableInfo: TimeTableInfo;
 };
 
-const TimeTable = ({ courses }: TimeTableProps) => {
+const TimeTable = ({ courses, timetableInfo }: TimeTableProps) => {
   const view = useContext(ViewContext);
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
@@ -124,7 +135,7 @@ const TimeTable = ({ courses }: TimeTableProps) => {
   return (
     <div className="timetable-container">
       <div className="weekday-row">
-        <WeekdayText config={config} />
+        <WeekdayText config={config} timetableInfo={timetableInfo} />
       </div>
       <div className="timetable-canvas">
         <div className="timetable-ticks">

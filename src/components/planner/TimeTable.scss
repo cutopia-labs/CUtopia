@@ -9,13 +9,22 @@
   display: flex;
   margin-left: var(--left-bar-width);
   margin-bottom: 10px;
-  opacity: 0.7;
   font-size: 14px;
   div {
     display: flex;
     align-items: center;
     justify-content: center;
     flex: 1;
+  }
+  .weekday-text {
+    color: var(--text);
+    opacity: 1;
+    .caption {
+      opacity: 1;
+      font-size: 11px;
+      margin-top: 4px;
+      opacity: 0.7;
+    }
   }
 }
 .timetable-canvas {
