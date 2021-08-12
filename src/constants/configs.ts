@@ -32,3 +32,5 @@ export const SentryConfigs: BrowserOptions = {
       : '',
   tracesSampleRate: 0.3,
 };
+
+export const CURRENT_TERM = '2021-22 Term 1';

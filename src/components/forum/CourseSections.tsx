@@ -8,6 +8,7 @@ import { PlannerContext, ViewContext } from '../../store';
 import { WEEKDAYS_TWO_ABBR } from '../../constants/states';
 import { CourseInfo, CourseSection, ErrorCardMode } from '../../types';
 import ErrorCard from '../molecules/ErrorCard';
+import { CURRENT_TERM } from '../../constants/configs';
 
 type SectionCardProps = {
   section: CourseSection;
@@ -86,10 +87,12 @@ type CourseSectionsProps = {
 const CourseSections = ({
   courseInfo: { terms: courseTerms, courseId, title },
 }: CourseSectionsProps) => {
-  if (!courseTerms?.length) {
+  const currentTermIndex = (courseTerms || []).findIndex(
+    (term) => term.name === CURRENT_TERM
+  );
+  if (!courseTerms?.length || currentTermIndex === -1) {
     return <ErrorCard mode={ErrorCardMode.NULL} />;
   }
-  const currentTermIndex = courseTerms?.length - 1;
   const planner = useContext(PlannerContext);
   const view = useContext(ViewContext);
   const addToPlanner = (section: CourseSection) => {
