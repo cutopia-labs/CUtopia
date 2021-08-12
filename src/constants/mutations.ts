@@ -50,7 +50,6 @@ export const ADD_REVIEW = gql`
     $courseId: String!
     $title: String
     $term: String!
-    $section: String!
     $lecturer: String!
     $overall: Int!
     $grading: ReviewDetailsInput!
@@ -64,7 +63,6 @@ export const ADD_REVIEW = gql`
         courseId: $courseId
         title: $title
         term: $term
-        section: $section
         lecturer: $lecturer
         overall: $overall
         grading: $grading

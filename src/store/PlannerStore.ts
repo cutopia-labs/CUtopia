@@ -61,9 +61,10 @@ class PlannerStore extends StorePrototype {
       weekdayAverageHour: {},
     };
     this.plannerCourses?.forEach((course, i) => {
-      info.totalCredits += +course.credit;
+      let unhide = false;
       Object.values(course.sections).forEach((section) => {
         if (!section.hide) {
+          unhide = true;
           section.days.forEach((day, i) => {
             if (day > maxDay) {
               maxDay = day;
@@ -73,11 +74,14 @@ class PlannerStore extends StorePrototype {
           });
         }
       });
-      Object.values(info.weekdayAverageHour).forEach(
-        (hr) => (info.averageHour += hr)
-      );
-      info.averageHour /= maxDay;
+      if (unhide) {
+        info.totalCredits += course.credit;
+      }
     });
+    Object.values(info.weekdayAverageHour).forEach(
+      (hr) => (info.averageHour += hr)
+    );
+    info.averageHour /= maxDay;
     return info;
   }
 

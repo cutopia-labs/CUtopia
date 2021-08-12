@@ -42,8 +42,11 @@
 }
 
 .timetable-info-row {
-  margin: 14px 0;
+  margin: 10px 0 14px 0;
   span {
     flex: 1;
+  }
+  .sub-title {
+    margin-bottom: 4px;
   }
 }

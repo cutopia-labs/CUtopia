@@ -60,7 +60,6 @@ export const REVIEWS_QUERY = gql`
         downvotes
         myVote
         term
-        section
         lecturer
         overall
         content {
@@ -117,7 +116,6 @@ export const GET_REVIEW = gql`
       downvotes
       myVote
       term
-      section
       lecturer
       overall
       content {
