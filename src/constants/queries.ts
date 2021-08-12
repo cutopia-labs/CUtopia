@@ -38,6 +38,8 @@ export const REVIEWS_QUERY = gql`
     $ascendingVote: Boolean
     $ascendingDate: Boolean
     $lastEvaluatedKey: LastEvaluatedKeyInput
+    $lecturer: String
+    $term: String
   ) {
     reviews(
       input: {
@@ -45,6 +47,8 @@ export const REVIEWS_QUERY = gql`
         ascendingVote: $ascendingVote
         ascendingDate: $ascendingDate
         lastEvaluatedKey: $lastEvaluatedKey
+        lecturer: $lecturer
+        term: $term
       }
     ) {
       reviews {

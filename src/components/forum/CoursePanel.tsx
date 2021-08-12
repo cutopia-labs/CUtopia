@@ -73,6 +73,24 @@ const ReviewFilterBar = ({
   const [mode, setMode] = useState(ReviewFilterBarMode.INITIAL);
   const [anchorEl, setAnchorEl] = useState(null);
 
+  const REVIEWS_CONFIGS = {
+    [ReviewFilterBarMode.SORTING]: {
+      key: 'sorting',
+      selections: Object.keys(SORTING_FIELDS),
+      icon: <TiArrowSortedUp />,
+    },
+    [ReviewFilterBarMode.LECTURER]: {
+      key: 'lecturer',
+      selections: courseInfo?.reviewLecturers || [],
+      icon: <FaUserAlt size={12} />,
+    },
+    [ReviewFilterBarMode.TERM]: {
+      key: 'term',
+      selections: courseInfo?.reviewTerms || [],
+      icon: <AiTwotoneCalendar />,
+    },
+  };
+
   const getLabel = (
     mode: ReviewFilterBarMode,
     reviewsPayload: Partial<ReviewsFilter>
@@ -101,24 +119,6 @@ const ReviewFilterBar = ({
       });
     }
     setAnchorEl(null);
-  };
-
-  const REVIEWS_CONFIGS = {
-    [ReviewFilterBarMode.SORTING]: {
-      key: 'sorting',
-      selections: Object.keys(SORTING_FIELDS),
-      icon: <TiArrowSortedUp />,
-    },
-    [ReviewFilterBarMode.LECTURER]: {
-      key: 'lecturer',
-      selections: courseInfo?.reviewLecturers || [],
-      icon: <FaUserAlt size={12} />,
-    },
-    [ReviewFilterBarMode.TERM]: {
-      key: 'term',
-      selections: courseInfo?.reviewTerms || [],
-      icon: <AiTwotoneCalendar />,
-    },
   };
 
   return (
@@ -238,14 +238,6 @@ const CoursePanel = () => {
     },
   ]);
 
-  useEffect(() => {
-    // Reset to reload the reviews once sortkey / filter changed
-    if (reviews?.length) {
-      setReviews([]);
-      setLastEvaluatedKey(undefined);
-    }
-  }, [reviewsPayload]);
-
   // Fetch course info
   const {
     data: courseInfo,
@@ -280,14 +272,18 @@ const CoursePanel = () => {
         )}`
       );
       console.table(data);
-      setReviews((prevReviews) =>
-        prevReviews
-          .concat(data.reviews.reviews)
-          .filter(
-            (v, i, a) =>
-              a.findIndex((m) => v.createdDate === m.createdDate) === i
-          )
-      );
+      if (lastEvaluatedKey) {
+        setReviews((prevReviews) =>
+          prevReviews
+            .concat(data.reviews.reviews)
+            .filter(
+              (v, i, a) =>
+                a.findIndex((m) => v.createdDate === m.createdDate) === i
+            )
+        );
+      } else {
+        setReviews(data.reviews.reviews);
+      }
       setLastEvaluatedKey(data.reviews.lastEvaluatedKey);
     },
     onError: view.handleError,
@@ -349,6 +345,16 @@ const CoursePanel = () => {
       isMobile && setFABHidden(false);
     }
   }, 300);
+
+  useEffect(() => {
+    if (reviews.length) {
+      setLastEvaluatedKey(undefined);
+      reviewsRefetch({
+        courseId,
+        ...reviewsPayload,
+      });
+    }
+  }, [reviewsPayload]);
 
   useEffect(() => {
     window.addEventListener('scroll', listenToScroll);
