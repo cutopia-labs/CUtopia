@@ -54,7 +54,11 @@
 }
 
 .review-section-title {
-  margin-top: 0;
+  cursor: pointer;
+  svg {
+    font-size: 16px;
+    margin-left: 6px;
+  }
 }
 
 .selection-group {

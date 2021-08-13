@@ -17,6 +17,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 
 import './ReviewEdit.scss';
+import { HiOutlineInformationCircle } from 'react-icons/hi';
 import { ViewContext, UserContext } from '../../store';
 import { GET_REVIEW, COURSE_INFO_QUERY } from '../../constants/queries';
 import { ADD_REVIEW, EDIT_REVIEW } from '../../constants/mutations';
@@ -96,6 +97,14 @@ type ReviewSectionProps = {
   onChangeGrade: (grade: number) => any;
 };
 
+const ReviewHelperText = {
+  grading: 'Assessments and their weighting, how grade is distributed, etc.',
+  teaching: 'Interactive, funny, boring or hard to follow',
+  difficulty:
+    'Difficulty of assessments (homework, exam). Workload is too heavy to handle?',
+  content: 'Topics, insights, skills rewarded in the course',
+};
+
 const ReviewSection = ({
   type,
   value,
@@ -104,7 +113,16 @@ const ReviewSection = ({
 }: ReviewSectionProps) => (
   <div className="review-section-container grid-auto-row">
     <div className="review-section-header center-row">
-      <span className="review-section-title form-section-title">{type}</span>
+      <Tooltip
+        enterTouchDelay={0}
+        title={ReviewHelperText[type]}
+        placement="right"
+      >
+        <span className="review-section-title form-section-title center-row">
+          {type}
+          {Boolean(ReviewHelperText[type]) && <HiOutlineInformationCircle />}
+        </span>
+      </Tooltip>
       <SelectionGroup
         onSelect={onChangeGrade}
         selectedIndex={typeof value === 'number' ? value : value.grade}
