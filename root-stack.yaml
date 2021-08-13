@@ -1,24 +1,37 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Transform: "AWS::Serverless-2016-10-31"
 Parameters:
+  IsProduction:
+    Type: String
+    Default: true
+    AllowedValues: [true, false]
   UserTableName:
     Type: String
+    Default: users
   UserEmailMappingIndexName:
     Type: String
+    Default: email-mapping
   CourseTableName:
     Type: String
+    Default: courses
   ReviewsTableName:
     Type: String
+    Default: reviews
   ReviewsByVoteIndexName:
     Type: String
+    Default: sort-by-vote
   LatestReviewsTableName:
     Type: String
+    Default: reviews-latest
   ReportTableName:
     Type: String
+    Default: reports
   TimetableTableName:
     Type: String
+    Default: timetable
   GmailAddress:
     Type: String
+    Default: cutopia.team@gmail.com
   GamilClientID:
     Type: String
   GmailClientSecret:
@@ -58,6 +71,7 @@ Resources:
     Properties:
       TemplateURL: ./lambda/lambda.yaml
       Parameters:
+        IsProduction: !Ref IsProduction
         UserTableName: !Sub
           - ${AWS::StackName}-${DBName}
           - { DBName: !Ref UserTableName }

@@ -1,6 +1,8 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Transform: "AWS::Serverless-2016-10-31"
 Parameters:
+  IsProduction:
+    Type: String
   UserTableName:
     Type: String
   UserEmailMappingIndexName:
@@ -62,6 +64,7 @@ Resources:
           Type: Api
       Environment:
         Variables:
+          IsProduction: !Ref IsProduction
           UserTableName: !Ref UserTableName
           UserEmailMappingIndexName: !Ref UserEmailMappingIndexName
           CourseTableName: !Ref CourseTableName

@@ -1,6 +1,7 @@
 const AWS = require('aws-sdk');
 const { nanoid } = require('nanoid');
 const { ErrorCode } = require('cutopia-types/lib/codes');
+const { addSharedTimetableId, deleteSharedTimetableId } = require('./user-db');
 
 const db = new AWS.DynamoDB.DocumentClient();
 
@@ -75,7 +76,7 @@ exports.shareTimetable = async (input) => {
       expire
     }
   };
-
+  await addSharedTimetableId({ username, id });
   await db.put(params).promise();
   return {
     id,
@@ -111,4 +112,31 @@ exports.getSharedTimetable = async (input) => {
     createdDate: result.createdDate,
     expireDate
   };
+};
+
+exports.deleteSharedTimetable = async (input) => {
+  const { username, id } = input;
+  const params = {
+    TableName: process.env.TimetableTableName,
+    Key: {
+      id
+    },
+    ConditionExpression: 'username = :username',
+    ExpressionAttributeValues: {
+      ':username': username
+    }
+  };
+
+  try {
+    await db.delete(params).promise();
+    await deleteSharedTimetableId({ username, id });
+  } catch (e) {
+    if (e.code === 'ResourceNotFoundException') {
+      throw Error(ErrorCode.DEL_TIMETABLE_INVALID_ID);
+    }
+
+    if (e.code === 'ConditionalCheckFailedException') {
+      throw Error(ErrorCode.AUTHORIZATION_REQUIRES_OWNER);
+    }
+  }
 };

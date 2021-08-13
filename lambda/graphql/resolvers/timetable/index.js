@@ -3,7 +3,8 @@ const {
   addTimetable,
   removeTimetable,
   shareTimetable,
-  getSharedTimetable
+  getSharedTimetable,
+  deleteSharedTimetable
 } = require('dynamodb');
 
 exports.User = {
@@ -34,6 +35,10 @@ exports.Mutation = {
     const { username } = user;
     const { entries, tableName, expire } = input;
     return await shareTimetable({ username, entries, tableName, expire });
+  },
+  deleteSharedTimetable: async (parent, { id }, { user }) => {
+    const { username } = user;
+    await deleteSharedTimetable({ username, id });
   }
 };
 

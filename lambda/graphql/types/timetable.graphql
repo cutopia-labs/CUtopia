@@ -2,6 +2,7 @@ type Mutation {
   addTimetable(input: AddTimetableInput!): [CourseTableEntry] @auth
   removeTimetable(input: RemoveTimetableInput!): [CourseTableEntry] @auth
   shareTimetable(input: ShareTimetableInput!): ShareTimetableResult @auth
+  deleteSharedTimetable(id: String!): Void @auth
 }
 
 type Query {

@@ -11,6 +11,7 @@ type User {
   exp: Int!
   level: Int!
   fullAccess: Boolean!
+  sharedTimetables: [String]!
 }
 
 type Mutation {

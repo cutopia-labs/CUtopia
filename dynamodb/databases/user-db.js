@@ -253,7 +253,7 @@ exports.incrementUpvotesCount = async (input) => {
   const params = {
     TableName: process.env.UserTableName,
     Key: {
-      username: username
+      username
     },
     UpdateExpression: 'set upvotesCount = upvotesCount + :value, exp = if_not_exists(exp, :defaultExp) + :delta',
     ExpressionAttributeValues: {
@@ -285,4 +285,34 @@ exports.adjustExp = async (input) => {
   const result = await db.update(params).promise();
   // uesrCache.set(username, result.Attributes);
   return result.Attributes.exp;
+};
+
+exports.addSharedTimetableId = async (input) => {
+  const { username, id } = input;
+  const params = {
+    TableName: process.env.UserTableName,
+    Key: {
+      username
+    },
+    UpdateExpression: 'add sharedTimetables :id',
+    ExpressionAttributeValues: {
+      ':id': db.createSet([id])
+    }
+  };
+  await db.update(params).promise();
+};
+
+exports.deleteSharedTimetableId = async (input) => {
+  const { username, id } = input;
+  const params = {
+    TableName: process.env.UserTableName,
+    Key: {
+      username
+    },
+    UpdateExpression: 'delete sharedTimetables :id',
+    ExpressionAttributeValues: {
+      ':id': db.createSet([id])
+    }
+  };
+  await db.update(params).promise();
 };

@@ -38,6 +38,9 @@ exports.User = {
   },
   fullAccess: ({ fullAccess }) => {
     return fullAccess === undefined ? false : fullAccess;
+  },
+  sharedTimetables: ({ sharedTimetables }) => {
+    return sharedTimetables ? sharedTimetables.values : [];
   }
 };
 

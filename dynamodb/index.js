@@ -26,7 +26,8 @@ const {
   addTimetable,
   removeTimetable,
   shareTimetable,
-  getSharedTimetable
+  getSharedTimetable,
+  deleteSharedTimetable
 } = require('./databases/timetable-db');
 
 const {
@@ -54,6 +55,7 @@ module.exports = {
   removeTimetable,
   shareTimetable,
   getSharedTimetable,
+  deleteSharedTimetable,
   report,
   reportFeedback
 };

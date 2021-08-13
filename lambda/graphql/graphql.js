@@ -13,22 +13,26 @@ const schema = makeExecutableSchema({
 });
 ValidateDirectiveVisitor.addValidationResolversToSchema(schema);
 
+const isProduction = process.env.IsProduction === 'true';
+const playground = isProduction
+  ? false
+  : {
+      endpoint: '/graphql'
+    };
+const allowedOrigins = isProduction
+  ? ['https://cutopia.app', 'https://dev.cutopia.app']
+  : '*';
+
 const server = new ApolloServer({
   schema,
   context: createContext,
-  playground: {
-    endpoint: '/graphql'
-  }
+  introspection: !isProduction,
+  playground
 });
 
 exports.graphqlHandler = server.createHandler({
   cors: {
-    origin: [
-      'https://cutopia.app',
-      'https://dev.cutopia.app',
-      // seems it does not support regex: /http:\/\/localhost:\d{4}/
-      'http://localhost:3000'
-    ],
+    origin: allowedOrigins,
     methods: ['get', 'post'],
     credentials: true,
     maxAge: 3600
