@@ -19,7 +19,6 @@ export type Review = {
   createdDate: string;
   modifiedDate: string;
   term: string;
-  section: string;
   lecturer: string;
   overall: number;
   grading: ReviewDetails;

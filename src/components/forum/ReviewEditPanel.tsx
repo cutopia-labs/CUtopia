@@ -30,6 +30,7 @@ import { TARGET_REVIEW_WORD_COUNT } from '../../constants/configs';
 import { RatingFieldWithOverall, ReviewDetails } from '../../types';
 import SelectionGroup, { FormSection } from '../molecules/SectionGroup';
 import useMobileQuery from '../../helpers/useMobileQuery';
+import handleCompleted from '../../helpers/handleCompleted';
 import CourseCard from './CourseCard';
 
 enum MODES {
@@ -57,7 +58,7 @@ const DEFAULT_REVIEW = Object.freeze({
 
 const TERMS_OPTIONS = [
   ...academicYears.flatMap((year) =>
-    ['Term 1', 'Term 2', 'Summer'].map(
+    ['Summer', 'Term 2', 'Term 1'].map(
       (suffix) =>
         `${year.toString()}-${(year + 1).toString().substring(2)} ${suffix}`
     )
@@ -131,10 +132,31 @@ const ReviewEdit = ({ courseId }) => {
   const [showLecturers, setShowLecturers] = useState(false);
   const [addReview, { loading: addReviewLoading, error: addReviewError }] =
     useMutation(ADD_REVIEW, {
+      onCompleted: handleCompleted(
+        (data) => {
+          const id = data?.createReview?.createdDate;
+          if (id) {
+            history.push(`/review/${courseId}/${id}`);
+          }
+        },
+        {
+          message: 'Review added!',
+        }
+      ),
       onError: view.handleError,
     });
   const [editReview, { loading: editReviewLoading, error: editReviewError }] =
     useMutation(EDIT_REVIEW, {
+      onCompleted: handleCompleted(
+        () => {
+          if (formData.createdDate) {
+            history.push(`/review/${courseId}/${formData.createdDate}`);
+          }
+        },
+        {
+          message: 'Review edited!',
+        }
+      ),
       onError: view.handleError,
     });
   const isMobile = useMobileQuery();
@@ -143,7 +165,6 @@ const ReviewEdit = ({ courseId }) => {
     {
       courseId,
       anonymous: false,
-      section: 'Hi',
       term: '',
       lecturer: '',
       title: '',
@@ -167,7 +188,7 @@ const ReviewEdit = ({ courseId }) => {
     onError: view.handleError,
   });
 
-  const submit = async (e) => {
+  const submit = (e) => {
     e.preventDefault();
     if (progress < 100) {
       view.setSnackBar(
@@ -176,30 +197,19 @@ const ReviewEdit = ({ courseId }) => {
       return;
     }
     // below are temp b4 server schema updated
-    let res;
     if (mode === MODES.EDIT) {
       const { title, term, section, lecturer, ...editReviewForm } = formData;
       console.log(JSON.stringify(editReviewForm));
-      res = await editReview({
+      editReview({
         variables: {
           ...editReviewForm,
         },
       });
     } else {
       console.log(JSON.stringify(formData));
-      res = await addReview({
+      addReview({
         variables: formData,
       });
-    }
-    console.log(res);
-    const id =
-      mode === MODES.EDIT
-        ? formData.createdDate
-        : res?.data?.createReview?.createdDate;
-
-    if (id) {
-      history.push(`/review/${courseId}/${id}`);
-      view.setSnackBar('Review added!');
     }
   };
 
