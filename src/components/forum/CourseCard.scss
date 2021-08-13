@@ -1,9 +1,6 @@
 .course-card {
   position: relative;
   overflow: hidden;
-  .course-title {
-    margin-top: -2px;
-  }
   &.retracted {
     max-height: 580px;
   }
@@ -29,6 +26,7 @@
     & > .course-card-header {
       align-items: center;
       .course-card-title-container {
+        margin-right: auto;
         width: 100%;
       }
       & .badge {
@@ -58,6 +56,9 @@
       margin-left: 4px;
     }
   }
+}
+.course-card-title-container {
+  margin-right: 8px;
 }
 .course-card-header {
   display: flex;

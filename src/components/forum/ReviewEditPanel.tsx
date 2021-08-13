@@ -4,7 +4,6 @@ import {
   Menu,
   MenuItem,
   Button,
-  CircularProgress,
   IconButton,
   Dialog,
   DialogActions,
@@ -31,6 +30,7 @@ import { RatingFieldWithOverall, ReviewDetails } from '../../types';
 import SelectionGroup, { FormSection } from '../molecules/SectionGroup';
 import useMobileQuery from '../../helpers/useMobileQuery';
 import handleCompleted from '../../helpers/handleCompleted';
+import LoadingButton from '../atoms/LoadingButton';
 import CourseCard from './CourseCard';
 
 enum MODES {
@@ -123,6 +123,38 @@ const ReviewSection = ({
   </div>
 );
 
+type ReviewSubmitProps = {
+  disabled: boolean;
+  progress: number;
+  onSubmit: (e) => void;
+  loading: boolean;
+};
+
+const ReviewSubmit = ({
+  disabled,
+  progress,
+  onSubmit,
+  loading,
+}: ReviewSubmitProps) => (
+  <LoadingButton
+    loading={loading}
+    className="submit-btn"
+    onClick={onSubmit}
+    variant="contained"
+    disabled={disabled}
+    color="inherit"
+  >
+    {progress >= 100 ? 'Submit' : 'Write More'}
+    {!disabled && !loading && progress < 100 && (
+      <span
+        className="progress"
+        style={{
+          width: `calc(${progress}% + 32px)`, // 32px is MuiLabel pdding
+        }}
+      />
+    )}
+  </LoadingButton>
+);
 const ReviewEdit = ({ courseId }) => {
   const view = useContext(ViewContext);
   const [mode, setMode] = useState(MODES.INITIAL);
@@ -191,9 +223,10 @@ const ReviewEdit = ({ courseId }) => {
   const submit = (e) => {
     e.preventDefault();
     if (progress < 100) {
-      view.setSnackBar(
-        `Please write at least ${TARGET_REVIEW_WORD_COUNT} words before submit~`
-      );
+      view.setSnackBar({
+        message: `Please write at least ${TARGET_REVIEW_WORD_COUNT} words before submit`,
+        severity: 'warning',
+      });
       return;
     }
     // below are temp b4 server schema updated
@@ -310,7 +343,7 @@ const ReviewEdit = ({ courseId }) => {
       </Dialog>
       <div className="review-header-container center-row">
         <span className="title">Your Review</span>
-        <span className="caption">前人種樹，後人乘涼--</span>
+        <span className="light-caption">前人種樹，後人乘涼</span>
         <Tooltip title="Anonymity">
           <IconButton
             className="anonymous-switch"
@@ -403,24 +436,12 @@ const ReviewEdit = ({ courseId }) => {
           value={formData.overall}
           onChangeGrade={(grade) => dispatchFormData({ overall: grade })}
         />
-        <Button
-          variant="contained"
-          className={`submit-btn${progress >= 100 ? ' filled' : ''}`}
-          color="secondary"
-          onClick={submit}
+        <ReviewSubmit
           disabled={!validation()}
-          style={{
-            background: `linear-gradient(to right, var(--accent) ${progress}%, transparent ${progress}%)`,
-          }}
-        >
-          {addReviewLoading || editReviewLoading ? (
-            <CircularProgress color="inherit" size={24} />
-          ) : progress < 100 ? (
-            'write more!'
-          ) : (
-            'submit'
-          )}
-        </Button>
+          onSubmit={submit}
+          progress={progress}
+          loading={addReviewLoading || editReviewLoading}
+        />
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 .review-edit {
+  --review-row-gap: 18px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -7,7 +8,7 @@
   margin: var(--card-padding) 0;
   padding: var(--card-padding) 10px;
   position: relative;
-
+  row-gap: var(--review-row-gap);
   .input-container {
     width: calc(100% - 36px);
   }
@@ -21,9 +22,8 @@
     width: fit-content;
   }
 
-  .caption {
-    margin-left: 16px;
-    font-size: var(--card-padding);
+  .light-caption {
+    margin-left: 10px;
   }
 
   .anonymous-switch {
@@ -35,8 +35,8 @@
 .form-section-title {
   font-weight: bold;
   text-transform: uppercase;
-  font-size: 14px;
-  opacity: 0.6;
+  font-size: 13px;
+  opacity: 0.8;
 }
 
 .term-selection-anchor {
@@ -69,12 +69,12 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  height: 28px;
-  width: 28px;
+  height: 26px;
+  width: 26px;
   opacity: 0.4;
-
   &.selected {
     color: white;
+    font-weight: 500;
     opacity: 1;
   }
 }
@@ -86,13 +86,17 @@
   width: 100%;
 }
 
+.review-section-container {
+  row-gap: 8px;
+}
+
 .submit-btn-row {
   width: 100%;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 6px;
 
-  > .review-section-container {
+  .review-section-container {
     width: calc(50% - 10px);
   }
 
@@ -100,19 +104,29 @@
     margin-top: 0;
   }
 
-  > .submit-btn {
-    width: 180px;
-    border: none;
-    height: 40px;
-    color: var(--text);
-    box-shadow: none;
-    border: 1px solid var(--border);
-    border-right: 1px solida var(--border);
-
-    &.filled {
-      color: white;
+  .submit-btn {
+    width: 240px;
+    height: 42px;
+    background-color: var(--default-button-background);
+    color: white;
+    position: relative;
+    overflow: hidden;
+    .MuiButton-label {
+      position: relative;
+    }
+    &:hover {
+      background-color: var(--default-button-background);
     }
   }
+}
+
+.progress {
+  position: absolute;
+  height: 4px;
+  background-color: var(--accent);
+  left: -16px; // MuiLabel padding
+  bottom: -10px; // MuiLabel padding
+  transition: width 300ms cubic-bezier(0.7, 0, 0.3, 1) 0ms;
 }
 
 .review-edit {
