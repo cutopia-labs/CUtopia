@@ -1,8 +1,8 @@
 /* eslint-disable camelcase */ // academic_group is not in camelcase when parsing the data
 
-const { getReviews } = require('dynamodb');
-const { subjects } = require('../../data/courses');
-const NodeCache = require('node-cache');
+import { getReviews } from 'dynamodb';
+import { subjects } from '../../data/courses';
+import NodeCache from 'node-cache';
 
 const rankingCache = new NodeCache({
   stdTTL: 1800,
@@ -56,7 +56,7 @@ const sortTopRatedCourses = (coursesRating, topRatedAcademicGroups) => {
       .map(courseId => ({
         courseId,
         course: {
-          course: this.getCourseById(courseId)
+          course: getCourseById(courseId)
         },
         ...coursesRating[courseId]
       }));
@@ -100,7 +100,7 @@ const updateCourseRating = async (courseId, calculateRatingFn, increaseNumReview
   rankingCache.set('courses-rating', coursesRating);
 
   // TODO: refactor the following logic?
-  const { academic_group } = this.getCourseById(courseId);
+  const { academic_group } = getCourseById(courseId);
   let group = academicGroupsRating[academic_group];
   overall = 0;
   isFirstRating = group === undefined;
@@ -127,22 +127,22 @@ const updateCourseRating = async (courseId, calculateRatingFn, increaseNumReview
   return { courseRatings: course, groupRatings: group };
 };
 
-exports.getCourseById = (courseId) => {
+export const getCourseById = (courseId) => {
   const subjectName = courseId.slice(0, 4);
   const courseCode = courseId.slice(4, 8);
   const courses = subjects[subjectName];
   return courses.find(course => course.code === courseCode);
 };
 
-exports.getCourseRating = async (courseId) => {
-  const coursesRating = await this.calculateTopRatedCourses('courses-rating');
+export const getCourseRating = async (courseId) => {
+  const coursesRating = await calculateTopRatedCourses('courses-rating');
   return coursesRating[courseId];
 };
 
-exports.calculatePopularCourses = async () => {
+export const calculatePopularCourses = async () => {
   const cachedPopularCourses = rankingCache.get('popular-courses');
   if (cachedPopularCourses) {
-    return cachedPopularCourses;
+    return cachedPopularCourses as any[];
   }
 
   const reviews = await getReviews({
@@ -162,15 +162,15 @@ exports.calculatePopularCourses = async () => {
     .map(courseId => ({
       courseId,
       course: {
-        course: this.getCourseById(courseId)
+        course: getCourseById(courseId)
       },
       numReviews: popularCourses[courseId]
     }));
   rankingCache.set('popular-courses', result);
-  return result;
+  return result || [];
 };
 
-exports.calculateTopRatedCourses = async (type) => {
+export const calculateTopRatedCourses = async (type) => {
   const cached = rankingCache.get(type);
   if (cached) {
     return cached;
@@ -184,7 +184,7 @@ exports.calculateTopRatedCourses = async (type) => {
 
   // calculate sum of each criterion of reviews
   reviews.forEach(review => {
-    const result = this.getCourseById(review.courseId);
+    const result = getCourseById(review.courseId);
     if (result === undefined) {
       // in case some bygone courses no longer exist in the current semester
       return;
@@ -240,17 +240,17 @@ exports.calculateTopRatedCourses = async (type) => {
   return rankingCache.get(type);
 };
 
-exports.recalWithNewReview = async (review) => {
+export const recalWithNewReview = async (review) => {
   const { courseId, ...reviewData } = review;
-  await this.calculateTopRatedCourses('courses-rating'); // calculate top rated courses in case it does not exist in cache
-  const popularCourses = await this.calculatePopularCourses();
+  await calculateTopRatedCourses('courses-rating'); // calculate top rated courses in case it does not exist in cache
+  const popularCourses = await calculatePopularCourses();
   const index = popularCourses.findIndex(course => course.courseId === courseId);
   if (index === -1) {
     // first review of the course
     popularCourses.push({
       courseId,
       course: {
-        course: this.getCourseById(courseId)
+        course: getCourseById(courseId)
       },
       numReviews: 1
     });
@@ -270,10 +270,10 @@ exports.recalWithNewReview = async (review) => {
   return updateCourseRating(courseId, calculateRating, true);
 };
 
-exports.recalWithEdittedReview = async (review) => {
+export const recalWithEdittedReview = async (review) => {
   const { courseId, oldReviewData, ...reviewData } = review;
 
-  await this.calculateTopRatedCourses('courses-rating'); // calculate top rated courses in case it does not exist in cache
+  await calculateTopRatedCourses('courses-rating'); // calculate top rated courses in case it does not exist in cache
   const calculateRating = (course, criterion) => (
     (course[criterion] * course.numReviews - oldReviewData[criterion].grade + reviewData[criterion].grade) / course.numReviews
   );

@@ -1,8 +1,10 @@
-const { AuthDirective } = require('./auth-directive');
-const { range, stringLength } = require('@profusion/apollo-validation-directives');
+import { AuthDirective } from './auth-directive';
+import { range, stringLength } from '@profusion/apollo-validation-directives';
 
-module.exports = {
+const directives = {
   auth: AuthDirective,
   range,
   stringLength
-};
+}
+
+export default directives;

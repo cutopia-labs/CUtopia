@@ -1,16 +1,17 @@
-const { ApolloServer, makeExecutableSchema } = require('apollo-server-lambda');
-const { ValidateDirectiveVisitor } = require('@profusion/apollo-validation-directives');
+import { ApolloServer, makeExecutableSchema } from 'apollo-server-lambda';
+import { ValidateDirectiveVisitor } from '@profusion/apollo-validation-directives';
 
-const typeDefs = require('./types');
-const resolvers = require('./resolvers');
-const schemaDirectives = require('./directives');
-const createContext = require('./context');
+import typeDefs from './types';
+import resolvers from './resolvers';
+import schemaDirectives from './directives';
+import createContext from './context';
 
 const schema = makeExecutableSchema({
   typeDefs,
   resolvers,
   schemaDirectives
-});
+} as any);
+
 ValidateDirectiveVisitor.addValidationResolversToSchema(schema);
 
 const isProduction = process.env.IsProduction === 'true';
@@ -30,7 +31,7 @@ const server = new ApolloServer({
   playground
 });
 
-exports.graphqlHandler = server.createHandler({
+export const graphqlHandler = server.createHandler({
   cors: {
     origin: allowedOrigins,
     methods: ['get', 'post'],

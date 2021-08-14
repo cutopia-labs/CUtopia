@@ -1,12 +1,12 @@
-const { mergeResolvers } = require('@graphql-tools/merge');
-const { resolvers: scalarResolvers } = require('graphql-scalars');
-const reviewsResolver = require('./reviews');
-const searchResolver = require('./search');
-const subjectsResolver = require('./subjects');
-const userResolver = require('./user');
-const rankingResolver = require('./ranking');
-const timetableResolver = require('./timetable');
-const reportResolver = require('./report');
+import { mergeResolvers } from '@graphql-tools/merge';
+import { resolvers as scalarResolvers } from 'graphql-scalars';
+import reviewsResolver from './reviews';
+import searchResolver from './search';
+import subjectsResolver from './subjects';
+import userResolver from './user';
+import rankingResolver from './ranking';
+import timetableResolver from './timetable';
+import reportResolver from './report';
 
 const resolvers = [
   scalarResolvers,
@@ -19,4 +19,4 @@ const resolvers = [
   reportResolver
 ];
 
-module.exports = mergeResolvers(resolvers);
+export default mergeResolvers(resolvers);

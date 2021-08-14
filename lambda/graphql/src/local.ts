@@ -3,33 +3,31 @@ const { ApolloServer } = require('apollo-server-express');
 const { ValidateDirectiveVisitor } = require('@profusion/apollo-validation-directives');
 const express = require('express');
 
-const { sign } = require('./jwt');
-const typeDefs = require('./types');
-const resolvers = require('./resolvers');
-const schemaDirectives = require('./directives');
+import { sign } from './jwt';
+import typeDefs from './types';
+import resolvers from './resolvers';
+import schemaDirectives from './directives';
 // const createContext = require('./context');
 
 const schema = makeExecutableSchema({
   typeDefs,
   resolvers,
   schemaDirectives
-});
+} as any);
+
 ValidateDirectiveVisitor.addValidationResolversToSchema(schema);
 
 const server = new ApolloServer({
   schema,
   // context: createContext,
   introspection: true,
-  playgroud: {
-    endpoint: '/graphql'
-  }
 });
 
 const startApolloServer = async () => {
   await server.start();
   const app = express();
   server.applyMiddleware({ app });
-  await new Promise(resolve => app.listen({ port: 4000 }, resolve));
+  app.listen({ port: 4000 });
   console.log(`Token: ${sign({
     user: 'mike'
   })}`);

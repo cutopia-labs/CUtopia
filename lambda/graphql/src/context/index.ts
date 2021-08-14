@@ -1,11 +1,11 @@
-const { verify } = require('../jwt');
+import { verify } from '../jwt';
 
 const DEFAULT_CONTEXT = {
   authenticated: false,
   user: null
 };
 
-module.exports = async ({
+const context = async ({
   event: lambdaEvent,
   context: lambdaContext
 }) => {
@@ -31,3 +31,5 @@ module.exports = async ({
     throw e;
   }
 };
+
+export default context;

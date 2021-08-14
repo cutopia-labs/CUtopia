@@ -1,9 +1,9 @@
 /* eslint-disable camelcase */ // course_sections is not in camelcase when parsing the data
 
-const { subjects, subjectNames } = require('../../data/courses');
-const { getCourseData } = require('dynamodb');
+import { subjects, subjectNames } from '../../data/courses';
+import { getCourseData } from 'dynamodb';
 
-exports.Query = {
+const Query = {
   subjects: (parent, { filter }) => {
     const { requiredSubjects = null } = { ...filter };
 
@@ -18,7 +18,7 @@ exports.Query = {
   }
 };
 
-exports.Subject = {
+const Subject = {
   courses: ({ name, courses }, { filter }) => {
     const idsContext = {
       subject: name,
@@ -40,7 +40,7 @@ exports.Subject = {
   }
 };
 
-exports.Course = {
+const Course = {
   code: ({ course }) => course.code,
   title: ({ course }) => course.title,
   reviewLecturers: async ({ idsContext, course }) => {
@@ -95,7 +95,7 @@ exports.Course = {
   }
 };
 
-exports.Term = {
+const Term = {
   name: ({ idsContext }) => idsContext.term,
   course_sections: ({ idsContext, course_sections }) => {
     const sectionsNames = Object.keys(course_sections);
@@ -109,8 +109,19 @@ exports.Term = {
   }
 };
 
-exports.CourseSection = {
+const CourseSection = {
   name: ({ idsContext }) => idsContext.section
 };
 
-exports.AssessementComponent = {};
+const AssessementComponent = {};
+
+const subjectsResolver = {
+  Query,
+  Subject,
+  Course,
+  Term,
+  CourseSection,
+  AssessementComponent,
+}
+
+export default subjectsResolver;

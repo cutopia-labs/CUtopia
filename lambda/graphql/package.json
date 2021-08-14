@@ -5,9 +5,10 @@
   "main": "graphql.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "local": "nodemon src/local.ts",
-    "predeploy": "rm -rf node_modules && npm install --production",
+    "local": "node --loader ts-node/esm src/local.ts",
+    "predeploy": "npm run build && npm run copyfile && rm -rf node_modules && npm install --production",
     "postdeploy": "rm -rf node_modules && npm install",
+    "copyfile": "cp src/jwt/jwtRS256.key build/jwt && cp src/jwt/jwtRS256.key.pub build/jwt && cp -R src/data/courses build/data",
     "build": "tsc"
   },
   "author": "",
@@ -32,8 +33,10 @@
     "yarn": ">=1.22.5"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^8.5.4",
     "apollo-server-express": "^3.1.2",
     "aws-sdk": "^2.968.0",
+    "ts-node": "^10.2.0",
     "webpack": "^5.50.0"
   }
 }

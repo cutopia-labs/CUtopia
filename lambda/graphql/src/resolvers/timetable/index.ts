@@ -1,26 +1,19 @@
-const {
-  getTimetable,
-  addTimetable,
-  removeTimetable,
-  shareTimetable,
-  getSharedTimetable,
-  deleteSharedTimetable
-} = require('dynamodb');
+import { getTimetable, addTimetable, removeTimetable, shareTimetable, getSharedTimetable, deleteSharedTimetable } from 'dynamodb';
 
-exports.User = {
+const User = {
   timetable: async (parent, args, { user }) => {
     const { username } = user;
     return await getTimetable({ username });
   }
 };
 
-exports.Query = {
+const Query = {
   timetable: async (parent, { id }) => {
     return await getSharedTimetable({ id });
   }
 };
 
-exports.Mutation = {
+const Mutation = {
   addTimetable: async (parent, { input }, { user }) => {
     const { username } = user;
     const { entries } = input;
@@ -42,7 +35,7 @@ exports.Mutation = {
   }
 };
 
-exports.CourseTableEntry = {
+const CourseTableEntry = {
   sections: ({ sections }) => {
     return sections.map((section) => {
       const { name } = section;
@@ -55,3 +48,12 @@ exports.CourseTableEntry = {
     });
   }
 };
+
+const timetableResolver = {
+  User,
+  Query,
+  Mutation,
+  CourseTableEntry,
+};
+
+export default timetableResolver;

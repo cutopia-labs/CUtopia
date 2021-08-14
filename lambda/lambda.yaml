@@ -44,7 +44,7 @@ Parameters:
 Resources:
   GraphQL:
     Properties:
-      CodeUri: ./graphql
+      CodeUri: ./graphql/build
       Handler: graphql.graphqlHandler
       Events:
         HttpGet:

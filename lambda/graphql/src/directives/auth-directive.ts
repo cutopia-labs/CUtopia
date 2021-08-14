@@ -1,6 +1,6 @@
-const { SchemaDirectiveVisitor } = require('apollo-server-lambda');
-const { defaultFieldResolver } = require('graphql');
-const { ErrorCode } = require('cutopia-types/lib/codes');
+import { SchemaDirectiveVisitor } from 'apollo-server-lambda';
+import { defaultFieldResolver } from 'graphql';
+import { ErrorCode } from 'cutopia-types/lib/codes';
 
 class AuthDirective extends SchemaDirectiveVisitor {
   visitFieldDefinition (field) {
@@ -10,12 +10,12 @@ class AuthDirective extends SchemaDirectiveVisitor {
     field.resolve = async (...params) => {
       const [parent, args, context, info] = params;
       if (!context.authenticated) {
-        throw Error(ErrorCode.AUTHORIZATION_REQUIRES_LOGIN);
+        throw Error(ErrorCode.AUTHORIZATION_REQUIRES_LOGIN as any);
       }
 
       const validateOwner = (owner) => {
         if (role === 'OWNER' && owner !== context.user.username) {
-          throw Error(ErrorCode.AUTHORIZATION_REQUIRES_OWNER);
+          throw Error(ErrorCode.AUTHORIZATION_REQUIRES_OWNER as any);
         }
       };
 
@@ -29,6 +29,6 @@ class AuthDirective extends SchemaDirectiveVisitor {
   }
 }
 
-module.exports = {
+export {
   AuthDirective
 };

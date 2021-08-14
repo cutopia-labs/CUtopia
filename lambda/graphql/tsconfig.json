@@ -13,7 +13,8 @@
     }
   },
   "compilerOptions": {
-    "module": "ESNext",
+    "target": "ES5",
+    "module": "commonjs",
       "esModuleInterop": true,
       "moduleResolution": "node",
       "lib": ["ES2020"],
@@ -27,7 +28,8 @@
           "*": [
               "node_modules/*"
           ]
-      }
+      },
+      "skipLibCheck": true
   },
   "include": ["src/**/*"],
   "exclude": [

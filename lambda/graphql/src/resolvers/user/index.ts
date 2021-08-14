@@ -1,15 +1,7 @@
-const AWS = require('aws-sdk');
+import AWS from 'aws-sdk';
 const SNS = new AWS.SNS({ apiVersion: '2010-03-31' });
-const {
-  createUser,
-  verifyUser,
-  updateUser,
-  getUser,
-  getResetPasswordCodeAndEmail,
-  resetPassword,
-  login
-} = require('dynamodb');
-const { sign } = require('../../jwt');
+import { createUser, verifyUser, updateUser, getUser, getResetPasswordCodeAndEmail, resetPassword, login } from 'dynamodb';
+import { sign } from '../../jwt';
 
 const sendEmail = async (message) => {
   const params = {
@@ -19,13 +11,13 @@ const sendEmail = async (message) => {
   await SNS.publish(params).promise();
 };
 
-exports.Query = {
+const Query = {
   me: async (parent, args, { user }) => {
     return await getUser({ username: user.username });
   }
 };
 
-exports.User = {
+const User = {
   reviewIds: ({ reviewIds }) => {
     // reviewIds is a set
     return reviewIds.values.filter((reviewId) => reviewId); // filter out empty string
@@ -44,7 +36,7 @@ exports.User = {
   }
 };
 
-exports.Mutation = {
+const Mutation = {
   createUser: async (parent, { input }) => {
     const { email } = input;
     const verificationCode = await createUser(input);
@@ -81,3 +73,11 @@ exports.Mutation = {
     await resetPassword(input);
   }
 };
+
+const userResolver = {
+  Mutation,
+  Query,
+  User,
+}
+
+export default userResolver;
