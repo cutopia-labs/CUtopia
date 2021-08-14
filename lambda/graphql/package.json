@@ -4,7 +4,8 @@
   "description": "",
   "main": "graphql.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "local": "nodemon local.js"
   },
   "author": "",
   "license": "ISC",
@@ -14,6 +15,7 @@
     "aws-sdk": "^2.963.0",
     "cutopia-types": "^1.0.2",
     "dynamodb": "file:../../dynamodb",
+    "express": "^4.17.1",
     "fuse.js": "^6.4.6",
     "graphql": "^15.4.0",
     "graphql-scalars": "^1.10.0",
@@ -26,5 +28,8 @@
     "node": ">=v14.0.0",
     "npm": ">=6.14.8",
     "yarn": ">=1.22.5"
+  },
+  "devDependencies": {
+    "apollo-server-express": "^3.1.2"
   }
 }
