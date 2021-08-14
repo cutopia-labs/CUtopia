@@ -6,10 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "local": "node --loader ts-node/esm src/local.ts",
-    "predeploy": "npm run build && npm run copyfile && rm -rf node_modules && npm install --production",
+    "predeploy": "npm run build && rm -rf node_modules && npm install --production && cp -RL node_modules/ build/",
     "postdeploy": "rm -rf node_modules && npm install",
-    "copyfile": "cp src/jwt/jwtRS256.key build/jwt && cp src/jwt/jwtRS256.key.pub build/jwt && cp -R src/data/courses build/data",
-    "build": "tsc"
+    "copyfile": "sh copyfile.sh",
+    "build": "tsc && npm run copyfile"
   },
   "author": "",
   "license": "ISC",
