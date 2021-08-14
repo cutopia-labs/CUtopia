@@ -1,5 +1,8 @@
-import { ApolloServer, makeExecutableSchema } from 'apollo-server-lambda';
+import { ApolloServer } from 'apollo-server-lambda'
+import { makeExecutableSchema } from '@graphql-tools/schema';;
 import { ValidateDirectiveVisitor } from '@profusion/apollo-validation-directives';
+import express from 'express';
+
 
 import typeDefs from './types';
 import resolvers from './resolvers';
@@ -27,15 +30,24 @@ const allowedOrigins = isProduction
 const server = new ApolloServer({
   schema,
   context: createContext,
-  introspection: !isProduction,
-  playground
+  introspection: !isProduction
 });
 
 export const graphqlHandler = server.createHandler({
-  cors: {
-    origin: allowedOrigins,
-    methods: ['get', 'post'],
-    credentials: true,
-    maxAge: 3600
+  expressGetMiddlewareOptions: {
+    cors: {
+      origin: allowedOrigins,
+      methods: ['get', 'post'],
+      credentials: true,
+      maxAge: 3600
+    },
+  },
+  expressAppFromMiddleware(middleware) {
+    const app = express();
+    app.use('/static', express.static(__dirname + '/data/derivatives', {
+      etag: true,
+    }))
+    app.use(middleware)
+    return app;
   }
 });

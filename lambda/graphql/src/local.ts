@@ -1,13 +1,13 @@
-const { makeExecutableSchema } = require('@graphql-tools/schema');
+import { makeExecutableSchema } from '@graphql-tools/schema';
 const { ApolloServer } = require('apollo-server-express');
-const { ValidateDirectiveVisitor } = require('@profusion/apollo-validation-directives');
-const express = require('express');
+import { ValidateDirectiveVisitor } from '@profusion/apollo-validation-directives';
+import express from 'express';
 
 import { sign } from './jwt';
 import typeDefs from './types';
 import resolvers from './resolvers';
 import schemaDirectives from './directives';
-// const createContext = require('./context');
+import createContext from './context';
 
 const schema = makeExecutableSchema({
   typeDefs,
@@ -19,13 +19,18 @@ ValidateDirectiveVisitor.addValidationResolversToSchema(schema);
 
 const server = new ApolloServer({
   schema,
-  // context: createContext,
   introspection: true,
-});
+} as any);
 
 const startApolloServer = async () => {
   await server.start();
   const app = express();
+  app.get('/', (req, res) => {
+    res.send('Hello World!')
+  })
+  app.use('/static', express.static(__dirname + '/data/derivatives', {
+    etag: true,
+  }))
   server.applyMiddleware({ app });
   app.listen({ port: 4000 });
   console.log(`Token: ${sign({

@@ -1,6 +1,6 @@
-import { SchemaDirectiveVisitor } from 'apollo-server-lambda';
 import { defaultFieldResolver } from 'graphql';
 import { ErrorCode } from 'cutopia-types/lib/codes';
+import { SchemaDirectiveVisitor } from 'graphql-tools';
 
 class AuthDirective extends SchemaDirectiveVisitor {
   visitFieldDefinition (field) {
