@@ -1,0 +1,1 @@
+for x in src/**/**/*.js; do mv "$x" "${x%.js}.ts"; done
