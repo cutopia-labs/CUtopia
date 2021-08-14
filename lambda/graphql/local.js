@@ -7,7 +7,7 @@ const { sign } = require('./jwt');
 const typeDefs = require('./types');
 const resolvers = require('./resolvers');
 const schemaDirectives = require('./directives');
-const createContext = require('./context');
+// const createContext = require('./context');
 
 const schema = makeExecutableSchema({
   typeDefs,
