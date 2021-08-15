@@ -1,11 +1,11 @@
-const NodeCache = require('node-cache');
-const Course = require('../models/course.model');
+import NodeCache from 'node-cache';
+import Course from '../models/course.model';
 
 const courseCache = new NodeCache({
   stdTTL: 1800,
 });
 
-exports.getCourseData = async input => {
+export const getCourseData = async input => {
   const { courseId } = input;
 
   const courseData = courseCache.get(courseId);
@@ -19,7 +19,7 @@ exports.getCourseData = async input => {
   return result;
 };
 
-exports.updateCourseDataFromReview = async (courseId, reviewData) => {
+export const updateCourseDataFromReview = async (courseId, reviewData) => {
   await Course.findByIdAndUpdate(
     courseId,
     {

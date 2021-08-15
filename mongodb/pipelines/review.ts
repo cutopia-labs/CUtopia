@@ -1,4 +1,4 @@
-exports.courseRating = courseId => [
+export const courseRating = courseId => [
   {
     $match: {
       courseId,

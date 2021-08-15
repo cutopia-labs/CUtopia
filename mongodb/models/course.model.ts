@@ -1,6 +1,19 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
+
+type Course = {
+  lecturers: string[];
+  terms: string[];
+  rating: {
+    numReviews: number;
+    overall: number;
+    grading: number;
+    content: number;
+    difficulty: number;
+    teaching: number;
+  };
+};
 
 const courseRatingSchema = {
   type: Number,
@@ -9,11 +22,8 @@ const courseRatingSchema = {
   min: 0,
 };
 
-const courseSchema = new Schema(
+const courseSchema = new Schema<Course>(
   {
-    _id: {
-      type: String,
-    },
     lecturers: {
       type: [
         {
@@ -50,6 +60,6 @@ const courseSchema = new Schema(
   }
 );
 
-const Course = mongoose.model('Course', courseSchema);
+const CourseModal = mongoose.model<Course>('Course', courseSchema);
 
-module.exports = Course;
+export default CourseModal;

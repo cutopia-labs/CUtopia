@@ -9,8 +9,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cutopia-types": "file:../../CUtopia-types",
     "dotenv": "^10.0.0",
-    "mongoose": "^5.13.6",
+    "mongodb": "4.1.0",
+    "mongoose": "^6.0.0-rc1",
     "nanoid": "^3.1.23",
     "node-cache": "^5.1.2"
   }

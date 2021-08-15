@@ -1,4 +1,4 @@
-exports.ratingSchema = {
+export const ratingSchema = {
   type: Number,
   required: true,
   min: 0,
