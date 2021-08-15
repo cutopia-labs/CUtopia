@@ -13,13 +13,19 @@ require('dotenv').config();
 
 // https://docs.atlas.mongodb.com/best-practices-connecting-from-aws-lambda/
 
+let conn = null;
+
 export const connect = async uri => {
   console.log(`Try to connect with ${uri}`);
-  const conn = await mongoose.connect(uri);
+  if (conn === null) {
+    conn = mongoose.connect(uri).then(() => mongoose);
+    await conn;
+  }
   console.log('MongoDB database connection established successfully');
   return conn;
 };
 
+/*
 // TODO: unit testing
 connect(process.env.ATLAS_URI).then(async conn => {
   try {
@@ -59,3 +65,4 @@ connect(process.env.ATLAS_URI).then(async conn => {
     mongoose.connection.close();
   }
 });
+*/

@@ -19,7 +19,7 @@
       "moduleResolution": "node",
       "lib": ["ES2020"],
       "sourceMap": true,
-      "outDir": "build",
+      "outDir": "lib",
       "baseUrl": ".",
       "skipDefaultLibCheck": true,
       "noEmitOnError": true,
@@ -29,8 +29,10 @@
               "node_modules/*"
           ]
       },
-      "skipLibCheck": true
+      "skipLibCheck": true,
+      "declaration": true
   },
+  "include": ["src/**/*"],
   "exclude": [
     "node_modules"
   ]

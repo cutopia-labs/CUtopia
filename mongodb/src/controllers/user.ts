@@ -78,7 +78,7 @@ export const login = async input => {
   }
 
   if (!user.verified) {
-    throw Error(ErrorCode.LOGIN_NOT_VERIFIED.toString());
+    // throw Error(ErrorCode.LOGIN_NOT_VERIFIED.toString()); #TODO
   }
 
   if (!(await bcrypt.compare(password, user.password))) {

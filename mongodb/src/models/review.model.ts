@@ -35,25 +35,23 @@ const reviewDetailSchema = new Schema<ReviewDetailSchema>({
   },
 });
 
-const reviewSchema = new Schema<Review>(
-  {
-    username: { type: String, required: true },
-    reviewId: { type: String, required: true },
-    courseId: { type: String, required: true },
-    term: { type: String, required: true },
-    lecturer: { type: String, required: true },
-    anonymous: { type: Boolean, required: true },
-    upvotes: Number,
-    downvotes: Number,
-    upvoteUserIds: [String],
-    downvoteUserIds: [String],
-    overall: ratingSchema,
-    grading: reviewDetailSchema,
-    teaching: reviewDetailSchema,
-    difficulty: reviewDetailSchema,
-    content: reviewDetailSchema,
-  }
-);
+const reviewSchema = new Schema<Review>({
+  username: { type: String, required: true },
+  reviewId: { type: String, required: true },
+  courseId: { type: String, required: true },
+  term: { type: String, required: true },
+  lecturer: { type: String, required: true },
+  anonymous: { type: Boolean, required: true },
+  upvotes: Number,
+  downvotes: Number,
+  upvoteUserIds: [String],
+  downvoteUserIds: [String],
+  overall: ratingSchema,
+  grading: reviewDetailSchema,
+  teaching: reviewDetailSchema,
+  difficulty: reviewDetailSchema,
+  content: reviewDetailSchema,
+});
 reviewSchema.index({ courseId: 1, createdDate: -1 }, { unique: true });
 
 const ReviewModal = mongoose.model<Review>('Review', reviewSchema);

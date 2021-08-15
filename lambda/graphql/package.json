@@ -5,12 +5,12 @@
   "main": "graphql.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "npm run build && nodemon build/graphql.js",
-    "local": "npm run build && nodemon build/local.js",
-    "predeploy": "npm run build && rm -rf node_modules && npm install --production && cp -RL node_modules/ build/",
-    "postdeploy": "rm -rf node_modules && npm install",
+    "server": "yarn run build && nodemon build/graphql.js",
+    "local": "yarn run build && node build/local.js",
+    "predeploy": "yarn run build && rm -rf node_modules && yarn install --production && cp -RL node_modules/ build/",
+    "postdeploy": "rm -rf node_modules && yarn install",
     "copyfile": "sh copyfile.sh",
-    "build": "rm -rf build && tsc && npm run copyfile"
+    "build": "rm -rf build && tsc && yarn run copyfile"
   },
   "author": "",
   "license": "ISC",
@@ -27,7 +27,7 @@
     "graphql-tools": "^7.0.2",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
-    "mongodb": "file:../../mongodb",
+    "mongodb": "file:../../mongodb/lib",
     "node-cache": "^5.1.2",
     "ws": "^8.1.0"
   },
