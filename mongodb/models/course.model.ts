@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { requiredNumber, requiredString } from '../schemas';
 
 const Schema = mongoose.Schema;
 
@@ -25,28 +26,15 @@ const courseRatingSchema = {
 const courseSchema = new Schema<Course>(
   {
     lecturers: {
-      type: [
-        {
-          type: String,
-          required: true,
-        },
-      ],
+      type: [requiredString],
       required: true,
     },
     terms: {
-      type: [
-        {
-          type: String,
-          required: true,
-        },
-      ],
+      type: [requiredString],
       required: true,
     },
     rating: {
-      numReviews: {
-        type: Number,
-        default: 0,
-      },
+      numReviews: requiredNumber,
       overall: courseRatingSchema,
       grading: courseRatingSchema,
       content: courseRatingSchema,

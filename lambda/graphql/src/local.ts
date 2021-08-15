@@ -11,6 +11,7 @@ import resolvers from './resolvers';
 import schemaDirectives from './directives';
 import reviewRouter from './routes/reviews';
 import courseRouter from './routes/courses';
+import timetableRouter from './routes/timetables';
 import createContext from './context';
 
 const schema = makeExecutableSchema({
@@ -51,6 +52,7 @@ const startApolloServer = async () => {
   app.use(express.json());
   app.use('/reviews', reviewRouter);
   app.use('/courses', courseRouter);
+  app.use('/timetables', timetableRouter);
   server.applyMiddleware({ app });
   app.listen({ port: 4000 });
   console.log(

@@ -5,7 +5,7 @@ import {
   login,
   getResetPasswordCodeAndEmail,
   resetPassword,
-} from './controllers/user';
+} from './controllers';
 
 export * from './controllers';
 

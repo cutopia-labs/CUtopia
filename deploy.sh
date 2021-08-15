@@ -1,3 +1,3 @@
-npm run --prefix lambda/graphql predeploy
+yarn --cwd lambda/graphql run predeploy
 eval "sam deploy --stack-name $1 -t root-stack.yaml"
-npm run --prefix lambda/graphql postdeploy
+yarn --cwd lambda/graphql run postdeploy

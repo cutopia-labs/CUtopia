@@ -19,8 +19,37 @@ export const getCourseData = async input => {
   return result;
 };
 
-export const updateCourseDataFromReview = async (courseId, reviewData) => {
-  await Course.findByIdAndUpdate(
+export type Review = {
+  id: string;
+  courseId: string;
+  username: string;
+  anonymous: boolean;
+  title?: string;
+  createdDate: string;
+  modifiedDate: string;
+  term: string;
+  lecturer: string;
+  overall: number;
+  grading: ReviewDetails;
+  teaching: ReviewDetails;
+  difficulty: ReviewDetails;
+  content: ReviewDetails;
+  upvotes: number;
+  downvotes: number;
+  myVote?: number;
+};
+
+export type ReviewDetails = {
+  grade: number;
+  text: string;
+};
+
+// @ts-ignore
+export const updateCourseDataFromReview = async (
+  courseId: string,
+  reviewData: Review
+) =>
+  Course.findByIdAndUpdate(
     courseId,
     {
       $addToSet: {
@@ -39,11 +68,5 @@ export const updateCourseDataFromReview = async (courseId, reviewData) => {
     {
       new: true,
       upsert: true,
-    },
-    e => {
-      if (e) {
-        console.trace(e);
-      }
     }
   );
-};
