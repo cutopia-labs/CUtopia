@@ -6,10 +6,10 @@ const {
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-const uri = process.env.ATLAS_URI;
 let conn = null;
 
-exports.connect = async () => {
+exports.connect = async (uri) => {
+  console.log(`Try to connect with ${uri}`);
   if (conn === null) {
     conn = mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true }).then(() => mongoose);
     await conn;

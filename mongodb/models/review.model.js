@@ -1,13 +1,7 @@
 const mongoose = require('mongoose');
+const { ratingSchema } = require('../schemas');
 
 const Schema = mongoose.Schema;
-
-const ratingSchema = {
-  type: Number,
-  required: true,
-  min: 0,
-  max: 4
-};
 
 const reviewDetailSchema = new Schema({
   grade: ratingSchema,
