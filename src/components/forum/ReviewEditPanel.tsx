@@ -24,7 +24,6 @@ import { ADD_REVIEW, EDIT_REVIEW } from '../../constants/mutations';
 import { GRADES, RATING_FIELDS } from '../../constants/states';
 import TextField from '../atoms/TextField';
 import Loading from '../atoms/Loading';
-import INSTRUCTORS from '../../constants/instructors';
 import ListItem from '../molecules/ListItem';
 import { TARGET_REVIEW_WORD_COUNT } from '../../constants/configs';
 import { RatingFieldWithOverall, ReviewDetails } from '../../types';
@@ -32,6 +31,7 @@ import SelectionGroup, { FormSection } from '../molecules/SectionGroup';
 import useMobileQuery from '../../helpers/useMobileQuery';
 import handleCompleted from '../../helpers/handleCompleted';
 import LoadingButton from '../atoms/LoadingButton';
+import { getStoreData, storeData } from '../../helpers/store';
 import CourseCard from './CourseCard';
 
 enum MODES {
@@ -72,22 +72,46 @@ const wordCount = (str: string) => {
   return matches ? matches.length : 0;
 };
 
-const searchLecturers = ({
+const searchLecturers = async ({
   payload,
   limit,
 }: {
   payload: string;
   limit: number;
-}): string[] => {
-  const results = [];
-  let resultsLen = 0;
-  for (let i = 0; i <= INSTRUCTORS.length && resultsLen <= limit; i++) {
-    if ((INSTRUCTORS[i] || '').toLowerCase().includes(payload.toLowerCase())) {
-      results.push(INSTRUCTORS[i]);
-      resultsLen++;
+}): Promise<string[] | false> => {
+  try {
+    let instructors: string[] | undefined = getStoreData('instructors')?.data;
+    if (!instructors) {
+      const res = await fetch(
+        'https://pv9wmcullh.execute-api.ap-northeast-1.amazonaws.com/Stage/static/instructors.json',
+        {
+          method: 'GET',
+          mode: 'cors',
+          headers: {
+            Accept: 'application/json',
+          },
+        }
+      );
+      instructors = await res.json();
+      storeData('instructors', {
+        data: instructors,
+        etag: +new Date(),
+      });
     }
+    const results = [];
+    let resultsLen = 0;
+    for (let i = 0; i <= instructors.length && resultsLen <= limit; i++) {
+      if (
+        (instructors[i] || '').toLowerCase().includes(payload.toLowerCase())
+      ) {
+        results.push(instructors[i]);
+        resultsLen++;
+      }
+    }
+    return results;
+  } catch (e) {
+    return false;
   }
-  return results;
 };
 
 type ReviewSectionProps = {
@@ -179,6 +203,9 @@ const ReviewEdit = ({ courseId }) => {
   const [targetReview, setTargetReview] = useState('');
   const [progress, setProgress] = useState(0);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [instructorsSearchResult, setInstructorsSearchResult] = useState<
+    string[] | null | false
+  >(null);
   const [showLecturers, setShowLecturers] = useState(false);
   const [addReview, { loading: addReviewLoading, error: addReviewError }] =
     useMutation(ADD_REVIEW, {
@@ -330,6 +357,13 @@ const ReviewEdit = ({ courseId }) => {
     RATING_FIELDS.map((type) => formData[type].text)
   );
 
+  useEffect(() => {
+    searchLecturers({
+      payload: formData.lecturer,
+      limit: isMobile ? 4 : 6,
+    }).then((result) => setInstructorsSearchResult(result));
+  }, [formData.lecturer]);
+
   return (
     <div className="review-edit grid-auto-row">
       {reviewLoading && <Loading fixed />}
@@ -418,18 +452,19 @@ const ReviewEdit = ({ courseId }) => {
         />
         {showLecturers && Boolean(formData.lecturer) && (
           <div className="header-search-result card">
-            {searchLecturers({
-              payload: formData.lecturer,
-              limit: isMobile ? 4 : 6,
-            })
-              .filter((item) => formData.lecturer !== item)
-              .map((lecturer) => (
-                <ListItem
-                  key={`listitem-${lecturer}`}
-                  onMouseDown={() => dispatchFormData({ lecturer })}
-                  title={lecturer}
-                />
-              ))}
+            {!instructorsSearchResult ? (
+              <Loading />
+            ) : (
+              instructorsSearchResult
+                .filter((item) => formData.lecturer !== item)
+                .map((lecturer) => (
+                  <ListItem
+                    key={`listitem-${lecturer}`}
+                    onMouseDown={() => dispatchFormData({ lecturer })}
+                    title={lecturer}
+                  />
+                ))
+            )}
           </div>
         )}
       </FormSection>

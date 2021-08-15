@@ -19,10 +19,10 @@ export const PLANNER_CONFIGS = {
 export const MIN_DESKTOP_WIDTH = 1260;
 
 const SERVER_ID =
-  process.env.NODE_ENV === 'production' ? 'vqx877xyad' : 'uqtx8qgnz5';
+  process.env.NODE_ENV === 'production' ? 'vqx877xyad' : 'pv9wmcullh';
 
 export const SERVER_CONFIG = {
-  URI: `https://${SERVER_ID}.execute-api.ap-northeast-1.amazonaws.com/Stage/graphql`,
+  URI: `https://${SERVER_ID}.execute-api.ap-northeast-1.amazonaws.com/Prod/graphql`,
 };
 
 export const SentryConfigs: BrowserOptions = {

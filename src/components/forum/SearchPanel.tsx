@@ -34,7 +34,12 @@ import {
   HISTORY_MAX_LENGTH,
   MAX_SEARCH_RESULT_LENGTH,
 } from '../../constants/configs';
-import { ErrorCardMode, SearchMode, SearchPayload } from '../../types';
+import {
+  CourseSearchItem,
+  ErrorCardMode,
+  SearchMode,
+  SearchPayload,
+} from '../../types';
 import UserStore from '../../store/UserStore';
 import Card from '../atoms/Card';
 import ErrorCard from '../molecules/ErrorCard';
@@ -72,14 +77,30 @@ export const SearchResult = ({
   onMouseDown,
   limit,
 }: SearchResultProps) => {
-  const results = getCoursesFromQuery({
-    payload: searchPayload,
-    user,
-    limit: limit || MAX_SEARCH_RESULT_LENGTH,
-    offerredOnly: searchPayload.offerredOnly,
-  });
+  const [results, setResults] = useState<CourseSearchItem[] | null | false>(
+    null
+  );
 
-  if (!results?.length) {
+  useEffect(() => {
+    getCoursesFromQuery({
+      payload: searchPayload,
+      user,
+      limit: limit || MAX_SEARCH_RESULT_LENGTH,
+      offerredOnly: searchPayload.offerredOnly,
+    }).then((result) => {
+      setResults(result);
+    });
+  }, [searchPayload]);
+
+  if (results === null) {
+    return <Loading />;
+  }
+
+  if (!results) {
+    return <ErrorCard mode={ErrorCardMode.ERROR} inPlace />;
+  }
+
+  if (!results.length) {
     return <ErrorCard mode={ErrorCardMode.NULL} inPlace />;
   }
 
