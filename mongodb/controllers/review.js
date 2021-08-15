@@ -1,6 +1,8 @@
 const { nanoid } = require('nanoid');
 const { courseRating } = require('../pipelines/reviews');
 const Review = require('../models/review.model');
+const Course = require('../models/course.model');
+const { updateCourseDataFromReview } = require('./course');
 
 exports.createReview = async (input, user) => {
   const now = new Date().getTime().toString();
@@ -23,6 +25,7 @@ exports.createReview = async (input, user) => {
   // Update User
   try {
     await newReview.save();
+    await updateCourseDataFromReview(courseId, reviewData);
     return {
       id: reviewId,
       createdDate: now

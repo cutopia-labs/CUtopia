@@ -1,10 +1,10 @@
-import Review from 'mongodb/models/review.model';
+import { createReview } from 'mongodb';
 const router = require('express').Router();
 
 router.route('/').post((req, res) => {
-  const newReview = new Review(req.body);
-  console.log(req.body);
-  newReview.save()
+  createReview(req.body, {
+    username: 'mike'
+  })
     .then(response => res.json(response))
     .catch(err => res.status(400).json('Error: ' + err));
 });

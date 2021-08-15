@@ -3,6 +3,9 @@ const {
   getCourseRating,
   getReviews
 } = require('./controllers/review');
+const {
+  getCourseData
+} = require('./controllers/course');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
@@ -26,5 +29,6 @@ https://docs.atlas.mongodb.com/best-practices-connecting-from-aws-lambda/
 module.exports = Object.assign(module.exports, {
   createReview,
   getCourseRating,
-  getReviews
+  getReviews,
+  getCourseData
 });
