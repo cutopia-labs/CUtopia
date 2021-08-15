@@ -1,7 +1,11 @@
 import { loadFilesSync } from '@graphql-tools/load-files';
 import { mergeTypeDefs } from '@graphql-tools/merge';
 import { typeDefs as scalarTypeDefs } from 'graphql-scalars';
-import { range, stringLength, ValidateDirectiveVisitor } from '@profusion/apollo-validation-directives';
+import {
+  range,
+  stringLength,
+  ValidateDirectiveVisitor,
+} from '@profusion/apollo-validation-directives';
 
 import { join } from 'path';
 
@@ -13,7 +17,7 @@ const graphqlFiles = [
   './reviews.graphql',
   './search.graphql',
   './timetable.graphql',
-  './user.graphql'
+  './user.graphql',
 ].map(relativePath => join(__dirname, relativePath));
 
 const typesArray = loadFilesSync(graphqlFiles);
@@ -23,7 +27,7 @@ const types = mergeTypeDefs([
   ...ValidateDirectiveVisitor.getMissingCommonTypeDefs(),
   ...range.getTypeDefs(),
   ...stringLength.getTypeDefs(),
-  ...typesArray
+  ...typesArray,
 ]);
 
 export default types;

@@ -3,7 +3,7 @@ const {
   editReview,
   getReviews,
   getReview,
-  voteReview
+  voteReview,
 } = require('./databases/reviews-db');
 
 const {
@@ -13,13 +13,10 @@ const {
   getUser,
   getResetPasswordCodeAndEmail,
   resetPassword,
-  login
+  login,
 } = require('./databases/user-db');
 
-const {
-  addCourseData,
-  getCourseData
-} = require('./databases/course-db');
+const { addCourseData, getCourseData } = require('./databases/course-db');
 
 const {
   getTimetable,
@@ -27,13 +24,10 @@ const {
   removeTimetable,
   shareTimetable,
   getSharedTimetable,
-  deleteSharedTimetable
+  deleteSharedTimetable,
 } = require('./databases/timetable-db');
 
-const {
-  report,
-  reportFeedback
-} = require('./databases/report-db');
+const { report, reportFeedback } = require('./databases/report-db');
 
 module.exports = {
   createReview,
@@ -57,5 +51,5 @@ module.exports = {
   getSharedTimetable,
   deleteSharedTimetable,
   report,
-  reportFeedback
+  reportFeedback,
 };

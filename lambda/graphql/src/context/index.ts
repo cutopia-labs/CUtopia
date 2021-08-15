@@ -2,13 +2,10 @@ import { verify } from '../jwt';
 
 const DEFAULT_CONTEXT = {
   authenticated: false,
-  user: null
+  user: null,
 };
 
-const context = async ({
-  event: lambdaEvent,
-  context: lambdaContext
-}) => {
+const context = async ({ event: lambdaEvent, context: lambdaContext }) => {
   try {
     const split = (lambdaEvent.headers.Authorization || '').split('Bearer ');
 
@@ -23,7 +20,7 @@ const context = async ({
     return userContext
       ? {
           authenticated: true,
-          user: userContext
+          user: userContext,
         }
       : DEFAULT_CONTEXT;
   } catch (e) {

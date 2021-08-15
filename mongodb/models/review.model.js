@@ -3,61 +3,74 @@ const { ratingSchema } = require('../schemas');
 
 const Schema = mongoose.Schema;
 
-const reviewDetailSchema = new Schema({
-  grade: ratingSchema,
-  text: {
-    type: String,
-    required: true,
-    maxlength: 500
+const reviewDetailSchema = new Schema(
+  {
+    grade: ratingSchema,
+    text: {
+      type: String,
+      required: true,
+      maxlength: 500,
+    },
+  },
+  {
+    _id: false,
   }
-}, {
-  _id: false
-});
+);
 
 const reviewSchema = new Schema(
   {
     username: {
-      type: String, required: true
+      type: String,
+      required: true,
     },
     reviewId: {
-      type: String, required: true
+      type: String,
+      required: true,
     },
     courseId: {
-      type: String, reqiored: true
+      type: String,
+      reqiored: true,
     },
     term: {
-      type: String, required: true
+      type: String,
+      required: true,
     },
     lecturer: {
-      type: String, required: true
+      type: String,
+      required: true,
     },
     anonymous: {
-      type: Boolean, required: true
+      type: Boolean,
+      required: true,
     },
     upvotes: {
-      type: Number
+      type: Number,
     },
     downvotes: {
-      type: Number
+      type: Number,
     },
     _id: {
       type: Number,
-      default: Date.now
+      default: Date.now,
     },
-    upvoteUserIds: [{
-      type: String
-    }],
-    downvoteUserIds: [{
-      type: String
-    }],
+    upvoteUserIds: [
+      {
+        type: String,
+      },
+    ],
+    downvoteUserIds: [
+      {
+        type: String,
+      },
+    ],
     overall: ratingSchema,
     grading: reviewDetailSchema,
     teaching: reviewDetailSchema,
     difficulty: reviewDetailSchema,
-    content: reviewDetailSchema
+    content: reviewDetailSchema,
   },
   {
-    timestamps: false
+    timestamps: false,
   }
 );
 

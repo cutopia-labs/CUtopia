@@ -16,7 +16,7 @@ const resolvers = [
   userResolver,
   rankingResolver,
   timetableResolver,
-  reportResolver
+  reportResolver,
 ];
 
 export default mergeResolvers(resolvers);

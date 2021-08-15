@@ -3,7 +3,7 @@ const { nanoid } = require('nanoid');
 
 const db = new AWS.DynamoDB.DocumentClient();
 
-exports.report = async (input) => {
+exports.report = async input => {
   const { cat, identifier, type, description, username } = input;
   const now = new Date().getTime();
   const reportId = nanoid(5);
@@ -17,8 +17,8 @@ exports.report = async (input) => {
       identifier,
       type,
       username,
-      description
-    }
+      description,
+    },
   };
 
   await db.put(params).promise();
@@ -26,7 +26,7 @@ exports.report = async (input) => {
 };
 
 // TODO: maybe remove this function?
-exports.reportFeedback = async (input) => {
+exports.reportFeedback = async input => {
   const { feedbackRatings, username } = input;
   const now = new Date().getTime();
   const reportId = nanoid(5);
@@ -38,8 +38,8 @@ exports.reportFeedback = async (input) => {
       createdDate: now,
       id: reportId,
       username,
-      feedbackRatings
-    }
+      feedbackRatings,
+    },
   };
 
   await db.put(params).promise();

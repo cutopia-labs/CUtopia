@@ -1,3 +1,4 @@
 .eslintrc.js
 modules/codes
 lambda/*/build
+**/node_modules

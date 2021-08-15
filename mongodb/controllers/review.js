@@ -20,7 +20,7 @@ exports.createReview = async (input, user) => {
     upvotesUserIds: [],
     downvotes: 0,
     downvotesUserIds: [],
-    ...reviewData
+    ...reviewData,
   });
   // Update User
   try {
@@ -28,7 +28,7 @@ exports.createReview = async (input, user) => {
     await updateCourseDataFromReview(courseId, reviewData);
     return {
       id: reviewId,
-      createdDate: now
+      createdDate: now,
     };
   } catch (e) {
     console.trace(e);
@@ -38,8 +38,7 @@ exports.createReview = async (input, user) => {
 exports.getCourseRating = async input => {
   const { courseId } = input;
   try {
-    const rating = await Review
-      .aggregate(courseRating(courseId));
+    const rating = await Review.aggregate(courseRating(courseId));
     return rating[0];
   } catch (e) {
     console.trace(e);
@@ -58,16 +57,16 @@ exports.getCourseRating = async input => {
 
 exports.getReviews = async (filter, sort) => {
   try {
-    const rating = await Review
-      .aggregate([
+    const rating = await Review.aggregate(
+      [
         {
-          $match: filter
+          $match: filter,
         },
-        sort &&
-        {
-          $sort: sort
-        }
-      ].filter(item => item));
+        sort && {
+          $sort: sort,
+        },
+      ].filter(item => item)
+    );
     return rating;
   } catch (e) {
     console.trace(e);

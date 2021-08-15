@@ -4,10 +4,10 @@ const NodeCache = require('node-cache');
 const db = new AWS.DynamoDB.DocumentClient();
 
 const courseCache = new NodeCache({
-  stdTTL: 1800
+  stdTTL: 1800,
 });
 
-exports.addCourseData = async (input) => {
+exports.addCourseData = async input => {
   // add course data extracted from reviews to provide review filtering
   // only lecturers and terms can be added
   const { courseId, lecturer, term } = input;
@@ -15,21 +15,21 @@ exports.addCourseData = async (input) => {
   const params = {
     TableName: process.env.CourseTableName,
     Key: {
-      courseId
+      courseId,
     },
     UpdateExpression: 'add lecturers :lecturer, terms :term',
     ExpressionAttributeValues: {
       ':lecturer': db.createSet(lecturer),
-      ':term': db.createSet(term)
+      ':term': db.createSet(term),
     },
-    ReturnValues: 'ALL_NEW'
+    ReturnValues: 'ALL_NEW',
   };
 
   const result = await db.update(params).promise();
   courseCache.set(courseId, result.Attributes);
 };
 
-exports.getCourseData = async (input) => {
+exports.getCourseData = async input => {
   const { courseId } = input;
 
   const courseData = courseCache.get(courseId);
@@ -40,9 +40,9 @@ exports.getCourseData = async (input) => {
   const params = {
     TableName: process.env.CourseTableName,
     Key: {
-      courseId
+      courseId,
     },
-    ProjectionExpression: 'lecturers, terms'
+    ProjectionExpression: 'lecturers, terms',
   };
 
   const result = await db.get(params).promise();

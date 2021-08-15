@@ -2,7 +2,7 @@ import { subjects, searchCourses } from '../../data/courses';
 
 const searchResolver = {
   Query: {
-    search: () => ({})
+    search: () => ({}),
   },
   SearchTable: {
     courses: (parent, { input }) => {
@@ -11,18 +11,18 @@ const searchResolver = {
         subject: result.subject,
         course: result.course,
         idsContext: {
-          subject: result.subject
-        }
+          subject: result.subject,
+        },
       }));
       return courses;
-    }
+    },
   },
   Course: {
     subject: ({ subject }) => ({
       name: subject,
-      courses: subjects[subject]
-    })
+      courses: subjects[subject],
+    }),
   },
-}
+};
 
 export default searchResolver;

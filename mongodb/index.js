@@ -1,20 +1,24 @@
 const {
   createReview,
   getCourseRating,
-  getReviews
+  getReviews,
 } = require('./controllers/review');
-const {
-  getCourseData
-} = require('./controllers/course');
+const { getCourseData } = require('./controllers/course');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
 let conn = null;
 
-exports.connect = async (uri) => {
+exports.connect = async uri => {
   console.log(`Try to connect with ${uri}`);
   if (conn === null) {
-    conn = mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true }).then(() => mongoose);
+    conn = mongoose
+      .connect(uri, {
+        useNewUrlParser: true,
+        useCreateIndex: true,
+        useUnifiedTopology: true,
+      })
+      .then(() => mongoose);
     await conn;
   }
   console.log('MongoDB database connection established successfully');
@@ -30,5 +34,5 @@ module.exports = Object.assign(module.exports, {
   createReview,
   getCourseRating,
   getReviews,
-  getCourseData
+  getCourseData,
 });

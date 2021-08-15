@@ -1,27 +1,27 @@
-exports.courseRating = courseId => ([
+exports.courseRating = courseId => [
   {
     $match: {
-      courseId
-    }
+      courseId,
+    },
   },
   {
     $group: {
       _id: '$courseId',
       overall: {
-        $avg: '$overall'
+        $avg: '$overall',
       },
       grading: {
-        $avg: '$grading.grade'
+        $avg: '$grading.grade',
       },
       teaching: {
-        $avg: '$teaching.grade'
+        $avg: '$teaching.grade',
       },
       difficulty: {
-        $avg: '$difficulty.grade'
+        $avg: '$difficulty.grade',
       },
       content: {
-        $avg: '$content.grade'
-      }
-    }
-  }
-]);
+        $avg: '$content.grade',
+      },
+    },
+  },
+];

@@ -15,7 +15,7 @@ const uncacheableUserFields = ["reviewIds", "resetPwdCode"];
 
 const VERIFY_EXPIRATION_TIME = 24 * 60 * 60 * 1000;
 
-exports.createUser = async (input) => {
+exports.createUser = async input => {
   const { username, email, password } = input;
   const now = new Date().getTime();
 
@@ -26,7 +26,7 @@ exports.createUser = async (input) => {
   // Ensure username and email do not exist
   const usernameResult = await this.getUser({
     username,
-    requiredFields: ['email']
+    requiredFields: ['email'],
   });
   if (usernameResult) {
     throw Error(ErrorCode.CREATE_USER_USERNAME_EXISTS);
@@ -50,12 +50,12 @@ exports.createUser = async (input) => {
     upvotesCount: 0,
     fullAccess: false,
     exp: 0,
-    viewsCount: 10
+    viewsCount: 10,
   };
 
   const params = {
     TableName: process.env.UserTableName,
-    Item: user
+    Item: user,
   };
 
   await db.put(params).promise();
@@ -68,16 +68,19 @@ const generateProjectionExpression = (fieldNames) => {
   return fieldNames.join(', ');
 };
 */
-exports.getUser = async (input) => {
+exports.getUser = async input => {
   const { username /* , requiredFields */ } = input;
   const user = undefined; // uesrCache.get(username);
 
-  if (user === undefined /* || (requiredFields && uncacheableUserFields.some(f => requiredFields.includes(f))) */) {
+  if (
+    user ===
+    undefined /* || (requiredFields && uncacheableUserFields.some(f => requiredFields.includes(f))) */
+  ) {
     const params = {
       TableName: process.env.UserTableName,
       Key: {
-        username
-      }
+        username,
+      },
       // ...(requiredFields && { ProjectionExpression: generateProjectionExpression(requiredFields) }),
     };
     const result = (await db.get(params).promise()).Item;
@@ -89,7 +92,7 @@ exports.getUser = async (input) => {
   return user;
 };
 
-exports.getUsernameByEmail = async (input) => {
+exports.getUsernameByEmail = async input => {
   const { email } = input;
   // GetItem does not support GSI / LSI
   const params = {
@@ -97,15 +100,15 @@ exports.getUsernameByEmail = async (input) => {
     IndexName: process.env.UserEmailMappingIndexName,
     KeyConditionExpression: 'email = :email',
     ExpressionAttributeValues: {
-      ':email': email
-    }
+      ':email': email,
+    },
   };
 
   const result = (await db.query(params).promise()).Items;
   return result;
 };
 
-const generateUpdateParams = (fields) => {
+const generateUpdateParams = fields => {
   let expression = 'set ';
   const values = {};
 
@@ -118,57 +121,64 @@ const generateUpdateParams = (fields) => {
   }
   return [expression, values];
 };
-exports.updateUser = async (input) => {
+exports.updateUser = async input => {
   const { username, ...updatedFields } = input; // Disallow updating username
   if ('password' in updatedFields) {
-    updatedFields.password = await bcrypt.hash(updatedFields.password, saltRounds);
+    updatedFields.password = await bcrypt.hash(
+      updatedFields.password,
+      saltRounds
+    );
   }
-  const [updateExpression, expressionValues] = generateUpdateParams(updatedFields);
+  const [updateExpression, expressionValues] =
+    generateUpdateParams(updatedFields);
   const params = {
     TableName: process.env.UserTableName,
     Key: {
-      username
+      username,
     },
     UpdateExpression: updateExpression,
     ExpressionAttributeValues: expressionValues,
-    ReturnValues: 'ALL_NEW'
+    ReturnValues: 'ALL_NEW',
   };
   await db.update(params).promise();
   // const result = await db.update(params).promise();
   // uesrCache.set(username, result.Attributes);
 };
 
-exports.deleteUser = async (input) => {
+exports.deleteUser = async input => {
   const { username } = input;
   // uesrCache.del(username);
   const params = {
     TableName: process.env.UserTableName,
     Key: {
-      username
-    }
+      username,
+    },
   };
   await db.delete(params).promise();
 };
 
-exports.verifyUser = async (input) => {
+exports.verifyUser = async input => {
   const { username, code } = input;
   const result = await this.getUser({
     username,
-    requiredFields: ['createdDate', 'verified', 'verificationCode']
+    requiredFields: ['createdDate', 'verified', 'verificationCode'],
   });
 
   if (result) {
     if (result.verified) {
       throw Error(ErrorCode.VERIFICATION_ALREADY_VERIFIED);
     }
-    if (result.createdDate + VERIFY_EXPIRATION_TIME - new Date().getTime() < 0) {
+    if (
+      result.createdDate + VERIFY_EXPIRATION_TIME - new Date().getTime() <
+      0
+    ) {
       await this.deleteUser({ username });
       throw Error(ErrorCode.VERIFICATION_EXPIRED);
     }
     if (result.verificationCode === code) {
       await this.updateUser({
         username,
-        verified: true
+        verified: true,
       });
       // successfully verified
       return true;
@@ -178,30 +188,30 @@ exports.verifyUser = async (input) => {
   throw Error(ErrorCode.VERIFICATION_USER_DNE);
 };
 
-exports.login = async (input) => {
+exports.login = async input => {
   const { username, password } = input;
   const result = await this.getUser({
     username,
-    requiredFields: ['username', 'password', 'email', 'verified', 'reviewIds']
+    requiredFields: ['username', 'password', 'email', 'verified', 'reviewIds'],
   });
   if (!result) {
     throw Error(ErrorCode.LOGIN_USER_DNE);
   }
-  if (!await bcrypt.compare(password, result.password)) {
+  if (!(await bcrypt.compare(password, result.password))) {
     throw Error(ErrorCode.LOGIN_FAILED);
   }
 
   const { password: pwd, ...remainedFields } = result;
   return {
-    data: remainedFields
+    data: remainedFields,
   };
 };
 
-exports.getResetPasswordCodeAndEmail = async (input) => {
+exports.getResetPasswordCodeAndEmail = async input => {
   const { username } = input;
   const data = await this.getUser({
     username,
-    requiredFields: ['email', 'verified']
+    requiredFields: ['email', 'verified'],
   });
 
   if (!data) {
@@ -213,19 +223,19 @@ exports.getResetPasswordCodeAndEmail = async (input) => {
   const resetPwdCode = nanoid(5);
   await this.updateUser({
     username,
-    resetPwdCode
+    resetPwdCode,
   });
   return {
     code: resetPwdCode,
-    email: data.email
+    email: data.email,
   };
 };
 
-exports.resetPassword = async (input) => {
+exports.resetPassword = async input => {
   const { username, newPassword, resetCode } = input;
   const data = await this.getUser({
     username,
-    requiredFields: ['verified', 'resetPwdCode']
+    requiredFields: ['verified', 'resetPwdCode'],
   });
 
   if (!data) {
@@ -240,7 +250,7 @@ exports.resetPassword = async (input) => {
     await this.updateUser({
       username,
       password: newPassword,
-      resetPwdCode: ''
+      resetPwdCode: '',
     });
     // successfully reset password
     return true;
@@ -248,71 +258,72 @@ exports.resetPassword = async (input) => {
   throw Error(ErrorCode.RESET_PASSWORD_FAILED);
 };
 
-exports.incrementUpvotesCount = async (input) => {
+exports.incrementUpvotesCount = async input => {
   const { username } = input;
   const params = {
     TableName: process.env.UserTableName,
     Key: {
-      username
+      username,
     },
-    UpdateExpression: 'set upvotesCount = upvotesCount + :value, exp = if_not_exists(exp, :defaultExp) + :delta',
+    UpdateExpression:
+      'set upvotesCount = upvotesCount + :value, exp = if_not_exists(exp, :defaultExp) + :delta',
     ExpressionAttributeValues: {
       ':value': 1,
       ':defaultExp': 0,
-      ':delta': 1
+      ':delta': 1,
     },
-    ReturnValues: 'ALL_NEW'
+    ReturnValues: 'ALL_NEW',
   };
   await db.update(params).promise();
   // const result = await db.update(params).promise();
   // uesrCache.set(username, result.Attributes);
 };
 
-exports.adjustExp = async (input) => {
+exports.adjustExp = async input => {
   const { username, delta } = input;
   const params = {
     TableName: process.env.UserTableName,
     Key: {
-      username
+      username,
     },
     UpdateExpression: 'set exp = if_not_exists(exp, :defaultExp) + :delta',
     ExpressionAttributeValues: {
       ':defaultExp': 0,
-      ':delta': delta
+      ':delta': delta,
     },
-    ReturnValues: 'ALL_NEW'
+    ReturnValues: 'ALL_NEW',
   };
   const result = await db.update(params).promise();
   // uesrCache.set(username, result.Attributes);
   return result.Attributes.exp;
 };
 
-exports.addSharedTimetableId = async (input) => {
+exports.addSharedTimetableId = async input => {
   const { username, id } = input;
   const params = {
     TableName: process.env.UserTableName,
     Key: {
-      username
+      username,
     },
     UpdateExpression: 'add sharedTimetables :id',
     ExpressionAttributeValues: {
-      ':id': db.createSet([id])
-    }
+      ':id': db.createSet([id]),
+    },
   };
   await db.update(params).promise();
 };
 
-exports.deleteSharedTimetableId = async (input) => {
+exports.deleteSharedTimetableId = async input => {
   const { username, id } = input;
   const params = {
     TableName: process.env.UserTableName,
     Key: {
-      username
+      username,
     },
     UpdateExpression: 'delete sharedTimetables :id',
     ExpressionAttributeValues: {
-      ':id': db.createSet([id])
-    }
+      ':id': db.createSet([id]),
+    },
   };
   await db.update(params).promise();
 };

@@ -8,12 +8,12 @@ const { ErrorCode, VoteAction } = require('cutopia-types/lib/codes');
 const db = new AWS.DynamoDB.DocumentClient();
 
 const latestReviewsCache = new NodeCache({
-  stdTTL: 300
+  stdTTL: 300,
 });
 const numOfLatestReviews = 20;
 
 const allReviewsCache = new NodeCache({
-  stdTTL: 1800
+  stdTTL: 1800,
 });
 
 exports.createReview = async (input, user) => {
@@ -32,30 +32,30 @@ exports.createReview = async (input, user) => {
     upvotesUserIds: db.createSet(['']),
     downvotes: 0,
     downvotesUserIds: db.createSet(['']),
-    ...reviewData
+    ...reviewData,
   };
 
   // parameters for inserting new review into reviews database
   const addReviewParams = {
     TableName: process.env.ReviewsTableName,
-    Item: review
+    Item: review,
   };
 
   const latestReview = {
     ...review,
     primaryKey: 'reviews-latest',
-    sortKey: `${now}#${reviewId}`
+    sortKey: `${now}#${reviewId}`,
   };
 
   // parameters for inserting new review into latest reviews database
   const addLatestReviewParams = {
     TableName: process.env.LatestReviewsTableName,
-    Item: latestReview
+    Item: latestReview,
   };
 
   const { reviewIds } = await getUser({
     username,
-    requiredFields: ['reviewIds']
+    requiredFields: ['reviewIds'],
   });
   if (reviewIds.values.some(id => id.includes(courseId))) {
     throw Error(ErrorCode.CREATE_REVIEW_ALREADY_CREATED);
@@ -67,22 +67,23 @@ exports.createReview = async (input, user) => {
   const addToMyReviewsParams = {
     TableName: process.env.UserTableName,
     Key: {
-      username
+      username,
     },
     // TODO: delete full access each semester
-    UpdateExpression: 'add reviewIds :reviewId set exp = if_not_exists(exp, :defaultExp) + :exp, fullAccess = :fullAccess',
+    UpdateExpression:
+      'add reviewIds :reviewId set exp = if_not_exists(exp, :defaultExp) + :exp, fullAccess = :fullAccess',
     ExpressionAttributeValues: {
       ':defaultExp': 0,
       ':exp': exp,
       ':reviewId': db.createSet(`${courseId}#${now}`),
-      ':fullAccess': true
-    }
+      ':fullAccess': true,
+    },
   };
 
   await addCourseData({
     courseId,
     lecturer: reviewData.lecturer,
-    term: reviewData.term
+    term: reviewData.term,
   });
 
   try {
@@ -90,7 +91,7 @@ exports.createReview = async (input, user) => {
     await Promise.all([
       db.put(addReviewParams).promise(),
       db.put(addLatestReviewParams).promise(),
-      db.update(addToMyReviewsParams).promise()
+      db.update(addToMyReviewsParams).promise(),
     ]);
 
     const latestReviews = latestReviewsCache.get('reviews-latest');
@@ -101,14 +102,14 @@ exports.createReview = async (input, user) => {
 
     return {
       id: reviewId,
-      createdDate: now
+      createdDate: now,
     };
   } catch (e) {
     console.trace(e);
   }
 };
 
-exports.editReview = async (input) => {
+exports.editReview = async input => {
   const { oldReviewData, newReviewData } = input;
   const now = new Date().getTime().toString();
 
@@ -117,8 +118,8 @@ exports.editReview = async (input) => {
     Item: {
       ...oldReviewData,
       ...newReviewData,
-      modifiedDate: now
-    }
+      modifiedDate: now,
+    },
   };
   await db.put(params).promise();
   return now;
@@ -137,18 +138,23 @@ exports.voteReview = async (input, user) => {
     TableName: process.env.ReviewsTableName,
     Key: {
       courseId,
-      createdDate
+      createdDate,
     },
     UpdateExpression:
-      (isUpvote ? 'set upvotes = upvotes + :val ' : 'set downvotes = downvotes + :val ') +
-      (isUpvote ? 'add upvotesUserIds :usernameSet' : 'add downvotesUserIds :usernameSet'),
-    ConditionExpression: 'not (contains(upvotesUserIds, :username) or contains(downvotesUserIds, :username))',
+      (isUpvote
+        ? 'set upvotes = upvotes + :val '
+        : 'set downvotes = downvotes + :val ') +
+      (isUpvote
+        ? 'add upvotesUserIds :usernameSet'
+        : 'add downvotesUserIds :usernameSet'),
+    ConditionExpression:
+      'not (contains(upvotesUserIds, :username) or contains(downvotesUserIds, :username))',
     ExpressionAttributeValues: {
       ':val': 1,
       ':username': username,
-      ':usernameSet': db.createSet(username)
+      ':usernameSet': db.createSet(username),
     },
-    ReturnValues: 'ALL_NEW'
+    ReturnValues: 'ALL_NEW',
   };
 
   let result;
@@ -167,7 +173,7 @@ exports.voteReview = async (input, user) => {
 
   return {
     id: reviewId,
-    ...reviewData
+    ...reviewData,
   };
 };
 
@@ -175,10 +181,10 @@ const mapReview = review => {
   const { primaryKey, sortKey, reviewId, ...reviewData } = review;
   return {
     id: reviewId,
-    ...reviewData
+    ...reviewData,
   };
 };
-exports.getReviews = async (input) => {
+exports.getReviews = async input => {
   const {
     courseId,
     getLatest,
@@ -188,7 +194,7 @@ exports.getReviews = async (input) => {
     ascendingDate,
     ascendingVote,
     lastEvaluatedKey = null,
-    limit = 10
+    limit = 10,
   } = { ...input };
 
   if (courseId) {
@@ -207,23 +213,22 @@ exports.getReviews = async (input) => {
       TableName: process.env.ReviewsTableName,
       KeyConditionExpression: 'courseId = :courseId',
       ExpressionAttributeValues: {
-        ':courseId': courseId
+        ':courseId': courseId,
       },
       ...(lastEvaluatedKey !== null && { ExclusiveStartKey: lastEvaluatedKey }),
-      Limit: limit
-
+      Limit: limit,
     };
 
     if (sortByDate) {
       params = {
         ...params,
-        ScanIndexForward: ascendingDate
+        ScanIndexForward: ascendingDate,
       };
     } else if (sortByVotes) {
       params = {
         ...params,
         IndexName: process.env.ReviewsByVoteIndexName,
-        ScanIndexForward: ascendingVote
+        ScanIndexForward: ascendingVote,
       };
     }
 
@@ -233,19 +238,21 @@ exports.getReviews = async (input) => {
         FilterExpression: 'lecturer = :lecturer',
         ExpressionAttributeValues: {
           ...params.ExpressionAttributeValues,
-          ':lecturer': lecturer
-        }
+          ':lecturer': lecturer,
+        },
       };
     }
 
     if (term !== undefined) {
       params = {
         ...params,
-        FilterExpression: `${params.FilterExpression ? params.FilterExpression + ' and ' : ''}term = :term`,
+        FilterExpression: `${
+          params.FilterExpression ? params.FilterExpression + ' and ' : ''
+        }term = :term`,
         ExpressionAttributeValues: {
           ...params.ExpressionAttributeValues,
-          ':term': term
-        }
+          ':term': term,
+        },
       };
     }
 
@@ -255,13 +262,13 @@ exports.getReviews = async (input) => {
       return {
         ...rest,
         id: reviewId,
-        courseId: courseId
+        courseId: courseId,
       };
     });
 
     return {
       reviews,
-      lastEvaluatedKey: result.LastEvaluatedKey
+      lastEvaluatedKey: result.LastEvaluatedKey,
     };
   }
 
@@ -271,7 +278,7 @@ exports.getReviews = async (input) => {
     if (cachedReviews) {
       return {
         reviews: ascendingDate ? cachedReviews.reverse() : cachedReviews,
-        lastEvaluatedKey: null
+        lastEvaluatedKey: null,
       };
     }
 
@@ -280,17 +287,19 @@ exports.getReviews = async (input) => {
       TableName: process.env.LatestReviewsTableName,
       KeyConditionExpression: 'primaryKey = :key',
       ExpressionAttributeValues: {
-        ':key': 'reviews-latest'
+        ':key': 'reviews-latest',
       },
       ScanIndexForward: false,
-      Limit: numOfLatestReviews
+      Limit: numOfLatestReviews,
     };
 
-    const latestReviews = (await db.query(params).promise()).Items.map(mapReview);
+    const latestReviews = (await db.query(params).promise()).Items.map(
+      mapReview
+    );
     latestReviewsCache.set('reviews-latest', latestReviews);
     return {
       reviews: ascendingDate ? latestReviews.reverse() : latestReviews,
-      lastEvaluatedKey: null
+      lastEvaluatedKey: null,
     };
   }
 
@@ -304,7 +313,7 @@ exports.getReviews = async (input) => {
     // return all reviews from database
     const params = {
       TableName: process.env.ReviewsTableName,
-      ProjectionExpression: 'courseId, grading, difficulty, teaching, content'
+      ProjectionExpression: 'courseId, grading, difficulty, teaching, content',
     };
     const reviews = (await db.scan(params).promise()).Items;
     allReviewsCache.set('all-reviews', reviews);
@@ -312,15 +321,15 @@ exports.getReviews = async (input) => {
   }
 };
 
-exports.getReview = async (input) => {
+exports.getReview = async input => {
   const { courseId, createdDate } = { ...input };
 
   const params = {
     TableName: process.env.ReviewsTableName,
     Key: {
       courseId,
-      createdDate
-    }
+      createdDate,
+    },
   };
 
   const review = mapReview((await db.get(params).promise()).Item);

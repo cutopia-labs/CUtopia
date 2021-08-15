@@ -1,5 +1,5 @@
-import { ApolloServer } from 'apollo-server-lambda'
-import { makeExecutableSchema } from '@graphql-tools/schema';;
+import { ApolloServer } from 'apollo-server-lambda';
+import { makeExecutableSchema } from '@graphql-tools/schema';
 import { ValidateDirectiveVisitor } from '@profusion/apollo-validation-directives';
 import express from 'express';
 require('dotenv').config();
@@ -12,7 +12,7 @@ import createContext from './context';
 const schema = makeExecutableSchema({
   typeDefs,
   resolvers,
-  schemaDirectives
+  schemaDirectives,
 } as any);
 
 ValidateDirectiveVisitor.addValidationResolversToSchema(schema);
@@ -21,7 +21,7 @@ const isProduction = process.env.IsProduction === 'true';
 const playground = isProduction
   ? false
   : {
-      endpoint: '/graphql'
+      endpoint: '/graphql',
     };
 const allowedOrigins = isProduction
   ? ['https://cutopia.app', 'https://dev.cutopia.app']
@@ -30,26 +30,30 @@ const allowedOrigins = isProduction
 const server = new ApolloServer({
   schema,
   context: createContext,
-  introspection: !isProduction
+  introspection: !isProduction,
 });
 
 export const graphqlHandler = server.createHandler({
   expressAppFromMiddleware(middleware) {
     const app = express();
-    app.use('/static', express.static(__dirname + '/data/derivatives', {
-      etag: true,
-      setHeaders: (res, path, stat) => {
-        res.header('Access-Control-Allow-Origin', allowedOrigins);
-        res.header('Access-Control-Allow-Methods', 'GET,OPTIONS');
-        res.header('Access-Control-Allow-Headers', 'Content-Type');
-        res.header('Access-Control-Allow-Headers', 'Accept');
-      },
-    }), (req, res) => {
-      res.sendStatus(200)
-    })
+    app.use(
+      '/static',
+      express.static(__dirname + '/data/derivatives', {
+        etag: true,
+        setHeaders: (res, path, stat) => {
+          res.header('Access-Control-Allow-Origin', allowedOrigins);
+          res.header('Access-Control-Allow-Methods', 'GET,OPTIONS');
+          res.header('Access-Control-Allow-Headers', 'Content-Type');
+          res.header('Access-Control-Allow-Headers', 'Accept');
+        },
+      }),
+      (req, res) => {
+        res.sendStatus(200);
+      }
+    );
     app.use(middleware, (req, res) => {
-      res.sendStatus(200)
-    })
+      res.sendStatus(200);
+    });
     return app;
   },
   expressGetMiddlewareOptions: {
@@ -57,7 +61,7 @@ export const graphqlHandler = server.createHandler({
       origin: allowedOrigins,
       methods: ['get', 'post'],
       credentials: true,
-      maxAge: 3600
+      maxAge: 3600,
     },
   },
 });

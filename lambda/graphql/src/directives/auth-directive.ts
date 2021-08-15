@@ -3,7 +3,7 @@ import { ErrorCode } from 'cutopia-types/lib/codes';
 import { SchemaDirectiveVisitor } from 'graphql-tools';
 
 class AuthDirective extends SchemaDirectiveVisitor {
-  visitFieldDefinition (field) {
+  visitFieldDefinition(field) {
     const { resolve = defaultFieldResolver } = field;
     const { role } = this.args;
 
@@ -13,7 +13,7 @@ class AuthDirective extends SchemaDirectiveVisitor {
         throw Error(ErrorCode.AUTHORIZATION_REQUIRES_LOGIN as any);
       }
 
-      const validateOwner = (owner) => {
+      const validateOwner = owner => {
         if (role === 'OWNER' && owner !== context.user.username) {
           throw Error(ErrorCode.AUTHORIZATION_REQUIRES_OWNER as any);
         }
@@ -23,12 +23,10 @@ class AuthDirective extends SchemaDirectiveVisitor {
         parent,
         args,
         { validateOwner, ...context },
-        info
+        info,
       ]);
     };
   }
 }
 
-export {
-  AuthDirective
-};
+export { AuthDirective };

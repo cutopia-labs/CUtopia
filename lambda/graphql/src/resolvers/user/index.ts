@@ -1,12 +1,20 @@
 import AWS from 'aws-sdk';
 const SNS = new AWS.SNS({ apiVersion: '2010-03-31' });
-import { createUser, verifyUser, updateUser, getUser, getResetPasswordCodeAndEmail, resetPassword, login } from 'dynamodb';
+import {
+  createUser,
+  verifyUser,
+  updateUser,
+  getUser,
+  getResetPasswordCodeAndEmail,
+  resetPassword,
+  login,
+} from 'dynamodb';
 import { sign } from '../../jwt';
 
-const sendEmail = async (message) => {
+const sendEmail = async message => {
   const params = {
     TopicArn: process.env.UserSNSTopic,
-    Message: JSON.stringify(message)
+    Message: JSON.stringify(message),
   };
   await SNS.publish(params).promise();
 };
@@ -15,12 +23,12 @@ const userResolver = {
   Query: {
     me: async (parent, args, { user }) => {
       return await getUser({ username: user.username });
-    }
+    },
   },
   User: {
     reviewIds: ({ reviewIds }) => {
       // reviewIds is a set
-      return reviewIds.values.filter((reviewId) => reviewId); // filter out empty string
+      return reviewIds.values.filter(reviewId => reviewId); // filter out empty string
     },
     exp: ({ exp }) => {
       return exp === undefined ? 0 : exp;
@@ -33,7 +41,7 @@ const userResolver = {
     },
     sharedTimetables: ({ sharedTimetables }) => {
       return sharedTimetables ? sharedTimetables.values : [];
-    }
+    },
   },
   Mutation: {
     createUser: async (parent, { input }) => {
@@ -42,7 +50,7 @@ const userResolver = {
       await sendEmail({
         action: 'create',
         email,
-        verificationCode
+        verificationCode,
       });
     },
     verifyUser: async (parent, { input }) => {
@@ -57,7 +65,7 @@ const userResolver = {
       const token = sign({ username });
       return {
         token,
-        me: data
+        me: data,
       };
     },
     sendResetPasswordCode: async (parent, { input }) => {
@@ -65,13 +73,13 @@ const userResolver = {
       await sendEmail({
         action: 'resetPwd',
         resetPwdCode: code,
-        email
+        email,
       });
     },
     resetPassword: async (parent, { input }) => {
       await resetPassword(input);
-    }
+    },
   },
-}
+};
 
 export default userResolver;

@@ -1,26 +1,24 @@
 const path = require('path');
 module.exports = {
-  entry: [
-    path.join(__dirname, 'graphql.ts')
-  ],
+  entry: [path.join(__dirname, 'graphql.ts')],
   module: {
     rules: [
       {
         exclude: /node_modules/,
         test: /\.ts$/,
-        use: 'ts-loader'
-      }
-    ]
+        use: 'ts-loader',
+      },
+    ],
   },
   output: {
     path: __dirname,
-    filename: 'bundle.js'
+    filename: 'bundle.js',
   },
   optimization: {
-    minimize: false
+    minimize: false,
   },
   resolve: {
-    extensions: ['.ts', '.js']
+    extensions: ['.ts', '.js'],
   },
-  target: 'node'
+  target: 'node',
 };

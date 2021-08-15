@@ -7,16 +7,18 @@ const subjectsResolver = {
   Query: {
     subjects: (parent, { filter }) => {
       const { requiredSubjects = null } = { ...filter };
-  
+
       let filteredSubjects = subjectNames;
       if (requiredSubjects) {
-        filteredSubjects = requiredSubjects.filter(subName => subjectNames.includes(subName));
+        filteredSubjects = requiredSubjects.filter(subName =>
+          subjectNames.includes(subName)
+        );
       }
       return filteredSubjects.map(subName => ({
         name: subName,
-        courses: subjects[subName]
+        courses: subjects[subName],
       }));
-    }
+    },
   },
   Subject: {
     courses: ({ name, courses }, { filter }) => {
@@ -24,20 +26,22 @@ const subjectsResolver = {
         subject: name,
         courseCode: null,
         term: null,
-        section: null
+        section: null,
       };
-  
+
       const { requiredCourses = null } = { ...filter };
-  
+
       let filteredCourses = courses;
       if (requiredCourses) {
-        filteredCourses = courses.filter(course => requiredCourses.includes(course.code));
+        filteredCourses = courses.filter(course =>
+          requiredCourses.includes(course.code)
+        );
       }
       return filteredCourses.map(course => ({
         idsContext,
-        course
+        course,
       }));
-    }
+    },
   },
   Course: {
     code: ({ course }) => course.code,
@@ -46,12 +50,16 @@ const subjectsResolver = {
       // TODO: reviewLecturers and reviewTerms query database twice instead of once before getting cached
       const courseId = idsContext.subject + course.code;
       const result = await getCourseData({ courseId });
-      return (result === undefined || result.lecturers === undefined) ? [] : result.lecturers.values;
+      return result === undefined || result.lecturers === undefined
+        ? []
+        : result.lecturers.values;
     },
     reviewTerms: async ({ idsContext, course }) => {
       const courseId = idsContext.subject + course.code;
       const result = await getCourseData({ courseId });
-      return (result === undefined || result.terms === undefined) ? [] : result.terms.values;
+      return result === undefined || result.terms === undefined
+        ? []
+        : result.terms.values;
     },
     career: ({ course }) => course.career,
     units: ({ course }) => course.units,
@@ -70,15 +78,15 @@ const subjectsResolver = {
       if (terms === undefined) {
         return null;
       }
-  
+
       const termsNames = Object.keys(terms);
       return termsNames.map(term => ({
         idsContext: {
           ...idsContext,
           courseCode: code,
-          term
+          term,
         },
-        course_sections: terms[term]
+        course_sections: terms[term],
       }));
     },
     assessments: ({ course }) => {
@@ -86,12 +94,12 @@ const subjectsResolver = {
       if (assessments === undefined) {
         return null;
       }
-  
+
       return Object.keys(assessments).map(assessment => ({
         name: assessment,
-        percentage: assessments[assessment]
+        percentage: assessments[assessment],
       }));
-    }
+    },
   },
   Term: {
     name: ({ idsContext }) => idsContext.term,
@@ -100,16 +108,16 @@ const subjectsResolver = {
       return sectionsNames.map(section => ({
         idsContext: {
           ...idsContext,
-          section
+          section,
         },
-        ...course_sections[section]
+        ...course_sections[section],
       }));
-    }
+    },
   },
   CourseSection: {
-    name: ({ idsContext }) => idsContext.section
+    name: ({ idsContext }) => idsContext.section,
   },
   AssessementComponent: {},
-}
+};
 
 export default subjectsResolver;

@@ -1,4 +1,10 @@
-import { getReviews, getReview, createReview, editReview, voteReview } from 'dynamodb';
+import {
+  getReviews,
+  getReview,
+  createReview,
+  editReview,
+  voteReview,
+} from 'dynamodb';
 import { recalWithNewReview, recalWithEdittedReview } from '../ranking/impl';
 import { VoteAction } from 'cutopia-types/lib/codes';
 
@@ -11,7 +17,7 @@ const reviewsResolver = {
         id,
         createdDate,
         courseRatings,
-        groupRatings
+        groupRatings,
       };
     },
     voteReview: async (parent, { input }, { user }) => {
@@ -21,21 +27,21 @@ const reviewsResolver = {
       const { courseId, createdDate } = input;
       const oldReviewData = await getReview({ courseId, createdDate });
       validateOwner(oldReviewData.username);
-  
+
       const modifiedDate = await editReview({
         oldReviewData,
-        newReviewData: input
+        newReviewData: input,
       });
       const { courseRatings, groupRatings } = await recalWithEdittedReview({
         oldReviewData,
-        ...input
+        ...input,
       });
       return {
         modifiedDate,
         courseRatings,
-        groupRatings
+        groupRatings,
       };
-    }
+    },
   },
   Review: {
     username: ({ username, anonymous }) => {
@@ -53,7 +59,7 @@ const reviewsResolver = {
         }
       }
       return null;
-    }
+    },
   },
   Query: {
     reviews: async (parent, { input }) => {
@@ -61,7 +67,7 @@ const reviewsResolver = {
     },
     review: async (parent, { input }) => {
       return await getReview(input);
-    }
+    },
   },
   ReviewDetails: {},
 };

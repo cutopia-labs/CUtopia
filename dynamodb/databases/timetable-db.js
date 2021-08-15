@@ -5,62 +5,62 @@ const { addSharedTimetableId, deleteSharedTimetableId } = require('./user-db');
 
 const db = new AWS.DynamoDB.DocumentClient();
 
-exports.getTimetable = async (input) => {
+exports.getTimetable = async input => {
   const { username } = input;
 
   const params = {
     TableName: process.env.UserTableName,
     Key: {
-      username
+      username,
     },
-    ProjectionExpression: 'timetable'
+    ProjectionExpression: 'timetable',
   };
 
   const result = await db.get(params).promise();
   return result.Item.timetable;
 };
 
-exports.addTimetable = async (input) => {
+exports.addTimetable = async input => {
   const { username, entries } = input;
 
   const params = {
     TableName: process.env.UserTableName,
     Key: {
-      username
+      username,
     },
     UpdateExpression:
       'set timetable = list_append(if_not_exists(timetable, :empty_list), :entries)',
     ExpressionAttributeValues: {
       ':entries': entries,
-      ':empty_list': []
+      ':empty_list': [],
     },
-    ReturnValues: 'UPDATED_NEW'
+    ReturnValues: 'UPDATED_NEW',
   };
 
   const result = await db.update(params).promise();
   return result.Attributes.timetable;
 };
 
-exports.removeTimetable = async (input) => {
+exports.removeTimetable = async input => {
   const { username, indices } = input;
 
   const UpdateExpression =
-    'remove ' + indices.map((i) => `timetable[${i}]`).join(', ');
+    'remove ' + indices.map(i => `timetable[${i}]`).join(', ');
 
   const params = {
     TableName: process.env.UserTableName,
     Key: {
-      username
+      username,
     },
     UpdateExpression,
-    ReturnValues: 'UPDATED_NEW'
+    ReturnValues: 'UPDATED_NEW',
   };
 
   const result = await db.update(params).promise();
   return result.Attributes.timetable;
 };
 
-exports.shareTimetable = async (input) => {
+exports.shareTimetable = async input => {
   const { username, entries, tableName, expire } = input;
   const id = nanoid(8);
   const now = new Date().getTime();
@@ -73,26 +73,26 @@ exports.shareTimetable = async (input) => {
       username,
       tableName,
       entries,
-      expire
-    }
+      expire,
+    },
   };
   await addSharedTimetableId({ username, id });
   await db.put(params).promise();
   return {
     id,
-    createdDate: now
+    createdDate: now,
   };
 };
 
-exports.getSharedTimetable = async (input) => {
+exports.getSharedTimetable = async input => {
   const { id } = input;
   const now = new Date().getTime();
 
   const params = {
     TableName: process.env.TimetableTableName,
     Key: {
-      id
-    }
+      id,
+    },
   };
 
   const result = (await db.get(params).promise()).Item;
@@ -110,21 +110,21 @@ exports.getSharedTimetable = async (input) => {
     entries: result.entries,
     tableName: result.tableName,
     createdDate: result.createdDate,
-    expireDate
+    expireDate,
   };
 };
 
-exports.deleteSharedTimetable = async (input) => {
+exports.deleteSharedTimetable = async input => {
   const { username, id } = input;
   const params = {
     TableName: process.env.TimetableTableName,
     Key: {
-      id
+      id,
     },
     ConditionExpression: 'username = :username',
     ExpressionAttributeValues: {
-      ':username': username
-    }
+      ':username': username,
+    },
   };
 
   try {
