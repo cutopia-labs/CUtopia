@@ -27,6 +27,7 @@ const timetableSectionSchema = new Schema(
   },
   {
     _id: false,
+    versionKey: false,
   }
 );
 
@@ -39,6 +40,7 @@ const timetableEntrySchema = new Schema(
   },
   {
     _id: false,
+    versionKey: false,
   }
 );
 

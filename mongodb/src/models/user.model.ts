@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { requiredString } from '../schemas';
 
 const Schema = mongoose.Schema;
 
@@ -35,7 +36,7 @@ const userSchema = new Schema<User>({
     index: true,
     unique: true,
   },
-  password: { type: String, required: true },
+  password: requiredString,
   createdDate: { type: Date, required: true },
   reviews: [
     {

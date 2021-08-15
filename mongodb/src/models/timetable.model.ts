@@ -34,6 +34,7 @@ const timetableSchema = new Schema<Timetable>(
   {
     timestamps: false,
     versionKey: false,
+    _id: false,
   }
 );
 

@@ -4,6 +4,7 @@ import { requiredNumber, requiredString } from '../schemas';
 const Schema = mongoose.Schema;
 
 type Course = {
+  __id: string;
   lecturers: string[];
   terms: string[];
   rating: {
@@ -25,6 +26,7 @@ const courseRatingSchema = {
 
 const courseSchema = new Schema<Course>(
   {
+    __id: requiredString,
     lecturers: {
       type: [requiredString],
       required: true,
@@ -45,6 +47,7 @@ const courseSchema = new Schema<Course>(
   {
     timestamps: false,
     versionKey: false,
+    _id: false,
   }
 );
 

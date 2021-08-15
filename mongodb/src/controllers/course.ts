@@ -8,13 +8,14 @@ const courseCache = new NodeCache({
 export const getCourseData = async input => {
   const { courseId } = input;
 
-  const courseData = courseCache.get(courseId);
+  const courseData = JSON.parse(courseCache.get(courseId) || 'null');
   if (courseData) {
+    console.log(courseData);
     return courseData;
   }
 
   const result = await Course.findById(courseId);
-  courseCache.set(courseId, result);
+  courseCache.set(courseId, JSON.stringify(result));
 
   return result;
 };
@@ -44,7 +45,6 @@ export type ReviewDetails = {
   text: string;
 };
 
-// @ts-ignore
 export const updateCourseDataFromReview = async (
   courseId: string,
   reviewData: Review

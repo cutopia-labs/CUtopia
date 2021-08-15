@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { ratingSchema } from '../schemas';
+import { ratingSchema, requiredString } from '../schemas';
 
 const Schema = mongoose.Schema;
 
@@ -36,11 +36,11 @@ const reviewDetailSchema = new Schema<ReviewDetailSchema>({
 });
 
 const reviewSchema = new Schema<Review>({
-  username: { type: String, required: true },
-  reviewId: { type: String, required: true },
-  courseId: { type: String, required: true },
-  term: { type: String, required: true },
-  lecturer: { type: String, required: true },
+  username: requiredString,
+  reviewId: requiredString,
+  courseId: requiredString,
+  term: requiredString,
+  lecturer: requiredString,
   anonymous: { type: Boolean, required: true },
   upvotes: Number,
   downvotes: Number,

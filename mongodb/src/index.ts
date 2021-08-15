@@ -7,7 +7,21 @@ import {
   resetPassword,
 } from './controllers';
 
-export * from './controllers';
+export {
+  getCourseData,
+  updateCourseDataFromReview,
+  createReview,
+  getReviews,
+  getSharedTimetable,
+  shareTimetable,
+  createUser,
+  verifyUser,
+  login,
+  getResetPasswordCodeAndEmail,
+  resetPassword,
+  incrementUpvotesCount,
+  updateSharedTimetableId,
+} from './controllers';
 
 require('dotenv').config();
 

@@ -10,7 +10,7 @@
     "predeploy": "yarn run build && rm -rf node_modules && yarn install --production && cp -RL node_modules/ build/",
     "postdeploy": "rm -rf node_modules && yarn install",
     "copyfile": "sh copyfile.sh",
-    "build": "rm -rf build && tsc && yarn run copyfile"
+    "build": "yarn --cwd ../../mongodb run build && yarn run postdeploy && rm -rf build && tsc && yarn run copyfile"
   },
   "author": "",
   "license": "ISC",

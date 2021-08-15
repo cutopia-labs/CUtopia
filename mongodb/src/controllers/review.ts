@@ -12,10 +12,12 @@ export const createReview = async input => {
   const reviewId = nanoid(10);
 
   const user = await User.findOne({ username }, 'reviews exp').exec();
-  if (user.reviews.some(review => review.courseId.includes(courseId))) {
+  if (
+    !user ||
+    user.reviews.some(review => review.courseId.includes(courseId))
+  ) {
     throw Error(ErrorCode.CREATE_REVIEW_ALREADY_CREATED.toString());
   }
-
   // give extra exp for writing the first review
   user.exp += user.reviews.length === 0 ? 5 : 3;
 
@@ -39,16 +41,6 @@ export const createReview = async input => {
     id: reviewId,
     createdDate: now,
   };
-};
-
-export const getCourseRating = async input => {
-  const { courseId } = input;
-  try {
-    const rating = await Review.aggregate(courseRating(courseId));
-    return rating[0];
-  } catch (e) {
-    console.trace(e);
-  }
 };
 
 export const getReviews = async (filter, sort) => {
