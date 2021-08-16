@@ -3,25 +3,16 @@ import { rankCoursesPipeline } from '../pipelines/review';
 import Course from '../models/course.model';
 import { createRanking } from './ranking';
 import { RankEntry, Ranking } from '../models/ranking.model';
+import withCache from '../utils/withCache';
 
 const courseCache = new NodeCache({
   stdTTL: 1800,
 });
 
-export const getCourseData = async input => {
-  const { courseId } = input;
-
-  const courseData = JSON.parse(courseCache.get(courseId) || 'null');
-  if (courseData) {
-    console.log(courseData);
-    return courseData;
-  }
-
-  const result = await Course.findById(courseId);
-  courseCache.set(courseId, JSON.stringify(result));
-
-  return result;
-};
+export const getCourseData = async input =>
+  withCache(courseCache, input.courseId, async () => {
+    return await Course.findById(input.courseId);
+  });
 
 export type Review = {
   id: string;

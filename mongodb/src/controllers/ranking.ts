@@ -1,4 +1,5 @@
 import NodeCache from 'node-cache';
+import withCache from '../utils/withCache';
 import RankingModel, { Ranking } from '../models/ranking.model';
 
 const rankingCache = new NodeCache({
@@ -20,12 +21,9 @@ export const createRanking = async (input: Partial<Ranking>) => {
   );
 };
 
-export const getRanking = async (rankingId: string) => {
-  const rankingData = JSON.parse(rankingCache.get(rankingId) || 'null');
-  if (rankingData) {
-    return rankingData;
-  }
-  const result = await RankingModel.findById(rankingId);
-  rankingCache.set(rankingId, JSON.stringify(result));
-  return result;
-};
+export const getRanking = async (rankingId: string) =>
+  withCache(
+    rankingCache,
+    rankingId,
+    async () => await RankingModel.findById(rankingId)
+  );

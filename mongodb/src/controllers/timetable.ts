@@ -1,4 +1,5 @@
 import NodeCache from 'node-cache';
+import withCache from '../utils/withCache';
 import Timetable from '../models/timetable.model';
 import { updateSharedTimetableId } from './user';
 
@@ -6,26 +7,20 @@ const timetableCache = new NodeCache({
   stdTTL: 1800,
 });
 
-export const getSharedTimetable = async input => {
-  const { id } = input;
-  const timetableData = JSON.parse(timetableCache.get(id) || 'null');
-  if (timetableData) {
-    return timetableData;
-  }
-  const result = await Timetable.findById(id);
-  if (!result?.createdAt) {
-    // throw Error(ErrorCode.GET_TIMETABLE_INVALID_ID);
-    return;
-  }
-  const response = {
-    entries: result.entries,
-    tableName: result.tableName,
-    createdAt: result.createdAt,
-    expireAt: result.expireAt,
-  };
-  timetableCache.set(id, JSON.stringify(response));
-  return response;
-};
+export const getSharedTimetable = async input =>
+  withCache(timetableCache, input.id, async () => {
+    const result = await Timetable.findById(input.id);
+    if (!result?.createdAt) {
+      // throw Error(ErrorCode.GET_TIMETABLE_INVALID_ID);
+      return;
+    }
+    return {
+      entries: result.entries,
+      tableName: result.tableName,
+      createdAt: result.createdAt,
+      expireAt: result.expireAt,
+    };
+  });
 
 export const shareTimetable = async input => {
   const { username } = input;
