@@ -1,7 +1,6 @@
 import { nanoid } from 'nanoid';
 import { ErrorCode } from 'cutopia-types/lib/codes';
 
-import { courseRating } from '../pipelines/review';
 import Review from '../models/review.model';
 import User from '../models/user.model';
 import { updateCourseDataFromReview } from './course';

@@ -22,6 +22,7 @@ export {
   incrementUpvotesCount,
   updateSharedTimetableId,
   report,
+  rankCourses,
 } from './controllers';
 
 require('dotenv').config();

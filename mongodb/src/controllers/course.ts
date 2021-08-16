@@ -1,4 +1,5 @@
 import NodeCache from 'node-cache';
+import { rankCoursesPipeline } from '../pipelines/review';
 import Course from '../models/course.model';
 
 const courseCache = new NodeCache({
@@ -70,3 +71,10 @@ export const updateCourseDataFromReview = async (
       upsert: true,
     }
   );
+
+export const rankCourses = async (field, limit, filter) => {
+  const result = await Course.aggregate(
+    rankCoursesPipeline(field, limit, filter)
+  );
+  return result;
+};

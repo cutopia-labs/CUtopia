@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose';
 import { requiredNumber, requiredString } from '../schemas';
 
 type Course = {
-  __id: string;
+  _id: string;
   lecturers: string[];
   terms: string[];
   rating: {
@@ -24,7 +24,7 @@ const courseRatingSchema = {
 
 const courseSchema = new Schema<Course>(
   {
-    __id: requiredString,
+    _id: requiredString,
     lecturers: {
       type: [requiredString],
       required: true,
