@@ -28,9 +28,12 @@ export const courseRating = courseId => [
 
 const projectRating = (field: string) => ({
   $project: {
-    rating: {
-      $divide: [`$rating.${field}`, '$rating.numReviews'],
-    },
+    val:
+      field === 'numReviews'
+        ? '$rating.numReviews'
+        : {
+            $divide: [`$rating.${field}`, '$rating.numReviews'],
+          },
   },
 });
 
@@ -46,7 +49,7 @@ export const rankCoursesPipeline = (
     projectRating(field),
     {
       $sort: {
-        rating: -1,
+        val: -1,
       },
     },
     {

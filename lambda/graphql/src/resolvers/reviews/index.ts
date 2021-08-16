@@ -5,10 +5,11 @@ import {
   editReview,
   voteReview,
 } from 'dynamodb';
-import { recalWithNewReview, recalWithEdittedReview } from '../ranking/impl';
+//import { recalWithNewReview, recalWithEdittedReview } from '../ranking/impl';
 import { VoteAction } from 'cutopia-types/lib/codes';
 
 const reviewsResolver = {
+  /* TODO: Revamp below to MongoDB
   Mutation: {
     createReview: async (parent, { input }, { user }) => {
       const { id, createdAt } = await createReview(input, user);
@@ -70,6 +71,7 @@ const reviewsResolver = {
     },
   },
   ReviewDetails: {},
+  */
 };
 
 export default reviewsResolver;

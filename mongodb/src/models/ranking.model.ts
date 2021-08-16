@@ -10,7 +10,7 @@ export type RatingFieldWithOverall =
 
 export type RankEntry = {
   _id: string;
-  rating: number;
+  val: number;
 };
 
 export type Ranking = {
@@ -22,7 +22,7 @@ export type Ranking = {
 const RankEntry = new Schema<RankEntry>(
   {
     _id: requiredString,
-    rating: requiredNumber,
+    val: requiredNumber,
   },
   {
     _id: false,
@@ -46,6 +46,6 @@ const rankingSchema = new Schema<Ranking>(
   }
 );
 
-const RankingModel = model<Ranking>('Rank', rankingSchema);
+const RankingModel = model<Ranking>('Ranking', rankingSchema);
 
 export default RankingModel;

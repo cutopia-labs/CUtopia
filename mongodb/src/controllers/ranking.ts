@@ -27,6 +27,5 @@ export const getRanking = async (rankingId: string) => {
   }
   const result = await RankingModel.findById(rankingId);
   rankingCache.set(rankingId, JSON.stringify(result));
-
   return result;
 };
