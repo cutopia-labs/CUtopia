@@ -51,12 +51,12 @@ input ShareTimetableInput {
 
 type ShareTimetableResult {
   id: String!
-  createdDate: Timestamp!
+  createdAt: Timestamp!
 }
 
 type Timetable {
   entries: [CourseTableEntry]!
   tableName: String
-  createdDate: Timestamp!
-  expireDate: Timestamp!
+  createdAt: Timestamp!
+  expireAt: Timestamp!
 }

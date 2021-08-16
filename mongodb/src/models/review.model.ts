@@ -50,7 +50,7 @@ const reviewSchema = new Schema<Review>({
   difficulty: reviewDetailSchema,
   content: reviewDetailSchema,
 });
-reviewSchema.index({ courseId: 1, createdDate: -1 }, { unique: true });
+reviewSchema.index({ courseId: 1, createdAt: -1 }, { unique: true });
 
 const ReviewModal = model<Review>('Review', reviewSchema);
 

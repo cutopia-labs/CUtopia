@@ -17,7 +17,7 @@
   "dependencies": {
     "@profusion/apollo-validation-directives": "^2.1.5",
     "apollo-server-lambda": "^3.1.2",
-    "cutopia-types": "^1.0.2",
+    "cutopia-types": "^1.0.3",
     "dotenv": "^10.0.0",
     "dynamodb": "file:../../dynamodb",
     "express": "^4.17.1",

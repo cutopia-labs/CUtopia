@@ -2,3 +2,4 @@
 modules/codes
 lambda/*/build
 **/node_modules
+mongodb/lib

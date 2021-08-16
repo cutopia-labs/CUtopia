@@ -9,6 +9,11 @@ const requiredString = {
   required: true,
 };
 
+const createdDate = {
+  type: Number,
+  default: +new Date(),
+};
+
 const ratingSchema = {
   type: Number,
   required: true,
@@ -47,6 +52,7 @@ const timetableEntrySchema = new Schema(
 export {
   requiredNumber,
   requiredString,
+  createdDate,
   ratingSchema,
   timetableSectionSchema,
   timetableEntrySchema,

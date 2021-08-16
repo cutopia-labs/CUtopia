@@ -1,9 +1,10 @@
 import { Schema, model } from 'mongoose';
-import { requiredString } from '../schemas';
+import { requiredString, createdDate } from '../schemas';
+import { Timetable } from './timetable.model';
 
 type Review = {
   courseId: string;
-  createdDate: number;
+  createdAt: number;
   sem: string;
 };
 
@@ -13,12 +14,13 @@ type User = {
   password: string;
   resetPwdCode: string;
   email: string;
-  createdDate: number;
+  createdAt: number;
   reviews: Review[];
   exp: number;
   veriCode: string;
   verified: boolean;
   fullAccess: boolean;
+  sharedTimetables: Timetable[];
 };
 
 const userSchema = new Schema<User>({
@@ -35,11 +37,11 @@ const userSchema = new Schema<User>({
     unique: true,
   },
   password: requiredString,
-  createdDate: { type: Date, required: true },
+  createdAt: createdDate,
   reviews: [
     {
       courseId: String,
-      createdDate: String,
+      createdAt: String,
       sem: String,
     },
   ],
@@ -48,6 +50,12 @@ const userSchema = new Schema<User>({
   veriCode: String,
   verified: Boolean,
   fullAccess: Boolean,
+  sharedTimetables: [
+    {
+      type: String,
+      ref: 'Timetable',
+    },
+  ],
 });
 userSchema.virtual('level').get(function () {
   return this.exp % 5;

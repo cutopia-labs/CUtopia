@@ -11,11 +11,11 @@ import { VoteAction } from 'cutopia-types/lib/codes';
 const reviewsResolver = {
   Mutation: {
     createReview: async (parent, { input }, { user }) => {
-      const { id, createdDate } = await createReview(input, user);
+      const { id, createdAt } = await createReview(input, user);
       const { courseRatings, groupRatings } = await recalWithNewReview(input);
       return {
         id,
-        createdDate,
+        createdAt,
         courseRatings,
         groupRatings,
       };
@@ -24,8 +24,8 @@ const reviewsResolver = {
       return await voteReview(input, user);
     },
     editReview: async (parent, { input }, { validateOwner }) => {
-      const { courseId, createdDate } = input;
-      const oldReviewData = await getReview({ courseId, createdDate });
+      const { courseId, createdAt } = input;
+      const oldReviewData = await getReview({ courseId, createdAt });
       validateOwner(oldReviewData.username);
 
       const modifiedDate = await editReview({

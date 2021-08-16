@@ -27,18 +27,18 @@ input ReviewsFilter {
 
 input ReviewFilter {
   courseId: String!
-  createdDate: String!
+  createdAt: String!
 }
 
 input LastEvaluatedKeyInput {
   courseId: String!
-  createdDate: String!
+  createdAt: String!
   upvotes: Int
 }
 
 type LastEvaluatedKey {
   courseId: String!
-  createdDate: String!
+  createdAt: String!
   upvotes: Int
 }
 
@@ -57,7 +57,7 @@ input CreateReviewInput {
 
 type CreateReviewResult {
   id: String!
-  createdDate: String!
+  createdAt: String!
   courseRatings: Ratings!
   groupRatings: Ratings!
 }
@@ -65,7 +65,7 @@ type CreateReviewResult {
 input EditReviewInput {
   title: String
   courseId: String!
-  createdDate: String!
+  createdAt: String!
   anonymous: Boolean!
   overall: Int! @range(min: 0, max: 4)
   grading: ReviewDetailsInput!
@@ -91,7 +91,7 @@ type Ratings {
 
 input VoteReviewInput {
   courseId: String!
-  createdDate: String!
+  createdAt: String!
   vote: Int!
 }
 
@@ -101,7 +101,7 @@ type Review {
   username: String!
   anonymous: Boolean!
   title: String
-  createdDate: String!
+  createdAt: String!
   modifiedDate: String!
   term: String!
   lecturer: String!

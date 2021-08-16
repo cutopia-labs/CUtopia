@@ -27,7 +27,7 @@ export type Review = {
   username: string;
   anonymous: boolean;
   title?: string;
-  createdDate: string;
+  createdAt: string;
   modifiedDate: string;
   term: string;
   lecturer: string;

@@ -4,13 +4,14 @@ import {
   timetableEntrySchema,
   requiredNumber,
   requiredString,
+  createdDate,
 } from '../schemas';
 
-type Timetable = {
+export type Timetable = {
   _id: string;
-  createdDate: number;
+  createdAt: number;
   entries: any[];
-  expire: number;
+  expireAt: number;
   tableName?: string;
 };
 
@@ -20,12 +21,9 @@ const timetableSchema = new Schema<Timetable>(
       type: String,
       default: nanoid(8),
     },
-    createdDate: {
-      type: Number,
-      default: +new Date(),
-    },
+    createdAt: createdDate,
     entries: [timetableEntrySchema],
-    expire: requiredNumber,
+    expireAt: requiredNumber,
     username: requiredString,
     tableName: String,
   },

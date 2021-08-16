@@ -38,7 +38,7 @@ export const createReview = async input => {
 
   return {
     id: reviewId,
-    createdDate: now,
+    createdAt: now,
   };
 };
 

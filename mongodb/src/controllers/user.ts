@@ -17,7 +17,7 @@ export const createUser = async input => {
     username,
     SID,
     password: hash,
-    createdDate: now,
+    createdAt: now,
     verified: false,
     veriCode,
     reviewIds: [],
@@ -46,7 +46,7 @@ export const verifyUser = async input => {
   const { username, code } = input;
   const user = await User.findOne(
     { username },
-    'createdDate veriCode verified'
+    'createdAt veriCode verified'
   ).exec();
 
   if (!user) {
@@ -55,7 +55,7 @@ export const verifyUser = async input => {
   if (user.verified) {
     throw Error(ErrorCode.VERIFICATION_ALREADY_VERIFIED.toString());
   }
-  if (user.createdDate + VERIFY_EXPIRATION_TIME - new Date().getTime() < 0) {
+  if (user.createdAt + VERIFY_EXPIRATION_TIME - new Date().getTime() < 0) {
     await user.remove();
     throw Error(ErrorCode.VERIFICATION_EXPIRED.toString());
   }
@@ -123,7 +123,7 @@ export const resetPassword = async input => {
     throw Error(ErrorCode.RESET_PASSWORD_FAILED.toString());
   }
 
-  user.password = newPassword;
+  user.password = await bcrypt.hash(newPassword, saltRounds);
   user.resetPwdCode = null;
   await user.save();
   return true;
@@ -144,7 +144,7 @@ export const incrementUpvotesCount = async input => {
 
 export const updateSharedTimetableId = async input => {
   const { username, id, operation } = input;
-  const op = operation === 'push' ? '$push' : '$pull';
+  const op = operation === 'add' ? '$addToSet' : '$pull';
   await User.findOneAndUpdate(
     { username },
     {
@@ -153,4 +153,13 @@ export const updateSharedTimetableId = async input => {
       },
     }
   ).exec();
+};
+
+export const getSharedTimetables = async input => {
+  const { username } = input;
+  const user = await User.findOne({ username }, 'sharedTimetables')
+    .lean()
+    .populate('sharedTimetables', 'tableName createdAt expireAt')
+    .exec();
+  return user.sharedTimetables;
 };
