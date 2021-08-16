@@ -1,7 +1,5 @@
-import mongoose from 'mongoose';
+import { Schema, model } from 'mongoose';
 import { requiredString } from '../schemas';
-
-const Schema = mongoose.Schema;
 
 type Review = {
   courseId: string;
@@ -58,6 +56,6 @@ userSchema.virtual('email').get(function () {
   return `${this.SID}@link.cuhk.edu.hk`;
 });
 
-const UserModal = mongoose.model<User>('User', userSchema);
+const UserModal = model<User>('User', userSchema);
 
 export default UserModal;

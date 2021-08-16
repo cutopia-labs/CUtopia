@@ -1,7 +1,5 @@
-import mongoose from 'mongoose';
+import { Schema, model } from 'mongoose';
 import { requiredNumber, requiredString } from '../schemas';
-
-const Schema = mongoose.Schema;
 
 type Course = {
   __id: string;
@@ -51,6 +49,6 @@ const courseSchema = new Schema<Course>(
   }
 );
 
-const CourseModal = mongoose.model<Course>('Course', courseSchema);
+const CourseModal = model<Course>('Course', courseSchema);
 
 export default CourseModal;

@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import { Schema, model } from 'mongoose';
 import { nanoid } from 'nanoid';
 import {
   timetableEntrySchema,
@@ -13,8 +13,6 @@ type Timetable = {
   expire: number;
   tableName?: string;
 };
-
-const Schema = mongoose.Schema;
 
 const timetableSchema = new Schema<Timetable>(
   {
@@ -38,6 +36,6 @@ const timetableSchema = new Schema<Timetable>(
   }
 );
 
-const Timetable = mongoose.model('Timetable', timetableSchema);
+const Timetable = model('Timetable', timetableSchema);
 
 export default Timetable;

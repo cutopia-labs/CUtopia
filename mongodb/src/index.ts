@@ -21,6 +21,7 @@ export {
   resetPassword,
   incrementUpvotesCount,
   updateSharedTimetableId,
+  report,
 } from './controllers';
 
 require('dotenv').config();

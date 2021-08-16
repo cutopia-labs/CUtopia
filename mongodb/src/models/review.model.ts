@@ -1,7 +1,5 @@
-import mongoose from 'mongoose';
+import { Schema, model } from 'mongoose';
 import { ratingSchema, requiredString } from '../schemas';
-
-const Schema = mongoose.Schema;
 
 type ReviewDetailSchema = {
   grade: number;
@@ -54,6 +52,6 @@ const reviewSchema = new Schema<Review>({
 });
 reviewSchema.index({ courseId: 1, createdDate: -1 }, { unique: true });
 
-const ReviewModal = mongoose.model<Review>('Review', reviewSchema);
+const ReviewModal = model<Review>('Review', reviewSchema);
 
 export default ReviewModal;
