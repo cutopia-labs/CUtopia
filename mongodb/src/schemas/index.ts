@@ -1,27 +1,27 @@
 import { Schema } from 'mongoose';
 
-const requiredNumber = {
+export const requiredNumber = {
   type: Number,
   required: true,
 };
-const requiredString = {
+export const requiredString = {
   type: String,
   required: true,
 };
 
-const createdDate = {
+export const createdAt = {
   type: Number,
   default: +new Date(),
 };
 
-const ratingSchema = {
+export const ratingSchema = {
   type: Number,
   required: true,
   min: 0,
   max: 4,
 };
 
-const timetableSectionSchema = new Schema(
+export const timetableSectionSchema = new Schema(
   {
     days: [requiredString],
     endTimes: [requiredString],
@@ -36,7 +36,7 @@ const timetableSectionSchema = new Schema(
   }
 );
 
-const timetableEntrySchema = new Schema(
+export const timetableEntrySchema = new Schema(
   {
     courseId: requiredString,
     title: requiredString,
@@ -48,12 +48,3 @@ const timetableEntrySchema = new Schema(
     versionKey: false,
   }
 );
-
-export {
-  requiredNumber,
-  requiredString,
-  createdDate,
-  ratingSchema,
-  timetableSectionSchema,
-  timetableEntrySchema,
-};

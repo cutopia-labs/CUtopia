@@ -12,6 +12,7 @@ import schemaDirectives from './directives';
 import reviewRouter from './routes/reviews';
 import courseRouter from './routes/courses';
 import reportRouter from './routes/reports';
+import rankingRouter from './routes/rankings';
 import timetableRouter from './routes/timetables';
 import createContext from './context';
 
@@ -55,6 +56,7 @@ const startApolloServer = async () => {
   app.use('/courses', courseRouter);
   app.use('/timetables', timetableRouter);
   app.use('/reports', reportRouter);
+  app.use('/rankings', rankingRouter);
   server.applyMiddleware({ app });
   app.listen({ port: 4000 });
   console.log(

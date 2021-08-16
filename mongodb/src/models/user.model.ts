@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { requiredString, createdDate } from '../schemas';
+import { requiredString, createdAt } from '../schemas';
 import { Timetable } from './timetable.model';
 
 type Review = {
@@ -37,7 +37,7 @@ const userSchema = new Schema<User>({
     unique: true,
   },
   password: requiredString,
-  createdAt: createdDate,
+  createdAt: createdAt,
   reviews: [
     {
       courseId: String,

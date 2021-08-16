@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { nanoid } from 'nanoid';
-import { createdDate, requiredNumber, requiredString } from '../schemas';
+import { createdAt, requiredNumber, requiredString } from '../schemas';
 
 type Report = {
   _id: string;
@@ -18,7 +18,7 @@ const reportSchema = new Schema<Report>(
       type: String,
       default: nanoid(5),
     },
-    createdAt: createdDate,
+    createdAt: createdAt,
     cat: requiredNumber,
     username: requiredString,
     description: requiredString,

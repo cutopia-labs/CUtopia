@@ -23,6 +23,7 @@ export {
   updateSharedTimetableId,
   report,
   rankCourses,
+  getRanking,
 } from './controllers';
 
 require('dotenv').config();

@@ -1,6 +1,8 @@
 import NodeCache from 'node-cache';
 import { rankCoursesPipeline } from '../pipelines/review';
 import Course from '../models/course.model';
+import { createRanking } from './ranking';
+import { RankEntry, Ranking } from '../models/ranking.model';
 
 const courseCache = new NodeCache({
   stdTTL: 1800,
@@ -73,8 +75,16 @@ export const updateCourseDataFromReview = async (
   );
 
 export const rankCourses = async (field, limit, filter) => {
-  const result = await Course.aggregate(
+  const result: RankEntry[] = await Course.aggregate(
     rankCoursesPipeline(field, limit, filter)
   );
+  if (result?.length) {
+    await createRanking({
+      _id: field,
+      ranks: result,
+    });
+  } else {
+    //TODO THROW ERROR
+  }
   return result;
 };

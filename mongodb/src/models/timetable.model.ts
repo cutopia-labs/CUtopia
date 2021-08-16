@@ -4,7 +4,7 @@ import {
   timetableEntrySchema,
   requiredNumber,
   requiredString,
-  createdDate,
+  createdAt,
 } from '../schemas';
 
 export type Timetable = {
@@ -21,7 +21,7 @@ const timetableSchema = new Schema<Timetable>(
       type: String,
       default: nanoid(8),
     },
-    createdAt: createdDate,
+    createdAt: createdAt,
     entries: [timetableEntrySchema],
     expireAt: requiredNumber,
     username: requiredString,
