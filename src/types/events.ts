@@ -28,7 +28,7 @@ export type EventConfig = {
 export type CourseTableEntry = {
   courseId: string;
   title: string;
-  credit: number;
+  credits: number;
   sections?: CourseSection[];
 };
 

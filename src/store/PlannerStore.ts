@@ -75,7 +75,7 @@ class PlannerStore extends StorePrototype {
         }
       });
       if (unhide) {
-        info.totalCredits += course.credit;
+        info.totalCredits += course.credits;
       }
     });
     Object.values(info.weekdayAverageHour).forEach(

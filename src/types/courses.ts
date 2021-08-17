@@ -58,7 +58,7 @@ export type Term = {
 export type PlannerCourse = {
   courseId: string;
   title: string;
-  credit: number;
+  credits: number;
   sections: {
     [sectionName: string]: CourseSection;
   };

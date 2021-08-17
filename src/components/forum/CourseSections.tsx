@@ -103,7 +103,7 @@ const CourseSections = ({
       },
       courseId,
       title,
-      credit: parseInt(units, 10),
+      credits: parseInt(units, 10),
     });
     view.setSnackBar(`Added ${courseId} ${name}`);
   };
