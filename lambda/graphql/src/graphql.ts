@@ -4,7 +4,7 @@ import { ValidateDirectiveVisitor } from '@profusion/apollo-validation-directive
 import express from 'express';
 require('dotenv').config();
 
-import typeDefs from './types';
+import typeDefs from './schemas';
 import resolvers from './resolvers';
 import schemaDirectives from './directives';
 import createContext from './context';

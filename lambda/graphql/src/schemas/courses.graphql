@@ -1,23 +1,14 @@
 type Query {
-  subjects(filter: SubjectFilter): [Subject]! @auth
-}
-
-input SubjectFilter {
-  requiredSubjects: [String]
-}
-
-type Subject {
-  name: String!
   courses(filter: CourseFilter): [Course]!
 }
 
 input CourseFilter {
-  requiredCourses: [String]
+  requiredCourses: [String]!
+  requiredTerm: String
 }
 
 type Course {
-  subject: Subject!
-  code: String!
+  courseId: String!
   title: String!
   reviewLecturers: [String]!
   reviewTerms: [String]!

@@ -1,4 +1,4 @@
-import { subjects } from '../../data/courses';
+import { courses } from '../../data/courses';
 import NodeCache from 'node-cache';
 import { getRanking } from 'mongodb';
 import withCache from '../../utils/withCache';
@@ -8,12 +8,7 @@ const rankingCache = new NodeCache({
   useClones: false,
 });
 
-export const getCourseById = courseId => {
-  const subjectName = courseId.slice(0, 4);
-  const courseCode = courseId.slice(4, 8);
-  const courses = subjects[subjectName];
-  return courses.find(course => course.code === courseCode);
-};
+export const getCourseById = courseId => courses[courseId];
 
 export const getRankingWithCache = async (field: string) =>
   withCache(rankingCache, `${field}-ranking`, async () => {

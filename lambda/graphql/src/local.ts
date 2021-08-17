@@ -6,7 +6,7 @@ import { connect } from 'mongodb';
 require('dotenv').config();
 
 import { sign } from './jwt';
-import typeDefs from './types';
+import typeDefs from './schemas';
 import resolvers from './resolvers';
 import schemaDirectives from './directives';
 import reviewRouter from './routes/reviews';

@@ -5,7 +5,9 @@ const withCache = async (
   cacheKey: string,
   callback: () => any
 ) => {
-  const cachedData = JSON.parse(cache.get(cacheKey) || 'null');
+  const cachedData = cacheKey
+    ? JSON.parse(cache.get(cacheKey) || 'null')
+    : null;
   if (cachedData) {
     console.log(`Cached: ${JSON.stringify(cachedData)}`);
     return cachedData;

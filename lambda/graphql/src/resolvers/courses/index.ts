@@ -1,65 +1,35 @@
 /* eslint-disable camelcase */ // course_sections is not in camelcase when parsing the data
 
-import { subjects, subjectNames } from '../../data/courses';
-import { getCourseData } from 'dynamodb';
+import { courses } from '../../data/courses';
+import { getCourseData } from 'mongodb';
+import processRating from '../../utils/processRating';
 
 const subjectsResolver = {
   Query: {
-    subjects: (parent, { filter }) => {
-      const { requiredSubjects = null } = { ...filter };
-
-      let filteredSubjects = subjectNames;
-      if (requiredSubjects) {
-        filteredSubjects = requiredSubjects.filter(subName =>
-          subjectNames.includes(subName)
-        );
-      }
-      return filteredSubjects.map(subName => ({
-        name: subName,
-        courses: subjects[subName],
-      }));
-    },
-  },
-  Subject: {
-    courses: ({ name, courses }, { filter }) => {
+    courses: (parent, { filter }) => {
+      const { requiredCourses = [], requiredTerm = null } = { ...filter };
       const idsContext = {
-        subject: name,
         courseCode: null,
         term: null,
         section: null,
+        requiredTerm,
       };
-
-      const { requiredCourses = null } = { ...filter };
-
-      let filteredCourses = courses;
-      if (requiredCourses) {
-        filteredCourses = courses.filter(course =>
-          requiredCourses.includes(course.code)
-        );
-      }
-      return filteredCourses.map(course => ({
+      return requiredCourses.map(id => ({
         idsContext,
-        course,
+        course: courses[id],
       }));
     },
   },
   Course: {
-    code: ({ course }) => course.code,
+    courseId: ({ course }) => course.courseId,
     title: ({ course }) => course.title,
     reviewLecturers: async ({ idsContext, course }) => {
-      // TODO: reviewLecturers and reviewTerms query database twice instead of once before getting cached
-      const courseId = idsContext.subject + course.code;
-      const result = await getCourseData({ courseId });
-      return result === undefined || result.lecturers === undefined
-        ? []
-        : result.lecturers.values;
+      const result = await getCourseData({ courseId: course.courseId });
+      return result?.lecturers || [];
     },
     reviewTerms: async ({ idsContext, course }) => {
-      const courseId = idsContext.subject + course.code;
-      const result = await getCourseData({ courseId });
-      return result === undefined || result.terms === undefined
-        ? []
-        : result.terms.values;
+      const result = await getCourseData({ courseId: course.courseId });
+      return result?.terms || [];
     },
     career: ({ course }) => course.career,
     units: ({ course }) => course.units,
@@ -75,30 +45,34 @@ const subjectsResolver = {
     recommended_readings: ({ course }) => course.recommended_readings,
     terms: ({ idsContext, course }) => {
       const { code, terms } = course;
-      if (terms === undefined) {
+      const { requiredTerm } = idsContext;
+      if (!requiredTerm || !terms) {
         return null;
       }
-
-      const termsNames = Object.keys(terms);
-      return termsNames.map(term => ({
-        idsContext: {
-          ...idsContext,
-          courseCode: code,
-          term,
+      return [
+        {
+          idsContext: {
+            ...idsContext,
+            courseCode: code,
+            term: requiredTerm,
+          },
+          course_sections: terms[requiredTerm],
         },
-        course_sections: terms[term],
-      }));
+      ];
     },
     assessments: ({ course }) => {
       const { assessments } = course;
       if (assessments === undefined) {
         return null;
       }
-
       return Object.keys(assessments).map(assessment => ({
         name: assessment,
         percentage: assessments[assessment],
       }));
+    },
+    rating: async ({ course }) => {
+      const result = await getCourseData({ courseId: course.courseId });
+      return processRating(result.rating);
     },
   },
   Term: {

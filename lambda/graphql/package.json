@@ -7,10 +7,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "yarn run build && nodemon build/graphql.js",
     "local": "yarn run build && node build/local.js",
+    "build-db": "yarn --cwd ../../mongodb run build && yarn run postdeploy",
     "predeploy": "yarn run build && rm -rf node_modules && yarn install --production && cp -RL node_modules/ build/",
     "postdeploy": "rm -rf node_modules && yarn install",
     "copyfile": "sh copyfile.sh",
-    "build": "yarn --cwd ../../mongodb run build && yarn run postdeploy && rm -rf build && tsc && yarn run copyfile"
+    "build": "rm -rf build && tsc && yarn run copyfile"
   },
   "author": "",
   "license": "ISC",
