@@ -1,17 +1,19 @@
 type Mutation {
   report(input: ReportInput!): String! @auth
-  reportFeedback(input: [ReportFeedbackInput]!): String! @auth
+  # reportFeedback(input: [ReportFeedbackInput]!): String! @auth
 }
 
 input ReportInput {
   cat: Int!
   "review id or course id"
   identifier: String
-  type: Int!
+  types: [Int]!
   description: String! @stringLength(min: 10, max: 500)
 }
 
+"""
 input ReportFeedbackInput {
   type: String!
   rating: Int! @range(min: 0, max: 4)
 }
+"""

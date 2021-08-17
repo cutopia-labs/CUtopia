@@ -2,10 +2,9 @@ import {
   getTimetable,
   addTimetable,
   removeTimetable,
-  shareTimetable,
-  getSharedTimetable,
   deleteSharedTimetable,
 } from 'dynamodb';
+import { uploadTimetable, getSharedTimetable } from 'mongodb';
 
 const timetableResolver = {
   User: {
@@ -30,10 +29,10 @@ const timetableResolver = {
       const { indices } = input;
       return await removeTimetable({ username, indices });
     },
-    shareTimetable: async (parent, { input }, { user }) => {
+    uploadTimetable: async (parent, { input }, { user }) => {
       const { username } = user;
       const { entries, tableName, expire } = input;
-      return await shareTimetable({ username, entries, tableName, expire });
+      return await uploadTimetable({ username, entries, tableName, expire });
     },
     deleteSharedTimetable: async (parent, { id }, { user }) => {
       const { username } = user;

@@ -5,10 +5,11 @@ import {
   verifyUser,
   updateUser,
   getUser,
+  getTimetables,
   getResetPasswordCodeAndEmail,
   resetPassword,
   login,
-} from 'dynamodb';
+} from 'mongodb';
 import { sign } from '../../jwt';
 
 const sendEmail = async message => {
@@ -39,8 +40,19 @@ const userResolver = {
     fullAccess: ({ fullAccess }) => {
       return fullAccess === undefined ? false : fullAccess;
     },
-    sharedTimetables: ({ sharedTimetables }) => {
-      return sharedTimetables ? sharedTimetables.values : [];
+    timetables: async (parent, args, { user }) => {
+      const { username } = user;
+      return await getTimetables({
+        username,
+        shared: false,
+      });
+    },
+    sharedTimetables: async (parent, args, { user }) => {
+      const { username } = user;
+      return await getTimetables({
+        username,
+        shared: true,
+      });
     },
   },
   Mutation: {
@@ -56,16 +68,22 @@ const userResolver = {
     verifyUser: async (parent, { input }) => {
       await verifyUser(input);
     },
-    updateUser: async (parent, { input }) => {
-      await updateUser(input);
+    /*
+    updateUser: async (parent, { input }, { user }) => {
+      const { username } = user;
+      await updateUser({
+        ...input,
+        username,
+      });
     },
+    */
     login: async (parent, { input }) => {
-      const { data } = await login(input);
+      const user = await login(input);
       const { username } = input;
       const token = sign({ username });
       return {
         token,
-        me: data,
+        me: user,
       };
     },
     sendResetPasswordCode: async (parent, { input }) => {

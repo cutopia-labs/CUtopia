@@ -1,19 +1,16 @@
-import { report, reportFeedback } from 'dynamodb';
+import { report } from 'mongodb';
 
 const reportResolver = {
   Mutation: {
     report: async (parent, { input }, { user }) => {
-      const { cat, identifier, type, description } = input;
       const { username } = user;
       const reportId = await report({
-        cat,
-        identifier,
-        type,
-        description,
+        ...input,
         username,
       });
       return reportId;
     },
+    /*
     reportFeedback: async (parent, { input }, { user }) => {
       const { username } = user;
       const reportId = await reportFeedback({
@@ -22,6 +19,7 @@ const reportResolver = {
       });
       return reportId;
     },
+    */
   },
 };
 

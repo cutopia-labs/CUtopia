@@ -20,6 +20,7 @@ type User = {
   veriCode: string;
   verified: boolean;
   fullAccess: boolean;
+  timetables: Timetable[];
   sharedTimetables: Timetable[];
 };
 
@@ -50,6 +51,12 @@ const userSchema = new Schema<User>({
   veriCode: String,
   verified: Boolean,
   fullAccess: Boolean,
+  timetables: [
+    {
+      type: String,
+      ref: 'Timetable',
+    },
+  ],
   sharedTimetables: [
     {
       type: String,

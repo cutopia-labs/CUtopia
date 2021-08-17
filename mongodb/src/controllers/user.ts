@@ -42,6 +42,17 @@ export const createUser = async input => {
   return veriCode;
 };
 
+export const getUser = async input => {
+  const { username, fields } = input;
+  const selection = fields ? fields.join(' ') : null;
+  return await User.findOne({ username }, selection);
+};
+
+export const updateUser = async input => {
+  const { username, ...update } = input;
+  return await User.updateOne({ username }, update);
+};
+
 export const verifyUser = async input => {
   const { username, code } = input;
   const user = await User.findOne(
@@ -84,6 +95,7 @@ export const login = async input => {
   if (!(await bcrypt.compare(password, user.password))) {
     throw Error(ErrorCode.LOGIN_FAILED.toString());
   }
+  return user;
 };
 
 export const getResetPasswordCodeAndEmail = async input => {
@@ -131,7 +143,7 @@ export const resetPassword = async input => {
 
 export const incrementUpvotesCount = async input => {
   const { username } = input;
-  await User.findOneAndUpdate(
+  await User.updateOne(
     { username },
     {
       $inc: {
@@ -142,24 +154,27 @@ export const incrementUpvotesCount = async input => {
   ).exec();
 };
 
-export const updateSharedTimetableId = async input => {
-  const { username, id, operation } = input;
+export const updateTimetableId = async input => {
+  const { username, id, operation, expire } = input;
   const op = operation === 'add' ? '$addToSet' : '$pull';
-  await User.findOneAndUpdate(
+  const timetableField = expire ? 'sharedTimetables' : 'timetables';
+
+  await User.updateOne(
     { username },
     {
       [op]: {
-        sharedTimetables: id,
+        [timetableField]: id,
       },
     }
   ).exec();
 };
 
-export const getSharedTimetables = async input => {
-  const { username } = input;
-  const user = await User.findOne({ username }, 'sharedTimetables')
+export const getTimetables = async input => {
+  const { username, shared } = input;
+  const timetableField = shared ? 'sharedTimetables' : 'timetables';
+  const user = await User.findOne({ username }, timetableField)
     .lean()
-    .populate('sharedTimetables', 'tableName createdAt expireAt')
+    .populate(timetableField, 'tableName createdAt expire')
     .exec();
-  return user.sharedTimetables;
+  return user[timetableField];
 };

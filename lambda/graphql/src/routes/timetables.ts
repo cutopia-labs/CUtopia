@@ -1,4 +1,4 @@
-import { shareTimetable, getSharedTimetable } from 'mongodb';
+import { uploadTimetable, getSharedTimetable } from 'mongodb';
 import { Router } from 'express';
 
 const router = Router();
@@ -12,7 +12,7 @@ router.route('/:id').get((req, res) => {
 });
 
 router.route('/').post((req, res) => {
-  shareTimetable(req.body)
+  uploadTimetable(req.body)
     .then(response => res.json(response))
     .catch(err => res.status(400).json('Error: ' + err));
 });

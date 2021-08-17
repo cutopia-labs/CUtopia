@@ -1,17 +1,12 @@
 import { Schema, model } from 'mongoose';
 import { nanoid } from 'nanoid';
-import {
-  timetableEntrySchema,
-  requiredNumber,
-  requiredString,
-  createdAt,
-} from '../schemas';
+import { timetableEntrySchema, requiredString, createdAt } from '../schemas';
 
 export type Timetable = {
   _id: string;
   createdAt: number;
   entries: any[];
-  expireAt: number;
+  expire: number;
   tableName?: string;
 };
 
@@ -23,7 +18,11 @@ const timetableSchema = new Schema<Timetable>(
     },
     createdAt: createdAt,
     entries: [timetableEntrySchema],
-    expireAt: requiredNumber,
+    expire: {
+      // expired 30 days after creation
+      type: Number,
+      expires: 60 * 60 * 24 * 30,
+    },
     username: requiredString,
     tableName: String,
   },
@@ -33,6 +32,17 @@ const timetableSchema = new Schema<Timetable>(
     _id: false,
   }
 );
+timetableSchema.post('remove', async function (doc) {
+  const timetableField = doc.expire ? 'sharedTimetables' : 'timetables';
+  await this.model('User').updateOne(
+    { username: doc.username },
+    {
+      $pull: {
+        [timetableField]: doc._id,
+      },
+    }
+  );
+});
 
 const Timetable = model('Timetable', timetableSchema);
 

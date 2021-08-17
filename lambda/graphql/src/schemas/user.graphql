@@ -11,13 +11,14 @@ type User {
   exp: Int!
   level: Int!
   fullAccess: Boolean!
+  timetables: [Timetable]
   sharedTimetables: [String]!
 }
 
 type Mutation {
   createUser(input: CreateUserInput!): Void
   verifyUser(input: VerifyUserInput!): Void
-  updateUser(input: UpdateUserInput!): Void
+  # updateUser(input: UpdateUserInput!): Void
   login(input: LoginInput!): LoginResult!
   sendResetPasswordCode(input: SendResetPasswordCodeIbnput!): Void
   resetPassword(input: ResetPasswordInput!): Void
@@ -34,10 +35,12 @@ input VerifyUserInput {
   code: String!
 }
 
+"""
 input UpdateUserInput {
   username: String!
   password: String
 }
+"""
 
 input LoginInput {
   username: String!
