@@ -9,7 +9,7 @@ export type RatingFieldWithOverall =
   | 'difficulty'
   | 'teaching';
 
-export interface CourseData {
+export interface CourseDataRaw {
   code: string;
   title: string;
   career: string;
@@ -27,7 +27,8 @@ export interface CourseData {
   assessments?: AssessementComponent[];
 }
 
-export interface Course extends CourseData {
+export interface Course extends CourseDataRaw {
+  courseId: string;
   terms?: Term[];
   rating?: CourseRating;
   reviewLecturers?: string[];
