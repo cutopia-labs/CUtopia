@@ -130,7 +130,9 @@ export const SearchResult = ({
               key={`listitem-${course.c}`}
               ribbonIndex={i}
               chevron
-              onClick={() => onClick(course.c)}
+              onClick={() => {
+                onClick ? onClick(course.c) : {};
+              }}
               onMouseDown={() => (onMouseDown ? onMouseDown(course.c) : {})}
               title={course.c}
               caption={course.t}

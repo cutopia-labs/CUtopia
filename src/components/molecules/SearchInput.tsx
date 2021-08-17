@@ -45,7 +45,6 @@ export default function SearchInput({
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onFocus={() => setVisible(true)}
-        onBlur={() => setVisible(false)}
       />
     </form>
   );

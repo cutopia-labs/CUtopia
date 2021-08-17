@@ -10,6 +10,7 @@ import './Header.scss';
 import Logo from '../atoms/Logo';
 import SearchInput from '../molecules/SearchInput';
 import useMobileQuery from '../../helpers/useMobileQuery';
+import useOuterClick from '../../helpers/useOuterClick';
 
 const SECTIONS = [
   {
@@ -34,7 +35,11 @@ const Header = () => {
   const isMobile = useMobileQuery();
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const searchDropDownRef = useOuterClick((e) => {
+    setVisible(false);
+    setSearchQuery('');
+  });
   const user = useContext(UserContext);
 
   const onSubmitSearch = (e) => {
@@ -98,30 +103,37 @@ const Header = () => {
           </Link>
         )}
         <nav className="header-nav row">
-          <SearchInput
-            isMobile={isMobile}
-            value={searchQuery}
-            setValue={setSearchQuery}
-            onSubmit={onSubmitSearch}
-            inputRef={inputRef}
-            visible={visible}
-            setVisible={setVisible}
-          />
-          {visible && Boolean(searchQuery) && (
-            <div className="header-search-result card">
-              <SearchResult
-                searchPayload={{
-                  text: searchQuery,
-                  mode: 'query',
-                }}
-                user={user}
-                limit={isMobile ? 4 : 6}
-                onMouseDown={(courseId) => {
-                  history.push(`/review/${courseId}`);
-                }}
-              />
-            </div>
-          )}
+          <div
+            className="search-dropdown center-box center"
+            ref={searchDropDownRef}
+          >
+            <SearchInput
+              isMobile={isMobile}
+              value={searchQuery}
+              setValue={setSearchQuery}
+              onSubmit={onSubmitSearch}
+              inputRef={inputRef}
+              visible={visible}
+              setVisible={setVisible}
+            />
+            {visible && Boolean(searchQuery) && (
+              <div className="header-search-result card">
+                <SearchResult
+                  searchPayload={{
+                    text: searchQuery,
+                    mode: 'query',
+                  }}
+                  user={user}
+                  limit={isMobile ? 4 : 6}
+                  onClick={(courseId) => {
+                    history.push(`/review/${courseId}`);
+                    setVisible(false);
+                    setSearchQuery('');
+                  }}
+                />
+              </div>
+            )}
+          </div>
           {!isMobile && navSections}
         </nav>
       </div>
