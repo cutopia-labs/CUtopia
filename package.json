@@ -1,6 +1,6 @@
 {
   "name": "cutopia-types",
-  "version": "1.0.2",
+  "version": "1.0.5",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -10,7 +10,8 @@
     "prepare": "npm run build"
   },
   "exports": {
-    "./lib/codes": "./lib/codes/index.js"
+    "./lib/codes": "./lib/codes/index.js",
+    "./lib/types": "./lib/types"
   },
   "keywords": [],
   "author": "",
