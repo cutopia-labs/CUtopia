@@ -157,7 +157,7 @@ export const incrementUpvotesCount = async input => {
 export const updateTimetableId = async input => {
   const { username, id, operation, expire } = input;
   const op = operation === 'add' ? '$addToSet' : '$pull';
-  const timetableField = expire ? 'sharedTimetables' : 'timetables';
+  const timetableField = expire >= 0 ? 'sharedTimetables' : 'timetables';
 
   await User.updateOne(
     { username },
@@ -169,12 +169,12 @@ export const updateTimetableId = async input => {
   ).exec();
 };
 
-export const getTimetables = async input => {
+export const getTimetablesOverview = async input => {
   const { username, shared } = input;
   const timetableField = shared ? 'sharedTimetables' : 'timetables';
   const user = await User.findOne({ username }, timetableField)
     .lean()
-    .populate(timetableField, 'tableName createdAt expire')
+    .populate(timetableField, 'tableName createdAt expireAt expire')
     .exec();
   return user[timetableField];
 };

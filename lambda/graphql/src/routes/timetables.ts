@@ -1,10 +1,10 @@
-import { uploadTimetable, getSharedTimetable } from 'mongodb';
+import { uploadTimetable, getTimetable } from 'mongodb';
 import { Router } from 'express';
 
 const router = Router();
 
 router.route('/:id').get((req, res) => {
-  getSharedTimetable({
+  getTimetable({
     id: req.params.id,
   })
     .then(response => res.json(response))

@@ -5,7 +5,6 @@ import {
   verifyUser,
   updateUser,
   getUser,
-  getTimetables,
   getResetPasswordCodeAndEmail,
   resetPassword,
   login,
@@ -39,20 +38,6 @@ const userResolver = {
     },
     fullAccess: ({ fullAccess }) => {
       return fullAccess === undefined ? false : fullAccess;
-    },
-    timetables: async (parent, args, { user }) => {
-      const { username } = user;
-      return await getTimetables({
-        username,
-        shared: false,
-      });
-    },
-    sharedTimetables: async (parent, args, { user }) => {
-      const { username } = user;
-      return await getTimetables({
-        username,
-        shared: true,
-      });
     },
   },
   Mutation: {

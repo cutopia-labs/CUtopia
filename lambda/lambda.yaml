@@ -3,6 +3,8 @@ Transform: "AWS::Serverless-2016-10-31"
 Parameters:
   IsProduction:
     Type: String
+  AtlasUri:
+    Type: String
   UserTableName:
     Type: String
   UserEmailMappingIndexName:
@@ -43,6 +45,7 @@ Parameters:
     Type: String
 Resources:
   GraphQL:
+    Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./graphql/build
       Handler: graphql.graphqlHandler
@@ -98,8 +101,8 @@ Resources:
       Runtime: nodejs14.x
       Timeout: 20
       MemorySize: 512
-    Type: AWS::Serverless::Function
   GraphQLRole:
+    Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
         Statement:
@@ -144,8 +147,8 @@ Resources:
                   - !Ref UserSNSTopic
             Version: "2012-10-17"
           PolicyName: LambdaPolicy
-    Type: AWS::IAM::Role
   Emailer:
+    Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./emailer
       Handler: index.handler
@@ -160,12 +163,46 @@ Resources:
           GamilClientID: !Ref GamilClientID
           GmailClientSecret: !Ref GmailClientSecret
           GmailRefreshToken: !Ref GmailRefreshToken
-      Role: !GetAtt EmailerRole.Arn
+      Role: !GetAtt LambdaRole.Arn
       Runtime: nodejs14.x
       Timeout: 20
       MemorySize: 512
+  ScheduledRemoveTimetable:
     Type: AWS::Serverless::Function
-  EmailerRole:
+    Properties:
+      CodeUri: ./cron-remove-timetable
+      Handler: index.handler
+      Environment:
+        Variables:
+          AtlasUri: !Ref AtlasUri
+      Role: !GetAtt LambdaRole.Arn
+      Runtime: nodejs14.x
+      Timeout: 20
+      MemorySize: 512
+  ScheduledRemoveTimetableRule:
+    Properties: 
+      ScheduleExpression: cron(0 0 * * ? *)
+      State: ENABLED
+      Targets: 
+        - Arn: 
+            Fn::GetAtt: 
+              - ScheduledRemoveTimetable
+              - Arn
+          Id: TargetFunctionV1
+    Type: AWS::Events::Rule
+  InvokeRemoveTimetablePermission: 
+    Type: AWS::Lambda::Permission
+    Properties: 
+      FunctionName: 
+        Ref: ScheduledRemoveTimetable
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: 
+        Fn::GetAtt: 
+          - ScheduledRemoveTimetableRule
+          - Arn
+  LambdaRole:
+    Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
         Statement:
@@ -188,4 +225,3 @@ Resources:
                   - arn:aws:logs:*:*:*
             Version: "2012-10-17"
           PolicyName: LambdaPolicy
-    Type: AWS::IAM::Role

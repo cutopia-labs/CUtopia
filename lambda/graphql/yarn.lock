@@ -1854,10 +1854,10 @@ cutopia-types@^1.0.2:
   resolved "https://registry.yarnpkg.com/cutopia-types/-/cutopia-types-1.0.2.tgz#feebf9a7b481ad47f5d85ec174b353c078d105a4"
   integrity sha512-qdKbdXfSbQ+zWMQ+wm1n5nVY65XRmFT5wmlsf1tZnUT5oaghlua+bevPznLv/v0JRtCxLs6xrHHSPCHhg+QRvQ==
 
-cutopia-types@^1.0.3:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/cutopia-types/-/cutopia-types-1.0.5.tgz#14d4d4c42527994ddb6bc97505d00f8df0ade237"
-  integrity sha512-bSTuH8M2bqAQ6ZOha97b77GVa7s09EMj22KIEAlQgdqpGcQSBmp+Lc7NfdRcFjCB5fcPTnKulCjsIuZ8fGG0TQ==
+cutopia-types@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/cutopia-types/-/cutopia-types-1.0.6.tgz#2f875cef0e7e6bcba80fda04f5ba9aae322b4761"
+  integrity sha512-XypU6boU/b54jJU2kIpGgGZadVPiaz3Jqshewu/ulayOh180ROxxQLwCWuPSUNl5HLhhioI5sjj/vfMHrTM7Cg==
 
 dataloader@2.0.0:
   version "2.0.0"

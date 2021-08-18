@@ -1,13 +1,17 @@
 import mongoose from 'mongoose';
 
 export {
+  getUser,
+  updateUser,
   getCourseData,
   updateCourseDataFromReview,
   createReview,
   getReviews,
-  getTimetables,
-  getSharedTimetable,
+  getTimetablesOverview,
+  getTimetable,
   uploadTimetable,
+  removeTimetable,
+  cleanExpiredTimetable,
   createUser,
   verifyUser,
   login,

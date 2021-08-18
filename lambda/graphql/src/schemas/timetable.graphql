@@ -1,8 +1,6 @@
 type Mutation {
-  addTimetable(input: AddTimetableInput!): [CourseTableEntry] @auth
-  removeTimetable(input: RemoveTimetableInput!): [CourseTableEntry] @auth
   uploadTimetable(input: UploadTimetableInput!): UploadTimetableResult @auth
-  deleteSharedTimetable(id: String!): Void @auth
+  removeTimetable(input: String!): Void @auth
 }
 
 type Query {
@@ -10,7 +8,8 @@ type Query {
 }
 
 type User {
-  timetable: [CourseTableEntry]
+  timetables: [TimetableOverview]
+  sharedTimetables: [TimetableOverview]
 }
 
 type CourseTableEntry {
@@ -25,14 +24,6 @@ input CourseTableEntryInput {
   sections: [CourseSectionInput]
 }
 
-input AddTimetableInput {
-  entries: [CourseTableEntryInput]!
-}
-
-input RemoveTimetableInput {
-  indices: [Int]!
-}
-
 input CourseSectionInput {
   name: String!
   startTimes: [String]!
@@ -45,7 +36,12 @@ input CourseSectionInput {
 input UploadTimetableInput {
   entries: [CourseTableEntryInput]!
   tableName: String
-  expire: Boolean!
+  """
+  -1: persistent private timetable
+  0: persistent shared timetable
+  >0: timetable expired after `expire` days
+  """
+  expire: Int!
 }
 
 type UploadTimetableResult {
@@ -57,5 +53,14 @@ type Timetable {
   entries: [CourseTableEntry]!
   tableName: String
   createdAt: Timestamp!
-  expire: Boolean!
+  expireAt: Timestamp!
+  expire: Int!
+}
+
+type TimetableOverview {
+  id: String!
+  tableName: String
+  createdAt: Timestamp!
+  expireAt: Timestamp!
+  expire: Int!
 }

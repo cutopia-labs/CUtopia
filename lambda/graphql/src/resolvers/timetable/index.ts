@@ -1,42 +1,42 @@
 import {
-  getTimetable,
-  addTimetable,
+  uploadTimetable,
   removeTimetable,
-  deleteSharedTimetable,
-} from 'dynamodb';
-import { uploadTimetable, getSharedTimetable } from 'mongodb';
+  getTimetable,
+  getTimetablesOverview,
+} from 'mongodb';
 
 const timetableResolver = {
   User: {
-    timetable: async (parent, args, { user }) => {
+    timetables: async (parent, args, { user }) => {
       const { username } = user;
-      return await getTimetable({ username });
+      return await getTimetablesOverview({
+        username,
+        shared: false,
+      });
+    },
+    sharedTimetables: async (parent, args, { user }) => {
+      const { username } = user;
+      return await getTimetablesOverview({
+        username,
+        shared: true,
+      });
     },
   },
   Query: {
-    timetable: async (parent, { id }) => {
-      return await getSharedTimetable({ id });
+    timetable: async (parent, { id }, { user }) => {
+      const { username } = user;
+      return await getTimetable({ id, username });
     },
   },
   Mutation: {
-    addTimetable: async (parent, { input }, { user }) => {
-      const { username } = user;
-      const { entries } = input;
-      return await addTimetable({ username, entries });
-    },
-    removeTimetable: async (parent, { input }, { user }) => {
-      const { username } = user;
-      const { indices } = input;
-      return await removeTimetable({ username, indices });
-    },
     uploadTimetable: async (parent, { input }, { user }) => {
       const { username } = user;
       const { entries, tableName, expire } = input;
       return await uploadTimetable({ username, entries, tableName, expire });
     },
-    deleteSharedTimetable: async (parent, { id }, { user }) => {
+    removeTimetable: async (parent, { id }, { user }) => {
       const { username } = user;
-      await deleteSharedTimetable({ username, id });
+      await removeTimetable({ username, id });
     },
   },
   CourseTableEntry: {

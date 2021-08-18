@@ -55,10 +55,10 @@ clone@2.x:
   resolved "https://registry.yarnpkg.com/clone/-/clone-2.1.2.tgz#1b7f4b9f591f1e8f83670401600345a02887435f"
   integrity sha1-G39Ln1kfHo+DZwQBYANFoCiHQ18=
 
-cutopia-types@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/cutopia-types/-/cutopia-types-1.0.3.tgz#015181ac4e059577849a2b31c685d1b3b6064067"
-  integrity sha512-Qb+LIt1NkE8QNfF7S4N7NYtVofbSz9/T/iDdWsAebdr1xCLPhJc+seoHFTgOxGnqUpTioE0T58b6p2GiHycouQ==
+cutopia-types@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/cutopia-types/-/cutopia-types-1.0.6.tgz#2f875cef0e7e6bcba80fda04f5ba9aae322b4761"
+  integrity sha512-XypU6boU/b54jJU2kIpGgGZadVPiaz3Jqshewu/ulayOh180ROxxQLwCWuPSUNl5HLhhioI5sjj/vfMHrTM7Cg==
 
 debug@3.1.0:
   version "3.1.0"
