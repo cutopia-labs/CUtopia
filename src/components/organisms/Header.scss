@@ -27,14 +27,18 @@
   flex-direction: column;
   margin: 10px 0;
   .search-panel {
-    --search-panel-width: 100%;
+    --search-panel-width: calc(100% - 2px); // 2px for border
     border-radius: 0;
     border-top: 0;
     .search-input-container {
       display: none;
     }
+    .MuiDivider-root {
+      &:first-of-type {
+        display: none;
+      }
+    }
   }
-
   .search-input-container {
     border-radius: 6px;
     background-color: var(--header-search-background);
@@ -103,36 +107,45 @@
     & > .header-logo {
       margin-left: 12px;
     }
-    .search-dropdown {
-      --search-dropdown-width: calc(100vw - 2 * var(--card-padding));
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      width: fit-content;
-      margin-left: auto;
-      &.active {
-        width: 100vw;
-        margin-left: initial;
-      }
+  }
+  .search-dropdown {
+    --search-dropdown-width: 100vw;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    width: fit-content;
+    margin-left: auto;
+    &.active {
+      width: 100vw;
+      margin-left: initial;
+    }
+    .search-panel {
+      display: initial;
     }
     .search-input-container {
       border: none;
       margin-right: 0;
       background-color: transparent;
-      &.active {
-        width: var(--search-dropdown-width);
-        background-color: var(--header-search-background);
+      width: 34px;
+      .search-input {
+        visibility: hidden;
       }
-      input {
-        width: 0;
-        &:focus {
-          width: calc(100vw - 2 * var(--card-padding) - 38px); // 38px for padding & searchIcon
+      &.active {
+        width: calc(100vw - 20px);
+        margin: 0 10px 10px 10px;
+        padding: 0;
+        background-color: var(--header-search-background);
+        border-bottom-left-radius: var(--border-radius);
+        border-bottom-right-radius: var(--border-radius);
+        .search-input {
+          visibility: visible;
+          width: 100%;
         }
       }
-    }
-    .search-input {
-      margin-left: 0;
+      .search-input {
+        margin-left: 0;
+      }
     }
   }
   .header-search-result {

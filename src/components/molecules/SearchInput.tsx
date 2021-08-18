@@ -28,10 +28,10 @@ export default function SearchInput({
         type="submit"
         className="search-input-icon"
         aria-label="search"
-        onClick={(e) => {
+        onClick={async (e) => {
           if (isMobile && inputRef.current) {
-            e.preventDefault();
-            console.log('Focused');
+            setVisible(true);
+            await new Promise((resolve) => setTimeout(resolve, 100));
             inputRef.current.focus();
           }
         }}
