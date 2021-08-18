@@ -4,16 +4,60 @@ import SearchIcon from '@material-ui/icons/Search';
 
 import './SearchInput.scss';
 import clsx from 'clsx';
+import { ArrowBack } from '@material-ui/icons';
+
+enum SearchInputMode {
+  SHOW_DROPDOWN,
+  HIDE_DROPDOWN,
+  SEARCH_PANEL,
+}
 
 export default function SearchInput({
-  value,
-  setValue,
+  searchPayload,
+  setSearchPayload,
   onSubmit,
   visible,
   setVisible,
   isMobile,
   inputRef,
 }) {
+  const getButtonActionMode = () => {
+    if (!visible && isMobile) {
+      return SearchInputMode.SHOW_DROPDOWN;
+    }
+    if (!searchPayload && isMobile) {
+      return SearchInputMode.HIDE_DROPDOWN;
+    }
+    if (
+      searchPayload &&
+      (searchPayload.mode !== 'query' || searchPayload.text)
+    ) {
+      return SearchInputMode.SEARCH_PANEL;
+    }
+    return SearchInputMode.SHOW_DROPDOWN;
+  };
+
+  const onIconButtonPress = async (e) => {
+    e.stopPropagation();
+    switch (getButtonActionMode()) {
+      case SearchInputMode.SHOW_DROPDOWN:
+        if (isMobile && inputRef.current) {
+          console.log('Hi');
+          setVisible(true);
+          await new Promise((resolve) => setTimeout(resolve, 100));
+          inputRef.current.focus();
+        }
+        break;
+      /* @ts-ignore */
+      case SearchInputMode.HIDE_DROPDOWN:
+        setVisible(false);
+      /* fall through */
+      case SearchInputMode.SEARCH_PANEL:
+        setSearchPayload(null);
+        break;
+    }
+  };
+
   return (
     <form
       className={clsx(
@@ -28,22 +72,29 @@ export default function SearchInput({
         type="submit"
         className="search-input-icon"
         aria-label="search"
-        onClick={async (e) => {
-          if (isMobile && inputRef.current) {
-            setVisible(true);
-            await new Promise((resolve) => setTimeout(resolve, 100));
-            inputRef.current.focus();
-          }
-        }}
+        onClick={(e) => onIconButtonPress(e)}
       >
-        <SearchIcon />
+        {getButtonActionMode() === SearchInputMode.SHOW_DROPDOWN ? (
+          <SearchIcon />
+        ) : (
+          <ArrowBack />
+        )}
       </IconButton>
       <InputBase
         inputRef={inputRef}
         className="search-input"
         placeholder="Search for courses"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
+        value={searchPayload?.text || ''}
+        onChange={(e) =>
+          setSearchPayload(
+            e.target.value
+              ? {
+                  mode: 'query',
+                  text: e.target.value,
+                }
+              : null
+          )
+        }
         onFocus={() => setVisible(true)}
       />
     </form>

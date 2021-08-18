@@ -39,15 +39,11 @@ const Header = () => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const inputRef = useRef<HTMLInputElement>(null);
-  const searchDropDownRef = useOuterClick(
-    (e) => {
-      console.log('Clicked outside');
-      setVisible(false);
-      setSearchPayload(null);
-    },
-    new Set(['search-panel-subject-code', 'search-panel-mode-item']),
-    !visible
-  );
+  const searchDropDownRef = useOuterClick((e) => {
+    console.log('Clicked outside');
+    setVisible(false);
+    setSearchPayload(null);
+  }, !visible);
   const user = useContext(UserContext);
 
   const onSubmitSearch = (e) => {
@@ -117,17 +113,8 @@ const Header = () => {
           >
             <SearchInput
               isMobile={isMobile}
-              value={searchPayload?.text || ''}
-              setValue={(text) =>
-                setSearchPayload(
-                  text
-                    ? {
-                        mode: 'query',
-                        text,
-                      }
-                    : null
-                )
-              }
+              searchPayload={searchPayload}
+              setSearchPayload={setSearchPayload}
               onSubmit={onSubmitSearch}
               inputRef={inputRef}
               visible={visible}

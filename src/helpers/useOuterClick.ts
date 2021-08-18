@@ -2,8 +2,8 @@ import { useEffect, useRef } from 'react';
 
 const useOuterClick = (
   callback: (e: MouseEvent) => any,
-  ignoredClassNames?: Set<string>,
-  skip?: boolean
+  skip?: boolean,
+  ignoredClassNames?: Set<string>
 ) => {
   const callbackRef = useRef(null);
   const innerRef = useRef(null);
