@@ -38,8 +38,6 @@ const getCoursesFromQuery = async ({
         etag: +new Date(),
       });
     }
-    console.log(`Fetched:`);
-    console.log(courseList);
     // load local TimeTable
     const { mode, text } = payload;
     switch (mode) {

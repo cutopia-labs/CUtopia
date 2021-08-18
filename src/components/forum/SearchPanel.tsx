@@ -169,16 +169,18 @@ const DepartmentList = ({ setSearchPayload }) => {
             <div className="code-list">
               {v.map((code, i) => (
                 <ListItem
+                  className="search-panel-subject-code"
                   key={code}
                   title={code}
                   ribbonIndex={i}
                   chevron
-                  onClick={() =>
+                  onClick={(e) => {
+                    e.stopPropagation();
                     setSearchPayload({
                       text: code,
                       mode: 'subject',
-                    })
-                  }
+                    });
+                  }}
                 />
               ))}
             </div>
@@ -189,7 +191,11 @@ const DepartmentList = ({ setSearchPayload }) => {
   );
 };
 
-const SearchPanel = () => {
+type SearchPanelProps = {
+  onSearchPayloadChange?: (searchPayload) => any;
+};
+
+const SearchPanel = ({ onSearchPayloadChange }: SearchPanelProps) => {
   const [searchPayload, setSearchPayloadState] = useState<SearchPayload | null>(
     null
   );
@@ -237,15 +243,17 @@ const SearchPanel = () => {
   });
 
   const setSearchPayload = (payload: SearchPayload) => {
-    setSearchPayloadState(
-      payload
-        ? {
-            ...payload,
-            showAvalibility: Boolean(isPlanner),
-            offerredOnly: Boolean(isPlanner),
-          }
-        : null
-    );
+    const newPayload = payload
+      ? {
+          ...payload,
+          showAvalibility: Boolean(isPlanner),
+          offerredOnly: Boolean(isPlanner),
+        }
+      : null;
+    setSearchPayloadState(newPayload);
+    if (onSearchPayloadChange) {
+      onSearchPayloadChange(newPayload);
+    }
   };
 
   const saveHistory = async (courseId: string) => {
@@ -362,7 +370,13 @@ const SearchPanel = () => {
               <MUIListItem
                 key={item.label}
                 button
-                onClick={() => setSearchPayload({ mode: item.label })}
+                onClick={(e) => {
+                  if (onSearchPayloadChange) {
+                    e.stopPropagation(); // prevent e.target showes child node
+                  }
+                  setSearchPayload({ mode: item.label });
+                }}
+                className="search-panel-mode-item"
               >
                 <ListItemIcon>{item.icon}</ListItemIcon>
                 <ListItemText primary={item.label} />

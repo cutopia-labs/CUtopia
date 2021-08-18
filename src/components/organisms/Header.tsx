@@ -5,12 +5,13 @@ import { Menu as MenuIcon } from '@material-ui/icons';
 import clsx from 'clsx';
 
 import { UserContext } from '../../store';
-import { SearchResult } from '../forum/SearchPanel';
+import SearchPanel, { SearchResult } from '../forum/SearchPanel';
 import './Header.scss';
 import Logo from '../atoms/Logo';
 import SearchInput from '../molecules/SearchInput';
 import useMobileQuery from '../../helpers/useMobileQuery';
 import useOuterClick from '../../helpers/useOuterClick';
+import { SearchPayload } from '../../types';
 
 const SECTIONS = [
   {
@@ -30,16 +31,23 @@ const SECTIONS = [
 const Header = () => {
   const location = useLocation();
   const history = useHistory();
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchPayload, setSearchPayload] = useState<SearchPayload | null>(
+    null
+  );
   const [visible, setVisible] = useState(false);
   const isMobile = useMobileQuery();
   const [anchorEl, setAnchorEl] = useState(null);
 
   const inputRef = useRef<HTMLInputElement>(null);
-  const searchDropDownRef = useOuterClick((e) => {
-    setVisible(false);
-    setSearchQuery('');
-  });
+  const searchDropDownRef = useOuterClick(
+    (e) => {
+      console.log('Clicked outside');
+      setVisible(false);
+      setSearchPayload(null);
+    },
+    new Set(['search-panel-subject-code', 'search-panel-mode-item']),
+    !visible
+  );
   const user = useContext(UserContext);
 
   const onSubmitSearch = (e) => {
@@ -104,35 +112,45 @@ const Header = () => {
         )}
         <nav className="header-nav row">
           <div
-            className="search-dropdown center-box center"
+            className={clsx('search-dropdown column', visible && 'active')}
             ref={searchDropDownRef}
           >
             <SearchInput
               isMobile={isMobile}
-              value={searchQuery}
-              setValue={setSearchQuery}
+              value={searchPayload?.text || ''}
+              setValue={(text) =>
+                setSearchPayload(
+                  text
+                    ? {
+                        mode: 'query',
+                        text,
+                      }
+                    : null
+                )
+              }
               onSubmit={onSubmitSearch}
               inputRef={inputRef}
               visible={visible}
               setVisible={setVisible}
             />
-            {visible && Boolean(searchQuery) && (
-              <div className="header-search-result card">
-                <SearchResult
-                  searchPayload={{
-                    text: searchQuery,
-                    mode: 'query',
-                  }}
-                  user={user}
-                  limit={isMobile ? 4 : 6}
-                  onClick={(courseId) => {
-                    history.push(`/review/${courseId}`);
-                    setVisible(false);
-                    setSearchQuery('');
-                  }}
-                />
-              </div>
-            )}
+            {visible &&
+              (searchPayload ? (
+                <div className="header-search-result card">
+                  <SearchResult
+                    searchPayload={searchPayload}
+                    user={user}
+                    limit={isMobile ? 4 : 6}
+                    onClick={(courseId) => {
+                      history.push(`/review/${courseId}`);
+                      setVisible(false);
+                      console.log('Hi I set you');
+                      setSearchPayload(null);
+                    }}
+                  />
+                </div>
+              ) : (
+                <SearchPanel onSearchPayloadChange={setSearchPayload} />
+              ))}
           </div>
           {!isMobile && navSections}
         </nav>
