@@ -95,6 +95,26 @@
   bottom: 20px;
 }
 
+.grade-row.standalone {
+  width: var(--second-column-width);
+  height: 120px;
+  background-color: var(--surface);
+}
+
+.course-suggestion {
+  .list-item-caption {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    margin-top: 5px;
+  }
+  .list-item-title-container {
+    margin: 0 16px;
+  }
+}
+
 @media only screen and (max-width: 1260px) {
   .course-panel {
     max-height: none;

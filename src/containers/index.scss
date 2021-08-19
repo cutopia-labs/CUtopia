@@ -38,6 +38,7 @@ body {
   --page-magrgin-top: 0;
   --page-content-height: calc(100vh - var(--header-height) - 2 * var(--card-padding));
   --default-button-background: rgba(31, 31, 31, 1);
+  --second-column-width: 310px;
   color: var(--text);
   background-color: var(--background);
   overflow-y: scroll;
@@ -150,6 +151,14 @@ textarea[type="number"] {
   font-weight: bold;
 }
 
+h1, h2, h3, h4, h5 {
+  margin: 0;
+}
+
+h4 {
+  font-size: 16;
+}
+
 .caption {
   color: var(--text);
   opacity: 0.9;
@@ -236,6 +245,7 @@ textarea[type="number"] {
   }
 }
 
+.secondary-column,
 .grid-auto-row {
   display: grid;
   grid-auto-rows: auto;
@@ -280,6 +290,16 @@ textarea[type="number"] {
 
 .full-width {
   width: 100%;
+}
+
+.sticky {
+  position: sticky;
+  top: calc(var(--header-height) + var(--page-margin));
+  height: fit-content;
+}
+
+.secondary-column {
+  width: var(--second-column-width);
 }
 
 /* Scrollbar styles */

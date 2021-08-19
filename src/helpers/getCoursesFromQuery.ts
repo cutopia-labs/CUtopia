@@ -7,6 +7,31 @@ const CODE_RULE = new RegExp('\\d{4}$');
 const CODE_RULE_ALTER = new RegExp('\\d+', 'g');
 const CONDENSED_RULE = new RegExp('[^a-zA-Z0-9]', 'g');
 
+export const fetchCourses = async (): Promise<
+  Record<string, CourseSearchItem[]> | undefined
+> => {
+  let courseList: Record<string, CourseSearchItem[]> | undefined =
+    getStoreData('course_list')?.data;
+  if (!courseList) {
+    const res = await fetch(
+      'https://pv9wmcullh.execute-api.ap-northeast-1.amazonaws.com/Stage/static/course_list.json',
+      {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          Accept: 'application/json',
+        },
+      }
+    );
+    courseList = await res.json();
+    storeData('course_list', {
+      data: courseList,
+      etag: +new Date(),
+    });
+  }
+  return courseList;
+};
+
 const getCoursesFromQuery = async ({
   payload,
   user,
@@ -19,24 +44,9 @@ const getCoursesFromQuery = async ({
   offerredOnly?: boolean;
 }): Promise<CourseSearchItem[] | false> => {
   try {
-    let courseList: Record<string, CourseSearchItem[]> | undefined =
-      getStoreData('course_list')?.data;
+    const courseList = await fetchCourses();
     if (!courseList) {
-      const res = await fetch(
-        'https://pv9wmcullh.execute-api.ap-northeast-1.amazonaws.com/Stage/static/course_list.json',
-        {
-          method: 'GET',
-          mode: 'cors',
-          headers: {
-            Accept: 'application/json',
-          },
-        }
-      );
-      courseList = await res.json();
-      storeData('course_list', {
-        data: courseList,
-        etag: +new Date(),
-      });
+      throw new Error('Cannot fetch courses!');
     }
     // load local TimeTable
     const { mode, text } = payload;

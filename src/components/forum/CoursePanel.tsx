@@ -29,6 +29,9 @@ import { LAZY_LOAD_BUFFER } from '../../constants/configs';
 import { CourseInfo, ReviewsFilter, ReviewsResult } from '../../types';
 import Footer from '../molecules/Footer';
 import useMobileQuery from '../../helpers/useMobileQuery';
+import Card from '../atoms/Card';
+import getSimilarCourses from '../../helpers/getSimilarCourses';
+import ListItem from '../molecules/ListItem';
 import ReviewCard from './ReviewCard';
 import CourseCard from './CourseCard';
 
@@ -215,6 +218,7 @@ const CoursePanel = () => {
   const isMobile = useMobileQuery();
   const [FABHidden, setFABHidden] = useState(!isMobile);
   const reviewFilterBarRef = useRef<HTMLDivElement | null>(null);
+  const [similarCourses, setSimilarCourse] = useState([]);
   const [reviewsPayload, dispatchReviewsPayload] = useReducer(
     (state: Partial<ReviewsFilter>, action: Partial<ReviewsFilter>) =>
       ({
@@ -361,12 +365,17 @@ const CoursePanel = () => {
     return () => window.removeEventListener('scroll', listenToScroll);
   }, [listenToScroll, reviewId]);
 
+  const fetchSimilarCourses = async (courseId) => {
+    setSimilarCourse(await getSimilarCourses(courseId));
+  };
+
   useEffect(() => {
     console.log(`Current id: ${courseId}`);
     if (reviews.length) {
       setReviews([]);
     }
     if (validCourse(courseId)) {
+      fetchSimilarCourses(courseId);
       setMode(COURSE_PANEL_MODES.FETCH_REVIEWS);
       user.increaseViewCount();
     } else {
@@ -484,6 +493,21 @@ const CoursePanel = () => {
           {(reviewLoading || reviewsLoading) && <Loading />}
         </div>
         {lastEvaluatedKey === null && <Footer />}
+      </div>
+      <div className="secondary-column sticky">
+        {!isMobile && (
+          <Card className="course-suggestion" title="Suggestions">
+            {similarCourses.map((course) => (
+              <ListItem
+                key={course.courseId}
+                title={course.courseId}
+                caption={course.title}
+                onClick={() => history.push(`/review/${course.courseId}`)}
+                noBorder
+              />
+            ))}
+          </Card>
+        )}
       </div>
     </>
   );
