@@ -43,7 +43,6 @@ const MODE_ITEMS = {
     title: 'Verify',
     caption:
       'An verification code has been sent to CUHK email.\nPlease enter your code here:',
-    username: 'Username',
     verificationCode: 'Your Verification Code',
     button: 'Verify',
   },
@@ -54,8 +53,9 @@ const MODE_ITEMS = {
     button: 'Send Reset Code',
   },
   [LoginPageMode.RESET_PASSWORD_VERIFY]: {
-    title: 'Verify',
-    caption: 'An verification code will be send to your CUHK email',
+    title: 'Set New Password',
+    caption:
+      'Please enter new password an the verification code in your CUHK email',
     password: 'New Password',
     verificationCode: 'Your Verification Code',
     button: 'Send',
@@ -97,62 +97,35 @@ const LoginPanel = () => {
   useEffect(() => {
     const mode = PATH_MODE_LOOKUP[location.pathname];
     if (!mode) {
+      if (location.pathname.startsWith('/account')) {
+        const subpath = location.pathname.substring(9);
+        const params = new URLSearchParams(location.search.substring(1));
+        const username = params.get('user');
+        const code = params.get('code');
+        setUsername(username);
+        setVerificationCode(code);
+        switch (subpath) {
+          case 'verify': {
+            verifyUser({
+              variables: {
+                username,
+                code,
+              },
+            });
+            setMode(LoginPageMode.VERIFY);
+            break;
+          }
+          case 'reset-password': {
+            setMode(LoginPageMode.RESET_PASSWORD_VERIFY);
+            break;
+          }
+        }
+        return;
+      }
       history.push('/');
     }
     setMode(mode || INITIAL_MODE);
   }, [location.pathname]);
-
-  /*
-  const { sendMessage, lastMessage, readyState } = useWebSocket(
-    'wss://1rys6xiqvk.execute-api.ap-northeast-1.amazonaws.com/Prod'
-  );
-
-  const [QRCodeData, setQRCodeData] = useState('');
-  const accessPwd = useRef('');
-
-  useEffect(() => {
-    if (readyState === ReadyState.OPEN && !QRCodeData) {
-      sendMessage(
-        JSON.stringify({
-          action: 'sendmessage',
-          type: 'getSelfId',
-        })
-      );
-    }
-  }, [readyState, QRCodeData]);
-
-  useEffect(() => {
-    if (!lastMessage) {
-      return;
-    }
-
-    try {
-      const data = JSON.parse(lastMessage.data);
-      if (data.connectionId) {
-        const pwd = nanoid(10);
-        accessPwd.current = pwd;
-        setQRCodeData(
-          JSON.stringify({
-            valid: 'CUtopia',
-            id: data.connectionId,
-            pwd,
-          })
-        );
-      }
-
-      if (data.pwd !== accessPwd.current) {
-        console.warn('Unauthorized');
-        return;
-      }
-
-      if (data.type === 'token') {
-        user.saveUser(data.username, data.token);
-      }
-    } catch (err) {
-      console.warn(err);
-    }
-  }, [lastMessage]);
-  */
 
   const [createUser, { loading: creatingUser, error: createError }] =
     useMutation(SEND_VERIFICATION, {
@@ -171,7 +144,10 @@ const LoginPanel = () => {
       onCompleted: handleCompleted(() => loginAndRedirect(), {
         view,
       }),
-      onError: view.handleError,
+      onError: (e) => {
+        view.handleError(e);
+        history.push('/verify');
+      },
     }
   );
   const [loginCUtopia, { loading: loggingInCUtopia }] = useMutation(
@@ -220,10 +196,6 @@ const LoginPanel = () => {
     };
     await loginCUtopia(loginPayload);
   };
-
-  useEffect(() => {
-    mode !== null && console.log(mode);
-  }, [mode]);
 
   const validate = (): boolean => {
     const errorsFound = {
@@ -336,14 +308,6 @@ const LoginPanel = () => {
           <h2 className="title">{MODE_ITEMS[mode].title}</h2>
           <span className="caption">{MODE_ITEMS[mode].caption}</span>
         </div>
-        {/*
-        mode === LoginPageMode.CUTOPIA_LOGIN &&
-          (readyState === ReadyState.OPEN && QRCodeData ? (
-            <QRCode value={QRCodeData} size={64} />
-          ) : (
-            <CircularProgress />
-          ))
-        */}
       </div>
       <form className="grid-auto-row" onSubmit={onSubmit}>
         {MODE_ITEMS[mode].userId && (

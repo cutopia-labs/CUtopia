@@ -168,7 +168,9 @@ export const getRandomGeCourses = async (
   limit: number = SIMILAR_COURSE_LIMIT
 ): Promise<CourseConcise[]> => {
   const courses = await fetchCourses();
-  const GECourses = UGE_COURSE_CODES.map((subject) => courses[subject]).flat();
+  const GECourses = UGE_COURSE_CODES.map((subject) => courses[subject])
+    .flat()
+    .filter((course) => course.o);
   const GECoursesLen = GECourses.length;
   return [...generateRandomArray(limit, GECoursesLen)].map((index) => ({
     courseId: GECourses[index].c,

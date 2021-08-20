@@ -172,12 +172,6 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
     {}
   );
 
-  useEffect(() => {
-    if (shareId) {
-      document.title = 'Planner | Share';
-    }
-  }, [shareId]);
-
   const onShareTimetTable = async (e) => {
     e.preventDefault();
     if (!shareCourses?.length) {

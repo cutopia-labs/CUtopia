@@ -23,7 +23,7 @@ const ROUTES = [
   {
     props: {
       exact: true,
-      path: '/',
+      path: ['/', '/account/:params'],
     },
     children: <HomePage />,
   },
