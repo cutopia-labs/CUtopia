@@ -25,49 +25,6 @@
   }
 }
 
-.reviews-filter {
-  display: flex;
-  padding: 12px 8px;
-  align-items: center;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  svg {
-    color: var(--text);
-  }
-  flex-direction: row;
-  .filter-row {
-    .reviews-filter-label {
-      margin: 0;
-      font-weight: 500;
-    }
-  }
-  &.float {
-    position: fixed;
-    z-index: 20;
-    bottom: 0;
-    right: 0;
-    width: inherit;
-    box-shadow: 0 4px 10px rgba(46, 43, 43, 0.1);
-  }
-  button {
-    &.edit {
-      font-size: 18px;
-      width: 32px;
-      height: 32px;
-    }
-  }
-}
-.reviews-filter-menu {
-}
-.reviews-filter-ratings {
-  align-items: center;
-}
-.reviews-filter-label {
-  text-transform: capitalize;
-  margin: 0 10px;
-  font-size: 14px;
-  color: var(--text);
-}
 .grade-indicator {
   &.reviews-filter-grade-indicator {
     border-radius: 8px;
@@ -101,36 +58,12 @@
   background-color: var(--surface);
 }
 
-.course-suggestion {
-  .list-item-caption {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    margin-top: 5px;
-  }
-  .list-item-title-container {
-    margin: 0 16px;
-  }
-}
-
 @media only screen and (max-width: 1260px) {
   .course-panel {
     max-height: none;
   }
   .course-panel-fab {
     right: 20px;
-  }
-  .reviews-filter {
-    padding: 12px var(--card-padding);
-  }
-  .filter-row {
-    button {
-      .MuiButton-endIcon {
-        margin-left: 0;
-      }
-    }
   }
   .review-count {
     margin: 0 6px;

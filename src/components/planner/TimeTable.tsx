@@ -3,7 +3,7 @@ import { useMediaQuery } from '@material-ui/core';
 
 import './TimeTable.scss';
 import colors from '../../constants/colors';
-import { WEEKDAYS } from '../../constants/states';
+import { WEEKDAYS } from '../../constants';
 import {
   CourseTableEntry,
   Event,

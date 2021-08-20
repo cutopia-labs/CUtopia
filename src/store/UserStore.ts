@@ -3,7 +3,7 @@ import { makeObservable, observable, action } from 'mobx';
 import { CourseConcise, CourseTableEntry, LoginState, User } from '../types';
 import { storeData, getStoreData, removeStoreItem } from '../helpers/store';
 
-import { TOKEN_EXPIRE_DAYS, VIEWS_LIMIT } from '../constants/states';
+import { TOKEN_EXPIRE_DAYS, VIEWS_LIMIT } from '../constants';
 import { FULL_MEMBER_LEVEL } from '../constants/configs';
 import ViewStore from './ViewStore';
 import StorePrototype from './StorePrototype';

@@ -1,4 +1,4 @@
-import { VALUE_TO_LETTER, GRADE_VALUES, GRADES } from '../constants/states';
+import { VALUE_TO_LETTER, GRADE_VALUES, GRADES } from '../constants';
 
 const VALID_COURSE_RULE = new RegExp('^[a-z]{4}\\d{4}$', 'i');
 

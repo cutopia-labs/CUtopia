@@ -8,7 +8,7 @@ import { IconButton } from '@material-ui/core';
 
 import './ReviewCard.scss';
 import clsx from 'clsx';
-import { RATING_FIELDS, VOTE_ACTIONS } from '../../constants/states';
+import { RATING_FIELDS, VOTE_ACTIONS } from '../../constants';
 import { VOTE_REVIEW } from '../../constants/mutations';
 import { getMMMDDYY } from '../../helpers/getTime';
 import ShowMoreOverlay from '../molecules/ShowMoreOverlay';

@@ -1,7 +1,7 @@
 import { createTheme } from '@material-ui/core/styles';
 import { blue, cyan, lime, amber, deepOrange } from '@material-ui/core/colors';
 
-const COLOR_SHADE = 300;
+const COLOR_SHADE = 500;
 
 const colors = {
   primary: '#ea4c89',

@@ -21,7 +21,7 @@ import { HiOutlineInformationCircle } from 'react-icons/hi';
 import { ViewContext, UserContext } from '../../store';
 import { GET_REVIEW, COURSE_INFO_QUERY } from '../../constants/queries';
 import { ADD_REVIEW, EDIT_REVIEW } from '../../constants/mutations';
-import { GRADES, RATING_FIELDS } from '../../constants/states';
+import { GRADES, RATING_FIELDS } from '../../constants';
 import TextField from '../atoms/TextField';
 import Loading from '../atoms/Loading';
 import ListItem from '../molecules/ListItem';

@@ -1,4 +1,4 @@
-import { WEEKDAYS } from '../constants/states';
+import { WEEKDAYS } from '../constants';
 
 const MONTHS = [
   'Jan',

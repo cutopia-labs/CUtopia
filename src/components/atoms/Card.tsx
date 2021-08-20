@@ -1,5 +1,3 @@
-import { PropsWithChildren } from 'react';
-
 import './Card.scss';
 import clsx from 'clsx';
 
@@ -9,9 +7,7 @@ type CardOwnProps = {
   titleContent?: JSX.Element;
 };
 
-export type CardProps = PropsWithChildren<
-  CardOwnProps & React.HTMLProps<HTMLDivElement>
->;
+export type CardProps = CardOwnProps & React.HTMLProps<HTMLDivElement>;
 
 const Card = ({
   className,

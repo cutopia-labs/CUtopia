@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import {
   ForumOutlined,
@@ -10,7 +10,7 @@ import { useQuery } from '@apollo/client';
 import './HomePanel.scss';
 import { useTitle } from 'react-use';
 import GradeIndicator from '../atoms/GradeIndicator';
-import { RATING_FIELDS } from '../../constants/states';
+import { RATING_FIELDS } from '../../constants';
 import {
   RECENT_REVIEWS_QUERY,
   TOP_RATED_COURSES_QUERY,
@@ -26,6 +26,8 @@ import { PopularCourse, RecentReview, TopRatedCourse } from '../../types';
 import { ViewContext } from '../../store';
 import { getMMMDDYY } from '../../helpers/getTime';
 import Footer from '../molecules/Footer';
+import FeedCard from '../molecules/FeedCard';
+import { getRandomGeCourses } from '../../helpers/getCourses';
 
 const MENU_ITEMS = [
   {
@@ -130,6 +132,8 @@ const HomePanel = () => {
   useTitle('Review');
   const [tab, setTab] = useState('Recents');
   const [sortKey, setSortKey] = useState('overall');
+  const [feedCourses, setFeedCourse] = useState([]);
+  const history = useHistory();
   const view = useContext(ViewContext);
 
   const { data: reviewsData, loading: recentReviewsLoading } = useQuery<{
@@ -157,6 +161,13 @@ const HomePanel = () => {
       onError: view.handleError,
     }
   );
+
+  useEffect(() => {
+    const fetchFeedCourses = async () => {
+      setFeedCourse(await getRandomGeCourses());
+    };
+    fetchFeedCourses();
+  }, []);
   return (
     <>
       <div className="panel review-home-panel center-row grid-auto-row">
@@ -187,7 +198,13 @@ const HomePanel = () => {
           topRatedCoursesLoading
         ) && <Footer />}
       </div>
-      <div className="secondary-column"></div>
+      <div className="secondary-column sticky">
+        <FeedCard
+          title="Suggestions"
+          courses={feedCourses}
+          onItemClick={(course) => history.push(`/review/${course.courseId}`)}
+        />
+      </div>
     </>
   );
 };

@@ -1,8 +1,9 @@
 import { SIMILAR_COURSE_LIMIT } from '../constants/configs';
 import UserStore from '../store/UserStore';
 import { CourseConcise, CourseSearchItem, SearchPayload } from '../types';
+import { UGE_COURSE_CODES } from '../constants';
 import { getStoreData, storeData } from './store';
-import { getSubjectAndCode } from '.';
+import { generateRandomArray, getSubjectAndCode } from '.';
 
 const SUBJECT_RULE = new RegExp('[a-zA-Z]{4}');
 const CODE_RULE = new RegExp('\\d{4}$');
@@ -31,6 +32,13 @@ export const fetchCourses = async (): Promise<
       etag: +new Date(),
     });
   }
+  let sum = 0;
+  console.log(
+    Object.values(courseList).forEach((list) => {
+      sum += list.length;
+    })
+  );
+  console.log(sum);
   return courseList;
 };
 
@@ -153,5 +161,17 @@ export const getSimilarCourses = async (
   return results.map((course) => ({
     courseId: course.c,
     title: course.t,
+  }));
+};
+
+export const getRandomGeCourses = async (
+  limit: number = SIMILAR_COURSE_LIMIT
+): Promise<CourseConcise[]> => {
+  const courses = await fetchCourses();
+  const GECourses = UGE_COURSE_CODES.map((subject) => courses[subject]).flat();
+  const GECoursesLen = GECourses.length;
+  return [...generateRandomArray(limit, GECoursesLen)].map((index) => ({
+    courseId: GECourses[index].c,
+    title: GECourses[index].t,
   }));
 };

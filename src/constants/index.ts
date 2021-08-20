@@ -58,3 +58,5 @@ export const VOTE_ACTIONS = Object.freeze({
 export const TOKEN_EXPIRE_DAYS = 7;
 export const VIEWS_LIMIT = 5;
 export const FULL_MEMBER_REVIEWS = 3;
+
+export const UGE_COURSE_CODES = ['UGEA', 'UGEB', 'UGEC', 'UGED'];

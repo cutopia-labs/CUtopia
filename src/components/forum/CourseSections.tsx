@@ -5,7 +5,7 @@ import { Add, PersonOutline, Schedule, RoomOutlined } from '@material-ui/icons';
 
 import './CourseSections.scss';
 import { PlannerContext, ViewContext } from '../../store';
-import { WEEKDAYS_TWO_ABBR } from '../../constants/states';
+import { WEEKDAYS_TWO_ABBR } from '../../constants';
 import { CourseInfo, CourseSection, ErrorCardMode } from '../../types';
 import ErrorCard from '../molecules/ErrorCard';
 import { CURRENT_TERM } from '../../constants/configs';
