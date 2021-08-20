@@ -43,7 +43,7 @@ import {
 import UserStore from '../../store/UserStore';
 import Card from '../atoms/Card';
 import ErrorCard from '../molecules/ErrorCard';
-import getCoursesFromQuery from '../../helpers/getCoursesFromQuery';
+import { getCoursesFromQuery } from '../../helpers/getCourses';
 import CourseCard from './CourseCard';
 
 /*

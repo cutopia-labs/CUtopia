@@ -29,9 +29,8 @@ import { LAZY_LOAD_BUFFER } from '../../constants/configs';
 import { CourseInfo, ReviewsFilter, ReviewsResult } from '../../types';
 import Footer from '../molecules/Footer';
 import useMobileQuery from '../../helpers/useMobileQuery';
-import Card from '../atoms/Card';
-import getSimilarCourses from '../../helpers/getSimilarCourses';
-import ListItem from '../molecules/ListItem';
+import { getSimilarCourses } from '../../helpers/getCourses';
+import FeedCard from '../molecules/FeedCard';
 import ReviewCard from './ReviewCard';
 import CourseCard from './CourseCard';
 
@@ -496,17 +495,11 @@ const CoursePanel = () => {
       </div>
       <div className="secondary-column sticky">
         {!isMobile && (
-          <Card className="course-suggestion" title="Suggestions">
-            {similarCourses.map((course) => (
-              <ListItem
-                key={course.courseId}
-                title={course.courseId}
-                caption={course.title}
-                onClick={() => history.push(`/review/${course.courseId}`)}
-                noBorder
-              />
-            ))}
-          </Card>
+          <FeedCard
+            title="Suggestions"
+            courses={similarCourses}
+            onItemClick={(course) => history.push(`/review/${course.courseId}`)}
+          />
         )}
       </div>
     </>

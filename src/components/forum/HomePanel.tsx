@@ -158,34 +158,37 @@ const HomePanel = () => {
     }
   );
   return (
-    <div className="panel review-home-panel center-row grid-auto-row">
-      <TabsContainer items={MENU_ITEMS} selected={tab} onSelect={setTab} />
-      {tab === 'Top Rated' && (
-        <ChipsRow
-          items={['overall', ...RATING_FIELDS]}
-          select={sortKey}
-          setSelect={setSortKey}
+    <>
+      <div className="panel review-home-panel center-row grid-auto-row">
+        <TabsContainer items={MENU_ITEMS} selected={tab} onSelect={setTab} />
+        {tab === 'Top Rated' && (
+          <ChipsRow
+            items={['overall', ...RATING_FIELDS]}
+            select={sortKey}
+            setSelect={setSortKey}
+          />
+        )}
+        <RecentReviewList
+          reviews={reviewsData?.reviews?.reviews}
+          loading={recentReviewsLoading}
         />
-      )}
-      <RecentReviewList
-        reviews={reviewsData?.reviews?.reviews}
-        loading={recentReviewsLoading}
-      />
-      <RankingCard
-        rankList={topRatedCourses?.ranking?.topRatedCourses}
-        sortKey={sortKey}
-        loading={topRatedCoursesLoading}
-      />
-      <RankingCard
-        rankList={popularCourses?.ranking?.popularCourses}
-        loading={popularCoursesLoading}
-      />
-      {!(
-        recentReviewsLoading ||
-        popularCoursesLoading ||
-        topRatedCoursesLoading
-      ) && <Footer />}
-    </div>
+        <RankingCard
+          rankList={topRatedCourses?.ranking?.topRatedCourses}
+          sortKey={sortKey}
+          loading={topRatedCoursesLoading}
+        />
+        <RankingCard
+          rankList={popularCourses?.ranking?.popularCourses}
+          loading={popularCoursesLoading}
+        />
+        {!(
+          recentReviewsLoading ||
+          popularCoursesLoading ||
+          topRatedCoursesLoading
+        ) && <Footer />}
+      </div>
+      <div className="secondary-column"></div>
+    </>
   );
 };
 
