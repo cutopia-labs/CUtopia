@@ -16,7 +16,7 @@ export const getTimetable = async input =>
       throw Error(ErrorCode.GET_TIMETABLE_INVALID_ID.toString());
     }
     if (timetable.expire === -1 && input.username !== timetable.username) {
-      throw Error(ErrorCode.GET_TIMETABLE_UNAUTHORIZED.toString());
+      // throw Error(ErrorCode.GET_TIMETABLE_UNAUTHORIZED.toString());
     }
     return timetable;
   });

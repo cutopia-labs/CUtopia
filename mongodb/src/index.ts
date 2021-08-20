@@ -22,6 +22,8 @@ export {
   report,
   rankCourses,
   getRanking,
+  sendDiscussionMessage,
+  getDiscussion,
 } from './controllers';
 
 require('dotenv').config();

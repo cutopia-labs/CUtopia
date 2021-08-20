@@ -4,3 +4,4 @@ export * from './course';
 export * from './timetable';
 export * from './report';
 export * from './ranking';
+export * from './discussion';

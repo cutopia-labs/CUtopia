@@ -36,11 +36,6 @@ input CourseSectionInput {
 input UploadTimetableInput {
   entries: [CourseTableEntryInput]!
   tableName: String
-  """
-  -1: persistent private timetable
-  0: persistent shared timetable
-  >0: timetable expired after `expire` days
-  """
   expire: Int!
 }
 

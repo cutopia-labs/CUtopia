@@ -18,11 +18,6 @@ const schema = makeExecutableSchema({
 ValidateDirectiveVisitor.addValidationResolversToSchema(schema);
 
 const isProduction = process.env.IsProduction === 'true';
-const playground = isProduction
-  ? false
-  : {
-      endpoint: '/graphql',
-    };
 const allowedOrigins = isProduction
   ? ['https://cutopia.app', 'https://dev.cutopia.app']
   : '*';

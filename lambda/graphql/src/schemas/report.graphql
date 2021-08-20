@@ -10,10 +10,3 @@ input ReportInput {
   types: [Int]!
   description: String! @stringLength(min: 10, max: 500)
 }
-
-"""
-input ReportFeedbackInput {
-  type: String!
-  rating: Int! @range(min: 0, max: 4)
-}
-"""

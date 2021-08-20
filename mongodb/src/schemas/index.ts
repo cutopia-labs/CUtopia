@@ -9,6 +9,8 @@ export const requiredString = {
   required: true,
 };
 
+export const courseId = requiredString;
+
 export const createdAt = {
   type: Number,
   default: +new Date(),

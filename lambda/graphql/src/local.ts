@@ -14,8 +14,10 @@ import courseRouter from './routes/courses';
 import reportRouter from './routes/reports';
 import rankingRouter from './routes/rankings';
 import timetableRouter from './routes/timetables';
+import discussionRouter from './routes/discussions';
 import createContext from './context';
 
+/*
 const schema = makeExecutableSchema({
   typeDefs,
   resolvers,
@@ -23,14 +25,16 @@ const schema = makeExecutableSchema({
 } as any);
 
 ValidateDirectiveVisitor.addValidationResolversToSchema(schema);
-
 const server = new ApolloServer({
   schema,
   introspection: true,
 } as any);
+*/
 
 const startApolloServer = async () => {
+  /*
   await server.start();
+  */
   await connect(process.env.ATLAS_URI);
   const app = express();
   app.get('/', (req, res) => {
@@ -57,14 +61,15 @@ const startApolloServer = async () => {
   app.use('/timetables', timetableRouter);
   app.use('/reports', reportRouter);
   app.use('/rankings', rankingRouter);
-  server.applyMiddleware({ app });
+  app.use('/discussions', discussionRouter);
+  // server.applyMiddleware({ app });
   app.listen({ port: 4000 });
   console.log(
     `Token: ${sign({
       user: 'mike',
     })}`
   );
-  console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
+  // console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
 };
 
 startApolloServer();

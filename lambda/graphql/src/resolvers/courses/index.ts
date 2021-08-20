@@ -78,6 +78,9 @@ const subjectsResolver = {
   Term: {
     name: ({ idsContext }) => idsContext.term,
     course_sections: ({ idsContext, course_sections }) => {
+      if (!course_sections) {
+        return null;
+      }
       const sectionsNames = Object.keys(course_sections);
       return sectionsNames.map(section => ({
         idsContext: {

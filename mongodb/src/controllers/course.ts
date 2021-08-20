@@ -1,5 +1,5 @@
 import NodeCache from 'node-cache';
-import { rankCoursesPipeline } from '../pipelines/review';
+import { rankCoursesPipeline } from '../pipelines';
 import Course from '../models/course.model';
 import { createRanking } from './ranking';
 import { RankEntry, Ranking } from '../models/ranking.model';
