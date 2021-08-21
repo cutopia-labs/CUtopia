@@ -24,11 +24,12 @@
   flex: 1;
   overflow-y: scroll;
   padding: 8px var(--card-padding) 8px var(--card-padding);
+  margin: 0 -16px;
   background-color: var(--background-secondary);
+  max-height: 300px;
 }
 
 .discussion-card {
-  max-height: 400px;
 }
 
 .message-input-container {
@@ -36,6 +37,7 @@
   input {
     flex: 1;
     background-color: transparent;
+    padding-left: 0;
   }
   .MuiIconButton-root {
     margin-right: 4px;

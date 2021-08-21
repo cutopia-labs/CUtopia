@@ -1,5 +1,6 @@
 import './Card.scss';
 import clsx from 'clsx';
+import CardHeader from './CardHeader';
 
 type CardOwnProps = {
   inPlace?: boolean;
@@ -18,12 +19,7 @@ const Card = ({
   ...props
 }: CardProps) => (
   <div className={clsx(inPlace ? 'column' : 'card', className)} {...props}>
-    {Boolean(title) && (
-      <header className="card-header">
-        <h4>{title}</h4>
-        {titleContent}
-      </header>
-    )}
+    {Boolean(title) && <CardHeader title={title}>{titleContent}</CardHeader>}
     {children}
   </div>
 );

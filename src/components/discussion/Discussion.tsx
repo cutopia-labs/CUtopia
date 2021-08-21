@@ -6,10 +6,10 @@ import { RiSendPlaneLine } from 'react-icons/ri';
 import { DiscussionMessage } from '../../types';
 
 import { UserContext } from '../../store';
-import Card from '../atoms/Card';
 import colors from '../../constants/colors';
 import { hashing } from '../../helpers';
 import TextField from '../atoms/TextField';
+import AccordionCard from '../atoms/AccordionCard';
 
 const MOCK_DISCUSSIONS = [
   {
@@ -96,6 +96,7 @@ const Message = ({ message, isAuthor }: MessageProps) => {
 };
 
 const Discussion = ({ courseId }) => {
+  const [expanded, setExpanded] = useState(false);
   const [messages, setMessages] = useState(MOCK_DISCUSSIONS);
   const [messageInput, setMessageInput] = useState('');
   const user = useContext(UserContext);
@@ -118,7 +119,12 @@ const Discussion = ({ courseId }) => {
     });
   }, [messages?.length]);
   return (
-    <Card title="Discussion" className="discussion-card">
+    <AccordionCard
+      expanded={expanded}
+      onChange={(e, expanded) => setExpanded(expanded)}
+      title="Discussion"
+      className="discussion-card"
+    >
       <div ref={messagesContainerRef} className="messages-container column">
         {messages.map((message) => (
           <Message
@@ -138,7 +144,7 @@ const Discussion = ({ courseId }) => {
           <RiSendPlaneLine />
         </IconButton>
       </form>
-    </Card>
+    </AccordionCard>
   );
 };
 

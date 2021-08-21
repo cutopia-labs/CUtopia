@@ -1,0 +1,11 @@
+.accordion-card {
+  .MuiAccordionSummary-root.Mui-expanded {
+    min-height: auto;
+  }  
+  .MuiAccordionSummary-content.Mui-expanded {
+    margin: auto;
+  }
+  .MuiAccordionDetails-root {
+    flex-direction: column;
+  }
+}
