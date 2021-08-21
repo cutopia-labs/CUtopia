@@ -5,34 +5,6 @@ Parameters:
     Type: String
   AtlasUri:
     Type: String
-  UserTableName:
-    Type: String
-  UserEmailMappingIndexName:
-    Type: String
-  CourseTableName:
-    Type: String
-  ReviewsTableName:
-    Type: String
-  ReviewsByVoteIndexName:
-    Type: String
-  LatestReviewsTableName:
-    Type: String
-  ReportTableName:
-    Type: String
-  TimetableTableName:
-    Type: String
-  UserDBArn:
-    Type: String
-  CourseDBArn:
-    Type: String
-  ReviewsDBArn:
-    Type: String
-  ReportDBArn:
-    Type: String
-  LatestReviewsDBArn:
-    Type: String
-  TimetableDBArn:
-    Type: String
   GmailAddress:
     Type: String
   GamilClientID:
@@ -88,14 +60,6 @@ Resources:
       Environment:
         Variables:
           IsProduction: !Ref IsProduction
-          UserTableName: !Ref UserTableName
-          UserEmailMappingIndexName: !Ref UserEmailMappingIndexName
-          CourseTableName: !Ref CourseTableName
-          ReviewsTableName: !Ref ReviewsTableName
-          ReviewsByVoteIndexName: !Ref ReviewsByVoteIndexName
-          LatestReviewsTableName: !Ref LatestReviewsTableName
-          ReportTableName: !Ref ReportTableName
-          TimetableTableName: !Ref TimetableTableName
           UserSNSTopic: !Ref UserSNSTopic
       Role: !GetAtt GraphQLRole.Arn
       Runtime: nodejs14.x
@@ -123,23 +87,6 @@ Resources:
                 Effect: Allow
                 Resource:
                   - arn:aws:logs:*:*:*
-              - Action:
-                  - dynamodb:PutItem
-                  - dynamodb:Query
-                  - dynamodb:Scan
-                  - dynamodb:UpdateItem
-                  - dynamodb:GetItem
-                  - dynamodb:DeleteItem
-                Effect: Allow
-                Resource:
-                  - !Ref UserDBArn
-                  - !Sub ${UserDBArn}/index/${UserEmailMappingIndexName}
-                  - !Ref CourseDBArn
-                  - !Ref ReviewsDBArn
-                  - !Sub ${ReviewsDBArn}/index/${ReviewsByVoteIndexName}
-                  - !Ref LatestReviewsDBArn
-                  - !Ref ReportDBArn
-                  - !Ref TimetableDBArn
               - Action:
                   - SNS:Publish
                 Effect: Allow

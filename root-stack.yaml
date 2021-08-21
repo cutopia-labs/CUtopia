@@ -5,30 +5,6 @@ Parameters:
     Type: String
     Default: true
     AllowedValues: [true, false]
-  UserTableName:
-    Type: String
-    Default: users
-  UserEmailMappingIndexName:
-    Type: String
-    Default: email-mapping
-  CourseTableName:
-    Type: String
-    Default: courses
-  ReviewsTableName:
-    Type: String
-    Default: reviews
-  ReviewsByVoteIndexName:
-    Type: String
-    Default: sort-by-vote
-  LatestReviewsTableName:
-    Type: String
-    Default: reviews-latest
-  ReportTableName:
-    Type: String
-    Default: reports
-  TimetableTableName:
-    Type: String
-    Default: timetable
   GmailAddress:
     Type: String
     Default: cutopia.team@gmail.com
@@ -39,65 +15,12 @@ Parameters:
   GmailRefreshToken:
     Type: String
 Resources:
-  DynamoDB:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      TemplateURL: ./dynamodb/dynamodb.yaml
-      Parameters:
-        UserTableName: !Sub
-          - ${AWS::StackName}-${DBName}
-          - { DBName: !Ref UserTableName }
-        UserEmailMappingIndexName: !Ref UserEmailMappingIndexName
-        CourseTableName: !Sub
-          - ${AWS::StackName}-${DBName}
-          - { DBName: !Ref CourseTableName }
-        ReviewsTableName: !Sub
-          - ${AWS::StackName}-${DBName}
-          - { DBName: !Ref ReviewsTableName }
-        LatestReviewsTableName: !Sub
-          - ${AWS::StackName}-${DBName}
-          - { DBName: !Ref LatestReviewsTableName }
-        ReviewsByVoteIndexName: !Ref ReviewsByVoteIndexName
-        ReportTableName: !Sub
-          - ${AWS::StackName}-${DBName}
-          - { DBName: !Ref ReportTableName }
-        TimetableTableName: !Sub
-          - ${AWS::StackName}-${DBName}
-          - { DBName: !Ref TimetableTableName }
   Lambda:
-    DependsOn:
-      - DynamoDB
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: ./lambda/lambda.yaml
       Parameters:
         IsProduction: !Ref IsProduction
-        UserTableName: !Sub
-          - ${AWS::StackName}-${DBName}
-          - { DBName: !Ref UserTableName }
-        UserEmailMappingIndexName: !Ref UserEmailMappingIndexName
-        CourseTableName: !Sub
-          - ${AWS::StackName}-${DBName}
-          - { DBName: !Ref CourseTableName }
-        ReviewsTableName: !Sub
-          - ${AWS::StackName}-${DBName}
-          - { DBName: !Ref ReviewsTableName }
-        ReviewsByVoteIndexName: !Ref ReviewsByVoteIndexName
-        LatestReviewsTableName: !Sub
-          - ${AWS::StackName}-${DBName}
-          - { DBName: !Ref LatestReviewsTableName }
-        ReportTableName: !Sub
-          - ${AWS::StackName}-${DBName}
-          - { DBName: !Ref ReportTableName }
-        TimetableTableName: !Sub
-          - ${AWS::StackName}-${DBName}
-          - { DBName: !Ref TimetableTableName }
-        UserDBArn: !GetAtt DynamoDB.Outputs.UserDBArn
-        CourseDBArn: !GetAtt DynamoDB.Outputs.CourseDBArn
-        ReviewsDBArn: !GetAtt DynamoDB.Outputs.ReviewsDBArn
-        LatestReviewsDBArn: !GetAtt DynamoDB.Outputs.LatestReviewsDBArn
-        ReportDBArn: !GetAtt DynamoDB.Outputs.ReportDBArn
-        TimetableDBArn: !GetAtt DynamoDB.Outputs.TimetableDBArn
         GmailAddress: !Ref GmailAddress
         GamilClientID: !Ref GamilClientID
         GmailClientSecret: !Ref GmailClientSecret
