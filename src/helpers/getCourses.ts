@@ -14,7 +14,7 @@ export const fetchCourses = async (): Promise<
   Record<string, CourseSearchItem[]> | undefined
 > => {
   let courseList: Record<string, CourseSearchItem[]> | undefined =
-    getStoreData('course_list')?.data;
+    getStoreData('courseList')?.data;
   if (!courseList) {
     const res = await fetch(
       'https://pv9wmcullh.execute-api.ap-northeast-1.amazonaws.com/Stage/static/course_list.json',
@@ -27,7 +27,7 @@ export const fetchCourses = async (): Promise<
       }
     );
     courseList = await res.json();
-    storeData('course_list', {
+    storeData('courseList', {
       data: courseList,
       etag: +new Date(),
     });

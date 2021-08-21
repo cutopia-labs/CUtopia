@@ -104,7 +104,7 @@
   .header-container {
     padding: 0 var(--card-padding);
     max-width: 100%;
-    & > .header-logo {
+    .header-logo {
       margin-left: 12px;
     }
   }
@@ -132,9 +132,8 @@
         visibility: hidden;
       }
       &.active {
-        width: calc(100vw - 20px);
+        width: calc(100vw - 40px);
         margin: 0 10px 10px 10px;
-        padding: 0;
         background-color: var(--header-search-background);
         border-bottom-left-radius: var(--border-radius);
         border-bottom-right-radius: var(--border-radius);

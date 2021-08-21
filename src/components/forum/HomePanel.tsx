@@ -204,6 +204,11 @@ const HomePanel = () => {
           courses={feedCourses}
           onItemClick={(course) => history.push(`/review/${course.courseId}`)}
         />
+        <FeedCard
+          title="Suggestions"
+          courses={feedCourses}
+          onItemClick={(course) => history.push(`/review/${course.courseId}`)}
+        />
       </div>
     </>
   );

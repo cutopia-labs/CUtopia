@@ -24,10 +24,7 @@ const ChipsRow = ({
         className={`chip-item center-row${item === select ? ' active' : ''}`}
         onClick={() => setSelect(item)}
         label={item}
-        variant={(variant as any) || 'outlined'}
-        color={
-          select === item ? (selectedColor as any) || 'secondary' : 'default'
-        }
+        variant={select === item ? 'default' : 'outlined'}
       />
     ))}
   </div>

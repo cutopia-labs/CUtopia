@@ -6,15 +6,30 @@
   &::-webkit-scrollbar {
     display: none;
   }
-  & > div {
+  div {
     margin-left: 8px;
     text-transform: capitalize;
+    border: 1px solid var(--underlay);
     &:first-child {
       margin-left: 0;
     }
-    & > .MuiChip-label {
+    .MuiChip-label {
       padding-left: 10px;
       padding-right: 10px;
     }
+    &.active {
+      background-color: var(--default-button-background);
+      color: var(--reversed-text);
+      border: none;
+    }
   }
 }
+
+
+@media only screen and (max-width: 1260px) {
+  .chips-row {
+    padding: 0 var(--card-padding);
+    width: calc(100% - 2 * var(--card-padding));
+  }
+}
+

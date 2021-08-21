@@ -263,11 +263,11 @@ const SearchPanel = ({ onSearchPayloadChange }: SearchPanelProps) => {
     }
     temp = [courseId].concat(temp.filter((saved) => saved !== courseId));
     setHistoryList(temp);
-    storeData('search_history', temp);
+    storeData('searchHistory', temp);
   };
 
   const loadHistory = async () => {
-    const savedData = await getStoreData('search_history');
+    const savedData = await getStoreData('searchHistory');
     console.log(savedData);
     if (savedData) {
       setHistoryList(savedData || []);
@@ -277,7 +277,7 @@ const SearchPanel = ({ onSearchPayloadChange }: SearchPanelProps) => {
   const deleteHistory = async (courseId) => {
     const temp = historyList.filter((hist) => hist !== courseId);
     setHistoryList(temp);
-    storeData('search_history', temp);
+    storeData('searchHistory', temp);
   };
 
   useEffect(() => {
