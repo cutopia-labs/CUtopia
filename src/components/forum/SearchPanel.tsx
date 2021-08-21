@@ -322,7 +322,7 @@ const SearchPanel = ({
             chipClassName="chip-fill"
             items={user.searchHistory.slice(0, 3)}
             onItemClick={(item) => {
-              history.push(`/review/${item}`);
+              history.push(`/${isPlanner ? 'planner' : 'review'}/${item}`);
               onCoursePress && onCoursePress();
             }}
           />

@@ -26,6 +26,7 @@ import Footer from '../molecules/Footer';
 import useMobileQuery from '../../helpers/useMobileQuery';
 import { getSimilarCourses } from '../../helpers/getCourses';
 import FeedCard from '../molecules/FeedCard';
+import Discussion from '../discussion/Discussion';
 import ReviewCard from './ReviewCard';
 import CourseCard from './CourseCard';
 import ReviewFilterBar from './ReviewFilterBar';
@@ -329,6 +330,7 @@ const CoursePanel = () => {
         {lastEvaluatedKey === null && <Footer />}
       </div>
       <div className="secondary-column sticky">
+        <Discussion courseId={courseId} />
         {!isMobile && (
           <FeedCard
             title="Suggestions"

@@ -3,26 +3,28 @@ import { blue, cyan, lime, amber, deepOrange } from '@material-ui/core/colors';
 
 const COLOR_SHADE = 500;
 
+const RANDOM_COLORS = [
+  'rgba(253,149,141,1)',
+  'rgba(241,153,40,1)',
+  'rgba(3,218,197,1)',
+  'rgba(0,142,204,1)',
+  'rgba(187,134,252,1)',
+  'rgba(102,204,255,1)',
+  'rgba(255,111,199,1)',
+  'rgba(50,144,144,1)',
+  'rgba(211,124,177,1)',
+  'rgba(153,204,255,1)',
+  'rgba(205, 102, 102,1)',
+  'rgba(132,143,106,1)',
+  'rgba(243,195,154,1)',
+  'rgba(255,153,204,1)',
+];
+
 const colors = {
   primary: '#ea4c89',
   accent: '#f7c188',
   primaryDark: '#1F1F1F',
-  randomColors: [
-    'rgba(253,149,141,1)',
-    'rgba(241,153,40,1)',
-    'rgba(3,218,197,1)',
-    'rgba(0,142,204,1)',
-    'rgba(187,134,252,1)',
-    'rgba(102,204,255,1)',
-    'rgba(255,111,199,1)',
-    'rgba(50,144,144,1)',
-    'rgba(211,124,177,1)',
-    'rgba(153,204,255,1)',
-    'rgba(205, 102, 102,1)',
-    'rgba(132,143,106,1)',
-    'rgba(243,195,154,1)',
-    'rgba(255,153,204,1)',
-  ],
+  randomColors: RANDOM_COLORS,
   gradeColors: {
     A: blue[COLOR_SHADE],
     B: cyan[COLOR_SHADE],
@@ -30,6 +32,7 @@ const colors = {
     D: amber[COLOR_SHADE],
     F: deepOrange[COLOR_SHADE],
   },
+  randomColorsLength: RANDOM_COLORS.length,
 };
 
 export const THEME = createTheme({

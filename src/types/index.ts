@@ -6,3 +6,4 @@ export * from './events';
 export * from './user';
 export * from './stores';
 export * from './views';
+export * from './discussions';

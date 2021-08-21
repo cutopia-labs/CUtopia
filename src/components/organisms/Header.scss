@@ -25,6 +25,7 @@
   height: fit-content;
   flex-direction: column;
   margin: 10px 0;
+  align-items: flex-end;
   .search-panel {
     --search-panel-width: calc(var(--search-dropdown-width) - 2px); // 2px for border
     border-radius: 0;

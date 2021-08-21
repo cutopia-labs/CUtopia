@@ -22,16 +22,13 @@
   &::-webkit-scrollbar {
     display: none;
   }
-  & > div {
-    background-color: var(--surface);
-  }
   .search-input-container {
     padding: 6px 16px;
     position: sticky;
     top: 0;
     z-index: 2;
   }
-  & > .list-item-container {
+  .list-item-container {
     height: auto;
     justify-content: space-between;
     position: relative;
@@ -48,9 +45,13 @@
       position: absolute;
     }
   }
+  .recent-chips {
+    margin: 0 var(--card-padding) 6px var(--card-padding);
+    width: fit-content;
+  }
 }
 .search-input-container {
-  & > .go-back-btn {
+  .go-back-btn {
     margin-left: -4px;
     margin-right: 20px;
     height: 30px;

@@ -1,0 +1,34 @@
+.message {
+  --message-spacing: 6px;
+  .char-icon {
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-right: var(--message-spacing);
+  }
+}
+
+.message-username {
+  margin-right: var(--message-spacing);
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.message-text {
+  font-size: 14px;
+}
+
+.messages-container {
+  row-gap: 14px;
+  flex: 1;
+  overflow-y: scroll;
+  padding: 0 var(--card-padding) 8px var(--card-padding);
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.discussion-card {
+  max-height: 400px;
+}

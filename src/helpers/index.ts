@@ -13,3 +13,7 @@ export const generateRandomArray = (
   }
   return result;
 };
+
+export const hashing = (str: string, len: number) =>
+  (str || '').split('').reduce((acc, curr) => acc + curr.charCodeAt(0), 0) %
+  len;
