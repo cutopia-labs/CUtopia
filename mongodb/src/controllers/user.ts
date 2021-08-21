@@ -3,14 +3,14 @@ import { nanoid } from 'nanoid';
 import { ErrorCode } from 'cutopia-types/lib/codes';
 import User from '../models/user.model';
 
-const saltRounds = 10;
-const VERIFY_EXPIRATION_TIME = 24 * 60 * 60 * 1000;
+export const SALT_ROUNDS = 10;
+export const VERIFY_EXPIRATION_TIME = 24 * 60 * 60 * 1000;
 
 export const createUser = async input => {
   const { username, SID, password } = input;
   const now = new Date().getTime();
 
-  const hash = await bcrypt.hash(password, saltRounds);
+  const hash = await bcrypt.hash(password, SALT_ROUNDS);
   const veriCode = nanoid(5);
 
   const user = new User({
@@ -21,7 +21,8 @@ export const createUser = async input => {
     verified: false,
     veriCode,
     reviewIds: [],
-    upvotesCount: 0,
+    upvotes: 0,
+    downvotes: 0,
     fullAccess: false,
     exp: 0,
     viewsCount: 10,
@@ -42,15 +43,20 @@ export const createUser = async input => {
   return veriCode;
 };
 
+export const deleteUser = async input => {
+  const { username } = input;
+  await User.deleteOne({ username }).exec();
+};
+
 export const getUser = async input => {
   const { username, fields } = input;
   const selection = fields ? fields.join(' ') : null;
-  return await User.findOne({ username }, selection);
+  return await User.findOne({ username }, selection).exec();
 };
 
 export const updateUser = async input => {
   const { username, ...update } = input;
-  return await User.updateOne({ username }, update);
+  return await User.updateOne({ username }, update).exec();
 };
 
 export const verifyUser = async input => {
@@ -135,7 +141,7 @@ export const resetPassword = async input => {
     throw Error(ErrorCode.RESET_PASSWORD_FAILED.toString());
   }
 
-  user.password = await bcrypt.hash(newPassword, saltRounds);
+  user.password = await bcrypt.hash(newPassword, SALT_ROUNDS);
   user.resetPwdCode = null;
   await user.save();
   return true;
@@ -147,7 +153,7 @@ export const incrementUpvotesCount = async input => {
     { username },
     {
       $inc: {
-        upvotesCount: 1,
+        upvotes: 1,
         exp: 3,
       },
     }

@@ -1,6 +1,5 @@
 type Mutation {
   report(input: ReportInput!): String! @auth
-  # reportFeedback(input: [ReportFeedbackInput]!): String! @auth
 }
 
 input ReportInput {

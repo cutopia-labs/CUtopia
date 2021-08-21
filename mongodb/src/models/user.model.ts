@@ -16,6 +16,8 @@ type User = {
   email: string;
   createdAt: number;
   reviews: Review[];
+  upvotes: number;
+  downvotes: number;
   exp: number;
   veriCode: string;
   verified: boolean;
@@ -46,6 +48,8 @@ const userSchema = new Schema<User>({
       sem: String,
     },
   ],
+  upvotes: Number,
+  downvotes: Number,
   resetPwdCode: String,
   exp: Number,
   veriCode: String,

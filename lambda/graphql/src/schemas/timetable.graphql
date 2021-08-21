@@ -1,6 +1,6 @@
 type Mutation {
   uploadTimetable(input: UploadTimetableInput!): UploadTimetableResult @auth
-  removeTimetable(input: String!): Void @auth
+  removeTimetable(id: String!): Void @auth
 }
 
 type Query {

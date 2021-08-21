@@ -22,6 +22,8 @@ type Review = {
   teaching: ReviewDetailSchema;
   difficulty: ReviewDetailSchema;
   content: ReviewDetailSchema;
+  createdAt: number;
+  updatedAt: number;
 };
 
 const reviewDetailSchema = new Schema<ReviewDetailSchema>({
@@ -33,23 +35,26 @@ const reviewDetailSchema = new Schema<ReviewDetailSchema>({
   },
 });
 
-const reviewSchema = new Schema<Review>({
-  username: requiredString,
-  reviewId: requiredString,
-  courseId: requiredString,
-  term: requiredString,
-  lecturer: requiredString,
-  anonymous: { type: Boolean, required: true },
-  upvotes: Number,
-  downvotes: Number,
-  upvoteUserIds: [String],
-  downvoteUserIds: [String],
-  overall: ratingSchema,
-  grading: reviewDetailSchema,
-  teaching: reviewDetailSchema,
-  difficulty: reviewDetailSchema,
-  content: reviewDetailSchema,
-});
+const reviewSchema = new Schema<Review>(
+  {
+    username: requiredString,
+    reviewId: requiredString,
+    courseId: requiredString,
+    term: requiredString,
+    lecturer: requiredString,
+    anonymous: { type: Boolean, required: true },
+    upvotes: Number,
+    downvotes: Number,
+    upvoteUserIds: [String],
+    downvoteUserIds: [String],
+    overall: ratingSchema,
+    grading: reviewDetailSchema,
+    teaching: reviewDetailSchema,
+    difficulty: reviewDetailSchema,
+    content: reviewDetailSchema,
+  },
+  { timestamps: { currentTime: Date.now } }
+);
 reviewSchema.index({ courseId: 1, createdAt: -1 }, { unique: true });
 
 const ReviewModal = model<Review>('Review', reviewSchema);

@@ -7,12 +7,10 @@ type User {
   email: String!
   verified: Boolean!
   reviewIds: [String]!
-  upvotesCount: Int!
+  upvotes: Int!
   exp: Int!
   level: Int!
   fullAccess: Boolean!
-  timetables: [Timetable]
-  sharedTimetables: [String]!
 }
 
 type Mutation {

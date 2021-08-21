@@ -1,45 +1,29 @@
 type Mutation {
   createReview(input: CreateReviewInput!): CreateReviewResult @auth
-  voteReview(input: VoteReviewInput!): Review @auth
+  voteReview(input: VoteReviewInput!): Void @auth
   editReview(input: EditReviewInput!): EditReviewResult @auth(role: OWNER)
 }
 
 type Query {
-  reviews(input: ReviewsFilter): ReviewsResult! @auth
+  reviews(input: ReviewsFilter): [Review]! @auth
   review(input: ReviewFilter!): Review @auth
 }
 
-type ReviewsResult {
-  reviews: [Review]!
-  lastEvaluatedKey: LastEvaluatedKey
-}
-
 input ReviewsFilter {
-  "Either set courseId or getLatest"
+  "Set courseId to null to get the latest reviews"
   courseId: String
-  getLatest: Boolean
+  "Filter by lecturer and term"
   lecturer: String
   term: String
-  ascendingDate: Boolean
-  ascendingVote: Boolean
-  lastEvaluatedKey: LastEvaluatedKeyInput
+  "Sort by date or vote"
+  sortBy: String
+  ascending: Boolean 
+  page: Int
 }
 
 input ReviewFilter {
   courseId: String!
   createdAt: String!
-}
-
-input LastEvaluatedKeyInput {
-  courseId: String!
-  createdAt: String!
-  upvotes: Int
-}
-
-type LastEvaluatedKey {
-  courseId: String!
-  createdAt: String!
-  upvotes: Int
 }
 
 input CreateReviewInput {
@@ -65,17 +49,16 @@ type CreateReviewResult {
 input EditReviewInput {
   title: String
   courseId: String!
-  createdAt: String!
-  anonymous: Boolean!
-  overall: Int! @range(min: 0, max: 4)
-  grading: ReviewDetailsInput!
-  teaching: ReviewDetailsInput!
-  difficulty: ReviewDetailsInput!
-  content: ReviewDetailsInput!
+  anonymous: Boolean
+  overall: Int @range(min: 0, max: 4)
+  grading: ReviewDetailsInput
+  teaching: ReviewDetailsInput
+  difficulty: ReviewDetailsInput
+  content: ReviewDetailsInput
 }
 
 type EditReviewResult {
-  modifiedDate: String!
+  updatedAt: String!
   courseRatings: Ratings!
   groupRatings: Ratings!
 }
@@ -91,7 +74,6 @@ type Ratings {
 
 input VoteReviewInput {
   courseId: String!
-  createdAt: String!
   vote: Int!
 }
 
@@ -102,7 +84,7 @@ type Review {
   anonymous: Boolean!
   title: String
   createdAt: String!
-  modifiedDate: String!
+  modifiedAt: String!
   term: String!
   lecturer: String!
   overall: Int!

@@ -1,46 +1,40 @@
 import {
+  createReview,
   getReviews,
   getReview,
-  createReview,
   editReview,
   voteReview,
-} from 'dynamodb';
-//import { recalWithNewReview, recalWithEdittedReview } from '../ranking/impl';
+} from 'mongodb';
 import { VoteAction } from 'cutopia-types/lib/codes';
 
 const reviewsResolver = {
-  /* TODO: Revamp below to MongoDB
   Mutation: {
     createReview: async (parent, { input }, { user }) => {
-      const { id, createdAt } = await createReview(input, user);
-      const { courseRatings, groupRatings } = await recalWithNewReview(input);
+      const { username } = user;
+      const { id, createdAt } = await createReview({
+        ...input,
+        username,
+      });
       return {
         id,
         createdAt,
-        courseRatings,
-        groupRatings,
       };
     },
     voteReview: async (parent, { input }, { user }) => {
-      return await voteReview(input, user);
-    },
-    editReview: async (parent, { input }, { validateOwner }) => {
-      const { courseId, createdAt } = input;
-      const oldReviewData = await getReview({ courseId, createdAt });
-      validateOwner(oldReviewData.username);
-
-      const modifiedDate = await editReview({
-        oldReviewData,
-        newReviewData: input,
-      });
-      const { courseRatings, groupRatings } = await recalWithEdittedReview({
-        oldReviewData,
+      const { username } = user;
+      return await voteReview({
         ...input,
+        username,
+      });
+    },
+    editReview: async (parent, { input }, { user }) => {
+      const { username } = user;
+      const updatedAt = await editReview({
+        ...input,
+        username,
       });
       return {
-        modifiedDate,
-        courseRatings,
-        groupRatings,
+        updatedAt,
       };
     },
   },
@@ -48,14 +42,13 @@ const reviewsResolver = {
     username: ({ username, anonymous }) => {
       return anonymous ? 'Anonymous' : username;
     },
-    myVote: ({ upvotesUserIds, downvotesUserIds }, args, { user }) => {
+    myVote: ({ upvoteUserIds, downvoteUserIds }, args, { user }) => {
       if (user) {
         const { username } = user;
-        // upvotesUserIds and downvotesUserIds are sets
-        if (upvotesUserIds.values.includes(username)) {
+        if (upvoteUserIds.includes(username)) {
           return VoteAction.UPVOTE;
         }
-        if (downvotesUserIds.values.includes(username)) {
+        if (downvoteUserIds.includes(username)) {
           return VoteAction.DOWNVOTE;
         }
       }
@@ -71,7 +64,6 @@ const reviewsResolver = {
     },
   },
   ReviewDetails: {},
-  */
 };
 
 export default reviewsResolver;
