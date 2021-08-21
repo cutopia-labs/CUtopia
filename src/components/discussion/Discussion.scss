@@ -23,12 +23,21 @@
   row-gap: 14px;
   flex: 1;
   overflow-y: scroll;
-  padding: 0 var(--card-padding) 8px var(--card-padding);
-  &::-webkit-scrollbar {
-    display: none;
-  }
+  padding: 8px var(--card-padding) 8px var(--card-padding);
+  background-color: var(--background-secondary);
 }
 
 .discussion-card {
   max-height: 400px;
+}
+
+.message-input-container {
+  width: 100%;
+  input {
+    flex: 1;
+    background-color: transparent;
+  }
+  .MuiIconButton-root {
+    margin-right: 4px;
+  }
 }

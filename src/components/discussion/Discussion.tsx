@@ -1,13 +1,15 @@
-import { useContext } from 'react';
+import { useContext, useState, useRef, useEffect } from 'react';
 
 import './Discussion.scss';
-import { Avatar } from '@material-ui/core';
+import { Avatar, IconButton } from '@material-ui/core';
+import { RiSendPlaneLine } from 'react-icons/ri';
 import { DiscussionMessage } from '../../types';
 
 import { UserContext } from '../../store';
 import Card from '../atoms/Card';
 import colors from '../../constants/colors';
 import { hashing } from '../../helpers';
+import TextField from '../atoms/TextField';
 
 const MOCK_DISCUSSIONS = [
   {
@@ -83,7 +85,7 @@ const Message = ({ message, isAuthor }: MessageProps) => {
         }}
         className="char-icon"
       >
-        {message.user.charAt(0) || ''}
+        {message.user.charAt(0)}
       </Avatar>
       <span>
         <span className="message-username">{message.user}</span>
@@ -94,11 +96,31 @@ const Message = ({ message, isAuthor }: MessageProps) => {
 };
 
 const Discussion = ({ courseId }) => {
+  const [messages, setMessages] = useState(MOCK_DISCUSSIONS);
+  const [messageInput, setMessageInput] = useState('');
   const user = useContext(UserContext);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const onSubmit = (e) => {
+    e.preventDefault();
+    setMessages((messages) => [
+      ...messages,
+      {
+        user: user.data.username,
+        text: messageInput,
+        _id: +new Date(),
+      },
+    ]);
+    setMessageInput('');
+  };
+  useEffect(() => {
+    messagesContainerRef.current.scrollTo({
+      top: messagesContainerRef.current.scrollHeight,
+    });
+  }, [messages?.length]);
   return (
     <Card title="Discussion" className="discussion-card">
-      <div className="messages-container column">
-        {MOCK_DISCUSSIONS.map((message) => (
+      <div ref={messagesContainerRef} className="messages-container column">
+        {messages.map((message) => (
           <Message
             key={JSON.stringify(message)}
             message={message}
@@ -106,6 +128,16 @@ const Discussion = ({ courseId }) => {
           />
         ))}
       </div>
+      <form onSubmit={onSubmit} className="message-input-container center-row">
+        <TextField
+          value={messageInput}
+          onChangeText={setMessageInput}
+          placeholder="Write message..."
+        />
+        <IconButton disabled={!messageInput} size="small" type="submit">
+          <RiSendPlaneLine />
+        </IconButton>
+      </form>
     </Card>
   );
 };

@@ -15,5 +15,7 @@ export const generateRandomArray = (
 };
 
 export const hashing = (str: string, len: number) =>
-  (str || '').split('').reduce((acc, curr) => acc + curr.charCodeAt(0), 0) %
-  len;
+  (str || '')
+    .split('')
+    .slice(0, 10)
+    .reduce((acc, curr) => acc + curr.charCodeAt(0), 0) % len;
