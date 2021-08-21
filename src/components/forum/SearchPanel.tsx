@@ -40,6 +40,7 @@ import UserStore from '../../store/UserStore';
 import Card from '../atoms/Card';
 import ErrorCard from '../molecules/ErrorCard';
 import { getCoursesFromQuery } from '../../helpers/getCourses';
+import ChipsRow from '../molecules/ChipsRow';
 import CourseCard from './CourseCard';
 
 /*
@@ -300,6 +301,15 @@ const SearchPanel = ({ onSearchPayloadChange }: SearchPanelProps) => {
           />
         </form>
       </div>
+      <Divider />
+      <Card title="Recent" inPlace className="search-panel-recent">
+        <ChipsRow
+          className="recent-chips"
+          chipClassName="chip-fill"
+          items={user.searchHistory.slice(0, 3)}
+          onItemClick={(item) => history.push(`/review/${item}`)}
+        />
+      </Card>
       {Boolean(currentCourse) && (
         <>
           <Divider />

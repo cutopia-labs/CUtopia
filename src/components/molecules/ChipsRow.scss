@@ -3,16 +3,15 @@
   flex-direction: row;
   overflow-x: scroll;
   width: 100%;
+  flex-wrap: wrap;
+  row-gap: 10px;
+  column-gap: 10px;
   &::-webkit-scrollbar {
     display: none;
   }
   div {
-    margin-left: 8px;
     text-transform: capitalize;
     border: 1px solid var(--underlay);
-    &:first-child {
-      margin-left: 0;
-    }
     .MuiChip-label {
       padding-left: 10px;
       padding-right: 10px;
@@ -28,8 +27,7 @@
 
 @media only screen and (max-width: 1260px) {
   .chips-row {
-    padding: 0 var(--card-padding);
-    width: calc(100% - 2 * var(--card-padding));
+    flex-wrap: nowrap;
+    overflow-x: scroll;
   }
 }
-

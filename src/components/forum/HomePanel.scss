@@ -73,12 +73,20 @@
   }
 }
 
+.recent-chips {
+  margin: 4px var(--card-padding) var(--card-padding) var(--card-padding);
+}
+
 @media only screen and (max-width: 1260px) {
   .review-home-panel {
     .tabs-row {
       position: sticky;
       top: var(--header-height);
       z-index: 2;
+    }
+    .chips-row {
+      padding: 0 var(--card-padding);
+      width: calc(100% - 2 * var(--card-padding));
     }
   }
   .review-home-row {

@@ -56,10 +56,8 @@ class UserStore extends StorePrototype {
     await this.applyUserStore();
     await this.applyToken();
     if (this.loginState === LoginState.INIT) {
-      console.log('No token found');
       this.loginState = LoginState.LOGGED_OUT;
     }
-    console.table(this.timetable);
     this.favoriteCourses = this.favoriteCourses || [];
     this.searchHistory = this.searchHistory || [];
     this.viewCount = this.viewCount || 0;

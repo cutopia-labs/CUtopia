@@ -5,7 +5,7 @@ body {
   --surface: rgba(255, 255, 255, 1);
   --background: rgb(247, 246, 245, 1);
   --background-dark: rgba(5, 5, 5, 1);
-  --background-chip: #f4f4f4;
+  --background-chip: var(--background);
   --background-secondary: rgb(250, 251, 252);
   --background-tertiary: rgb(246, 248, 250);
   --background-warm: rgb(243, 243, 244);
@@ -304,6 +304,12 @@ h4 {
   height: fit-content;
 }
 
+.chip-fill.MuiButtonBase-root {
+  background-color: var(--background-chip);
+  border-radius: var(--border-radius);
+  border: none;
+}
+
 /* Scrollbar styles */
 
 /* Mobile Styles */
@@ -312,6 +318,7 @@ h4 {
   body {
     --page-margin-top: 3vh;
     --page-margin: 5vw;
+    --background-chip: var(--background-secondary);
   }
   .center-page {
     width: 100%;

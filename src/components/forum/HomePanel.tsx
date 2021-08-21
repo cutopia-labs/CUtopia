@@ -23,11 +23,12 @@ import ChipsRow from '../molecules/ChipsRow';
 import TabsContainer from '../molecules/TabsContainer';
 import { PopularCourse, RecentReview, TopRatedCourse } from '../../types';
 
-import { ViewContext } from '../../store';
+import { UserContext, ViewContext } from '../../store';
 import { getMMMDDYY } from '../../helpers/getTime';
 import Footer from '../molecules/Footer';
 import FeedCard from '../molecules/FeedCard';
 import { getRandomGeCourses } from '../../helpers/getCourses';
+import Card from '../atoms/Card';
 
 const MENU_ITEMS = [
   {
@@ -135,6 +136,7 @@ const HomePanel = () => {
   const [feedCourses, setFeedCourse] = useState([]);
   const history = useHistory();
   const view = useContext(ViewContext);
+  const user = useContext(UserContext);
 
   const { data: reviewsData, loading: recentReviewsLoading } = useQuery<{
     reviews: {
@@ -199,11 +201,14 @@ const HomePanel = () => {
         ) && <Footer />}
       </div>
       <div className="secondary-column sticky">
-        <FeedCard
-          title="Suggestions"
-          courses={feedCourses}
-          onItemClick={(course) => history.push(`/review/${course.courseId}`)}
-        />
+        <Card title="Recent">
+          <ChipsRow
+            className="recent-chips"
+            chipClassName="chip-fill"
+            items={user.searchHistory}
+            onItemClick={(item) => history.push(`/review/${item}`)}
+          />
+        </Card>
         <FeedCard
           title="Suggestions"
           courses={feedCourses}
