@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": ">=v14.0.0",
-    "yarn": ">=1.22.10"
+    "node": ">=v12.21.0",
+    "yarn": ">=1.22.0"
   },
   "dependencies": {
     "@apollo/client": "^3.3.18",
