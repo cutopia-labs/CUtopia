@@ -41,6 +41,7 @@ const Header = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const searchDropDownRef = useOuterClick((e) => {
     console.log('Clicked outside');
+    console.log(e.target);
     setVisible(false);
     setSearchPayload(null);
   }, !visible);
@@ -127,6 +128,7 @@ const Header = () => {
                   setSearchPayload(null);
                   setVisible(false);
                 }}
+                setSearchPayloadProp={setSearchPayload}
               />
             )}
           </div>

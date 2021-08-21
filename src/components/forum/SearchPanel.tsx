@@ -1,5 +1,5 @@
 import { useState, useEffect, Fragment, useContext } from 'react';
-import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import {
   InputBase,
   ListItem as MUIListItem,
@@ -41,6 +41,7 @@ import Card from '../atoms/Card';
 import ErrorCard from '../molecules/ErrorCard';
 import { getCoursesFromQuery } from '../../helpers/getCourses';
 import ChipsRow from '../molecules/ChipsRow';
+import useMobileQuery from '../../helpers/useMobileQuery';
 import CourseCard from './CourseCard';
 
 /*
@@ -127,7 +128,8 @@ export const SearchResult = ({
               key={`listitem-${course.c}`}
               ribbonIndex={i}
               chevron
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 onClick ? onClick(course.c) : {};
               }}
               onMouseDown={() => (onMouseDown ? onMouseDown(course.c) : {})}
@@ -190,11 +192,13 @@ const DepartmentList = ({ setSearchPayload }) => {
 
 type SearchPanelProps = {
   searchPayloadProp?: SearchPayload;
+  setSearchPayloadProp?: (payload: SearchPayload) => void;
   onCoursePress?: () => any;
 };
 
 const SearchPanel = ({
   searchPayloadProp,
+  setSearchPayloadProp,
   onCoursePress,
 }: SearchPanelProps) => {
   const [searchPayload, setSearchPayloadState] = useState<SearchPayload | null>(
@@ -204,12 +208,12 @@ const SearchPanel = ({
   const history = useHistory();
   const view = useContext(ViewContext);
   const user = useContext(UserContext);
-  const isPlanner = useRouteMatch({
-    path: ['/planner', '/planner/:courseId'],
-  });
-  const { courseId } = useParams<{
+  const isMobile = useMobileQuery();
+  const isPlanner = useRouteMatch<{
     courseId?: string;
-  }>();
+  }>({
+    path: ['/planner/:courseId', '/planner'],
+  });
 
   useEffect(() => {
     if (currentCourse) {
@@ -218,12 +222,15 @@ const SearchPanel = ({
   }, [currentCourse]);
 
   useEffect(() => {
-    if (validCourse(courseId)) {
-      console.log('Current course');
-      console.log(courseId);
+    const courseId = isPlanner?.params?.courseId;
+    console.log(`Got ID ${courseId}`);
+    if (courseId && validCourse(courseId) && (!onCoursePress || isMobile)) {
+      console.log(`Planner Current course ${courseId}`);
       setCurrentCourse(courseId);
+    } else {
+      setCurrentCourse(null);
     }
-  }, [courseId]);
+  }, [isPlanner?.params?.courseId, isMobile]);
 
   // Fetch course info
   const {
@@ -249,7 +256,11 @@ const SearchPanel = ({
           offerredOnly: Boolean(isPlanner),
         }
       : null;
+    if (isPlanner?.params?.courseId) {
+      history.push('/planner');
+    }
     setSearchPayloadState(newPayload);
+    setSearchPayloadProp && setSearchPayloadProp(payload);
   };
 
   useEffect(() => {
@@ -272,14 +283,9 @@ const SearchPanel = ({
             size="small"
             className="go-back-btn"
             onClick={() => {
-              if (currentCourse) {
-                setCurrentCourse(null);
-                if (!searchPayload && isPlanner) {
-                  history.push('/planner');
-                }
-                return;
+              if (!currentCourse) {
+                setSearchPayload(null);
               }
-              setSearchPayload(null);
               if (isPlanner) {
                 history.push('/planner');
               }
@@ -309,7 +315,7 @@ const SearchPanel = ({
         </form>
       </div>
       <Divider />
-      {!searchPayload && (
+      {!searchPayload && !currentCourse && (
         <Card title="Recent" inPlace className="search-panel-recent">
           <ChipsRow
             className="recent-chips"
@@ -349,7 +355,7 @@ const SearchPanel = ({
                 history.push(
                   `/${isPlanner ? 'planner' : 'review'}/${courseId}`
                 );
-                onCoursePress && onCoursePress();
+                onCoursePress && !(isPlanner && isMobile) && onCoursePress();
               }}
             />
           </>

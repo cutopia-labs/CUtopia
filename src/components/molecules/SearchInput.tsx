@@ -5,11 +5,13 @@ import SearchIcon from '@material-ui/icons/Search';
 import './SearchInput.scss';
 import clsx from 'clsx';
 import { ArrowBack } from '@material-ui/icons';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 
 enum SearchInputMode {
   SHOW_DROPDOWN,
   HIDE_DROPDOWN,
   SEARCH_PANEL,
+  SEARCH_RESULT,
 }
 
 export default function SearchInput({
@@ -21,7 +23,15 @@ export default function SearchInput({
   isMobile,
   inputRef,
 }) {
+  const plannerCourseMatch = useRouteMatch<{
+    courseId?: string;
+  }>('/planner/:courseId');
+  const history = useHistory();
   const getButtonActionMode = () => {
+    console.log(searchPayload);
+    if (plannerCourseMatch && isMobile && visible) {
+      return SearchInputMode.SEARCH_RESULT;
+    }
     if (!visible && isMobile) {
       return SearchInputMode.SHOW_DROPDOWN;
     }
@@ -47,6 +57,9 @@ export default function SearchInput({
           await new Promise((resolve) => setTimeout(resolve, 100));
           inputRef.current.focus();
         }
+        break;
+      case SearchInputMode.SEARCH_RESULT:
+        history.push('/planner');
         break;
       /* @ts-ignore */
       case SearchInputMode.HIDE_DROPDOWN:

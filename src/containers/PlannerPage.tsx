@@ -76,11 +76,7 @@ const PlannerPage = () => {
   console.log(`is Mobile ${isMobile}`);
 
   const [mode, setMode] = useState<PlannerMode>(
-    isMobile
-      ? isPlannerShare
-        ? PlannerMode.TIMETABLE
-        : PlannerMode.SEARCH
-      : PlannerMode.INITIAL
+    isMobile ? PlannerMode.TIMETABLE : PlannerMode.INITIAL
   );
 
   const renderContent = () => {
@@ -93,29 +89,15 @@ const PlannerPage = () => {
             <PlannerCart />
           </>
         );
-      case PlannerMode.SEARCH:
-        return <SearchPanel />;
       case PlannerMode.TIMETABLE:
         return <PlannerTimeTable />;
     }
   };
 
   return (
-    <>
-      <Page className="planner-page" center padding>
-        {renderContent()}
-      </Page>
-      {isMobile && (
-        <PlannerMobileFab
-          targetMode={
-            mode === PlannerMode.SEARCH
-              ? PlannerMode.TIMETABLE
-              : PlannerMode.SEARCH
-          }
-          setMode={setMode}
-        />
-      )}
-    </>
+    <Page className="planner-page" center padding>
+      {renderContent()}
+    </Page>
   );
 };
 
