@@ -24,16 +24,12 @@ import { observer } from 'mobx-react-lite';
 
 import './SearchPanel.scss';
 import ListItem from '../molecules/ListItem';
-import { storeData, getStoreData } from '../../helpers/store';
 import COURSE_CODES from '../../constants/courseCodes';
 import { ViewContext, UserContext } from '../../store';
 import { COURSE_SECTIONS_QUERY } from '../../constants/queries';
 import { validCourse } from '../../helpers/marcos';
 import Loading from '../atoms/Loading';
-import {
-  HISTORY_MAX_LENGTH,
-  MAX_SEARCH_RESULT_LENGTH,
-} from '../../constants/configs';
+import { MAX_SEARCH_RESULT_LENGTH } from '../../constants/configs';
 import {
   CourseSearchItem,
   ErrorCardMode,
@@ -199,11 +195,9 @@ const SearchPanel = ({ onSearchPayloadChange }: SearchPanelProps) => {
   const [searchPayload, setSearchPayloadState] = useState<SearchPayload | null>(
     null
   );
-  const [historyList, setHistoryList] = useState([]);
   const [currentCourse, setCurrentCourse] = useState(null);
   const history = useHistory();
   const view = useContext(ViewContext);
-
   const user = useContext(UserContext);
   const isPlanner = useRouteMatch({
     path: ['/planner', '/planner/:courseId'],
@@ -256,33 +250,8 @@ const SearchPanel = ({ onSearchPayloadChange }: SearchPanelProps) => {
     }
   };
 
-  const saveHistory = async (courseId: string) => {
-    let temp = [...historyList];
-    if (temp.length >= HISTORY_MAX_LENGTH) {
-      temp.pop();
-    }
-    temp = [courseId].concat(temp.filter((saved) => saved !== courseId));
-    setHistoryList(temp);
-    storeData('searchHistory', temp);
-  };
-
-  const loadHistory = async () => {
-    const savedData = await getStoreData('searchHistory');
-    console.log(savedData);
-    if (savedData) {
-      setHistoryList(savedData || []);
-    }
-  };
-
-  const deleteHistory = async (courseId) => {
-    const temp = historyList.filter((hist) => hist !== courseId);
-    setHistoryList(temp);
-    storeData('searchHistory', temp);
-  };
-
   useEffect(() => {
     console.log(COURSE_CODES);
-    loadHistory();
   }, []);
 
   return (
@@ -356,7 +325,7 @@ const SearchPanel = ({ onSearchPayloadChange }: SearchPanelProps) => {
               searchPayload={searchPayload}
               user={user}
               onClick={(courseId) => {
-                saveHistory(courseId);
+                user.saveHistory(courseId);
                 history.push(
                   `/${isPlanner ? 'planner' : 'review'}/${courseId}`
                 );

@@ -43,26 +43,7 @@ const CourseCard = ({ courseInfo, concise, loading }: CourseCardProps) => {
   const isFavorited = user.favoriteCourses.some(
     (course) => course.courseId === courseInfo.courseId
   );
-  const setFavorited = async () => {
-    if (isFavorited) {
-      await user.setStore(
-        'favoriteCourses',
-        [...user.favoriteCourses].filter(
-          (course) => course.courseId !== courseInfo.courseId
-        )
-      );
-    } else {
-      console.log('Setting');
-      const temp = {
-        courseId: courseInfo.courseId,
-        title: courseInfo.title,
-      };
-      await user.setStore(
-        'favoriteCourses',
-        user.favoriteCourses.length ? [...user.favoriteCourses, temp] : [temp]
-      );
-    }
-  };
+
   return (
     <div
       className={clsx(
@@ -87,7 +68,7 @@ const CourseCard = ({ courseInfo, concise, loading }: CourseCardProps) => {
             <span className="title">{courseInfo.courseId}</span>
             <IconButton
               className={clsx(isFavorited && 'active')}
-              onClick={() => setFavorited()}
+              onClick={() => user.toggleFavourite(courseInfo, isFavorited)}
               aria-label="favourite"
               size="small"
             >

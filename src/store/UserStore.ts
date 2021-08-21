@@ -1,14 +1,26 @@
 import { makeObservable, observable, action } from 'mobx';
 
-import { CourseConcise, CourseTableEntry, LoginState, User } from '../types';
+import {
+  CourseConcise,
+  CourseInfo,
+  CourseTableEntry,
+  LoginState,
+  User,
+} from '../types';
 import { storeData, getStoreData, removeStoreItem } from '../helpers/store';
 
 import { TOKEN_EXPIRE_DAYS, VIEWS_LIMIT } from '../constants';
-import { FULL_MEMBER_LEVEL } from '../constants/configs';
+import { FULL_MEMBER_LEVEL, HISTORY_MAX_LENGTH } from '../constants/configs';
 import ViewStore from './ViewStore';
 import StorePrototype from './StorePrototype';
 
-const LOAD_KEYS = ['username', 'favoriteCourses', 'timetable', 'viewCount'];
+const LOAD_KEYS = [
+  'username',
+  'favoriteCourses',
+  'timetable',
+  'viewCount',
+  'searchHistory',
+];
 
 const RESET_KEYS = [...LOAD_KEYS, 'token'];
 
@@ -20,6 +32,7 @@ class UserStore extends StorePrototype {
   @observable loginState: LoginState;
 
   // User Saved Data
+  @observable searchHistory: string[] = [];
   @observable favoriteCourses: CourseConcise[] = [];
   @observable timetable: CourseTableEntry[];
 
@@ -48,6 +61,7 @@ class UserStore extends StorePrototype {
     }
     console.table(this.timetable);
     this.favoriteCourses = this.favoriteCourses || [];
+    this.searchHistory = this.searchHistory || [];
     this.viewCount = this.viewCount || 0;
   }
 
@@ -128,6 +142,49 @@ class UserStore extends StorePrototype {
     this.username = null;
     this.token = null;
   }
+
+  // Fav courses
+
+  @action checkIsFavourite = (courseId) =>
+    this.favoriteCourses.some((course) => course.courseId === courseId);
+
+  @action toggleFavourite = async (
+    courseInfo: CourseInfo,
+    isFavourite?: boolean
+  ) => {
+    if (isFavourite || this.checkIsFavourite(courseInfo.courseId)) {
+      this.setStore(
+        'favoriteCourses',
+        [...this.favoriteCourses].filter(
+          (course) => course.courseId !== courseInfo.courseId
+        )
+      );
+    } else {
+      await this.setStore(
+        'favoriteCourses',
+        this.favoriteCourses.concat({
+          courseId: courseInfo.courseId,
+          title: courseInfo.title,
+        })
+      );
+    }
+  };
+
+  // Search History
+
+  @action saveHistory = async (courseId: string) => {
+    let temp = [...this.searchHistory];
+    if (temp.length >= HISTORY_MAX_LENGTH) {
+      temp.pop();
+    }
+    temp = [courseId].concat(temp.filter((saved) => saved !== courseId));
+    this.setStore('searchHistory', temp);
+  };
+
+  @action deleteHistory = async (courseId) => {
+    const temp = this.searchHistory.filter((hist) => hist !== courseId);
+    this.setStore('searchHistory', temp);
+  };
 
   // reset
   @action async reset() {

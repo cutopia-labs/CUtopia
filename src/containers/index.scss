@@ -5,6 +5,7 @@ body {
   --surface: rgba(255, 255, 255, 1);
   --background: rgb(247, 246, 245, 1);
   --background-dark: rgba(5, 5, 5, 1);
+  --background-chip: #f4f4f4;
   --background-secondary: rgb(250, 251, 252);
   --background-tertiary: rgb(246, 248, 250);
   --background-warm: rgb(243, 243, 244);
@@ -366,6 +367,6 @@ h4 {
     --background-warm: #333;
     --header-color: rgba(31, 31, 31, 1);
     --header-text-color: white;
-    --default-button-background: rgb(39, 39, 39);
+    --default-button-background: var(--primary);
   }
 }
