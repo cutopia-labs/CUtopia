@@ -26,7 +26,7 @@
   flex-direction: column;
   margin: 10px 0;
   .search-panel {
-    --search-panel-width: calc(100% - 2px); // 2px for border
+    --search-panel-width: calc(var(--search-dropdown-width) - 2px); // 2px for border
     border-radius: 0;
     border-top: 0;
     .search-input-container {

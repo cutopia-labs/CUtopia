@@ -5,7 +5,7 @@ import { Menu as MenuIcon } from '@material-ui/icons';
 import clsx from 'clsx';
 
 import { UserContext } from '../../store';
-import SearchPanel, { SearchResult } from '../forum/SearchPanel';
+import SearchPanel from '../forum/SearchPanel';
 import './Header.scss';
 import Logo from '../atoms/Logo';
 import SearchInput from '../molecules/SearchInput';
@@ -120,24 +120,15 @@ const Header = () => {
               visible={visible}
               setVisible={setVisible}
             />
-            {visible &&
-              (searchPayload ? (
-                <div className="header-search-result card">
-                  <SearchResult
-                    searchPayload={searchPayload}
-                    user={user}
-                    limit={isMobile ? 4 : 6}
-                    onClick={(courseId) => {
-                      history.push(`/review/${courseId}`);
-                      setVisible(false);
-                      console.log('Hi I set you');
-                      setSearchPayload(null);
-                    }}
-                  />
-                </div>
-              ) : (
-                <SearchPanel onSearchPayloadChange={setSearchPayload} />
-              ))}
+            {visible && (
+              <SearchPanel
+                searchPayloadProp={searchPayload}
+                onCoursePress={() => {
+                  setSearchPayload(null);
+                  setVisible(false);
+                }}
+              />
+            )}
           </div>
           {!isMobile && navSections}
         </nav>

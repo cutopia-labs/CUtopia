@@ -189,12 +189,16 @@ const DepartmentList = ({ setSearchPayload }) => {
 };
 
 type SearchPanelProps = {
-  onSearchPayloadChange?: (searchPayload) => any;
+  searchPayloadProp?: SearchPayload;
+  onCoursePress?: () => any;
 };
 
-const SearchPanel = ({ onSearchPayloadChange }: SearchPanelProps) => {
+const SearchPanel = ({
+  searchPayloadProp,
+  onCoursePress,
+}: SearchPanelProps) => {
   const [searchPayload, setSearchPayloadState] = useState<SearchPayload | null>(
-    null
+    searchPayloadProp
   );
   const [currentCourse, setCurrentCourse] = useState(null);
   const history = useHistory();
@@ -246,14 +250,17 @@ const SearchPanel = ({ onSearchPayloadChange }: SearchPanelProps) => {
         }
       : null;
     setSearchPayloadState(newPayload);
-    if (onSearchPayloadChange) {
-      onSearchPayloadChange(newPayload);
-    }
   };
 
   useEffect(() => {
     console.log(COURSE_CODES);
   }, []);
+
+  useEffect(() => {
+    if (JSON.stringify(searchPayload) !== JSON.stringify(searchPayloadProp)) {
+      setSearchPayload(searchPayloadProp);
+    }
+  }, [searchPayloadProp]);
 
   return (
     <Card className="search-panel">
@@ -302,17 +309,21 @@ const SearchPanel = ({ onSearchPayloadChange }: SearchPanelProps) => {
         </form>
       </div>
       <Divider />
-      <Card title="Recent" inPlace className="search-panel-recent">
-        <ChipsRow
-          className="recent-chips"
-          chipClassName="chip-fill"
-          items={user.searchHistory.slice(0, 3)}
-          onItemClick={(item) => history.push(`/review/${item}`)}
-        />
-      </Card>
+      {!searchPayload && (
+        <Card title="Recent" inPlace className="search-panel-recent">
+          <ChipsRow
+            className="recent-chips"
+            chipClassName="chip-fill"
+            items={user.searchHistory.slice(0, 3)}
+            onItemClick={(item) => {
+              history.push(`/review/${item}`);
+              onCoursePress && onCoursePress();
+            }}
+          />
+        </Card>
+      )}
       {Boolean(currentCourse) && (
         <>
-          <Divider />
           {courseInfo && !courseInfoLoading ? (
             <CourseCard
               courseInfo={{
@@ -330,7 +341,6 @@ const SearchPanel = ({ onSearchPayloadChange }: SearchPanelProps) => {
         (searchPayload?.mode &&
         (searchPayload.mode !== 'query' || searchPayload.text) ? (
           <>
-            <Divider />
             <SearchResult
               searchPayload={searchPayload}
               user={user}
@@ -339,18 +349,18 @@ const SearchPanel = ({ onSearchPayloadChange }: SearchPanelProps) => {
                 history.push(
                   `/${isPlanner ? 'planner' : 'review'}/${courseId}`
                 );
+                onCoursePress && onCoursePress();
               }}
             />
           </>
         ) : (
           <>
-            <Divider />
             {LIST_ITEMS.map((item) => (
               <MUIListItem
                 key={item.label}
                 button
                 onClick={(e) => {
-                  if (onSearchPayloadChange) {
+                  if (onCoursePress) {
                     e.stopPropagation(); // prevent e.target showes child node
                   }
                   setSearchPayload({ mode: item.label });
