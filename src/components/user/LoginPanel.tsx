@@ -35,8 +35,8 @@ const MODE_ITEMS = {
     title: 'Sign Up',
     caption: 'A few steps away from unlimited course reviews',
     userId: 'Your CUHK SID (For Verification)',
-    username: 'Username',
-    password: 'Password',
+    username: '2 - 10 characters',
+    password: '8 - 15 characters',
     button: 'Sign Up',
   },
   [LoginPageMode.VERIFY]: {
@@ -73,7 +73,19 @@ const PATH_MODE_LOOKUP = {
 
 const MODE_PATH_LOOKUP = reverseMapping(PATH_MODE_LOOKUP);
 
-const USER_ID_RULE = new RegExp('^[0-9]{10}$', 'i');
+const USER_ID_RULE = new RegExp('^[0-9]{10}$');
+const USERNAME_RULE = new RegExp(
+  `^[A-Za-z0-9\u3000\u3400-\u4DBF\u4E00-\u9FFF]{2,10}$`
+);
+const PASSWORD_RULE = new RegExp(`^[A-Za-z0-9@$!%*#?&^_-]{8,15}$`);
+
+/*
+Contains no space
+
+Allow only alphas + digits + @$!%*#?&^_-
+
+8 - 15 length
+*/
 
 const LoginPanel = () => {
   const location = useLocation();
@@ -198,25 +210,37 @@ const LoginPanel = () => {
   };
 
   const validate = (): boolean => {
+    const usernameSignUpError =
+      mode === LoginPageMode.CUTOPIA_SIGNUP &&
+      !USERNAME_RULE.test(username) &&
+      'Invalid username (2 - 10 length without space)';
+    const passwordSignUpError =
+      (mode === LoginPageMode.CUTOPIA_SIGNUP ||
+        mode === LoginPageMode.RESET_PASSWORD_VERIFY) &&
+      !PASSWORD_RULE.test(password) &&
+      'Invalid password (8 - 15 length without space)';
+    console.log(`sign up error ${passwordSignUpError}`);
+    const passwordMissingError =
+      MODE_ITEMS[mode].password &&
+      !password &&
+      `Please enter your ${
+        mode === LoginPageMode.CUSIS ? 'OnePass ' : ''
+      }password`;
     const errorsFound = {
       verification:
         MODE_ITEMS[mode].verificationCode &&
         !verificationCode &&
         'Please enter the verification code',
       username:
-        MODE_ITEMS[mode].username &&
-        !username &&
-        'Please choose your CUtopia username',
+        (MODE_ITEMS[mode].username &&
+          !username &&
+          'Please choose your CUtopia username') ||
+        usernameSignUpError,
       userId:
         MODE_ITEMS[mode].userId &&
         (!userId || !USER_ID_RULE.test(userId)) &&
         'Please enter an valid CUHK SID (Not email)',
-      password:
-        MODE_ITEMS[mode].password &&
-        !password &&
-        `Please enter your ${
-          mode === LoginPageMode.CUSIS ? 'OnePass ' : ''
-        }password`,
+      password: passwordMissingError || passwordSignUpError,
     };
     setErrors(errorsFound);
     return !Object.values(errorsFound).some((e) => e);
