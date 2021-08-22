@@ -6,6 +6,7 @@ import userResolver from './user';
 import rankingResolver from './ranking';
 import timetableResolver from './timetable';
 import reportResolver from './report';
+import discussionResolver from './discussion';
 
 const resolvers = [
   scalarResolvers,
@@ -15,6 +16,7 @@ const resolvers = [
   rankingResolver,
   timetableResolver,
   reportResolver,
+  discussionResolver,
 ];
 
 export default mergeResolvers(resolvers);

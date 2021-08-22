@@ -17,7 +17,6 @@ import timetableRouter from './routes/timetables';
 import discussionRouter from './routes/discussions';
 import createContext from './context';
 
-/*
 const schema = makeExecutableSchema({
   typeDefs,
   resolvers,
@@ -29,12 +28,10 @@ const server = new ApolloServer({
   schema,
   introspection: true,
 } as any);
-*/
 
 const startApolloServer = async () => {
-  /*
   await server.start();
-  */
+
   await connect(process.env.ATLAS_URI);
   const app = express();
   app.get('/', (req, res) => {
@@ -62,14 +59,14 @@ const startApolloServer = async () => {
   app.use('/reports', reportRouter);
   app.use('/rankings', rankingRouter);
   app.use('/discussions', discussionRouter);
-  // server.applyMiddleware({ app });
+  server.applyMiddleware({ app });
   app.listen({ port: 4000 });
   console.log(
     `Token: ${sign({
       user: 'mike',
     })}`
   );
-  // console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
+  console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
 };
 
 startApolloServer();

@@ -9,6 +9,11 @@ type Query {
   review(input: ReviewFilter!): Review @auth
 }
 
+type ReviewsResult {
+  reviews: [Review]!
+  nextPage: Int
+}
+
 input ReviewsFilter {
   "Set courseId to null to get the latest reviews"
   courseId: String

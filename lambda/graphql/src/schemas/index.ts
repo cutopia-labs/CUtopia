@@ -15,9 +15,9 @@ const graphqlFiles = [
   './ranking.graphql',
   './report.graphql',
   './reviews.graphql',
-  './search.graphql',
   './timetable.graphql',
   './user.graphql',
+  './discussion.graphql',
 ].map(relativePath => join(__dirname, relativePath));
 
 const typesArray = loadFilesSync(graphqlFiles);
