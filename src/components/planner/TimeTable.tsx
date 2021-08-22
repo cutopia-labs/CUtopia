@@ -113,7 +113,9 @@ const TimeTable = ({ courses, timetableInfo }: TimeTableProps) => {
                 endTime: v.endTimes[i],
                 location: v.locations[i],
                 color:
-                  colors.randomColors[colorIndex % colors.randomColors.length],
+                  colors.timetableColors[
+                    colorIndex % colors.randomColorsLength
+                  ],
               });
             }
           });

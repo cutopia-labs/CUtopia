@@ -38,11 +38,7 @@ const ListItem = ({
           className="list-item-color-bar"
           style={{
             backgroundColor:
-              colors.randomColors[
-                ribbonIndex >= colors.randomColors.length
-                  ? ribbonIndex % colors.randomColors.length
-                  : ribbonIndex
-              ],
+              colors.timetableColors[ribbonIndex % colors.randomColorsLength],
           }}
         />
       )}

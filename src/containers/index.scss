@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Caveat&display=swap");
 body {
-  --primary: #01579b;
-  --accent: #ff7146;
+  --primary: #e21061;
+  --accent: var(--primary); // #f06292
   --surface: rgba(255, 255, 255, 1);
   --background: rgb(247, 246, 245, 1);
   --background-dark: rgba(5, 5, 5, 1);
@@ -310,6 +310,10 @@ h4 {
   border: none;
 }
 
+.char-icon {
+  font-weight: 500;
+}
+
 /* Scrollbar styles */
 
 /* Mobile Styles */
@@ -353,7 +357,7 @@ h4 {
 
 @media (prefers-color-scheme: dark) {
   body {
-    --primary: #ff8a65;
+    --primary: #d30051;
     --accent: #ff8a65;
     --warn: #f57c00;
     --error: #9a0036;
