@@ -6,8 +6,7 @@ import Review from '../models/review.model';
 import User from '../models/user.model';
 import withCache from '../utils/withCache';
 import { updateCourseDataFromReview } from './course';
-
-const REVIEWS_PER_PAGE = 10;
+import { REVIEWS_PER_PAGE } from '../constant/configs';
 
 const reviewCache = new NodeCache({
   stdTTL: 1800,

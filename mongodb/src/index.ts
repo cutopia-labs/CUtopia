@@ -35,7 +35,7 @@ require('dotenv').config();
 
 let conn = null;
 
-export const connect = async uri => {
+export const connect = async (uri: string) => {
   console.log(`Try to connect with ${uri}`);
   if (conn === null) {
     conn = mongoose.connect(uri).then(() => mongoose);

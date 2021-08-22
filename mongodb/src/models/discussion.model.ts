@@ -10,6 +10,7 @@ export type DiscussionMessage = {
 export type Discussion = {
   _id: string;
   messages: [DiscussionMessage];
+  numMessages: number;
 };
 
 const discussionMessageSchema = new Schema<DiscussionMessage>(
@@ -31,6 +32,7 @@ const discussionSchema = new Schema<Discussion>(
       type: [discussionMessageSchema],
       required: true,
     },
+    numMessages: { type: Number, default: 0 },
   },
   {
     _id: false,
