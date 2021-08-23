@@ -1,14 +1,13 @@
 import { useContext, useState, useRef, useEffect } from 'react';
 
 import './Discussion.scss';
-import { Avatar, IconButton } from '@material-ui/core';
+import { IconButton } from '@material-ui/core';
 import { RiSendPlaneLine } from 'react-icons/ri';
 import { DiscussionMessage } from '../../types';
 
 import { UserContext } from '../../store';
-import colors from '../../constants/colors';
-import { hashing } from '../../helpers';
 import TextField from '../atoms/TextField';
+import TextIcon from '../atoms/TextIcon';
 
 const MOCK_DISCUSSIONS = [
   {
@@ -75,17 +74,7 @@ type DiscussionProps = {
 export const Message = ({ message, isAuthor }: MessageProps) => {
   return (
     <div className="message row">
-      <Avatar
-        style={{
-          backgroundColor:
-            colors.randomColors[
-              hashing(message.user, colors.randomColorsLength)
-            ],
-        }}
-        className="char-icon"
-      >
-        {message.user.charAt(0)}
-      </Avatar>
+      <TextIcon text={message.user} size={24} />
       <span>
         <span className="message-username">{message.user}</span>
         <span className="message-text caption">{message.text}</span>
@@ -94,7 +83,7 @@ export const Message = ({ message, isAuthor }: MessageProps) => {
   );
 };
 
-const Discussion = ({ courseId }) => {
+const Discussion = ({ courseId }: DiscussionProps) => {
   const [messages, setMessages] = useState(MOCK_DISCUSSIONS);
   const [messageInput, setMessageInput] = useState('');
   const user = useContext(UserContext);
