@@ -5,6 +5,8 @@
 }
 
 .discussion-item {
+  padding: 4px 12px;
+  width: calc(100% - 24px);
   .title {
     font-weight: 500;
   }

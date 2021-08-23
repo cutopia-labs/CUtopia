@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { DiscussionRecent } from '../../types';
 import Card from '../atoms/Card';
-import ListItem from '../molecules/ListItem';
+import TextIcon from '../atoms/TextIcon';
 import SearchDropdown from '../organisms/SearchDropdown';
 import Discussion from './Discussion';
 import './DiscussionPanel.scss';
@@ -89,13 +89,16 @@ const DiscussionListItem = ({
   onClick,
 }: DiscussionListItemProps) => {
   return (
-    <ListItem
-      className="discussion-item"
-      noBorder
-      title={discussion.courseId}
-      caption={`${discussion.user}: ${discussion.text}`}
+    <div
+      className={'discussion-item list-item-container hover-bg'}
       onClick={() => onClick(discussion.courseId)}
-    />
+    >
+      <TextIcon text={discussion.courseId} size={28} />
+      <span className="list-item-title-container column">
+        <span className="list-item-title title">{discussion.courseId}</span>
+        <span className="list-item-caption caption ellipsis-text">{`${discussion.user}: ${discussion.text}`}</span>
+      </span>
+    </div>
   );
 };
 
