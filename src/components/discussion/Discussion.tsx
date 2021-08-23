@@ -9,7 +9,6 @@ import { UserContext } from '../../store';
 import colors from '../../constants/colors';
 import { hashing } from '../../helpers';
 import TextField from '../atoms/TextField';
-import AccordionCard from '../atoms/AccordionCard';
 
 const MOCK_DISCUSSIONS = [
   {
@@ -73,7 +72,7 @@ type DiscussionProps = {
   courseId: string;
 };
 
-const Message = ({ message, isAuthor }: MessageProps) => {
+export const Message = ({ message, isAuthor }: MessageProps) => {
   return (
     <div className="message row">
       <Avatar
@@ -96,7 +95,6 @@ const Message = ({ message, isAuthor }: MessageProps) => {
 };
 
 const Discussion = ({ courseId }) => {
-  const [expanded, setExpanded] = useState(false);
   const [messages, setMessages] = useState(MOCK_DISCUSSIONS);
   const [messageInput, setMessageInput] = useState('');
   const user = useContext(UserContext);
@@ -119,12 +117,7 @@ const Discussion = ({ courseId }) => {
     });
   }, [messages?.length]);
   return (
-    <AccordionCard
-      expanded={expanded}
-      onChange={(e, expanded) => setExpanded(expanded)}
-      title="Discussion"
-      className="discussion-card"
-    >
+    <div className="discussion-container">
       <div ref={messagesContainerRef} className="messages-container column">
         {messages.map((message) => (
           <Message
@@ -144,7 +137,7 @@ const Discussion = ({ courseId }) => {
           <RiSendPlaneLine />
         </IconButton>
       </form>
-    </AccordionCard>
+    </div>
   );
 };
 
