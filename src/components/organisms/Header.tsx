@@ -1,9 +1,18 @@
 import { useState, useContext, useRef } from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { IconButton, Menu, MenuItem } from '@material-ui/core';
-import { Menu as MenuIcon } from '@material-ui/icons';
+import {
+  ChatBubble,
+  ChatBubbleOutlineOutlined,
+  Home,
+  HomeOutlined,
+  Menu as MenuIcon,
+  Note,
+  NoteOutlined,
+} from '@material-ui/icons';
 import clsx from 'clsx';
 
+import { BsChatDots, BsFillChatDotsFill } from 'react-icons/bs';
 import { UserContext } from '../../store';
 import SearchPanel from '../forum/SearchPanel';
 import './Header.scss';
@@ -15,14 +24,26 @@ import { SearchPayload } from '../../types';
 
 const SECTIONS = [
   {
+    icon: <HomeOutlined />,
+    filledIcon: <Home />,
     label: 'Home',
     link: '/',
   },
   {
+    icon: <ChatBubbleOutlineOutlined />,
+    filledIcon: <ChatBubble />,
     label: 'Review',
     link: '/review',
   },
   {
+    icon: <BsChatDots />,
+    filledIcon: <BsFillChatDotsFill />,
+    label: 'Discussion',
+    link: '/discussion',
+  },
+  {
+    icon: <NoteOutlined />,
+    filledIcon: <Note />,
     label: 'Planner',
     link: '/planner',
   },
@@ -51,27 +72,31 @@ const Header = () => {
     e.preventDefault();
   };
 
-  const navSections = SECTIONS.map((section) => (
-    <Link
-      key={section.link}
-      to={section.link}
-      className={clsx(
-        'nav-label-container',
-        location.pathname.startsWith(section.link) &&
-          (section.link.length > 1 || section.link === location.pathname) &&
-          'active'
-      )}
-    >
-      {section.label}
-    </Link>
-  ));
+  const navSections = SECTIONS.map((section) => {
+    const active =
+      location.pathname.startsWith(section.link) &&
+      (section.link.length > 1 || section.link === location.pathname);
+    return (
+      <Link
+        key={section.link}
+        to={section.link}
+        className={clsx(
+          'nav-label-container column center',
+          active && 'active'
+        )}
+      >
+        {active ? section.filledIcon : section.icon}
+        {section.label}
+      </Link>
+    );
+  });
 
   return (
     <header className="header-background-container">
       <div className="header-container row">
         {isMobile && (
           <>
-            {(!visible || !isMobile) && (
+            {!visible && (
               <IconButton
                 aria-label="sort"
                 size="small"

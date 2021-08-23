@@ -81,13 +81,16 @@
 }
 .nav-label-container {
   &:first-of-type {
-    margin-left: 10px;
+    margin-left: var(--card-padding);
   }
-  display: flex;
-  justify-content: center;
+  svg {
+    font-size: 24px;
+    margin-bottom: 4px;
+  }
   align-items: center;
-  padding: 10px 20px;
-  font-weight: bold;
+  width: 82px;
+  font-weight: 500;
+  font-size: 12px;
   transition: all 0.1s ease-in-out;
   text-transform: capitalize;
   opacity: 0.6;
