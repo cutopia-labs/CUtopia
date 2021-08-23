@@ -310,8 +310,13 @@ h4 {
   border: none;
 }
 
-.char-icon {
-  font-weight: 500;
+.ellipsis-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  margin-top: 5px;
 }
 
 /* Scrollbar styles */

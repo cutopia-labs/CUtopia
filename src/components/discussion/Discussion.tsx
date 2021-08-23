@@ -46,6 +46,81 @@ const MOCK_DISCUSSIONS = [
     _id: 1233453456,
   },
   {
+    text: 'Dun reg this shit !',
+    user: 'mike',
+    _id: 1233453456,
+  },
+  {
+    text: 'Dun reg this shit !!',
+    user: 'mike',
+    _id: 1233453456,
+  },
+  {
+    text: 'Dun reg this shit !!!',
+    user: 'mike',
+    _id: 1233453456,
+  },
+  {
+    text: 'Dun reg this shit !',
+    user: 'mike',
+    _id: 1233453456,
+  },
+  {
+    text: 'Dun reg this shit !!',
+    user: 'mike',
+    _id: 1233453456,
+  },
+  {
+    text: 'Dun reg this shit !!!',
+    user: 'mike',
+    _id: 1233453456,
+  },
+  {
+    text: 'Dun reg this shit !',
+    user: 'mike',
+    _id: 1233453456,
+  },
+  {
+    text: 'Dun reg this shit !!',
+    user: 'mike',
+    _id: 1233453456,
+  },
+  {
+    text: 'Dun reg this shit !',
+    user: 'mike',
+    _id: 1233453456,
+  },
+  {
+    text: 'Dun reg this shit !!',
+    user: 'mike',
+    _id: 1233453456,
+  },
+  {
+    text: 'Dun reg this shit !!!',
+    user: 'mike',
+    _id: 1233453456,
+  },
+  {
+    text: 'Dun reg this shit !!!',
+    user: 'mike',
+    _id: 1233453456,
+  },
+  {
+    text: 'Dun reg this shit !',
+    user: 'mike',
+    _id: 1233453456,
+  },
+  {
+    text: 'Dun reg this shit !!',
+    user: 'mike',
+    _id: 1233453456,
+  },
+  {
+    text: 'Dun reg this shit !!!',
+    user: 'mike',
+    _id: 1233453456,
+  },
+  {
     text: 'Bye',
     user: 'mike',
     _id: 1233453456,

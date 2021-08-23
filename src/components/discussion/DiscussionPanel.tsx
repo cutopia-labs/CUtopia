@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { DiscussionRecent } from '../../types';
 import Card from '../atoms/Card';
+import CardHeader from '../atoms/CardHeader';
 import TextIcon from '../atoms/TextIcon';
 import SearchDropdown from '../organisms/SearchDropdown';
 import Discussion from './Discussion';
@@ -119,6 +120,7 @@ const DiscussionPanel = () => {
         </div>
       </Card>
       <div className="messages-wrapper">
+        <CardHeader title={courseId} />
         <Discussion courseId={courseId} />
       </div>
     </Card>

@@ -18,6 +18,7 @@ import LandingPage from './LandingPage';
 import PlannerPage from './PlannerPage';
 import ForumPage from './ForumPage';
 import AboutPage, { ABOUT_PAGE_ROUTES } from './AboutPage';
+import DiscussionPage from './DiscussionPage';
 
 const ROUTES = [
   {
@@ -35,6 +36,12 @@ const ROUTES = [
   },
   {
     props: {
+      path: '/discussion',
+    },
+    children: <DiscussionPage />,
+  },
+  {
+    props: {
       exact: true,
       path: ['/planner', '/planner/:courseId', '/planner/share/:shareId'],
     },
@@ -48,7 +55,6 @@ const ROUTES = [
     children: <AboutPage />,
   },
   {
-    props: {},
     children: <ErrorCard mode={ErrorCardMode.NOT_FOUND} />,
   },
 ];
