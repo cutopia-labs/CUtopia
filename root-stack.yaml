@@ -1,30 +1,11 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Transform: "AWS::Serverless-2016-10-31"
-Parameters:
-  IsProduction:
-    Type: String
-    Default: true
-    AllowedValues: [true, false]
-  GmailAddress:
-    Type: String
-    Default: cutopia.team@gmail.com
-  GamilClientID:
-    Type: String
-  GmailClientSecret:
-    Type: String
-  GmailRefreshToken:
-    Type: String
 Resources:
   Lambda:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: ./lambda/lambda.yaml
       Parameters:
-        IsProduction: !Ref IsProduction
-        GmailAddress: !Ref GmailAddress
-        GamilClientID: !Ref GamilClientID
-        GmailClientSecret: !Ref GmailClientSecret
-        GmailRefreshToken: !Ref GmailRefreshToken
         UserSNSTopic: !Ref UserSNSTopic
   UserSNSTopic:
     Type: AWS::SNS::Topic

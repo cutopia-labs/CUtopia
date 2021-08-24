@@ -1,23 +1,24 @@
+require('dotenv').config();
 const { google } = require('googleapis');
 const nodemailer = require('nodemailer');
 
 const OAuth2 = google.auth.OAuth2;
 const OAuth2Client = new OAuth2(
-  process.env.GamilClientID,
-  process.env.GmailClientSecret,
+  process.env.GMAIL_CLIENT_ID,
+  process.env.GMAIL_CLIENT_SECRET,
   'https://developers.google.com/oauthplayground'
 );
 OAuth2Client.setCredentials({
-  refresh_token: process.env.GmailRefreshToken,
+  refresh_token: process.env.GMAIL_REFRESH_TOKEN,
 });
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     type: 'OAuth2',
-    user: process.env.GmailAddress,
-    clientId: process.env.GamilClientID,
-    clientSecret: process.env.GmailClientSecret,
-    refreshToken: process.env.GmailRefreshToken,
+    user: process.env.GMAIL_ADDRESS,
+    clientId: process.env.GMAIL_CLIENT_ID,
+    clientSecret: process.env.GMAIL_CLIENT_SECRET,
+    refreshToken: process.env.GMAIL_REFRESH_TOKEN,
     accessToken: OAuth2Client.getAccessToken(),
   },
 });

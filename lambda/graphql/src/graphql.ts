@@ -2,12 +2,18 @@ import { ApolloServer } from 'apollo-server-lambda';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { ValidateDirectiveVisitor } from '@profusion/apollo-validation-directives';
 import express from 'express';
-require('dotenv').config();
+import { connect } from 'mongodb';
+import dotenv from 'dotenv';
 
 import typeDefs from './schemas';
 import resolvers from './resolvers';
 import schemaDirectives from './directives';
 import createContext from './context';
+
+dotenv.config();
+
+// no need to await, mongoose buffers function calls internally
+connect(process.env.ATLAS_URI);
 
 const schema = makeExecutableSchema({
   typeDefs,
@@ -17,7 +23,7 @@ const schema = makeExecutableSchema({
 
 ValidateDirectiveVisitor.addValidationResolversToSchema(schema);
 
-const isProduction = process.env.IsProduction === 'true';
+const isProduction = process.env.NODE_ENV === 'production';
 const allowedOrigins = isProduction
   ? ['https://cutopia.app', 'https://dev.cutopia.app']
   : '*';

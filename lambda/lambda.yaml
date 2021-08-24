@@ -1,18 +1,6 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Transform: "AWS::Serverless-2016-10-31"
 Parameters:
-  IsProduction:
-    Type: String
-  AtlasUri:
-    Type: String
-  GmailAddress:
-    Type: String
-  GamilClientID:
-    Type: String
-  GmailClientSecret:
-    Type: String
-  GmailRefreshToken:
-    Type: String
   UserSNSTopic:
     Type: String
 Resources:
@@ -57,9 +45,15 @@ Resources:
             Method: post
             Path: /graphql
           Type: Api
+      # temporary solution (NAT instance) for mongodb access
+      # until mongodb atlas serverless supports vpc peering
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-03ed907b42c26a4ed
+        SubnetIds:
+          - subnet-0d9182dad41e3aafa
       Environment:
         Variables:
-          IsProduction: !Ref IsProduction
           UserSNSTopic: !Ref UserSNSTopic
       Role: !GetAtt GraphQLRole.Arn
       Runtime: nodejs14.x
@@ -92,8 +86,17 @@ Resources:
                 Effect: Allow
                 Resource:
                   - !Ref UserSNSTopic
+              - Action:
+                  - ec2:CreateNetworkInterface
+                  - ec2:DescribeNetworkInterfaces
+                  - ec2:DeleteNetworkInterface
+                  - ec2:AssignPrivateIpAddresses
+                  - ec2:UnassignPrivateIpAddresses
+                Effect: Allow
+                Resource:
+                  - '*'
             Version: "2012-10-17"
-          PolicyName: LambdaPolicy
+          PolicyName: GraphQLPolicy
   Emailer:
     Type: AWS::Serverless::Function
     Properties:
@@ -104,12 +107,6 @@ Resources:
           Type: SNS
           Properties:
             Topic: !Ref UserSNSTopic
-      Environment:
-        Variables:
-          GmailAddress: !Ref GmailAddress
-          GamilClientID: !Ref GamilClientID
-          GmailClientSecret: !Ref GmailClientSecret
-          GmailRefreshToken: !Ref GmailRefreshToken
       Role: !GetAtt LambdaRole.Arn
       Runtime: nodejs14.x
       Timeout: 20
@@ -119,9 +116,6 @@ Resources:
     Properties:
       CodeUri: ./cron-remove-timetable
       Handler: index.handler
-      Environment:
-        Variables:
-          AtlasUri: !Ref AtlasUri
       Role: !GetAtt LambdaRole.Arn
       Runtime: nodejs14.x
       Timeout: 20

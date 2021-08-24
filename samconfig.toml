@@ -2,10 +2,9 @@ version = 0.1
 [default]
 [default.deploy]
 [default.deploy.parameters]
-stack_name = "mike-dev"
-s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-66wc6266rpfl"
-s3_prefix = "mike-dev"
-region = "ap-northeast-1"
+stack_name = "cutopia-dev"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-av1wavv1xwnl"
+s3_prefix = "cutopia-dev"
+region = "ap-southeast-1"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM CAPABILITY_AUTO_EXPAND"
-parameter_overrides = "UserTableName=\"users\" UserEmailMappingIndexName=\"email-mapping\" ReviewsTableName=\"reviews\" ReviewsByVoteIndexName=\"sort-by-vote\" LatestReviewsTableName=\"reviews-latest\" ReportTableName=\"reports\" GmailAddress=\"cutopia.team@gmail.com\" GamilClientID=\"613970822961-3jvqbjgr448r99g1p1aatb8u73th370u.apps.googleusercontent.com\" GmailClientSecret=\"7fyhyTmJOc2lOE5hFAD7SSEq\" GmailRefreshToken=\"1//0499FCj7Gs7t5CgYIARAAGAQSNwF-L9IrAwmlqVRMh1tlFWYnNtn8FeGUICUFmtvCj22asAHwZzTF0WdDPk_BIWrAJzvmKQZAotQ\""

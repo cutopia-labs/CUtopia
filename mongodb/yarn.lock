@@ -2040,7 +2040,7 @@ mongodb@4.1.0:
   optionalDependencies:
     saslprep "^1.0.0"
 
-mongoose@^6.0.0-rc1:
+mongoose@6.0.0-rc1:
   version "6.0.0-rc1"
   resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-6.0.0-rc1.tgz#82f78fe8bb095592c68ebf3d8046624f9782b9b2"
   integrity sha512-H7p4s25ommmSlzjmxJszk0poRqwoNaLD4qm9Clh8T099Bd/vXbbu18U7d1nu3y0QO4jnL3sRHFULer120h85VA==

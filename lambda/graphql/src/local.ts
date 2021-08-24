@@ -3,7 +3,7 @@ const { ApolloServer } = require('apollo-server-express');
 import { ValidateDirectiveVisitor } from '@profusion/apollo-validation-directives';
 import express from 'express';
 import { connect } from 'mongodb';
-require('dotenv').config();
+import dotenv from 'dotenv';
 
 import { sign } from './jwt';
 import typeDefs from './schemas';
@@ -15,7 +15,8 @@ import reportRouter from './routes/reports';
 import rankingRouter from './routes/rankings';
 import timetableRouter from './routes/timetables';
 import discussionRouter from './routes/discussions';
-import createContext from './context';
+
+dotenv.config();
 
 const schema = makeExecutableSchema({
   typeDefs,
