@@ -1,8 +1,8 @@
 /* eslint-disable camelcase */ // course_sections is not in camelcase when parsing the data
-
-import { courses } from '../../data/courses';
 import { getCourseData } from 'mongodb';
-import processRating from '../../utils/processRating';
+
+import { courses } from '../data/courses';
+import processRating from '../utils/processRating';
 
 const subjectsResolver = {
   Query: {

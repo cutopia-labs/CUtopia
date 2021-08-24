@@ -1,5 +1,4 @@
 import { getDiscussion, sendDiscussionMessage } from 'mongodb';
-import { VoteAction } from 'cutopia-types/lib/codes';
 
 const discussionResolver = {
   Mutation: {

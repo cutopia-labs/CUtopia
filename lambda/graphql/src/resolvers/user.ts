@@ -1,5 +1,4 @@
 import AWS from 'aws-sdk';
-const SNS = new AWS.SNS({ apiVersion: '2010-03-31' });
 import {
   createUser,
   verifyUser,
@@ -9,7 +8,9 @@ import {
   resetPassword,
   login,
 } from 'mongodb';
-import { sign } from '../../jwt';
+import { sign } from '../jwt';
+
+const SNS = new AWS.SNS({ apiVersion: '2010-03-31' });
 
 const sendEmail = async message => {
   const params = {

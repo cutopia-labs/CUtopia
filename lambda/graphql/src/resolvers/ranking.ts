@@ -1,7 +1,8 @@
-import { courses } from '../../data/courses';
-import NodeCache from 'node-cache';
 import { getRanking } from 'mongodb';
-import withCache from '../../utils/withCache';
+import NodeCache from 'node-cache';
+
+import { courses } from '../data/courses';
+import withCache from '../utils/withCache';
 
 const rankingCache = new NodeCache({
   stdTTL: 1800,
@@ -22,3 +23,20 @@ export const getRankingWithCache = async (field: string) =>
     }));
     return resData;
   });
+
+const rankingResolver = {
+  Query: {
+    ranking: () => ({}),
+  },
+  RankTable: {
+    popularCourses: async (parent, { filter }) => {
+      return await getRankingWithCache('numReviews');
+    },
+    topRatedCourses: async (parent, { filter }) => {
+      const { limit, sortBy } = filter;
+      return (await getRankingWithCache(sortBy))?.slice(0, limit);
+    },
+  },
+};
+
+export default rankingResolver;
