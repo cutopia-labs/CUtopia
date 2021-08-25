@@ -39,19 +39,6 @@ const timetableResolver = {
       await removeTimetable({ username, id });
     },
   },
-  CourseTableEntry: {
-    sections: ({ sections }) => {
-      return sections.map(section => {
-        const { name } = section;
-        return {
-          ...section,
-          idsContext: {
-            section: name,
-          },
-        };
-      });
-    },
-  },
 };
 
 export default timetableResolver;

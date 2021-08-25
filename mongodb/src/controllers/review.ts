@@ -19,14 +19,11 @@ export const createReview = async input => {
   const createdAt = +new Date();
   const _id = generateReviewId(courseId, createdAt);
   const user = await User.findOne({ username }, 'reviews exp').exec();
-  if (
-    !user ||
-    user.reviews.some(review => review.courseId.includes(courseId))
-  ) {
+  if (!user || user.reviewIds.some(reviewId => reviewId.startsWith(courseId))) {
     throw Error(ErrorCode.CREATE_REVIEW_ALREADY_CREATED.toString());
   }
   // give extra exp for writing the first review
-  user.exp += user.reviews.length === 0 ? 5 : 3;
+  user.exp += user.reviewIds.length === 0 ? 5 : 3;
 
   const newReview = new Review({
     username,

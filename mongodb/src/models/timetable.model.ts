@@ -14,6 +14,7 @@ export type Timetable = {
   expire: number;
   expireAt: number;
   tableName?: string;
+  username: string;
 };
 
 const timetableSchema = new Schema<Timetable>(
@@ -50,6 +51,6 @@ timetableSchema.post('remove', async function (doc) {
   );
 });
 
-const Timetable = model('Timetable', timetableSchema);
+const Timetable = model<Timetable>('Timetable', timetableSchema);
 
 export default Timetable;

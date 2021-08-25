@@ -23,31 +23,22 @@ const sendEmail = async message => {
 const userResolver = {
   Query: {
     me: async (parent, args, { user }) => {
-      return await getUser({ username: user.username });
+      const { username } = user;
+      return await getUser({ username });
     },
   },
   User: {
-    reviewIds: ({ reviewIds }) => {
-      // reviewIds is a set
-      return reviewIds?.values?.filter(reviewId => reviewId) || [];
-    },
-    exp: ({ exp }) => {
-      return exp === undefined ? 0 : exp;
-    },
     level: ({ exp }) => {
-      return exp === undefined ? 0 : Math.floor(exp / 5);
-    },
-    fullAccess: ({ fullAccess }) => {
-      return fullAccess === undefined ? false : fullAccess;
+      return Math.floor(exp / 5);
     },
   },
   Mutation: {
     createUser: async (parent, { input }) => {
-      const { email } = input;
+      const { SID } = input;
       const verificationCode = await createUser(input);
       await sendEmail({
         action: 'create',
-        email,
+        email: `${SID}@link.cuhk.edu.hk`,
         verificationCode,
       });
     },

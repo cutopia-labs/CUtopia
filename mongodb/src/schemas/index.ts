@@ -42,7 +42,6 @@ export const timetableEntrySchema = new Schema(
   {
     courseId: requiredString,
     title: requiredString,
-    credits: requiredNumber,
     sections: [timetableSectionSchema],
   },
   {

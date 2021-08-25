@@ -92,7 +92,10 @@ const subjectsResolver = {
     },
   },
   CourseSection: {
-    name: ({ idsContext }) => idsContext.section,
+    name: ({ idsContext, name }) => {
+      // when idsContext is undefined, the course section name is derived from database
+      return idsContext === undefined ? name : idsContext.section;
+    },
   },
   AssessementComponent: {},
 };

@@ -2,9 +2,9 @@ version = 0.1
 [default]
 [default.deploy]
 [default.deploy.parameters]
-stack_name = "mike-dev"
+stack_name = "cutopia-dev"
 s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-av1wavv1xwnl"
-s3_prefix = "mike-dev"
+s3_prefix = "cutopia-dev"
 region = "ap-southeast-1"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM CAPABILITY_AUTO_EXPAND"

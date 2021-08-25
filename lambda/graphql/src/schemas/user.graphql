@@ -23,7 +23,7 @@ type Mutation {
 
 input CreateUserInput {
   username: String!
-  email: String!
+  SID: String!
   password: String!
 }
 

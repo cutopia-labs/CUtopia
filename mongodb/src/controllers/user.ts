@@ -179,7 +179,6 @@ export const getTimetablesOverview = async input => {
   const { username, shared } = input;
   const timetableField = shared ? 'sharedTimetables' : 'timetables';
   const user = await User.findOne({ username }, timetableField)
-    .lean()
     .populate(timetableField, 'tableName createdAt expireAt expire')
     .exec();
   return user[timetableField];

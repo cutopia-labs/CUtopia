@@ -1,12 +1,6 @@
 import { Schema, model } from 'mongoose';
-import { requiredString, createdAt } from '../schemas';
 import { Timetable } from './timetable.model';
-
-type Review = {
-  courseId: string;
-  createdAt: number;
-  sem: string;
-};
+import { requiredString, createdAt } from '../schemas';
 
 type User = {
   username: string;
@@ -15,7 +9,7 @@ type User = {
   resetPwdCode: string;
   email: string;
   createdAt: number;
-  reviews: Review[];
+  reviewIds: string[];
   upvotes: number;
   downvotes: number;
   exp: number;
@@ -41,13 +35,7 @@ const userSchema = new Schema<User>({
   },
   password: requiredString,
   createdAt: createdAt,
-  reviews: [
-    {
-      courseId: String,
-      createdAt: String,
-      sem: String,
-    },
-  ],
+  reviewIds: [String], // format: courseId#createdAt
   upvotes: Number,
   downvotes: Number,
   resetPwdCode: String,
