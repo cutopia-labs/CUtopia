@@ -72,7 +72,7 @@ const subjectsResolver = {
     },
     rating: async ({ course }) => {
       const result = await getCourseData({ courseId: course.courseId });
-      return processRating(result.rating);
+      return result ? processRating(result.rating) : null;
     },
   },
   Term: {

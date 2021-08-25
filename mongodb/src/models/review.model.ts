@@ -26,25 +26,37 @@ type Review = {
   updatedAt: number;
 };
 
-const reviewDetailSchema = new Schema<ReviewDetailSchema>({
-  grade: ratingSchema,
-  text: {
-    type: String,
-    required: true,
-    maxlength: 500,
+const reviewDetailSchema = new Schema<ReviewDetailSchema>(
+  {
+    grade: ratingSchema,
+    text: {
+      type: String,
+      required: true,
+      maxlength: 500,
+    },
   },
-});
+  {
+    _id: false,
+    versionKey: false,
+  }
+);
 
 const reviewSchema = new Schema<Review>(
   {
+    _id: requiredString,
     username: requiredString,
-    reviewId: requiredString,
     courseId: requiredString,
     term: requiredString,
     lecturer: requiredString,
     anonymous: { type: Boolean, required: true },
-    upvotes: Number,
-    downvotes: Number,
+    upvotes: {
+      type: Number,
+      default: 0,
+    },
+    downvotes: {
+      type: Number,
+      default: 0,
+    },
     upvoteUserIds: [String],
     downvoteUserIds: [String],
     overall: ratingSchema,
@@ -53,7 +65,10 @@ const reviewSchema = new Schema<Review>(
     difficulty: reviewDetailSchema,
     content: reviewDetailSchema,
   },
-  { timestamps: { currentTime: Date.now } }
+  {
+    timestamps: false,
+    _id: false,
+  }
 );
 reviewSchema.index({ courseId: 1, createdAt: -1 }, { unique: true });
 

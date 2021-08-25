@@ -29,7 +29,7 @@ const userResolver = {
   User: {
     reviewIds: ({ reviewIds }) => {
       // reviewIds is a set
-      return reviewIds.values.filter(reviewId => reviewId); // filter out empty string
+      return reviewIds?.values?.filter(reviewId => reviewId) || [];
     },
     exp: ({ exp }) => {
       return exp === undefined ? 0 : exp;

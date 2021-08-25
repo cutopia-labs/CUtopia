@@ -1,4 +1,3 @@
-import { nanoid } from 'nanoid';
 import NodeCache from 'node-cache';
 import { ErrorCode, VoteAction } from 'cutopia-types/lib/codes';
 
@@ -8,14 +7,17 @@ import withCache from '../utils/withCache';
 import { updateCourseDataFromReview } from './course';
 import { REVIEWS_PER_PAGE } from '../constant/configs';
 
+const generateReviewId = (courseId: string, createdAt: number | string) =>
+  `${courseId}#${createdAt}`;
+
 const reviewCache = new NodeCache({
   stdTTL: 1800,
 });
 
 export const createReview = async input => {
   const { username, courseId, ...reviewData } = input;
-  const reviewId = nanoid(10);
-
+  const createdAt = +new Date();
+  const _id = generateReviewId(courseId, createdAt);
   const user = await User.findOne({ username }, 'reviews exp').exec();
   if (
     !user ||
@@ -29,11 +31,7 @@ export const createReview = async input => {
   const newReview = new Review({
     username,
     courseId,
-    reviewId,
-    upvoteUserIds: [],
-    upvotes: 0,
-    downvoteUserIds: [],
-    downvotes: 0,
+    _id,
     ...reviewData,
   });
 
@@ -42,14 +40,16 @@ export const createReview = async input => {
   await updateCourseDataFromReview(courseId, reviewData);
 
   return {
-    id: reviewId,
-    createdAt: newReview.createdAt,
+    id: _id,
+    createdAt,
   };
 };
 
 export const getReview = async input =>
   withCache(reviewCache, `${input.courseId}_${input.createdAt}`, async () => {
-    return await Review.findOne(input).exec();
+    return await Review.findById(
+      generateReviewId(input.courseId, input.createdAt)
+    ).exec();
   });
 
 export const voteReview = async input => {
