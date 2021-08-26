@@ -260,7 +260,7 @@ const LoginPanel = () => {
         const createUserPayload = {
           variables: {
             username,
-            email: `${userId}${CUHK_EMAIL_SUFFIX}`,
+            sid: userId,
             password,
           },
         };

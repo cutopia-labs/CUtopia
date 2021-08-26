@@ -11,10 +11,8 @@ export const LOGIN_CUTOPIA = gql`
 
 // CUTOPIA SIGNUP Mutations
 export const SEND_VERIFICATION = gql`
-  mutation ($email: String!, $password: String!, $username: String!) {
-    createUser(
-      input: { username: $username, email: $email, password: $password }
-    )
+  mutation ($sid: String!, $password: String!, $username: String!) {
+    createUser(input: { username: $username, SID: $sid, password: $password })
   }
 `;
 

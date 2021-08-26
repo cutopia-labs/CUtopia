@@ -29,7 +29,10 @@ import { ViewContext, UserContext } from '../../store';
 import { COURSE_SECTIONS_QUERY } from '../../constants/queries';
 import { validCourse } from '../../helpers/marcos';
 import Loading from '../atoms/Loading';
-import { MAX_SEARCH_RESULT_LENGTH } from '../../constants/configs';
+import {
+  CURRENT_TERM,
+  MAX_SEARCH_RESULT_LENGTH,
+} from '../../constants/configs';
 import {
   CourseSearchItem,
   ErrorCardMode,
@@ -241,8 +244,8 @@ const SearchPanel = ({
     skip: !currentCourse || !validCourse(currentCourse),
     ...(currentCourse && {
       variables: {
-        subject: currentCourse.substring(0, 4),
-        code: currentCourse.substring(4),
+        courseId: currentCourse,
+        term: CURRENT_TERM,
       },
     }),
     onError: view.handleError,
@@ -333,7 +336,7 @@ const SearchPanel = ({
           {courseInfo && !courseInfoLoading ? (
             <CourseCard
               courseInfo={{
-                ...courseInfo.subjects[0].courses[0],
+                ...courseInfo.courses[0],
                 courseId: currentCourse,
               }}
               concise

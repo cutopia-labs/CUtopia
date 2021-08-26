@@ -2,31 +2,29 @@ import { gql } from '@apollo/client';
 
 // Course Information Query
 export const COURSE_INFO_QUERY = gql`
-  query ($subject: String!, $code: String!) {
-    subjects(filter: { requiredSubjects: [$subject] }) {
-      courses(filter: { requiredCourses: [$code] }) {
-        units
-        title
-        components
-        requirements
-        description
-        syllabus
-        academic_group
-        reviewLecturers
-        reviewTerms
-        assessments {
-          name
-          percentage
-        }
-        rating {
-          numReviews
-          overall
-          grading
-          content
-          difficulty
-          teaching
-        }
+  query ($courseId: String!) {
+    courses(filter: { requiredCourses: [$courseId] }) {
+      units
+      title
+      components
+      requirements
+      description
+      syllabus
+      academic_group
+      assessments {
+        name
+        percentage
       }
+      rating {
+        numReviews
+        overall
+        grading
+        content
+        difficulty
+        teaching
+      }
+      reviewLecturers
+      reviewTerms
     }
   }
 `;
@@ -90,7 +88,7 @@ export const REVIEWS_QUERY = gql`
 
 export const RECENT_REVIEWS_QUERY = gql`
   query {
-    reviews(input: { getLatest: true }) {
+    reviews(input: { ascending: true }) {
       reviews {
         courseId
         username
@@ -143,7 +141,7 @@ export const GET_USER = gql`
   query {
     me {
       reviewIds
-      upvotesCount
+      upvotes
       username
       exp
       level
@@ -187,31 +185,29 @@ export const POPULAR_COURSES_QUERY = gql`
 `;
 
 export const COURSE_SECTIONS_QUERY = gql`
-  query ($subject: String!, $code: String!) {
-    subjects(filter: { requiredSubjects: [$subject] }) {
-      courses(filter: { requiredCourses: [$code] }) {
-        units
-        title
-        academic_group
-        requirements
-        rating {
-          numReviews
-          overall
-          grading
-          content
-          difficulty
-          teaching
-        }
-        terms {
+  query ($courseId: String!, $term: String!) {
+    courses(filter: { requiredCourses: [$courseId], requiredTerm: $term }) {
+      units
+      title
+      academic_group
+      requirements
+      rating {
+        numReviews
+        overall
+        grading
+        content
+        difficulty
+        teaching
+      }
+      terms {
+        name
+        course_sections {
           name
-          course_sections {
-            name
-            startTimes
-            endTimes
-            days
-            locations
-            instructors
-          }
+          startTimes
+          endTimes
+          days
+          locations
+          instructors
         }
       }
     }

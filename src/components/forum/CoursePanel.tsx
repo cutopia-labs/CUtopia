@@ -86,8 +86,7 @@ const CoursePanel = () => {
     skip: !courseId,
     ...(courseId && {
       variables: {
-        subject: courseId.substring(0, 4),
-        code: courseId.substring(4),
+        courseId,
       },
     }),
     fetchPolicy: 'cache-first',
@@ -232,7 +231,7 @@ const CoursePanel = () => {
         <div className="course-panel panel card">
           <CourseCard
             courseInfo={{
-              ...courseInfo?.subjects[0]?.courses[0],
+              ...courseInfo?.courses[0],
               courseId,
             }}
             loading={courseInfoLoading}
@@ -242,7 +241,7 @@ const CoursePanel = () => {
           <>
             <ReviewFilterBar
               forwardedRef={reviewFilterBarRef}
-              courseInfo={courseInfo?.subjects[0]?.courses[0]}
+              courseInfo={courseInfo?.courses[0]}
               reviewsPayload={reviewsPayload}
               dispatchReviewsPayload={dispatchReviewsPayload}
               fetchAllAction={
@@ -279,7 +278,7 @@ const CoursePanel = () => {
               <ReviewFilterBar
                 className="float"
                 isMobile={true}
-                courseInfo={courseInfo?.subjects[0]?.courses[0]}
+                courseInfo={courseInfo?.courses[0]}
                 reviewsPayload={reviewsPayload}
                 dispatchReviewsPayload={dispatchReviewsPayload}
                 fetchAllAction={
@@ -292,17 +291,17 @@ const CoursePanel = () => {
             )}
           </>
         )}
-        {Boolean(courseInfo?.subjects[0]?.courses[0]) && (
+        {Boolean(courseInfo?.courses[0]) && (
           <span className="review-count caption center-row">
             {reviewId ? (
               <>
                 {`Showing 1 review`}
-                <span className="caption">{`(${courseInfo?.subjects[0]?.courses[0]?.rating?.numReviews} total)`}</span>
+                <span className="caption">{`(${courseInfo?.courses[0]?.rating?.numReviews} total)`}</span>
               </>
             ) : (
               `${pluralize(
                 'review',
-                courseInfo?.subjects[0]?.courses[0]?.rating?.numReviews || 0,
+                courseInfo?.courses[0]?.rating?.numReviews || 0,
                 true
               )}`
             )}

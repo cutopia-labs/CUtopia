@@ -19,11 +19,13 @@ export const PLANNER_CONFIGS = {
 
 export const MIN_DESKTOP_WIDTH = 1260;
 
+const AWS_REGION = 'ap-southeast-1';
+
 const SERVER_ID =
-  process.env.NODE_ENV === 'production' ? 'vqx877xyad' : 'uqtx8qgnz5';
+  process.env.NODE_ENV === 'production' ? 'uvp03fp791' : 'uvp03fp791';
 
 export const SERVER_CONFIG = {
-  URI: `https://${SERVER_ID}.execute-api.ap-northeast-1.amazonaws.com/Prod/graphql`,
+  URI: `https://${SERVER_ID}.execute-api.${AWS_REGION}.amazonaws.com/Prod/graphql`,
 };
 
 export const SentryConfigs: BrowserOptions = {

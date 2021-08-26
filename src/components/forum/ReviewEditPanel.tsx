@@ -513,8 +513,7 @@ const ReviewEditPanel = () => {
       skip: !courseId,
       ...(courseId && {
         variables: {
-          subject: courseId.substring(0, 4),
-          code: courseId.substring(4),
+          courseId,
         },
       }),
       fetchPolicy: 'cache-first',
@@ -523,17 +522,14 @@ const ReviewEditPanel = () => {
   );
   return (
     <div className="review-edit-panel course-panel panel card">
-      {!courseInfoLoading &&
-        courseInfo &&
-        courseInfo.subjects &&
-        courseInfo.subjects[0] && (
-          <CourseCard
-            courseInfo={{
-              ...courseInfo.subjects[0].courses[0],
-              courseId,
-            }}
-          />
-        )}
+      {!courseInfoLoading && courseInfo && courseInfo.courses && (
+        <CourseCard
+          courseInfo={{
+            ...courseInfo.courses[0],
+            courseId,
+          }}
+        />
+      )}
       <ReviewEdit courseId={courseId} />
     </div>
   );
