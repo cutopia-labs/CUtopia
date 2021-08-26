@@ -8,7 +8,7 @@ export const VERIFY_EXPIRATION_TIME = 24 * 60 * 60 * 1000;
 
 export const createUser = async input => {
   const { username, SID, password } = input;
-  const now = new Date().getTime();
+  const now = +new Date();
 
   const hash = await bcrypt.hash(password, SALT_ROUNDS);
   const veriCode = nanoid(5);
@@ -18,14 +18,7 @@ export const createUser = async input => {
     SID,
     password: hash,
     createdAt: now,
-    verified: false,
     veriCode,
-    reviewIds: [],
-    upvotes: 0,
-    downvotes: 0,
-    fullAccess: false,
-    exp: 0,
-    viewsCount: 10,
   });
 
   try {

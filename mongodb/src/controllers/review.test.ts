@@ -5,7 +5,7 @@ import { getUser } from './user';
 
 describe('Review', () => {
   beforeAll(async () => {
-    await connect(process.env.ALTAS_DEV_URI);
+    await connect(process.env.ATLAS_DEV_URI);
   });
 
   afterAll(async () => {

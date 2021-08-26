@@ -3,10 +3,6 @@ import withCache from '../utils/withCache';
 import DiscussionModel from '../models/discussion.model';
 import { MESSAGES_PER_PAGE } from '../constant/configs';
 
-const discussionCache = new NodeCache({
-  stdTTL: 1800,
-});
-
 type SendDiscussionMessageProps = {
   courseId: string;
   text: string;

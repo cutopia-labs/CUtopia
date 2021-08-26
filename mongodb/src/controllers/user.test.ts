@@ -10,10 +10,11 @@ import {
 import { connect } from '../';
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
+import { nanoid } from 'nanoid';
 
 describe('User', () => {
   beforeAll(async () => {
-    await connect(process.env.ALTAS_DEV_URI);
+    await connect(process.env.ATLAS_DEV_URI);
   });
 
   afterAll(async () => {
@@ -21,43 +22,45 @@ describe('User', () => {
   });
 
   it('Register, Verify, Reset Password and Delete', async () => {
+    const username = nanoid(10);
+    const SID = Math.floor(1000000000 + Math.random() * 9000000000).toString();
     const veriCode = await createUser({
-      username: 'test',
+      username,
       password: '1234',
-      SID: '1155000000',
+      SID,
     });
     // console.log('Created user');
 
     await verifyUser({
-      username: 'test',
+      username,
       code: veriCode,
     });
     // console.log('Verified user');
 
     await login({
-      username: 'test',
+      username,
       password: '1234',
     });
     // console.log('Logged in');
 
     const { code: resetCode, email } = await getResetPasswordCodeAndEmail({
-      username: 'test',
+      username,
     });
     // console.log('Generated reset password');
 
     await resetPassword({
-      username: 'test',
+      username,
       newPassword: '5678',
       resetCode,
     });
     // console.log('Resetted password');
 
-    const user = await getUser({ username: 'test' });
+    const user = await getUser({ username });
     const password = await bcrypt.compare('5678', user.password);
     expect(password).toBeTruthy();
     expect(user).toMatchObject({
-      username: 'test',
-      SID: '1155000000',
+      username,
+      SID,
       verified: true,
       veriCode: null,
       resetPwdCode: null,

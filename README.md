@@ -16,4 +16,5 @@ ATLAS_URI=Your mongodb connection key
 #### mongodb/.env
 ```
 ATLAS_URI=Your mongodb connection key
+ATLAS_DEV_URI=Mongodb connection key for dev
 ```

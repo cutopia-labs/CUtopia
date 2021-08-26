@@ -18,6 +18,7 @@ type User = {
   fullAccess: boolean;
   timetables: Timetable[];
   sharedTimetables: Timetable[];
+  viewsCount: number;
 };
 
 const userSchema = new Schema<User>({
@@ -36,13 +37,28 @@ const userSchema = new Schema<User>({
   password: requiredString,
   createdAt: createdAt,
   reviewIds: [String], // format: courseId#createdAt
-  upvotes: Number,
-  downvotes: Number,
+  upvotes: {
+    type: Number,
+    default: 0,
+  },
+  downvotes: {
+    type: Number,
+    default: 0,
+  },
   resetPwdCode: String,
-  exp: Number,
+  exp: {
+    type: Number,
+    default: 0,
+  },
   veriCode: String,
-  verified: Boolean,
-  fullAccess: Boolean,
+  verified: {
+    type: Boolean,
+    default: false,
+  },
+  fullAccess: {
+    type: Boolean,
+    default: false,
+  },
   timetables: [
     {
       type: String,
@@ -55,6 +71,10 @@ const userSchema = new Schema<User>({
       ref: 'Timetable',
     },
   ],
+  viewsCount: {
+    type: Number,
+    default: 10,
+  },
 });
 userSchema.virtual('level').get(function () {
   return this.exp % 5;
