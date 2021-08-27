@@ -16,7 +16,7 @@ const reportSchema = new Schema<Report>(
   {
     _id: {
       type: String,
-      default: nanoid(5),
+      default: () => nanoid(5),
     },
     createdAt: createdAt,
     cat: requiredNumber,

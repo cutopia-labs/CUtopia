@@ -10,7 +10,7 @@ export type RatingFieldWithOverall =
 
 export type RankEntry = {
   _id: string;
-  val: number;
+  val: Schema.Types.Mixed;
 };
 
 export type Ranking = {

@@ -13,7 +13,7 @@ export const courseId = requiredString;
 
 export const createdAt = {
   type: Number,
-  default: +new Date(),
+  default: () => +new Date(),
 };
 
 export const ratingSchema = {
@@ -42,6 +42,7 @@ export const timetableEntrySchema = new Schema(
   {
     courseId: requiredString,
     title: requiredString,
+    credits: requiredNumber,
     sections: [timetableSectionSchema],
   },
   {

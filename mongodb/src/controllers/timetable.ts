@@ -23,11 +23,10 @@ export const getTimetable = async input =>
 
 export const uploadTimetable = async input => {
   const { username, expire } = input;
-
   const newTimetable = new Timetable({
     ...input,
     expire,
-    expireAt: expire > 0 ? Date.now() + expire * 24 * 60 * 60 * 1000 : -1,
+    expireAt: expire > 0 ? +new Date() + expire * 24 * 60 * 60 * 1000 : -1,
   });
 
   await updateTimetableId({

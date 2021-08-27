@@ -21,7 +21,7 @@ const timetableSchema = new Schema<Timetable>(
   {
     _id: {
       type: String,
-      default: nanoid(8),
+      default: () => nanoid(8),
     },
     createdAt: createdAt,
     entries: [timetableEntrySchema],

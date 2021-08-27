@@ -15,12 +15,14 @@ type User {
 type CourseTableEntry {
   courseId: String!
   title: String!
+  credits: Int!
   sections: [CourseSection]
 }
 
 input CourseTableEntryInput {
   courseId: String!
   title: String!
+  credits: Int!
   sections: [CourseSectionInput]
 }
 

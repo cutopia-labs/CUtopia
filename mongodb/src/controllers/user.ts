@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import { nanoid } from 'nanoid';
 import { ErrorCode } from 'cutopia-types/lib/codes';
 import User from '../models/user.model';
+import { USER_DISCUSSIONS } from '../constant/configs';
 
 export const SALT_ROUNDS = 10;
 export const VERIFY_EXPIRATION_TIME = 24 * 60 * 60 * 1000;
@@ -175,4 +176,19 @@ export const getTimetablesOverview = async input => {
     .populate(timetableField, 'tableName createdAt expireAt expire')
     .exec();
   return user[timetableField];
+};
+
+export const updateDiscussions = async input => {
+  const { username, courseId } = input;
+  await User.updateOne(
+    { username },
+    {
+      $push: {
+        discussions: {
+          $each: [courseId], // ensure unique
+          $slice: -USER_DISCUSSIONS, // ensure max 10
+        },
+      },
+    }
+  );
 };

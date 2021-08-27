@@ -19,6 +19,7 @@ type User = {
   timetables: Timetable[];
   sharedTimetables: Timetable[];
   viewsCount: number;
+  discussions: string[];
 };
 
 const userSchema = new Schema<User>({
@@ -37,6 +38,7 @@ const userSchema = new Schema<User>({
   password: requiredString,
   createdAt: createdAt,
   reviewIds: [String], // format: courseId#createdAt
+  discussions: [String], // format: courseId
   upvotes: {
     type: Number,
     default: 0,

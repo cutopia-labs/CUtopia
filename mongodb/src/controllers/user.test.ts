@@ -6,6 +6,7 @@ import {
   getResetPasswordCodeAndEmail,
   getUser,
   deleteUser,
+  updateDiscussions,
 } from './user';
 import { connect } from '../';
 import mongoose from 'mongoose';
@@ -54,6 +55,27 @@ describe('User', () => {
       resetCode,
     });
     // console.log('Resetted password');
+
+    await updateDiscussions({
+      username,
+      courseId: 'AIST1110',
+    });
+    await updateDiscussions({
+      username,
+      courseId: 'AIST1110',
+    });
+    await updateDiscussions({
+      username,
+      courseId: 'AIST1120',
+    });
+    await updateDiscussions({
+      username,
+      courseId: 'AIST1130',
+    });
+    await updateDiscussions({
+      username,
+      courseId: 'AIST1140',
+    });
 
     const user = await getUser({ username });
     const password = await bcrypt.compare('5678', user.password);
