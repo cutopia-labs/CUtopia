@@ -58,7 +58,7 @@ export const getCoursesFromQuery = async ({
     if (!courseList) {
       throw new Error('Cannot fetch courses!');
     }
-    // load local TimeTable
+    // load local Timetable
     const { mode, text } = payload;
     switch (mode) {
       case 'Pins':

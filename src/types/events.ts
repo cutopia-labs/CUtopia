@@ -32,15 +32,15 @@ export type CourseTableEntry = {
   sections?: CourseSection[];
 };
 
-export type ShareTimeTableResponse = {
+export type UploadTimetableResponse = {
   id: string;
 };
 
-export type ShareTimeTable = {
+export type UploadTimetable = {
   entries: CourseTableEntry[];
   tableName?: string;
-  createdDate: number;
-  expireDate: number;
+  createdAt: number;
+  expireAt: number;
 };
 
 export type OverlapSection = {

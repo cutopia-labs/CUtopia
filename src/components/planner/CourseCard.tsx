@@ -8,7 +8,7 @@ import updateOpacity from '../../helpers/updateOpacity';
 import { PlannerContext } from '../../store';
 import { Event } from '../../types';
 import colorMixing from '../../helpers/colorMixing';
-import { PropsWithConfig } from './TimeTable';
+import { PropsWithConfig } from './Timetable';
 
 const useStyles = (
   durationHeight: string,

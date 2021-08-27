@@ -1,20 +1,20 @@
 import { useContext, useReducer, useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 
-import './PlannerTimeTable.scss';
+import './PlannerTimetable.scss';
 import { useMutation, useQuery } from '@apollo/client';
 import { Button, Dialog } from '@material-ui/core';
 import copy from 'copy-to-clipboard';
 import { useHistory, useParams } from 'react-router-dom';
-import TimeTablePanel from '../templates/TimeTablePanel';
+import TimetablePanel from '../templates/TimetablePanel';
 import { ViewContext, PlannerContext, plannerStore } from '../../store';
 import { PLANNER_CONFIGS } from '../../constants/configs';
 import { SHARE_TIMETABLE } from '../../constants/mutations';
 import {
   Planner,
   PlannerCourse,
-  ShareTimeTable,
-  ShareTimeTableResponse,
+  UploadTimetable,
+  UploadTimetableResponse,
 } from '../../types';
 import ChipsRow from '../molecules/ChipsRow';
 import TextField from '../atoms/TextField';
@@ -25,7 +25,7 @@ import Loading from '../atoms/Loading';
 import DialogContentTemplate from '../templates/DialogContentTemplate';
 import Section from '../molecules/Section';
 
-type PlannerTimeTableProps = {
+type PlannerTimetableProps = {
   className?: string;
 };
 
@@ -39,15 +39,15 @@ const SECTIONS = [
   },
 ];
 
-const generateShareURL = (sharedTimeTable: ShareTimeTableResponse) =>
-  `${window.location.protocol}//${window.location.host}/planner/share/${sharedTimeTable.id}`;
+const generateShareURL = (uploadTimetable: UploadTimetableResponse) =>
+  `${window.location.protocol}//${window.location.host}/planner/share/${uploadTimetable.id}`;
 
-const TimeTableShareDialogContent = ({
+const TimetableShareDialogContent = ({
   shareConfig,
   dispatchShareConfig,
   view,
   onShareTimetTable,
-  shareTimeTableLoading,
+  uploadTimetableLoading,
 }) => (
   <>
     {SECTIONS.map((section) => (
@@ -83,7 +83,7 @@ const TimeTableShareDialogContent = ({
     ) : (
       <div className="share-btn-row center-row">
         <LoadingButton
-          loading={shareTimeTableLoading}
+          loading={uploadTimetableLoading}
           className="share loading-btn"
           onClick={onShareTimetTable}
           variant="contained"
@@ -99,7 +99,7 @@ const SHARE_ID_RULE = new RegExp('^[A-Za-z0-9_-]{8}$', 'i');
 
 const validShareId = (id: string) => id && SHARE_ID_RULE.test(id);
 
-const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
+const PlannerTimetable = ({ className }: PlannerTimetableProps) => {
   const { shareId } = useParams<{
     shareId?: string;
   }>();
@@ -109,13 +109,13 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
   const [shareCourses, setShareCourses] = useState<PlannerCourse[] | null>(
     null
   );
-  const { loading: getShareTimeTableLoading } = useQuery(GET_SHARE_TIMETABLE, {
+  const { loading: getUploadTimetableLoading } = useQuery(GET_SHARE_TIMETABLE, {
     skip: !validShareId(shareId),
     variables: {
       id: shareId,
     },
-    onCompleted: async (data: { timetable: ShareTimeTable }) => {
-      if (planner.validKey(data?.timetable?.createdDate)) {
+    onCompleted: async (data: { timetable: UploadTimetable }) => {
+      if (planner.validKey(data?.timetable?.createdAt)) {
         view.setSnackBar({
           message: 'Shared planner already loaded!',
           severity: 'warning',
@@ -124,7 +124,7 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
         return;
       }
       const importedPlanner: Planner = {
-        key: data.timetable.createdDate,
+        key: data.timetable.createdAt,
         label: data.timetable.tableName,
         courses:
           data.timetable.entries.map((course) => ({
@@ -140,14 +140,14 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
     },
     onError: view.handleError,
   });
-  const [shareTimeTable, { loading: shareTimeTableLoading }] = useMutation(
+  const [uploadTimetable, { loading: uploadTimetableLoading }] = useMutation(
     SHARE_TIMETABLE,
     {
       onCompleted: handleCompleted(
         (data) => {
-          const sharedTimeTable = data?.shareTimetable;
-          if (sharedTimeTable && sharedTimeTable?.id) {
-            const shareURL = generateShareURL(sharedTimeTable);
+          const uploadTimetable = data?.uploadTimetable;
+          if (uploadTimetable && uploadTimetable?.id) {
+            const shareURL = generateShareURL(uploadTimetable);
             dispatchShareConfig({
               shareLink: shareURL,
             });
@@ -176,7 +176,7 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
     e.preventDefault();
     if (!shareCourses?.length) {
       view.setSnackBar({
-        message: 'Empty TimeTable, please add some courses before Sharing!',
+        message: 'Empty Timetable, please add some courses before Sharing!',
         severity: 'error',
       });
     }
@@ -199,11 +199,11 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
                 return shareSection;
               }),
           })),
-        expire: parseInt(shareConfig.expire[0], 10) * 60 * 24,
+        expire: parseInt(shareConfig.expire[0], 10),
         tableName: planner.currentPlanner?.label,
       };
       console.log(JSON.stringify(data));
-      await shareTimeTable({
+      await uploadTimetable({
         variables: data,
       });
     }
@@ -226,8 +226,8 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
 
   return (
     <>
-      {getShareTimeTableLoading && <Loading fixed />}
-      <TimeTablePanel
+      {getUploadTimetableLoading && <Loading fixed />}
+      <TimetablePanel
         className={className}
         courses={planner.plannerCourses?.concat(planner.previewPlannerCourse)}
         timetableInfo={plannerStore.timetableInfo}
@@ -257,12 +257,12 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
             planner.currentPlanner?.label || PLANNER_CONFIGS.DEFAULT_TABLE_NAME
           } (${planner.currentPlanner?.courses?.length} courses)`}
         >
-          <TimeTableShareDialogContent
+          <TimetableShareDialogContent
             shareConfig={shareConfig}
             dispatchShareConfig={dispatchShareConfig}
             view={view}
             onShareTimetTable={onShareTimetTable}
-            shareTimeTableLoading={shareTimeTableLoading}
+            uploadTimetableLoading={uploadTimetableLoading}
           />
         </DialogContentTemplate>
       </Dialog>
@@ -270,4 +270,4 @@ const PlannerTimeTable = ({ className }: PlannerTimeTableProps) => {
   );
 };
 
-export default observer(PlannerTimeTable);
+export default observer(PlannerTimetable);

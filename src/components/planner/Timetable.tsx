@@ -1,14 +1,14 @@
 import { useContext } from 'react';
 import { useMediaQuery } from '@material-ui/core';
 
-import './TimeTable.scss';
+import './Timetable.scss';
 import colors from '../../constants/colors';
 import { WEEKDAYS } from '../../constants';
 import {
   CourseTableEntry,
   Event,
   EventConfig,
-  TimeTableInfo,
+  TimetableInfo,
 } from '../../types';
 import { ViewContext } from '../../store';
 import CourseCard from './CourseCard';
@@ -17,7 +17,7 @@ export type PropsWithConfig<T> = T & {
   config: EventConfig;
 };
 
-const TimeTableTicks = ({ config }: PropsWithConfig<{}>) => {
+const TimetableTicks = ({ config }: PropsWithConfig<{}>) => {
   return (
     <>
       {Array.from(
@@ -36,7 +36,7 @@ const TimeTableTicks = ({ config }: PropsWithConfig<{}>) => {
 
 type WeekdayTextProps = {
   withDate?: boolean;
-  timetableInfo?: TimeTableInfo;
+  timetableInfo?: TimetableInfo;
 };
 
 const WeekdayText = ({
@@ -68,12 +68,12 @@ const WeekdayText = ({
   );
 };
 
-type TimeTableProps = {
+type TimetableProps = {
   courses: CourseTableEntry[];
-  timetableInfo: TimeTableInfo;
+  timetableInfo: TimetableInfo;
 };
 
-const TimeTable = ({ courses, timetableInfo }: TimeTableProps) => {
+const Timetable = ({ courses, timetableInfo }: TimetableProps) => {
   const view = useContext(ViewContext);
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
@@ -127,7 +127,7 @@ const TimeTable = ({ courses, timetableInfo }: TimeTableProps) => {
   } catch (error) {
     console.log(error);
     view.setSnackBar({
-      message: 'Invalid TimeTable',
+      message: 'Invalid Timetable',
       severity: 'warning',
     });
   }
@@ -141,7 +141,7 @@ const TimeTable = ({ courses, timetableInfo }: TimeTableProps) => {
       </div>
       <div className="timetable-canvas">
         <div className="timetable-ticks">
-          <TimeTableTicks config={config} />
+          <TimetableTicks config={config} />
         </div>
         <div className="timetable-courses-container">
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
@@ -178,4 +178,4 @@ const TimeTable = ({ courses, timetableInfo }: TimeTableProps) => {
   );
 };
 
-export default TimeTable;
+export default Timetable;

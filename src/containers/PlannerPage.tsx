@@ -9,7 +9,7 @@ import { useRouteMatch } from 'react-router-dom';
 import { useTitle } from 'react-use';
 import { SearchPanel } from '../components/forum';
 import Page from '../components/atoms/Page';
-import PlannerTimeTable from '../components/planner/PlannerTimeTable';
+import PlannerTimetable from '../components/planner/PlannerTimetable';
 import PlannerCart from '../components/planner/PlannerCart';
 
 import { MIN_DESKTOP_WIDTH } from '../constants/configs';
@@ -85,12 +85,12 @@ const PlannerPage = () => {
         return (
           <>
             <SearchPanel />
-            <PlannerTimeTable />
+            <PlannerTimetable />
             <PlannerCart />
           </>
         );
       case PlannerMode.TIMETABLE:
-        return <PlannerTimeTable />;
+        return <PlannerTimetable />;
     }
   };
 

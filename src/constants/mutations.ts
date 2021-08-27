@@ -118,7 +118,7 @@ export const SHARE_TIMETABLE = gql`
     $expire: Int!
     $tableName: String
   ) {
-    shareTimetable(
+    uploadTimetable(
       input: { entries: $entries, tableName: $tableName, expire: $expire }
     ) {
       id

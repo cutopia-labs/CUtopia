@@ -239,6 +239,7 @@ export const GET_SHARE_TIMETABLE = gql`
       entries {
         courseId
         title
+        credits
         sections {
           name
           startTimes
@@ -249,8 +250,8 @@ export const GET_SHARE_TIMETABLE = gql`
         }
       }
       tableName
-      createdDate
-      expireDate
+      createdAt
+      expireAt
     }
   }
 `;

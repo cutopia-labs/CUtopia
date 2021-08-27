@@ -16,7 +16,7 @@ import TabsContainer from '../components/molecules/TabsContainer';
 import Page from '../components/atoms/Page';
 import Card from '../components/atoms/Card';
 import Link from '../components/molecules/Link';
-import PlannerTimeTable from '../components/planner/PlannerTimeTable';
+import PlannerTimetable from '../components/planner/PlannerTimetable';
 import Footer from '../components/molecules/Footer';
 import useMobileQuery from '../helpers/useMobileQuery';
 
@@ -79,11 +79,11 @@ const HomePage = () => {
       case 'Reviews':
         return <ReviewsList reviewIds={user.data?.reviewIds} />;
       case 'Planner':
-        return <PlannerTimeTable className="home-page-timetable" />;
+        return <PlannerTimetable className="home-page-timetable" />;
       /*
       case 'Timetable':
         return (
-          <TimeTablePanel
+          <TimetablePanel
             className="home-page-timetable"
             title="Timetable"
             courses={user.timetable}

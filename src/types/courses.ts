@@ -70,7 +70,7 @@ export type Planner = {
   courses: PlannerCourse[];
 };
 
-export type TimeTableInfo = {
+export type TimetableInfo = {
   totalCredits: number;
   averageHour: number;
   weekdayAverageHour: Record<string, number>;

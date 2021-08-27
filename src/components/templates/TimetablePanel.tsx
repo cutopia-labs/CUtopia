@@ -20,14 +20,14 @@ import { Check, DeleteOutline, Edit, ExpandMore } from '@material-ui/icons';
 import clsx from 'clsx';
 import { FiShare } from 'react-icons/fi';
 import { ViewContext } from '../../store';
-import './TimeTablePanel.scss';
-import TimeTable from '../planner/TimeTable';
+import './TimetablePanel.scss';
+import Timetable from '../planner/Timetable';
 import Card from '../atoms/Card';
 import {
   CourseTableEntry,
   PlannerCourse,
   PlannerItem,
-  TimeTableInfo,
+  TimetableInfo,
 } from '../../types';
 import { PLANNER_CONFIGS } from '../../constants/configs';
 
@@ -37,13 +37,13 @@ enum MODAL_MODES {
   EXPORT_MODAL,
 }
 
-type TimeTablePanelProps = {
+type TimetablePanelProps = {
   title?: string;
   selections?: PlannerItem[];
   selected?: PlannerItem;
   onSelect?: (selected: any) => any;
   courses?: CourseTableEntry[] | PlannerCourse[];
-  timetableInfo?: TimeTableInfo;
+  timetableInfo?: TimetableInfo;
   previewCourse?: CourseTableEntry | PlannerCourse;
   onImport?: (...args: any[]) => any;
   onExport?: (...args: any[]) => any;
@@ -53,7 +53,7 @@ type TimeTablePanelProps = {
   className?: string;
 };
 
-const TimeTablePanel = ({
+const TimetablePanel = ({
   title,
   courses,
   timetableInfo,
@@ -67,7 +67,7 @@ const TimeTablePanel = ({
   setLabel,
   deleteTable,
   className,
-}: TimeTablePanelProps) => {
+}: TimetablePanelProps) => {
   const view = useContext(ViewContext);
   const [modalMode, setModalMode] = useState(MODAL_MODES.NO_MODAL);
   const [importInput, setImportInput] = useState('');
@@ -144,7 +144,7 @@ const TimeTablePanel = ({
                 </IconButton>
               </form>
               <Divider />
-              <h4 className="subheading">TimeTables</h4>
+              <h4 className="subheading">Timetables</h4>
               {selections.map((item) => (
                 <MenuItem
                   className="timetable-select-item"
@@ -185,7 +185,7 @@ const TimeTablePanel = ({
           ))}
         </div>
       </header>
-      <TimeTable
+      <Timetable
         courses={((courses?.slice() || []) as any).concat(previewCourse) as any}
         timetableInfo={timetableInfo}
       />
@@ -199,7 +199,7 @@ const TimeTablePanel = ({
           <DialogContentText>
             Paste the shared json string here!
             {/*
-            1. Visit <a href="https://cusis.cuhk.edu.hk/psc/CSPRD/EMPLOYEE/SA/c/SSR_STUDENT_FL.SSR_COMPONENT_FL.GBL">CUSIS TimeTable Page</a>
+            1. Visit <a href="https://cusis.cuhk.edu.hk/psc/CSPRD/EMPLOYEE/SA/c/SSR_STUDENT_FL.SSR_COMPONENT_FL.GBL">CUSIS Timetable Page</a>
             2. Right click and select View Page Source
             3. Copy n paste to here
             */}
@@ -238,4 +238,4 @@ const TimeTablePanel = ({
   );
 };
 
-export default observer(TimeTablePanel);
+export default observer(TimetablePanel);

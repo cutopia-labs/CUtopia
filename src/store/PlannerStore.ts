@@ -6,7 +6,7 @@ import {
   PlannerItem,
   CourseSection,
   OverlapSections,
-  TimeTableInfo,
+  TimetableInfo,
 } from '../types';
 import { storeData, getStoreData, removeStoreItem } from '../helpers/store';
 
@@ -53,9 +53,9 @@ class PlannerStore extends StorePrototype {
     this.initiated = true;
   }
 
-  get timetableInfo(): TimeTableInfo {
+  get timetableInfo(): TimetableInfo {
     let maxDay = 5;
-    const info: TimeTableInfo = {
+    const info: TimetableInfo = {
       totalCredits: 0,
       averageHour: 0,
       weekdayAverageHour: {},
