@@ -8,10 +8,10 @@ class StorePrototype {
     console.log(`Updated ${key} with value ${JSON.stringify(value)}`);
   }
 
-  @action setStore = async (key: string, value: any) => {
+  @action async setStore(key: string, value: any) {
     this.updateStore(key, value);
     storeData(key, value);
-  };
+  }
 }
 
 export default StorePrototype;

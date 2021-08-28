@@ -165,14 +165,13 @@ class PlannerStore extends StorePrototype {
     );
   }
 
-  @action.bound findIndexInPlanner = (courseId) => {
-    return this.plannerCourses?.findIndex((item) => item.courseId === courseId);
-  };
+  @action.bound findIndexInPlanner = (courseId) =>
+    this.plannerCourses?.findIndex((item) => item.courseId === courseId);
 
   @action.bound validKey = (key: number) =>
     Boolean(this.initiated && this.planners && key && key in this.planners);
 
-  @action updateCurrentPlanner = (key: number) => {
+  @action updateCurrentPlanner(key: number) {
     let label = PLANNER_CONFIGS.DEFAULT_TABLE_NAME;
     if (this.validKey(key)) {
       this.plannerCourses = this.planners[key].courses;
@@ -189,16 +188,16 @@ class PlannerStore extends StorePrototype {
     }
     this.setStore('currentPlannerKey', key);
     this.viewStore.setSnackBar(`Switched to ${label}`);
-  };
+  }
 
-  @action sectionInPlanner = (courseId, sectionId) => {
+  @action sectionInPlanner(courseId, sectionId) {
     const index = this.findIndexInPlanner(courseId);
     if (index === -1 || !this.plannerCourses) {
       return false;
     } else {
       return sectionId in this.plannerCourses[index].sections;
     }
-  };
+  }
 
   @action async applyPlannerStore() {
     await Promise.all(

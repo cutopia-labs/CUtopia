@@ -82,14 +82,14 @@ class UserStore extends StorePrototype {
     return this.data?.level >= FULL_MEMBER_LEVEL;
   }
 
-  @action increaseViewCount = async () => {
+  @action async increaseViewCount() {
     await this.increaseViewCountBounded();
-  };
+  }
 
-  @action.bound increaseViewCountBounded = async () => {
+  @action.bound async increaseViewCountBounded() {
     const increased = this.viewCount + 1;
     this.setStore('viewCount', increased);
-  };
+  }
 
   // CUtopia
   @action async saveUser(username, token) {
@@ -146,10 +146,7 @@ class UserStore extends StorePrototype {
   @action checkIsFavourite = (courseId) =>
     this.favoriteCourses.some((course) => course.courseId === courseId);
 
-  @action toggleFavourite = async (
-    courseInfo: CourseInfo,
-    isFavourite?: boolean
-  ) => {
+  @action async toggleFavourite(courseInfo: CourseInfo, isFavourite?: boolean) {
     if (isFavourite || this.checkIsFavourite(courseInfo.courseId)) {
       this.setStore(
         'favoriteCourses',
@@ -166,23 +163,23 @@ class UserStore extends StorePrototype {
         })
       );
     }
-  };
+  }
 
   // Search History
 
-  @action saveHistory = async (courseId: string) => {
+  @action async saveHistory(courseId: string) {
     let temp = [...this.searchHistory];
     if (temp.length >= HISTORY_MAX_LENGTH) {
       temp.pop();
     }
     temp = [courseId].concat(temp.filter((saved) => saved !== courseId));
     this.setStore('searchHistory', temp);
-  };
+  }
 
-  @action deleteHistory = async (courseId) => {
+  @action async deleteHistory(courseId) {
     const temp = this.searchHistory.filter((hist) => hist !== courseId);
     this.setStore('searchHistory', temp);
-  };
+  }
 
   // reset
   @action async reset() {

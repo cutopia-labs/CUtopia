@@ -36,8 +36,9 @@ class ViewStore extends StorePrototype {
     }
   }
 
-  @action setDialog = (dialog: Dialog | null) =>
+  @action async setDialog(dialog: Dialog | null) {
     this.updateStore('dialog', dialog);
+  }
 
   @action.bound needsClear(snackbarId: number) {
     return this.snackbar.snackbarId === snackbarId;
