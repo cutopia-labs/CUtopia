@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { createdAt, requiredNumber, requiredString } from '../schemas';
+import { requiredNumber, requiredString } from '../schemas';
 
 export type RatingFieldWithOverall =
   | 'overall'
@@ -9,17 +9,18 @@ export type RatingFieldWithOverall =
   | 'teaching';
 
 export type RankEntry = {
-  _id: string;
+  _id: string; // courseId
   val: Schema.Types.Mixed;
 };
 
 export type Ranking = {
-  _id: string;
+  _id: string; // ranking field, e.g. latest, grading
   ranks: RankEntry[];
-  createdAt: number;
+  updatedAt: number;
 };
 
-const RankEntry = new Schema<RankEntry>(
+// temporarily remove type due to: https://github.com/Automattic/mongoose/issues/10623
+const RankEntry = new Schema(
   {
     _id: requiredString,
     val: requiredNumber,
@@ -37,7 +38,7 @@ const rankingSchema = new Schema<Ranking>(
       type: [RankEntry],
       required: true,
     },
-    createdAt: createdAt,
+    updatedAt: requiredNumber,
   },
   {
     _id: false,

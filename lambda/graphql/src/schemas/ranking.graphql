@@ -3,43 +3,20 @@ type Query {
 }
 
 type RankTable {
-  popularCourses(filter: PopularFilter): [PopularCourse]
-  topRatedCourses(filter: TopRatedFilter): [TopRatedCourse]
-  topRatedAcademicGroups(filter: TopRatedFilter): [TopRatedAcademicGroups]
+  rankedCourses(filter: RankingFilter): [RankedCourse]
 }
 
-input PopularFilter {
-  limit: Int!
+input RankingFilter {
+  rankBy: String! # numReviews, grading, content, difficulty, teaching
 }
 
-input TopRatedFilter {
-  limit: Int!
-  sortBy: String! # grading, content, difficulty, teaching
-}
-
-type PopularCourse {
+type RankedCourse {
   courseId: String!
   course: Course!
-  numReviews: Int!
-}
-
-type TopRatedCourse {
-  courseId: String!
-  course: Course!
-  numReviews: Int!
-  overall: Float!
-  grading: Float!
-  content: Float!
-  difficulty: Float!
-  teaching: Float!
-}
-
-type TopRatedAcademicGroups {
-  name: String!
-  numReviews: Int!
-  overall: Float!
-  grading: Float!
-  content: Float!
-  difficulty: Float!
-  teaching: Float!
+  numReviews: Int
+  overall: Float
+  grading: Float
+  content: Float
+  difficulty: Float
+  teaching: Float
 }

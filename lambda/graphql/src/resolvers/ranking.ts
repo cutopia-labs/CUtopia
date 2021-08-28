@@ -29,12 +29,9 @@ const rankingResolver = {
     ranking: () => ({}),
   },
   RankTable: {
-    popularCourses: async (parent, { filter }) => {
-      return await getRankingWithCache('numReviews');
-    },
-    topRatedCourses: async (parent, { filter }) => {
-      const { limit, sortBy } = filter;
-      return (await getRankingWithCache(sortBy))?.slice(0, limit);
+    rankedCourses: async (parent, { filter }) => {
+      const { rankBy } = filter;
+      return await getRankingWithCache(rankBy);
     },
   },
 };

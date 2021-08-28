@@ -1,8 +1,5 @@
 import NodeCache from 'node-cache';
-import { rankCoursesPipeline } from '../pipelines';
 import Course from '../models/course.model';
-import { createRanking } from './ranking';
-import { RankEntry, Ranking } from '../models/ranking.model';
 import withCache from '../utils/withCache';
 
 const courseCache = new NodeCache({
@@ -20,8 +17,8 @@ export type Review = {
   username: string;
   anonymous: boolean;
   title?: string;
-  createdAt: string;
-  modifiedDate: string;
+  createdAt: number;
+  updatedAt: number;
   term: string;
   lecturer: string;
   overall: number;
@@ -39,43 +36,40 @@ export type ReviewDetails = {
   text: string;
 };
 
-export const updateCourseDataFromReview = async (
+export const updateCourseData = async (
   courseId: string,
-  reviewData: Review
-) =>
-  Course.findByIdAndUpdate(
+  review: Review,
+  oldReview?: Review // update course data from existing review if any
+) => {
+  const ratingInc = {
+    'rating.numReviews': 1,
+    'rating.overall': review.overall,
+    'rating.grading': review.grading.grade,
+    'rating.content': review.content.grade,
+    'rating.difficulty': review.difficulty.grade,
+    'rating.teaching': review.teaching.grade,
+  };
+  if (oldReview) {
+    const critierions = ['grading', 'content', 'difficulty', 'teaching'];
+    critierions.forEach(
+      critierion =>
+        (ratingInc[`rating.${critierions}`] -= oldReview[critierion].grade)
+    );
+    ratingInc['rating.overall'] -= oldReview.overall;
+  }
+
+  return await Course.findByIdAndUpdate(
     courseId,
     {
       $addToSet: {
-        lecturers: reviewData.lecturer,
-        terms: reviewData.term,
+        lecturers: review.lecturer,
+        terms: review.term,
       },
-      $inc: {
-        'rating.numReviews': 1,
-        'rating.overall': reviewData.overall,
-        'rating.grading': reviewData.grading.grade,
-        'rating.content': reviewData.content.grade,
-        'rating.difficulty': reviewData.difficulty.grade,
-        'rating.teaching': reviewData.teaching.grade,
-      },
+      $inc: ratingInc,
     },
     {
       new: true,
       upsert: true,
     }
   );
-
-export const rankCourses = async (field, limit, filter) => {
-  const result: RankEntry[] = await Course.aggregate(
-    rankCoursesPipeline(field, limit, filter)
-  );
-  if (result?.length) {
-    await createRanking({
-      _id: field,
-      ranks: result,
-    });
-  } else {
-    //TODO THROW ERROR
-  }
-  return result;
 };

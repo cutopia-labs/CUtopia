@@ -4,7 +4,7 @@ export {
   getUser,
   updateUser,
   getCourseData,
-  updateCourseDataFromReview,
+  updateCourseData,
   createReview,
   getReviews,
   getReview,

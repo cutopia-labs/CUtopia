@@ -1,29 +1,60 @@
 import NodeCache from 'node-cache';
 import withCache from '../utils/withCache';
-import RankingModel, { Ranking } from '../models/ranking.model';
+import Course from '../models/course.model';
+import Ranking from '../models/ranking.model';
+import { RANK_LIMIT } from '../constant/configs';
 
 const rankingCache = new NodeCache({
   stdTTL: 1800,
 });
 
-export const createRanking = async (input: Partial<Ranking>) => {
-  const { _id, ...rankingBody } = input;
-  await RankingModel.findByIdAndUpdate(
-    _id,
-    {
-      ...rankingBody,
-      createdAt: +new Date(),
+const rankField = (field: string) => [
+  {
+    $project: {
+      val:
+        field === 'numReviews'
+          ? '$rating.numReviews'
+          : {
+              $divide: [`$rating.${field}`, '$rating.numReviews'],
+            },
     },
+  },
+  {
+    $sort: {
+      val: -1,
+    },
+  },
+  {
+    $limit: RANK_LIMIT,
+  },
+];
+export const rankCourses = async () => {
+  const result = await Course.aggregate([
     {
-      new: true,
+      $facet: {
+        numReviews: rankField('numReviews'),
+        grading: rankField('grading'),
+        content: rankField('content'),
+        difficulty: rankField('difficulty'),
+        teaching: rankField('teaching'),
+      },
+    },
+    // $facet does not support $merge in nested pipeline and seems
+    // splitting one document into multiples with different fields is not feasible ($unwind does not help)
+    // so we have to separate the write operations from aggregate
+  ]);
+  const bulkOperations = Object.keys(result[0]).map(field => ({
+    updateOne: {
+      filter: { _id: field },
+      update: {
+        _id: field,
+        ranks: result[0][field],
+      },
       upsert: true,
-    }
-  );
+    },
+  }));
+  await Ranking.bulkWrite(bulkOperations);
 };
 
-export const getRanking = async (rankingId: string) =>
-  withCache(
-    rankingCache,
-    rankingId,
-    async () => await RankingModel.findById(rankingId)
-  );
+export const getRanking = async (field: string) =>
+  withCache(rankingCache, field, async () => await Ranking.findById(field));
