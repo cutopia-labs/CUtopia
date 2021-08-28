@@ -25,19 +25,67 @@ import Loading from '../atoms/Loading';
 import DialogContentTemplate from '../templates/DialogContentTemplate';
 import Section from '../molecules/Section';
 
+enum ShareTimetableMode {
+  UPLOAD, // user persist timetable / persist sharing ttb
+  SHARE,
+}
+
 type PlannerTimetableProps = {
   className?: string;
 };
 
-const EXPIRE_LABELS = ['1 day', '3 days', '7 days'];
+const getExpire = (str: string) => {
+  if (!str) {
+    return null;
+  }
+  if (str.endsWith('day') || str.endsWith('days')) {
+    return parseInt(str[0], 10);
+  }
+  switch (str) {
+    case 'Yes':
+      return 0;
+    case 'No':
+      return -1;
+  }
+  return str;
+};
 
-const SECTIONS = [
+const getLabelFromKey = {
+  [0]: 'Yes',
+  [-1]: 'No',
+};
+
+const EXPIRE_LABELS = ['1 day', '3 days', '7 days'];
+const SHAREABLE_LABELS = ['Yes', 'No'];
+
+const SHARE_SECTIONS = [
   {
     label: 'Expire In',
     chips: EXPIRE_LABELS,
     key: 'expire',
   },
 ];
+
+const UPLOAD_SECTIONS = [
+  {
+    label: 'Shareable',
+    chips: SHAREABLE_LABELS,
+    key: 'expire',
+  },
+];
+
+const MODE_ASSETS = {
+  [ShareTimetableMode.SHARE]: {
+    sections: SHARE_SECTIONS,
+    label: 'share',
+    title: 'Share Timetable',
+  },
+  [ShareTimetableMode.UPLOAD]: {
+    sections: UPLOAD_SECTIONS,
+    label: 'upload',
+    title: 'Upload Timetable',
+  },
+};
 
 const generateShareURL = (uploadTimetable: UploadTimetableResponse) =>
   `${window.location.protocol}//${window.location.host}/planner/share/${uploadTimetable.id}`;
@@ -48,13 +96,17 @@ const TimetableShareDialogContent = ({
   view,
   onShareTimetTable,
   uploadTimetableLoading,
+  mode,
 }) => (
   <>
-    {SECTIONS.map((section) => (
+    {MODE_ASSETS[mode]?.sections?.map((section) => (
       <Section title={section.label} key={section.key}>
         <ChipsRow
           items={section.chips}
-          select={shareConfig[section.key]}
+          select={
+            getLabelFromKey[shareConfig[section.key]] ||
+            shareConfig[section.key]
+          }
           setSelect={(item) => dispatchShareConfig({ [section.key]: item })}
         />
       </Section>
@@ -88,7 +140,7 @@ const TimetableShareDialogContent = ({
           onClick={onShareTimetTable}
           variant="contained"
         >
-          Share
+          {MODE_ASSETS[mode]?.label}
         </LoadingButton>
       </div>
     )}
@@ -106,8 +158,13 @@ const PlannerTimetable = ({ className }: PlannerTimetableProps) => {
   const planner = useContext(PlannerContext);
   const history = useHistory();
   const view = useContext(ViewContext);
-  const [shareCourses, setShareCourses] = useState<PlannerCourse[] | null>(
-    null
+  const [shareCourses, setShareCourses] = useState<{
+    courses: PlannerCourse[];
+    mode: ShareTimetableMode;
+  } | null>(null);
+  const [shareConfig, dispatchShareConfig] = useReducer(
+    (state, action) => ({ ...state, ...action }),
+    {}
   );
   const { loading: getUploadTimetableLoading } = useQuery(GET_SHARE_TIMETABLE, {
     skip: !validShareId(shareId),
@@ -146,6 +203,10 @@ const PlannerTimetable = ({ className }: PlannerTimetableProps) => {
       onCompleted: handleCompleted(
         (data) => {
           const uploadTimetable = data?.uploadTimetable;
+          if (getExpire(shareConfig?.expire) === -1) {
+            setShareCourses(null);
+            return;
+          }
           if (uploadTimetable && uploadTimetable?.id) {
             const shareURL = generateShareURL(uploadTimetable);
             dispatchShareConfig({
@@ -161,29 +222,22 @@ const PlannerTimetable = ({ className }: PlannerTimetableProps) => {
         },
         {
           view,
-          message: 'Copied share link to your clipboard!',
+          message:
+            getExpire(shareConfig?.expire) === -1
+              ? 'Uploaded!'
+              : 'Copied share link to your clipboard!',
         }
       ),
       onError: view.handleError,
     }
   );
-  const [shareConfig, dispatchShareConfig] = useReducer(
-    (state, action) => ({ ...state, ...action }),
-    {}
-  );
 
   const onShareTimetTable = async (e) => {
     e.preventDefault();
-    if (!shareCourses?.length) {
-      view.setSnackBar({
-        message: 'Empty Timetable, please add some courses before Sharing!',
-        severity: 'error',
-      });
-    }
     console.table(shareCourses);
-    if (shareCourses?.length) {
+    if (shareCourses?.courses?.length) {
       const data = {
-        entries: shareCourses
+        entries: shareCourses.courses
           .filter(
             (course) =>
               course &&
@@ -199,7 +253,7 @@ const PlannerTimetable = ({ className }: PlannerTimetableProps) => {
                 return shareSection;
               }),
           })),
-        expire: parseInt(shareConfig.expire[0], 10),
+        expire: getExpire(shareConfig.expire),
         tableName: planner.currentPlanner?.label,
       };
       console.log(JSON.stringify(data));
@@ -210,10 +264,10 @@ const PlannerTimetable = ({ className }: PlannerTimetableProps) => {
   };
   useEffect(() => {
     dispatchShareConfig({
-      expire: '7 days',
+      expire: shareCourses?.mode === ShareTimetableMode.SHARE ? '7 days' : 'No',
       shareLink: '',
     });
-  }, [planner.currentPlannerKey]);
+  }, [planner.currentPlannerKey, shareCourses]);
 
   useEffect(() => {
     if (shareId && !validShareId(shareId)) {
@@ -229,13 +283,26 @@ const PlannerTimetable = ({ className }: PlannerTimetableProps) => {
       {getUploadTimetableLoading && <Loading fixed />}
       <TimetablePanel
         className={className}
-        courses={planner.plannerCourses?.concat(planner.previewPlannerCourse)}
+        courses={planner.plannerCourses
+          ?.concat(planner.previewPlannerCourse)
+          .filter((course) => course)}
         timetableInfo={plannerStore.timetableInfo}
         onImport={(parsedData) =>
           planner.setStore('plannerCourses', parsedData)
         }
         onClear={() => planner.clearPlannerCourses()}
-        onExport={(courses) => setShareCourses(courses)}
+        onUpload={(courses) =>
+          setShareCourses({
+            courses: courses,
+            mode: ShareTimetableMode.UPLOAD,
+          })
+        }
+        onShare={(courses) =>
+          setShareCourses({
+            courses: courses,
+            mode: ShareTimetableMode.SHARE,
+          })
+        }
         selections={planner.plannerList}
         onSelect={(key) => planner.updateCurrentPlanner(key)}
         selected={{
@@ -247,12 +314,19 @@ const PlannerTimetable = ({ className }: PlannerTimetableProps) => {
         deleteTable={(key: number) => planner.deletePlanner(key)}
       />
       <Dialog
+        transitionDuration={{
+          enter: 120,
+          exit: 0,
+        }}
         className="planner-share-dialog"
         onClose={() => setShareCourses(null)}
+        TransitionProps={{
+          onExited: () => setShareCourses(null),
+        }}
         open={Boolean(shareCourses)}
       >
         <DialogContentTemplate
-          title="Share Planner"
+          title={MODE_ASSETS[shareCourses?.mode]?.title}
           caption={`${
             planner.currentPlanner?.label || PLANNER_CONFIGS.DEFAULT_TABLE_NAME
           } (${planner.currentPlanner?.courses?.length} courses)`}
@@ -263,6 +337,7 @@ const PlannerTimetable = ({ className }: PlannerTimetableProps) => {
             view={view}
             onShareTimetTable={onShareTimetTable}
             uploadTimetableLoading={uploadTimetableLoading}
+            mode={shareCourses?.mode}
           />
         </DialogContentTemplate>
       </Dialog>

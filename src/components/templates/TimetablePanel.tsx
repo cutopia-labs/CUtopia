@@ -18,7 +18,11 @@ import { observer } from 'mobx-react-lite';
 import copy from 'copy-to-clipboard';
 import { Check, DeleteOutline, Edit, ExpandMore } from '@material-ui/icons';
 import clsx from 'clsx';
-import { FiShare } from 'react-icons/fi';
+import {
+  AiOutlineCloudUpload,
+  AiOutlineDelete,
+  AiOutlineShareAlt,
+} from 'react-icons/ai';
 import { ViewContext } from '../../store';
 import './TimetablePanel.scss';
 import Timetable from '../planner/Timetable';
@@ -46,7 +50,8 @@ type TimetablePanelProps = {
   timetableInfo?: TimetableInfo;
   previewCourse?: CourseTableEntry | PlannerCourse;
   onImport?: (...args: any[]) => any;
-  onExport?: (...args: any[]) => any;
+  onUpload?: (...args: any[]) => any;
+  onShare?: (...args: any[]) => any;
   onClear?: (...args: any[]) => any;
   setLabel?: (label: string) => any;
   deleteTable?: (key: number) => any;
@@ -59,7 +64,8 @@ const TimetablePanel = ({
   timetableInfo,
   previewCourse,
   onImport,
-  onExport,
+  onUpload,
+  onShare,
   onClear,
   selections,
   selected,
@@ -81,7 +87,7 @@ const TimetablePanel = ({
   const FUNCTION_BUTTONS = [
     {
       action: () => {
-        if (!onExport) {
+        if (!onUpload) {
           const result = copy(JSON.stringify(courses));
           view.setSnackBar(
             result
@@ -89,18 +95,34 @@ const TimetablePanel = ({
               : 'Failed to copy QAQ, please report the issue to us'
           );
         } else {
-          onExport(courses);
+          onUpload(courses);
         }
       },
-      icon: <FiShare />,
-      key: 'export',
+      icon: <AiOutlineCloudUpload />,
+      key: 'upload',
+    },
+    {
+      action: () => {
+        if (!onShare) {
+          const result = copy(JSON.stringify(courses));
+          view.setSnackBar(
+            result
+              ? 'Copied the timetable to clipboard!'
+              : 'Failed to copy QAQ, please report the issue to us'
+          );
+        } else {
+          onShare(courses);
+        }
+      },
+      icon: <AiOutlineShareAlt />,
+      key: 'share',
     },
     {
       key: 'Clear',
       action: () => {
         onClear();
       },
-      icon: <DeleteOutline />,
+      icon: <AiOutlineDelete />,
     },
   ];
   return (
@@ -177,13 +199,15 @@ const TimetablePanel = ({
         ) : (
           <span className="title">{title}</span>
         )}
-        <div className="btn-row center-row">
-          {FUNCTION_BUTTONS.map((item) => (
-            <IconButton key={item.key} size="small" onClick={item.action}>
-              {item.icon}
-            </IconButton>
-          ))}
-        </div>
+        {Boolean(courses?.length) && (
+          <div className="btn-row center-row">
+            {FUNCTION_BUTTONS.map((item) => (
+              <IconButton key={item.key} size="small" onClick={item.action}>
+                {item.icon}
+              </IconButton>
+            ))}
+          </div>
+        )}
       </header>
       <Timetable
         courses={((courses?.slice() || []) as any).concat(previewCourse) as any}

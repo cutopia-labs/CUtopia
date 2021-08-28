@@ -1,9 +1,7 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { observer } from 'mobx-react-lite';
 
 import './PlannerPage.scss';
-import Draggable from 'react-draggable';
-import { Fab } from '@material-ui/core';
 import { CalendarToday, Search } from '@material-ui/icons';
 import { useRouteMatch } from 'react-router-dom';
 import { useTitle } from 'react-use';
@@ -32,34 +30,6 @@ const PLANNER_MOBILE_FAB_ITEM = {
   [PlannerMode.TIMETABLE]: {
     icon: <CalendarToday />,
   },
-};
-
-const PlannerMobileFab = ({ targetMode, setMode }: PlannerMobileFabProps) => {
-  const isDraggingRef = useRef(false);
-  return (
-    <Draggable
-      bounds="parent"
-      onDrag={() => {
-        isDraggingRef.current = true;
-      }}
-      onStop={() => {
-        // i.e. not dragging but onclick
-        if (!isDraggingRef.current) {
-          setMode(targetMode);
-        }
-        isDraggingRef.current = false;
-      }}
-    >
-      <Fab
-        disableRipple
-        id="planner-draggable-fab-container"
-        color="primary"
-        aria-label="edit"
-      >
-        {PLANNER_MOBILE_FAB_ITEM[targetMode]?.icon}
-      </Fab>
-    </Draggable>
-  );
 };
 
 const PlannerPage = () => {
