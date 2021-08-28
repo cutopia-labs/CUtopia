@@ -18,3 +18,9 @@ export enum ErrorCardMode {
   ERROR,
   NOT_FOUND,
 }
+
+export enum TimetableOverviewMode {
+  NON_EXPIRE,
+  NON_EXPIRE_SHARE,
+  SHARE,
+}

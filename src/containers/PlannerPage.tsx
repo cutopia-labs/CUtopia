@@ -11,6 +11,7 @@ import PlannerTimetable from '../components/planner/PlannerTimetable';
 import PlannerCart from '../components/planner/PlannerCart';
 
 import { MIN_DESKTOP_WIDTH } from '../constants/configs';
+import TimetableOverviewCard from '../components/planner/TimetableOverviewCard';
 
 enum PlannerMode {
   INITIAL,
@@ -56,7 +57,10 @@ const PlannerPage = () => {
           <>
             <SearchPanel />
             <PlannerTimetable />
-            <PlannerCart />
+            <div className="secondary-column">
+              <TimetableOverviewCard />
+              <PlannerCart />
+            </div>
           </>
         );
       case PlannerMode.TIMETABLE:

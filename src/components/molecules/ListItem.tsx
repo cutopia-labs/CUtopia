@@ -5,7 +5,7 @@ import colors from '../../constants/colors';
 
 export type ListItemProps = {
   title?: string;
-  caption?: string;
+  caption?: string | JSX.Element;
   onClick?: (...args: any[]) => any;
   chevron?: boolean;
   noBorder?: boolean;
@@ -45,7 +45,7 @@ const ListItem = ({
       {left}
       <span className="list-item-title-container column">
         {title && <span className="list-item-title title">{title}</span>}
-        {caption && (
+        {Boolean(caption) && (
           <span className="list-item-caption caption">{caption}</span>
         )}
       </span>

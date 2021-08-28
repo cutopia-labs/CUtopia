@@ -33,7 +33,7 @@ const PlannerCart = () => {
     <Card className="planner-cart">
       <header className="planner-cart-header column">
         <div className="center-row">
-          <span className="title">Cart</span>
+          <h4>Cart</h4>
           {Boolean(planner.hidedSections?.length) && (
             <Tooltip title="Clear unchecked sections">
               <IconButton

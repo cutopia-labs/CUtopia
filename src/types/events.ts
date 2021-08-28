@@ -1,4 +1,5 @@
 import { CourseSection } from './courses';
+import { TimetableOverviewMode } from './enums';
 
 export interface Event {
   courseId: string;
@@ -52,3 +53,15 @@ export type OverlapSection = {
 export type OverlapSections = {
   [key: string]: OverlapSection;
 };
+
+export interface TimetableOverview {
+  id: string;
+  createdAt: number;
+  tableName: string | null;
+  expireAt?: number;
+  expire?: number;
+}
+
+export interface TimetableOverviewWithMode extends TimetableOverview {
+  mode: TimetableOverviewMode;
+}

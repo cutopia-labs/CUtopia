@@ -10,12 +10,7 @@ import TimetablePanel from '../templates/TimetablePanel';
 import { ViewContext, PlannerContext, plannerStore } from '../../store';
 import { PLANNER_CONFIGS } from '../../constants/configs';
 import { SHARE_TIMETABLE } from '../../constants/mutations';
-import {
-  Planner,
-  PlannerCourse,
-  UploadTimetable,
-  UploadTimetableResponse,
-} from '../../types';
+import { Planner, PlannerCourse, UploadTimetable } from '../../types';
 import ChipsRow from '../molecules/ChipsRow';
 import TextField from '../atoms/TextField';
 import handleCompleted from '../../helpers/handleCompleted';
@@ -87,8 +82,8 @@ const MODE_ASSETS = {
   },
 };
 
-const generateShareURL = (uploadTimetable: UploadTimetableResponse) =>
-  `${window.location.protocol}//${window.location.host}/planner/share/${uploadTimetable.id}`;
+export const generateTimetableURL = (id: string) =>
+  `${window.location.protocol}//${window.location.host}/planner/share/${id}`;
 
 const TimetableShareDialogContent = ({
   shareConfig,
@@ -208,7 +203,7 @@ const PlannerTimetable = ({ className }: PlannerTimetableProps) => {
             return;
           }
           if (uploadTimetable && uploadTimetable?.id) {
-            const shareURL = generateShareURL(uploadTimetable);
+            const shareURL = generateTimetableURL(uploadTimetable?.id);
             dispatchShareConfig({
               shareLink: shareURL,
             });

@@ -16,22 +16,22 @@ const MONTHS = [
 ];
 const addZero = (digit: number) => (digit > 9 ? digit : `0${digit}`);
 
-export function getHHMM(timestamp: Date | string) {
+export function getHHMM(timestamp: Date | string | number) {
   const time =
     typeof timestamp === 'object'
       ? timestamp
-      : new Date(parseInt(timestamp, 10));
+      : new Date(parseInt(timestamp as any, 10));
   return `${addZero(time.getHours())}:${addZero(time.getMinutes())}`;
 }
 
 export function getMMMDDYY(
-  timestamp: string,
+  timestamp: string | number,
   showWeekday?: boolean,
   showMinutes?: boolean,
   hideYear?: boolean
 ) {
   const currentYear = new Date().getFullYear();
-  const date = new Date(parseInt(timestamp, 10));
+  const date = new Date(parseInt(timestamp as any, 10));
   const day = date.getDay();
   const timestampYear = date.getFullYear();
   hideYear = hideYear === undefined ? currentYear === timestampYear : hideYear;

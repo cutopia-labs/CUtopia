@@ -150,6 +150,26 @@ export const GET_USER = gql`
   }
 `;
 
+// User Info Query
+export const GET_USER_TIMETABLES = gql`
+  query {
+    me {
+      sharedTimetables {
+        id
+        tableName
+        createdAt
+        expire
+      }
+      timetables {
+        id
+        tableName
+        createdAt
+        expire
+      }
+    }
+  }
+`;
+
 // Top Rated Courses Query
 export const TOP_RATED_COURSES_QUERY = gql`
   query ($criteria: String!) {

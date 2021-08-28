@@ -1,8 +1,7 @@
 .planner-cart {
-  width: 260px;
   height: fit-content;
   max-height: calc(100vh - var(--header-height) - 3 * var(--page-margin));
-  padding-top: var(--card-padding);
+  padding-top: 8px;
   overflow-y: scroll;
   &::-webkit-scrollbar {
     display: none;
@@ -11,10 +10,6 @@
     padding: 0 var(--card-padding);
     & > div:first-child {
       height: 30px;
-    }
-    .title {
-      font-size: 16px;
-      font-weight: 500;
     }
     button {
       margin-left: auto;
