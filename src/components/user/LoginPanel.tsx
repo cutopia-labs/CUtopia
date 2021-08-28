@@ -19,10 +19,9 @@ import {
 } from '../../constants/mutations';
 import { LoginPageMode } from '../../types';
 import handleCompleted from '../../helpers/handleCompleted';
-import reverseMapping from '../../helpers/reverseMapping';
+import { reverseMapping } from '../../helpers';
 
 const INITIAL_MODE = LoginPageMode.CUTOPIA_SIGNUP;
-const CUHK_EMAIL_SUFFIX = '@link.cuhk.edu.hk';
 const MODE_ITEMS = {
   [LoginPageMode.CUTOPIA_LOGIN]: {
     title: 'Log In',

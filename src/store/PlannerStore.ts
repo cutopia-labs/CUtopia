@@ -12,8 +12,7 @@ import { storeData, getStoreData, removeStoreItem } from '../helpers/store';
 
 import { PLANNER_CONFIGS } from '../constants/configs';
 import withUndo from '../helpers/withUndo';
-import timeInRange from '../helpers/timeInRange';
-import { getDurationInHour } from '../helpers/timetable';
+import { getDurationInHour, timeInRange } from '../helpers/timetable';
 import ViewStore from './ViewStore';
 import StorePrototype from './StorePrototype';
 

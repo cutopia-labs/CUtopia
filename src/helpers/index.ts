@@ -1,3 +1,6 @@
+import { VALUE_TO_LETTER, GRADE_VALUES, GRADES } from '../constants';
+import { VALID_COURSE_RULE } from '../constants/rules';
+
 export const getSubjectAndCode = (courseId: string) => ({
   subject: courseId.substring(0, 4),
   code: courseId.substring(4),
@@ -19,3 +22,20 @@ export const hashing = (str: string, len: number) =>
     .split('')
     .slice(0, 10)
     .reduce((acc, curr) => acc + curr.charCodeAt(0), 0) % len;
+
+export const reverseMapping = (obj: Record<string, any>) =>
+  Object.fromEntries(Object.entries(obj).map(([k, v]) => [v, k]));
+
+export const validCourse = (coursename: string) => {
+  return VALID_COURSE_RULE.test(coursename);
+};
+
+export const getLabel = (grade: number | string) => {
+  if (Number.isInteger(grade) && grade >= 0 && grade <= 4) {
+    return GRADES[grade];
+  }
+  for (const key of GRADE_VALUES) {
+    if (grade > key - 0.1) return VALUE_TO_LETTER[key];
+  }
+  return 'F';
+};

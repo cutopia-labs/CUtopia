@@ -27,7 +27,7 @@ import ListItem from '../molecules/ListItem';
 import COURSE_CODES from '../../constants/courseCodes';
 import { ViewContext, UserContext } from '../../store';
 import { COURSE_SECTIONS_QUERY } from '../../constants/queries';
-import { validCourse } from '../../helpers/marcos';
+import { validCourse } from '../../helpers';
 import Loading from '../atoms/Loading';
 import {
   CURRENT_TERM,

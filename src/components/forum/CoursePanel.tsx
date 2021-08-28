@@ -11,7 +11,7 @@ import { useTitle } from 'react-use';
 import './CoursePanel.scss';
 import copy from 'copy-to-clipboard';
 
-import { validCourse } from '../../helpers/marcos';
+import { validCourse } from '../../helpers';
 import {
   COURSE_INFO_QUERY,
   GET_REVIEW,
@@ -19,11 +19,11 @@ import {
 } from '../../constants/queries';
 import Loading from '../atoms/Loading';
 import { ViewContext, UserContext } from '../../store';
-import useDebounce from '../../helpers/useDebounce';
+import useDebounce from '../../hooks/useDebounce';
 import { LAZY_LOAD_BUFFER } from '../../constants/configs';
 import { ReviewsFilter, ReviewsResult } from '../../types';
 import Footer from '../molecules/Footer';
-import useMobileQuery from '../../helpers/useMobileQuery';
+import useMobileQuery from '../../hooks/useMobileQuery';
 import { getSimilarCourses } from '../../helpers/getCourses';
 import FeedCard from '../molecules/FeedCard';
 import DiscussionCard from '../discussion/DiscussionCard';
