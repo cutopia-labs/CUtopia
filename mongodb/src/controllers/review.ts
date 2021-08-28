@@ -4,7 +4,7 @@ import { ErrorCode, VoteAction } from 'cutopia-types/lib/codes';
 import Review from '../models/review.model';
 import User from '../models/user.model';
 import withCache from '../utils/withCache';
-import { updateCourseDataFromReview } from './course';
+import { updateCourseData } from './course';
 import { REVIEWS_PER_PAGE } from '../constant/configs';
 
 const generateReviewId = (courseId: string, createdAt: number | string) =>
@@ -18,15 +18,13 @@ export const createReview = async input => {
   const { username, courseId, ...reviewData } = input;
   const createdAt = +new Date();
   const _id = generateReviewId(courseId, createdAt);
-  const user = await User.findOne({ username }, 'reviews exp').exec();
-  if (
-    !user ||
-    user.reviewIds?.some(reviewId => reviewId.startsWith(courseId))
-  ) {
+  const user = await User.findOne({ username }, 'reviewIds exp').exec();
+  if (user.reviewIds.some(reviewId => reviewId.startsWith(courseId))) {
     throw Error(ErrorCode.CREATE_REVIEW_ALREADY_CREATED.toString());
   }
   // give extra exp for writing the first review
-  user.exp += user.reviewIds?.length === 0 ? 5 : 3;
+  user.exp += user.reviewIds.length === 0 ? 5 : 3;
+  user.reviewIds.push(_id);
 
   const newReview = new Review({
     username,
@@ -37,7 +35,7 @@ export const createReview = async input => {
 
   await user.save();
   await newReview.save();
-  await updateCourseDataFromReview(courseId, reviewData);
+  await updateCourseData(courseId, reviewData);
 
   return {
     id: _id,
@@ -53,36 +51,35 @@ export const getReview = async input =>
   });
 
 export const voteReview = async input => {
-  const { courseId, username, vote } = input;
+  const { id, username, vote } = input;
   if (vote !== VoteAction.UPVOTE && vote !== VoteAction.DOWNVOTE) {
-    // vote must be either 0 or 1
     throw Error(ErrorCode.VOTE_REVIEW_INVALID_VALUE.toString());
   }
   const isUpvote = vote === VoteAction.UPVOTE;
   const voteListField = isUpvote ? 'upvoteUserIds' : 'downvoteUserIds';
   const voteCountField = isUpvote ? 'upvotes' : 'downvotes';
 
-  await Review.updateOne(
-    {
-      courseId,
-      username,
-      upvoteUserIds: {
-        $nin: username,
-      },
-      downvoteUserIds: {
-        $nin: username,
-      },
-    },
-    {
-      $addToSet: {
-        [voteListField]: username,
-      },
-      $inc: {
-        [voteCountField]: 1,
-      },
-    }
+  const review = await Review.findById(
+    { _id: id },
+    `upvoteUserIds downvoteUserIds ${voteCountField} username`
   ).exec();
-  await User.updateOne({ username }, { $inc: { [voteCountField]: 1 } }).exec();
+  if (!review) {
+    throw Error(ErrorCode.VOTE_REVIEW_DNE.toString());
+  }
+  if (
+    review.upvoteUserIds.includes(username) ||
+    review.downvoteUserIds.includes(username)
+  ) {
+    throw Error(ErrorCode.VOTE_REVIEW_VOTED_ALREADY.toString());
+  }
+  review[voteListField].push(username);
+  review[voteCountField] += 1;
+  await review.save();
+
+  await User.updateOne(
+    { username: review.username },
+    { $inc: { [voteCountField]: 1 } }
+  ).exec();
 };
 
 export const getReviews = async input => {
@@ -110,11 +107,9 @@ export const getReviews = async input => {
 
 export const editReview = async input => {
   const { courseId, username, ...newReview } = input;
-  await Review.updateOne(
-    {
-      courseId,
-      username,
-    },
+  const oldReview = await Review.findOneAndUpdate(
+    { courseId, username },
     newReview
   ).exec();
+  await updateCourseData(courseId, newReview, oldReview);
 };

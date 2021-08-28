@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { ratingSchema, requiredString } from '../schemas';
+import { ratingSchema, requiredNumber, requiredString } from '../schemas';
 
 type ReviewDetailSchema = {
   grade: number;
@@ -7,8 +7,10 @@ type ReviewDetailSchema = {
 };
 
 type Review = {
+  id: string;
   username: string;
   reviewId: string;
+  title: string;
   courseId: string;
   term: string;
   lecturer: string;
@@ -41,11 +43,13 @@ const reviewDetailSchema = new Schema<ReviewDetailSchema>(
   }
 );
 
-const reviewSchema = new Schema<Review>(
+// temporarily remove type due to: https://github.com/Automattic/mongoose/issues/10623
+const reviewSchema = new Schema(
   {
     _id: requiredString,
     username: requiredString,
     courseId: requiredString,
+    title: String,
     term: requiredString,
     lecturer: requiredString,
     anonymous: { type: Boolean, required: true },
@@ -64,13 +68,24 @@ const reviewSchema = new Schema<Review>(
     teaching: reviewDetailSchema,
     difficulty: reviewDetailSchema,
     content: reviewDetailSchema,
+    updatedAt: requiredNumber,
   },
   {
-    timestamps: false,
+    timestamps: {
+      currentTime: Date.now,
+      createdAt: false,
+      updatedAt: true,
+    },
     _id: false,
   }
 );
 reviewSchema.index({ courseId: 1, createdAt: -1 }, { unique: true });
+reviewSchema.virtual('id').get(function () {
+  return this._id;
+});
+reviewSchema.virtual('createdAt').get(function () {
+  return this._id.split('#')[1];
+});
 
 const ReviewModal = model<Review>('Review', reviewSchema);
 

@@ -45,10 +45,7 @@ input CreateReviewInput {
 }
 
 type CreateReviewResult {
-  id: String!
-  createdAt: String!
-  courseRatings: Ratings!
-  groupRatings: Ratings!
+  id: String! # format: courseID#createdAt
 }
 
 input EditReviewInput {
@@ -78,7 +75,7 @@ type Ratings {
 }
 
 input VoteReviewInput {
-  courseId: String!
+  id: String! # format: courseId#createdAt
   vote: Int!
 }
 
@@ -89,7 +86,7 @@ type Review {
   anonymous: Boolean!
   title: String
   createdAt: String!
-  modifiedAt: String!
+  updatedAt: String!
   term: String!
   lecturer: String!
   overall: Int!

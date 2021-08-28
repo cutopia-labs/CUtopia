@@ -22,7 +22,8 @@ const courseRatingSchema = {
   min: 0,
 };
 
-const courseSchema = new Schema<Course>(
+// temporarily remove type due to: https://github.com/Automattic/mongoose/issues/10623
+const courseSchema = new Schema(
   {
     _id: requiredString,
     lecturers: {

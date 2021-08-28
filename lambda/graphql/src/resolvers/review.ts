@@ -29,13 +29,10 @@ const reviewsResolver = {
     },
     editReview: async (parent, { input }, { user }) => {
       const { username } = user;
-      const updatedAt = await editReview({
+      return await editReview({
         ...input,
         username,
       });
-      return {
-        updatedAt,
-      };
     },
   },
   Review: {

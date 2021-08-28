@@ -41,7 +41,7 @@ timetableSchema.virtual('id').get(function () {
 });
 timetableSchema.post('remove', async function (doc) {
   const timetableField = doc.expire >= 0 ? 'sharedTimetables' : 'timetables';
-  await this.model('User').updateOne(
+  await (this as any).model('User').updateOne(
     { username: doc.username },
     {
       $pull: {
