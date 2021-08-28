@@ -143,3 +143,9 @@ export const REPORT = gql`
     )
   }
 `;
+
+export const REMOVE_TIMETABLE = gql`
+  mutation ($id: String!) {
+    removeTimetable(id: $id)
+  }
+`;

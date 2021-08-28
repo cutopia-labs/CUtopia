@@ -1,17 +1,21 @@
-import { useLazyQuery } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import { useEffect, useContext, useState } from 'react';
 import pluralize from 'pluralize';
 
-import { AiOutlineCloudDownload, AiOutlineShareAlt } from 'react-icons/ai';
-import { IconButton } from '@material-ui/core';
-import { Timer } from '@material-ui/icons';
+import {
+  AiOutlineCloudDownload,
+  AiOutlineDelete,
+  AiOutlineShareAlt,
+} from 'react-icons/ai';
+import { IconButton, MenuItem, Menu } from '@material-ui/core';
+import { MoreHoriz, Timer } from '@material-ui/icons';
 import copy from 'copy-to-clipboard';
 import { useHistory } from 'react-router-dom';
 import { PLANNER_CONFIGS } from '../../constants/configs';
 import './TimetableOverviewCard.scss';
 import { GET_USER_TIMETABLES } from '../../constants/queries';
 import { getMMMDDYY } from '../../helpers/getTime';
-import { ViewContext } from '../../store';
+import { PlannerContext, ViewContext } from '../../store';
 import {
   ErrorCardMode,
   TimetableOverviewMode,
@@ -21,6 +25,7 @@ import AccordionCard from '../atoms/AccordionCard';
 import Loading from '../atoms/Loading';
 import ErrorCard from '../molecules/ErrorCard';
 import ListItem from '../molecules/ListItem';
+import { REMOVE_TIMETABLE } from '../../constants/mutations';
 import { generateTimetableURL } from './PlannerTimetable';
 
 const getExpire = (mode: TimetableOverviewMode, expire: number) => {
@@ -45,8 +50,12 @@ const getTimetableOverviewMode = (expire: number) => {
 };
 
 const getCombinedTimetable = (data): TimetableOverviewWithMode[] => {
-  return (data.me.timetables || [])
-    .concat(data.me.sharedTimetables || [])
+  return (data?.me?.timetables || [])
+    .concat(
+      [...(data?.me?.sharedTimetables || [])].sort((a, b) =>
+        a.createdAt > b.createdAt ? -1 : 1
+      )
+    )
     .map((item) => ({
       ...item,
       mode: getTimetableOverviewMode(item.expire),
@@ -56,14 +65,31 @@ const getCombinedTimetable = (data): TimetableOverviewWithMode[] => {
 type TimetableOverviewListItemProps = {
   item: TimetableOverviewWithMode;
   onShare: (id: string) => void;
-  onDownload: (id: string) => void;
+  onDownload: (id: string, createdAt: number) => void;
+  onDelete: (id: string) => void;
 };
 
 const TimetableOverviewListItem = ({
   item,
   onShare,
   onDownload,
+  onDelete,
 }: TimetableOverviewListItemProps) => {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const menuItems = [
+    {
+      label: 'Delete',
+      action: () => onDelete(item.id),
+      icon: <AiOutlineDelete />,
+    },
+  ];
+  if (item.mode === TimetableOverviewMode.SHARE) {
+    menuItems.push({
+      label: 'Share',
+      action: () => onShare(item.id),
+      icon: <AiOutlineShareAlt />,
+    });
+  }
   return (
     <ListItem
       className="timetable-overview-list-item"
@@ -81,19 +107,38 @@ const TimetableOverviewListItem = ({
         <IconButton
           size="small"
           color="primary"
-          onClick={() => onDownload(item.id)}
+          onClick={() => onDownload(item.id, item.createdAt)}
         >
           <AiOutlineCloudDownload />
         </IconButton>
-        {item.mode === TimetableOverviewMode.SHARE && (
-          <IconButton
-            size="small"
-            color="primary"
-            onClick={() => onShare(item.id)}
-          >
-            <AiOutlineShareAlt />
-          </IconButton>
-        )}
+        <IconButton
+          size="small"
+          color="primary"
+          onClick={(e) => setAnchorEl(e.currentTarget)}
+        >
+          <MoreHoriz />
+        </IconButton>
+        <Menu
+          className="timetable-more-menu"
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={() => setAnchorEl(null)}
+        >
+          {menuItems.map((item) => (
+            <MenuItem
+              key={item.label}
+              onClick={() => {
+                item.action();
+                setAnchorEl(null);
+              }}
+            >
+              <span className="menu-icon-container center-box">
+                {item.icon}
+              </span>
+              {item.label}
+            </MenuItem>
+          ))}
+        </Menu>
       </span>
     </ListItem>
   );
@@ -103,12 +148,18 @@ const TimetableOverviewCard = () => {
   const history = useHistory();
   const [expanded, setExpanded] = useState(false);
   const view = useContext(ViewContext);
+  const planner = useContext(PlannerContext);
+  const [combinedTimetables, setCombinedTimetables] =
+    useState<TimetableOverviewWithMode[]>(null);
+  const [removeTimetable, { loading: removeTimetableLoading }] =
+    useMutation(REMOVE_TIMETABLE);
   const [
     getUserTimetable,
     { data: userTimetable, loading: userTimetableLoading },
   ] = useLazyQuery(GET_USER_TIMETABLES, {
     onCompleted: async (data) => {
-      console.log(data);
+      console.log(getCombinedTimetable(data));
+      setCombinedTimetables(getCombinedTimetable(data));
     },
     onError: view.handleError,
   });
@@ -118,35 +169,50 @@ const TimetableOverviewCard = () => {
     }
   }, [expanded]);
 
-  const onDownload = (id: string) => {
-    history.push(`/planner/share/${id}`);
+  const onDownload = (id: string, createdAt: number) => {
+    // if key match (createdAt), then do not load but switch
+    if (planner.validKey(createdAt)) {
+      planner.updateCurrentPlanner(createdAt);
+    } else {
+      history.push(`/planner/share/${id}`);
+    }
   };
   const onShare = (id: string) => {
     copy(generateTimetableURL(id));
     view.setSnackBar('Copied share link!');
   };
-
+  const onDelete = async (id: string) => {
+    try {
+      await removeTimetable({
+        variables: {
+          id,
+        },
+      });
+      setCombinedTimetables((items) =>
+        [...items].filter((item) => item.id !== id)
+      );
+      view.setSnackBar('Deleted!');
+    } catch (e) {
+      // To skip remove entry in state in case of any error
+      view.handleError(e);
+    }
+  };
   const renderChildren = () => {
-    if (userTimetableLoading) {
+    if (userTimetableLoading || !combinedTimetables) {
       return <Loading />;
     }
-    if (
-      !userTimetable ||
-      !userTimetable?.me ||
-      (!userTimetable.me.sharedTimetables && !userTimetable.me.timetables)
-    ) {
+    if (!combinedTimetables.length) {
       return <ErrorCard mode={ErrorCardMode.NULL} />;
     }
-    return getCombinedTimetable(userTimetable)
-      .sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1))
-      .map((item) => (
-        <TimetableOverviewListItem
-          key={`${item.createdAt}${item.id}`}
-          item={item}
-          onShare={onShare}
-          onDownload={onDownload}
-        />
-      ));
+    return combinedTimetables.map((item) => (
+      <TimetableOverviewListItem
+        key={`${item.createdAt}${item.id}`}
+        item={item}
+        onShare={onShare}
+        onDownload={onDownload}
+        onDelete={onDelete}
+      />
+    ));
   };
   return (
     <AccordionCard
