@@ -14,7 +14,7 @@ import { getMMMDDYY } from '../../helpers/getTime';
 import ShowMoreOverlay from '../molecules/ShowMoreOverlay';
 import { Review } from '../../types';
 import { ViewContext } from '../../store';
-import useMobileQuery from '../../helpers/useMobileQuery';
+import useMobileQuery from '../../hooks/useMobileQuery';
 import GradeRow from './GradeRow';
 import LikeButtonsRow from './LikeButtonRow';
 

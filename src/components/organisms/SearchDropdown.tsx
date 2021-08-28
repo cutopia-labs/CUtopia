@@ -15,8 +15,8 @@ import { BsChatDots, BsFillChatDotsFill } from 'react-icons/bs';
 import SearchPanel from '../forum/SearchPanel';
 import './Header.scss';
 import SearchInput from '../molecules/SearchInput';
-import useMobileQuery from '../../helpers/useMobileQuery';
-import useOuterClick from '../../helpers/useOuterClick';
+import useMobileQuery from '../../hooks/useMobileQuery';
+import useOuterClick from '../../hooks/useOuterClick';
 import { SearchPayload } from '../../types';
 
 const SECTIONS = [

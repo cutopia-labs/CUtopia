@@ -18,7 +18,7 @@ import Card from '../components/atoms/Card';
 import Link from '../components/molecules/Link';
 import PlannerTimetable from '../components/planner/PlannerTimetable';
 import Footer from '../components/molecules/Footer';
-import useMobileQuery from '../helpers/useMobileQuery';
+import useMobileQuery from '../hooks/useMobileQuery';
 
 const LINKS = [
   {

@@ -4,7 +4,7 @@ import './LandingPage.scss';
 import LoginPanel from '../components/user/LoginPanel';
 import Logo from '../components/atoms/Logo';
 import Illustration from '../images/meditation.svg';
-import useMobileQuery from '../helpers/useMobileQuery';
+import useMobileQuery from '../hooks/useMobileQuery';
 
 const LandingPage = () => {
   const isMobile = useMobileQuery();

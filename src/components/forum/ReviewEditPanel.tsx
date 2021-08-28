@@ -28,7 +28,7 @@ import ListItem from '../molecules/ListItem';
 import { TARGET_REVIEW_WORD_COUNT } from '../../constants/configs';
 import { RatingFieldWithOverall, ReviewDetails } from '../../types';
 import SelectionGroup, { FormSection } from '../molecules/SectionGroup';
-import useMobileQuery from '../../helpers/useMobileQuery';
+import useMobileQuery from '../../hooks/useMobileQuery';
 import handleCompleted from '../../helpers/handleCompleted';
 import LoadingButton from '../atoms/LoadingButton';
 import { getStoreData, storeData } from '../../helpers/store';

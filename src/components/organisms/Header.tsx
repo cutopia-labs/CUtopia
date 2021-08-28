@@ -15,7 +15,7 @@ import clsx from 'clsx';
 import { BsChatDots, BsFillChatDotsFill } from 'react-icons/bs';
 import './Header.scss';
 import Logo from '../atoms/Logo';
-import useMobileQuery from '../../helpers/useMobileQuery';
+import useMobileQuery from '../../hooks/useMobileQuery';
 import SearchDropdown from './SearchDropdown';
 
 const SECTIONS = [

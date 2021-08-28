@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import './Tab.scss';
 import Card from '../../atoms/Card';
 import ChangelogItem from '../ChangelogItem';
-import useMobileQuery from '../../../helpers/useMobileQuery';
+import useMobileQuery from '../../../hooks/useMobileQuery';
 import Loading from '../../atoms/Loading';
 
 const ChangelogTab = () => {

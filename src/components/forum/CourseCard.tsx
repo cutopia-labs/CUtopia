@@ -14,7 +14,7 @@ import { UserContext, ViewContext } from '../../store';
 import { COURSE_CARD_MAX_HEIGHT } from '../../constants/configs';
 import { CourseInfo, ErrorCardMode } from '../../types';
 import Link from '../molecules/Link';
-import useMobileQuery from '../../helpers/useMobileQuery';
+import useMobileQuery from '../../hooks/useMobileQuery';
 import Section from '../molecules/Section';
 import SectionText from '../molecules/SectionText';
 import { CourseCardSkeleton } from '../templates/Skeleton';
