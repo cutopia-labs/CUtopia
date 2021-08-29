@@ -1,6 +1,6 @@
 import { Review, ReviewDetail } from 'cutopia-types/lib/types';
 import { Schema, model } from 'mongoose';
-import { ratingSchema, requiredNumber, requiredString } from '../schemas';
+import { ratingSchema, requiredString } from '../schemas';
 
 const reviewDetailSchema = new Schema<ReviewDetail>(
   {
@@ -42,11 +42,10 @@ const reviewSchema = new Schema(
     teaching: reviewDetailSchema,
     difficulty: reviewDetailSchema,
     content: reviewDetailSchema,
-    updatedAt: requiredNumber,
   },
   {
     timestamps: {
-      currentTime: Date.now,
+      currentTime: () => +new Date(),
       createdAt: false,
       updatedAt: true,
     },

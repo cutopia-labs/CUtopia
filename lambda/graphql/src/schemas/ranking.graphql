@@ -7,7 +7,7 @@ type RankTable {
 }
 
 input RankingFilter {
-  rankBy: String! # numReviews, grading, content, difficulty, teaching
+  rankBy: String! # numReviews, grading, content, difficulty, teaching, overall
 }
 
 type RankedCourse {

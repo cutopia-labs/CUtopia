@@ -1,5 +1,3 @@
-import NodeCache from 'node-cache';
-import withCache from '../utils/withCache';
 import DiscussionModel from '../models/discussion.model';
 import { MESSAGES_PER_PAGE } from '../constant/configs';
 import { updateDiscussions } from './user';
@@ -36,6 +34,7 @@ export const sendDiscussionMessage = async (
   await updateDiscussions({
     username: messageBody.user,
     courseId,
+    text: messageBody.text,
   });
   return messageId;
 };

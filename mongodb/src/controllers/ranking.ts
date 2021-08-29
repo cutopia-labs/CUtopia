@@ -3,6 +3,7 @@ import withCache from '../utils/withCache';
 import Course from '../models/course.model';
 import Ranking from '../models/ranking.model';
 import { RANK_LIMIT } from '../constant/configs';
+import { RankEntry } from 'cutopia-types/lib/types';
 
 const rankingCache = new NodeCache({
   stdTTL: 1800,
@@ -28,6 +29,7 @@ const rankField = (field: string) => [
     $limit: RANK_LIMIT,
   },
 ];
+
 export const rankCourses = async () => {
   const result = await Course.aggregate([
     {
@@ -37,6 +39,7 @@ export const rankCourses = async () => {
         content: rankField('content'),
         difficulty: rankField('difficulty'),
         teaching: rankField('teaching'),
+        overall: rankField('overall'),
       },
     },
     // $facet does not support $merge in nested pipeline and seems
@@ -58,3 +61,20 @@ export const rankCourses = async () => {
 
 export const getRanking = async (field: string) =>
   withCache(rankingCache, field, async () => await Ranking.findById(field));
+
+type UpdaterRankingProps = {
+  field: string;
+  rank: RankEntry;
+  limit?: number;
+};
+
+export const updateRanking = async (input: UpdaterRankingProps) => {
+  Ranking.findByIdAndUpdate(input.field, {
+    $push: {
+      ranks: {
+        $each: [input.rank], // TODO: need check nested _id instead of this
+        $slice: -(input.limit || RANK_LIMIT),
+      },
+    },
+  });
+};
