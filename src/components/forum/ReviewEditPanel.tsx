@@ -211,7 +211,7 @@ const ReviewEdit = ({ courseId }) => {
     useMutation(ADD_REVIEW, {
       onCompleted: handleCompleted(
         (data) => {
-          const id = data?.createReview?.createdDate;
+          const id = data?.createReview?.createdAt;
           if (id) {
             history.push(`/review/${courseId}/${id}`);
           }
@@ -226,8 +226,8 @@ const ReviewEdit = ({ courseId }) => {
     useMutation(EDIT_REVIEW, {
       onCompleted: handleCompleted(
         () => {
-          if (formData.createdDate) {
-            history.push(`/review/${courseId}/${formData.createdDate}`);
+          if (formData.createdAt) {
+            history.push(`/review/${courseId}/${formData.createdAt}`);
           }
         },
         {
@@ -259,7 +259,7 @@ const ReviewEdit = ({ courseId }) => {
   const { data: review, loading: reviewLoading } = useQuery(GET_REVIEW, {
     variables: {
       courseId,
-      createdDate: targetReview,
+      createdAt: targetReview,
     },
     skip: mode !== MODES.EDIT || !targetReview,
     onError: view.handleError,

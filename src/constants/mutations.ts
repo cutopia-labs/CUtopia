@@ -69,7 +69,7 @@ export const ADD_REVIEW = gql`
         content: $content
       }
     ) {
-      createdDate
+      createdAt
     }
   }
 `;
@@ -83,7 +83,7 @@ export const EDIT_REVIEW = gql`
     $teaching: ReviewDetailsInput!
     $difficulty: ReviewDetailsInput!
     $content: ReviewDetailsInput!
-    $createdDate: String!
+    $createdAt: String!
   ) {
     editReview(
       input: {
@@ -94,7 +94,7 @@ export const EDIT_REVIEW = gql`
         teaching: $teaching
         difficulty: $difficulty
         content: $content
-        createdDate: $createdDate
+        createdAt: $createdAt
       }
     ) {
       modifiedDate
@@ -103,9 +103,9 @@ export const EDIT_REVIEW = gql`
 `;
 
 export const VOTE_REVIEW = gql`
-  mutation ($courseId: String!, $createdDate: String!, $vote: Int!) {
+  mutation ($courseId: String!, $createdAt: String!, $vote: Int!) {
     voteReview(
-      input: { courseId: $courseId, createdDate: $createdDate, vote: $vote }
+      input: { courseId: $courseId, createdAt: $createdAt, vote: $vote }
     ) {
       myVote
     }

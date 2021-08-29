@@ -5,7 +5,7 @@ export type RecentReview = {
   courseId: string;
   username: string;
   title?: string;
-  createdDate: string;
+  createdAt: string;
   overall: number;
   grading: ReviewDetails;
 };
@@ -16,7 +16,7 @@ export type Review = {
   username: string;
   anonymous: boolean;
   title?: string;
-  createdDate: string;
+  createdAt: string;
   modifiedDate: string;
   term: string;
   lecturer: string;
@@ -44,13 +44,13 @@ export type ReviewsResult = {
 
 export type LastEvaluatedKey = {
   courseId: string;
-  createdDate: string;
+  createdAt: string;
   upvotes?: number;
 };
 
 export type CreateReviewResult = {
   id?: string;
-  createdDate?: string;
+  createdAt?: string;
   error?: string;
 };
 

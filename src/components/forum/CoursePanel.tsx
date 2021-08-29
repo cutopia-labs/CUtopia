@@ -115,8 +115,7 @@ const CoursePanel = () => {
           prevReviews
             .concat(data.reviews.reviews)
             .filter(
-              (v, i, a) =>
-                a.findIndex((m) => v.createdDate === m.createdDate) === i
+              (v, i, a) => a.findIndex((m) => v.createdAt === m.createdAt) === i
             )
         );
       } else {
@@ -133,7 +132,7 @@ const CoursePanel = () => {
   const { loading: reviewLoading } = useQuery(GET_REVIEW, {
     variables: {
       courseId,
-      createdDate: reviewId,
+      createdAt: reviewId,
     },
     skip: !reviewId,
     onCompleted: (data) => {
@@ -171,7 +170,7 @@ const CoursePanel = () => {
           ...reviewsPayload,
           lastEvaluatedKey: {
             courseId: lastEvaluatedKey.courseId,
-            createdDate: lastEvaluatedKey.createdDate,
+            createdAt: lastEvaluatedKey.createdAt,
             upvotes: lastEvaluatedKey.upvotes,
           },
         });
@@ -185,7 +184,7 @@ const CoursePanel = () => {
   }, 300);
 
   useEffect(() => {
-    if (reviews.length) {
+    if (reviews?.length) {
       setLastEvaluatedKey(undefined);
       reviewsRefetch({
         courseId,
@@ -311,13 +310,13 @@ const CoursePanel = () => {
         <div className="grid-auto-row reviews-container">
           {(reviews || []).map((item) => (
             <ReviewCard
-              key={item.createdDate}
+              key={item.createdAt}
               review={item}
               shareAction={() => {
                 copy(
                   reviewId
                     ? window.location.href
-                    : `${window.location.href}/${item.createdDate}`
+                    : `${window.location.href}/${item.createdAt}`
                 );
                 view.setSnackBar('Copied sharelink to clipboard!');
               }}

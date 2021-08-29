@@ -49,13 +49,13 @@ export const ReviewsList = ({ reviewIds }: ReviewsListProps) => {
   return (
     <div className="home-course-container card">
       {reviewIds?.map((id) => {
-        const [courseId, createdDate] = id.split('#');
+        const [courseId, createdAt] = id.split('#');
         return (
-          <Link key={id} to={`/review/${courseId}/${createdDate}`}>
+          <Link key={id} to={`/review/${courseId}/${createdAt}`}>
             <ListItem
               className="home-course-list-item"
               title={courseId}
-              caption={getMMMDDYY(createdDate)}
+              caption={getMMMDDYY(createdAt)}
               noBorder
             />
           </Link>

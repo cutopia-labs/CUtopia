@@ -55,7 +55,7 @@ const ReviewCard = ({
     const res = await voteReview({
       variables: {
         courseId: review.courseId,
-        createdDate: review.createdDate,
+        createdAt: review.createdAt,
         vote,
       },
     });
@@ -140,7 +140,7 @@ const ReviewCard = ({
           {`@`}
           <span>{review.anonymous ? 'Anonymous' : review.username}</span>
           {' • '}
-          {getMMMDDYY(review.createdDate)}
+          {getMMMDDYY(review.createdAt)}
         </span>
         <div className="review-bottom-btn-row right center-row">
           <LikeButtonsRow

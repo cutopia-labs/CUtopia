@@ -34,3 +34,10 @@
     }
   }
 }
+
+.menu-icon-container {
+  margin-right: var(--card-padding);
+  & .MuiSvgIcon-root {
+    font-size: 18px;
+  }
+}

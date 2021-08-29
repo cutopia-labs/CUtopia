@@ -33,54 +33,46 @@ export const COURSE_INFO_QUERY = gql`
 export const REVIEWS_QUERY = gql`
   query (
     $courseId: String
-    $ascendingVote: Boolean
-    $ascendingDate: Boolean
-    $lastEvaluatedKey: LastEvaluatedKeyInput
+    $sortBy: String
+    $page: Int
     $lecturer: String
     $term: String
   ) {
     reviews(
       input: {
         courseId: $courseId
-        ascendingVote: $ascendingVote
-        ascendingDate: $ascendingDate
-        lastEvaluatedKey: $lastEvaluatedKey
+        page: $page
         lecturer: $lecturer
         term: $term
+        sortBy: $sortBy
+        ascending: true
       }
     ) {
-      reviews {
-        courseId
-        username
-        title
-        createdDate
-        upvotes
-        downvotes
-        myVote
-        term
-        lecturer
-        overall
-        content {
-          text
-          grade
-        }
-        grading {
-          text
-          grade
-        }
-        teaching {
-          text
-          grade
-        }
-        difficulty {
-          text
-          grade
-        }
+      courseId
+      username
+      title
+      createdAt
+      upvotes
+      downvotes
+      myVote
+      term
+      lecturer
+      overall
+      content {
+        text
+        grade
       }
-      lastEvaluatedKey {
-        courseId
-        createdDate
-        upvotes
+      grading {
+        text
+        grade
+      }
+      teaching {
+        text
+        grade
+      }
+      difficulty {
+        text
+        grade
       }
     }
   }
@@ -89,27 +81,26 @@ export const REVIEWS_QUERY = gql`
 export const RECENT_REVIEWS_QUERY = gql`
   query {
     reviews(input: { ascending: true }) {
-      reviews {
-        courseId
-        username
-        title
-        createdDate
-        overall
-        grading {
-          text
-        }
+      courseId
+      username
+      title
+      overall
+      grading {
+        text
       }
     }
   }
 `;
 
+// Add createdAt later
+
 export const GET_REVIEW = gql`
-  query ($courseId: String!, $createdDate: String!) {
-    review(input: { courseId: $courseId, createdDate: $createdDate }) {
+  query ($courseId: String!, $createdAt: String!) {
+    review(input: { courseId: $courseId, createdAt: $createdAt }) {
       courseId
       username
       title
-      createdDate
+      createdAt
       upvotes
       downvotes
       myVote

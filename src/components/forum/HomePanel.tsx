@@ -64,10 +64,10 @@ const RecentReviewCard = ({ review, onClick }: RecentReviewCardProps) => {
       title={review.courseId}
       noBorder
       caption={`By ${review.username || 'Anonymous'} on ${getMMMDDYY(
-        review.createdDate
+        review.createdAt
       )}`}
       right={<GradeIndicator grade={review.overall} />}
-      onClick={() => onClick(`${review.courseId}/${review.createdDate}`)}
+      onClick={() => onClick(`${review.courseId}/${review.createdAt}`)}
     >
       <span className="recent-review-text">{review.grading.text}</span>
     </ListItem>
@@ -87,7 +87,7 @@ const RecentReviewList = ({ reviews, loading }: RecentReviewListProps) => {
     <div className="grid-auto-row">
       {reviews.map((review) => (
         <RecentReviewCard
-          key={review.createdDate}
+          key={review.createdAt}
           review={review}
           onClick={(id) => history.push(`/review/${id}`)}
         />
@@ -139,9 +139,7 @@ const HomePanel = () => {
   const user = useContext(UserContext);
 
   const { data: reviewsData, loading: recentReviewsLoading } = useQuery<{
-    reviews: {
-      reviews: RecentReview[];
-    };
+    reviews: RecentReview[];
   }>(RECENT_REVIEWS_QUERY, {
     skip: tab !== 'Recents',
     onError: view.handleError,
@@ -182,7 +180,7 @@ const HomePanel = () => {
           />
         )}
         <RecentReviewList
-          reviews={reviewsData?.reviews?.reviews}
+          reviews={reviewsData?.reviews}
           loading={recentReviewsLoading}
         />
         <RankingCard
