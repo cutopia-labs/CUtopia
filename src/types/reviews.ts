@@ -1,5 +1,14 @@
 export type Grade = 'F' | 'D' | 'C' | 'B' | 'A';
 
+export type RatingField = 'grading' | 'content' | 'difficulty' | 'teaching';
+
+export type RatingFieldWithOverall =
+  | 'overall'
+  | 'grading'
+  | 'content'
+  | 'difficulty'
+  | 'teaching';
+
 export type RecentReview = {
   id: string;
   courseId: string;
@@ -7,30 +16,32 @@ export type RecentReview = {
   title?: string;
   createdDate: string;
   overall: number;
-  grading: ReviewDetails;
+  grading: ReviewDetail;
 };
 
 export type Review = {
   id: string;
-  courseId: string;
   username: string;
-  anonymous: boolean;
-  title?: string;
-  createdDate: string;
-  modifiedDate: string;
+  reviewId: string;
+  title: string;
+  courseId: string;
   term: string;
   lecturer: string;
-  overall: number;
-  grading: ReviewDetails;
-  teaching: ReviewDetails;
-  difficulty: ReviewDetails;
-  content: ReviewDetails;
+  anonymous: boolean;
   upvotes: number;
   downvotes: number;
-  myVote?: number;
+  upvoteUserIds: string[];
+  downvoteUserIds: string[];
+  overall: number;
+  grading: ReviewDetail;
+  teaching: ReviewDetail;
+  difficulty: ReviewDetail;
+  content: ReviewDetail;
+  createdAt: number;
+  updatedAt: number;
 };
 
-export type ReviewDetails = {
+export type ReviewDetail = {
   grade: number;
   text: string;
 };

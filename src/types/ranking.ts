@@ -1,18 +1,29 @@
 import { Course } from './courses';
 
-type RankTable = {
+export type RankEntry = {
+  _id: string; // courseId
+  val: any;
+};
+
+export type Ranking = {
+  _id: string; // ranking field, e.g. latest, grading
+  ranks: RankEntry[];
+  updatedAt: number;
+};
+
+export type RankTable = {
   popularCourses: PopularCourse[];
   topRatedCourses: TopRatedCourse[];
   topRatedAcademicGroups: TopRatedAcademicGroups[];
 };
 
-type PopularCourse = {
+export type PopularCourse = {
   courseId: string;
   course: Course;
   numReviews: number;
 };
 
-type TopRatedCourse = {
+export type TopRatedCourse = {
   courseId: string;
   course: Course;
   numReviews: number;
@@ -23,7 +34,7 @@ type TopRatedCourse = {
   teaching: number;
 };
 
-type TopRatedAcademicGroups = {
+export type TopRatedAcademicGroups = {
   name: string;
   numReviews: number;
   overall: number;
@@ -31,11 +42,4 @@ type TopRatedAcademicGroups = {
   content: number;
   difficulty: number;
   teaching: number;
-};
-
-export type {
-  RankTable,
-  PopularCourse,
-  TopRatedCourse,
-  TopRatedAcademicGroups,
 };

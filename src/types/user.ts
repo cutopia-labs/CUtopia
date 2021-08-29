@@ -1,15 +1,23 @@
-import { CourseTableEntry } from './events';
+import { Timetable } from './timetable';
 
 type User = {
   username: string;
-  verified: boolean;
+  SID: string;
+  password: string;
+  resetPwdCode: string;
+  email: string;
+  createdAt: number;
   reviewIds: string[];
-  upvotesCount: number;
+  upvotes: number;
+  downvotes: number;
   exp: number;
-  level: number;
-  email?: string;
-  timetable?: CourseTableEntry[];
-  fullAccess?: boolean;
+  veriCode: string;
+  verified: boolean;
+  fullAccess: boolean;
+  timetables: Timetable[];
+  sharedTimetables: Timetable[];
+  viewsCount: number;
+  discussions: string[];
 };
 
 type CreateUserResult = {

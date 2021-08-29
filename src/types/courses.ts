@@ -1,14 +1,5 @@
 import { Events } from './events';
 
-export type RatingField = 'grading' | 'content' | 'difficulty' | 'teaching';
-
-export type RatingFieldWithOverall =
-  | 'overall'
-  | 'grading'
-  | 'content'
-  | 'difficulty'
-  | 'teaching';
-
 export interface CourseDataRaw {
   code: string;
   title: string;
@@ -99,3 +90,17 @@ export type CourseConcise = {
   courseId: string;
   title: string;
 };
+
+export type CourseDocument = {
+  _id: string;
+  lecturers: string[];
+  terms: string[];
+  rating: {
+    numReviews: number;
+    overall: number;
+    grading: number;
+    content: number;
+    difficulty: number;
+    teaching: number;
+  };
+}
