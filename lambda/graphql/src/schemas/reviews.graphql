@@ -1,7 +1,7 @@
 type Mutation {
   createReview(input: CreateReviewInput!): CreateReviewResult @auth
   voteReview(input: VoteReviewInput!): Void @auth
-  editReview(input: EditReviewInput!): EditReviewResult @auth(role: OWNER)
+  editReview(input: EditReviewInput!): Void @auth(role: OWNER)
 }
 
 type Query {
@@ -57,12 +57,6 @@ input EditReviewInput {
   teaching: ReviewDetailsInput
   difficulty: ReviewDetailsInput
   content: ReviewDetailsInput
-}
-
-type EditReviewResult {
-  updatedAt: String!
-  courseRatings: Ratings!
-  groupRatings: Ratings!
 }
 
 type Ratings {

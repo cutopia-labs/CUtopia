@@ -22,14 +22,14 @@ const reviewsResolver = {
     },
     voteReview: async (parent, { input }, { user }) => {
       const { username } = user;
-      return await voteReview({
+      await voteReview({
         ...input,
         username,
       });
     },
     editReview: async (parent, { input }, { user }) => {
       const { username } = user;
-      return await editReview({
+      await editReview({
         ...input,
         username,
       });
