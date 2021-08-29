@@ -149,3 +149,11 @@ export const REMOVE_TIMETABLE = gql`
     removeTimetable(id: $id)
   }
 `;
+
+export const SEND_MESSAGE = gql`
+  mutation ($courseId: String!, $text: String!) {
+    sendMessage(input: { courseId: $courseId, text: $text }) {
+      id
+    }
+  }
+`;

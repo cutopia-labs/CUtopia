@@ -12,6 +12,7 @@ export const LEVEL_UP_EXP = 5;
 export const FULL_MEMBER_EXP = (FULL_MEMBER_LEVEL - 1) * LEVEL_UP_EXP;
 export const REVIEW_EXP = 3;
 export const SIMILAR_COURSE_LIMIT = 5;
+export const MESSAGE_PREVIEW_LENGTH = 10;
 
 export const PLANNER_CONFIGS = {
   DEFAULT_TABLE_NAME: 'New Timetable',

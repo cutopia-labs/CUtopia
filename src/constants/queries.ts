@@ -165,7 +165,7 @@ export const GET_USER_TIMETABLES = gql`
 export const TOP_RATED_COURSES_QUERY = gql`
   query ($criteria: String!) {
     ranking {
-      topRatedCourses(filter: { limit: 10, sortBy: $criteria }) {
+      rankedCourses(filter: { rankBy: $criteria }) {
         courseId
         course {
           title
@@ -225,25 +225,6 @@ export const COURSE_SECTIONS_QUERY = gql`
   }
 `;
 
-export const MY_TIMETABLE_QUERY = gql`
-  query ($username: String!) {
-    user(input: { username: $username }) {
-      timetable {
-        courseId
-        title
-        sections {
-          name
-          startTimes
-          endTimes
-          days
-          locations
-          instructors
-        }
-      }
-    }
-  }
-`;
-
 export const GET_SHARE_TIMETABLE = gql`
   query ($id: String!) {
     timetable(id: $id) {
@@ -263,6 +244,27 @@ export const GET_SHARE_TIMETABLE = gql`
       tableName
       createdAt
       expireAt
+    }
+  }
+`;
+
+export const GET_MY_DISCUSSIONS = gql`
+  query {
+    me {
+      discussions
+    }
+  }
+`;
+
+export const GET_DISCUSSIONS = gql`
+  query ($courseId: String!, $page: Int) {
+    discussion(input: { courseId: $courseId, page: $page }) {
+      messages {
+        text
+        user
+        id
+      }
+      nextPage
     }
   }
 `;

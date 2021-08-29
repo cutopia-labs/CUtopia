@@ -151,7 +151,7 @@ const HomePanel = () => {
       onError: view.handleError,
     }
   );
-  const { data: topRatedCourses, loading: topRatedCoursesLoading } = useQuery(
+  const { data: rankedCourses, loading: rankedCoursesLoading } = useQuery(
     TOP_RATED_COURSES_QUERY,
     {
       variables: {
@@ -184,9 +184,9 @@ const HomePanel = () => {
           loading={recentReviewsLoading}
         />
         <RankingCard
-          rankList={topRatedCourses?.ranking?.topRatedCourses}
+          rankList={rankedCourses?.ranking?.rankedCourses}
           sortKey={sortKey}
-          loading={topRatedCoursesLoading}
+          loading={rankedCoursesLoading}
         />
         <RankingCard
           rankList={popularCourses?.ranking?.popularCourses}
@@ -195,7 +195,7 @@ const HomePanel = () => {
         {!(
           recentReviewsLoading ||
           popularCoursesLoading ||
-          topRatedCoursesLoading
+          rankedCoursesLoading
         ) && <Footer />}
       </div>
       <div className="secondary-column sticky">

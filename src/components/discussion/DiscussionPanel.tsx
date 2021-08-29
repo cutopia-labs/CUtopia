@@ -1,8 +1,15 @@
-import { useState } from 'react';
-import { DiscussionRecent } from '../../types';
+import { useQuery } from '@apollo/client';
+import { useContext, useState } from 'react';
+import { MESSAGE_PREVIEW_LENGTH } from '../../constants/configs';
+
+import { GET_MY_DISCUSSIONS } from '../../constants/queries';
+import { validCourse } from '../../helpers';
+import { ViewContext } from '../../store';
+import { DiscussionRecent, ErrorCardMode } from '../../types';
 import Card from '../atoms/Card';
 import CardHeader from '../atoms/CardHeader';
 import TextIcon from '../atoms/TextIcon';
+import ErrorCard from '../molecules/ErrorCard';
 import SearchDropdown from '../organisms/SearchDropdown';
 import Discussion from './Discussion';
 import './DiscussionPanel.scss';
@@ -80,6 +87,15 @@ const RECENT_DISCUSSIONS_RAW = [
   },
 ];
 
+const getDiscussionFromString = (str: string) => {
+  const [courseId, text] = str.split('#');
+  return {
+    text: `${text}${text.length < MESSAGE_PREVIEW_LENGTH ? '' : '...'}`,
+    user: 'me',
+    courseId,
+  };
+};
+
 type DiscussionListItemProps = {
   discussion: DiscussionRecent;
   onClick: (courseId) => any;
@@ -104,25 +120,39 @@ const DiscussionListItem = ({
 };
 
 const DiscussionPanel = () => {
-  const [courseId, setCourseId] = useState('AIST1110');
+  const [courseId, setCourseId] = useState('');
+  const view = useContext(ViewContext);
+  const { data: userData, loading: userDataLoading } = useQuery(
+    GET_MY_DISCUSSIONS,
+    {
+      onError: view.handleError,
+    }
+  );
   return (
     <Card className="discussion-panel">
       <Card inPlace title="Discussions" className="discussion-list">
         <SearchDropdown />
         <div className="recent-discussions">
-          {RECENT_DISCUSSIONS_RAW.map((discussion) => (
+          {(userData?.me?.discussions || []).map((discussionRaw) => (
             <DiscussionListItem
-              key={JSON.stringify(discussion)}
-              discussion={discussion}
+              key={discussionRaw}
+              discussion={getDiscussionFromString(discussionRaw)}
               onClick={setCourseId}
             />
           ))}
         </div>
       </Card>
-      <div className="messages-wrapper">
-        <CardHeader title={courseId} />
-        <Discussion courseId={courseId} />
-      </div>
+      {validCourse(courseId) ? (
+        <div className="messages-wrapper">
+          <CardHeader title={courseId} />
+          <Discussion courseId={courseId} />
+        </div>
+      ) : (
+        <ErrorCard
+          mode={ErrorCardMode.NULL}
+          caption="Select a course to start discussion!"
+        />
+      )}
     </Card>
   );
 };
