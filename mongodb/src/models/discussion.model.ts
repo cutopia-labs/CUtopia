@@ -1,17 +1,6 @@
+import { Discussion, DiscussionMessage } from 'cutopia-types/lib/types';
 import { model, Schema } from 'mongoose';
 import { courseId, createdAt, requiredString } from '../schemas';
-
-export type DiscussionMessage = {
-  _id: number;
-  text: string;
-  user: string;
-};
-
-export type Discussion = {
-  _id: string;
-  messages: [DiscussionMessage];
-  numMessages: number;
-};
 
 const discussionMessageSchema = new Schema<DiscussionMessage>(
   {

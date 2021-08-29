@@ -1,34 +1,8 @@
+import { Review, ReviewDetail } from 'cutopia-types/lib/types';
 import { Schema, model } from 'mongoose';
 import { ratingSchema, requiredNumber, requiredString } from '../schemas';
 
-type ReviewDetailSchema = {
-  grade: number;
-  text: string;
-};
-
-type Review = {
-  id: string;
-  username: string;
-  reviewId: string;
-  title: string;
-  courseId: string;
-  term: string;
-  lecturer: string;
-  anonymous: boolean;
-  upvotes: number;
-  downvotes: number;
-  upvoteUserIds: string[];
-  downvoteUserIds: string[];
-  overall: number;
-  grading: ReviewDetailSchema;
-  teaching: ReviewDetailSchema;
-  difficulty: ReviewDetailSchema;
-  content: ReviewDetailSchema;
-  createdAt: number;
-  updatedAt: number;
-};
-
-const reviewDetailSchema = new Schema<ReviewDetailSchema>(
+const reviewDetailSchema = new Schema<ReviewDetail>(
   {
     grade: ratingSchema,
     text: {

@@ -1,3 +1,4 @@
+import { Timetable } from 'cutopia-types/lib/types';
 import { Schema, model } from 'mongoose';
 import { nanoid } from 'nanoid';
 import {
@@ -6,16 +7,6 @@ import {
   requiredString,
   createdAt,
 } from '../schemas';
-
-export type Timetable = {
-  _id: string;
-  createdAt: number;
-  entries: any[];
-  expire: number;
-  expireAt: number;
-  tableName?: string;
-  username: string;
-};
 
 const timetableSchema = new Schema<Timetable>(
   {

@@ -1,29 +1,15 @@
+import { Ranking } from 'cutopia-types/lib/types';
 import { Schema, model } from 'mongoose';
 import { requiredNumber, requiredString } from '../schemas';
-
-export type RatingFieldWithOverall =
-  | 'overall'
-  | 'grading'
-  | 'content'
-  | 'difficulty'
-  | 'teaching';
-
-export type RankEntry = {
-  _id: string; // courseId
-  val: Schema.Types.Mixed;
-};
-
-export type Ranking = {
-  _id: string; // ranking field, e.g. latest, grading
-  ranks: RankEntry[];
-  updatedAt: number;
-};
 
 // temporarily remove type due to: https://github.com/Automattic/mongoose/issues/10623
 const RankEntry = new Schema(
   {
     _id: requiredString,
-    val: requiredNumber,
+    val: {
+      type: Schema.Types.Mixed,
+      required: true,
+    },
   },
   {
     _id: false,

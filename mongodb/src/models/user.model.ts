@@ -1,26 +1,6 @@
 import { Schema, model } from 'mongoose';
-import { Timetable } from './timetable.model';
+import { User } from 'cutopia-types/lib/types';
 import { requiredString, createdAt } from '../schemas';
-
-type User = {
-  username: string;
-  SID: string;
-  password: string;
-  resetPwdCode: string;
-  email: string;
-  createdAt: number;
-  reviewIds: string[];
-  upvotes: number;
-  downvotes: number;
-  exp: number;
-  veriCode: string;
-  verified: boolean;
-  fullAccess: boolean;
-  timetables: Timetable[];
-  sharedTimetables: Timetable[];
-  viewsCount: number;
-  discussions: string[];
-};
 
 const userSchema = new Schema<User>({
   username: {

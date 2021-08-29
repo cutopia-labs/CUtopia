@@ -1,18 +1,9 @@
 import { Schema, model } from 'mongoose';
 import { nanoid } from 'nanoid';
 import { createdAt, requiredNumber, requiredString } from '../schemas';
+import { ReportDocument } from 'cutopia-types/lib/types';
 
-type Report = {
-  _id: string;
-  createdAt: number;
-  cat: number;
-  username: string;
-  description: string;
-  types?: number[];
-  identifier?: string;
-};
-
-const reportSchema = new Schema<Report>(
+const reportSchema = new Schema<ReportDocument>(
   {
     _id: {
       type: String,
@@ -32,6 +23,6 @@ const reportSchema = new Schema<Report>(
   }
 );
 
-const Report = model<Report>('Report', reportSchema);
+const Report = model<ReportDocument>('Report', reportSchema);
 
 export default Report;

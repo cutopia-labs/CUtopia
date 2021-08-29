@@ -1010,9 +1010,9 @@ cssstyle@^2.3.0:
     cssom "~0.3.6"
 
 cutopia-types@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/cutopia-types/-/cutopia-types-1.0.6.tgz#2f875cef0e7e6bcba80fda04f5ba9aae322b4761"
-  integrity sha512-XypU6boU/b54jJU2kIpGgGZadVPiaz3Jqshewu/ulayOh180ROxxQLwCWuPSUNl5HLhhioI5sjj/vfMHrTM7Cg==
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/cutopia-types/-/cutopia-types-1.0.12.tgz#0d75b3d9926b1b0c416efefb44e462371056ca6a"
+  integrity sha512-SjVodg4Yp/F8APrsg7ISwwkQ8m4FjR4kIonSbIi7up7CpNzjjp+8XFlt36/N0ZfepA+zOblOH09KefyxGo+Gng==
 
 data-urls@^2.0.0:
   version "2.0.0"

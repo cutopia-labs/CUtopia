@@ -1,19 +1,6 @@
+import { CourseDocument } from 'cutopia-types/lib/types';
 import { Schema, model } from 'mongoose';
 import { requiredNumber, requiredString } from '../schemas';
-
-type Course = {
-  _id: string;
-  lecturers: string[];
-  terms: string[];
-  rating: {
-    numReviews: number;
-    overall: number;
-    grading: number;
-    content: number;
-    difficulty: number;
-    teaching: number;
-  };
-};
 
 const courseRatingSchema = {
   type: Number,
@@ -50,6 +37,6 @@ const courseSchema = new Schema(
   }
 );
 
-const CourseModal = model<Course>('Course', courseSchema);
+const CourseModal = model<CourseDocument>('Course', courseSchema);
 
 export default CourseModal;
