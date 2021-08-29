@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
 import { useContext, useState } from 'react';
 import { MESSAGE_PREVIEW_LENGTH } from '../../constants/configs';
-
+import Loading from '../atoms/Loading';
 import { GET_MY_DISCUSSIONS } from '../../constants/queries';
 import { validCourse } from '../../helpers';
 import { ViewContext } from '../../store';
@@ -133,6 +133,7 @@ const DiscussionPanel = () => {
       <Card inPlace title="Discussions" className="discussion-list">
         <SearchDropdown />
         <div className="recent-discussions">
+          {userDataLoading && <Loading />}
           {(userData?.me?.discussions || []).map((discussionRaw) => (
             <DiscussionListItem
               key={discussionRaw}

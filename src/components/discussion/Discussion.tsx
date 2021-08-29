@@ -1,7 +1,7 @@
 import { useContext, useState, useRef, useEffect } from 'react';
 
 import './Discussion.scss';
-import { IconButton } from '@material-ui/core';
+import { Button, IconButton } from '@material-ui/core';
 import { RiSendPlaneLine } from 'react-icons/ri';
 import { useMutation, useQuery } from '@apollo/client';
 import { DiscussionMessage } from '../../types';
@@ -10,9 +10,10 @@ import { UserContext, ViewContext } from '../../store';
 import TextField from '../atoms/TextField';
 import TextIcon from '../atoms/TextIcon';
 import { GET_DISCUSSIONS } from '../../constants/queries';
-import { validCourse } from '../../helpers';
 import { SEND_MESSAGE } from '../../constants/mutations';
 import Loading from '../atoms/Loading';
+import { getMMMDDYY } from '../../helpers/getTime';
+import { MESSAGES_PER_PAGE } from '../../constants/configs';
 
 const MOCK_DISCUSSIONS = [
   {
@@ -154,10 +155,13 @@ type DiscussionProps = {
 export const Message = ({ message, isAuthor }: MessageProps) => {
   return (
     <div className="message row">
-      <TextIcon text={message.user} size={24} />
+      <TextIcon text={message.user} size={32} />
       <span>
-        <span className="message-username">{message.user}</span>
-        <span className="message-text caption">{message.text}</span>
+        <span className="message-username center-row">
+          {`${message.user} · `}
+          <span className="message-text caption">{getMMMDDYY(message.id)}</span>
+        </span>
+        <span className="message-text">{message.text}</span>
       </span>
     </div>
   );
@@ -178,7 +182,7 @@ const Discussion = ({ courseId }: DiscussionProps) => {
       {
         user: user.data.username,
         text: messageInput,
-        _id: +new Date(),
+        id: +new Date(),
       },
     ]);
     setMessageInput('');
@@ -194,20 +198,25 @@ const Discussion = ({ courseId }: DiscussionProps) => {
       setMessages((items) => items.filter((item) => item._id !== messageId));
     }
   };
-  const { loading: discussionLoading, refetch: fetchDiscussion } = useQuery(
-    GET_DISCUSSIONS,
+  const { loading: discussionLoading, refetch: fetchDiscussion } = useQuery<
+    any,
     {
-      skip: !validCourse(courseId),
-      variables: {
-        courseId,
-      },
-      onError: view.handleError,
-      onCompleted: (data) => {
-        setMessages((items) => items.concat(data?.discussion?.messages));
-        setPage(data?.discussion?.nextPage);
-      },
+      courseId: string;
+      page?: number;
     }
-  );
+  >(GET_DISCUSSIONS, {
+    variables: {
+      courseId,
+    },
+    onError: view.handleError,
+    onCompleted: (data) => {
+      console.log(`Fetched ${data}`);
+      setMessages((items) => items.concat(data?.discussion?.messages));
+      setPage(data?.discussion?.nextPage);
+    },
+    notifyOnNetworkStatusChange: true,
+    fetchPolicy: 'cache-first',
+  });
   const [
     sendMessage,
     { loading: sendMessageLoading, error: sendMessageError },
@@ -217,14 +226,39 @@ const Discussion = ({ courseId }: DiscussionProps) => {
       // remove the sended message here
     },
   });
+  const loadMore = async () => {
+    console.log(`Loading ${page}`);
+    if (page) {
+      console.log('Fetching');
+      console.log({
+        courseId,
+        page,
+      });
+      await fetchDiscussion({
+        courseId,
+        page,
+      });
+    }
+  };
   useEffect(() => {
-    messagesContainerRef.current.scrollTo({
-      top: messagesContainerRef.current.scrollHeight,
-    });
-  }, [messages?.length]);
+    if (!page && messages?.length < MESSAGES_PER_PAGE) {
+      messagesContainerRef.current.scrollTo({
+        top: messagesContainerRef.current.scrollHeight,
+      });
+    }
+  }, [messages?.length, page]);
   return (
     <div className="discussion-container">
       <div ref={messagesContainerRef} className="messages-container column">
+        {Boolean(page) && !discussionLoading && (
+          <Button
+            color="primary"
+            onClick={() => loadMore()}
+            className="load-more-btn capsule-btn"
+          >
+            Load More
+          </Button>
+        )}
         {discussionLoading && <Loading />}
         {messages.map((message) => (
           <Message

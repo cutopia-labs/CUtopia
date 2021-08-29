@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import AccordionCard from '../atoms/AccordionCard';
 import Discussion from './Discussion';
-import './DiscussionCard';
+import './DiscussionCard.scss';
 
 const DiscussionCard = ({ courseId }) => {
   const [expanded, setExpanded] = useState(false);
@@ -12,7 +12,7 @@ const DiscussionCard = ({ courseId }) => {
       title="Discussion"
       className="discussion-card"
     >
-      <Discussion courseId={courseId} />
+      {expanded && <Discussion courseId={courseId} />}
     </AccordionCard>
   );
 };

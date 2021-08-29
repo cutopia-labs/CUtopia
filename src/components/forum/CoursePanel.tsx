@@ -136,7 +136,9 @@ const CoursePanel = () => {
     },
     skip: !reviewId,
     onCompleted: (data) => {
-      setReviews([data.review]);
+      if (data.review) {
+        setReviews([data.review]);
+      }
     },
     onError: view.handleError,
   });
@@ -204,7 +206,7 @@ const CoursePanel = () => {
 
   useEffect(() => {
     console.log(`Current id: ${courseId}`);
-    if (reviews.length) {
+    if (reviews?.length) {
       setReviews([]);
     }
     if (validCourse(courseId)) {

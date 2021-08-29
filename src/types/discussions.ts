@@ -1,4 +1,5 @@
 export type DiscussionMessage = {
+  id: number;
   _id: number;
   text: string;
   user: string;
