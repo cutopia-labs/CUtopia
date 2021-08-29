@@ -55,6 +55,7 @@ export const updateCourseData = async (
       critierion =>
         (ratingInc[`rating.${critierions}`] -= oldReview[critierion].grade)
     );
+    ratingInc['rating.numReviews'] = 0;
     ratingInc['rating.overall'] -= oldReview.overall;
   }
 

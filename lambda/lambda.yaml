@@ -111,37 +111,60 @@ Resources:
       Runtime: nodejs14.x
       Timeout: 20
       MemorySize: 512
+  ScheduledUpdateRanking:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./cron-update-ranking
+      Handler: index.handler
+      Role: !GetAtt LambdaRole.Arn
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-03ed907b42c26a4ed
+        SubnetIds:
+          - subnet-0d9182dad41e3aafa
+      Runtime: nodejs14.x
+      Timeout: 20
+      MemorySize: 512
   ScheduledRemoveTimetable:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./cron-remove-timetable
       Handler: index.handler
       Role: !GetAtt LambdaRole.Arn
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-03ed907b42c26a4ed
+        SubnetIds:
+          - subnet-0d9182dad41e3aafa
       Runtime: nodejs14.x
       Timeout: 20
       MemorySize: 512
-  ScheduledRemoveTimetableRule:
-    Properties: 
+  HourlyScheduledRule:
+    Type: AWS::Events::Rule
+    Properties:
       ScheduleExpression: cron(0 0 * * ? *)
       State: ENABLED
-      Targets: 
-        - Arn: 
-            Fn::GetAtt: 
-              - ScheduledRemoveTimetable
-              - Arn
-          Id: TargetFunctionV1
-    Type: AWS::Events::Rule
-  InvokeRemoveTimetablePermission: 
+      Targets:
+        - Arn: !GetAtt ScheduledUpdateRanking.Arn
+          Id: UpdateRanking
+        - Arn: !GetAtt ScheduledRemoveTimetable.Arn
+          Id: RemoveTimetable
+  # TODO: efficient way to grant permissions
+  # of accessing multiple lambda functions in a single resource?
+  InvokeRemoveTimetablePermission:
     Type: AWS::Lambda::Permission
-    Properties: 
-      FunctionName: 
-        Ref: ScheduledRemoveTimetable
+    Properties:
+      FunctionName: !Ref ScheduledRemoveTimetable
       Action: lambda:InvokeFunction
       Principal: events.amazonaws.com
-      SourceArn: 
-        Fn::GetAtt: 
-          - ScheduledRemoveTimetableRule
-          - Arn
+      SourceArn: !GetAtt HourlyScheduledRule.Arn
+  InvokeUpdateRankingPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref ScheduledUpdateRanking
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt HourlyScheduledRule.Arn
   LambdaRole:
     Type: AWS::IAM::Role
     Properties:
@@ -164,5 +187,14 @@ Resources:
                 Effect: Allow
                 Resource:
                   - arn:aws:logs:*:*:*
+              - Action:
+                  - ec2:CreateNetworkInterface
+                  - ec2:DescribeNetworkInterfaces
+                  - ec2:DeleteNetworkInterface
+                  - ec2:AssignPrivateIpAddresses
+                  - ec2:UnassignPrivateIpAddresses
+                Effect: Allow
+                Resource:
+                  - '*'
             Version: "2012-10-17"
           PolicyName: LambdaPolicy

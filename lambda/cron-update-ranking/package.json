@@ -1,5 +1,5 @@
 {
-  "name": "cron-remove-timetable",
+  "name": "cron-update-ranking",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
