@@ -8,6 +8,7 @@ import dotenv from 'dotenv';
 import { sign } from './jwt';
 import typeDefs from './schemas';
 import resolvers from './resolvers';
+import createContext from './context';
 import schemaDirectives from './directives';
 import reviewRouter from './routes/reviews';
 import courseRouter from './routes/courses';
@@ -22,6 +23,7 @@ const schema = makeExecutableSchema({
   typeDefs,
   resolvers,
   schemaDirectives,
+  context: createContext,
 } as any);
 
 ValidateDirectiveVisitor.addValidationResolversToSchema(schema);

@@ -8,7 +8,7 @@ const withCache = async (
   if (!cacheKey) {
     return;
   }
-  const cachedData = cache.get(cacheKey);
+  const cachedData = JSON.parse(cache.get(cacheKey) || 'null');
   if (cachedData) {
     console.log(`Cached: ${JSON.stringify(cachedData)}`);
     return cachedData;
@@ -16,7 +16,7 @@ const withCache = async (
   const fetchedData = await callback();
   console.log(`Fetched: ${JSON.stringify(fetchedData)}`);
   if (fetchedData) {
-    cache.set(cacheKey, fetchedData);
+    cache.set(cacheKey, JSON.stringify(fetchedData));
   }
   return fetchedData;
 };

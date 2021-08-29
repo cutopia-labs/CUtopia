@@ -54,7 +54,8 @@ export const getDiscussion = async ({ courseId, page }: GetDiscussionProps) => {
   });
   console.log(`curr page ${page}`);
   return {
-    messages: discussion.messages,
-    nextPage: page * MESSAGES_PER_PAGE >= discussion.numMessages ? null : page,
+    messages: discussion?.messages,
+    nextPage:
+      page * MESSAGES_PER_PAGE >= (discussion?.numMessages || 0) ? null : page,
   };
 };

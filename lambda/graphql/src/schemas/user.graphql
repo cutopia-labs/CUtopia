@@ -7,6 +7,7 @@ type User {
   email: String!
   verified: Boolean!
   reviewIds: [String]!
+  discussions: [String]
   upvotes: Int!
   exp: Int!
   level: Int!
