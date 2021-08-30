@@ -47,6 +47,8 @@ import ChipsRow from '../molecules/ChipsRow';
 import useMobileQuery from '../../hooks/useMobileQuery';
 import CourseCard from './CourseCard';
 
+type SearchPanelMode = 'review' | 'planner' | 'discussion';
+
 /*
 c: courseId
 t: title
@@ -193,16 +195,18 @@ const DepartmentList = ({ setSearchPayload }) => {
   );
 };
 
-type SearchPanelProps = {
+export type SearchPanelProps = {
   searchPayloadProp?: SearchPayload;
   setSearchPayloadProp?: (payload: SearchPayload) => void;
-  onCoursePress?: () => any;
+  onCoursePress?: (...args: any[]) => any;
+  skipDefaultAction?: boolean;
 };
 
 const SearchPanel = ({
   searchPayloadProp,
   setSearchPayloadProp,
   onCoursePress,
+  skipDefaultAction,
 }: SearchPanelProps) => {
   const [searchPayload, setSearchPayloadState] = useState<SearchPayload | null>(
     searchPayloadProp
@@ -325,8 +329,10 @@ const SearchPanel = ({
             chipClassName="chip-fill"
             items={user.searchHistory.slice(0, 3)}
             onItemClick={(item) => {
-              history.push(`/${isPlanner ? 'planner' : 'review'}/${item}`);
-              onCoursePress && onCoursePress();
+              if (!skipDefaultAction) {
+                history.push(`/${isPlanner ? 'planner' : 'review'}/${item}`);
+              }
+              onCoursePress && onCoursePress(item);
             }}
           />
         </Card>
@@ -355,10 +361,14 @@ const SearchPanel = ({
               user={user}
               onClick={(courseId) => {
                 user.saveHistory(courseId);
-                history.push(
-                  `/${isPlanner ? 'planner' : 'review'}/${courseId}`
-                );
-                onCoursePress && !(isPlanner && isMobile) && onCoursePress();
+                if (!skipDefaultAction) {
+                  history.push(
+                    `/${isPlanner ? 'planner' : 'review'}/${courseId}`
+                  );
+                }
+                onCoursePress &&
+                  !(isPlanner && isMobile) &&
+                  onCoursePress(courseId);
               }}
             />
           </>

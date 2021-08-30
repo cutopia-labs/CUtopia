@@ -131,7 +131,10 @@ const DiscussionPanel = () => {
   return (
     <Card className="discussion-panel">
       <Card inPlace title="Discussions" className="discussion-list">
-        <SearchDropdown />
+        <SearchDropdown
+          skipDefaultAction
+          onCoursePress={(courseId) => setCourseId(courseId)}
+        />
         <div className="recent-discussions">
           {userDataLoading && <Loading />}
           {(userData?.me?.discussions || []).map((discussionRaw) => (

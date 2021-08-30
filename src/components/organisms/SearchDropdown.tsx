@@ -12,7 +12,7 @@ import {
 import clsx from 'clsx';
 
 import { BsChatDots, BsFillChatDotsFill } from 'react-icons/bs';
-import SearchPanel from '../forum/SearchPanel';
+import SearchPanel, { SearchPanelProps } from '../forum/SearchPanel';
 import './Header.scss';
 import SearchInput from '../molecules/SearchInput';
 import useMobileQuery from '../../hooks/useMobileQuery';
@@ -46,7 +46,8 @@ const SECTIONS = [
   },
 ];
 
-const SearchDropdown = () => {
+const SearchDropdown = (props: SearchPanelProps) => {
+  const { onCoursePress, ...searchPanelProps } = props || {};
   const [searchPayload, setSearchPayload] = useState<SearchPayload | null>(
     null
   );
@@ -82,11 +83,13 @@ const SearchDropdown = () => {
       {visible && (
         <SearchPanel
           searchPayloadProp={searchPayload}
-          onCoursePress={() => {
+          onCoursePress={(courseId) => {
             setSearchPayload(null);
             setVisible(false);
+            onCoursePress && onCoursePress(courseId);
           }}
           setSearchPayloadProp={setSearchPayload}
+          {...searchPanelProps}
         />
       )}
     </div>
