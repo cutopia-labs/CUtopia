@@ -20,7 +20,7 @@ import {
 import Loading from '../atoms/Loading';
 import { ViewContext, UserContext } from '../../store';
 import useDebounce from '../../hooks/useDebounce';
-import { LAZY_LOAD_BUFFER } from '../../constants/configs';
+import { LAZY_LOAD_BUFFER, REVIEWS_PER_PAGE } from '../../constants/configs';
 import { ReviewsFilter, ReviewsResult } from '../../types';
 import Footer from '../molecules/Footer';
 import useMobileQuery from '../../hooks/useMobileQuery';
@@ -37,6 +37,11 @@ export enum COURSE_PANEL_MODES {
   FETCH_REVIEWS,
 }
 
+const getNextPage = (currPage: number, numReviews: number) => {
+  const numLoaded = currPage * REVIEWS_PER_PAGE;
+  return numReviews > numLoaded ? currPage + 1 : null;
+};
+
 const CoursePanel = () => {
   const { id: courseId, reviewId } = useParams<{
     id?: string;
@@ -46,7 +51,7 @@ const CoursePanel = () => {
   const [mode, setMode] = useState(COURSE_PANEL_MODES.INITIAL);
   const history = useHistory();
   const [FABOpen, setFABOpen] = useState(false);
-  const [lastEvaluatedKey, setLastEvaluatedKey] = useState(undefined);
+  const [page, setPage] = useState(0);
   const [reviews, setReviews] = useState([]);
   const view = useContext(ViewContext);
   const user = useContext(UserContext);
@@ -61,8 +66,7 @@ const CoursePanel = () => {
         ...action,
       } as Partial<ReviewsFilter>),
     {
-      ascendingDate: false,
-      ascendingVote: null,
+      sortBy: '_id',
     } as Partial<ReviewsFilter>
   );
 
@@ -98,30 +102,26 @@ const CoursePanel = () => {
     ReviewsResult,
     ReviewsFilter
   >(REVIEWS_QUERY, {
-    skip: Boolean(reviewId),
+    skip:
+      Boolean(reviewId) || courseInfoLoading || !courseInfo?.courses[0]?.rating,
     variables: {
       courseId,
       ...reviewsPayload,
     },
     onCompleted: data => {
-      console.log(
-        `Fetched ${courseId} with ${lastEvaluatedKey}, updated ${JSON.stringify(
-          data.reviews.lastEvaluatedKey
-        )}`
-      );
       console.table(data);
-      if (lastEvaluatedKey) {
+      if (page) {
         setReviews(prevReviews =>
           prevReviews
-            .concat(data.reviews.reviews)
+            .concat(data.reviews)
             .filter(
               (v, i, a) => a.findIndex(m => v.createdAt === m.createdAt) === i
             )
         );
       } else {
-        setReviews(data.reviews.reviews);
+        setReviews(data.reviews);
       }
-      setLastEvaluatedKey(data.reviews.lastEvaluatedKey);
+      setPage(getNextPage(page, courseInfo?.courses[0]?.rating?.numReviews));
     },
     onError: view.handleError,
     notifyOnNetworkStatusChange: true,
@@ -165,16 +165,12 @@ const CoursePanel = () => {
     // Load and setFAB
     if (distanceFromBottom <= LAZY_LOAD_BUFFER) {
       // Fetch more here;
-      if (lastEvaluatedKey && courseId && !reviewId) {
+      if (page && courseId && !reviewId) {
         console.log('Refetching');
         await reviewsRefetch({
           courseId,
           ...reviewsPayload,
-          lastEvaluatedKey: {
-            courseId: lastEvaluatedKey.courseId,
-            createdAt: lastEvaluatedKey.createdAt,
-            upvotes: lastEvaluatedKey.upvotes,
-          },
+          page,
         });
         isMobile && setFABHidden(false);
       } else {
@@ -187,7 +183,7 @@ const CoursePanel = () => {
 
   useEffect(() => {
     if (reviews?.length) {
-      setLastEvaluatedKey(undefined);
+      setPage(undefined);
       reviewsRefetch({
         courseId,
         ...reviewsPayload,
@@ -327,7 +323,7 @@ const CoursePanel = () => {
           ))}
           {(reviewLoading || reviewsLoading) && <Loading />}
         </div>
-        {lastEvaluatedKey === null && <Footer />}
+        {page === null && <Footer />}
       </div>
       <div className="secondary-column sticky">
         <DiscussionCard courseId={courseId} />

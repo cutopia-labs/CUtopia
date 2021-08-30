@@ -103,12 +103,8 @@ export const EDIT_REVIEW = gql`
 `;
 
 export const VOTE_REVIEW = gql`
-  mutation ($courseId: String!, $createdAt: String!, $vote: Int!) {
-    voteReview(
-      input: { courseId: $courseId, createdAt: $createdAt, vote: $vote }
-    ) {
-      myVote
-    }
+  mutation ($id: String!, $vote: Int!) {
+    voteReview(input: { id: $id, vote: $vote })
   }
 `;
 

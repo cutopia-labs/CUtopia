@@ -10,8 +10,12 @@ import { FiEdit } from 'react-icons/fi';
 import clsx from 'clsx';
 
 import { CourseInfo, ReviewsFilter } from '../../types';
+import { reverseMapping } from '../../helpers';
 
-const SORTING_FIELDS = { date: 'ascendingDate', upvotes: 'ascendingVote' };
+const SORTING_FIELDS = { date: '_id', upvotes: 'upvotes' };
+const SORTING_FIELDS_REVERSE = reverseMapping(SORTING_FIELDS);
+
+console.log(`reverse ${JSON.stringify(SORTING_FIELDS_REVERSE)}`);
 
 type ReviewFilterBarProps = {
   forwardedRef?: any;
@@ -73,7 +77,7 @@ const ReviewFilterBar = ({
     }
     if (mode === ReviewFilterBarMode.SORTING) {
       console.log(reviewsPayload);
-      return reviewsPayload.ascendingDate === null ? 'vote' : 'date';
+      return SORTING_FIELDS_REVERSE[reviewsPayload.sortBy] || 'date';
     }
     return reviewsPayload[REVIEWS_CONFIGS[mode].key] || 'All';
   };
@@ -81,10 +85,8 @@ const ReviewFilterBar = ({
   const onSelect = (field: string, selected: boolean) => {
     console.log(`Setted to ${field}`);
     if (mode === ReviewFilterBarMode.SORTING) {
-      field = selected ? (field === 'date' ? 'upvotes' : 'date') : field;
       dispatchReviewsPayload({
-        ascendingDate: field === 'date' ? false : null,
-        ascendingVote: field === 'upvotes' ? false : null,
+        sortBy: selected ? '_id' : SORTING_FIELDS[field],
       });
     } else {
       dispatchReviewsPayload({
@@ -143,10 +145,15 @@ const ReviewFilterBar = ({
             disableScrollLock={true}
           >
             {(REVIEWS_CONFIGS[mode]?.selections || []).map((field: string) => {
-              console.log(`sorting ${SORTING_FIELDS[field]}`);
+              console.log(
+                `sorting ${field} ${
+                  SORTING_FIELDS_REVERSE[reviewsPayload.sortBy || '_id']
+                }`
+              );
               const selected =
                 mode === ReviewFilterBarMode.SORTING
-                  ? reviewsPayload[SORTING_FIELDS[field]] !== null
+                  ? SORTING_FIELDS_REVERSE[reviewsPayload.sortBy || '_id'] ===
+                    field
                   : reviewsPayload[REVIEWS_CONFIGS[mode].key] === field;
               return (
                 <MenuItem

@@ -45,7 +45,7 @@ export const REVIEWS_QUERY = gql`
         lecturer: $lecturer
         term: $term
         sortBy: $sortBy
-        ascending: true
+        ascending: false
       }
     ) {
       courseId
@@ -85,6 +85,7 @@ export const RECENT_REVIEWS_QUERY = gql`
       username
       title
       overall
+      createdAt
       grading {
         text
       }

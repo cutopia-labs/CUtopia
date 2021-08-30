@@ -1,5 +1,6 @@
 import { VALUE_TO_LETTER, GRADE_VALUES, GRADES } from '../constants';
 import { VALID_COURSE_RULE } from '../constants/rules';
+import { Review } from '../types';
 
 export const getSubjectAndCode = (courseId: string) => ({
   subject: courseId.substring(0, 4),
@@ -39,3 +40,6 @@ export const getLabel = (grade: number | string) => {
   }
   return 'F';
 };
+
+export const getReviewId = (review: Review) =>
+  `${review.courseId}#${review.createdAt}`;

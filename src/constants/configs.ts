@@ -14,6 +14,7 @@ export const REVIEW_EXP = 3;
 export const SIMILAR_COURSE_LIMIT = 5;
 export const MESSAGE_PREVIEW_LENGTH = 10;
 export const MESSAGES_PER_PAGE = 10;
+export const REVIEWS_PER_PAGE = 10;
 
 export const PLANNER_CONFIGS = {
   DEFAULT_TABLE_NAME: 'New Timetable',

@@ -187,6 +187,9 @@ const Discussion = ({ courseId }: DiscussionProps) => {
       },
     ]);
     setMessageInput('');
+    messagesContainerRef?.current?.scrollTo({
+      top: messagesContainerRef.current.scrollHeight,
+    });
     try {
       sendMessage({
         variables: {

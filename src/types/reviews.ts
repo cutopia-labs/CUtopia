@@ -36,10 +36,7 @@ export type ReviewDetails = {
 };
 
 export type ReviewsResult = {
-  reviews: {
-    reviews: Review[];
-    lastEvaluatedKey?: LastEvaluatedKey;
-  };
+  reviews: Review[];
 };
 
 export type LastEvaluatedKey = {
@@ -61,9 +58,9 @@ export type VoteReviewResult = {
 
 export type ReviewsFilter = {
   courseId: string;
-  getLatest?: boolean;
-  ascendingDate?: boolean;
-  ascendingVote?: boolean;
-  lastEvaluatedKey?: LastEvaluatedKey;
+  sortBy?: string;
+  page?: number;
   lecturer?: string;
+  term?: string;
+  ascending?: boolean;
 };

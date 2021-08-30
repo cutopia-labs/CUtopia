@@ -15,6 +15,7 @@ import ShowMoreOverlay from '../molecules/ShowMoreOverlay';
 import { Review } from '../../types';
 import { ViewContext } from '../../store';
 import useMobileQuery from '../../hooks/useMobileQuery';
+import { getReviewId } from '../../helpers';
 import GradeRow from './GradeRow';
 import LikeButtonsRow from './LikeButtonRow';
 
@@ -52,8 +53,7 @@ const ReviewCard = ({
     }
     const res = await voteReview({
       variables: {
-        courseId: review.courseId,
-        createdAt: review.createdAt,
+        id: getReviewId(review),
         vote,
       },
     });
