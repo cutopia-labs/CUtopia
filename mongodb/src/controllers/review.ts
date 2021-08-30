@@ -28,8 +28,8 @@ export const createReview = async input => {
 
   const newReview = new Review({
     username,
-    courseId,
     _id,
+    courseId,
     ...reviewData,
   });
 
@@ -60,7 +60,7 @@ export const voteReview = async input => {
   const voteCountField = isUpvote ? 'upvotes' : 'downvotes';
 
   const review = await Review.findById(
-    { _id: id },
+    id,
     `upvoteUserIds downvoteUserIds ${voteCountField} username`
   ).exec();
   if (!review) {
@@ -94,15 +94,19 @@ export const getReviews = async input => {
     key => query[key] === undefined && delete query[key]
   );
 
-  return withCache(reviewCache, courseId ? courseId : 'latest', async () => {
-    return await Review.find(courseId && query, null, {
-      skip: page * REVIEWS_PER_PAGE,
-      limit: REVIEWS_PER_PAGE,
-      sort: {
-        [sortBy]: ascending ? 1 : -1,
-      },
-    }).exec();
-  });
+  return withCache(
+    reviewCache,
+    courseId ? JSON.stringify(input) : 'latest', // using courseId as key will return same with diff query params
+    async () => {
+      return await Review.find(courseId && query, null, {
+        sort: {
+          [sortBy]: ascending ? 1 : -1,
+        },
+        skip: page * REVIEWS_PER_PAGE,
+        limit: REVIEWS_PER_PAGE,
+      }).exec();
+    }
+  );
 };
 
 export const editReview = async input => {

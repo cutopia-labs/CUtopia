@@ -20,7 +20,7 @@ input ReviewsFilter {
   "Filter by lecturer and term"
   lecturer: String
   term: String
-  "Sort by date or vote"
+  "Sort by date (pass _id string) or vote (pass upvotes string)"
   sortBy: String
   ascending: Boolean 
   page: Int

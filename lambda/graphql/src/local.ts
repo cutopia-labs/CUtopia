@@ -23,12 +23,12 @@ const schema = makeExecutableSchema({
   typeDefs,
   resolvers,
   schemaDirectives,
-  context: createContext,
 } as any);
 
 ValidateDirectiveVisitor.addValidationResolversToSchema(schema);
 const server = new ApolloServer({
   schema,
+  // context: createContext,
   introspection: true,
 } as any);
 

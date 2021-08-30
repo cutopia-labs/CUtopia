@@ -21,8 +21,8 @@ const reviewDetailSchema = new Schema<ReviewDetail>(
 const reviewSchema = new Schema(
   {
     _id: requiredString,
+    courseId: requiredString, // dummy for filtering
     username: requiredString,
-    courseId: requiredString,
     title: String,
     term: requiredString,
     lecturer: requiredString,
@@ -50,9 +50,10 @@ const reviewSchema = new Schema(
       updatedAt: true,
     },
     _id: false,
+    toJSON: { virtuals: true }, // to store virtuals in cache
   }
 );
-reviewSchema.index({ courseId: 1, createdAt: -1 }, { unique: true });
+reviewSchema.index({ _id: -1 }, { unique: true });
 reviewSchema.virtual('id').get(function () {
   return this._id;
 });
