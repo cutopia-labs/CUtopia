@@ -31,7 +31,7 @@ const ChangelogTab = () => {
   return (
     <Card className="about-card">
       {commits ? (
-        commits.map((commit) => (
+        commits.map(commit => (
           <ChangelogItem
             key={commit.html_url}
             committer={commit.commit.author.name}

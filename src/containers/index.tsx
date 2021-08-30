@@ -50,7 +50,7 @@ const ROUTES = [
   {
     props: {
       exact: true,
-      path: ABOUT_PAGE_ROUTES.map((route) => `/${route.label}`),
+      path: ABOUT_PAGE_ROUTES.map(route => `/${route.label}`),
     },
     children: <AboutPage />,
   },
@@ -65,7 +65,7 @@ const Navigator = () => {
   const [getUser, { data: userData, loading: userDataLoading }] = useLazyQuery<{
     me: User;
   }>(GET_USER, {
-    onCompleted: (data) => {
+    onCompleted: data => {
       if (data?.me?.username) {
         user.updateStore('data', data.me);
         Sentry.setUser({
@@ -76,7 +76,7 @@ const Navigator = () => {
         user.updateStore('loginState', LoginState.LOGGED_OUT);
       }
     },
-    onError: (e) => {
+    onError: e => {
       view.handleError(e);
       user.updateStore('loginState', LoginState.LOGGED_OUT);
     },
@@ -99,7 +99,7 @@ const Navigator = () => {
           <>
             <Header />
             <Switch>
-              {ROUTES.map((route) => (
+              {ROUTES.map(route => (
                 <Route
                   key={JSON.stringify(route?.props?.path) || '404'}
                   {...route.props}

@@ -68,7 +68,7 @@ const SectionCard = ({
         </IconButton>
       </span>
       <div className="section-detail">
-        {SECTION_CARD_ITEMS.map((item) => (
+        {SECTION_CARD_ITEMS.map(item => (
           <div className="section-detail-item" key={item.val}>
             {item.icon}
             {item.val}
@@ -88,7 +88,7 @@ const CourseSections = ({
   courseInfo: { terms: courseTerms, courseId, title, units },
 }: CourseSectionsProps) => {
   const currentTermIndex = (courseTerms || []).findIndex(
-    (term) => term.name === CURRENT_TERM
+    term => term.name === CURRENT_TERM
   );
   if (!courseTerms?.length || currentTermIndex === -1) {
     return <ErrorCard mode={ErrorCardMode.NULL} />;
@@ -107,7 +107,7 @@ const CourseSections = ({
     });
     view.setSnackBar(`Added ${courseId} ${name}`);
   };
-  const deleteInPlanner = (sectionId) => {
+  const deleteInPlanner = sectionId => {
     planner.deleteSectionInPlannerCourses({ courseId, sectionId });
   };
   const handlePreviewCourse = (hover: boolean, section: CourseSection) => {
@@ -126,7 +126,7 @@ const CourseSections = ({
     <div className="course-sections">
       <div className="course-section-wrapper">
         <span className="course-term-label">{`${courseTerms[currentTermIndex].name}`}</span>
-        {courseTerms[currentTermIndex].course_sections.map((section) => (
+        {courseTerms[currentTermIndex].course_sections.map(section => (
           <SectionCard
             key={section.name}
             section={section}

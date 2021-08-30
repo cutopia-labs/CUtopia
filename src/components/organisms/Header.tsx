@@ -51,7 +51,7 @@ const Header = () => {
   const [visible, setVisible] = useState(false);
   const isMobile = useMobileQuery();
   const [anchorEl, setAnchorEl] = useState(null);
-  const navSections = SECTIONS.map((section) => {
+  const navSections = SECTIONS.map(section => {
     const active =
       location.pathname.startsWith(section.link) &&
       (section.link.length > 1 || section.link === location.pathname);
@@ -79,7 +79,7 @@ const Header = () => {
               <IconButton
                 aria-label="sort"
                 size="small"
-                onClick={(e) => setAnchorEl(e.currentTarget)}
+                onClick={e => setAnchorEl(e.currentTarget)}
               >
                 <MenuIcon />
               </IconButton>
@@ -92,7 +92,7 @@ const Header = () => {
               open={Boolean(anchorEl)}
               onClose={() => setAnchorEl(null)}
             >
-              {SECTIONS.map((section) => (
+              {SECTIONS.map(section => (
                 <MenuItem
                   key={section.link}
                   onClick={() => [

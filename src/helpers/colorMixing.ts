@@ -9,7 +9,7 @@ const hexTorgba = (hex: string): string => {
 const rgbaToArray = (rgba: string) => {
   const arr = rgba.substr(5).split(')')[0].split(',');
   if (arr.indexOf('/') > -1) arr.splice(3, 1);
-  return arr.map((x) => parseFloat(x));
+  return arr.map(x => parseFloat(x));
 };
 
 const colorMixing = (color: string, base: string) => {

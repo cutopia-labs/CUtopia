@@ -27,7 +27,7 @@ export default function LikeButtonsRow({
 }) {
   return (
     <div className="like-btn-row center-row">
-      {[1, 0].map((label) => (
+      {[1, 0].map(label => (
         <Fragment key={label}>
           <LikeButton
             isLike={Boolean(label)}

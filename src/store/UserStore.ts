@@ -65,7 +65,7 @@ class UserStore extends StorePrototype {
 
   @action async applyUserStore() {
     await Promise.all(
-      LOAD_KEYS.map(async (key) => {
+      LOAD_KEYS.map(async key => {
         const retrieved = await getStoreData(key);
         this.updateStore(key, retrieved);
       })
@@ -129,7 +129,7 @@ class UserStore extends StorePrototype {
   @action async logout() {
     this.setLogout();
     await Promise.all(
-      LOGOUT_KEYS.map(async (key) => {
+      LOGOUT_KEYS.map(async key => {
         await removeStoreItem(key);
       })
     );
@@ -143,15 +143,15 @@ class UserStore extends StorePrototype {
 
   // Fav courses
 
-  @action checkIsFavourite = (courseId) =>
-    this.favoriteCourses.some((course) => course.courseId === courseId);
+  @action checkIsFavourite = courseId =>
+    this.favoriteCourses.some(course => course.courseId === courseId);
 
   @action async toggleFavourite(courseInfo: CourseInfo, isFavourite?: boolean) {
     if (isFavourite || this.checkIsFavourite(courseInfo.courseId)) {
       this.setStore(
         'favoriteCourses',
         [...this.favoriteCourses].filter(
-          (course) => course.courseId !== courseInfo.courseId
+          course => course.courseId !== courseInfo.courseId
         )
       );
     } else {
@@ -172,12 +172,12 @@ class UserStore extends StorePrototype {
     if (temp.length >= HISTORY_MAX_LENGTH) {
       temp.pop();
     }
-    temp = [courseId].concat(temp.filter((saved) => saved !== courseId));
+    temp = [courseId].concat(temp.filter(saved => saved !== courseId));
     this.setStore('searchHistory', temp);
   }
 
   @action async deleteHistory(courseId) {
-    const temp = this.searchHistory.filter((hist) => hist !== courseId);
+    const temp = this.searchHistory.filter(hist => hist !== courseId);
     this.setStore('searchHistory', temp);
   }
 
@@ -186,7 +186,7 @@ class UserStore extends StorePrototype {
     this.init();
     // Clear user related asyncstorage
     await Promise.all(
-      RESET_KEYS.map(async (key) => {
+      RESET_KEYS.map(async key => {
         await removeStoreItem(key);
       })
     );

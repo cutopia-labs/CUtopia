@@ -22,7 +22,7 @@ export const CoursesList = ({ loading, courses }: CoursesListProps) => {
         <Loading />
       ) : (
         <div className="home-course-container card">
-          {courses?.map((course) => (
+          {courses?.map(course => (
             <Link key={course.courseId} to={`/review/${course.courseId}`}>
               <ListItem
                 className="search-list-item column home-course-list-item"
@@ -48,7 +48,7 @@ export const ReviewsList = ({ reviewIds }: ReviewsListProps) => {
   }
   return (
     <div className="home-course-container card">
-      {reviewIds?.map((id) => {
+      {reviewIds?.map(id => {
         const [courseId, createdAt] = id.split('#');
         return (
           <Link key={id} to={`/review/${courseId}/${createdAt}`}>

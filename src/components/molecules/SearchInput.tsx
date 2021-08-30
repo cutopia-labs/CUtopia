@@ -47,14 +47,14 @@ export default function SearchInput({
     return SearchInputMode.SHOW_DROPDOWN;
   };
 
-  const onIconButtonPress = async (e) => {
+  const onIconButtonPress = async e => {
     e.stopPropagation();
     switch (getButtonActionMode()) {
       case SearchInputMode.SHOW_DROPDOWN:
         if (isMobile && inputRef.current) {
           console.log('Hi');
           setVisible(true);
-          await new Promise((resolve) => setTimeout(resolve, 100));
+          await new Promise(resolve => setTimeout(resolve, 100));
           inputRef.current.focus();
         }
         break;
@@ -85,7 +85,7 @@ export default function SearchInput({
         type="submit"
         className="search-input-icon"
         aria-label="search"
-        onClick={(e) => onIconButtonPress(e)}
+        onClick={e => onIconButtonPress(e)}
       >
         {getButtonActionMode() === SearchInputMode.SHOW_DROPDOWN ? (
           <SearchIcon />
@@ -98,7 +98,7 @@ export default function SearchInput({
         className="search-input"
         placeholder="Search for courses"
         value={searchPayload?.text || ''}
-        onChange={(e) =>
+        onChange={e =>
           setSearchPayload(
             e.target.value
               ? {

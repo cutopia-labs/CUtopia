@@ -41,7 +41,7 @@ const CourseCard = ({ courseInfo, concise, loading }: CourseCardProps) => {
   }
 
   const isFavorited = user.favoriteCourses.some(
-    (course) => course.courseId === courseInfo.courseId
+    course => course.courseId === courseInfo.courseId
   );
 
   return (
@@ -51,7 +51,7 @@ const CourseCard = ({ courseInfo, concise, loading }: CourseCardProps) => {
         concise && 'concise',
         !showMore && 'retracted'
       )}
-      ref={(ref) => {
+      ref={ref => {
         // Wrap if course-card is too long
         if (
           !skipHeightCheck &&
@@ -152,8 +152,8 @@ const CourseCard = ({ courseInfo, concise, loading }: CourseCardProps) => {
             ...(Array.isArray(courseInfo.components)
               ? courseInfo.components
               : (courseInfo.components || '').match(/[A-Z][a-z]+/g) || []
-            ).map((item) => item && [item]),
-            ...(courseInfo.assessments || []).map((assessment) => [
+            ).map(item => item && [item]),
+            ...(courseInfo.assessments || []).map(assessment => [
               assessment.name,
               parseInt(assessment.percentage, 10) || false,
             ]),
@@ -178,8 +178,8 @@ const CourseCard = ({ courseInfo, concise, loading }: CourseCardProps) => {
       {!concise && (
         <>
           {['requirements', 'outcome']
-            .filter((key) => courseInfo[key] && courseInfo[key] !== '') // filter off empty strings
-            .map((key) => (
+            .filter(key => courseInfo[key] && courseInfo[key] !== '') // filter off empty strings
+            .map(key => (
               <SectionText
                 key={key}
                 title={key.replaceAll('_', ' ')}

@@ -94,7 +94,7 @@ const TimetableShareDialogContent = ({
   mode,
 }) => (
   <>
-    {MODE_ASSETS[mode]?.sections?.map((section) => (
+    {MODE_ASSETS[mode]?.sections?.map(section => (
       <Section title={section.label} key={section.key}>
         <ChipsRow
           items={section.chips}
@@ -102,7 +102,7 @@ const TimetableShareDialogContent = ({
             getLabelFromKey[shareConfig[section.key]] ||
             shareConfig[section.key]
           }
-          setSelect={(item) => dispatchShareConfig({ [section.key]: item })}
+          setSelect={item => dispatchShareConfig({ [section.key]: item })}
         />
       </Section>
     ))}
@@ -179,10 +179,10 @@ const PlannerTimetable = ({ className }: PlannerTimetableProps) => {
         key: data.timetable.createdAt,
         label: data.timetable.tableName,
         courses:
-          data.timetable.entries.map((course) => ({
+          data.timetable.entries.map(course => ({
             ...course,
             sections: Object.fromEntries(
-              course.sections.map((section) => [section.name, section])
+              course.sections.map(section => [section.name, section])
             ),
           })) || [],
       };
@@ -196,7 +196,7 @@ const PlannerTimetable = ({ className }: PlannerTimetableProps) => {
     SHARE_TIMETABLE,
     {
       onCompleted: handleCompleted(
-        (data) => {
+        data => {
           const uploadTimetable = data?.uploadTimetable;
           if (getExpire(shareConfig?.expire) === -1) {
             setShareCourses(null);
@@ -227,23 +227,23 @@ const PlannerTimetable = ({ className }: PlannerTimetableProps) => {
     }
   );
 
-  const onShareTimetTable = async (e) => {
+  const onShareTimetTable = async e => {
     e.preventDefault();
     console.table(shareCourses);
     if (shareCourses?.courses?.length) {
       const data = {
         entries: shareCourses.courses
           .filter(
-            (course) =>
+            course =>
               course &&
               course.sections &&
               Object.values(course.sections)?.length
           )
-          .map((course) => ({
+          .map(course => ({
             ...course,
             sections: Object.values(course?.sections || {})
-              .filter((section) => section && !section.hide)
-              .map((section) => {
+              .filter(section => section && !section.hide)
+              .map(section => {
                 const { hide, ...shareSection } = section;
                 return shareSection;
               }),
@@ -280,26 +280,24 @@ const PlannerTimetable = ({ className }: PlannerTimetableProps) => {
         className={className}
         courses={planner.plannerCourses
           ?.concat(planner.previewPlannerCourse)
-          .filter((course) => course)}
+          .filter(course => course)}
         timetableInfo={plannerStore.timetableInfo}
-        onImport={(parsedData) =>
-          planner.setStore('plannerCourses', parsedData)
-        }
+        onImport={parsedData => planner.setStore('plannerCourses', parsedData)}
         onClear={() => planner.clearPlannerCourses()}
-        onUpload={(courses) =>
+        onUpload={courses =>
           setShareCourses({
             courses: courses,
             mode: ShareTimetableMode.UPLOAD,
           })
         }
-        onShare={(courses) =>
+        onShare={courses =>
           setShareCourses({
             courses: courses,
             mode: ShareTimetableMode.SHARE,
           })
         }
         selections={planner.plannerList}
-        onSelect={(key) => planner.updateCurrentPlanner(key)}
+        onSelect={key => planner.updateCurrentPlanner(key)}
         selected={{
           key: planner.currentPlannerKey,
           label:

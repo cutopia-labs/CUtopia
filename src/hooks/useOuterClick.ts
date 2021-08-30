@@ -13,7 +13,7 @@ const useOuterClick = (
   });
 
   useEffect(() => {
-    const handleClick = (e) => {
+    const handleClick = e => {
       if (skip) {
         return;
       }

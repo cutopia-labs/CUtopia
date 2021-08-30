@@ -132,7 +132,7 @@ const TimetablePanel = ({
           <>
             <Button
               size="small"
-              onClick={(e) => setAnchorEl(e.currentTarget)}
+              onClick={e => setAnchorEl(e.currentTarget)}
               endIcon={<ExpandMore />}
             >
               {selected.label || PLANNER_CONFIGS.DEFAULT_TABLE_NAME}
@@ -146,7 +146,7 @@ const TimetablePanel = ({
               <h4 className="subheading">Title</h4>
               <form
                 className="timetable-label-input-container"
-                onSubmit={(e) => {
+                onSubmit={e => {
                   e.preventDefault();
                   if (labelInput !== selected.label) {
                     setLabel(labelInput);
@@ -156,7 +156,7 @@ const TimetablePanel = ({
                 <InputBase
                   placeholder="Enter Label"
                   value={labelInput}
-                  onChange={(e) => {
+                  onChange={e => {
                     setLabelInput(e.target.value);
                   }}
                   inputProps={{ 'aria-label': 'search' }}
@@ -167,7 +167,7 @@ const TimetablePanel = ({
               </form>
               <Divider />
               <h4 className="subheading">Timetables</h4>
-              {selections.map((item) => (
+              {selections.map(item => (
                 <MenuItem
                   className="timetable-select-item"
                   key={item.key}
@@ -176,7 +176,7 @@ const TimetablePanel = ({
                 >
                   {item.label}
                   <IconButton
-                    onClick={(e) => {
+                    onClick={e => {
                       e.stopPropagation();
                       e.preventDefault();
                       deleteTable(item.key);
@@ -201,7 +201,7 @@ const TimetablePanel = ({
         )}
         {Boolean(courses?.length) && (
           <div className="btn-row center-row">
-            {FUNCTION_BUTTONS.map((item) => (
+            {FUNCTION_BUTTONS.map(item => (
               <IconButton key={item.key} size="small" onClick={item.action}>
                 {item.icon}
               </IconButton>
@@ -235,7 +235,7 @@ const TimetablePanel = ({
             label="JSON"
             type="text"
             fullWidth
-            onChange={(e) => setImportInput(e.target.value)}
+            onChange={e => setImportInput(e.target.value)}
           />
         </DialogContent>
         <DialogActions>

@@ -61,7 +61,7 @@ class PlannerStore extends StorePrototype {
     };
     this.plannerCourses?.forEach((course, i) => {
       let unhide = false;
-      Object.values(course.sections).forEach((section) => {
+      Object.values(course.sections).forEach(section => {
         if (!section.hide) {
           unhide = true;
           section.days.forEach((day, i) => {
@@ -78,7 +78,7 @@ class PlannerStore extends StorePrototype {
       }
     });
     Object.values(info.weekdayAverageHour).forEach(
-      (hr) => (info.averageHour += hr)
+      hr => (info.averageHour += hr)
     );
     info.averageHour /= maxDay;
     return info;
@@ -87,7 +87,7 @@ class PlannerStore extends StorePrototype {
   get hidedSections() {
     const sections = [];
     this.plannerCourses?.forEach((course, i) =>
-      Object.values(course.sections).forEach((section) => {
+      Object.values(course.sections).forEach(section => {
         if (section.hide) {
           sections.push({
             ...section,
@@ -101,7 +101,7 @@ class PlannerStore extends StorePrototype {
   }
 
   get plannerList() {
-    return Object.values(this.planners).map((planner) => ({
+    return Object.values(this.planners).map(planner => ({
       key: planner.key,
       label: planner.label || PLANNER_CONFIGS.DEFAULT_TABLE_NAME,
     })) as PlannerItem[];
@@ -114,7 +114,7 @@ class PlannerStore extends StorePrototype {
   get overlapSections() {
     const sections = [];
     this.plannerCourses?.forEach((course, i) =>
-      Object.values(course.sections).forEach((section) => {
+      Object.values(course.sections).forEach(section => {
         if (section && !section.hide) {
           sections.push({
             ...section,
@@ -158,14 +158,14 @@ class PlannerStore extends StorePrototype {
     this.init();
     // Clear user related asyncstorage
     await Promise.all(
-      LOCAL_STORAGE_KEYS.map(async (key) => {
+      LOCAL_STORAGE_KEYS.map(async key => {
         await removeStoreItem(key);
       })
     );
   }
 
-  @action.bound findIndexInPlanner = (courseId) =>
-    this.plannerCourses?.findIndex((item) => item.courseId === courseId);
+  @action.bound findIndexInPlanner = courseId =>
+    this.plannerCourses?.findIndex(item => item.courseId === courseId);
 
   @action.bound validKey = (key: number) =>
     Boolean(this.initiated && this.planners && key && key in this.planners);
@@ -200,7 +200,7 @@ class PlannerStore extends StorePrototype {
 
   @action async applyPlannerStore() {
     await Promise.all(
-      LOCAL_STORAGE_KEYS.map(async (key) => {
+      LOCAL_STORAGE_KEYS.map(async key => {
         const retrieved = await getStoreData(key);
         this.updateStore(key, retrieved);
       })
@@ -233,7 +233,7 @@ class PlannerStore extends StorePrototype {
       withUndo(
         {
           prevData: this.planners,
-          setData: (prevData) => this.setStore('planners', prevData),
+          setData: prevData => this.setStore('planners', prevData),
           message: 'Deleted planner!',
           stringify: true,
           viewStore: this.viewStore,
@@ -254,7 +254,7 @@ class PlannerStore extends StorePrototype {
     withUndo(
       {
         prevData: [...this.plannerCourses],
-        setData: (prevData) => this.setStore('plannerCourses', prevData),
+        setData: prevData => this.setStore('plannerCourses', prevData),
         message: 'Cleared planner!',
         viewStore: this.viewStore,
       },
@@ -286,14 +286,14 @@ class PlannerStore extends StorePrototype {
     plannerCourses?: PlannerCourse[]
   ) =>
     (plannerCourses || this.plannerCourses).filter(
-      (course) => Object.keys(course.sections)?.length
+      course => Object.keys(course.sections)?.length
     );
 
   @action async removeHidedCourses() {
     withUndo(
       {
         prevData: this.plannerCourses,
-        setData: (prevData) => this.setStore('plannerCourses', prevData),
+        setData: prevData => this.setStore('plannerCourses', prevData),
         message: 'Removed unchecked courses',
         stringify: true,
         viewStore: this.viewStore,
@@ -340,7 +340,7 @@ class PlannerStore extends StorePrototype {
       withUndo(
         {
           prevData: this.plannerCourses,
-          setData: (prevData) => this.setStore('plannerCourses', prevData),
+          setData: prevData => this.setStore('plannerCourses', prevData),
           message: 'Section deleted!',
           stringify: true,
           viewStore: this.viewStore,
@@ -373,7 +373,7 @@ class PlannerStore extends StorePrototype {
       withUndo(
         {
           prevData: [...this.plannerCourses],
-          setData: (prevData) => this.setStore('plannerCourses', prevData),
+          setData: prevData => this.setStore('plannerCourses', prevData),
           message: 'Course deleted!',
           viewStore: this.viewStore,
         },

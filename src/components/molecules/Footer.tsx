@@ -81,7 +81,7 @@ type FooterProps = {
 
 const Footer = ({ mt }: FooterProps) => (
   <div className={clsx('footer', mt && 'mt')}>
-    {FOOTER_ITEMS.map((item) => renderItem(item))}
+    {FOOTER_ITEMS.map(item => renderItem(item))}
   </div>
 );
 

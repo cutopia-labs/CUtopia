@@ -23,7 +23,7 @@ const TimetableTicks = ({ config }: PropsWithConfig<{}>) => {
       {Array.from(
         { length: config.endHour - config.startHour + 1 },
         (_, i) => config.startHour + i
-      ).map((hour) => (
+      ).map(hour => (
         <div className="time-line-box" key={`Timeline:${hour}`}>
           {hour !== config.startHour
             ? `${hour > 9 ? '' + hour : '0' + hour}:00`
@@ -49,7 +49,7 @@ const WeekdayText = ({
 
   return (
     <>
-      {Array.from({ length: config.numOfDays }, (_, i) => 1 + i).map((day) => {
+      {Array.from({ length: config.numOfDays }, (_, i) => 1 + i).map(day => {
         const differenceOfDate = day - currentWeekday;
         const thatDay = new Date();
         thatDay.setDate(new Date().getDate() + differenceOfDate);
@@ -88,7 +88,7 @@ const Timetable = ({ courses, timetableInfo }: TimetableProps) => {
 
   try {
     courses
-      .filter((course) => course)
+      .filter(course => course)
       .forEach((course, i) => {
         Object.entries(course.sections).forEach(([k, v]) => {
           (v.days || []).forEach((day, i) => {

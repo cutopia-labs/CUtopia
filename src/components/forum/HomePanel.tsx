@@ -85,11 +85,11 @@ const RecentReviewList = ({ reviews, loading }: RecentReviewListProps) => {
   if (!reviews || !reviews.length) return null;
   return (
     <div className="grid-auto-row">
-      {reviews.map((review) => (
+      {reviews.map(review => (
         <RecentReviewCard
           key={review.createdAt}
           review={review}
-          onClick={(id) => history.push(`/review/${id}`)}
+          onClick={id => history.push(`/review/${id}`)}
         />
       ))}
     </div>
@@ -204,13 +204,13 @@ const HomePanel = () => {
             className="recent-chips"
             chipClassName="chip-fill"
             items={user.searchHistory}
-            onItemClick={(item) => history.push(`/review/${item}`)}
+            onItemClick={item => history.push(`/review/${item}`)}
           />
         </Card>
         <FeedCard
           title="Suggestions"
           courses={feedCourses}
-          onItemClick={(course) => history.push(`/review/${course.courseId}`)}
+          onItemClick={course => history.push(`/review/${course.courseId}`)}
         />
       </div>
     </>

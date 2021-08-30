@@ -27,7 +27,7 @@ const ChipsRow = ({
   }
   return (
     <div className={clsx('chips-row', className)} {...props}>
-      {items.map((item) => (
+      {items.map(item => (
         <Chip
           key={item}
           className={clsx(

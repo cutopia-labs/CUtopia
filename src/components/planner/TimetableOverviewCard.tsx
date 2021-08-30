@@ -56,7 +56,7 @@ const getCombinedTimetable = (data): TimetableOverviewWithMode[] => {
         a.createdAt > b.createdAt ? -1 : 1
       )
     )
-    .map((item) => ({
+    .map(item => ({
       ...item,
       mode: getTimetableOverviewMode(item.expire),
     }));
@@ -114,7 +114,7 @@ const TimetableOverviewListItem = ({
         <IconButton
           size="small"
           color="primary"
-          onClick={(e) => setAnchorEl(e.currentTarget)}
+          onClick={e => setAnchorEl(e.currentTarget)}
         >
           <MoreHoriz />
         </IconButton>
@@ -124,7 +124,7 @@ const TimetableOverviewListItem = ({
           open={Boolean(anchorEl)}
           onClose={() => setAnchorEl(null)}
         >
-          {menuItems.map((item) => (
+          {menuItems.map(item => (
             <MenuItem
               key={item.label}
               onClick={() => {
@@ -157,7 +157,7 @@ const TimetableOverviewCard = () => {
     getUserTimetable,
     { data: userTimetable, loading: userTimetableLoading },
   ] = useLazyQuery(GET_USER_TIMETABLES, {
-    onCompleted: async (data) => {
+    onCompleted: async data => {
       console.log(getCombinedTimetable(data));
       setCombinedTimetables(getCombinedTimetable(data));
     },
@@ -188,9 +188,7 @@ const TimetableOverviewCard = () => {
           id,
         },
       });
-      setCombinedTimetables((items) =>
-        [...items].filter((item) => item.id !== id)
-      );
+      setCombinedTimetables(items => [...items].filter(item => item.id !== id));
       view.setSnackBar('Deleted!');
     } catch (e) {
       // To skip remove entry in state in case of any error
@@ -204,7 +202,7 @@ const TimetableOverviewCard = () => {
     if (!combinedTimetables.length) {
       return <ErrorCard mode={ErrorCardMode.NULL} />;
     }
-    return combinedTimetables.map((item) => (
+    return combinedTimetables.map(item => (
       <TimetableOverviewListItem
         key={`${item.createdAt}${item.id}`}
         item={item}

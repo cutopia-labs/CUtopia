@@ -99,7 +99,7 @@ const ReportIssuesDialogContent = observer(
       ),
       onError: view.handleError,
     });
-    const submit = async (e) => {
+    const submit = async e => {
       e.preventDefault();
       await report({
         variables: {
@@ -121,7 +121,7 @@ const ReportIssuesDialogContent = observer(
                 'term-selection-anchor input-container report-issue-category',
                 issueData.type === null && 'caption'
               )}
-              onClick={(e) => setAnchorEl(e.currentTarget)}
+              onClick={e => setAnchorEl(e.currentTarget)}
             >
               {currentModeMessages[issueData.type] ||
                 'Please select a cetegory'}
@@ -155,7 +155,7 @@ const ReportIssuesDialogContent = observer(
               placeholder="Please describe the issue..."
               value={issueData.description}
               Tag="textarea"
-              onChangeText={(text) => dispatchIssueData({ description: text })}
+              onChangeText={text => dispatchIssueData({ description: text })}
             />
           </Section>
           <div className="share-btn-row center-row">

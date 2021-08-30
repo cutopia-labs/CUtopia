@@ -38,7 +38,7 @@ const LINKS = [
 const LinksCard = () => (
   <Card className="links-card">
     <Typography>Links</Typography>
-    {LINKS.map((link) => (
+    {LINKS.map(link => (
       <Link url={link.url} label={link.name} key={link.url} />
     ))}
   </Card>

@@ -113,7 +113,7 @@ const ReviewFilterBar = ({
                       'selected'
                   )}
                   size="small"
-                  onClick={(e) => [
+                  onClick={e => [
                     setMode(parseInt(k, 10)),
                     setAnchorEl(e.currentTarget),
                   ]}

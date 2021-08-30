@@ -32,8 +32,8 @@ const RANDOM_COLOR_DARK_SHADE = 200;
 const TIMETABLE_COLOR_SHADE = 300;
 const GRADE_COLOR_SHADE = 500;
 
-const getRandomColorsFromShade = (shade) =>
-  RANDOM_COLOR_BASES.map((color) => color[shade]);
+const getRandomColorsFromShade = shade =>
+  RANDOM_COLOR_BASES.map(color => color[shade]);
 
 const LIGHT_RANDOM_COLORS = getRandomColorsFromShade(RANDOM_COLOR_SHADE);
 const DARK_RANDOM_COLORS = getRandomColorsFromShade(RANDOM_COLOR_DARK_SHADE);

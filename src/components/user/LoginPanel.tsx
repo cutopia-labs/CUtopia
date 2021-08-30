@@ -155,7 +155,7 @@ const LoginPanel = () => {
       onCompleted: handleCompleted(() => loginAndRedirect(), {
         view,
       }),
-      onError: (e) => {
+      onError: e => {
         view.handleError(e);
         history.push('/verify');
       },
@@ -164,7 +164,7 @@ const LoginPanel = () => {
   const [loginCUtopia, { loading: loggingInCUtopia }] = useMutation(
     LOGIN_CUTOPIA,
     {
-      onCompleted: handleCompleted(async (data) => {
+      onCompleted: handleCompleted(async data => {
         history.push('/');
         await user.saveUser(username, data.login?.token);
       }),
@@ -242,10 +242,10 @@ const LoginPanel = () => {
       password: passwordMissingError || passwordSignUpError,
     };
     setErrors(errorsFound);
-    return !Object.values(errorsFound).some((e) => e);
+    return !Object.values(errorsFound).some(e => e);
   };
 
-  const onSubmit = async (e) => {
+  const onSubmit = async e => {
     e.preventDefault();
     if (!validate()) {
       return;
@@ -339,7 +339,7 @@ const LoginPanel = () => {
             placeholder={MODE_ITEMS[mode].userId}
             type="number"
             value={userId}
-            onChangeText={(text) => setUserId(text)}
+            onChangeText={text => setUserId(text)}
             label="CUHK SID"
           />
         )}
@@ -348,7 +348,7 @@ const LoginPanel = () => {
             error={errors.username}
             placeholder={MODE_ITEMS[mode].username}
             value={username}
-            onChangeText={(text) => setUsername(text)}
+            onChangeText={text => setUsername(text)}
             label="Username"
           />
         )}
@@ -358,7 +358,7 @@ const LoginPanel = () => {
             placeholder={MODE_ITEMS[mode].password}
             defaultValue=""
             value={password}
-            onChangeText={(text) => setPassword(text)}
+            onChangeText={text => setPassword(text)}
             type={invisible ? 'password' : 'text'}
             label="Password"
           />
@@ -368,7 +368,7 @@ const LoginPanel = () => {
             error={errors.verification}
             placeholder={MODE_ITEMS[mode].verificationCode}
             value={verificationCode}
-            onChangeText={(text) => setVerificationCode(text)}
+            onChangeText={text => setVerificationCode(text)}
             label="Verification Code"
           />
         )}

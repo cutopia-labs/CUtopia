@@ -18,7 +18,7 @@ const FeedCard = ({
   ...props
 }: FeedCardProps & CardProps) => (
   <Card className={clsx('feed-card', className)} title={title} {...props}>
-    {courses.map((course) => (
+    {courses.map(course => (
       <ListItem
         key={course.courseId}
         title={course.courseId}

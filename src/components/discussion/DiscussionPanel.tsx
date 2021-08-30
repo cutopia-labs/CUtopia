@@ -133,11 +133,11 @@ const DiscussionPanel = () => {
       <Card inPlace title="Discussions" className="discussion-list">
         <SearchDropdown
           skipDefaultAction
-          onCoursePress={(courseId) => setCourseId(courseId)}
+          onCoursePress={courseId => setCourseId(courseId)}
         />
         <div className="recent-discussions">
           {userDataLoading && <Loading />}
-          {(userData?.me?.discussions || []).map((discussionRaw) => (
+          {(userData?.me?.discussions || []).map(discussionRaw => (
             <DiscussionListItem
               key={discussionRaw}
               discussion={getDiscussionFromString(discussionRaw)}

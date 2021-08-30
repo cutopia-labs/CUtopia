@@ -58,9 +58,9 @@ const DEFAULT_REVIEW = Object.freeze({
 });
 
 const TERMS_OPTIONS = [
-  ...academicYears.flatMap((year) =>
+  ...academicYears.flatMap(year =>
     ['Summer', 'Term 2', 'Term 1'].map(
-      (suffix) =>
+      suffix =>
         `${year.toString()}-${(year + 1).toString().substring(2)} ${suffix}`
     )
   ),
@@ -210,7 +210,7 @@ const ReviewEdit = ({ courseId }) => {
   const [addReview, { loading: addReviewLoading, error: addReviewError }] =
     useMutation(ADD_REVIEW, {
       onCompleted: handleCompleted(
-        (data) => {
+        data => {
           const id = data?.createReview?.createdAt;
           if (id) {
             history.push(`/review/${courseId}/${id}`);
@@ -246,9 +246,7 @@ const ReviewEdit = ({ courseId }) => {
       lecturer: '',
       title: '',
       overall: 3,
-      ...Object.fromEntries(
-        RATING_FIELDS.map((type) => [type, DEFAULT_REVIEW])
-      ),
+      ...Object.fromEntries(RATING_FIELDS.map(type => [type, DEFAULT_REVIEW])),
     }
   );
   const user = useContext(UserContext);
@@ -265,7 +263,7 @@ const ReviewEdit = ({ courseId }) => {
     onError: view.handleError,
   });
 
-  const submit = (e) => {
+  const submit = e => {
     e.preventDefault();
     if (progress < 100) {
       view.setSnackBar({
@@ -338,30 +336,30 @@ const ReviewEdit = ({ courseId }) => {
   useEffect(
     () => {
       const overallAverage =
-        RATING_FIELDS.map((type) => formData[type].grade).reduce(
+        RATING_FIELDS.map(type => formData[type].grade).reduce(
           (acc, v) => acc + v
         ) / RATING_FIELDS.length;
       dispatchFormData({ overall: Math.round(overallAverage) }); // later detemine round or floor
     },
-    RATING_FIELDS.map((type) => formData[type].grade)
+    RATING_FIELDS.map(type => formData[type].grade)
   );
 
   useEffect(
     () => {
       const combinedReviewText = RATING_FIELDS.map(
-        (type) => formData[type].text
+        type => formData[type].text
       ).reduce((acc, v) => acc + v);
       const count = wordCount(combinedReviewText);
       setProgress((count * 100) / TARGET_REVIEW_WORD_COUNT);
     },
-    RATING_FIELDS.map((type) => formData[type].text)
+    RATING_FIELDS.map(type => formData[type].text)
   );
 
   useEffect(() => {
     searchLecturers({
       payload: formData.lecturer,
       limit: isMobile ? 4 : 6,
-    }).then((result) => setInstructorsSearchResult(result));
+    }).then(result => setInstructorsSearchResult(result));
   }, [formData.lecturer]);
 
   return (
@@ -409,7 +407,7 @@ const ReviewEdit = ({ courseId }) => {
       <FormSection title="term">
         <div
           className="term-selection-anchor input-container"
-          onClick={(e) => setAnchorEl(e.currentTarget)}
+          onClick={e => setAnchorEl(e.currentTarget)}
         >
           {formData.term || 'Please select a term'}
         </div>
@@ -438,14 +436,14 @@ const ReviewEdit = ({ courseId }) => {
         <TextField
           placeholder="(Optional) Your Review Title"
           value={formData.title}
-          onChangeText={(text) => dispatchFormData({ title: text })}
+          onChangeText={text => dispatchFormData({ title: text })}
         />
       </FormSection>
       <FormSection title="lecturer" className="lecturer">
         <TextField
           placeholder="Please input your course instructor here."
           value={formData.lecturer}
-          onChangeText={(text) => dispatchFormData({ lecturer: text })}
+          onChangeText={text => dispatchFormData({ lecturer: text })}
           ref={lecturerInputRef}
           onFocus={() => setShowLecturers(true)}
           onBlur={() => setShowLecturers(false)}
@@ -456,8 +454,8 @@ const ReviewEdit = ({ courseId }) => {
               <Loading />
             ) : (
               instructorsSearchResult
-                .filter((item) => formData.lecturer !== item)
-                .map((lecturer) => (
+                .filter(item => formData.lecturer !== item)
+                .map(lecturer => (
                   <ListItem
                     key={`listitem-${lecturer}`}
                     onMouseDown={() => dispatchFormData({ lecturer })}
@@ -469,15 +467,15 @@ const ReviewEdit = ({ courseId }) => {
         )}
       </FormSection>
       <div className="review-sections-container grid-auto-row">
-        {RATING_FIELDS.map((type) => (
+        {RATING_FIELDS.map(type => (
           <ReviewSection
             key={type}
             type={type}
             value={formData[type]}
-            onChangeText={(text) =>
+            onChangeText={text =>
               dispatchFormData({ [type]: { ...formData[type], text } })
             }
-            onChangeGrade={(grade) =>
+            onChangeGrade={grade =>
               dispatchFormData({ [type]: { ...formData[type], grade } })
             }
           />
@@ -487,7 +485,7 @@ const ReviewEdit = ({ courseId }) => {
         <ReviewSection
           type="overall"
           value={formData.overall}
-          onChangeGrade={(grade) => dispatchFormData({ overall: grade })}
+          onChangeGrade={grade => dispatchFormData({ overall: grade })}
         />
         <ReviewSubmit
           disabled={!validation()}

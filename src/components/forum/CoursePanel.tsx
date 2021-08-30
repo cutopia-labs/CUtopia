@@ -103,7 +103,7 @@ const CoursePanel = () => {
       courseId,
       ...reviewsPayload,
     },
-    onCompleted: (data) => {
+    onCompleted: data => {
       console.log(
         `Fetched ${courseId} with ${lastEvaluatedKey}, updated ${JSON.stringify(
           data.reviews.lastEvaluatedKey
@@ -111,11 +111,11 @@ const CoursePanel = () => {
       );
       console.table(data);
       if (lastEvaluatedKey) {
-        setReviews((prevReviews) =>
+        setReviews(prevReviews =>
           prevReviews
             .concat(data.reviews.reviews)
             .filter(
-              (v, i, a) => a.findIndex((m) => v.createdAt === m.createdAt) === i
+              (v, i, a) => a.findIndex(m => v.createdAt === m.createdAt) === i
             )
         );
       } else {
@@ -135,7 +135,7 @@ const CoursePanel = () => {
       createdAt: reviewId,
     },
     skip: !reviewId,
-    onCompleted: (data) => {
+    onCompleted: data => {
       if (data.review) {
         setReviews([data.review]);
       }
@@ -200,7 +200,7 @@ const CoursePanel = () => {
     return () => window.removeEventListener('scroll', listenToScroll);
   }, [listenToScroll, reviewId]);
 
-  const fetchSimilarCourses = async (courseId) => {
+  const fetchSimilarCourses = async courseId => {
     setSimilarCourse(await getSimilarCourses(courseId));
   };
 
@@ -266,7 +266,7 @@ const CoursePanel = () => {
               open={FABOpen}
               className="course-panel-fab"
             >
-              {FAB_GROUP_ACTIONS.map((action) => (
+              {FAB_GROUP_ACTIONS.map(action => (
                 <SpeedDialAction
                   key={action.name}
                   icon={action.icon}
@@ -310,7 +310,7 @@ const CoursePanel = () => {
           </span>
         )}
         <div className="grid-auto-row reviews-container">
-          {(reviews || []).map((item) => (
+          {(reviews || []).map(item => (
             <ReviewCard
               key={item.createdAt}
               review={item}
@@ -335,7 +335,7 @@ const CoursePanel = () => {
           <FeedCard
             title="Suggestions"
             courses={similarCourses}
-            onItemClick={(course) => history.push(`/review/${course.courseId}`)}
+            onItemClick={course => history.push(`/review/${course.courseId}`)}
           />
         )}
       </div>

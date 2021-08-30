@@ -41,12 +41,10 @@ const ReviewCard = ({
   const [showMore, setShowMore] = useState(true);
   const [skipHeightCheck, setSkipHeightCheck] = useState(showAll);
 
-  const updateVote = async (vote) => {
+  const updateVote = async vote => {
     console.log(review.courseId);
     if (
-      Object.values(VOTE_ACTIONS).some(
-        (v) => v === review.myVote || v === liked
-      )
+      Object.values(VOTE_ACTIONS).some(v => v === review.myVote || v === liked)
     ) {
       // i.e. already voted
       console.log('Voted Already');
@@ -102,7 +100,7 @@ const ReviewCard = ({
       </div>
       {selectedCriteria === 'overall' ? (
         <div
-          ref={(ref) => {
+          ref={ref => {
             // Wrap if course-card is too long
             if (
               !skipHeightCheck &&
@@ -114,7 +112,7 @@ const ReviewCard = ({
           }}
           className={`review-text-full${showMore ? '' : ' retracted'}`}
         >
-          {RATING_FIELDS.map((field) => (
+          {RATING_FIELDS.map(field => (
             <div key={field} className="review-text-container">
               <p className="review-text-label review-text">{field}</p>
               <p className="review-text">{review[field].text}</p>

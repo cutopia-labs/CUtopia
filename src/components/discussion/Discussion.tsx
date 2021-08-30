@@ -174,10 +174,10 @@ const Discussion = ({ courseId }: DiscussionProps) => {
   const user = useContext(UserContext);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const view = useContext(ViewContext);
-  const onSubmit = (e) => {
+  const onSubmit = e => {
     const messageId = +new Date();
     e.preventDefault();
-    setMessages((messages) => [
+    setMessages(messages => [
       ...messages,
       {
         user: user.data.username,
@@ -195,7 +195,7 @@ const Discussion = ({ courseId }: DiscussionProps) => {
       });
     } catch (e) {
       view.handleError(e);
-      setMessages((items) => items.filter((item) => item._id !== messageId));
+      setMessages(items => items.filter(item => item._id !== messageId));
     }
   };
   const { loading: discussionLoading, refetch: fetchDiscussion } = useQuery<
@@ -209,9 +209,9 @@ const Discussion = ({ courseId }: DiscussionProps) => {
       courseId,
     },
     onError: view.handleError,
-    onCompleted: (data) => {
+    onCompleted: data => {
       console.log(`Fetched ${data}`);
-      setMessages((items) => items.concat(data?.discussion?.messages));
+      setMessages(items => items.concat(data?.discussion?.messages));
       setPage(data?.discussion?.nextPage);
     },
     notifyOnNetworkStatusChange: true,
@@ -221,7 +221,7 @@ const Discussion = ({ courseId }: DiscussionProps) => {
     sendMessage,
     { loading: sendMessageLoading, error: sendMessageError },
   ] = useMutation(SEND_MESSAGE, {
-    onError: (e) => {
+    onError: e => {
       view.handleError(e);
       // remove the sended message here
     },
@@ -260,7 +260,7 @@ const Discussion = ({ courseId }: DiscussionProps) => {
           </Button>
         )}
         {discussionLoading && <Loading />}
-        {messages.map((message) => (
+        {messages.map(message => (
           <Message
             key={JSON.stringify(message)}
             message={message}

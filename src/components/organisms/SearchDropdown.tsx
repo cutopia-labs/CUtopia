@@ -55,14 +55,14 @@ const SearchDropdown = (props: SearchPanelProps) => {
   const isMobile = useMobileQuery();
 
   const inputRef = useRef<HTMLInputElement>(null);
-  const searchDropDownRef = useOuterClick((e) => {
+  const searchDropDownRef = useOuterClick(e => {
     console.log('Clicked outside');
     console.log(e.target);
     setVisible(false);
     setSearchPayload(null);
   }, !visible);
 
-  const onSubmitSearch = (e) => {
+  const onSubmitSearch = e => {
     e.preventDefault();
   };
 
@@ -83,7 +83,7 @@ const SearchDropdown = (props: SearchPanelProps) => {
       {visible && (
         <SearchPanel
           searchPayloadProp={searchPayload}
-          onCoursePress={(courseId) => {
+          onCoursePress={courseId => {
             setSearchPayload(null);
             setVisible(false);
             onCoursePress && onCoursePress(courseId);

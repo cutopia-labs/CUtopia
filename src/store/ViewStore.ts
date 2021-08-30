@@ -24,13 +24,13 @@ class ViewStore extends StorePrototype {
     this.init();
   }
 
-  @action handleError = (e) => handleError(e, this);
+  @action handleError = e => handleError(e, this);
 
   @action async setSnackBar(prop: string | SnackBarProps) {
     const snackbar = typeof prop === 'string' ? { message: prop } : prop;
     const snackbarId = snackbar?.message ? +new Date() : undefined;
     this.updateSnackBar(prop ? { ...snackbar, snackbarId } : null);
-    await new Promise((resolve) => setTimeout(resolve, SNACKBAR_TIMEOUT));
+    await new Promise(resolve => setTimeout(resolve, SNACKBAR_TIMEOUT));
     if (this.needsClear(snackbarId)) {
       this.updateSnackBar({ message: '', snackbarId: undefined });
     }

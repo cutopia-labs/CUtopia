@@ -16,7 +16,7 @@ const TabsContainer = ({
   mb,
 }: TabsContainerProps) => (
   <div className={clsx('card', 'tabs-row', mb && 'mb')}>
-    {items.map((item) => (
+    {items.map(item => (
       <div
         key={item.label}
         className={clsx(

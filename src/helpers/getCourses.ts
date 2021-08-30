@@ -34,7 +34,7 @@ export const fetchCourses = async (): Promise<
   }
   let sum = 0;
   console.log(
-    Object.values(courseList).forEach((list) => {
+    Object.values(courseList).forEach(list => {
       sum += list.length;
     })
   );
@@ -62,12 +62,12 @@ export const getCoursesFromQuery = async ({
     const { mode, text } = payload;
     switch (mode) {
       case 'Pins':
-        return user.favoriteCourses.map((course) => ({
+        return user.favoriteCourses.map(course => ({
           c: course.courseId,
           t: course.title,
         }));
       case 'My Courses':
-        return user.timetable?.map((course) => ({
+        return user.timetable?.map(course => ({
           c: course.courseId,
           t: course.title,
         }));
@@ -156,9 +156,9 @@ export const getSimilarCourses = async (
   if (currLen < limit) {
     results = results
       .concat(courseList[subject].slice(0, limit - currLen))
-      .filter((course) => !occurred.has(course.c));
+      .filter(course => !occurred.has(course.c));
   }
-  return results.map((course) => ({
+  return results.map(course => ({
     courseId: course.c,
     title: course.t,
   }));
@@ -168,11 +168,11 @@ export const getRandomGeCourses = async (
   limit: number = SIMILAR_COURSE_LIMIT
 ): Promise<CourseConcise[]> => {
   const courses = await fetchCourses();
-  const GECourses = UGE_COURSE_CODES.map((subject) => courses[subject])
+  const GECourses = UGE_COURSE_CODES.map(subject => courses[subject])
     .flat()
-    .filter((course) => course.o);
+    .filter(course => course.o);
   const GECoursesLen = GECourses.length;
-  return [...generateRandomArray(limit, GECoursesLen)].map((index) => ({
+  return [...generateRandomArray(limit, GECoursesLen)].map(index => ({
     courseId: GECourses[index].c,
     title: GECourses[index].t,
   }));

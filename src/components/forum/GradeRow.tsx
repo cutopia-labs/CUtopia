@@ -37,8 +37,8 @@ const GradeRow = ({
       />
     )}
     {[isReview ? 'overall' : '', ...RATING_FIELDS]
-      .filter((x) => x)
-      .map((field) => (
+      .filter(x => x)
+      .map(field => (
         <div
           key={field}
           className={clsx(

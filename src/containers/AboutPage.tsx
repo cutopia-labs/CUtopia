@@ -59,7 +59,7 @@ const AboutPage = () => {
         <TabsContainer
           items={ABOUT_PAGE_ROUTES}
           selected={location.pathname.slice(1)}
-          onSelect={(label) => history.push(`/${label}`)}
+          onSelect={label => history.push(`/${label}`)}
         />
         {renderTab()}
       </div>

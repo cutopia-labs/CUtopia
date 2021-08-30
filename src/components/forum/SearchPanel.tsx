@@ -90,7 +90,7 @@ export const SearchResult = ({
       user,
       limit: limit || MAX_SEARCH_RESULT_LENGTH,
       offerredOnly: searchPayload.offerredOnly,
-    }).then((result) => {
+    }).then(result => {
       setResults(result);
     });
   }, [searchPayload]);
@@ -133,7 +133,7 @@ export const SearchResult = ({
               key={`listitem-${course.c}`}
               ribbonIndex={i}
               chevron
-              onClick={(e) => {
+              onClick={e => {
                 e.stopPropagation();
                 onClick ? onClick(course.c) : {};
               }}
@@ -178,7 +178,7 @@ const DepartmentList = ({ setSearchPayload }) => {
                   title={code}
                   ribbonIndex={i}
                   chevron
-                  onClick={(e) => {
+                  onClick={e => {
                     e.stopPropagation();
                     setSearchPayload({
                       text: code,
@@ -305,12 +305,12 @@ const SearchPanel = ({
             <Search />
           </div>
         )}
-        <form className="search-form" onSubmit={(e) => e.preventDefault()}>
+        <form className="search-form" onSubmit={e => e.preventDefault()}>
           <InputBase
             className="search-input"
             placeholder="Search…"
             value={searchPayload?.text || ''}
-            onChange={(e) => {
+            onChange={e => {
               setSearchPayload({
                 text: e.target.value,
                 mode: 'query',
@@ -328,7 +328,7 @@ const SearchPanel = ({
             className="recent-chips"
             chipClassName="chip-fill"
             items={user.searchHistory.slice(0, 3)}
-            onItemClick={(item) => {
+            onItemClick={item => {
               if (!skipDefaultAction) {
                 history.push(`/${isPlanner ? 'planner' : 'review'}/${item}`);
               }
@@ -359,7 +359,7 @@ const SearchPanel = ({
             <SearchResult
               searchPayload={searchPayload}
               user={user}
-              onClick={(courseId) => {
+              onClick={courseId => {
                 user.saveHistory(courseId);
                 if (!skipDefaultAction) {
                   history.push(
@@ -374,11 +374,11 @@ const SearchPanel = ({
           </>
         ) : (
           <>
-            {LIST_ITEMS.map((item) => (
+            {LIST_ITEMS.map(item => (
               <MUIListItem
                 key={item.label}
                 button
-                onClick={(e) => {
+                onClick={e => {
                   if (onCoursePress) {
                     e.stopPropagation(); // prevent e.target showes child node
                   }

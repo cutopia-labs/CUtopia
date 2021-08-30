@@ -43,7 +43,7 @@ const TextField = ({
         defaultValue={defaultValue}
         type={type}
         value={value}
-        onChange={(e) => onChangeText(e.target.value)}
+        onChange={e => onChangeText(e.target.value)}
         onFocus={onFocus}
         onBlur={onBlur}
         disabled={disabled}
