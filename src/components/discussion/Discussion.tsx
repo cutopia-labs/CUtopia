@@ -3,7 +3,7 @@ import { useContext, useState, useRef, useEffect } from 'react';
 import './Discussion.scss';
 import { Button, IconButton } from '@material-ui/core';
 import { RiSendPlaneLine } from 'react-icons/ri';
-import { useMutation, useQuery } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import { DiscussionMessage } from '../../types';
 
 import { UserContext, ViewContext } from '../../store';
@@ -168,7 +168,7 @@ export const Message = ({ message, isAuthor }: MessageProps) => {
 };
 
 const Discussion = ({ courseId }: DiscussionProps) => {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<DiscussionMessage[]>([]);
   const [messageInput, setMessageInput] = useState('');
   const [page, setPage] = useState(0);
   const user = useContext(UserContext);
@@ -198,16 +198,14 @@ const Discussion = ({ courseId }: DiscussionProps) => {
       setMessages(items => items.filter(item => item._id !== messageId));
     }
   };
-  const { loading: discussionLoading, refetch: fetchDiscussion } = useQuery<
+
+  const [fetchDiscussion, { loading: discussionLoading }] = useLazyQuery<
     any,
     {
       courseId: string;
       page?: number;
     }
   >(GET_DISCUSSIONS, {
-    variables: {
-      courseId,
-    },
     onError: view.handleError,
     onCompleted: data => {
       console.log(`Fetched ${data}`);
@@ -239,11 +237,25 @@ const Discussion = ({ courseId }: DiscussionProps) => {
         page,
       });
       await fetchDiscussion({
-        courseId,
-        page,
+        variables: {
+          courseId,
+          page,
+        },
       });
     }
   };
+  useEffect(() => {
+    if (courseId) {
+      setMessages([]);
+      setPage(0);
+      fetchDiscussion({
+        variables: {
+          courseId,
+          page: 0,
+        },
+      });
+    }
+  }, [courseId]);
   useEffect(() => {
     if (!page && messages?.length < MESSAGES_PER_PAGE) {
       messagesContainerRef.current.scrollTo({

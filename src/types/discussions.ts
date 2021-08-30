@@ -1,6 +1,6 @@
 export type DiscussionMessage = {
-  id: number;
-  _id: number;
+  id?: number;
+  _id?: number;
   text: string;
   user: string;
 };
