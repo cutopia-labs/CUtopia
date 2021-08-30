@@ -183,7 +183,7 @@ const CoursePanel = () => {
 
   useEffect(() => {
     if (reviews?.length) {
-      setPage(undefined);
+      setPage(0);
       reviewsRefetch({
         courseId,
         ...reviewsPayload,

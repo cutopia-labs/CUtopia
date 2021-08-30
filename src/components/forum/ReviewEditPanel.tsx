@@ -231,7 +231,8 @@ const ReviewEdit = ({ courseId }) => {
           }
         },
         {
-          message: 'Review edited!',
+          message:
+            'Review edited! (Changes may take several minites to take effect)',
         }
       ),
       onError: view.handleError,

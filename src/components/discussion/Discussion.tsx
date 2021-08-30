@@ -215,7 +215,7 @@ const Discussion = ({ courseId }: DiscussionProps) => {
       console.log(`Fetched ${data}`);
       setMessages(items =>
         items
-          .concat(data?.discussion?.messages)
+          .concat(data?.discussion?.messages || [])
           .sort((a, b) => (a.id > b.id ? 1 : -1))
       );
       setPage(data?.discussion?.nextPage);

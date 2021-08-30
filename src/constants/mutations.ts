@@ -83,7 +83,6 @@ export const EDIT_REVIEW = gql`
     $teaching: ReviewDetailsInput!
     $difficulty: ReviewDetailsInput!
     $content: ReviewDetailsInput!
-    $createdAt: String!
   ) {
     editReview(
       input: {
@@ -94,11 +93,8 @@ export const EDIT_REVIEW = gql`
         teaching: $teaching
         difficulty: $difficulty
         content: $content
-        createdAt: $createdAt
       }
-    ) {
-      modifiedDate
-    }
+    )
   }
 `;
 
