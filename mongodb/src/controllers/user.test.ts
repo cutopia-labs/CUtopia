@@ -8,73 +8,95 @@ import {
   deleteUser,
   updateDiscussions,
 } from './user';
-import { connect } from '../';
-import mongoose from 'mongoose';
+import { setup, teardown } from '../jest/env';
 import bcrypt from 'bcryptjs';
+import { ErrorCode } from 'cutopia-types/lib/codes';
 import { nanoid } from 'nanoid';
 
 describe('User', () => {
-  beforeAll(async () => {
-    await connect(process.env.ATLAS_DEV_URI);
-  });
+  let testUser;
 
-  afterAll(async () => {
-    await mongoose.connection.close();
-  });
+  beforeAll(async () => (testUser = await setup()));
+
+  afterAll(async () => await teardown(testUser));
 
   it('Register, Verify, Reset Password and Delete', async () => {
     const username = nanoid(10);
+    const fakeUsername = nanoid(10);
     const SID = Math.floor(1000000000 + Math.random() * 9000000000).toString();
+
     const veriCode = await createUser({
       username,
       password: '1234',
       SID,
     });
-    // console.log('Created user');
 
+    expect(
+      verifyUser({
+        username,
+        code: nanoid(5),
+      })
+    ).rejects.toThrow(ErrorCode.VERIFICATION_FAILED.toString());
     await verifyUser({
       username,
       code: veriCode,
     });
-    // console.log('Verified user');
+    expect(
+      verifyUser({
+        username,
+        code: veriCode,
+      })
+    ).rejects.toThrow(ErrorCode.VERIFICATION_ALREADY_VERIFIED.toString());
+    expect(
+      verifyUser({
+        username: fakeUsername,
+        code: nanoid(5),
+      })
+    ).rejects.toThrow(ErrorCode.VERIFICATION_USER_DNE.toString());
 
     await login({
       username,
       password: '1234',
     });
-    // console.log('Logged in');
 
     const { code: resetCode, email } = await getResetPasswordCodeAndEmail({
       username,
     });
-    // console.log('Generated reset password');
 
     await resetPassword({
       username,
       newPassword: '5678',
       resetCode,
     });
-    // console.log('Resetted password');
+    expect(
+      resetPassword({
+        username,
+        newPassword: '5678',
+        resetCode: nanoid(5),
+      })
+    ).rejects.toThrow(ErrorCode.RESET_PASSWORD_FAILED.toString());
+    expect(
+      resetPassword({
+        username: fakeUsername,
+        newPassword: '5678',
+        resetCode,
+      })
+    ).rejects.toThrow(ErrorCode.RESET_PASSWORD_USER_DNE.toString());
 
     await updateDiscussions({
       username,
       courseId: 'AIST1110',
+      text: 'Hello world!',
     });
     await updateDiscussions({
       username,
       courseId: 'AIST1110',
+      text: "If it works, then don't touch it",
     });
     await updateDiscussions({
       username,
       courseId: 'AIST1120',
-    });
-    await updateDiscussions({
-      username,
-      courseId: 'AIST1130',
-    });
-    await updateDiscussions({
-      username,
-      courseId: 'AIST1140',
+      text: "Developers' job: create bugs, then fix it",
     });
 
     const user = await getUser({ username });
@@ -89,11 +111,15 @@ describe('User', () => {
       fullAccess: false,
       timetables: [],
       sharedTimetables: [],
-      reviews: [],
+      reviewIds: [],
       exp: 0,
+      discussions: [
+        'AIST1110#Hello world!',
+        'AIST1110#If it works, th',
+        "AIST1120#Developers' job",
+      ],
     });
 
-    // await deleteUser({ username: 'test' });
-    // console.log('Deleted user');
+    await deleteUser({ username });
   });
 });

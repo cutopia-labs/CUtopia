@@ -197,7 +197,7 @@ export const updateDiscussions = async (input: updateDiscussionsProps) => {
       $push: {
         discussions: {
           $each: [discussionOverview], // ensure unique
-          $slice: -USER_DISCUSSIONS, // ensure max 10
+          $slice: -USER_DISCUSSIONS, // ensure max 15
         },
       },
     }

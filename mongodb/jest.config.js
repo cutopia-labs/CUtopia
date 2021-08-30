@@ -6,7 +6,7 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   testPathIgnorePatterns: ['./lib'],
-  setupFiles: ['./src/jest/setupFile.ts'],
+  setupFiles: ['./src/jest/env.ts'],
   // globalSetup: './src/jest/globalSetup.ts',
   // globalTeardown: './src/jest/globalTeardown.ts',
 };

@@ -1,20 +1,21 @@
+import { ErrorCode } from 'cutopia-types/lib/codes';
+import { nanoid } from 'nanoid';
 import { createReview, getReviews, voteReview } from './review';
-import { connect } from '../';
-import mongoose from 'mongoose';
 import { getUser } from './user';
+import { setup, teardown } from '../jest/env';
 
 describe('Review', () => {
-  beforeAll(async () => {
-    await connect(process.env.ATLAS_DEV_URI);
-  });
+  let testUser;
 
-  afterAll(async () => {
-    await mongoose.connection.close();
-  });
+  beforeAll(async () => (testUser = await setup()));
+
+  afterAll(async () => await teardown(testUser));
 
   it('Create, Vote and Get', async () => {
+    const { username } = testUser;
+
     const review = {
-      username: 'test',
+      username,
       courseId: 'ABCD1234',
       anonymous: false,
       lecturer: 'Someone',
@@ -38,14 +39,37 @@ describe('Review', () => {
       },
     };
 
-    await createReview(review);
+    const { id } = await createReview(review);
+    const fakeId = nanoid(10);
+    expect(createReview(review)).rejects.toThrow(
+      ErrorCode.CREATE_REVIEW_ALREADY_CREATED.toString()
+    );
 
-    await voteReview({
-      courseId: 'ABCD1234',
-      username: 'test',
+    const voteReviewInput = {
+      id,
+      username,
       vote: 1,
-    });
+    };
+    await voteReview(voteReviewInput);
+    expect(voteReview(voteReviewInput)).rejects.toThrow(
+      ErrorCode.VOTE_REVIEW_VOTED_ALREADY.toString()
+    );
+    expect(
+      voteReview({
+        id,
+        username,
+        vote: -1,
+      })
+    ).rejects.toThrow(ErrorCode.VOTE_REVIEW_INVALID_VALUE.toString());
+    expect(
+      voteReview({
+        id: fakeId,
+        username,
+        vote: 1,
+      })
+    ).rejects.toThrow(ErrorCode.VOTE_REVIEW_DNE.toString());
 
+    /*
     const reviews = await getReviews({
       courseId: 'ABCD1234',
       sortBy: 'upvotes',
@@ -54,12 +78,13 @@ describe('Review', () => {
     expect(reviews[0]).toMatchObject({
       ...review,
       upvotes: 1,
-      upvoteUserIds: ['test'],
+      upvoteUserIds: [username],
       downvotes: 0,
       downvoteUserIds: [],
     });
+    */
     const reviewAuthor = await getUser({
-      username: 'test',
+      username,
       fields: ['upvotes'],
     });
     expect(reviewAuthor.upvotes).toEqual(1);
