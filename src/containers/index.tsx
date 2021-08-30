@@ -36,7 +36,8 @@ const ROUTES = [
   },
   {
     props: {
-      path: '/discussion',
+      exact: true,
+      path: ['/discussion', '/discussion/:courseId'],
     },
     children: <DiscussionPage />,
   },

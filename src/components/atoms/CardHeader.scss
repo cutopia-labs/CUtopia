@@ -1,3 +1,7 @@
 .card-header {
   padding: 12px 16px;
+  column-gap: 6px;
+  svg {
+    color: var(--text);
+  }
 }

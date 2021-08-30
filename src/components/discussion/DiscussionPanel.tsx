@@ -1,5 +1,8 @@
 import { useQuery } from '@apollo/client';
-import { useContext, useState } from 'react';
+import { useContext, useEffect } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
+import { IconButton } from '@material-ui/core';
+import { ArrowBack } from '@material-ui/icons';
 import { MESSAGE_PREVIEW_LENGTH } from '../../constants/configs';
 import Loading from '../atoms/Loading';
 import { GET_MY_DISCUSSIONS } from '../../constants/queries';
@@ -13,6 +16,7 @@ import ErrorCard from '../molecules/ErrorCard';
 import SearchDropdown from '../organisms/SearchDropdown';
 import Discussion from './Discussion';
 import './DiscussionPanel.scss';
+import useMobileQuery from '../../hooks/useMobileQuery';
 
 const RECENT_DISCUSSIONS_RAW = [
   {
@@ -120,7 +124,10 @@ const DiscussionListItem = ({
 };
 
 const DiscussionPanel = () => {
-  const [courseId, setCourseId] = useState('');
+  const { courseId } = useParams<{
+    courseId?: string;
+  }>();
+  const history = useHistory();
   const view = useContext(ViewContext);
   const { data: userData, loading: userDataLoading } = useQuery(
     GET_MY_DISCUSSIONS,
@@ -128,34 +135,56 @@ const DiscussionPanel = () => {
       onError: view.handleError,
     }
   );
+  const isMobile = useMobileQuery();
+  useEffect(() => {
+    console.log(courseId);
+  }, [courseId]);
   return (
     <Card className="discussion-panel">
-      <Card inPlace title="Discussions" className="discussion-list">
-        <SearchDropdown
-          skipDefaultAction
-          onCoursePress={courseId => setCourseId(courseId)}
-        />
-        <div className="recent-discussions">
-          {userDataLoading && <Loading />}
-          {(userData?.me?.discussions || []).map(discussionRaw => (
-            <DiscussionListItem
-              key={discussionRaw}
-              discussion={getDiscussionFromString(discussionRaw)}
-              onClick={setCourseId}
-            />
-          ))}
-        </div>
-      </Card>
+      {(!isMobile || !validCourse(courseId)) && (
+        <Card inPlace title="Discussions" className="discussion-list">
+          <SearchDropdown
+            skipDefaultAction
+            onCoursePress={courseId => {
+              history.push(`/discussion/${courseId}`);
+            }}
+          />
+          <div className="recent-discussions">
+            {userDataLoading && <Loading />}
+            {(userData?.me?.discussions || []).map(discussionRaw => (
+              <DiscussionListItem
+                key={discussionRaw}
+                discussion={getDiscussionFromString(discussionRaw)}
+                onClick={courseId => history.push(`/discussion/${courseId}`)}
+              />
+            ))}
+          </div>
+        </Card>
+      )}
       {validCourse(courseId) ? (
         <div className="messages-wrapper">
-          <CardHeader title={courseId} />
+          <CardHeader
+            left={
+              isMobile && (
+                <IconButton
+                  size="small"
+                  onClick={() => history.push('/discussion')}
+                >
+                  <ArrowBack />
+                </IconButton>
+              )
+            }
+            title={courseId}
+          />
           <Discussion courseId={courseId} />
         </div>
       ) : (
-        <ErrorCard
-          mode={ErrorCardMode.NULL}
-          caption="Select a course to start discussion!"
-        />
+        !isMobile && (
+          <ErrorCard
+            mode={ErrorCardMode.NULL}
+            caption="Select a course to start discussion!"
+          />
+        )
       )}
     </Card>
   );

@@ -8,6 +8,7 @@ import { useHistory, Link as RouterLink } from 'react-router-dom';
 import { FiExternalLink } from 'react-icons/fi';
 import clsx from 'clsx';
 import { ReportCategory } from 'cutopia-types/lib/codes';
+import { HiOutlineChat } from 'react-icons/hi';
 import ShowMoreOverlay from '../molecules/ShowMoreOverlay';
 import Badge from '../atoms/Badge';
 import { UserContext, ViewContext } from '../../store';
@@ -95,6 +96,13 @@ const CourseCard = ({ courseInfo, concise, loading }: CourseCardProps) => {
                 <ErrorOutline />
               </IconButton>
             </Tooltip>
+            {isMobile && (
+              <RouterLink to={`/discussion/${courseInfo.courseId}`}>
+                <IconButton aria-label="report" size="small">
+                  <HiOutlineChat size={24} />
+                </IconButton>
+              </RouterLink>
+            )}
             {concise && (
               <Badge
                 className="right"

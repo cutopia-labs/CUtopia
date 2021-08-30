@@ -41,12 +41,6 @@
 @media only screen and (max-width: 1260px) {
   .search-dropdown {
     --search-dropdown-width: 100vw;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    width: fit-content;
-    margin-left: auto;
     &.active {
       width: 100vw;
       margin-left: initial;
@@ -56,12 +50,6 @@
     }
     .search-input-container {
       border: none;
-      margin-right: 0;
-      background-color: transparent;
-      width: 34px;
-      .search-input {
-        visibility: hidden;
-      }
       &.active {
         width: calc(100vw - 40px);
         margin: 0 10px 10px 10px;

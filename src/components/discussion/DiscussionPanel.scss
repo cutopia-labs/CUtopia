@@ -78,3 +78,15 @@
     }
   }
 }
+
+
+@media only screen and (max-width: 1260px) {
+  .discussion-panel {
+    --discussion-panel-height: calc(100vh - var(--header-height));
+  }
+  .discussion-list {
+    --discussion-list-width: 100vw;
+    border-right: 0;
+  }
+}
+

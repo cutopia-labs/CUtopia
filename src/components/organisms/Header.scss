@@ -69,6 +69,22 @@
   .header-container {
     padding: 0 var(--card-padding);
     max-width: 100%;
+    .search-dropdown {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      width: fit-content;
+      margin-left: auto;
+      .search-input-container {
+        margin-right: 0;
+        background-color: transparent;
+        width: 34px;
+      }
+      .search-input {
+        visibility: hidden;
+      }
+    }
     .header-logo {
       margin-left: 12px;
     }
