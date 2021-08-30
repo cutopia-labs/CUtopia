@@ -39,7 +39,7 @@ const UserCard = ({ userData }: UserCardProps) => {
               arrow
             >
               <span className="center-row">
-                {user.data?.fullAccess ? <GoVerified /> : <GoUnverified />}
+                {user.isFullMember ? <GoVerified /> : <GoUnverified />}
               </span>
             </Tooltip>
           </div>

@@ -44,6 +44,10 @@ const FOOTER_ITEMS = [
     label: 'Contact Us',
     url: 'mailto::cutopia.team@gmail.com',
   },
+  {
+    label: 'Fund Us ♡',
+    url: 'https://www.buymeacoffee.com/cutopia',
+  },
 ];
 
 const renderItem = (item: MultiTypeLink) => {

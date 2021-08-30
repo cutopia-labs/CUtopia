@@ -4,7 +4,7 @@ import './Discussion.scss';
 import { Button, IconButton } from '@material-ui/core';
 import { RiSendPlaneLine } from 'react-icons/ri';
 import { useLazyQuery, useMutation } from '@apollo/client';
-import { DiscussionMessage } from '../../types';
+import { DiscussionMessage, ErrorCardMode } from '../../types';
 
 import { UserContext, ViewContext } from '../../store';
 import TextField from '../atoms/TextField';
@@ -14,6 +14,7 @@ import { SEND_MESSAGE } from '../../constants/mutations';
 import Loading from '../atoms/Loading';
 import { getMMMDDYY } from '../../helpers/getTime';
 import { MESSAGES_PER_PAGE } from '../../constants/configs';
+import ErrorCard from '../molecules/ErrorCard';
 
 const MOCK_DISCUSSIONS = [
   {
@@ -276,13 +277,20 @@ const Discussion = ({ courseId }: DiscussionProps) => {
           </Button>
         )}
         {discussionLoading && <Loading />}
-        {messages.map(message => (
-          <Message
-            key={JSON.stringify(message)}
-            message={message}
-            isAuthor={user.data.username === message.user}
+        {messages && messages.length ? (
+          messages.map(message => (
+            <Message
+              key={JSON.stringify(message)}
+              message={message}
+              isAuthor={user.data.username === message.user}
+            />
+          ))
+        ) : (
+          <ErrorCard
+            mode={ErrorCardMode.NULL}
+            caption="Nothing here, you can be the first!"
           />
-        ))}
+        )}
       </div>
       <form onSubmit={onSubmit} className="message-input-container center-row">
         <TextField
