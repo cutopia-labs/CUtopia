@@ -45,7 +45,7 @@ import ErrorCard from '../molecules/ErrorCard';
 import { getCoursesFromQuery } from '../../helpers/getCourses';
 import ChipsRow from '../molecules/ChipsRow';
 import useMobileQuery from '../../hooks/useMobileQuery';
-import CourseCard from './CourseCard';
+import CourseCard from '../forum/CourseCard';
 
 type SearchPanelMode = 'review' | 'planner' | 'discussion';
 

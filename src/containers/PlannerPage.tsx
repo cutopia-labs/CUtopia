@@ -5,7 +5,7 @@ import './PlannerPage.scss';
 import { CalendarToday, Search } from '@material-ui/icons';
 import { useRouteMatch } from 'react-router-dom';
 import { useTitle } from 'react-use';
-import { SearchPanel } from '../components/forum';
+import SearchPanel from '../components/organisms/SearchPanel';
 import Page from '../components/atoms/Page';
 import PlannerTimetable from '../components/planner/PlannerTimetable';
 import PlannerCart from '../components/planner/PlannerCart';

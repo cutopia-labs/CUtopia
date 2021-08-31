@@ -16,7 +16,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import { useHistory, useParams } from 'react-router-dom';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 
-import './ReviewEdit.scss';
+import './ReviewEditPanel.scss';
 import { HiOutlineInformationCircle } from 'react-icons/hi';
 import { ViewContext, UserContext } from '../../store';
 import { GET_REVIEW, COURSE_INFO_QUERY } from '../../constants/queries';

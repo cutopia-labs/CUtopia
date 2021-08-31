@@ -12,12 +12,12 @@ import {
 import clsx from 'clsx';
 
 import { BsChatDots, BsFillChatDotsFill } from 'react-icons/bs';
-import SearchPanel, { SearchPanelProps } from '../forum/SearchPanel';
 import './Header.scss';
 import SearchInput from '../molecules/SearchInput';
 import useMobileQuery from '../../hooks/useMobileQuery';
 import useOuterClick from '../../hooks/useOuterClick';
 import { SearchPayload } from '../../types';
+import SearchPanel, { SearchPanelProps } from './SearchPanel';
 
 const SECTIONS = [
   {

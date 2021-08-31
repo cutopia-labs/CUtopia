@@ -2,7 +2,7 @@ import { observer } from 'mobx-react-lite';
 
 import './ForumPage.scss';
 import { Route, Switch } from 'react-router-dom';
-import { CoursePanel } from '../components/forum';
+import CoursePanel from '../components/forum/CoursePanel';
 import Page from '../components/atoms/Page';
 import HomePanel from '../components/forum/HomePanel';
 import ReviewEditPanel from '../components/forum/ReviewEditPanel';
