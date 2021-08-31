@@ -10,7 +10,7 @@
     "local-only": "yarn run build && node build/local.js",
     "build-db": "yarn --cwd ../../mongodb run build && yarn run postdeploy",
     "predeploy": "yarn run build-db && yarn run build && rm -rf node_modules && yarn install --production && cp -RL node_modules/ build/",
-    "postdeploy": "rm -rf node_modules && yarn install",
+    "postdeploy": "rm -rf node_modules && yarn install && yarn --cwd ../../mongodb run postdeploy",
     "copyfile": "sh copyfile.sh",
     "build": "rm -rf build && tsc && yarn run copyfile"
   },
