@@ -69,7 +69,9 @@ const RecentReviewCard = ({ review, onClick }: RecentReviewCardProps) => {
       right={<GradeIndicator grade={review.overall} />}
       onClick={() => onClick(`${review.courseId}/${review.createdAt}`)}
     >
-      <span className="recent-review-text">{review.grading.text}</span>
+      <span className="recent-review-text ellipsis-text">
+        {review.grading.text}
+      </span>
     </ListItem>
   );
 };

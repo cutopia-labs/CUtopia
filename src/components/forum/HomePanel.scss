@@ -57,7 +57,8 @@
 }
 
 .recent-review {
-  width: calc(100% - 2 * var(--card-padding));
+  --recent-review-width: calc(100% - 2 * var(--card-padding));
+  width: var(--recent-review-width);
   padding: 0 var(--card-padding) 12px var(--card-padding);
   .list-item-title-container {
     margin-left: 0;
@@ -67,9 +68,9 @@
   }
   .recent-review-text {
     line-height: var(--line-height);
-    max-height: calc(var(--line-height) * 3);
-    overflow: hidden;
     width: 100%;
+    white-space: pre-line;
+    -webkit-line-clamp: 3;
   }
 }
 
@@ -98,5 +99,8 @@
       margin-left: 0;
       margin-top: var(--card-padding);
     }
+  }
+  .recent-review-text {
+    max-width: calc(100vw - 2 * var(--card-padding));
   }
 }
