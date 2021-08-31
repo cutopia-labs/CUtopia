@@ -39,14 +39,6 @@ export const GRADE_VALUES = Object.freeze([
   4, 3.7, 3.3, 3, 2.7, 2.3, 2, 1.7, 1, 0,
 ]);
 
-export const LETTER_TO_FIVE_VALUES = Object.freeze({
-  A: 4,
-  B: 3,
-  C: 2,
-  D: 1,
-  F: 0,
-});
-
 export const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 export const WEEKDAYS_TWO_ABBR = ['', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
 
@@ -57,6 +49,5 @@ export const VOTE_ACTIONS = Object.freeze({
 
 export const TOKEN_EXPIRE_DAYS = 7;
 export const VIEWS_LIMIT = 5;
-export const FULL_MEMBER_REVIEWS = 3;
 
 export const UGE_COURSE_CODES = ['UGEA', 'UGEB', 'UGEC', 'UGED'];
