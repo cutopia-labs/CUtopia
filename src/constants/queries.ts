@@ -185,12 +185,16 @@ export const TOP_RATED_COURSES_QUERY = gql`
 export const POPULAR_COURSES_QUERY = gql`
   query {
     ranking {
-      popularCourses(filter: { limit: 10 }) {
+      rankedCourses(filter: { rankBy: "numReviews" }) {
         courseId
         course {
           title
         }
-        numReviews
+        overall
+        grading
+        content
+        difficulty
+        teaching
       }
     }
   }
