@@ -19,7 +19,6 @@ import StorePrototype from './StorePrototype';
 const LOCAL_STORAGE_KEYS = ['planners', 'plannerTerm', 'currentPlannerKey'];
 
 class PlannerStore extends StorePrototype {
-  // Planner
   @observable planners: Record<string | number, Planner> = {};
   @observable plannerTerm: string;
   @observable previewPlannerCourse: PlannerCourse;

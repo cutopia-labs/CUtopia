@@ -12,7 +12,7 @@ import clsx from 'clsx';
 import { CourseInfo, ReviewsFilter } from '../../types';
 import { reverseMapping } from '../../helpers';
 
-const SORTING_FIELDS = { date: '_id', upvotes: 'upvotes' };
+const SORTING_FIELDS = { date: 'createdAt', upvotes: 'upvotes' };
 const SORTING_FIELDS_REVERSE = reverseMapping(SORTING_FIELDS);
 
 console.log(`reverse ${JSON.stringify(SORTING_FIELDS_REVERSE)}`);
@@ -86,7 +86,7 @@ const ReviewFilterBar = ({
     console.log(`Setted to ${field}`);
     if (mode === ReviewFilterBarMode.SORTING) {
       dispatchReviewsPayload({
-        sortBy: selected ? '_id' : SORTING_FIELDS[field],
+        sortBy: selected ? 'createdAt' : SORTING_FIELDS[field],
       });
     } else {
       dispatchReviewsPayload({
@@ -147,13 +147,14 @@ const ReviewFilterBar = ({
             {(REVIEWS_CONFIGS[mode]?.selections || []).map((field: string) => {
               console.log(
                 `sorting ${field} ${
-                  SORTING_FIELDS_REVERSE[reviewsPayload.sortBy || '_id']
+                  SORTING_FIELDS_REVERSE[reviewsPayload.sortBy || 'createdAt']
                 }`
               );
               const selected =
                 mode === ReviewFilterBarMode.SORTING
-                  ? SORTING_FIELDS_REVERSE[reviewsPayload.sortBy || '_id'] ===
-                    field
+                  ? SORTING_FIELDS_REVERSE[
+                      reviewsPayload.sortBy || 'createdAt'
+                    ] === field
                   : reviewsPayload[REVIEWS_CONFIGS[mode].key] === field;
               return (
                 <MenuItem

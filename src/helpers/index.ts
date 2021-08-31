@@ -43,3 +43,6 @@ export const getLabel = (grade: number | string) => {
 
 export const getReviewId = (review: Review) =>
   `${review.courseId}#${review.createdAt}`;
+
+export const removeEmptyValues = (obj: Record<string, any>) =>
+  Object.fromEntries(Object.entries(obj).filter(([_, v]) => v));

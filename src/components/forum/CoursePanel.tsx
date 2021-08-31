@@ -11,7 +11,7 @@ import { useTitle } from 'react-use';
 import './CoursePanel.scss';
 import copy from 'copy-to-clipboard';
 
-import { validCourse } from '../../helpers';
+import { removeEmptyValues, validCourse } from '../../helpers';
 import {
   COURSE_INFO_QUERY,
   GET_REVIEW,
@@ -61,12 +61,12 @@ const CoursePanel = () => {
   const [similarCourses, setSimilarCourse] = useState([]);
   const [reviewsPayload, dispatchReviewsPayload] = useReducer(
     (state: Partial<ReviewsFilter>, action: Partial<ReviewsFilter>) =>
-      ({
+      removeEmptyValues({
         ...state,
         ...action,
-      } as Partial<ReviewsFilter>),
+      }) as Partial<ReviewsFilter>,
     {
-      sortBy: '_id',
+      sortBy: 'createdAt',
     } as Partial<ReviewsFilter>
   );
 
