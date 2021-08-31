@@ -16,7 +16,7 @@ describe('Review', () => {
 
     const review = {
       username,
-      courseId: 'ABCD1234',
+      courseId: 'AIST1110',
       anonymous: false,
       lecturer: 'Someone',
       term: '1',

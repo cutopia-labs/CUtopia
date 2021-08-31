@@ -11,12 +11,11 @@ const reviewsResolver = {
   Mutation: {
     createReview: async (parent, { input }, { user }) => {
       const { username } = user;
-      const { id, createdAt } = await createReview({
+      const { createdAt } = await createReview({
         ...input,
         username,
       });
       return {
-        id,
         createdAt,
       };
     },

@@ -183,23 +183,3 @@ type updateDiscussionsProps = {
   courseId: string;
   text: string;
 };
-
-export const updateDiscussions = async (input: updateDiscussionsProps) => {
-  const { username, courseId, text } = input;
-  // Not sure to use below or not, concern about bandwidth
-  const discussionOverview = `${courseId}#${text.substring(
-    0,
-    MESSAGE_PREVIEW_LENGTH
-  )}`;
-  await User.updateOne(
-    { username },
-    {
-      $push: {
-        discussions: {
-          $each: [discussionOverview], // ensure unique
-          $slice: -USER_DISCUSSIONS, // ensure max 15
-        },
-      },
-    }
-  );
-};

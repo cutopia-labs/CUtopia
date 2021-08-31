@@ -7,8 +7,10 @@ import withCache from '../utils/withCache';
 import { updateCourseData } from './course';
 import { REVIEWS_PER_PAGE } from '../constant/configs';
 
-const generateReviewId = (courseId: string, createdAt: number | string) =>
-  `${courseId}#${createdAt}`;
+export const generateReviewId = (
+  courseId: string,
+  createdAt: number | string
+) => `${courseId}#${createdAt}`;
 
 const reviewCache = new NodeCache({
   stdTTL: 1800,
@@ -30,6 +32,7 @@ export const createReview = async input => {
     username,
     _id,
     courseId,
+    createdAt,
     ...reviewData,
   });
 
@@ -38,7 +41,6 @@ export const createReview = async input => {
   await updateCourseData(courseId, reviewData);
 
   return {
-    id: _id,
     createdAt,
   };
 };
@@ -113,7 +115,10 @@ export const editReview = async input => {
   const { courseId, username, ...newReview } = input;
   const oldReview = await Review.findOneAndUpdate(
     { courseId, username },
-    newReview
+    {
+      ...newReview,
+      updatedAt: +new Date(),
+    }
   ).exec();
   await updateCourseData(courseId, newReview, oldReview);
 };

@@ -1,4 +1,16 @@
 import { Schema } from 'mongoose';
+import { toSeconds, toMilliseconds } from '../utils';
+
+export const unixTimestampInSeconds = {
+  type: Number,
+  get: toMilliseconds,
+  set: toSeconds,
+};
+
+export const unixTimestampInSecondsRequired = {
+  ...unixTimestampInSeconds,
+  require: true,
+};
 
 export const requiredNumber = {
   type: Number,

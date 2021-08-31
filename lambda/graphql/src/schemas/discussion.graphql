@@ -27,11 +27,11 @@ type DiscussionMessage {
 }
 
 type DiscussionResult {
-  messages: [DiscussionMessage]!
+  messages: [DiscussionMessage]
   nextPage: Int
 }
 
 type Discussion {
   id: String!
-  messages: [DiscussionMessage]!
+  messages: [DiscussionMessage]
 }
