@@ -31,7 +31,8 @@
           ]
       },
       "skipLibCheck": true,
-      "declaration": true
+      "declaration": true,
+      "resolveJsonModule": true
   },
   "include": ["src/**/*"],
   "exclude": [

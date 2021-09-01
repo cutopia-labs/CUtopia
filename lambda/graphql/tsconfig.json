@@ -29,7 +29,8 @@
               "node_modules/*"
           ]
       },
-      "skipLibCheck": true
+      "skipLibCheck": true,
+      "resolveJsonModule": true
   },
   "include": ["src/**/*"],
   "exclude": [

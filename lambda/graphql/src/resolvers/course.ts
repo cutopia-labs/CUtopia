@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */ // course_sections is not in camelcase when parsing the data
 import { getCourseData } from 'mongodb';
+import { verifyCourseId } from '../utils';
 
 import { courses } from '../data/courses';
 import processRating from '../utils/processRating';
@@ -8,6 +9,11 @@ const subjectsResolver = {
   Query: {
     courses: (parent, { filter }) => {
       const { requiredCourses = [], requiredTerm = null } = { ...filter };
+      /* TODO: NOT SURE ADD OR NOT FOR PERFORMANCE
+      requiredCourses.forEach(id => {
+        verifyCourseId(id);
+      });
+      */
       const idsContext = {
         courseCode: null,
         term: null,

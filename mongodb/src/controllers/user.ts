@@ -177,9 +177,3 @@ export const getTimetablesOverview = async input => {
     .exec();
   return user[timetableField];
 };
-
-type updateDiscussionsProps = {
-  username: string;
-  courseId: string;
-  text: string;
-};

@@ -39,7 +39,7 @@ export const graphqlHandler = server.createHandler({
     const app = express();
     app.use(
       '/static',
-      express.static(__dirname + '/data/derivatives', {
+      express.static(__dirname + '/data/static', {
         etag: true,
         setHeaders: (res, path, stat) => {
           res.header('Access-Control-Allow-Origin', allowedOrigins);

@@ -6,10 +6,12 @@ import {
   voteReview,
 } from 'mongodb';
 import { VoteAction } from 'cutopia-types/lib/codes';
+import { verifyCourseId } from '../utils';
 
 const reviewsResolver = {
   Mutation: {
     createReview: async (parent, { input }, { user }) => {
+      verifyCourseId(input.courseId);
       const { username } = user;
       const { createdAt } = await createReview({
         ...input,
@@ -20,6 +22,7 @@ const reviewsResolver = {
       };
     },
     voteReview: async (parent, { input }, { user }) => {
+      verifyCourseId(input.courseId);
       const { username } = user;
       await voteReview({
         ...input,
@@ -27,6 +30,7 @@ const reviewsResolver = {
       });
     },
     editReview: async (parent, { input }, { user }) => {
+      verifyCourseId(input.courseId);
       const { username } = user;
       await editReview({
         ...input,
@@ -53,9 +57,15 @@ const reviewsResolver = {
   },
   Query: {
     reviews: async (parent, { input }) => {
+      /* TODO: Not sure check or not, cuz rare + add lambda billed time?
+      if (input.courseId) {
+        verifyCourseId(input.courseId);
+      }
+      */
       return await getReviews(input);
     },
     review: async (parent, { input }) => {
+      verifyCourseId(input.courseId);
       return await getReview(input);
     },
   },
