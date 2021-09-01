@@ -36,9 +36,11 @@ export const createReview = async input => {
     ...reviewData,
   });
 
-  await user.save();
   await newReview.save();
+
+  // skip update if review cannot be saved
   await updateCourseData(courseId, reviewData);
+  await user.save();
 
   return {
     createdAt,

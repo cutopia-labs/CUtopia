@@ -100,5 +100,5 @@ type ReviewDetails {
 
 input ReviewDetailsInput {
   grade: Int! @range(min: 0, max: 4)
-  text: String @stringLength(min: 10, max: 500)
+  text: String @stringLength(min: 10, max: 3000)
 }

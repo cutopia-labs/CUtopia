@@ -10,12 +10,6 @@ import typeDefs from './schemas';
 import resolvers from './resolvers';
 import createContext from './context';
 import schemaDirectives from './directives';
-import reviewRouter from './routes/reviews';
-import courseRouter from './routes/courses';
-import reportRouter from './routes/reports';
-import rankingRouter from './routes/rankings';
-import timetableRouter from './routes/timetables';
-import discussionRouter from './routes/discussions';
 
 dotenv.config();
 
@@ -56,12 +50,6 @@ const startApolloServer = async () => {
     }
   );
   app.use(express.json());
-  app.use('/reviews', reviewRouter);
-  app.use('/courses', courseRouter);
-  app.use('/timetables', timetableRouter);
-  app.use('/reports', reportRouter);
-  app.use('/rankings', rankingRouter);
-  app.use('/discussions', discussionRouter);
   server.applyMiddleware({ app });
   app.listen({ port: 4000 });
   console.log(

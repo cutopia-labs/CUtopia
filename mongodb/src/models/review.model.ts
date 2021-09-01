@@ -13,7 +13,7 @@ const reviewDetailSchema = new Schema<ReviewDetail>(
     text: {
       type: String,
       required: true,
-      maxlength: 500,
+      maxlength: 3000,
     },
   },
   {
@@ -58,16 +58,18 @@ const reviewSchema = new Schema(
   }
 );
 // By default, MongoDB creates a unique index on the _id field during the creation of a collection.
-reviewSchema.index({ createdAt: -1 }, { unique: true });
+reviewSchema.index({ createdAt: -1 });
 reviewSchema.virtual('id').get(function () {
   return this._id;
 });
 
 const ReviewModel = model<Review>('Review', reviewSchema);
 
-// set('debug', true);
+/* DEBUG ONLY
+set('debug', true);
 ReviewModel.on('index', err => {
   console.error(err);
 });
+*/
 
 export default ReviewModel;
