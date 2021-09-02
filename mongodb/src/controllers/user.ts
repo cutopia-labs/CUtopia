@@ -173,10 +173,10 @@ export const updateTimetableId = async input => {
 };
 
 export const getTimetablesOverview = async input => {
-  const { username, shared } = input;
-  const timetableField = shared ? 'sharedTimetables' : 'timetables';
-  const user = await User.findOne({ username }, timetableField)
-    .populate(timetableField, 'tableName createdAt expireAt expire')
+  const { username } = input;
+  const user = await User.findOne({ username }, 'timetables sharedTimetables')
+    .populate('timetables', 'tableName createdAt expireAt expire')
+    .populate('sharedTimetables', 'tableName createdAt expireAt expire')
     .exec();
-  return user[timetableField];
+  return [user.timetables, user.sharedTimetables];
 };

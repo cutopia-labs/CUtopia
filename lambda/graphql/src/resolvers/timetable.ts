@@ -9,17 +9,7 @@ const timetableResolver = {
   User: {
     timetables: async (parent, args, { user }) => {
       const { username } = user;
-      return await getTimetablesOverview({
-        username,
-        shared: false,
-      });
-    },
-    sharedTimetables: async (parent, args, { user }) => {
-      const { username } = user;
-      return await getTimetablesOverview({
-        username,
-        shared: true,
-      });
+      return await getTimetablesOverview({ username });
     },
   },
   Query: {

@@ -8,8 +8,7 @@ type Query {
 }
 
 type User {
-  timetables: [TimetableOverview]
-  sharedTimetables: [TimetableOverview]
+  timetables: [[TimetableOverview]]
 }
 
 type CourseTableEntry {

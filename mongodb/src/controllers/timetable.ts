@@ -3,7 +3,9 @@ import { ErrorCode } from 'cutopia-types/lib/codes';
 
 import withCache from '../utils/withCache';
 import Timetable from '../models/timetable.model';
+import User from '../models/user.model';
 import { updateTimetableId } from './user';
+import { UPLOAD_TIMETABLE_LIMIT } from '../constant/configs';
 
 const timetableCache = new NodeCache({
   stdTTL: 1800,
@@ -23,6 +25,17 @@ export const getTimetable = async input =>
 
 export const uploadTimetable = async input => {
   const { username, expire } = input;
+  const user = await User.findOne(
+    { username },
+    'timetables sharedTimetables'
+  ).exec();
+  if (
+    user.timetables.length + user.sharedTimetables.length >
+    UPLOAD_TIMETABLE_LIMIT
+  ) {
+    throw Error(ErrorCode.UPLOAD_TIMETABLE_EXCEED_LIMIT.toString());
+  }
+
   const newTimetable = new Timetable({
     ...input,
     expire,
