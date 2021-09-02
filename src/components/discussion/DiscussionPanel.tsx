@@ -14,9 +14,9 @@ import CardHeader from '../atoms/CardHeader';
 import TextIcon from '../atoms/TextIcon';
 import ErrorCard from '../molecules/ErrorCard';
 import SearchDropdown from '../organisms/SearchDropdown';
+import useMobileQuery from '../../hooks/useMobileQuery';
 import Discussion from './Discussion';
 import './DiscussionPanel.scss';
-import useMobileQuery from '../../hooks/useMobileQuery';
 
 const RECENT_DISCUSSIONS_RAW = [
   {
