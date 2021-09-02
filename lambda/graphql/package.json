@@ -5,9 +5,13 @@
   "main": "graphql.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rm -rf build && yarn install && tsc && cp -RL node_modules/ build/ && sh copyfile.sh",
+    "build": "rm -rf build && tsc && sh copyfile.sh",
+    "predeploy": "yarn run build && rm -rf node_modules && rm -rf build/node_modules && yarn install --prod && cp -RL node_modules/ build/",
+    "postdeploy": "rm -rf node_modules && yarn install --prod=false",
+    "local": "yarn run build-db && yarn run restart",
+    "restart": "yarn run build && node build/local.js",
     "upgrade-db": "yarn upgrade mongodb && cp -RL node_modules/mongodb/ build/node_modules/",
-    "postdeploy": "rm -rf node_modules && yarn install --prod=false"
+    "build-db": "yarn --cwd ../../mongodb run build && yarn upgrade mongodb"
   },
   "author": "",
   "license": "ISC",

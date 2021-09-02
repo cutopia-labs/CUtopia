@@ -5,3 +5,4 @@ cp -R src/data/static build/data
 cp -R src/data/derivatives build/data
 cp src/schemas/*.graphql build/schemas
 cp .env build/.env
+cp -RL node_modules/ build/
