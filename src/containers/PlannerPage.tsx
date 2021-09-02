@@ -2,8 +2,6 @@ import { useState } from 'react';
 import { observer } from 'mobx-react-lite';
 
 import './PlannerPage.scss';
-import { CalendarToday, Search } from '@material-ui/icons';
-import { useRouteMatch } from 'react-router-dom';
 import { useTitle } from 'react-use';
 import SearchPanel from '../components/organisms/SearchPanel';
 import Page from '../components/atoms/Page';
@@ -19,26 +17,7 @@ enum PlannerMode {
   TIMETABLE, // Mobile Only
 }
 
-type PlannerMobileFabProps = {
-  targetMode: PlannerMode;
-  setMode: (mode: PlannerMode) => any;
-};
-
-const PLANNER_MOBILE_FAB_ITEM = {
-  [PlannerMode.SEARCH]: {
-    icon: <Search />,
-  },
-  [PlannerMode.TIMETABLE]: {
-    icon: <CalendarToday />,
-  },
-};
-
 const PlannerPage = () => {
-  const isPlannerShare = useRouteMatch({
-    path: '/planner/share/:shareId',
-    strict: true,
-    exact: true,
-  });
   useTitle('Planner');
   const isMobile = window.matchMedia(
     `(max-width:${MIN_DESKTOP_WIDTH}px)`
@@ -57,7 +36,7 @@ const PlannerPage = () => {
           <>
             <SearchPanel />
             <PlannerTimetable />
-            <div className="secondary-column">
+            <div className="planner-cart-column secondary-column">
               <TimetableOverviewCard />
               <PlannerCart />
             </div>

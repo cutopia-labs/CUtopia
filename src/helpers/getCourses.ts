@@ -32,13 +32,6 @@ export const fetchCourses = async (): Promise<
       etag: +new Date(),
     });
   }
-  let sum = 0;
-  console.log(
-    Object.values(courseList).forEach(list => {
-      sum += list.length;
-    })
-  );
-  console.log(sum);
   return courseList;
 };
 
@@ -107,13 +100,14 @@ export const getCoursesFromQuery = async ({
             return courseList[subject];
           }
         } catch (error) {
-          // search for titles
+          // search for courseId & titles
           const results = [];
           const queryString = text.toLowerCase().trim();
           for (const [, courses] of Object.entries(courseList)) {
             for (let i = 0; i < courses.length && results.length < limit; i++) {
               if (
-                courses[i].t.toLowerCase().includes(queryString) &&
+                (courses[i].c.toLowerCase().includes(queryString) ||
+                  courses[i].t.toLowerCase().includes(queryString)) &&
                 (!offerredOnly || courses[i].o)
               ) {
                 results.push(courses[i]);

@@ -1,6 +1,5 @@
 .planner-cart {
-  height: fit-content;
-  max-height: calc(100vh - var(--header-height) - 3 * var(--page-margin));
+  height: 100%;
   padding-top: 8px;
   overflow-y: scroll;
   &::-webkit-scrollbar {

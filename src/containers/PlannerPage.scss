@@ -6,6 +6,10 @@
   }
 }
 
+.planner-cart-column {
+  height: calc(100vh - var(--header-height) - 3 * var(--page-margin));
+}
+
 @media only screen and (max-width: 1260px) {
   .planner-page {
     display: flex;
