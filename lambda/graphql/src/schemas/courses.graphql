@@ -10,8 +10,8 @@ input CourseFilter {
 type Course {
   courseId: String!
   title: String!
-  reviewLecturers: [String]!
-  reviewTerms: [String]!
+  reviewLecturers: [String]
+  reviewTerms: [String]
   career: String!
   units: String!
   grading: String!

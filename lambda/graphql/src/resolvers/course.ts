@@ -5,7 +5,16 @@ import { verifyCourseId } from '../utils';
 import { courses } from '../data/courses';
 import processRating from '../utils/processRating';
 
-const subjectsResolver = {
+export const coursesPreResolver = {
+  courses: [
+    ['reviewLecturers', 'reviewTerms', 'rating'],
+    async parent => ({
+      courseData: await getCourseData({ courseId: parent.course.courseId }),
+    }),
+  ],
+};
+
+const coursesResolver = {
   Query: {
     courses: (parent, { filter }) => {
       const { requiredCourses = [], requiredTerm = null } = { ...filter };
@@ -29,14 +38,8 @@ const subjectsResolver = {
   Course: {
     courseId: ({ course }) => course.courseId,
     title: ({ course }) => course.title,
-    reviewLecturers: async ({ idsContext, course }) => {
-      const result = await getCourseData({ courseId: course.courseId });
-      return result?.lecturers || [];
-    },
-    reviewTerms: async ({ idsContext, course }) => {
-      const result = await getCourseData({ courseId: course.courseId });
-      return result?.terms || [];
-    },
+    reviewLecturers: async ({ courseData }) => courseData?.lecturers,
+    reviewTerms: async ({ courseData }) => courseData?.terms,
     career: ({ course }) => course.career,
     units: ({ course }) => course.units,
     grading: ({ course }) => course.grading,
@@ -76,9 +79,8 @@ const subjectsResolver = {
         percentage: assessments[assessment],
       }));
     },
-    rating: async ({ course }) => {
-      const result = await getCourseData({ courseId: course.courseId });
-      return result ? processRating(result.rating) : null;
+    rating: async ({ courseData }) => {
+      return courseData ? processRating(courseData.rating) : null;
     },
   },
   Term: {
@@ -106,4 +108,4 @@ const subjectsResolver = {
   AssessementComponent: {},
 };
 
-export default subjectsResolver;
+export default coursesResolver;

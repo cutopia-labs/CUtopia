@@ -19,6 +19,7 @@
     "express": "^4.17.1",
     "fuse.js": "^6.4.6",
     "graphql": "^15.4.0",
+    "graphql-fields": "^2.0.3",
     "graphql-middleware": "^6.1.5",
     "graphql-rate-limit": "^3.1.0",
     "graphql-scalars": "^1.10.0",

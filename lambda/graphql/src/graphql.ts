@@ -1,6 +1,7 @@
 import { ApolloServer } from 'apollo-server-lambda';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { ValidateDirectiveVisitor } from '@profusion/apollo-validation-directives';
+import { applyMiddleware } from 'graphql-middleware';
 import express from 'express';
 import { connect } from 'mongodb';
 import dotenv from 'dotenv';
@@ -9,17 +10,19 @@ import typeDefs from './schemas';
 import resolvers from './resolvers';
 import schemaDirectives from './directives';
 import createContext from './context';
+import middlewares from './middlewares';
 
 dotenv.config();
 
 // no need to await, mongoose buffers function calls internally
 connect(process.env.ATLAS_URI);
 
-const schema = makeExecutableSchema({
+let schema = makeExecutableSchema({
   typeDefs,
   resolvers,
   schemaDirectives,
 } as any);
+schema = applyMiddleware(schema, ...middlewares);
 
 ValidateDirectiveVisitor.addValidationResolversToSchema(schema);
 
