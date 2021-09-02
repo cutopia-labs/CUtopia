@@ -3,7 +3,7 @@ type Query {
 }
 
 type RankTable {
-  rankedCourses(filter: RankingFilter): [RankedCourse]
+  rankedCourses(filter: RankingFilter): [RankedCourse] @rateLimit(window: "1m", max: 100)
 }
 
 input RankingFilter {

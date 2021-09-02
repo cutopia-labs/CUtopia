@@ -1,10 +1,10 @@
 type Mutation {
-  uploadTimetable(input: UploadTimetableInput!): UploadTimetableResult @auth
-  removeTimetable(_id: String!): Void @auth
+  uploadTimetable(input: UploadTimetableInput!): UploadTimetableResult @auth @rateLimit(window: "1m", max: 30)
+  removeTimetable(_id: String!): Void @auth @rateLimit(window: "1s", max: 3)
 }
 
 type Query {
-  timetable(_id: String!): Timetable
+  timetable(_id: String!): Timetable @rateLimit(window: "1s", max: 5)
 }
 
 type User {

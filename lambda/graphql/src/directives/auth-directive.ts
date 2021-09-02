@@ -9,13 +9,13 @@ class AuthDirective extends SchemaDirectiveVisitor {
 
     field.resolve = async (...params) => {
       const [parent, args, context, info] = params;
-      if (!context.authenticated) {
-        throw Error(ErrorCode.AUTHORIZATION_REQUIRES_LOGIN as any);
+      if (!context.user) {
+        throw Error(ErrorCode.AUTHORIZATION_REQUIRES_LOGIN.toString());
       }
 
       const validateOwner = owner => {
         if (role === 'OWNER' && owner !== context.user.username) {
-          throw Error(ErrorCode.AUTHORIZATION_REQUIRES_OWNER as any);
+          throw Error(ErrorCode.AUTHORIZATION_REQUIRES_OWNER.toString());
         }
       };
 

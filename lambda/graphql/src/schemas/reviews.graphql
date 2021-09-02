@@ -1,12 +1,12 @@
 type Mutation {
-  createReview(input: CreateReviewInput!): CreateReviewResult @auth
-  voteReview(input: VoteReviewInput!): Void @auth
-  editReview(input: EditReviewInput!): Void @auth(role: OWNER)
+  createReview(input: CreateReviewInput!): CreateReviewResult @auth @rateLimit(window: "1m", max: 3)
+  voteReview(input: VoteReviewInput!): Void @auth @rateLimit(window: "1s", max: 5)
+  editReview(input: EditReviewInput!): Void @auth(role: OWNER) @rateLimit(window: "1m", max: 10)
 }
 
 type Query {
-  reviews(input: ReviewsFilter): [Review]! @auth
-  review(input: ReviewFilter!): Review @auth
+  reviews(input: ReviewsFilter): [Review]! @auth @rateLimit(window: "1m", max: 200)
+  review(input: ReviewFilter!): Review @auth @rateLimit(window: "1m", max: 80)
 }
 
 type ReviewsResult {
