@@ -45,6 +45,12 @@ export const getUser = async input => {
   return await User.findOne({ username }, selection).exec();
 };
 
+export const getUsers = async input => {
+  const { filters, fields } = input;
+  const selection = fields ? fields.join(' ') : null;
+  return await User.find(filters, selection).exec();
+};
+
 export const updateUser = async input => {
   const { username, ...update } = input;
   return await User.updateOne({ username }, update).exec();

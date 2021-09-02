@@ -107,6 +107,11 @@ Resources:
           Type: SNS
           Properties:
             Topic: !Ref UserSNSTopic
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-03ed907b42c26a4ed
+        SubnetIds:
+          - subnet-0d9182dad41e3aafa
       Role: !GetAtt LambdaRole.Arn
       Runtime: nodejs14.x
       Timeout: 20
@@ -139,6 +144,20 @@ Resources:
       Runtime: nodejs14.x
       Timeout: 20
       MemorySize: 512
+  ScheduledResendEmail:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./emailer
+      Handler: resend.handler
+      Role: !GetAtt LambdaRole.Arn
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-03ed907b42c26a4ed
+        SubnetIds:
+          - subnet-0d9182dad41e3aafa
+      Runtime: nodejs14.x
+      Timeout: 20
+      MemorySize: 512
   HourlyScheduledRule:
     Type: AWS::Events::Rule
     Properties:
@@ -149,6 +168,14 @@ Resources:
           Id: UpdateRanking
         - Arn: !GetAtt ScheduledRemoveTimetable.Arn
           Id: RemoveTimetable
+  FiveMinutesScheduledRule:
+    Type: AWS::Events::Rule
+    Properties:
+      ScheduleExpression: cron(0/5 * * * ? *)
+      State: ENABLED
+      Targets:
+        - Arn: !GetAtt ScheduledResendEmail.Arn
+          Id: ResendEmail
   # TODO: efficient way to grant permissions
   # of accessing multiple lambda functions in a single resource?
   InvokeRemoveTimetablePermission:
@@ -165,6 +192,13 @@ Resources:
       Action: lambda:InvokeFunction
       Principal: events.amazonaws.com
       SourceArn: !GetAtt HourlyScheduledRule.Arn
+  InvokeResendEmailPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref ScheduledResendEmail
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt FiveMinutesScheduledRule.Arn
   LambdaRole:
     Type: AWS::IAM::Role
     Properties:

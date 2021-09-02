@@ -34,12 +34,13 @@ const userResolver = {
   },
   Mutation: {
     createUser: async (parent, { input }) => {
-      const { SID } = input;
-      const verificationCode = await createUser(input);
+      const { username, SID } = input;
+      const veriCode = await createUser(input);
       await sendEmail({
         action: 'create',
         email: `${SID}@link.cuhk.edu.hk`,
-        verificationCode,
+        username,
+        veriCode,
       });
     },
     verifyUser: async (parent, { input }) => {
@@ -68,6 +69,7 @@ const userResolver = {
       await sendEmail({
         action: 'resetPwd',
         resetPwdCode: code,
+        username: input.username,
         email,
       });
     },

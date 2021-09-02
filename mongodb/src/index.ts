@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 
 export {
   getUser,
+  getUsers,
   updateUser,
   getCourseData,
   updateCourseData,

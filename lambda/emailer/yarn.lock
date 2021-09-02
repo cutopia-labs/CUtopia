@@ -218,6 +218,9 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
+"mongodb@file:../../mongodb/lib":
+  version "0.0.0"
+
 ms@2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"

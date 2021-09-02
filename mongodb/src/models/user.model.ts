@@ -37,6 +37,7 @@ const userSchema = new Schema<User>(
       type: Boolean,
       default: false,
     },
+    resendEmail: Boolean,
     fullAccess: {
       type: Boolean,
       default: false,
