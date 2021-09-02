@@ -1,9 +1,6 @@
 .timetable-overview {
   min-height: 48px;
-  .MuiAccordion-root.Mui-expanded {
-    &:first-child {
-      height: fit-content;
-    }
+  &.MuiAccordion-root.Mui-expanded {
     margin: 0;
   }
   .MuiAccordionSummary-root {

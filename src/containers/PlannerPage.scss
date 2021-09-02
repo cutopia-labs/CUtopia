@@ -1,12 +1,11 @@
 .planner-page {
   min-height: calc(100vh - var(--header-height) - 2 * var(--page-margin));
   grid-template-columns: min-content 1fr min-content;
-  .secondary-column {
-    width: 280px;
-  }
 }
 
 .planner-cart-column {
+  width: 280px;
+  grid-auto-rows: min-content;
   height: calc(100vh - var(--header-height) - 3 * var(--page-margin));
 }
 
