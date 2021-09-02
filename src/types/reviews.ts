@@ -20,7 +20,7 @@ export type RecentReview = {
 };
 
 export type Review = {
-  id: string;
+  _id: string;
   username: string;
   reviewId: string;
   title: string;

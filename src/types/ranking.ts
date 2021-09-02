@@ -6,7 +6,7 @@ export type RankEntry = {
 };
 
 export type Ranking = {
-  _id: string; // ranking field, e.g. latest, grading
+  _id: string; // ranking field, e.g. numReviews, grading
   ranks: RankEntry[];
   updatedAt: number;
 };

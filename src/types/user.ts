@@ -13,6 +13,7 @@ type User = {
   exp: number;
   veriCode: string;
   verified: boolean;
+  resendEmail: boolean;
   fullAccess: boolean;
   timetables: Timetable[];
   sharedTimetables: Timetable[];
