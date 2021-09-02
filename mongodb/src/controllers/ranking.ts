@@ -6,7 +6,7 @@ import { RANK_LIMIT } from '../constant/configs';
 import { RankEntry } from 'cutopia-types/lib/types';
 
 const rankingCache = new NodeCache({
-  stdTTL: 1800,
+  stdTTL: 600,
 });
 
 const rankField = (field: string) => [

@@ -10,13 +10,13 @@ const timetableCache = new NodeCache({
 });
 
 export const getTimetable = async input =>
-  withCache(timetableCache, input.id, async () => {
-    const timetable = await Timetable.findById(input.id);
+  withCache(timetableCache, input._id, async () => {
+    const timetable = await Timetable.findById(input._id);
     if (!timetable) {
       throw Error(ErrorCode.GET_TIMETABLE_INVALID_ID.toString());
     }
     if (timetable.expire === -1 && input.username !== timetable.username) {
-      // throw Error(ErrorCode.GET_TIMETABLE_UNAUTHORIZED.toString());
+      throw Error(ErrorCode.GET_TIMETABLE_UNAUTHORIZED.toString());
     }
     return timetable;
   });
@@ -31,21 +31,21 @@ export const uploadTimetable = async input => {
 
   await updateTimetableId({
     operation: 'add',
-    id: newTimetable._id,
+    _id: newTimetable._id,
     username,
     expire,
   });
   await newTimetable.save();
   return {
-    id: newTimetable._id,
+    _id: newTimetable._id,
     createdAt: newTimetable.createdAt,
   };
 };
 
 export const removeTimetable = async input => {
-  const { username, id } = input;
+  const { username, _id } = input;
   return await Timetable.deleteOne({
-    _id: id,
+    _id,
     username,
   });
 };

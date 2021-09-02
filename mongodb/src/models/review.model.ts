@@ -59,9 +59,6 @@ const reviewSchema = new Schema(
 );
 // By default, MongoDB creates a unique index on the _id field during the creation of a collection.
 reviewSchema.index({ createdAt: -1 });
-reviewSchema.virtual('id').get(function () {
-  return this._id;
-});
 
 const ReviewModel = model<Review>('Review', reviewSchema);
 

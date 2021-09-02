@@ -2,10 +2,7 @@ import bcrypt from 'bcryptjs';
 import { nanoid } from 'nanoid';
 import { ErrorCode } from 'cutopia-types/lib/codes';
 import User from '../models/user.model';
-import { MESSAGE_PREVIEW_LENGTH, USER_DISCUSSIONS } from '../constant/configs';
-
-export const SALT_ROUNDS = 10;
-export const VERIFY_EXPIRATION_TIME = 24 * 60 * 60 * 1000;
+import { SALT_ROUNDS, VERIFY_EXPIRATION_TIME } from '../constant/configs';
 
 export const createUser = async input => {
   const { username, SID, password } = input;
@@ -89,7 +86,7 @@ export const login = async input => {
   }
 
   if (!user.verified) {
-    // throw Error(ErrorCode.LOGIN_NOT_VERIFIED.toString()); #TODO
+    throw Error(ErrorCode.LOGIN_NOT_VERIFIED.toString());
   }
 
   if (!(await bcrypt.compare(password, user.password))) {
@@ -155,7 +152,7 @@ export const incrementUpvotesCount = async input => {
 };
 
 export const updateTimetableId = async input => {
-  const { username, id, operation, expire } = input;
+  const { username, _id, operation, expire } = input;
   const op = operation === 'add' ? '$addToSet' : '$pull';
   const timetableField = expire >= 0 ? 'sharedTimetables' : 'timetables';
 
@@ -163,7 +160,7 @@ export const updateTimetableId = async input => {
     { username },
     {
       [op]: {
-        [timetableField]: id,
+        [timetableField]: _id,
       },
     }
   ).exec();

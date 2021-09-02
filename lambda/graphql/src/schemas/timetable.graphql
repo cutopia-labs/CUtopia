@@ -1,10 +1,10 @@
 type Mutation {
   uploadTimetable(input: UploadTimetableInput!): UploadTimetableResult @auth
-  removeTimetable(id: String!): Void @auth
+  removeTimetable(_id: String!): Void @auth
 }
 
 type Query {
-  timetable(id: String!): Timetable
+  timetable(_id: String!): Timetable
 }
 
 type User {
@@ -42,7 +42,7 @@ input UploadTimetableInput {
 }
 
 type UploadTimetableResult {
-  id: String!
+  _id: String!
   createdAt: Timestamp!
 }
 
@@ -55,7 +55,7 @@ type Timetable {
 }
 
 type TimetableOverview {
-  id: String!
+  _id: String!
   tableName: String
   createdAt: Timestamp!
   expireAt: Timestamp!

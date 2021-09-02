@@ -5,7 +5,7 @@ import { courses } from '../data/courses';
 import withCache from '../utils/withCache';
 
 const rankingCache = new NodeCache({
-  stdTTL: 1800,
+  stdTTL: 600,
   useClones: false,
 });
 

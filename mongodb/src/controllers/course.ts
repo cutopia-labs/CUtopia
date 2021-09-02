@@ -3,7 +3,7 @@ import Course from '../models/course.model';
 import withCache from '../utils/withCache';
 
 const courseCache = new NodeCache({
-  stdTTL: 1800,
+  stdTTL: 600,
 });
 
 export const getCourseData = async input =>
@@ -12,7 +12,7 @@ export const getCourseData = async input =>
   });
 
 export type Review = {
-  id: string;
+  _id: string;
   courseId: string;
   username: string;
   anonymous: boolean;

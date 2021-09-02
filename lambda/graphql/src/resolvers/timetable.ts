@@ -23,9 +23,9 @@ const timetableResolver = {
     },
   },
   Query: {
-    timetable: async (parent, { id }, { user }) => {
+    timetable: async (parent, { _id }, { user }) => {
       const { username } = user;
-      return await getTimetable({ id, username });
+      return await getTimetable({ _id, username });
     },
   },
   Mutation: {
@@ -34,9 +34,9 @@ const timetableResolver = {
       const { entries, tableName, expire } = input;
       return await uploadTimetable({ username, entries, tableName, expire });
     },
-    removeTimetable: async (parent, { id }, { user }) => {
+    removeTimetable: async (parent, { _id }, { user }) => {
       const { username } = user;
-      await removeTimetable({ username, id });
+      await removeTimetable({ username, _id });
     },
   },
 };

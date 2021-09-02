@@ -69,12 +69,12 @@ type Ratings {
 }
 
 input VoteReviewInput {
-  id: String! # format: courseId#createdAt
+  _id: String! # format: courseId#createdAt
   vote: Int!
 }
 
 type Review {
-  id: String!
+  _id: String!
   courseId: String!
   username: String!
   anonymous: Boolean!

@@ -13,7 +13,7 @@ export const generateReviewId = (
 ) => `${courseId}#${createdAt}`;
 
 const reviewCache = new NodeCache({
-  stdTTL: 1800,
+  stdTTL: 600,
 });
 
 export const createReview = async input => {
@@ -55,7 +55,7 @@ export const getReview = async input =>
   });
 
 export const voteReview = async input => {
-  const { id, username, vote } = input;
+  const { _id, username, vote } = input;
   if (vote !== VoteAction.UPVOTE && vote !== VoteAction.DOWNVOTE) {
     throw Error(ErrorCode.VOTE_REVIEW_INVALID_VALUE.toString());
   }
@@ -64,7 +64,7 @@ export const voteReview = async input => {
   const voteCountField = isUpvote ? 'upvotes' : 'downvotes';
 
   const review = await Review.findById(
-    id,
+    _id,
     `upvoteUserIds downvoteUserIds ${voteCountField} username`
   ).exec();
   if (!review) {
