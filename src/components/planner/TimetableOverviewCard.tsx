@@ -162,7 +162,6 @@ const TimetableOverviewCard = () => {
       plannerStore.updateStore('remoteTimetableData', data);
     },
     onError: view.handleError,
-    notifyOnNetworkStatusChange: true,
   });
   useEffect(() => {
     if (expanded && !userTimetableLoading && !userTimetable) {
