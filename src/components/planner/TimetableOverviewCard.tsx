@@ -11,11 +11,12 @@ import { IconButton, MenuItem, Menu } from '@material-ui/core';
 import { MoreHoriz, Timer } from '@material-ui/icons';
 import copy from 'copy-to-clipboard';
 import { useHistory } from 'react-router-dom';
+import { observer } from 'mobx-react-lite';
 import { PLANNER_CONFIGS } from '../../constants/configs';
 import './TimetableOverviewCard.scss';
 import { GET_USER_TIMETABLES } from '../../constants/queries';
 import { getMMMDDYY } from '../../helpers/getTime';
-import { PlannerContext, ViewContext } from '../../store';
+import { PlannerContext, plannerStore, ViewContext } from '../../store';
 import {
   ErrorCardMode,
   TimetableOverviewMode,
@@ -30,7 +31,6 @@ import { generateTimetableURL } from './PlannerTimetable';
 
 const getExpire = (mode: TimetableOverviewMode, expire: number) => {
   if (mode === TimetableOverviewMode.SHARE) {
-    console.log(expire);
     return (
       <>
         {' • '}
@@ -158,16 +158,23 @@ const TimetableOverviewCard = () => {
     { data: userTimetable, loading: userTimetableLoading },
   ] = useLazyQuery(GET_USER_TIMETABLES, {
     onCompleted: async data => {
-      console.log(getCombinedTimetable(data));
-      setCombinedTimetables(getCombinedTimetable(data));
+      console.log(`fetched tiemtabnle`);
+      plannerStore.updateStore('remoteTimetableData', data);
     },
     onError: view.handleError,
+    notifyOnNetworkStatusChange: true,
   });
   useEffect(() => {
     if (expanded && !userTimetableLoading && !userTimetable) {
       getUserTimetable();
     }
   }, [expanded]);
+
+  useEffect(() => {
+    setCombinedTimetables(
+      getCombinedTimetable(plannerStore.remoteTimetableData)
+    );
+  }, [plannerStore.remoteTimetableData]);
 
   const onDownload = (id: string, createdAt: number) => {
     // if key match (createdAt), then do not load but switch
@@ -224,4 +231,4 @@ const TimetableOverviewCard = () => {
   );
 };
 
-export default TimetableOverviewCard;
+export default observer(TimetableOverviewCard);

@@ -25,6 +25,7 @@ class PlannerStore extends StorePrototype {
   @observable currentPlannerKey: number;
   @observable plannerCourses: PlannerCourse[] = [];
   @observable initiated: boolean = false; // prevent reaction of null timetable override planners
+  @observable remoteTimetableData: any = null;
 
   viewStore: ViewStore;
 
