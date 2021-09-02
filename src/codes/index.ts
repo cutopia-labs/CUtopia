@@ -30,6 +30,7 @@ export enum ErrorCode {
   DEL_TIMETABLE_INVALID_ID,
   INPUT_INVALID_LENGTH,
   INPUT_INVALID_VALUE,
+  EXCEED_RATE_LIMIT,
 }
 
 export enum ReportCategory {
