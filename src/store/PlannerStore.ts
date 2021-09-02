@@ -52,6 +52,15 @@ class PlannerStore extends StorePrototype {
     this.initiated = true;
   }
 
+  get shareIds() {
+    return Object.fromEntries(
+      Object.entries(this.planners).map(([key, planner]) => [
+        planner.shareId,
+        key,
+      ])
+    );
+  }
+
   get timetableInfo(): TimetableInfo {
     let maxDay = 5;
     const info: TimetableInfo = {
@@ -173,6 +182,10 @@ class PlannerStore extends StorePrototype {
   @action updateCurrentPlanner(key: number) {
     let label = PLANNER_CONFIGS.DEFAULT_TABLE_NAME;
     if (this.validKey(key)) {
+      if (this.currentPlannerKey === key) {
+        this.viewStore.setSnackBar(`Switched to ${label}`);
+        return;
+      }
       this.plannerCourses = this.planners[key].courses;
       this.currentPlannerKey = key;
       label = this.planners[key].label || label;
@@ -218,7 +231,22 @@ class PlannerStore extends StorePrototype {
   @action async updatePlanners(key: number, plannerCourses: PlannerCourse[]) {
     if (this.validKey(key)) {
       this.planners[key].courses = plannerCourses;
+      // as the local one is updated, cannot treat it as uploaded
+      this.updatePlannerShareId(key, undefined, false);
       storeData('planners', this.planners);
+    }
+  }
+
+  @action async updatePlannerShareId(
+    key: number,
+    shareId: string | undefined,
+    save: boolean = true
+  ) {
+    if (this.validKey(key) && this.planners[key].shareId !== shareId) {
+      this.planners[key].shareId = shareId;
+      if (save) {
+        storeData('planners', this.planners);
+      }
     }
   }
 

@@ -107,7 +107,7 @@ const PlannerPage = () => {
   };
 
   useEffect(() => {
-    if (isPlannerShare) {
+    if (isMobile && isPlannerShare) {
       if (mode !== PlannerMode.TIMETABLE) {
         setMode(PlannerMode.TIMETABLE);
       }

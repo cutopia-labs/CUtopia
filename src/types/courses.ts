@@ -66,6 +66,7 @@ export type PlannerCourse = {
 
 export type Planner = {
   label?: string;
+  shareId?: string;
   key: number; // timestamp
   courses: PlannerCourse[];
 };

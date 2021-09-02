@@ -14,7 +14,6 @@ const rgbaToArray = (rgba: string) => {
 
 const colorMixing = (color: string, base: string) => {
   if (color.charAt(0) === '#') {
-    console.log(color);
     color = hexTorgba(color);
   }
   const baseColor = base;

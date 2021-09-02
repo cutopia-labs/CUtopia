@@ -41,8 +41,6 @@ const CourseCard = ({
   course: Event;
 }>) => {
   const theme = useTheme();
-  console.log(`${course.courseId} ${course.section}`);
-
   const sTime = course.startTime.split(':');
   const eTime = course.endTime.split(':');
   const topMarginValue = `${

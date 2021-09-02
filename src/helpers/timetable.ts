@@ -4,9 +4,6 @@ import { CourseSection } from '../types';
 export const getDurationInHour = (section: CourseSection, i: number) => {
   const sTime = section.startTimes[i].split(':');
   const eTime = section.endTimes[i].split(':');
-  console.log(sTime);
-  console.log(eTime);
-  console.log(+eTime[0] - +sTime[0] + (+eTime[1] - +sTime[1]) / 60.0);
   return +eTime[0] - +sTime[0] + (+eTime[1] - +sTime[1]) / 60.0;
 };
 
@@ -26,8 +23,6 @@ export const timeInRange = (
         const s2StartTime = timeStrToInt(s2.startTimes[j]);
         const s2EndTime = timeStrToInt(s2.endTimes[j]);
         if (s1StartTime < s2EndTime && s1EndTime > s2StartTime) {
-          console.log(s1);
-          console.log(s2);
           return getSectionTime(s2);
         }
       }
