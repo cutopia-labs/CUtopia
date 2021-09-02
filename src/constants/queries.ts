@@ -146,17 +146,11 @@ export const GET_USER = gql`
 export const GET_USER_TIMETABLES = gql`
   query {
     me {
-      sharedTimetables {
-        id
-        tableName
-        createdAt
-        expire
-      }
       timetables {
-        id
         tableName
         createdAt
         expire
+        _id
       }
     }
   }
@@ -232,7 +226,7 @@ export const COURSE_SECTIONS_QUERY = gql`
 
 export const GET_SHARE_TIMETABLE = gql`
   query ($id: String!) {
-    timetable(id: $id) {
+    timetable(_id: $id) {
       entries {
         courseId
         title

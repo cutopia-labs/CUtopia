@@ -100,7 +100,7 @@ export const EDIT_REVIEW = gql`
 
 export const VOTE_REVIEW = gql`
   mutation ($id: String!, $vote: Int!) {
-    voteReview(input: { id: $id, vote: $vote })
+    voteReview(input: { _id: $id, vote: $vote })
   }
 `;
 
@@ -113,7 +113,7 @@ export const SHARE_TIMETABLE = gql`
     uploadTimetable(
       input: { entries: $entries, tableName: $tableName, expire: $expire }
     ) {
-      id
+      _id
     }
   }
 `;
@@ -138,7 +138,7 @@ export const REPORT = gql`
 
 export const REMOVE_TIMETABLE = gql`
   mutation ($id: String!) {
-    removeTimetable(id: $id)
+    removeTimetable(_id: $id)
   }
 `;
 

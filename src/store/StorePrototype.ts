@@ -5,7 +5,6 @@ import { storeData } from '../helpers/store';
 class StorePrototype {
   @action.bound updateStore(key: string, value: any) {
     this[key] = value;
-    console.log(`Updated ${key} with value ${JSON.stringify(value)}`);
   }
 
   @action async setStore(key: string, value: any) {

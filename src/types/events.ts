@@ -55,7 +55,7 @@ export type OverlapSections = {
 };
 
 export interface TimetableOverview {
-  id: string;
+  _id: string;
   createdAt: number;
   tableName: string | null;
   expireAt?: number;

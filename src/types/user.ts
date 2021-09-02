@@ -1,4 +1,4 @@
-import { CourseTableEntry } from './events';
+import { TimetableOverview } from './events';
 
 type User = {
   username: string;
@@ -8,8 +8,12 @@ type User = {
   exp: number;
   level: number;
   email?: string;
-  timetable?: CourseTableEntry[];
+  timetables?: TimetableOverview[][];
   fullAccess?: boolean;
+};
+
+type UserData = {
+  me: User;
 };
 
 type CreateUserResult = {
@@ -41,6 +45,7 @@ type ResetPasswordResult = {
 
 export type {
   User,
+  UserData,
   CreateUserResult,
   VerifyUserResult,
   UpdateUserResult,

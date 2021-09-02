@@ -21,6 +21,7 @@ import {
   ErrorCardMode,
   TimetableOverviewMode,
   TimetableOverviewWithMode,
+  UserData,
 } from '../../types';
 import AccordionCard from '../atoms/AccordionCard';
 import Loading from '../atoms/Loading';
@@ -46,14 +47,14 @@ const getTimetableOverviewMode = (expire: number) => {
   if (expire > 0) {
     return TimetableOverviewMode.SHARE;
   }
-  return TimetableOverviewMode.NON_EXPIRE;
+  return TimetableOverviewMode.UPLOAD;
 };
 
-const getCombinedTimetable = (data): TimetableOverviewWithMode[] => {
-  return (data?.me?.timetables || [])
+const getCombinedTimetable = (data: UserData): TimetableOverviewWithMode[] => {
+  return (data?.me?.timetables[TimetableOverviewMode.UPLOAD] || [])
     .concat(
-      [...(data?.me?.sharedTimetables || [])].sort((a, b) =>
-        a.createdAt > b.createdAt ? -1 : 1
+      [...(data?.me?.timetables[TimetableOverviewMode.SHARE] || [])].sort(
+        (a, b) => (a.createdAt > b.createdAt ? -1 : 1)
       )
     )
     .map(item => ({
@@ -79,14 +80,14 @@ const TimetableOverviewListItem = ({
   const menuItems = [
     {
       label: 'Delete',
-      action: () => onDelete(item.id),
+      action: () => onDelete(item._id),
       icon: <AiOutlineDelete />,
     },
   ];
   if (item.mode === TimetableOverviewMode.SHARE) {
     menuItems.push({
       label: 'Share',
-      action: () => onShare(item.id),
+      action: () => onShare(item._id),
       icon: <AiOutlineShareAlt />,
     });
   }
@@ -107,7 +108,7 @@ const TimetableOverviewListItem = ({
         <IconButton
           size="small"
           color="primary"
-          onClick={() => onDownload(item.id, item.createdAt)}
+          onClick={() => onDownload(item._id, item.createdAt)}
         >
           <AiOutlineCloudDownload />
         </IconButton>
@@ -194,7 +195,9 @@ const TimetableOverviewCard = () => {
           id,
         },
       });
-      setCombinedTimetables(items => [...items].filter(item => item.id !== id));
+      setCombinedTimetables(items =>
+        [...items].filter(item => item._id !== id)
+      );
       view.setSnackBar('Deleted!');
     } catch (e) {
       // To skip remove entry in state in case of any error
@@ -210,7 +213,7 @@ const TimetableOverviewCard = () => {
     }
     return combinedTimetables.map(item => (
       <TimetableOverviewListItem
-        key={`${item.createdAt}${item.id}`}
+        key={`${item.createdAt}${item._id}`}
         item={item}
         onShare={onShare}
         onDownload={onDownload}

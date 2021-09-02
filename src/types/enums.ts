@@ -20,7 +20,7 @@ export enum ErrorCardMode {
 }
 
 export enum TimetableOverviewMode {
-  NON_EXPIRE,
-  NON_EXPIRE_SHARE,
+  UPLOAD,
   SHARE,
+  UPLOAD_SHARABLE,
 }

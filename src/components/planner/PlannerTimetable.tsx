@@ -221,13 +221,19 @@ const PlannerTimetable = ({ className }: PlannerTimetableProps) => {
         data => {
           const uploadTimetable = data?.uploadTimetable;
           if (getExpire(shareConfig?.expire) === -1) {
-            planner.updatePlannerShareId(shareCourses.key, uploadTimetable?.id);
+            planner.updatePlannerShareId(
+              shareCourses.key,
+              uploadTimetable?._id
+            );
             setShareCourses(null);
             return;
           }
-          if (uploadTimetable && uploadTimetable?.id) {
-            planner.updatePlannerShareId(shareCourses.key, uploadTimetable?.id);
-            const shareURL = generateTimetableURL(uploadTimetable?.id);
+          if (uploadTimetable && uploadTimetable?._id) {
+            planner.updatePlannerShareId(
+              shareCourses.key,
+              uploadTimetable?._id
+            );
+            const shareURL = generateTimetableURL(uploadTimetable?._id);
             dispatchShareConfig({
               shareLink: shareURL,
             });
