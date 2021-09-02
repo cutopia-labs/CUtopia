@@ -50,13 +50,13 @@ const PlannerCart = () => {
             <span className="sub-title">
               {planner.timetableInfo.totalCredits || 0}
             </span>
-            <span className="light-caption">Credit</span>
+            <span className="light-caption">Credits</span>
           </span>
           <span className="column">
             <span className="sub-title">
               {planner.timetableInfo.averageHour.toFixed(2)}
             </span>
-            <span className="light-caption">Average Hour</span>
+            <span className="light-caption">Average Hours</span>
           </span>
         </div>
       </header>

@@ -310,8 +310,6 @@ const PlannerTimetable = ({ className }: PlannerTimetableProps) => {
       });
       return;
     }
-    console.log('shareIds');
-    console.log(planner.shareIds);
     if (planner.shareIds[shareId]) {
       console.log(
         `Found shareId ${shareId}, skipped loading and switch to ${planner.shareIds[shareId]}`

@@ -1,13 +1,11 @@
-import { useQuery } from '@apollo/client';
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { IconButton } from '@material-ui/core';
 import { ArrowBack } from '@material-ui/icons';
+import { observer } from 'mobx-react-lite';
 import { MESSAGE_PREVIEW_LENGTH } from '../../constants/configs';
-import Loading from '../atoms/Loading';
-import { GET_MY_DISCUSSIONS } from '../../constants/queries';
 import { validCourse } from '../../helpers';
-import { ViewContext } from '../../store';
+import { UserContext } from '../../store';
 import { DiscussionRecent, ErrorCardMode } from '../../types';
 import Card from '../atoms/Card';
 import CardHeader from '../atoms/CardHeader';
@@ -17,79 +15,6 @@ import SearchDropdown from '../organisms/SearchDropdown';
 import useMobileQuery from '../../hooks/useMobileQuery';
 import Discussion from './Discussion';
 import './DiscussionPanel.scss';
-
-const RECENT_DISCUSSIONS_RAW = [
-  {
-    courseId: 'AIST1110',
-    text: 'Hasd asd asd ',
-    user: 'mike',
-  },
-  {
-    courseId: 'CSCI1110',
-    text: 'Hasd asd asd ',
-    user: 'mike',
-  },
-  {
-    courseId: 'CHLT1110',
-    text: 'Hasd asd asd ',
-    user: 'mike',
-  },
-  {
-    courseId: 'HIST1110',
-    text: 'Hasd asd asd ',
-    user: 'mike',
-  },
-  {
-    courseId: 'CSCI1110',
-    text: 'Hasd asd asd ',
-    user: 'mike',
-  },
-  {
-    courseId: 'CHLT1110',
-    text: 'Hasd asd asd ',
-    user: 'mike',
-  },
-  {
-    courseId: 'PHYS1110',
-    text: 'Hasd asd asasdklmf lksadmf masdflk masdlkfm asldkfm d ',
-    user: 'mike',
-  },
-  {
-    courseId: 'CSCI1110',
-    text: 'Hasd asd asd ',
-    user: 'mike',
-  },
-  {
-    courseId: 'CHLT1110',
-    text: 'Hasd asd asd ',
-    user: 'mike',
-  },
-  {
-    courseId: 'CSCI1110',
-    text: 'Hasd asd asd ',
-    user: 'mike',
-  },
-  {
-    courseId: 'CHLT1110',
-    text: 'Hasd asd asd ',
-    user: 'mike',
-  },
-  {
-    courseId: 'CSCI1110',
-    text: 'Hasd asd asd ',
-    user: 'mike',
-  },
-  {
-    courseId: 'CHLT1110',
-    text: 'Hasd asd asd ',
-    user: 'mike',
-  },
-  {
-    courseId: 'PHED1110',
-    text: 'Hasd asd asd ',
-    user: 'mike',
-  },
-];
 
 const getDiscussionFromString = (str: string) => {
   const [courseId, text] = str.split('#');
@@ -128,17 +53,8 @@ const DiscussionPanel = () => {
     courseId?: string;
   }>();
   const history = useHistory();
-  const view = useContext(ViewContext);
-  const { data: userData, loading: userDataLoading } = useQuery(
-    GET_MY_DISCUSSIONS,
-    {
-      onError: view.handleError,
-    }
-  );
+  const user = useContext(UserContext);
   const isMobile = useMobileQuery();
-  useEffect(() => {
-    console.log(courseId);
-  }, [courseId]);
   return (
     <Card className="discussion-panel">
       {(!isMobile || !validCourse(courseId)) && (
@@ -150,14 +66,17 @@ const DiscussionPanel = () => {
             }}
           />
           <div className="recent-discussions">
-            {userDataLoading && <Loading />}
-            {(userData?.me?.discussions || []).map(discussionRaw => (
-              <DiscussionListItem
-                key={discussionRaw}
-                discussion={getDiscussionFromString(discussionRaw)}
-                onClick={courseId => history.push(`/discussion/${courseId}`)}
-              />
-            ))}
+            {user.discussionHistory?.length ? (
+              user.discussionHistory.map(discussion => (
+                <DiscussionListItem
+                  key={discussion.time}
+                  discussion={discussion}
+                  onClick={courseId => history.push(`/discussion/${courseId}`)}
+                />
+              ))
+            ) : (
+              <ErrorCard mode={ErrorCardMode.NULL} />
+            )}
           </div>
         </Card>
       )}
@@ -190,4 +109,4 @@ const DiscussionPanel = () => {
   );
 };
 
-export default DiscussionPanel;
+export default observer(DiscussionPanel);

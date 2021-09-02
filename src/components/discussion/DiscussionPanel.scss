@@ -43,9 +43,7 @@
   .search-dropdown {
     align-items: center;
     .search-panel {
-      --search-panel-width: calc(100% - 22px);
-      margin-right: auto;
-      margin-left: auto;
+      --search-panel-width: calc(100%);
     }
     .search-input-container {
       width: calc(100% - 40px);

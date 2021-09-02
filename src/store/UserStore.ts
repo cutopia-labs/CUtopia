@@ -4,6 +4,7 @@ import {
   CourseConcise,
   CourseInfo,
   CourseTableEntry,
+  DiscussionRecent,
   LoginState,
   User,
 } from '../types';
@@ -32,6 +33,7 @@ class UserStore extends StorePrototype {
   @observable loginState: LoginState;
 
   // User Saved Data
+  @observable discussionHistory: DiscussionRecent[] = [];
   @observable searchHistory: string[] = [];
   @observable favoriteCourses: CourseConcise[] = [];
   @observable timetable: CourseTableEntry[];
