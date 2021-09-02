@@ -1,3 +1,18 @@
+## Develop
+#### Starting server
+```sh
+sh local.sh
+```
+#### Watching logs
+```sh
+sh watch-log.sh
+```
+
+#### GraphQL playground
+After server started, GraphQL playground is available at:
+http://127.0.0.1:3000/graphql
+
+
 ## Deploy
 
 ```sh
