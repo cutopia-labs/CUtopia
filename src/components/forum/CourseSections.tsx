@@ -90,7 +90,11 @@ const CourseSections = ({
   const currentTermIndex = (courseTerms || []).findIndex(
     term => term.name === CURRENT_TERM
   );
-  if (!courseTerms?.length || currentTermIndex === -1) {
+  if (
+    !courseTerms?.length ||
+    currentTermIndex === -1 ||
+    !courseTerms[currentTermIndex]?.course_sections
+  ) {
     return <ErrorCard mode={ErrorCardMode.NULL} />;
   }
   const planner = useContext(PlannerContext);

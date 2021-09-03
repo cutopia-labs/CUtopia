@@ -18,6 +18,7 @@ if (process.env.NODE_ENV === 'production') {
 Sentry.init({
   ...SentryConfigs,
   integrations: [new Integrations.BrowserTracing()],
+  /* Temp disable cuz it showed multiple
   beforeSend(event, hint) {
     // Check if it is an exception, and if so, show the report dialog
     if (event.exception) {
@@ -25,6 +26,7 @@ Sentry.init({
     }
     return event;
   },
+  */
 });
 
 ReactDOM.render(
