@@ -137,8 +137,8 @@ export const REPORT = gql`
 `;
 
 export const REMOVE_TIMETABLE = gql`
-  mutation ($id: String!) {
-    removeTimetable(_id: $id)
+  mutation ($id: String!, $expire: Int!) {
+    removeTimetable(input: { _id: $id, expire: $expire })
   }
 `;
 

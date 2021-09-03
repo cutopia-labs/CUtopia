@@ -70,7 +70,7 @@ type TimetableOverviewListItemProps = {
   item: TimetableOverviewWithMode;
   onShare: (id: string) => void;
   onDownload: (id: string, createdAt: number) => void;
-  onDelete: (id: string) => void;
+  onDelete: (id: string, expire: number) => void;
 };
 
 const TimetableOverviewListItem = ({
@@ -83,7 +83,7 @@ const TimetableOverviewListItem = ({
   const menuItems = [
     {
       label: 'Delete',
-      action: () => onDelete(item._id),
+      action: () => onDelete(item._id, item.expire),
       icon: <AiOutlineDelete />,
     },
   ];
@@ -186,11 +186,12 @@ const TimetableOverviewCard = () => {
     copy(generateTimetableURL(id));
     view.setSnackBar('Copied share link!');
   };
-  const onDelete = async (id: string) => {
+  const onDelete = async (id: string, expire: number) => {
     try {
       await removeTimetable({
         variables: {
           id,
+          expire,
         },
       });
       planner.updateStore(
