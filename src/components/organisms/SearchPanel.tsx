@@ -150,7 +150,8 @@ const DepartmentList = ({ setSearchPayload }) => {
         <Fragment key={k}>
           <MUIListItem
             button
-            onClick={() => {
+            onClick={e => {
+              e.stopPropagation(); // prevent press icon trigger onClickOutside
               if (k === currentSchool) {
                 setCurrentSchool(null);
               } else {
