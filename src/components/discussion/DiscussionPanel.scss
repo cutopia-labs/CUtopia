@@ -42,14 +42,17 @@
   }
   .search-dropdown {
     align-items: center;
+    position: relative;
     .search-panel {
-      --search-panel-width: calc(100%);
+      --search-panel-width: 100%;
+      border: 0;
+      top: 42px;
+      position: absolute;
+      z-index: 10;
     }
     .search-input-container {
       width: calc(100% - 40px);
-      &.active {
-        width: calc(100% - 40px);
-      }
+      height: 42px;
     }
   }
 }
@@ -81,6 +84,9 @@
 @media only screen and (max-width: 1260px) {
   .discussion-panel {
     --discussion-panel-height: calc(100vh - var(--header-height));
+    .search-dropdown {
+      overflow-x: initial;
+    }
   }
   .discussion-list {
     --discussion-list-width: 100vw;

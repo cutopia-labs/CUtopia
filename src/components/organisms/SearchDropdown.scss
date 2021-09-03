@@ -29,7 +29,7 @@
       border-bottom-left-radius: 0;
       border-bottom-right-radius: 0;
       input {
-        width: auto;
+        width: 100%;
       }
     }
     & > .search-input-divider {
@@ -43,16 +43,21 @@
     --search-dropdown-width: 100vw;
     &.active {
       width: 100vw;
+      overflow-x: hidden;
+      height: fit-content;
       margin-left: initial;
+      background-color: var(--surface);
     }
     .search-panel {
       display: initial;
+      top: 0;
     }
     .search-input-container {
       border: none;
       &.active {
         width: calc(100vw - 40px);
         margin: 0 10px 10px 10px;
+        height: 42px;
         background-color: var(--background-search);
         border-bottom-left-radius: var(--border-radius);
         border-bottom-right-radius: var(--border-radius);

@@ -163,7 +163,7 @@ const Discussion = ({ courseId }: DiscussionProps) => {
         ) : (
           <ErrorCard
             mode={ErrorCardMode.NULL}
-            caption="Nothing here, you can be the first!"
+            caption="Be the first to say sth!"
           />
         )}
       </div>
