@@ -12,6 +12,11 @@
   .input-container {
     width: calc(100% - 36px);
   }
+  textarea {
+    &.input-container {
+      min-height: 100px;
+    }
+  }
   .header-search-result {
     position: absolute;
     margin-top: 70px;
