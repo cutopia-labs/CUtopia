@@ -323,11 +323,12 @@ const SearchPanel = ({
             className="recent-chips"
             chipClassName="chip-fill"
             items={user.searchHistory.slice(0, 3)}
-            onItemClick={item => {
+            onItemClick={(item, e) => {
+              e.stopPropagation();
               if (!skipDefaultAction) {
                 history.push(`/${isPlanner ? 'planner' : 'review'}/${item}`);
               }
-              onCoursePress && onCoursePress(item);
+              (!isMobile || !isPlanner) && onCoursePress && onCoursePress(item);
             }}
           />
         </Card>

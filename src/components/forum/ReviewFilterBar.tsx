@@ -15,8 +15,6 @@ import { reverseMapping } from '../../helpers';
 const SORTING_FIELDS = { date: 'createdAt', upvotes: 'upvotes' };
 const SORTING_FIELDS_REVERSE = reverseMapping(SORTING_FIELDS);
 
-console.log(`reverse ${JSON.stringify(SORTING_FIELDS_REVERSE)}`);
-
 type ReviewFilterBarProps = {
   forwardedRef?: any;
   courseInfo: CourseInfo;

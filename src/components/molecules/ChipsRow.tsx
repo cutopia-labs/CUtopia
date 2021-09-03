@@ -1,5 +1,6 @@
 import { Chip } from '@material-ui/core';
 import clsx from 'clsx';
+import { MouseEvent } from 'react';
 import { ErrorCardMode } from '../../types';
 
 import './ChipsRow.scss';
@@ -9,7 +10,7 @@ type ChipsRowProps = {
   items: string[];
   select?: string | string[];
   setSelect?: (item: string, selected: boolean) => any;
-  onItemClick?: (item: string) => any;
+  onItemClick?: (item: string, e: MouseEvent<HTMLDivElement>) => any;
   chipClassName?: string;
 };
 
@@ -36,9 +37,9 @@ const ChipsRow = ({
           <Chip
             key={item}
             className={clsx('chip-item', selected && 'active', chipClassName)}
-            onClick={() => {
+            onClick={e => {
               if (onItemClick) {
-                onItemClick(item);
+                onItemClick(item, e);
               } else {
                 setSelect(item, selected);
               }
