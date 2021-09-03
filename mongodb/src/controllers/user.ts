@@ -91,7 +91,7 @@ export const verifyUser = async input => {
   if (user.verified) {
     throw Error(ErrorCode.VERIFICATION_ALREADY_VERIFIED.toString());
   }
-  if (user.createdAt + VERIFY_EXPIRATION_TIME - new Date().getTime() < 0) {
+  if (isVerfiCodeExpired(user.createdAt)) {
     await user.remove();
     throw Error(ErrorCode.VERIFICATION_EXPIRED.toString());
   }

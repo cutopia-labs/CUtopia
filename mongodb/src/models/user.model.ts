@@ -54,10 +54,6 @@ const userSchema = new Schema<User>(
         ref: 'Timetable',
       },
     ],
-    viewsCount: {
-      type: Number,
-      default: 10,
-    },
   },
   {
     toJSON: { virtuals: true, getters: true },
