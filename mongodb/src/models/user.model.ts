@@ -37,10 +37,6 @@ const userSchema = new Schema<User>(
       type: Boolean,
       default: false,
     },
-    fullAccess: {
-      type: Boolean,
-      default: false,
-    },
     timetables: [
       {
         type: String,
@@ -63,6 +59,10 @@ userSchema.virtual('level').get(function () {
 });
 userSchema.virtual('email').get(function () {
   return `${this.SID}@link.cuhk.edu.hk`;
+});
+// to be removed when viewsCount is implemented
+userSchema.virtual('fullAccess').get(function () {
+  return this.reviewIds.length > 0;
 });
 
 const UserModal = model<User>('User', userSchema);
