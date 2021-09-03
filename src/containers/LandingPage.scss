@@ -83,6 +83,17 @@
   flex: 1;
 }
 
+
+@media (prefers-color-scheme: dark) {
+  .landing-page {
+    --landing-page-color: #5B6B86;
+    --landing-page-logo-color: #7C94BB;
+    --landing-page-bg-color: #CBD6F0;
+    --landing-page-btn-color: #6D7E9C;
+  }
+}
+
+
 @media only screen and (max-width: 1260px) {
   .landing-page {
     flex-wrap: wrap;

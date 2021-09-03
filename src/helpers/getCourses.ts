@@ -140,9 +140,11 @@ export const getSimilarCourses = async (
     }
   }
   if (currLen < limit) {
-    results = results
-      .concat(courseList[subject].slice(0, limit - currLen))
-      .filter(course => !occurred.has(course.c));
+    results = results.concat(
+      courseList[subject]
+        .slice(0, limit - currLen)
+        .filter(course => !occurred.has(course.c))
+    );
   }
   return results.map(course => ({
     courseId: course.c,
