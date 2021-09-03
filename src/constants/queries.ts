@@ -136,7 +136,6 @@ export const GET_USER = gql`
       upvotes
       username
       exp
-      level
       fullAccess
     }
   }

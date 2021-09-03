@@ -11,7 +11,7 @@ import {
 import { storeData, getStoreData, removeStoreItem } from '../helpers/store';
 
 import { TOKEN_EXPIRE_DAYS, VIEWS_LIMIT } from '../constants';
-import { FULL_MEMBER_LEVEL, HISTORY_MAX_LENGTH } from '../constants/configs';
+import { HISTORY_MAX_LENGTH, LEVEL_UP_EXP } from '../constants/configs';
 import ViewStore from './ViewStore';
 import StorePrototype from './StorePrototype';
 
@@ -80,8 +80,8 @@ class UserStore extends StorePrototype {
     return this.viewCount > VIEWS_LIMIT;
   }
 
-  get isFullMember() {
-    return this.data?.level >= FULL_MEMBER_LEVEL;
+  get level() {
+    return Math.floor((this.data?.exp || 0) / LEVEL_UP_EXP);
   }
 
   @action async increaseViewCount() {

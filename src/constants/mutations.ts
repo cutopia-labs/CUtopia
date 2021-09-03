@@ -49,7 +49,7 @@ export const ADD_REVIEW = gql`
     $title: String
     $term: String!
     $lecturer: String!
-    $overall: Int!
+    $overall: overall_Int_NotNull_min_0_max_4!
     $grading: ReviewDetailsInput!
     $teaching: ReviewDetailsInput!
     $difficulty: ReviewDetailsInput!

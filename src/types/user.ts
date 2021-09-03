@@ -4,7 +4,7 @@ type User = {
   username: string;
   verified: boolean;
   reviewIds: string[];
-  upvotesCount: number;
+  upvotes: number;
   exp: number;
   level: number;
   email?: string;

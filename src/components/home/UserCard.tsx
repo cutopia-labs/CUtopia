@@ -31,7 +31,7 @@ const UserCard = ({ userData }: UserCardProps) => {
             {user.data?.username}
             <Tooltip
               title={
-                user.isFullMember
+                user.data?.fullAccess
                   ? 'Full Access'
                   : 'Post 1 review to unlock full access for current semester'
               }
@@ -39,18 +39,18 @@ const UserCard = ({ userData }: UserCardProps) => {
               arrow
             >
               <span className="center-row">
-                {user.isFullMember ? <GoVerified /> : <GoUnverified />}
+                {user.data?.fullAccess ? <GoVerified /> : <GoUnverified />}
               </span>
             </Tooltip>
           </div>
           <Tooltip
             title={`${
               LEVEL_UP_EXP - (user.data?.exp % LEVEL_UP_EXP)
-            } more exp to level up to Lv. ${user.data?.level + 1}`}
+            } more exp to level up to Lv. ${user.level + 1}`}
             placement="bottom-start"
             arrow
           >
-            <div className="caption">{`Contributor Lv. ${user.data?.level}`}</div>
+            <div className="caption">{`Contributor Lv. ${user.level}`}</div>
           </Tooltip>
         </div>
         <IconButton
@@ -70,7 +70,7 @@ const UserCard = ({ userData }: UserCardProps) => {
           <div className="light-caption">Reviews</div>
         </div>
         <div className="user-about-card-item column">
-          <div className="sub-title">{userData?.upvotesCount || 0}</div>
+          <div className="sub-title">{userData?.upvotes || 0}</div>
           <div className="light-caption">Upvotes</div>
         </div>
       </div>
