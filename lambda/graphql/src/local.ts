@@ -1,6 +1,5 @@
 import { makeExecutableSchema } from '@graphql-tools/schema';
 const { ApolloServer } = require('apollo-server-express');
-import { ValidateDirectiveVisitor } from '@profusion/apollo-validation-directives';
 import express from 'express';
 import { connect } from 'mongodb';
 import dotenv from 'dotenv';
@@ -16,10 +15,9 @@ dotenv.config();
 const schema = makeExecutableSchema({
   typeDefs,
   resolvers,
-  schemaDirectives,
+  ...schemaDirectives,
 } as any);
 
-ValidateDirectiveVisitor.addValidationResolversToSchema(schema);
 const server = new ApolloServer({
   schema,
   // context: createContext,

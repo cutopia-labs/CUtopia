@@ -7,5 +7,5 @@ input ReportInput {
   "review id or course id"
   identifier: String
   types: [Int]!
-  description: String! @stringLength(min: 10, max: 1800)
+  description: String! @constraint(maxLength: 3000)
 }

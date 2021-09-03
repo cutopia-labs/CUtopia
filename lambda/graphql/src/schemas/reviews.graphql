@@ -37,7 +37,7 @@ input CreateReviewInput {
   courseId: String!
   term: String!
   lecturer: String!
-  overall: Int! @range(min: 0, max: 4)
+  overall: Int! @constraint(min: 0, max: 4)
   grading: ReviewDetailsInput!
   teaching: ReviewDetailsInput!
   difficulty: ReviewDetailsInput!
@@ -52,7 +52,7 @@ input EditReviewInput {
   title: String
   courseId: String!
   anonymous: Boolean
-  overall: Int @range(min: 0, max: 4)
+  overall: Int @constraint(min: 0, max: 4)
   grading: ReviewDetailsInput
   teaching: ReviewDetailsInput
   difficulty: ReviewDetailsInput
@@ -99,6 +99,6 @@ type ReviewDetails {
 }
 
 input ReviewDetailsInput {
-  grade: Int! @range(min: 0, max: 4)
-  text: String @stringLength(min: 10, max: 3000)
+  grade: Int! @constraint(min: 0, max: 4)
+  text: String @constraint(maxLength: 3000)
 }

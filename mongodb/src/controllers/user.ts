@@ -4,6 +4,17 @@ import { ErrorCode } from 'cutopia-types/lib/codes';
 import User from '../models/user.model';
 import { SALT_ROUNDS, VERIFY_EXPIRATION_TIME } from '../constant/configs';
 
+const isVerfiCodeExpired = createdAt =>
+  createdAt + VERIFY_EXPIRATION_TIME - Date.now() < 0;
+
+const replaceUnverifiedUser = async (filter, newUser, err) => {
+  const user = await User.findOne(filter, 'verified createdAt').exec();
+  if (user.verified || !isVerfiCodeExpired(user.createdAt)) {
+    throw Error(err);
+  }
+  await User.replaceOne(filter, newUser).exec();
+};
+
 export const createUser = async input => {
   const { username, SID, password } = input;
   const now = +new Date();
@@ -11,13 +22,14 @@ export const createUser = async input => {
   const hash = await bcrypt.hash(password, SALT_ROUNDS);
   const veriCode = nanoid(5);
 
-  const user = new User({
+  const userData = {
     username,
     SID,
     password: hash,
     createdAt: now,
     veriCode,
-  });
+  };
+  const user = new User(userData);
 
   try {
     await user.save();
@@ -25,9 +37,19 @@ export const createUser = async input => {
     if (e.code === 11000) {
       switch (Object.keys(e.keyValue)[0]) {
         case 'username':
-          throw Error(ErrorCode.CREATE_USER_USERNAME_EXISTS.toString());
+          await replaceUnverifiedUser(
+            { username },
+            userData,
+            ErrorCode.CREATE_USER_USERNAME_EXISTS.toString()
+          );
+          break;
         case 'SID':
-          throw Error(ErrorCode.CREATE_USER_EMAIL_EXISTS.toString());
+          await replaceUnverifiedUser(
+            { SID },
+            userData,
+            ErrorCode.CREATE_USER_EMAIL_EXISTS.toString()
+          );
+          break;
       }
     }
   }

@@ -1,11 +1,7 @@
 import { loadFilesSync } from '@graphql-tools/load-files';
 import { mergeTypeDefs } from '@graphql-tools/merge';
 import { typeDefs as scalarTypeDefs } from 'graphql-scalars';
-import {
-  range,
-  stringLength,
-  ValidateDirectiveVisitor,
-} from '@profusion/apollo-validation-directives';
+import { constraintDirectiveTypeDefs } from 'graphql-constraint-directive';
 
 import { join } from 'path';
 
@@ -24,10 +20,8 @@ const typesArray = loadFilesSync(graphqlFiles);
 
 const types = mergeTypeDefs([
   scalarTypeDefs,
-  ...ValidateDirectiveVisitor.getMissingCommonTypeDefs(),
-  ...range.getTypeDefs(),
-  ...stringLength.getTypeDefs(),
   ...typesArray,
+  [constraintDirectiveTypeDefs],
 ]);
 
 export default types;

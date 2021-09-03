@@ -1,6 +1,5 @@
 import { ApolloServer } from 'apollo-server-lambda';
 import { makeExecutableSchema } from '@graphql-tools/schema';
-import { ValidateDirectiveVisitor } from '@profusion/apollo-validation-directives';
 import { applyMiddleware } from 'graphql-middleware';
 import express from 'express';
 import { connect } from 'mongodb';
@@ -20,11 +19,9 @@ connect(process.env.ATLAS_URI);
 let schema = makeExecutableSchema({
   typeDefs,
   resolvers,
-  schemaDirectives,
+  ...schemaDirectives,
 } as any);
 schema = applyMiddleware(schema, ...middlewares);
-
-ValidateDirectiveVisitor.addValidationResolversToSchema(schema);
 
 const isProduction = process.env.NODE_ENV === 'production';
 const allowedOrigins = isProduction
