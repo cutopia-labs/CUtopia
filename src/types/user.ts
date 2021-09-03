@@ -17,8 +17,6 @@ type User = {
   fullAccess: boolean;
   timetables: Timetable[];
   sharedTimetables: Timetable[];
-  viewsCount: number;
-  discussions: string[];
 };
 
 type CreateUserResult = {
