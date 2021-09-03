@@ -4320,9 +4320,9 @@ csstype@^3.0.2, csstype@^3.0.6:
   integrity sha512-jXKhWqXPmlUeoQnF/EhTtTl4C9SnrxSH/jZUih3jmO6lBKr99rP3/+FmrMj4EFpOXzMtXHAZkd3x0E6h6Fgflw==
 
 cutopia-types@^1.0.1:
-  version "1.0.16"
-  resolved "https://registry.yarnpkg.com/cutopia-types/-/cutopia-types-1.0.16.tgz#8903d0a786342d98f0ba7157933ff62b9c03faea"
-  integrity sha512-D7hl/XUveiYF5vDTBNtq2PGFudPzqeZ+QUn1nUR/7oteq4JKI+ponsYdpNEM4BIgRUgvaWXLTXQzc01U91LwZg==
+  version "1.0.19"
+  resolved "https://registry.yarnpkg.com/cutopia-types/-/cutopia-types-1.0.19.tgz#928e1f977a84b6271d14ce3a89a56bf3b6c9e076"
+  integrity sha512-u0kOvcyzSLhz0TtWT0B3H/3xT9yFvIheIvLB39Yax0LuBJdMBkCTAe/Ad6nyQp5qzGX5GfjRmlkhKzRHa9/hXA==
 
 cyclist@^1.0.1:
   version "1.0.1"

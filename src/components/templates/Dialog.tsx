@@ -97,7 +97,9 @@ const ReportIssuesDialogContent = observer(
       <DialogContentTemplate
         className="issue-report-dialog"
         title="Report Issues"
-        caption={`${REPORT_ISSUES_MESSAGES[reportCategory]} ${id}`}
+        caption={`${REPORT_ISSUES_MESSAGES[reportCategory]}${
+          id ? ` ${id}` : ''
+        }`}
       >
         <form className="grid-auto-row" onSubmit={submit}>
           <Section title="Category">
