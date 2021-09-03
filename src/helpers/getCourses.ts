@@ -1,4 +1,4 @@
-import { SIMILAR_COURSE_LIMIT } from '../constants/configs';
+import { SERVER_ADDR, SIMILAR_COURSE_LIMIT } from '../constants/configs';
 import UserStore from '../store/UserStore';
 import { CourseConcise, CourseSearchItem, SearchPayload } from '../types';
 import { UGE_COURSE_CODES } from '../constants';
@@ -16,16 +16,13 @@ export const fetchCourses = async (): Promise<
   let courseList: Record<string, CourseSearchItem[]> | undefined =
     getStoreData('courseList')?.data;
   if (!courseList) {
-    const res = await fetch(
-      'https://pv9wmcullh.execute-api.ap-northeast-1.amazonaws.com/Stage/static/course_list.json',
-      {
-        method: 'GET',
-        mode: 'cors',
-        headers: {
-          Accept: 'application/json',
-        },
-      }
-    );
+    const res = await fetch(`${SERVER_ADDR}/static/course_list.json`, {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        Accept: 'application/json',
+      },
+    });
     courseList = await res.json();
     storeData('courseList', {
       data: courseList,

@@ -9,7 +9,7 @@ const handleCompleted =
   (callback?: (data?: any) => any, options?: HandleCompletedConfigs) =>
   (data: any) => {
     callback(data);
-    if (!options.view) {
+    if (!options?.view) {
       return;
     }
     const msg = options.message || 'Success';

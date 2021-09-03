@@ -23,11 +23,13 @@ export const MIN_DESKTOP_WIDTH = 1260;
 
 const AWS_REGION = 'ap-southeast-1';
 
-const SERVER_ID =
+export const SERVER_ID =
   process.env.NODE_ENV === 'production' ? 'eisbgazs16' : 'uvp03fp791';
 
+export const SERVER_ADDR = `https://${SERVER_ID}.execute-api.${AWS_REGION}.amazonaws.com/Prod`;
+
 export const SERVER_CONFIG = {
-  URI: `https://${SERVER_ID}.execute-api.${AWS_REGION}.amazonaws.com/Prod/graphql`,
+  URI: `${SERVER_ADDR}/graphql`,
 };
 
 export const SentryConfigs: BrowserOptions = {

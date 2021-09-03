@@ -25,7 +25,7 @@ import { GRADES, RATING_FIELDS } from '../../constants';
 import TextField from '../atoms/TextField';
 import Loading from '../atoms/Loading';
 import ListItem from '../molecules/ListItem';
-import { TARGET_REVIEW_WORD_COUNT } from '../../constants/configs';
+import { SERVER_ADDR, TARGET_REVIEW_WORD_COUNT } from '../../constants/configs';
 import { RatingFieldWithOverall, ReviewDetails } from '../../types';
 import SelectionGroup, { FormSection } from '../molecules/SectionGroup';
 import useMobileQuery from '../../hooks/useMobileQuery';
@@ -82,16 +82,13 @@ const searchLecturers = async ({
   try {
     let instructors: string[] | undefined = getStoreData('instructors')?.data;
     if (!instructors) {
-      const res = await fetch(
-        'https://pv9wmcullh.execute-api.ap-northeast-1.amazonaws.com/Stage/static/instructors.json',
-        {
-          method: 'GET',
-          mode: 'cors',
-          headers: {
-            Accept: 'application/json',
-          },
-        }
-      );
+      const res = await fetch(`${SERVER_ADDR}/static/instructors.json`, {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          Accept: 'application/json',
+        },
+      });
       instructors = await res.json();
       storeData('instructors', {
         data: instructors,
