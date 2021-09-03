@@ -15,7 +15,13 @@ import { HISTORY_MAX_LENGTH, LEVEL_UP_EXP } from '../constants/configs';
 import ViewStore from './ViewStore';
 import StorePrototype from './StorePrototype';
 
-const LOAD_KEYS = ['username', 'favoriteCourses', 'timetable', 'searchHistory'];
+const LOAD_KEYS = [
+  'username',
+  'favoriteCourses',
+  'timetable',
+  'searchHistory',
+  'discussionHistory',
+];
 
 const RESET_KEYS = [...LOAD_KEYS, 'token'];
 
@@ -147,7 +153,6 @@ class UserStore extends StorePrototype {
   }
 
   // Search History
-
   @action async saveHistory(courseId: string) {
     let temp = [...this.searchHistory];
     if (temp.length >= HISTORY_MAX_LENGTH) {
@@ -160,6 +165,21 @@ class UserStore extends StorePrototype {
   @action async deleteHistory(courseId) {
     const temp = this.searchHistory.filter(hist => hist !== courseId);
     this.setStore('searchHistory', temp);
+  }
+
+  @action async appendDiscussionHistory(item: DiscussionRecent) {
+    const index = this.discussionHistory.findIndex(
+      hist => hist.courseId === item.courseId
+    );
+    let temp = [...this.discussionHistory];
+    if (index === -1) {
+      if (temp.length >= HISTORY_MAX_LENGTH) {
+        temp.pop();
+      }
+    } else {
+      temp.splice(index, 1);
+    }
+    this.setStore('discussionHistory', [item, ...temp]);
   }
 
   // reset

@@ -4,7 +4,6 @@ import { IconButton } from '@material-ui/core';
 import { ArrowBack } from '@material-ui/icons';
 import { observer } from 'mobx-react-lite';
 import { useTitle } from 'react-use';
-import { MESSAGE_PREVIEW_LENGTH } from '../../constants/configs';
 import { validCourse } from '../../helpers';
 import { UserContext } from '../../store';
 import { DiscussionRecent, ErrorCardMode } from '../../types';
@@ -16,15 +15,6 @@ import SearchDropdown from '../organisms/SearchDropdown';
 import useMobileQuery from '../../hooks/useMobileQuery';
 import Discussion from './Discussion';
 import './DiscussionPanel.scss';
-
-const getDiscussionFromString = (str: string) => {
-  const [courseId, text] = str.split('#');
-  return {
-    text: `${text}${text.length < MESSAGE_PREVIEW_LENGTH ? '' : '...'}`,
-    user: 'me',
-    courseId,
-  };
-};
 
 type DiscussionListItemProps = {
   discussion: DiscussionRecent;
@@ -43,7 +33,9 @@ const DiscussionListItem = ({
       <TextIcon text={discussion.courseId} size={28} />
       <span className="list-item-title-container column">
         <span className="list-item-title title">{discussion.courseId}</span>
-        <span className="list-item-caption caption ellipsis-text">{`${discussion.user}: ${discussion.text}`}</span>
+        {Boolean(discussion.user) && (
+          <span className="list-item-caption caption ellipsis-text">{`${discussion.user}: ${discussion.text}`}</span>
+        )}
       </span>
     </div>
   );

@@ -122,6 +122,11 @@ const Discussion = ({ courseId }: DiscussionProps) => {
   };
   useEffect(() => {
     if (courseId) {
+      user.appendDiscussionHistory({
+        courseId,
+        text: '',
+        user: '',
+      });
       setMessages([]);
       setPage(0);
       fetchDiscussion({
