@@ -78,7 +78,7 @@ export const EDIT_REVIEW = gql`
   mutation (
     $anonymous: Boolean!
     $courseId: String!
-    $overall: Int!
+    $overall: overall_Int_NotNull_min_0_max_4!
     $grading: ReviewDetailsInput!
     $teaching: ReviewDetailsInput!
     $difficulty: ReviewDetailsInput!
@@ -121,14 +121,14 @@ export const SHARE_TIMETABLE = gql`
 export const REPORT = gql`
   mutation (
     $cat: Int!
-    $type: Int!
-    $description: String!
+    $types: [Int]!
+    $description: description_String_NotNull_maxLength_3000!
     $identifier: String
   ) {
     report(
       input: {
         cat: $cat
-        type: $type
+        types: $types
         description: $description
         identifier: $identifier
       }

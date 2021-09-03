@@ -5,11 +5,8 @@ import {
   DialogContent,
   Switch,
   Divider,
-  Menu,
-  MenuItem,
 } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
-import clsx from 'clsx';
 import { useMutation } from '@apollo/client';
 import { ReportCategory } from 'cutopia-types/lib/codes';
 
@@ -23,13 +20,14 @@ import TextField from '../atoms/TextField';
 import LoadingButton from '../atoms/LoadingButton';
 import { REPORT } from '../../constants/mutations';
 import handleCompleted from '../../helpers/handleCompleted';
+import ChipsRow from '../molecules/ChipsRow';
+import { reverseMapping } from '../../helpers';
 import DialogContentTemplate from './DialogContentTemplate';
 
 const UserSettingsDialogContent = observer(() => {
   const preference = useContext(PreferenceContext);
   const user = useContext(UserContext);
   const view = useContext(ViewContext);
-  console.log('Hi');
   return (
     <>
       <DialogTitle id="form-dialog-title">Settings</DialogTitle>
@@ -76,12 +74,13 @@ type ReportIssuesDialogContentProps = {
 const ReportIssuesDialogContent = observer(
   ({ reportCategory, id }: ReportIssuesDialogContentProps) => {
     const currentModeMessages = REPORT_MODES[reportCategory];
+    const currentModeMessagesLookup = reverseMapping(currentModeMessages);
     const [anchorEl, setAnchorEl] = useState(null);
     const view = useContext(ViewContext);
     const [issueData, dispatchIssueData] = useReducer(
       (state, action) => ({ ...state, ...action }),
       {
-        type: null,
+        types: [],
         description: '',
         identifier: id,
       }
@@ -101,10 +100,13 @@ const ReportIssuesDialogContent = observer(
     });
     const submit = async e => {
       e.preventDefault();
+      console.log(issueData.types);
+      const { types, ...payload } = issueData;
       await report({
         variables: {
           cat: reportCategory,
-          ...issueData,
+          types: types.map(category => +currentModeMessagesLookup[category]),
+          ...payload,
         },
       });
     };
@@ -116,38 +118,21 @@ const ReportIssuesDialogContent = observer(
       >
         <form className="grid-auto-row" onSubmit={submit}>
           <Section title="Category">
-            <div
-              className={clsx(
-                'term-selection-anchor input-container report-issue-category',
-                issueData.type === null && 'caption'
-              )}
-              onClick={e => setAnchorEl(e.currentTarget)}
-            >
-              {currentModeMessages[issueData.type] ||
-                'Please select a cetegory'}
-            </div>
-            <Menu
-              className="category-menu"
-              anchorEl={anchorEl}
-              keepMounted
-              open={Boolean(anchorEl)}
-              onClose={() => setAnchorEl(null)}
-            >
-              {Object.entries(currentModeMessages).map(
-                ([category, label], i) => (
-                  <MenuItem
-                    key={category}
-                    selected={category === issueData.type}
-                    onClick={() => [
-                      dispatchIssueData({ type: parseInt(category, 10) }),
-                      setAnchorEl(null),
-                    ]}
-                  >
-                    {label}
-                  </MenuItem>
-                )
-              )}
-            </Menu>
+            <ChipsRow
+              items={Object.values(currentModeMessages)}
+              select={issueData.types || []}
+              setSelect={(item, selected) => [
+                dispatchIssueData({
+                  types: selected
+                    ? issueData.types.filter(
+                        selectedItem => selectedItem !== item
+                      )
+                    : [...issueData.types, item],
+                }),
+                setAnchorEl(null),
+              ]}
+              multiple
+            />
           </Section>
           <Section title="Description">
             <TextField
@@ -163,7 +148,7 @@ const ReportIssuesDialogContent = observer(
               loading={reportLoading}
               className="share loading-btn"
               type="submit"
-              disabled={issueData.type === null || !issueData.description}
+              disabled={!issueData.types?.length || !issueData.description}
             >
               Report
             </LoadingButton>
