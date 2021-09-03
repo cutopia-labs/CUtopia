@@ -34,10 +34,17 @@ export enum ErrorCode {
 }
 
 export enum ReportCategory {
-  ERROR,
+  ISSUE,
   FEEDBACK,
   COURSE,
   REVIEW,
+}
+
+export enum IssueReportType {
+  UI,
+  BUGS,
+  FEATURES,
+  EXPERIENCE,
 }
 
 export enum ReviewReportType {
