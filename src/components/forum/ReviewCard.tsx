@@ -23,8 +23,8 @@ type ReviewCardProps = {
   review: Review;
   concise?: boolean;
   showAll?: boolean;
-  shareAction?: () => void;
-  reportAction?: () => void;
+  shareAction?: (item: Review) => void;
+  reportAction?: (item: Review) => void;
 };
 
 const ReviewCard = ({
@@ -161,14 +161,14 @@ const ReviewCard = ({
           <IconButton
             className="share-icon-btn"
             size="small"
-            onClick={reportAction}
+            onClick={() => reportAction(review)}
           >
             <RiFlag2Line />
           </IconButton>
           <IconButton
             className="share-icon-btn"
             size="small"
-            onClick={shareAction}
+            onClick={() => shareAction(review)}
           >
             <RiShareForwardLine />
           </IconButton>

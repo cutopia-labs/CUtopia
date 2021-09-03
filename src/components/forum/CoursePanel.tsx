@@ -22,7 +22,7 @@ import Loading from '../atoms/Loading';
 import { ViewContext, UserContext } from '../../store';
 import useDebounce from '../../hooks/useDebounce';
 import { LAZY_LOAD_BUFFER, REVIEWS_PER_PAGE } from '../../constants/configs';
-import { ReviewsFilter, ReviewsResult } from '../../types';
+import { Review, ReviewsFilter, ReviewsResult } from '../../types';
 import Footer from '../molecules/Footer';
 import useMobileQuery from '../../hooks/useMobileQuery';
 import { getSimilarCourses } from '../../helpers/getCourses';
@@ -223,6 +223,25 @@ const CoursePanel = () => {
     );
   }, [reviewId]);
 
+  const reportReview = (item: Review) => {
+    view.setDialog({
+      key: 'reportIssues',
+      contentProps: {
+        reportCategory: ReportCategory.REVIEW,
+        id: `${courseId}#${item.createdAt}`,
+      },
+    });
+  };
+
+  const shareReview = (item: Review) => {
+    copy(
+      reviewId
+        ? window.location.href
+        : `${window.location.href}/${item.createdAt}`
+    );
+    view.setSnackBar('Copied sharelink to clipboard!');
+  };
+
   return (
     <>
       <div className="course-panel-container grid-auto-row">
@@ -311,23 +330,8 @@ const CoursePanel = () => {
             <ReviewCard
               key={item.createdAt}
               review={item}
-              reportAction={() => {
-                view.setDialog({
-                  key: 'reportIssues',
-                  contentProps: {
-                    reportCategory: ReportCategory.REVIEW,
-                    id: `${courseId}#${item.createdAt}`,
-                  },
-                });
-              }}
-              shareAction={() => {
-                copy(
-                  reviewId
-                    ? window.location.href
-                    : `${window.location.href}/${item.createdAt}`
-                );
-                view.setSnackBar('Copied sharelink to clipboard!');
-              }}
+              reportAction={reportReview}
+              shareAction={shareReview}
               showAll={Boolean(reviewId)}
             />
           ))}
