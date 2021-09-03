@@ -8,7 +8,7 @@ import { ErrorCardMode } from '../../types';
 const CARD_ITEMS = {
   [ErrorCardMode.NULL]: {
     image: emptyPhoto,
-    caption: 'Nothing here',
+    caption: 'Nothing here...',
   },
   [ErrorCardMode.ERROR]: {
     image: errorPhoto,
@@ -27,16 +27,9 @@ type ErrorCardProps = {
 };
 
 const ErrorCard = ({ mode, inPlace, caption }: ErrorCardProps) => (
-  <Card inPlace className="null-card-container center column">
-    <img
-      src={CARD_ITEMS[mode]?.image}
-      alt="Empty!"
-      className="null-card-photo"
-      draggable={false}
-    />
-    <span className="null-card-word caption">
-      {caption || CARD_ITEMS[mode]?.caption}
-    </span>
+  <Card inPlace className="error-card-container center column">
+    <img src={CARD_ITEMS[mode]?.image} alt="Empty!" draggable={false} />
+    <span className="caption">{caption || CARD_ITEMS[mode]?.caption}</span>
   </Card>
 );
 

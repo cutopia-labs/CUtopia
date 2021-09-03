@@ -1,12 +1,10 @@
-.null-card-container {
+.error-card-container {
   padding: 5% 0;
-}
-
-.null-card-photo {
-  width: 35%;
-}
-
-.null-card-word {
-  padding-top: 4%;
-  opacity: 0.7;
+  img {
+    width: 35%;
+  }  
+  .caption {
+    padding-top: 4%;
+    color: var(--caption-light);
+  }
 }
