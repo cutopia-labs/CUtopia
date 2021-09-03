@@ -14,6 +14,7 @@ import {
   Planner,
   PlannerCourse,
   SnackBarProps,
+  TimetableOverviewMode,
   UploadTimetable,
 } from '../../types';
 import ChipsRow from '../molecules/ChipsRow';
@@ -33,6 +34,15 @@ enum ShareTimetableMode {
 
 type PlannerTimetableProps = {
   className?: string;
+};
+
+const getModeFromExpire = (expire: number) => {
+  if (expire > 0) {
+    return TimetableOverviewMode.SHARE;
+  }
+  return expire === 0
+    ? TimetableOverviewMode.UPLOAD_SHARABLE
+    : TimetableOverviewMode.UPLOAD;
 };
 
 const getExpire = (str: string) => {
@@ -231,6 +241,7 @@ const PlannerTimetable = ({ className }: PlannerTimetableProps) => {
             createdAt: shareCourses.key,
             tableName: planner.currentPlanner?.label,
             expire: getExpire(shareConfig?.expire),
+            mode: getModeFromExpire(getExpire(shareConfig?.expire) as any),
           };
           if (getExpire(shareConfig?.expire) !== -1) {
             const shareURL = generateTimetableURL(uploadTimetable?._id);
@@ -242,7 +253,7 @@ const PlannerTimetable = ({ className }: PlannerTimetableProps) => {
             setShareCourses(null);
           }
           planner.updateStore('remoteTimetableData', [
-            ...planner.remoteTimetableData,
+            ...(planner.remoteTimetableData || []),
             newTimetableOverview,
           ]);
           planner.updatePlannerShareId(shareCourses.key, uploadTimetable?._id);

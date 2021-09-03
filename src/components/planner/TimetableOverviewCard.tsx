@@ -47,6 +47,9 @@ const getTimetableOverviewMode = (expire: number) => {
   if (expire > 0) {
     return TimetableOverviewMode.SHARE;
   }
+  if (expire === 0) {
+    return TimetableOverviewMode.UPLOAD_SHARABLE;
+  }
   return TimetableOverviewMode.UPLOAD;
 };
 
@@ -87,7 +90,7 @@ const TimetableOverviewListItem = ({
       icon: <AiOutlineDelete />,
     },
   ];
-  if (item.mode === TimetableOverviewMode.SHARE) {
+  if (item.mode !== TimetableOverviewMode.UPLOAD) {
     menuItems.push({
       label: 'Share',
       action: () => onShare(item._id),
