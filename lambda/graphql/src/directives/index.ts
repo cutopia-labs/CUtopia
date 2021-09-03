@@ -1,4 +1,4 @@
-import { AuthDirective } from './auth-directive';
+import AuthDirective from './auth-directive';
 import { createRateLimitDirective } from 'graphql-rate-limit';
 import { constraintDirective } from 'graphql-constraint-directive';
 import { ErrorCode } from 'cutopia-types/lib/codes';

@@ -1,7 +1,7 @@
 type Mutation {
   createReview(input: CreateReviewInput!): CreateReviewResult @auth @rateLimit(window: "1m", max: 3)
   voteReview(input: VoteReviewInput!): Void @auth @rateLimit(window: "1s", max: 5)
-  editReview(input: EditReviewInput!): Void @auth(role: OWNER) @rateLimit(window: "1m", max: 10)
+  editReview(input: EditReviewInput!): Void @auth @rateLimit(window: "1m", max: 10)
 }
 
 type Query {

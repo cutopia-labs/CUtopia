@@ -122,5 +122,7 @@ export const editReview = async input => {
       updatedAt: +new Date(),
     }
   ).exec();
-  await updateCourseData(courseId, newReview, oldReview);
+  if (oldReview) {
+    await updateCourseData(courseId, newReview, oldReview);
+  }
 };
