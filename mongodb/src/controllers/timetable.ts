@@ -56,11 +56,12 @@ export const uploadTimetable = async input => {
 };
 
 export const removeTimetable = async input => {
-  const { username, _id } = input;
+  const { _id, username, expire } = input;
   return await Timetable.deleteOne({
     _id,
     username,
-  });
+    expire,
+  }).exec();
 };
 
 export const cleanExpiredTimetable = async input => {

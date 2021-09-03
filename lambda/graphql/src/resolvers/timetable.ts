@@ -24,9 +24,10 @@ const timetableResolver = {
       const { entries, tableName, expire } = input;
       return await uploadTimetable({ username, entries, tableName, expire });
     },
-    removeTimetable: async (parent, { _id }, { user }) => {
+    removeTimetable: async (parent, { input }, { user }) => {
       const { username } = user;
-      await removeTimetable({ username, _id });
+      const { _id, expire } = input;
+      await removeTimetable({ username, _id, expire });
     },
   },
 };
