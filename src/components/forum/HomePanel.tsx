@@ -116,7 +116,7 @@ const RankingCard = ({
           <ListItem
             left={<span className="ranking-label center-box">{i + 1}</span>}
             right={
-              course[sortKey] ? (
+              course[sortKey] !== null ? (
                 <GradeIndicator grade={course[sortKey]} />
               ) : (
                 <Badge index={0} text={`${course.numReviews} reviews`} />
@@ -191,7 +191,7 @@ const HomePanel = () => {
           loading={rankedCoursesLoading}
         />
         <RankingCard
-          rankList={popularCourses?.ranking?.popularCourses}
+          rankList={popularCourses?.ranking?.rankedCourses}
           loading={popularCoursesLoading}
         />
         {!(

@@ -183,11 +183,7 @@ export const POPULAR_COURSES_QUERY = gql`
         course {
           title
         }
-        overall
-        grading
-        content
-        difficulty
-        teaching
+        numReviews
       }
     }
   }
