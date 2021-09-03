@@ -13,6 +13,6 @@
 
 @media only screen and (max-width: 1260px) {
   .content-container {
-    width: calc(90vw - 2 * var(--card-padding));
+    width: calc(100vw - 32px * 2 - 2 * var(--card-padding));
   }
 }

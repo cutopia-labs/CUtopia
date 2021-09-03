@@ -11,6 +11,7 @@ import { useTitle } from 'react-use';
 import './CoursePanel.scss';
 import copy from 'copy-to-clipboard';
 
+import { ReportCategory } from 'cutopia-types/lib/codes';
 import { removeEmptyValues, validCourse } from '../../helpers';
 import {
   COURSE_INFO_QUERY,
@@ -310,6 +311,15 @@ const CoursePanel = () => {
             <ReviewCard
               key={item.createdAt}
               review={item}
+              reportAction={() => {
+                view.setDialog({
+                  key: 'reportIssues',
+                  contentProps: {
+                    reportCategory: ReportCategory.REVIEW,
+                    id: `${courseId}#${item.createdAt}`,
+                  },
+                });
+              }}
               shareAction={() => {
                 copy(
                   reviewId

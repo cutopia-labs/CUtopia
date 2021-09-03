@@ -2,7 +2,7 @@ import { useState, useContext } from 'react';
 import { observer } from 'mobx-react-lite';
 import { AiTwotoneCalendar } from 'react-icons/ai';
 import { BiMessageRounded } from 'react-icons/bi';
-import { RiShareForwardLine } from 'react-icons/ri';
+import { RiShareForwardLine, RiFlag2Line } from 'react-icons/ri';
 import { useMutation } from '@apollo/client';
 import { IconButton } from '@material-ui/core';
 
@@ -24,6 +24,7 @@ type ReviewCardProps = {
   concise?: boolean;
   showAll?: boolean;
   shareAction?: () => void;
+  reportAction?: () => void;
 };
 
 const ReviewCard = ({
@@ -31,6 +32,7 @@ const ReviewCard = ({
   concise,
   showAll,
   shareAction,
+  reportAction,
 }: ReviewCardProps) => {
   const [selectedCriteria, setSelectedCriteria] = useState('overall');
   const view = useContext(ViewContext);
@@ -159,8 +161,14 @@ const ReviewCard = ({
           <IconButton
             className="share-icon-btn"
             size="small"
+            onClick={reportAction}
+          >
+            <RiFlag2Line />
+          </IconButton>
+          <IconButton
+            className="share-icon-btn"
+            size="small"
             onClick={shareAction}
-            color="primary"
           >
             <RiShareForwardLine />
           </IconButton>
