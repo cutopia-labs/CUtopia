@@ -13,13 +13,12 @@ import ShowMoreOverlay from '../molecules/ShowMoreOverlay';
 import Badge from '../atoms/Badge';
 import { UserContext, ViewContext } from '../../store';
 import { COURSE_CARD_MAX_HEIGHT } from '../../constants/configs';
-import { CourseInfo, ErrorCardMode } from '../../types';
+import { CourseInfo } from '../../types';
 import Link from '../molecules/Link';
 import useMobileQuery from '../../hooks/useMobileQuery';
 import Section from '../molecules/Section';
 import SectionText from '../molecules/SectionText';
 import { CourseCardSkeleton } from '../templates/Skeleton';
-import ErrorCard from '../molecules/ErrorCard';
 import CourseSections from './CourseSections';
 import GradeRow from './GradeRow';
 
@@ -149,30 +148,33 @@ const CourseCard = ({ courseInfo, concise, loading }: CourseCardProps) => {
           </Section>
         </>
       ) : (
-        <div className="badges-row course-badge-row">
-          {[
-            [
-              courseInfo.units
-                ? `${parseInt(courseInfo.units, 10)} Credits`
-                : undefined,
-            ],
-            [courseInfo.academic_group],
-            ...(Array.isArray(courseInfo.components)
-              ? courseInfo.components
-              : (courseInfo.components || '').match(/[A-Z][a-z]+/g) || []
-            ).map(item => item && [item]),
-            ...(courseInfo.assessments || []).map(assessment => [
-              assessment.name,
-              parseInt(assessment.percentage, 10) || false,
-            ]),
-          ]
-            .filter(([k, v]) => k !== undefined)
-            .map(([k, v], i) => (
-              <Badge index={i} text={k} value={v} key={k + v} />
-            ))}
-        </div>
+        <>
+          {Boolean(courseInfo?.units) && (
+            <div className="badges-row course-badge-row">
+              {[
+                [
+                  courseInfo.units
+                    ? `${parseInt(courseInfo.units, 10)} Credits`
+                    : undefined,
+                ],
+                [courseInfo.academic_group],
+                ...(Array.isArray(courseInfo.components)
+                  ? courseInfo.components
+                  : (courseInfo.components || '').match(/[A-Z][a-z]+/g) || []
+                ).map(item => item && [item]),
+                ...(courseInfo.assessments || []).map(assessment => [
+                  assessment.name,
+                  parseInt(assessment.percentage, 10) || false,
+                ]),
+              ]
+                .filter(([k, v]) => k !== undefined)
+                .map(([k, v], i) => (
+                  <Badge index={i} text={k} value={v} key={k + v} />
+                ))}
+            </div>
+          )}
+        </>
       )}
-      {!courseInfo?.units && <ErrorCard mode={ErrorCardMode.ERROR} />}
       {courseInfo.rating && isMobile && !concise && (
         <GradeRow rating={courseInfo.rating} additionalClassName="concise" />
       )}
