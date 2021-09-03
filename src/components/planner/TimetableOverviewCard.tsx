@@ -51,6 +51,9 @@ const getTimetableOverviewMode = (expire: number) => {
 };
 
 const getCombinedTimetable = (data: UserData): TimetableOverviewWithMode[] => {
+  if (!data?.me?.timetables) {
+    return [];
+  }
   return (data?.me?.timetables[TimetableOverviewMode.UPLOAD] || [])
     .concat(
       [...(data?.me?.timetables[TimetableOverviewMode.SHARE] || [])].sort(
@@ -150,8 +153,6 @@ const TimetableOverviewCard = () => {
   const [expanded, setExpanded] = useState(false);
   const view = useContext(ViewContext);
   const planner = useContext(PlannerContext);
-  const [combinedTimetables, setCombinedTimetables] =
-    useState<TimetableOverviewWithMode[]>(null);
   const [removeTimetable, { loading: removeTimetableLoading }] =
     useMutation(REMOVE_TIMETABLE);
   const [
@@ -160,7 +161,10 @@ const TimetableOverviewCard = () => {
   ] = useLazyQuery(GET_USER_TIMETABLES, {
     onCompleted: async data => {
       console.log(`fetched tiemtabnle`);
-      plannerStore.updateStore('remoteTimetableData', data);
+      plannerStore.updateStore(
+        'remoteTimetableData',
+        getCombinedTimetable(data)
+      );
     },
     onError: view.handleError,
   });
@@ -169,12 +173,6 @@ const TimetableOverviewCard = () => {
       getUserTimetable();
     }
   }, [expanded]);
-
-  useEffect(() => {
-    setCombinedTimetables(
-      getCombinedTimetable(plannerStore.remoteTimetableData)
-    );
-  }, [plannerStore.remoteTimetableData]);
 
   const onDownload = (id: string, createdAt: number) => {
     // if key match (createdAt), then do not load but switch
@@ -195,9 +193,11 @@ const TimetableOverviewCard = () => {
           id,
         },
       });
-      setCombinedTimetables(items =>
-        [...items].filter(item => item._id !== id)
+      planner.updateStore(
+        'remoteTimetableData',
+        [...planner.remoteTimetableData].filter(item => item._id !== id)
       );
+      planner.updatePlannerShareId(+planner.shareIds[id], undefined);
       view.setSnackBar('Deleted!');
     } catch (e) {
       // To skip remove entry in state in case of any error
@@ -205,13 +205,13 @@ const TimetableOverviewCard = () => {
     }
   };
   const renderChildren = () => {
-    if (userTimetableLoading || !combinedTimetables) {
+    if (userTimetableLoading || !planner.remoteTimetableData) {
       return <Loading />;
     }
-    if (!combinedTimetables.length) {
+    if (!planner.remoteTimetableData.length) {
       return <ErrorCard mode={ErrorCardMode.NULL} />;
     }
-    return combinedTimetables.map(item => (
+    return planner.remoteTimetableData.map(item => (
       <TimetableOverviewListItem
         key={`${item.createdAt}${item._id}`}
         item={item}

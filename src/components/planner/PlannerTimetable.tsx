@@ -220,30 +220,32 @@ const PlannerTimetable = ({ className }: PlannerTimetableProps) => {
       onCompleted: handleCompleted(
         data => {
           const uploadTimetable = data?.uploadTimetable;
-          if (getExpire(shareConfig?.expire) === -1) {
-            planner.updatePlannerShareId(
-              shareCourses.key,
-              uploadTimetable?._id
-            );
-            setShareCourses(null);
-            return;
+          if (!uploadTimetable?._id) {
+            return view.setSnackBar({
+              message: 'Cannot generate timetable QAQ...',
+              severity: 'error',
+            });
           }
-          if (uploadTimetable && uploadTimetable?._id) {
-            planner.updatePlannerShareId(
-              shareCourses.key,
-              uploadTimetable?._id
-            );
+          const newTimetableOverview = {
+            _id: uploadTimetable._id,
+            createdAt: shareCourses.key,
+            tableName: planner.currentPlanner?.label,
+            expire: getExpire(shareConfig?.expire),
+          };
+          if (getExpire(shareConfig?.expire) !== -1) {
             const shareURL = generateTimetableURL(uploadTimetable?._id);
             dispatchShareConfig({
               shareLink: shareURL,
             });
             copy(shareURL);
           } else {
-            view.setSnackBar({
-              message: 'Cannot generate timetable QAQ...',
-              severity: 'error',
-            });
+            setShareCourses(null);
           }
+          planner.updateStore('remoteTimetableData', [
+            ...planner.remoteTimetableData,
+            newTimetableOverview,
+          ]);
+          planner.updatePlannerShareId(shareCourses.key, uploadTimetable?._id);
         },
         {
           view,
