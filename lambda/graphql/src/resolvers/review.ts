@@ -22,7 +22,6 @@ const reviewsResolver = {
       };
     },
     voteReview: async (parent, { input }, { user }) => {
-      verifyCourseId(input.courseId);
       const { username } = user;
       await voteReview({
         ...input,
