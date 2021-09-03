@@ -1,7 +1,13 @@
 require('dotenv').config();
 const { google } = require('googleapis');
 const nodemailer = require('nodemailer');
-const { connect, getUsers, updateUser } = require('mongodb');
+const {
+  connect,
+  disconnect,
+  getResendList,
+  removeFromResendList,
+} = require('mongodb');
+const { getTemplateByAction } = require('./template');
 
 const OAuth2 = google.auth.OAuth2;
 const OAuth2Client = new OAuth2(
@@ -29,26 +35,18 @@ transporter.set('oauth2_provision_cb', (user, renew, callback) => {
 });
 
 exports.handler = async event => {
-  let mail = {
-    from: 'CUtopia <cutopia.app@gmail.com>',
-    subject: 'CUtopia confirmation email',
-  };
-
   await connect(process.env.ATLAS_URI);
-  const users = await getUsers({
-    filters: { resendEmail: true },
-    fields: ['username', 'SID', 'veriCode'],
-  });
-  await Promise.all(
-    users.map(async ({ username, SID, veriCode }) => {
-      await transporter.sendMail({
-        ...mail,
-        to: `${SID}@link.cuhk.edu.hk`,
-        text: `Thanks for using CUtopia! Please click the following link to verify:
-https://cutopia.app/account/verify?user=${username}&code=${veriCode}`,
-      });
-      await updateUser({ username, resendEmail: false });
-      console.log('Resent email:', username);
-    })
-  );
+  const resendList = await getResendList();
+
+  try {
+    await Promise.all(
+      resendList.map(async message => {
+        await transporter.sendMail(getTemplateByAction(message));
+        await removeFromResendList(message);
+        console.log('Resent email:', message);
+      })
+    );
+  } finally {
+    await disconnect();
+  }
 };

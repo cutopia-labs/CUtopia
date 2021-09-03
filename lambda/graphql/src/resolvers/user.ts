@@ -38,9 +38,9 @@ const userResolver = {
       const veriCode = await createUser(input);
       await sendEmail({
         action: 'create',
-        email: `${SID}@link.cuhk.edu.hk`,
+        code: veriCode,
         username,
-        veriCode,
+        SID,
       });
     },
     verifyUser: async (parent, { input }) => {
@@ -65,12 +65,12 @@ const userResolver = {
       };
     },
     sendResetPasswordCode: async (parent, { input }) => {
-      const { code, email } = await getResetPasswordCodeAndEmail(input);
+      const { resetPwdCode, SID } = await getResetPasswordCodeAndEmail(input);
       await sendEmail({
         action: 'resetPwd',
-        resetPwdCode: code,
+        code: resetPwdCode,
         username: input.username,
-        email,
+        SID,
       });
     },
     resetPassword: async (parent, { input }) => {

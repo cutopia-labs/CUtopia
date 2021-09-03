@@ -1,7 +1,8 @@
 require('dotenv').config();
 const { google } = require('googleapis');
 const nodemailer = require('nodemailer');
-const { connect, updateUser } = require('mongodb');
+const { connect, disconnect, addToResendList } = require('mongodb');
+const { getTemplateByAction } = require('./template');
 
 const OAuth2 = google.auth.OAuth2;
 const OAuth2Client = new OAuth2(
@@ -29,35 +30,16 @@ transporter.set('oauth2_provision_cb', (user, renew, callback) => {
 });
 
 exports.handler = async event => {
-  const message = event.Records[0].Sns.Message;
-  const { action, email, username, veriCode, resetPwdCode } =
-    JSON.parse(message);
-
-  let mail = {
-    from: 'CUtopia <cutopia.app@gmail.com>',
-    to: email,
-  };
-  if (action === 'create') {
-    mail = {
-      ...mail,
-      subject: 'CUtopia confirmation email',
-      text: `Thanks for using CUtopia! Please click the following link to verify:
-https://cutopia.app/account/verify?user=${username}&code=${veriCode}`,
-    };
-  } else if (action === 'resetPwd') {
-    mail = {
-      ...mail,
-      subject: 'CUtopia reset password',
-      text: `Please click the following link to reset your password:
-http://cutopia.app/account/reset-password?user=${username}&code=${resetPwdCode}`,
-    };
-  }
+  const message = JSON.parse(event.Records[0].Sns.Message);
+  const mail = getTemplateByAction(message);
 
   try {
     await transporter.sendMail(mail);
   } catch (e) {
     console.error(e);
     await connect(process.env.ATLAS_URI);
-    await updateUser({ username, resendEmail: true });
+    await addToResendList(message);
+  } finally {
+    await disconnect();
   }
 };

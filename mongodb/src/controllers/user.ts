@@ -139,8 +139,8 @@ export const getResetPasswordCodeAndEmail = async input => {
   await user.save();
 
   return {
-    code: resetPwdCode,
-    email: user.email,
+    SID: user.SID,
+    resetPwdCode,
   };
 };
 

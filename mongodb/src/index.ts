@@ -28,6 +28,9 @@ export {
   getRanking,
   sendDiscussionMessage,
   getDiscussion,
+  addToResendList,
+  getResendList,
+  removeFromResendList,
 } from './controllers';
 
 require('dotenv').config();
@@ -43,4 +46,9 @@ export const connect = async (uri: string) => {
     console.log('Connected to MongoDB successfully');
   }
   return conn;
+};
+
+export const disconnect = async () => {
+  await mongoose.disconnect();
+  console.log('Disconnected from MongoDB');
 };
