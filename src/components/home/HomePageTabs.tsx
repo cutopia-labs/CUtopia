@@ -14,7 +14,7 @@ type CoursesListProps = {
 
 export const CoursesList = ({ loading, courses }: CoursesListProps) => {
   if (!courses.length) {
-    return <ErrorCard mode={ErrorCardMode.NULL} />;
+    return <ErrorCard mode={ErrorCardMode.NULL} inPlace={false} />;
   }
   return (
     <>

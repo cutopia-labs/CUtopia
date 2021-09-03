@@ -34,6 +34,7 @@
 }
 
 .messages-container {
+  min-height: 120px;
   row-gap: 20px;
   flex: 1;
   overflow-y: scroll;

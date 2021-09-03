@@ -25,7 +25,7 @@ export const ERROR_MESSAGES = {
   [ErrorCode.GET_TIMETABLE_EXPIRED]: 'Link expired!',
   [ErrorCode.INPUT_INVALID_LENGTH]: 'Invalid input length!',
   [ErrorCode.INPUT_INVALID_VALUE]: 'Invalid input value!',
-  [ErrorCode.EXCEED_RATE_LIMIT]: 'Exceed rate limit, please try again later!',
+  [ErrorCode.EXCEED_RATE_LIMIT]: 'Too fast, please try again later!',
   [ErrorCode.UPLOAD_TIMETABLE_EXCEED_LIMIT]:
     'Exceed upload limit, please delete remote timetable before upload!',
 };

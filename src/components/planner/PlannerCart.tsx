@@ -95,7 +95,7 @@ const PlannerCart = () => {
           })
         )
       ) : (
-        <ErrorCard mode={ErrorCardMode.NULL} inPlace />
+        <ErrorCard mode={ErrorCardMode.NULL} />
       )}
     </Card>
   );

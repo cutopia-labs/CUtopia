@@ -26,8 +26,8 @@ type ErrorCardProps = {
   caption?: string;
 };
 
-const ErrorCard = ({ mode, inPlace, caption }: ErrorCardProps) => (
-  <Card inPlace className="error-card-container center column">
+const ErrorCard = ({ mode, inPlace = true, caption }: ErrorCardProps) => (
+  <Card inPlace={inPlace} className="error-card-container center column">
     <img src={CARD_ITEMS[mode]?.image} alt="Empty!" draggable={false} />
     <span className="caption">{caption || CARD_ITEMS[mode]?.caption}</span>
   </Card>

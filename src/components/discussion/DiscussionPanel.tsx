@@ -3,6 +3,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { IconButton } from '@material-ui/core';
 import { ArrowBack } from '@material-ui/icons';
 import { observer } from 'mobx-react-lite';
+import { useTitle } from 'react-use';
 import { MESSAGE_PREVIEW_LENGTH } from '../../constants/configs';
 import { validCourse } from '../../helpers';
 import { UserContext } from '../../store';
@@ -52,6 +53,7 @@ const DiscussionPanel = () => {
   const { courseId } = useParams<{
     courseId?: string;
   }>();
+  useTitle(`Discussion${courseId ? ` | ${courseId}` : ''}`);
   const history = useHistory();
   const user = useContext(UserContext);
   const isMobile = useMobileQuery();

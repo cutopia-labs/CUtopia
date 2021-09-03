@@ -95,11 +95,11 @@ export const SearchResult = ({
   }
 
   if (!results) {
-    return <ErrorCard mode={ErrorCardMode.ERROR} inPlace />;
+    return <ErrorCard mode={ErrorCardMode.ERROR} />;
   }
 
   if (!results.length) {
-    return <ErrorCard mode={ErrorCardMode.NULL} inPlace />;
+    return <ErrorCard mode={ErrorCardMode.NULL} />;
   }
 
   return (
