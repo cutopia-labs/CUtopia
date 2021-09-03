@@ -9,7 +9,7 @@ const PrivacyTab = () => (
     <AboutSection title="Privacy" labelClassName="about-title sub-heading">
       <p>
         {' '}
-        We collect your student id for verification purposes only. Reviews are
+        We need your student id for verification purposes only. Reviews are
         being posted anonymously or with CUtopia username, but not student id.
         Thus, your student id is only used in sign-up and password recovery
         services.

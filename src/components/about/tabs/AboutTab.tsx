@@ -15,10 +15,10 @@ const AboutTab = () => (
         ensure that all users are CUHK students.
       </p>
       <p>
-        CUtopia is a open source project and under development by a team of CUHK
-        students. It is still at the development stage, therefore functions are
-        incomplete and potentially buggy. Any contribution to the CUtopia
-        project is welcomed!
+        CUtopia is a open source project (will open source after beta test) and
+        under development by a team of CUHK students. It is still at the
+        development stage, therefore functions are incomplete and potentially
+        buggy. Any contribution to the CUtopia project is welcomed!
       </p>
     </AboutSection>
     <AboutSection title="Data Source">
@@ -33,7 +33,10 @@ const AboutTab = () => (
       </p>
     </AboutSection>
     <AboutSection title="Contact Us">
-      <p>Email: cutopia.team@gmail.com</p>
+      <p>
+        Email:{' '}
+        <Link href="mailto::cutopia.app@gmail.com">cutopia.app@gmail.com</Link>
+      </p>
       <p>
         If you found any bugs or have any suggestion, you may email us or issue
         a report via CUtopia apps.
