@@ -16,7 +16,6 @@ import {
   ExpandMore,
   ArrowBack,
   ClassOutlined,
-  SchoolOutlined,
   BookmarkBorderOutlined,
 } from '@material-ui/icons';
 import { useQuery } from '@apollo/client';
@@ -58,10 +57,6 @@ const LIST_ITEMS = Object.freeze([
   {
     label: 'Pins' as SearchMode,
     icon: <BookmarkBorderOutlined />,
-  },
-  {
-    label: 'My Courses' as SearchMode,
-    icon: <SchoolOutlined />,
   },
 ]);
 

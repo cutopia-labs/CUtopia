@@ -56,11 +56,6 @@ export const getCoursesFromQuery = async ({
           c: course.courseId,
           t: course.title,
         }));
-      case 'My Courses':
-        return user.timetable?.map(course => ({
-          c: course.courseId,
-          t: course.title,
-        }));
       case 'subject':
         return courseList[text];
       case 'query':

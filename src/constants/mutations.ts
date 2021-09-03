@@ -78,7 +78,7 @@ export const EDIT_REVIEW = gql`
   mutation (
     $anonymous: Boolean!
     $courseId: String!
-    $overall: overall_Int_NotNull_min_0_max_4!
+    $overall: overall_Int_min_0_max_4!
     $grading: ReviewDetailsInput!
     $teaching: ReviewDetailsInput!
     $difficulty: ReviewDetailsInput!
