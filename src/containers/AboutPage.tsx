@@ -1,5 +1,4 @@
 import {
-  History,
   InfoOutlined,
   LockOutlined,
   DescriptionOutlined,
@@ -7,12 +6,7 @@ import {
 
 import './AboutPage.scss';
 import { useHistory, useLocation } from 'react-router-dom';
-import {
-  AboutTab,
-  ChangelogTab,
-  PrivacyTab,
-  TermsOfUseTab,
-} from '../components/about/tabs';
+import { AboutTab, PrivacyTab, TermsOfUseTab } from '../components/about/tabs';
 import Page from '../components/atoms/Page';
 import TabsContainer from '../components/molecules/TabsContainer';
 
@@ -20,10 +14,6 @@ export const ABOUT_PAGE_ROUTES = [
   {
     label: 'about',
     icon: <InfoOutlined />,
-  },
-  {
-    label: 'changelog',
-    icon: <History />,
   },
   {
     label: 'privacy',
@@ -44,8 +34,6 @@ const AboutPage = () => {
     switch (location?.pathname.slice(1)) {
       case 'about':
         return <AboutTab />;
-      case 'changelog':
-        return <ChangelogTab />;
       case 'privacy':
         return <PrivacyTab />;
       case 'terms':

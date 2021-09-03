@@ -18,10 +18,6 @@ const FOOTER_ITEMS = [
     to: '/about',
   },
   {
-    label: 'Changelog',
-    to: '/changelog',
-  },
-  {
     label: 'Privacy',
     to: '/privacy',
   },
@@ -42,11 +38,7 @@ const FOOTER_ITEMS = [
   },
   {
     label: 'Contact Us',
-    url: 'mailto::cutopia.team@gmail.com',
-  },
-  {
-    label: 'Fund Us ♡',
-    url: 'https://www.buymeacoffee.com/cutopia',
+    url: 'mailto::cutopia.app@gmail.com',
   },
 ];
 
