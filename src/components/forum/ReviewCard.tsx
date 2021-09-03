@@ -70,7 +70,7 @@ const ReviewCard = ({
     <div className={clsx('review-card card', !showMore && 'retracted')}>
       <div className="reviews-filter review">
         {Boolean(review.title) && (
-          <div className="review-title center-row">
+          <div className="review-title center-row ellipsis-text">
             <BiMessageRounded />
             {review.title}
           </div>

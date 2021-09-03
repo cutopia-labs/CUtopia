@@ -8,15 +8,17 @@
   }
 }
 .review-title {
-  display: flex;
-  padding: var(--review-card-inner-padding-vertical) var(--review-card-inner-padding-horizontal);
-  text-align: start;
+  margin: var(--review-card-inner-padding-vertical) var(--review-card-inner-padding-horizontal);
   font-size: 14px;
   font-weight: 500;
   color: var(--caption);
+  line-height: 22px;
+  padding-left: 24px;
   svg {
+    position: absolute;
+    left: var(--review-card-inner-padding-horizontal);
+    top: 14px;
     font-size: 18px;
-    margin-right: 6px;
   }
 }
 .review-title-author {
