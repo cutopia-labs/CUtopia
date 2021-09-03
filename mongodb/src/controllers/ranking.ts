@@ -45,7 +45,7 @@ export const rankCourses = async () => {
     // $facet does not support $merge in nested pipeline and seems
     // splitting one document into multiples with different fields is not feasible ($unwind does not help)
     // so we have to separate the write operations from aggregate
-  ]);
+  ]).exec();
   const bulkOperations = Object.keys(result[0]).map(field => ({
     updateOne: {
       filter: { _id: field },

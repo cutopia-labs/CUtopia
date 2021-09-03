@@ -158,10 +158,10 @@ Resources:
       Runtime: nodejs14.x
       Timeout: 20
       MemorySize: 512
-  HourlyScheduledRule:
+  ThirtyMinutesScheduledRule:
     Type: AWS::Events::Rule
     Properties:
-      ScheduleExpression: cron(0 0 * * ? *)
+      ScheduleExpression: cron(30 * * * ? *)
       State: ENABLED
       Targets:
         - Arn: !GetAtt ScheduledUpdateRanking.Arn
@@ -184,14 +184,14 @@ Resources:
       FunctionName: !Ref ScheduledRemoveTimetable
       Action: lambda:InvokeFunction
       Principal: events.amazonaws.com
-      SourceArn: !GetAtt HourlyScheduledRule.Arn
+      SourceArn: !GetAtt ThirtyMinutesScheduledRule.Arn
   InvokeUpdateRankingPermission:
     Type: AWS::Lambda::Permission
     Properties:
       FunctionName: !Ref ScheduledUpdateRanking
       Action: lambda:InvokeFunction
       Principal: events.amazonaws.com
-      SourceArn: !GetAtt HourlyScheduledRule.Arn
+      SourceArn: !GetAtt ThirtyMinutesScheduledRule.Arn
   InvokeResendEmailPermission:
     Type: AWS::Lambda::Permission
     Properties:
