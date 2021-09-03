@@ -116,10 +116,10 @@ const RankingCard = ({
           <ListItem
             left={<span className="ranking-label center-box">{i + 1}</span>}
             right={
-              course[sortKey] !== null ? (
-                <GradeIndicator grade={course[sortKey]} />
-              ) : (
+              course.numReviews ? (
                 <Badge index={0} text={`${course.numReviews} reviews`} />
+              ) : (
+                <GradeIndicator grade={course[sortKey]} />
               )
             }
             title={course.courseId}

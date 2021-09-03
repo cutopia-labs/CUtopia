@@ -1,11 +1,5 @@
 import { useContext, useReducer, useState } from 'react';
-import {
-  Dialog as MUIDialog,
-  DialogTitle,
-  DialogContent,
-  Switch,
-  Divider,
-} from '@material-ui/core';
+import { Dialog as MUIDialog, DialogTitle, Divider } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 import { useMutation } from '@apollo/client';
 import { ReportCategory } from 'cutopia-types/lib/codes';
@@ -31,17 +25,6 @@ const UserSettingsDialogContent = observer(() => {
   return (
     <>
       <DialogTitle id="form-dialog-title">Settings</DialogTitle>
-      <DialogContent className="settings-modal">
-        <div className="toggle-row center-row">
-          Dark Mode
-          <Switch
-            checked={preference.darkTheme}
-            onChange={() => preference.setDarkTheme(!preference.darkTheme)}
-            name="checkedA"
-            inputProps={{ 'aria-label': 'secondary checkbox' }}
-          />
-        </div>
-      </DialogContent>
       <ListItem
         noBorder
         className="log-out-row"
@@ -169,7 +152,7 @@ const Dialog = () => {
   const ContentFC = DialogContentMap[view.dialog?.key];
   return (
     <MUIDialog
-      className="settings-modal-container"
+      className="global-modal-container"
       open={Boolean(view.dialog)}
       onClose={(e, reason) => {
         view.dialog?.props?.onClose(e, reason);
