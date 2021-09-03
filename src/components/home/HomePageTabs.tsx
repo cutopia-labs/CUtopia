@@ -44,7 +44,7 @@ type ReviewsListProps = {
 
 export const ReviewsList = ({ reviewIds }: ReviewsListProps) => {
   if (!reviewIds?.length) {
-    return <ErrorCard mode={ErrorCardMode.NULL} />;
+    return <ErrorCard mode={ErrorCardMode.NULL} inPlace={false} />;
   }
   return (
     <div className="home-course-container card">
