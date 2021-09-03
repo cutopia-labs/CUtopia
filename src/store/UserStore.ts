@@ -10,18 +10,12 @@ import {
 } from '../types';
 import { storeData, getStoreData, removeStoreItem } from '../helpers/store';
 
-import { TOKEN_EXPIRE_DAYS, VIEWS_LIMIT } from '../constants';
+import { TOKEN_EXPIRE_DAYS } from '../constants';
 import { HISTORY_MAX_LENGTH, LEVEL_UP_EXP } from '../constants/configs';
 import ViewStore from './ViewStore';
 import StorePrototype from './StorePrototype';
 
-const LOAD_KEYS = [
-  'username',
-  'favoriteCourses',
-  'timetable',
-  'viewCount',
-  'searchHistory',
-];
+const LOAD_KEYS = ['username', 'favoriteCourses', 'timetable', 'searchHistory'];
 
 const RESET_KEYS = [...LOAD_KEYS, 'token'];
 
@@ -29,7 +23,6 @@ const LOGOUT_KEYS = ['username', 'token'];
 
 class UserStore extends StorePrototype {
   // General State
-  @observable viewCount: number;
   @observable loginState: LoginState;
 
   // User Saved Data
@@ -62,7 +55,6 @@ class UserStore extends StorePrototype {
     }
     this.favoriteCourses = this.favoriteCourses || [];
     this.searchHistory = this.searchHistory || [];
-    this.viewCount = this.viewCount || 0;
   }
 
   @action async applyUserStore() {
@@ -76,21 +68,8 @@ class UserStore extends StorePrototype {
 
   // General
 
-  get exceedLimit() {
-    return this.viewCount > VIEWS_LIMIT;
-  }
-
   get level() {
     return Math.floor((this.data?.exp || 0) / LEVEL_UP_EXP);
-  }
-
-  @action async increaseViewCount() {
-    await this.increaseViewCountBounded();
-  }
-
-  @action.bound async increaseViewCountBounded() {
-    const increased = this.viewCount + 1;
-    this.setStore('viewCount', increased);
   }
 
   // CUtopia

@@ -209,7 +209,6 @@ const CoursePanel = () => {
     if (validCourse(courseId)) {
       fetchSimilarCourses(courseId);
       setMode(COURSE_PANEL_MODES.FETCH_REVIEWS);
-      user.increaseViewCount();
     } else {
       // Display ERROR PAGE
     }
