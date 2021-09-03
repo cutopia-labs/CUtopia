@@ -154,6 +154,7 @@ const LoginPanel = () => {
     {
       onCompleted: handleCompleted(() => loginAndRedirect(), {
         view,
+        message: 'Verification success!',
       }),
       onError: e => {
         view.handleError(e);
@@ -199,13 +200,17 @@ const LoginPanel = () => {
   );
 
   const loginAndRedirect = async () => {
-    const loginPayload = {
-      variables: {
-        username,
-        password,
-      },
-    };
-    await loginCUtopia(loginPayload);
+    if (password) {
+      const loginPayload = {
+        variables: {
+          username,
+          password,
+        },
+      };
+      await loginCUtopia(loginPayload);
+    } else {
+      setMode(LoginPageMode.CUTOPIA_LOGIN);
+    }
   };
 
   const validate = (): boolean => {
