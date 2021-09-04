@@ -100,5 +100,5 @@ type ReviewDetails {
 
 input ReviewDetailsInput {
   grade: Int! @constraint(min: 0, max: 4)
-  text: String @constraint(maxLength: 3000)
+  text: String @constraint(maxLength: 10000)
 }

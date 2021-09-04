@@ -13,7 +13,7 @@ const reviewDetailSchema = new Schema<ReviewDetail>(
     text: {
       type: String,
       required: true,
-      maxlength: 3000,
+      maxlength: 10000,
     },
   },
   {
