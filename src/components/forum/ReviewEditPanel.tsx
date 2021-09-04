@@ -84,7 +84,6 @@ const searchLecturers = async ({
     if (!instructors) {
       const res = await fetch(`${SERVER_ADDR}/static/instructors.json`, {
         method: 'GET',
-        mode: 'cors',
         headers: {
           Accept: 'application/json',
         },

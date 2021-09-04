@@ -18,7 +18,6 @@ export const fetchCourses = async (): Promise<
   if (!courseList) {
     const res = await fetch(`${SERVER_ADDR}/static/course_list.json`, {
       method: 'GET',
-      mode: 'cors',
       headers: {
         Accept: 'application/json',
       },
