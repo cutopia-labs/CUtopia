@@ -1,0 +1,11 @@
+{
+  "name": "load-test",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "graphql": "^15.5.2",
+    "graphql-request": "^3.5.0"
+  }
+}
