@@ -41,7 +41,7 @@ const MODE_ITEMS = {
   [LoginPageMode.VERIFY]: {
     title: 'Verify',
     caption:
-      '⚠️ Due to Gmail service limitation, if you failed to receive verification code, please dm us via ig: cutopia.app or email: cutopia.app@gmail.com',
+      'An verification code has been sent to CUHK email.\nPlease enter your code here:',
     verificationCode: 'Your Verification Code',
     button: 'Verify',
   },
