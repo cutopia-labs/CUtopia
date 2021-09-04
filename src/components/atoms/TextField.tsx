@@ -9,7 +9,7 @@ type TextFieldProps = {
   Tag?: Tag;
   value: string;
   type?: string;
-  ref?: React.RefObject<HTMLInputElement | HTMLTextAreaElement>;
+  inputRef?: React.RefObject<HTMLInputElement | HTMLTextAreaElement>;
   label?: string;
   disabled?: boolean;
 };
@@ -22,7 +22,7 @@ const TextField = ({
   defaultValue,
   type,
   Tag,
-  ref,
+  inputRef,
   label,
   onBlur,
   onFocus,
@@ -37,7 +37,7 @@ const TextField = ({
         <span className="label text-filed-label">{label}</span>
       )}
       <TagName
-        ref={ref as any}
+        ref={inputRef as any}
         className={clsx('input-container', className)}
         placeholder={placeholder}
         defaultValue={defaultValue}

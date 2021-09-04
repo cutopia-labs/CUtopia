@@ -37,7 +37,8 @@ import CourseCard from './CourseCard';
 enum MODES {
   INITIAL,
   EDIT,
-  MODAL, // to ask if need to edit or exit
+  EDIT_MODAL, // to ask if need to edit or exit
+  DRAFT_MODAL,
 }
 
 const WORD_COUNT_RULE = new RegExp('[\\u00ff-\\uffff]|\\S+', 'g');
@@ -123,6 +124,7 @@ const ReviewHelperText = {
   difficulty:
     'Difficulty of assessments (homework, exam). Workload is too heavy to handle?',
   content: 'Topics, insights, skills rewarded in the course',
+  overall: 'Your overall rating about this course',
 };
 
 const ReviewSection = ({
@@ -310,13 +312,13 @@ const ReviewEdit = ({ courseId }) => {
   // Check userData to see if user already posted review
   useEffect(() => {
     const reviewIds = user?.data?.reviewIds;
-    if (reviewIds && reviewIds?.length) {
-      const reviewIds = user.data?.reviewIds;
+    if (reviewIds?.length) {
       for (let i = 0; i < reviewIds.length; i++) {
         if (reviewIds[i].startsWith(courseId)) {
-          const parts = reviewIds[i].split('#');
-          setTargetReview(parts[1]);
-          setMode(MODES.MODAL);
+          const [_, reviewId] = reviewIds[i].split('#');
+          setTargetReview(reviewId);
+          setMode(MODES.EDIT_MODAL);
+          return;
         }
       }
     }
@@ -362,32 +364,6 @@ const ReviewEdit = ({ courseId }) => {
   return (
     <div className="review-edit grid-auto-row">
       {reviewLoading && <Loading fixed />}
-      <Dialog
-        open={mode === MODES.MODAL}
-        onClose={() => history.push(`/review/${courseId}`)}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          You have already reviewed this course!
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Do you want to edit your posted review?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={() => history.push(`/review/${courseId}`)}
-            color="primary"
-          >
-            Cancel
-          </Button>
-          <Button onClick={() => setMode(MODES.EDIT)} color="primary" autoFocus>
-            Edit
-          </Button>
-        </DialogActions>
-      </Dialog>
       <div className="review-header-container center-row">
         <span className="title">Your Review</span>
         <span className="light-caption">前人種樹，後人乘涼</span>
@@ -441,7 +417,7 @@ const ReviewEdit = ({ courseId }) => {
           placeholder="Please input your course instructor here."
           value={formData.lecturer}
           onChangeText={text => dispatchFormData({ lecturer: text })}
-          ref={lecturerInputRef}
+          inputRef={lecturerInputRef}
           onFocus={() => setShowLecturers(true)}
           onBlur={() => setShowLecturers(false)}
         />
@@ -491,6 +467,30 @@ const ReviewEdit = ({ courseId }) => {
           loading={addReviewLoading || editReviewLoading}
         />
       </div>
+      <Dialog
+        open={mode === MODES.EDIT_MODAL || mode === MODES.DRAFT_MODAL}
+        onClose={() => history.push(`/review/${courseId}`)}
+      >
+        <DialogTitle id="alert-dialog-title">
+          You have already reviewed this course!
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Do you want to edit your posted review?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => history.push(`/review/${courseId}`)}
+            color="primary"
+          >
+            Cancel
+          </Button>
+          <Button onClick={() => setMode(MODES.EDIT)} color="primary" autoFocus>
+            Edit
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

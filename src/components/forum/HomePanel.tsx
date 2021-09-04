@@ -103,7 +103,7 @@ const RecentReviewList = ({ visible }: RecentReviewListProps) => {
       } else {
         setReviews(data.reviews);
       }
-      if (data?.reviews?.length < REVIEWS_PER_PAGE) {
+      if ((data?.reviews?.length || 0) < REVIEWS_PER_PAGE) {
         setPage(null); // All pages fetched
       } else {
         setPage(page + 1);
