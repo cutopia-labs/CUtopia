@@ -6,12 +6,14 @@ import {
   CourseTableEntry,
   DiscussionRecent,
   LoginState,
+  Review,
   User,
 } from '../types';
 import { storeData, getStoreData, removeStoreItem } from '../helpers/store';
 
 import { TOKEN_EXPIRE_DAYS } from '../constants';
 import { HISTORY_MAX_LENGTH, LEVEL_UP_EXP } from '../constants/configs';
+import withUndo from '../helpers/withUndo';
 import ViewStore from './ViewStore';
 import StorePrototype from './StorePrototype';
 
@@ -21,6 +23,7 @@ const LOAD_KEYS = [
   'timetable',
   'searchHistory',
   'discussionHistory',
+  'reviewDrafts',
 ];
 
 const RESET_KEYS = [...LOAD_KEYS, 'token'];
@@ -32,6 +35,7 @@ class UserStore extends StorePrototype {
   @observable loginState: LoginState;
 
   // User Saved Data
+  @observable reviewDrafts: Record<string, Review> = {};
   @observable discussionHistory: DiscussionRecent[] = [];
   @observable searchHistory: string[] = [];
   @observable favoriteCourses: CourseConcise[] = [];
@@ -62,6 +66,7 @@ class UserStore extends StorePrototype {
     this.favoriteCourses = this.favoriteCourses || [];
     this.searchHistory = this.searchHistory || [];
     this.discussionHistory = this.discussionHistory || [];
+    this.reviewDrafts = this.reviewDrafts || {};
   }
 
   @action async applyUserStore() {
@@ -182,6 +187,28 @@ class UserStore extends StorePrototype {
     }
     this.setStore('discussionHistory', [item, ...temp]);
   }
+
+  @action updateReviewDrafts = (courseId: string, review: Review) => {
+    withUndo(
+      {
+        prevData: { ...this.reviewDrafts },
+        setData: prevData => this.setStore('reviewDrafts', prevData),
+        message: 'Draft saved!',
+        viewStore: this.viewStore,
+      },
+      () => {
+        const copy = { ...this.reviewDrafts };
+        copy[courseId] = review;
+        this.setStore('reviewDrafts', copy);
+      }
+    );
+  };
+
+  @action deleteReveiwDraft = (courseId: string) => {
+    const copy = { ...this.reviewDrafts };
+    delete copy[courseId];
+    this.setStore('reviewDrafts', copy);
+  };
 
   // reset
   @action async reset() {

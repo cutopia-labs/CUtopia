@@ -32,7 +32,7 @@ import {
   TARGET_REVIEW_WORD_COUNT,
   WINDOW_LEAVE_MESSAGES,
 } from '../../constants/configs';
-import { RatingFieldWithOverall, ReviewDetails } from '../../types';
+import { RatingFieldWithOverall, Review, ReviewDetails } from '../../types';
 import SelectionGroup, { FormSection } from '../molecules/SectionGroup';
 import useMobileQuery from '../../hooks/useMobileQuery';
 import handleCompleted from '../../helpers/handleCompleted';
@@ -204,7 +204,7 @@ const ReviewSubmit = ({
 const ReviewEdit = ({ courseId }) => {
   const view = useContext(ViewContext);
   const [mode, setMode] = useState(MODES.INITIAL);
-  const [targetReview, setTargetReview] = useState('');
+  const [targetReview, setTargetReview] = useState<string | Review>('');
   const [progress, setProgress] = useState(0);
   const [anchorEl, setAnchorEl] = useState(null);
   const [instructorsSearchResult, setInstructorsSearchResult] = useState<
@@ -217,6 +217,7 @@ const ReviewEdit = ({ courseId }) => {
         data => {
           const id = data?.createReview?.createdAt;
           if (id) {
+            user.deleteReveiwDraft(courseId);
             history.push(`/review/${courseId}/${id}`);
           }
         },
@@ -231,6 +232,7 @@ const ReviewEdit = ({ courseId }) => {
       onCompleted: handleCompleted(
         () => {
           if (formData.createdAt) {
+            user.deleteReveiwDraft(courseId);
             history.push(`/review/${courseId}/${formData.createdAt}`);
           }
         },
@@ -329,7 +331,8 @@ const ReviewEdit = ({ courseId }) => {
       }
     }
     if (user.reviewDrafts[courseId]) {
-      console.log('Found draft ');
+      setTargetReview(user.reviewDrafts[courseId]);
+      setMode(MODES.DRAFT_MODAL);
     }
   }, [user.reviewDrafts, user.data?.reviewIds]);
 
@@ -371,11 +374,49 @@ const ReviewEdit = ({ courseId }) => {
   }, [formData.lecturer]);
 
   useBeforeunload(e => {
-    if (progress > SAVE_DRAFT_PROGRESS_BUFFER) {
+    if (progress > SAVE_DRAFT_PROGRESS_BUFFER && mode === MODES.INITIAL) {
       user.updateReviewDrafts(courseId, formData);
       e.preventDefault();
     }
   });
+
+  const reviewModal = {
+    [MODES.EDIT_MODAL]: {
+      title: 'You have already reviewed this course!',
+      caption: 'Do you want to edit your posted review?',
+      cancelButton: {
+        label: 'Cancel',
+        action: () => history.push(`/review/${courseId}`),
+      },
+      confirmButton: {
+        label: 'Edit',
+        action: () => setMode(MODES.EDIT),
+      },
+      onClose: () => history.push(`/review/${courseId}`),
+    },
+    [MODES.DRAFT_MODAL]: {
+      title: 'Review draft found!',
+      caption: 'Do you want use your draft?',
+      cancelButton: {
+        label: 'Discard',
+        action: () => {
+          user.deleteReveiwDraft(courseId);
+          setMode(MODES.INITIAL);
+        },
+      },
+      confirmButton: {
+        label: 'Yes',
+        action: () => {
+          setMode(MODES.INITIAL);
+          dispatchFormData(targetReview);
+        },
+      },
+      onClose: () => {
+        setMode(MODES.INITIAL);
+      },
+    },
+  };
+
   return (
     <div className="review-edit grid-auto-row">
       {reviewLoading && <Loading fixed />}
@@ -482,37 +523,48 @@ const ReviewEdit = ({ courseId }) => {
           loading={addReviewLoading || editReviewLoading}
         />
       </div>
-      <Dialog
-        open={mode === MODES.EDIT_MODAL || mode === MODES.DRAFT_MODAL}
-        onClose={() => history.push(`/review/${courseId}`)}
-      >
-        <DialogTitle id="alert-dialog-title">
-          You have already reviewed this course!
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Do you want to edit your posted review?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={() => history.push(`/review/${courseId}`)}
-            color="primary"
-          >
-            Cancel
-          </Button>
-          <Button onClick={() => setMode(MODES.EDIT)} color="primary" autoFocus>
-            Edit
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {(mode === MODES.DRAFT_MODAL || mode === MODES.EDIT_MODAL) && (
+        <Dialog
+          open={mode === MODES.EDIT_MODAL || mode === MODES.DRAFT_MODAL}
+          onClose={reviewModal[mode].onClose}
+          className="review-edit-dialog"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {reviewModal[mode].title}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              {reviewModal[mode].caption}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={reviewModal[mode].cancelButton.action}
+              color="primary"
+            >
+              {reviewModal[mode].cancelButton.label}
+            </Button>
+            <Button
+              onClick={reviewModal[mode].confirmButton.action}
+              color="primary"
+              autoFocus
+            >
+              {reviewModal[mode].confirmButton.label}
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
       <Prompt
+        when={progress > SAVE_DRAFT_PROGRESS_BUFFER && mode === MODES.INITIAL}
         message={(location, action) => {
-          console.log(`Action: ${action}`);
-          if (action === 'PUSH' || action === 'POP') {
+          // ignore draft saving if it's submitted
+          const isRedirect =
+            action === 'PUSH' &&
+            location.pathname.startsWith(`/review/${courseId}/`);
+          if (!isRedirect && (action === 'PUSH' || action === 'POP')) {
             user.updateReviewDrafts(courseId, formData);
           }
-          return WINDOW_LEAVE_MESSAGES.REVIEW_EDIT;
+          return isRedirect ? true : WINDOW_LEAVE_MESSAGES.REVIEW_EDIT;
         }}
       />
     </div>

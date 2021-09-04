@@ -157,6 +157,12 @@
   }
 }
 
+.review-edit-dialog {
+  .MuiDialog-paper {
+    min-width: 320px;
+  }
+}
+
 @media only screen and (max-width: 1260px) {
   .review-sections-container {
     grid-template-columns: none;
@@ -176,4 +182,10 @@
   .review-edit .header-search-result {
     margin-left: 11px;
   }
+  .review-edit-dialog {
+    .MuiDialog-paper {
+      min-width: 280px;
+    }
+  }
+  
 }
