@@ -1887,9 +1887,9 @@ cssfilter@0.0.10:
   integrity sha1-xtJnJjKi5cg+AT5oZKQs6N79IK4=
 
 cutopia-types@^1.0.6:
-  version "1.0.17"
-  resolved "https://registry.yarnpkg.com/cutopia-types/-/cutopia-types-1.0.17.tgz#651381cba3dc80542bc2f0bb5de2034b40fb61a8"
-  integrity sha512-98F4R9mmPYhz4TEp7WNVbcqf5yEK+9xXkQQYzy5eAG/Xu2JKEhDcT4Xwl/0j/9UHA0rGuuPh5iIvRyr4iZ3yTA==
+  version "1.0.20"
+  resolved "https://registry.yarnpkg.com/cutopia-types/-/cutopia-types-1.0.20.tgz#73551f2d942ea11f2cc3766435bb45a75037be17"
+  integrity sha512-vI3zpVVZ/H241DYVMgJvDvhq6G+ldChtGhJS9VuWTglMpmHq4yPpKOUKDXAG5XAlk8hcepk0RigGY4aUFpq/Tg==
 
 dataloader@2.0.0:
   version "2.0.0"

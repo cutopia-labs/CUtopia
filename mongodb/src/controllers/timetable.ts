@@ -5,7 +5,10 @@ import withCache from '../utils/withCache';
 import Timetable from '../models/timetable.model';
 import User from '../models/user.model';
 import { updateTimetableId } from './user';
-import { UPLOAD_TIMETABLE_LIMIT } from '../constant/configs';
+import {
+  UPLOAD_TIMETABLE_ENTRY_LIMIT,
+  UPLOAD_TIMETABLE_TOTAL_LIMIT,
+} from '../constant/configs';
 
 const timetableCache = new NodeCache({
   stdTTL: 1800,
@@ -24,16 +27,20 @@ export const getTimetable = async input =>
   });
 
 export const uploadTimetable = async input => {
-  const { username, expire } = input;
+  const { username, expire, entries } = input;
+  if (entries.length > UPLOAD_TIMETABLE_ENTRY_LIMIT) {
+    throw Error(ErrorCode.UPLOAD_TIMETABLE_EXCEED_ENTRY_LIMIT.toString());
+  }
+
   const user = await User.findOne(
     { username },
     'timetables sharedTimetables'
   ).exec();
   if (
     user.timetables.length + user.sharedTimetables.length >
-    UPLOAD_TIMETABLE_LIMIT
+    UPLOAD_TIMETABLE_TOTAL_LIMIT
   ) {
-    throw Error(ErrorCode.UPLOAD_TIMETABLE_EXCEED_LIMIT.toString());
+    throw Error(ErrorCode.UPLOAD_TIMETABLE_EXCEED_TOTAL_LIMIT.toString());
   }
 
   const newTimetable = new Timetable({

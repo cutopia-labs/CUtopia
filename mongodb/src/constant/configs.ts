@@ -12,4 +12,5 @@ export const REVIEWS_PER_PAGE = 10;
 export const RANK_LIMIT = 10;
 
 // Timetable configs
-export const UPLOAD_TIMETABLE_LIMIT = 20;
+export const UPLOAD_TIMETABLE_ENTRY_LIMIT = 20;
+export const UPLOAD_TIMETABLE_TOTAL_LIMIT = 20;
