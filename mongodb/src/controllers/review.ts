@@ -100,7 +100,7 @@ export const getReviews = async input => {
 
   return withCache(
     reviewCache,
-    courseId ? JSON.stringify(input) : 'latest', // using courseId as key will return same with diff query params
+    courseId ? JSON.stringify(input) : `latest#${page || 0}`,
     async () => {
       return await Review.find(courseId && query, null, {
         sort: {
