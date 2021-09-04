@@ -21,15 +21,22 @@ const AboutTab = () => (
         buggy. Any contribution to the CUtopia project is welcomed!
       </p>
     </AboutSection>
-    <AboutSection title="Data Source">
+    <AboutSection title="Course Data Source">
+      <p className="caption">Last batch update date: Jul 20, 2021</p>
       <p>
         The courses information is fetched and parsed from{' '}
         <Link href="http://rgsntl.rgs.cuhk.edu.hk/aqs_prd_applx/Public/tt_dsp_crse_catalog.aspx">
           Browse Course Catalog
+        </Link>{' '}
+        using a{' '}
+        <Link href="https://github.com/mikezzb/cuhk-course-scraper">
+          parser
         </Link>
-        . Some information (e.g. assessments) from the data source may not be
-        accurate and up-to-date, you are encouraged to double-check the
-        information provided by official course page.
+        . However, some of the course info is missing (e.g. UGFN, UGFN,
+        ELTU2014) from the website. Moreover, some information (e.g.
+        assessments) from the data source may not be accurate and up-to-date,
+        you are encouraged to double-check the information provided by{' '}
+        <Link href="https://cusis.cuhk.edu.hk/">CUSIS</Link>.
       </p>
     </AboutSection>
     <AboutSection title="Contact Us">
@@ -44,8 +51,8 @@ const AboutTab = () => (
     </AboutSection>
     <AboutSection title="Declaimer">
       <p>
-        CUtopia is an independent and unofficial application. It is not
-        affiliated with the CUHK.
+        CUtopia is an independent platform developed by a group of CUHK
+        students. It is not affiliated with the CUHK.
       </p>
     </AboutSection>
   </Card>

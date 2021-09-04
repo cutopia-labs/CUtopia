@@ -80,7 +80,7 @@ export const REVIEWS_QUERY = gql`
 
 export const RECENT_REVIEWS_QUERY = gql`
   query {
-    reviews(input: { ascending: false, sortBy: "createdAt" }) {
+    reviews(input: { ascending: false, sortBy: "createdAt", page: 0 }) {
       courseId
       username
       title
