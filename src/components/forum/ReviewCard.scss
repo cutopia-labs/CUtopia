@@ -150,6 +150,10 @@
       font-size: 12px;
     }
   }
+  .review-text {
+    width: calc(100vw - 2 * var(--review-card-inner-padding-horizontal));
+    overflow-wrap: break-word;
+  }
   .review-text-full {
     grid-template-columns: repeat(1, 1fr);
   }
