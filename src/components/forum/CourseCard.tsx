@@ -187,15 +187,12 @@ const CourseCard = ({ courseInfo, concise, loading }: CourseCardProps) => {
       />
       {!concise && (
         <>
-          {['requirements', 'outcome']
-            .filter(key => courseInfo[key] && courseInfo[key] !== '') // filter off empty strings
-            .map(key => (
-              <SectionText
-                key={key}
-                title={key.replaceAll('_', ' ')}
-                caption={courseInfo[key]}
-              />
-            ))}
+          {Boolean(courseInfo.requirements) && (
+            <SectionText
+              title={'requirements'}
+              caption={courseInfo.requirements}
+            />
+          )}
           <Section title="Past Paper" subheading>
             <Link
               url={`https://julac.hosted.exlibrisgroup.com/primo-explore/search?query=any,contains,${courseInfo.courseId}&tab=default_tab&search_scope=Exam&sortby=date&vid=CUHK&lang=en_US`}
