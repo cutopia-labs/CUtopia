@@ -8,7 +8,7 @@ const {
 const { setupEmailer } = require('./setup');
 const { getTemplateByAction } = require('./template');
 
-const transporter = setupEmailer();
+const transporters = setupEmailer();
 
 exports.handler = async event => {
   await connect(process.env.ATLAS_URI);
@@ -17,9 +17,18 @@ exports.handler = async event => {
   try {
     await Promise.all(
       resendList.map(async message => {
-        await transporter.sendMail(getTemplateByAction(message));
-        await removeFromResendList(message);
-        console.log('Resent email:', message);
+        for (const transporter of transporters) {
+          // temporary workaround to resend emails when failed
+          try {
+            await transporter.sendMail(getTemplateByAction(message));
+            await removeFromResendList(message);
+            console.log('resent!', message);
+            break;
+          } catch (e) {
+            console.log('resend failed', message);
+            continue;
+          }
+        }
       })
     );
   } finally {
