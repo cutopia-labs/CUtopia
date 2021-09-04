@@ -94,7 +94,12 @@ const Navigator = () => {
     return <Loading fixed />;
   }
   return (
-    <Router>
+    <Router
+      getUserConfirmation={(message, callback) => {
+        const allowTransition = window.confirm(message);
+        callback(allowTransition);
+      }}
+    >
       <div className="App">
         {user.loginState === LoginState.LOGGED_IN ? (
           <>

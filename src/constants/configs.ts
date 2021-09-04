@@ -15,6 +15,8 @@ export const MESSAGE_PREVIEW_LENGTH = 10;
 export const MESSAGES_PER_PAGE = 10;
 export const REVIEWS_PER_PAGE = 10;
 
+export const SAVE_DRAFT_PROGRESS_BUFFER = 25;
+
 export const PLANNER_CONFIGS = {
   DEFAULT_TABLE_NAME: 'New Timetable',
 };
@@ -41,3 +43,8 @@ export const SentryConfigs: BrowserOptions = {
 };
 
 export const CURRENT_TERM = '2021-22 Term 1';
+
+export const WINDOW_LEAVE_MESSAGES = {
+  REVIEW_EDIT:
+    'Are you sure you want to leave? (Review will be saved as draft)',
+};

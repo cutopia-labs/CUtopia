@@ -13,11 +13,12 @@ import {
   Tooltip,
 } from '@material-ui/core';
 import { useMutation, useQuery } from '@apollo/client';
-import { useHistory, useParams } from 'react-router-dom';
+import { Prompt, useHistory, useParams } from 'react-router-dom';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 
 import './ReviewEditPanel.scss';
 import { HiOutlineInformationCircle } from 'react-icons/hi';
+import { useBeforeunload } from 'react-beforeunload';
 import { ViewContext, UserContext } from '../../store';
 import { GET_REVIEW, COURSE_INFO_QUERY } from '../../constants/queries';
 import { ADD_REVIEW, EDIT_REVIEW } from '../../constants/mutations';
@@ -25,7 +26,12 @@ import { GRADES, RATING_FIELDS } from '../../constants';
 import TextField from '../atoms/TextField';
 import Loading from '../atoms/Loading';
 import ListItem from '../molecules/ListItem';
-import { SERVER_ADDR, TARGET_REVIEW_WORD_COUNT } from '../../constants/configs';
+import {
+  SAVE_DRAFT_PROGRESS_BUFFER,
+  SERVER_ADDR,
+  TARGET_REVIEW_WORD_COUNT,
+  WINDOW_LEAVE_MESSAGES,
+} from '../../constants/configs';
 import { RatingFieldWithOverall, ReviewDetails } from '../../types';
 import SelectionGroup, { FormSection } from '../molecules/SectionGroup';
 import useMobileQuery from '../../hooks/useMobileQuery';
@@ -322,7 +328,10 @@ const ReviewEdit = ({ courseId }) => {
         }
       }
     }
-  }, [user.data?.reviewIds]);
+    if (user.reviewDrafts[courseId]) {
+      console.log('Found draft ');
+    }
+  }, [user.reviewDrafts, user.data?.reviewIds]);
 
   // to fillin posted review if choose to edit
   useEffect(() => {
@@ -361,6 +370,12 @@ const ReviewEdit = ({ courseId }) => {
     }).then(result => setInstructorsSearchResult(result));
   }, [formData.lecturer]);
 
+  useBeforeunload(e => {
+    if (progress > SAVE_DRAFT_PROGRESS_BUFFER) {
+      user.updateReviewDrafts(courseId, formData);
+      e.preventDefault();
+    }
+  });
   return (
     <div className="review-edit grid-auto-row">
       {reviewLoading && <Loading fixed />}
@@ -491,6 +506,15 @@ const ReviewEdit = ({ courseId }) => {
           </Button>
         </DialogActions>
       </Dialog>
+      <Prompt
+        message={(location, action) => {
+          console.log(`Action: ${action}`);
+          if (action === 'PUSH' || action === 'POP') {
+            user.updateReviewDrafts(courseId, formData);
+          }
+          return WINDOW_LEAVE_MESSAGES.REVIEW_EDIT;
+        }}
+      />
     </div>
   );
 };
