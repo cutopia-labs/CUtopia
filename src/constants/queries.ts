@@ -79,8 +79,8 @@ export const REVIEWS_QUERY = gql`
 `;
 
 export const RECENT_REVIEWS_QUERY = gql`
-  query {
-    reviews(input: { ascending: false, sortBy: "createdAt", page: 0 }) {
+  query ($page: Int!) {
+    reviews(input: { ascending: false, sortBy: "createdAt", page: $page }) {
       courseId
       username
       title

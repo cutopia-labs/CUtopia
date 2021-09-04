@@ -5,7 +5,7 @@ import {
   ThumbUpOutlined,
   WhatshotOutlined,
 } from '@material-ui/icons';
-import { useQuery } from '@apollo/client';
+import { useLazyQuery, useQuery } from '@apollo/client';
 
 import './HomePanel.scss';
 import { useTitle } from 'react-use';
@@ -29,6 +29,8 @@ import Footer from '../molecules/Footer';
 import FeedCard from '../molecules/FeedCard';
 import { getRandomGeCourses } from '../../helpers/getCourses';
 import Card from '../atoms/Card';
+import { LAZY_LOAD_BUFFER, REVIEWS_PER_PAGE } from '../../constants/configs';
+import useDebounce from '../../hooks/useDebounce';
 
 const MENU_ITEMS = [
   {
@@ -77,24 +79,88 @@ const RecentReviewCard = ({ review, onClick }: RecentReviewCardProps) => {
 };
 
 type RecentReviewListProps = {
-  reviews: RecentReview[];
-  loading: boolean;
+  visible: Boolean;
 };
 
-const RecentReviewList = ({ reviews, loading }: RecentReviewListProps) => {
+const RecentReviewList = ({ visible }: RecentReviewListProps) => {
+  const [reviews, setReviews] = useState<RecentReview[]>([]);
+  const [page, setPage] = useState(0);
   const history = useHistory();
-  if (loading) return <Loading />;
-  if (!reviews || !reviews.length) return null;
+  const view = useContext(ViewContext);
+  const [getRecentReviews, { loading: recentReviewsLoading }] = useLazyQuery<{
+    reviews: RecentReview[];
+  }>(RECENT_REVIEWS_QUERY, {
+    onCompleted: data => {
+      console.log(data.reviews);
+      if (page) {
+        setReviews(prevReviews =>
+          prevReviews
+            .concat(data.reviews)
+            .filter(
+              (v, i, a) => a.findIndex(m => v.createdAt === m.createdAt) === i
+            )
+        );
+      } else {
+        setReviews(data.reviews);
+      }
+      if (data?.reviews?.length < REVIEWS_PER_PAGE) {
+        setPage(null); // All pages fetched
+      } else {
+        setPage(page + 1);
+      }
+    },
+    onError: view.handleError,
+  });
+
+  useEffect(() => {
+    if (page === 0 && !recentReviewsLoading) {
+      getRecentReviews({
+        variables: {
+          page,
+        },
+      });
+    }
+  }, [page, recentReviewsLoading]);
+
+  const listenToScroll = useDebounce(async () => {
+    const distanceFromBottom =
+      document.documentElement.scrollHeight -
+      document.documentElement.scrollTop -
+      window.innerHeight;
+    console.log(distanceFromBottom);
+    if (distanceFromBottom <= LAZY_LOAD_BUFFER) {
+      // Fetch more here;
+      if (page) {
+        console.log('Refetching');
+        getRecentReviews({
+          variables: { page },
+        });
+      }
+    }
+  }, 300);
+
+  useEffect(() => {
+    window.addEventListener('scroll', listenToScroll);
+    return () => window.removeEventListener('scroll', listenToScroll);
+  }, [listenToScroll, visible]);
+
+  if (!visible) {
+    return null;
+  }
   return (
-    <div className="grid-auto-row">
-      {reviews.map(review => (
-        <RecentReviewCard
-          key={review.createdAt}
-          review={review}
-          onClick={id => history.push(`/review/${id}`)}
-        />
-      ))}
-    </div>
+    <>
+      <div className="grid-auto-row">
+        {reviews.map(review => (
+          <RecentReviewCard
+            key={review.createdAt}
+            review={review}
+            onClick={id => history.push(`/review/${id}`)}
+          />
+        ))}
+        {recentReviewsLoading && <Loading />}
+      </div>
+      {page === null && <Footer />}
+    </>
   );
 };
 
@@ -140,12 +206,6 @@ const HomePanel = () => {
   const view = useContext(ViewContext);
   const user = useContext(UserContext);
 
-  const { data: reviewsData, loading: recentReviewsLoading } = useQuery<{
-    reviews: RecentReview[];
-  }>(RECENT_REVIEWS_QUERY, {
-    skip: tab !== 'Recents',
-    onError: view.handleError,
-  });
   const { data: popularCourses, loading: popularCoursesLoading } = useQuery(
     POPULAR_COURSES_QUERY,
     {
@@ -181,10 +241,7 @@ const HomePanel = () => {
             setSelect={setSortKey}
           />
         )}
-        <RecentReviewList
-          reviews={reviewsData?.reviews}
-          loading={recentReviewsLoading}
-        />
+        <RecentReviewList visible={tab === 'Recents'} />
         <RankingCard
           rankList={rankedCourses?.ranking?.rankedCourses}
           sortKey={sortKey}
@@ -195,9 +252,9 @@ const HomePanel = () => {
           loading={popularCoursesLoading}
         />
         {!(
-          recentReviewsLoading ||
           popularCoursesLoading ||
-          rankedCoursesLoading
+          rankedCoursesLoading ||
+          tab === 'Recents'
         ) && <Footer />}
       </div>
       <div className="secondary-column sticky">
