@@ -17,6 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "apollo-server-lambda": "^3.1.2",
+    "aws-sdk": "^2.983.0",
     "cutopia-types": "^1.0.6",
     "dotenv": "^10.0.0",
     "graphql": "^15.4.0",
@@ -38,7 +39,6 @@
   "devDependencies": {
     "@types/jsonwebtoken": "^8.5.4",
     "apollo-server-express": "^3.1.2",
-    "aws-sdk": "^2.968.0",
     "express": "^4.17.1",
     "ts-node": "^10.2.0",
     "webpack": "^5.50.0"

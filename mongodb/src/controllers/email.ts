@@ -10,7 +10,7 @@ export const addToResendList = async (input: EmailType) => {
   }
 };
 
-export const getResendList = async filter => Email.find(filter).lean().exec();
+export const getResendList = async filter => Email.find(filter).exec();
 
 export const removeFromResendList = async filter =>
   Email.findOneAndDelete(filter).exec();

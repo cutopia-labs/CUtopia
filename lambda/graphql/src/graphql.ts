@@ -24,9 +24,11 @@ let schema = makeExecutableSchema({
 schema = applyMiddleware(schema, ...middlewares);
 
 const isProduction = process.env.NODE_ENV === 'production';
+/*
 const allowedOrigins = isProduction
   ? ['https://cutopia.app', 'https://dev.cutopia.app']
   : '*';
+*/
 
 const server = new ApolloServer({
   schema,
@@ -42,7 +44,7 @@ export const graphqlHandler = server.createHandler({
       express.static(__dirname + '/data/static', {
         etag: true,
         setHeaders: (res, path, stat) => {
-          res.header('Access-Control-Allow-Origin', allowedOrigins);
+          res.header('Access-Control-Allow-Origin', '*');
           res.header('Access-Control-Allow-Methods', 'GET,OPTIONS');
           res.header('Access-Control-Allow-Headers', 'Content-Type');
           res.header('Access-Control-Allow-Headers', 'Accept');
@@ -59,7 +61,7 @@ export const graphqlHandler = server.createHandler({
   },
   expressGetMiddlewareOptions: {
     cors: {
-      origin: allowedOrigins,
+      origin: '*',
       methods: ['get', 'post'],
       credentials: true,
       maxAge: 3600,
