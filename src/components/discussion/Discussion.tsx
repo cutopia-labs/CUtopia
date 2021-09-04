@@ -4,6 +4,7 @@ import './Discussion.scss';
 import { Button, IconButton } from '@material-ui/core';
 import { RiSendPlaneLine } from 'react-icons/ri';
 import { useLazyQuery, useMutation } from '@apollo/client';
+import { observer } from 'mobx-react-lite';
 import { DiscussionMessage, ErrorCardMode } from '../../types';
 
 import { UserContext, ViewContext } from '../../store';
@@ -186,4 +187,4 @@ const Discussion = ({ courseId }: DiscussionProps) => {
   );
 };
 
-export default Discussion;
+export default observer(Discussion);

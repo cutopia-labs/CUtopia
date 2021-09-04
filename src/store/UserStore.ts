@@ -61,6 +61,7 @@ class UserStore extends StorePrototype {
     }
     this.favoriteCourses = this.favoriteCourses || [];
     this.searchHistory = this.searchHistory || [];
+    this.discussionHistory = this.discussionHistory || [];
   }
 
   @action async applyUserStore() {
