@@ -10,6 +10,7 @@ import resolvers from './resolvers';
 import schemaDirectives from './directives';
 import createContext from './context';
 import middlewares from './middlewares';
+import loggingPlugin from './plugins/logging';
 
 dotenv.config();
 
@@ -34,6 +35,7 @@ const server = new ApolloServer({
   schema,
   context: createContext,
   introspection: !isProduction,
+  plugins: [loggingPlugin],
 });
 
 export const graphqlHandler = server.createHandler({
