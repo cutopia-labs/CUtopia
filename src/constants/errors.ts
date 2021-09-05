@@ -24,7 +24,9 @@ export const ERROR_MESSAGES = {
   [ErrorCode.CREATE_REVIEW_ALREADY_CREATED]: 'Already created review!',
   [ErrorCode.VOTE_REVIEW_INVALID_VALUE]: 'Invalid voting',
   [ErrorCode.VOTE_REVIEW_VOTED_ALREADY]: 'Voted already!',
-  [ErrorCode.UPLOAD_TIMETABLE_EXCEED_LIMIT]:
+  [ErrorCode.UPLOAD_TIMETABLE_EXCEED_ENTRY_LIMIT]:
+    'Timetable exceed 10 courses! Please remove some and retry.',
+  [ErrorCode.UPLOAD_TIMETABLE_EXCEED_TOTAL_LIMIT]:
     'Exceed upload limit, please delete remote timetable before upload!',
   [ErrorCode.GET_REVIEW_INVALID_SORTING]: 'Invalid sorting!',
   [ErrorCode.GET_TIMETABLE_INVALID_ID]: 'Invalid timetable id!',
