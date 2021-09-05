@@ -17,6 +17,8 @@ export const REPORT_MODES = {
     [IssueReportType.BUGS]: 'bugs',
     [IssueReportType.FEATURES]: 'features',
     [IssueReportType.EXPERIENCE]: 'experiences',
+    [IssueReportType.COURSE_INFO]: 'courses',
+    [IssueReportType.OTHER]: 'other',
   },
   [ReportCategory.COURSE]: {
     [CourseReportType.COURSE_TITLE]: 'title',

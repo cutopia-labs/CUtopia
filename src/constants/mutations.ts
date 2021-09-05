@@ -122,7 +122,7 @@ export const REPORT = gql`
   mutation (
     $cat: Int!
     $types: [Int]!
-    $description: description_String_NotNull_maxLength_3000!
+    $description: description_String_NotNull_maxLength_10000!
     $identifier: String
   ) {
     report(
