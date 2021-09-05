@@ -10,11 +10,7 @@ import { observer } from 'mobx-react-lite';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { useMediaQuery } from '@material-ui/core';
 
-import StoreProvider, {
-  UserContext,
-  PreferenceContext,
-  PlannerContext,
-} from './store';
+import StoreProvider, { UserContext, PlannerContext } from './store';
 
 import Navigator from './containers';
 import { DARK_THEME, THEME } from './constants/colors';
@@ -22,12 +18,11 @@ import { SERVER_CONFIG } from './constants/configs';
 
 const AppWrapper = observer(() => {
   const [ready, setReady] = useState(false);
-  const preference = useContext(PreferenceContext);
   const user = useContext(UserContext);
   const planner = useContext(PlannerContext);
 
   const init = async () => {
-    await Promise.all([user.init(), preference.init(), planner.init()]);
+    await Promise.all([user.init(), planner.init()]);
     console.log('Ready');
     setReady(true);
   };

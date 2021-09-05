@@ -5,7 +5,7 @@ import { useMutation } from '@apollo/client';
 import { ReportCategory } from 'cutopia-types/lib/codes';
 
 import ListItem from '../molecules/ListItem';
-import { PreferenceContext, UserContext, ViewContext } from '../../store';
+import { UserContext, ViewContext } from '../../store';
 import './Dialog.scss';
 import { clearStore } from '../../helpers/store';
 import { REPORT_ISSUES_MESSAGES, REPORT_MODES } from '../../constants/messages';
@@ -19,7 +19,6 @@ import { reverseMapping } from '../../helpers';
 import DialogContentTemplate from './DialogContentTemplate';
 
 const UserSettingsDialogContent = observer(() => {
-  const preference = useContext(PreferenceContext);
   const user = useContext(UserContext);
   const view = useContext(ViewContext);
   return (

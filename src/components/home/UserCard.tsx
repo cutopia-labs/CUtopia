@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { observer } from 'mobx-react-lite';
 import Avatar from '@material-ui/core/Avatar';
 import { SettingsOutlined } from '@material-ui/icons';
@@ -6,7 +6,7 @@ import { IconButton, Tooltip } from '@material-ui/core';
 import { GoUnverified, GoVerified } from 'react-icons/go';
 
 import './UserCard.scss';
-import { ViewContext, PreferenceContext, UserContext } from '../../store';
+import { ViewContext, UserContext } from '../../store';
 import { User } from '../../types';
 import { LEVEL_UP_EXP } from '../../constants/configs';
 
@@ -16,9 +16,7 @@ type UserCardProps = {
 
 const UserCard = ({ userData }: UserCardProps) => {
   const user = useContext(UserContext);
-  const preference = useContext(PreferenceContext);
   const view = useContext(ViewContext);
-  const [openSettings, SetOpenSetting] = useState(false);
 
   return (
     <div className="user-card card">
