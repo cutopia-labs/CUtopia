@@ -42,10 +42,12 @@ export enum ReportCategory {
 }
 
 export enum IssueReportType {
+  OTHER,
   UI,
   BUGS,
   FEATURES,
   EXPERIENCE,
+  COURSE_INFO,
 }
 
 export enum ReviewReportType {
