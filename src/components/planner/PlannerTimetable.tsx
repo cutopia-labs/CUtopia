@@ -26,6 +26,7 @@ import Loading from '../atoms/Loading';
 import DialogContentTemplate from '../templates/DialogContentTemplate';
 import Section from '../molecules/Section';
 import ViewStore from '../../store/ViewStore';
+import Footer from '../molecules/Footer';
 
 enum ShareTimetableMode {
   UPLOAD, // user persist timetable / persist sharing ttb
@@ -345,7 +346,7 @@ const PlannerTimetable = ({ className }: PlannerTimetableProps) => {
   }, [shareId, planner]);
 
   return (
-    <>
+    <div className="planner-timetable-container column">
       {getUploadTimetableLoading && <Loading fixed />}
       <TimetablePanel
         className={className}
@@ -379,6 +380,7 @@ const PlannerTimetable = ({ className }: PlannerTimetableProps) => {
         setLabel={(label: string) => planner.setPlannerLabel(label)}
         deleteTable={(key: number) => planner.deletePlanner(key)}
       />
+      <Footer />
       <Dialog
         transitionDuration={{
           enter: 120,
@@ -407,7 +409,7 @@ const PlannerTimetable = ({ className }: PlannerTimetableProps) => {
           />
         </DialogContentTemplate>
       </Dialog>
-    </>
+    </div>
   );
 };
 
