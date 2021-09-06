@@ -28,6 +28,14 @@ const LOAD_KEYS = [
 
 const RESET_KEYS = [...LOAD_KEYS, 'token'];
 
+const DEFAULT_VALUES = {
+  reviewDrafts: {},
+  discussionHistory: [],
+  searchHistory: [],
+  favoriteCourses: [],
+  loginState: LoginState.INIT,
+};
+
 const LOGOUT_KEYS = ['username', 'token'];
 
 class UserStore extends StorePrototype {
@@ -51,31 +59,17 @@ class UserStore extends StorePrototype {
   viewStore: ViewStore;
 
   constructor(viewStore: ViewStore) {
-    super();
+    super(LOAD_KEYS, RESET_KEYS, DEFAULT_VALUES);
     this.viewStore = viewStore;
     makeObservable(this);
   }
 
   @action async init() {
-    this.loginState = LoginState.INIT;
-    await this.applyUserStore();
+    this.initStore();
     await this.applyToken();
     if (this.loginState === LoginState.INIT) {
       this.loginState = LoginState.LOGGED_OUT;
     }
-    this.favoriteCourses = this.favoriteCourses || [];
-    this.searchHistory = this.searchHistory || [];
-    this.discussionHistory = this.discussionHistory || [];
-    this.reviewDrafts = this.reviewDrafts || {};
-  }
-
-  @action async applyUserStore() {
-    await Promise.all(
-      LOAD_KEYS.map(async key => {
-        const retrieved = await getStoreData(key);
-        this.updateStore(key, retrieved);
-      })
-    );
   }
 
   // General
@@ -212,13 +206,7 @@ class UserStore extends StorePrototype {
 
   // reset
   @action async reset() {
-    this.init();
-    // Clear user related asyncstorage
-    await Promise.all(
-      RESET_KEYS.map(async key => {
-        await removeStoreItem(key);
-      })
-    );
+    this.resetStore();
   }
 }
 

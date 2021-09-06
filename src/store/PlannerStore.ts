@@ -9,7 +9,7 @@ import {
   TimetableInfo,
   TimetableOverviewWithMode,
 } from '../types';
-import { storeData, getStoreData, removeStoreItem } from '../helpers/store';
+import { storeData } from '../helpers/store';
 
 import { PLANNER_CONFIGS } from '../constants/configs';
 import withUndo from '../helpers/withUndo';
@@ -17,7 +17,13 @@ import { getDurationInHour, timeInRange } from '../helpers/timetable';
 import ViewStore from './ViewStore';
 import StorePrototype from './StorePrototype';
 
-const LOCAL_STORAGE_KEYS = ['planners', 'plannerTerm', 'currentPlannerKey'];
+const LOAD_KEYS = ['planners', 'plannerTerm', 'currentPlannerKey'];
+
+const RESET_KEYS = LOAD_KEYS;
+
+const DEFAULT_VALUES = {
+  initiated: true,
+};
 
 class PlannerStore extends StorePrototype {
   @observable planners: Record<string | number, Planner> = {};
@@ -31,13 +37,13 @@ class PlannerStore extends StorePrototype {
   viewStore: ViewStore;
 
   constructor(viewStore: ViewStore) {
-    super();
+    super(LOAD_KEYS, RESET_KEYS, DEFAULT_VALUES);
     makeObservable(this);
     this.viewStore = viewStore;
   }
 
   @action async init() {
-    await this.applyPlannerStore();
+    await this.loadStore();
     if (!this.currentPlannerKey) {
       console.log('Creating new planners');
       const now = +new Date();
@@ -50,7 +56,6 @@ class PlannerStore extends StorePrototype {
       });
     }
     this.plannerCourses = this.planners[this.currentPlannerKey]?.courses || [];
-    this.initiated = true;
   }
 
   get shareIds() {
@@ -165,13 +170,7 @@ class PlannerStore extends StorePrototype {
 
   // reset
   @action async reset() {
-    this.init();
-    // Clear user related asyncstorage
-    await Promise.all(
-      LOCAL_STORAGE_KEYS.map(async key => {
-        await removeStoreItem(key);
-      })
-    );
+    this.resetStore();
   }
 
   @action.bound findIndexInPlanner = courseId =>
@@ -210,16 +209,6 @@ class PlannerStore extends StorePrototype {
     } else {
       return sectionId in this.plannerCourses[index].sections;
     }
-  }
-
-  @action async applyPlannerStore() {
-    await Promise.all(
-      LOCAL_STORAGE_KEYS.map(async key => {
-        const retrieved = await getStoreData(key);
-        this.updateStore(key, retrieved);
-      })
-    );
-    console.log(toJS(this));
   }
 
   @action async addPlannerCourses(plannerCourses: PlannerCourse[]) {
