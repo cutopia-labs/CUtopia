@@ -120,7 +120,7 @@ export const login = async input => {
   if (!(await bcrypt.compare(password, user.password))) {
     throw Error(ErrorCode.LOGIN_FAILED.toString());
   }
-  return user;
+  return await User.findOne({ username }).exec();
 };
 
 export const getResetPasswordCodeAndEmail = async input => {
