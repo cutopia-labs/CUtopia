@@ -70,9 +70,16 @@ export const deleteUser = async input => {
   await User.deleteOne({ username }).exec();
 };
 
-export const getUser = async filter =>
-  withCache(userCache, filter.username, async () =>
-    User.findOne(filter).exec()
+export const getUser = async (filter, fetchIf?) =>
+  withCache(
+    userCache,
+    filter.username,
+    async () => User.findOne(filter).exec(),
+    // fetchIf here is to deal with data synchronization accross lambda instances
+    // e.g. suppose lambda A and B have cache of unverified user U, U verified its account in A
+    // and reset password in B, but U is unverified in B's cache, resulting in error
+    // database access is reduced if U's requests are handled by A
+    fetchIf
   );
 
 export const getUsers = async input => {
@@ -88,7 +95,7 @@ export const updateUser = async input => {
 
 export const verifyUser = async input => {
   const { username, code } = input;
-  const user = await getUser({ username });
+  const user = await getUser({ username }, cachedUser => !cachedUser.verified);
 
   if (!user) {
     throw Error(ErrorCode.VERIFICATION_USER_DNE.toString());
@@ -113,7 +120,12 @@ export const verifyUser = async input => {
 
 export const login = async input => {
   const { username, password } = input;
-  const user = await getUser({ username });
+  const user = await getUser(
+    { username },
+    async cachedUser =>
+      !cachedUser.verified ||
+      !(await bcrypt.compare(password, cachedUser.password))
+  );
 
   if (!user) {
     throw Error(ErrorCode.LOGIN_USER_DNE.toString());
@@ -131,7 +143,7 @@ export const login = async input => {
 
 export const getResetPasswordCodeAndEmail = async input => {
   const { username } = input;
-  const user = await getUser({ username });
+  const user = await getUser({ username }, cachedUser => !cachedUser.verified);
 
   if (!user) {
     throw Error(ErrorCode.GET_PASSWORD_USER_DNE.toString());
@@ -153,7 +165,7 @@ export const getResetPasswordCodeAndEmail = async input => {
 
 export const resetPassword = async input => {
   const { username, newPassword, resetCode } = input;
-  const user = await getUser({ username });
+  const user = await getUser({ username }, cachedUser => !cachedUser.verified);
 
   if (!user) {
     throw Error(ErrorCode.RESET_PASSWORD_USER_DNE.toString());
