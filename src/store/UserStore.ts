@@ -65,7 +65,7 @@ class UserStore extends StorePrototype {
   }
 
   @action async init() {
-    this.initStore();
+    await this.loadStore();
     await this.applyToken();
     if (this.loginState === LoginState.INIT) {
       this.loginState = LoginState.LOGGED_OUT;
