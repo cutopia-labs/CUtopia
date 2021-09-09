@@ -5,7 +5,7 @@ import './PlannerTimetable.scss';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { Button, Dialog } from '@material-ui/core';
 import copy from 'copy-to-clipboard';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
 import TimetablePanel from '../templates/TimetablePanel';
 import { ViewContext, PlannerContext, plannerStore } from '../../store';
 import { PLANNER_CONFIGS } from '../../constants/configs';
@@ -181,6 +181,11 @@ const PlannerTimetable = ({ className }: PlannerTimetableProps) => {
   const { shareId } = useParams<{
     shareId?: string;
   }>();
+  const isHome = useRouteMatch({
+    path: '/',
+    strict: true,
+    exact: true,
+  });
   const planner = useContext(PlannerContext);
   const history = useHistory();
   const view = useContext(ViewContext);
@@ -380,7 +385,7 @@ const PlannerTimetable = ({ className }: PlannerTimetableProps) => {
         setLabel={(label: string) => planner.setPlannerLabel(label)}
         deleteTable={(key: number) => planner.deletePlanner(key)}
       />
-      <Footer />
+      {!isHome && <Footer />}
       <Dialog
         transitionDuration={{
           enter: 120,

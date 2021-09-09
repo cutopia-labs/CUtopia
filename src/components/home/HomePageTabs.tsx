@@ -25,7 +25,7 @@ export const CoursesList = ({ loading, courses }: CoursesListProps) => {
           {courses?.map(course => (
             <Link key={course.courseId} to={`/review/${course.courseId}`}>
               <ListItem
-                className="search-list-item column home-course-list-item"
+                className="home-course-list-item"
                 title={course.courseId}
                 caption={course.title}
                 noBorder

@@ -57,12 +57,6 @@ const SELECTIONS = [
     label: 'Planner',
     icon: <NoteOutlined />,
   },
-  /*
-  {
-    label: 'Timetable',
-    icon: <CalendarTodayOutlined />,
-  },
-  */
 ];
 
 const HomePage = () => {
@@ -75,23 +69,11 @@ const HomePage = () => {
   const renderTab = () => {
     switch (tab) {
       case 'Courses':
-        return <CoursesList loading={false} courses={user.favoriteCourses} />;
+        return <CoursesList loading={false} courses={planner.plannerCourses} />;
       case 'Reviews':
         return <ReviewsList reviewIds={user.data?.reviewIds} />;
       case 'Planner':
         return <PlannerTimetable className="home-page-timetable" />;
-      /*
-      case 'Timetable':
-        return (
-          <TimetablePanel
-            className="home-page-timetable"
-            title="Timetable"
-            courses={user.timetable}
-            onImport={(parsedData) => user.setStore('timetable', parsedData)}
-            onClear={() => user.setStore('timetable', {})}
-          />
-        );
-      */
       default:
         return null;
     }
