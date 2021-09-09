@@ -96,98 +96,102 @@ type RecentReviewListProps = {
   category: RatingField;
 };
 
-const RecentReviewList = observer(
-  ({ visible, category }: RecentReviewListProps) => {
-    const [reviews, setReviews] = useState<RecentReview[]>([]);
-    const { current } = useRef<{
-      page: number | null;
-      stall: boolean;
-    }>({ page: 0, stall: false });
-    const history = useHistory();
-    const view = useContext(ViewContext);
-    const { loading: recentReviewsLoading, refetch: getRecentReviews } =
-      useQuery<any, any>(getRecentReviewQuery(category), {
-        skip: current.page === null,
-        variables: {
-          page: 0,
-        },
-        onCompleted: data => {
-          console.log(data.reviews);
-          if (current.page) {
-            setReviews(prevReviews =>
-              prevReviews
-                .concat(data.reviews)
-                .filter(
-                  (v, i, a) =>
-                    a.findIndex(m => v.createdAt === m.createdAt) === i
-                )
-            );
-          } else {
-            current.stall = false;
-            setReviews(data.reviews);
-          }
-          if ((data?.reviews?.length || 0) < REVIEWS_PER_PAGE) {
-            current.page = null;
-          } else {
-            current.page += 1;
-          }
-        },
-        onError: view.handleError,
-        notifyOnNetworkStatusChange: true,
-      });
+const RecentReviewList = ({ visible, category }: RecentReviewListProps) => {
+  const [reviews, setReviews] = useState<RecentReview[]>([]);
+  const { current } = useRef<{
+    page: number | null;
+    stall: boolean;
+  }>({ page: 0, stall: false });
+  const history = useHistory();
+  const view = useContext(ViewContext);
 
-    useEffect(() => {
-      current.stall = true;
-      current.page = 0;
-      setReviews([]);
-    }, [category]);
+  useEffect(() => {
+    setReviews([]); // if come from react nav, it gonna set empty arr to be empty again
+    current.stall = true;
+    current.page = 0;
+  }, [category]);
 
-    const listenToScroll = useDebounce(async () => {
-      const distanceFromBottom =
-        document.documentElement.scrollHeight -
-        document.documentElement.scrollTop -
-        window.innerHeight;
-      console.log(`Distance: ${distanceFromBottom}`);
-      if (distanceFromBottom <= LAZY_LOAD_BUFFER) {
-        // Fetch more here;
-        console.log(`page: ${current.page} stall: ${current.stall}`);
-        if (current.page && !current.stall) {
-          console.log('Refetching');
-          getRecentReviews({ page: current.page });
+  useEffect(() => {
+    const now = new Date();
+    console.log(`${reviews.length} ${now} ${now.getMilliseconds()}`);
+  }, [reviews]);
+
+  const { loading: recentReviewsLoading, refetch: getRecentReviews } = useQuery<
+    any,
+    any
+  >(getRecentReviewQuery(category), {
+    variables: {
+      page: 0,
+    },
+    onCompleted: async data => {
+      if (current.page) {
+        setReviews(prevReviews =>
+          prevReviews
+            .concat(data.reviews)
+            .filter(
+              (v, i, a) => a.findIndex(m => v.createdAt === m.createdAt) === i
+            )
+        );
+      } else {
+        if (current.stall) {
+          current.stall = false;
         }
+        setReviews(data.reviews);
       }
-    }, 300);
+      if ((data?.reviews?.length || 0) < REVIEWS_PER_PAGE) {
+        current.page = null;
+      } else {
+        current.page += 1;
+      }
+    },
+    onError: view.handleError,
+    notifyOnNetworkStatusChange: true,
+  });
 
-    useEffect(() => {
-      window.addEventListener('scroll', listenToScroll, true);
-      return () => {
-        console.log(`Removed listener ${category}`);
-        window.removeEventListener('scroll', listenToScroll, true);
-      };
-    }, [visible, category]);
-
-    if (!visible) {
-      return null;
+  const listenToScroll = useDebounce(async () => {
+    const distanceFromBottom =
+      document.documentElement.scrollHeight -
+      document.documentElement.scrollTop -
+      window.innerHeight;
+    console.log(`Distance: ${distanceFromBottom}`);
+    if (distanceFromBottom <= LAZY_LOAD_BUFFER) {
+      // Fetch more here;
+      console.log(`page: ${current.page} stall: ${current.stall}`);
+      if (current.page && !current.stall) {
+        console.log('Refetching');
+        getRecentReviews({ page: current.page });
+      }
     }
-    return (
-      <>
-        <div className="grid-auto-row">
-          {reviews.map(review => (
-            <RecentReviewCard
-              key={review.createdAt}
-              review={review}
-              onClick={id => history.push(`/review/${id}`)}
-              category={category}
-            />
-          ))}
-          {recentReviewsLoading && <Loading />}
-        </div>
-        {current.page === null && <Footer />}
-      </>
-    );
-  }
-);
+  }, 300);
 
+  useEffect(() => {
+    window.addEventListener('scroll', listenToScroll, true);
+    return () => {
+      console.log(`Removed listener ${category}`);
+      window.removeEventListener('scroll', listenToScroll, true);
+    };
+  }, [visible, category]);
+
+  if (!visible) {
+    return null;
+  }
+  return (
+    <>
+      <div className="grid-auto-row">
+        {reviews.map(review => (
+          <RecentReviewCard
+            key={review.createdAt}
+            review={review}
+            onClick={id => history.push(`/review/${id}`)}
+            category={category}
+          />
+        ))}
+        {recentReviewsLoading && <Loading />}
+      </div>
+      {current.page === null && <Footer />}
+    </>
+  );
+};
 const RankingCard = ({
   rankList,
   headerTitle,
