@@ -1,8 +1,15 @@
 import bcrypt from 'bcryptjs';
 import { nanoid } from 'nanoid';
+import NodeCache from 'node-cache';
 import { ErrorCode } from 'cutopia-types/lib/codes';
+
 import User from '../models/user.model';
 import { SALT_ROUNDS, VERIFY_EXPIRATION_TIME } from '../constant/configs';
+import withCache from '../utils/withCache';
+
+const userCache = new NodeCache({
+  stdTTL: 1800,
+});
 
 const isVerfiCodeExpired = createdAt =>
   createdAt + VERIFY_EXPIRATION_TIME - Date.now() < 0;
@@ -13,6 +20,7 @@ const replaceUnverifiedUser = async (filter, newUser, err) => {
     throw Error(err);
   }
   await User.replaceOne(filter, newUser).exec();
+  userCache.set(newUser.username, user);
 };
 
 export const createUser = async input => {
@@ -33,6 +41,7 @@ export const createUser = async input => {
 
   try {
     await user.save();
+    userCache.set(username, user);
   } catch (e) {
     if (e.code === 11000) {
       switch (Object.keys(e.keyValue)[0]) {
@@ -61,11 +70,10 @@ export const deleteUser = async input => {
   await User.deleteOne({ username }).exec();
 };
 
-export const getUser = async input => {
-  const { username, fields } = input;
-  const selection = fields ? fields.join(' ') : null;
-  return await User.findOne({ username }, selection).exec();
-};
+export const getUser = async filter =>
+  withCache(userCache, filter.username, async () =>
+    User.findOne(filter).exec()
+  );
 
 export const getUsers = async input => {
   const { filters, fields } = input;
@@ -80,10 +88,7 @@ export const updateUser = async input => {
 
 export const verifyUser = async input => {
   const { username, code } = input;
-  const user = await User.findOne(
-    { username },
-    'createdAt veriCode verified'
-  ).exec();
+  const user = await getUser({ username });
 
   if (!user) {
     throw Error(ErrorCode.VERIFICATION_USER_DNE.toString());
@@ -102,12 +107,13 @@ export const verifyUser = async input => {
   user.veriCode = null;
   user.verified = true;
   await user.save();
+  userCache.set(username, user);
   return true;
 };
 
 export const login = async input => {
   const { username, password } = input;
-  const user = await User.findOne({ username }, 'verified password').exec();
+  const user = await getUser({ username });
 
   if (!user) {
     throw Error(ErrorCode.LOGIN_USER_DNE.toString());
@@ -120,12 +126,12 @@ export const login = async input => {
   if (!(await bcrypt.compare(password, user.password))) {
     throw Error(ErrorCode.LOGIN_FAILED.toString());
   }
-  return await User.findOne({ username }).exec();
+  return user;
 };
 
 export const getResetPasswordCodeAndEmail = async input => {
   const { username } = input;
-  const user = await User.findOne({ username }, 'SID verified').exec();
+  const user = await getUser({ username });
 
   if (!user) {
     throw Error(ErrorCode.GET_PASSWORD_USER_DNE.toString());
@@ -137,6 +143,7 @@ export const getResetPasswordCodeAndEmail = async input => {
   const resetPwdCode = nanoid(5);
   user.resetPwdCode = resetPwdCode;
   await user.save();
+  userCache.set(username, user);
 
   return {
     SID: user.SID,
@@ -146,7 +153,7 @@ export const getResetPasswordCodeAndEmail = async input => {
 
 export const resetPassword = async input => {
   const { username, newPassword, resetCode } = input;
-  const user = await User.findOne({ username }, 'verified resetPwdCode').exec();
+  const user = await getUser({ username });
 
   if (!user) {
     throw Error(ErrorCode.RESET_PASSWORD_USER_DNE.toString());
@@ -163,20 +170,23 @@ export const resetPassword = async input => {
   user.password = await bcrypt.hash(newPassword, SALT_ROUNDS);
   user.resetPwdCode = null;
   await user.save();
+  userCache.set(username, user);
   return true;
 };
 
 export const incrementUpvotesCount = async input => {
   const { username } = input;
-  await User.updateOne(
+  const user = await User.findOneAndUpdate(
     { username },
     {
       $inc: {
         upvotes: 1,
         exp: 3,
       },
-    }
+    },
+    { new: true }
   ).exec();
+  userCache.set(username, user);
 };
 
 export const updateTimetableId = async input => {
@@ -184,14 +194,16 @@ export const updateTimetableId = async input => {
   const op = operation === 'add' ? '$addToSet' : '$pull';
   const timetableField = expire >= 0 ? 'sharedTimetables' : 'timetables';
 
-  await User.updateOne(
+  const user = await User.findOneAndUpdate(
     { username },
     {
       [op]: {
         [timetableField]: _id,
       },
-    }
+    },
+    { new: true }
   ).exec();
+  userCache.set(username, user);
 };
 
 export const getTimetablesOverview = async input => {
