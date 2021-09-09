@@ -12,10 +12,12 @@
   overflow: hidden;
   & > .like-btn {
     border-radius: 0;
-    &.active {
+    &.active.Mui-disabled {
       svg {
         color: var(--primary);
       }
+      color: var(--primary);
+      opacity: 1;
       border: none;
     }
   }
