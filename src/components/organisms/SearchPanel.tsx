@@ -357,7 +357,7 @@ const SearchPanel = ({
               searchPayload={searchPayload}
               user={user}
               onClick={courseId => {
-                user.saveHistory(courseId);
+                isPlanner && user.saveHistory(courseId);
                 if (!skipDefaultAction) {
                   history.push(
                     `/${isPlanner ? 'planner' : 'review'}/${courseId}`

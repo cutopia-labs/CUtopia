@@ -207,6 +207,7 @@ const CoursePanel = () => {
       setReviews([]);
     }
     if (validCourse(courseId)) {
+      user.saveHistory(courseId);
       fetchSimilarCourses(courseId);
       setMode(COURSE_PANEL_MODES.FETCH_REVIEWS);
     } else {
