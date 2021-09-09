@@ -1,9 +1,8 @@
-import { Ranking } from 'cutopia-types/lib/types';
+import { RankEntry, Ranking } from 'cutopia-types/lib/types';
 import { Schema, model } from 'mongoose';
 import { requiredNumber, requiredString } from '../schemas';
 
-// temporarily remove type due to: https://github.com/Automattic/mongoose/issues/10623
-const RankEntry = new Schema(
+const RankEntry = new Schema<RankEntry>(
   {
     _id: requiredString,
     val: {

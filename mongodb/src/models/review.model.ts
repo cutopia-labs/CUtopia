@@ -22,8 +22,7 @@ const reviewDetailSchema = new Schema<ReviewDetail>(
   }
 );
 
-// temporarily remove type due to: https://github.com/Automattic/mongoose/issues/10623
-const reviewSchema = new Schema(
+const reviewSchema = new Schema<Review>(
   {
     _id: requiredString,
     courseId: requiredString, // dummy for filtering
