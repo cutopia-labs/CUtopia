@@ -79,9 +79,18 @@ class UserStore extends StorePrototype {
   }
 
   // CUtopia
-  @action async saveUser(username, token) {
+  @action async saveUser(username: string, token: string, data: Partial<User>) {
+    // need set date before set token cuz set token first will trigger query user.me
+    this.updateUserData(data);
     await this.saveToken(token);
     this.viewStore.setSnackBar(`Logged in as ${username}`);
+  }
+
+  @action updateUserData(data: Partial<User>) {
+    if (data?.username) {
+      console.log(data);
+      this.updateStore('data', data);
+    }
   }
 
   @action async applyToken() {

@@ -26,7 +26,7 @@ export const MIN_DESKTOP_WIDTH = 1260;
 const AWS_REGION = 'ap-southeast-1';
 
 export const SERVER_ID =
-  process.env.NODE_ENV === 'production' ? 'eisbgazs16' : 'd8r6qarg78';
+  process.env.NODE_ENV === 'production' ? 'eisbgazs16' : 'eisbgazs16';
 
 export const SERVER_ADDR = `https://${SERVER_ID}.execute-api.${AWS_REGION}.amazonaws.com/Prod`;
 

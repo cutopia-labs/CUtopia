@@ -5,6 +5,13 @@ export const LOGIN_CUTOPIA = gql`
   mutation ($username: String!, $password: String!) {
     login(input: { username: $username, password: $password }) {
       token
+      me {
+        reviewIds
+        upvotes
+        username
+        exp
+        fullAccess
+      }
     }
   }
 `;

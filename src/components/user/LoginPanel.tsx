@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from 'react';
 import { Button, IconButton, CircularProgress } from '@material-ui/core';
 import { ArrowBack } from '@material-ui/icons';
-
+import * as Sentry from '@sentry/react';
 import { observer } from 'mobx-react-lite';
 import { useMutation } from '@apollo/client';
 
@@ -166,8 +166,13 @@ const LoginPanel = () => {
     LOGIN_CUTOPIA,
     {
       onCompleted: handleCompleted(async data => {
+        await user.saveUser(username, data.login?.token, data.login?.me);
+        if (data.login?.me?.username) {
+          Sentry.setUser({
+            username: data.login?.me?.username,
+          });
+        }
         history.push('/');
-        await user.saveUser(username, data.login?.token);
       }),
       onError: view.handleError,
     }
