@@ -26,29 +26,29 @@ const MODE_ITEMS = {
   [LoginPageMode.CUTOPIA_LOGIN]: {
     title: 'Log In',
     caption: 'Welcome back',
-    username: 'Your username for CUtopia',
-    password: 'Password for CUtopia Account',
+    username: 'Username',
+    password: 'Password',
     button: 'Log In',
   },
   [LoginPageMode.CUTOPIA_SIGNUP]: {
     title: 'Sign Up',
     caption: 'A few steps away from unlimited course reviews',
-    userId: 'Your CUHK SID (For Verification)',
-    username: '2 - 10 characters',
-    password: '8 - 15 characters',
+    userId: 'Your CUHK SID (for verification)',
+    username: 'Username (2-10 chars, case sensitive)',
+    password: 'Password (8-15 chars)',
     button: 'Sign Up',
   },
   [LoginPageMode.VERIFY]: {
     title: 'Verify',
     caption:
       'An verification code has been sent to CUHK email.\nPlease enter your code here:',
-    verificationCode: 'Your Verification Code',
+    verificationCode: 'Verification Code',
     button: 'Verify',
   },
   [LoginPageMode.RESET_PASSWORD]: {
     title: 'Reset Password',
     caption: 'An verification code will be send to your CUHK email',
-    username: 'Your CUtopia Username',
+    username: 'Username',
     button: 'Send Reset Code',
   },
   [LoginPageMode.RESET_PASSWORD_VERIFY]: {
@@ -56,7 +56,7 @@ const MODE_ITEMS = {
     caption:
       'Please enter new password an the verification code in your CUHK email',
     password: 'New Password',
-    verificationCode: 'Your Verification Code',
+    verificationCode: 'Verification Code',
     button: 'Send',
   },
 };
