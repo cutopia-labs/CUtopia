@@ -78,7 +78,7 @@ export const REVIEWS_QUERY = gql`
   }
 `;
 
-export const RECENT_REVIEWS_QUERY = gql`
+export const RECENT_REVIEWS_GRADING_QUERY = gql`
   query ($page: Int!) {
     reviews(input: { ascending: false, sortBy: "createdAt", page: $page }) {
       courseId
@@ -87,6 +87,51 @@ export const RECENT_REVIEWS_QUERY = gql`
       overall
       createdAt
       grading {
+        text
+      }
+    }
+  }
+`;
+
+export const RECENT_REVIEWS_CONTENT_QUERY = gql`
+  query ($page: Int!) {
+    reviews(input: { ascending: false, sortBy: "createdAt", page: $page }) {
+      courseId
+      username
+      title
+      overall
+      createdAt
+      content {
+        text
+      }
+    }
+  }
+`;
+
+export const RECENT_REVIEWS_TEACHING_QUERY = gql`
+  query ($page: Int!) {
+    reviews(input: { ascending: false, sortBy: "createdAt", page: $page }) {
+      courseId
+      username
+      title
+      overall
+      createdAt
+      teaching {
+        text
+      }
+    }
+  }
+`;
+
+export const RECENT_REVIEWS_DIFFICULTY_QUERY = gql`
+  query ($page: Int!) {
+    reviews(input: { ascending: false, sortBy: "createdAt", page: $page }) {
+      courseId
+      username
+      title
+      overall
+      createdAt
+      difficulty {
         text
       }
     }

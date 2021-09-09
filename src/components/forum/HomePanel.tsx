@@ -1,18 +1,18 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext, useEffect, useRef } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import {
   ForumOutlined,
   ThumbUpOutlined,
   WhatshotOutlined,
 } from '@material-ui/icons';
-import { useLazyQuery, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 
 import './HomePanel.scss';
 import { useTitle } from 'react-use';
+import { observer } from 'mobx-react-lite';
 import GradeIndicator from '../atoms/GradeIndicator';
 import { RATING_FIELDS } from '../../constants';
 import {
-  RECENT_REVIEWS_QUERY,
   TOP_RATED_COURSES_QUERY,
   POPULAR_COURSES_QUERY,
 } from '../../constants/queries';
@@ -21,7 +21,12 @@ import ListItem from '../molecules/ListItem';
 import Badge from '../atoms/Badge';
 import ChipsRow from '../molecules/ChipsRow';
 import TabsContainer from '../molecules/TabsContainer';
-import { PopularCourse, RecentReview, TopRatedCourse } from '../../types';
+import {
+  PopularCourse,
+  RatingField,
+  RecentReview,
+  TopRatedCourse,
+} from '../../types';
 
 import { UserContext, ViewContext } from '../../store';
 import { getMMMDDYY } from '../../helpers/getTime';
@@ -31,6 +36,9 @@ import { getRandomGeCourses } from '../../helpers/getCourses';
 import Card from '../atoms/Card';
 import { LAZY_LOAD_BUFFER, REVIEWS_PER_PAGE } from '../../constants/configs';
 import useDebounce from '../../hooks/useDebounce';
+import { getRecentReviewQuery } from '../../helpers/dynamicQueries';
+
+type ReviewHomeTab = 'Recents' | 'Top Rated' | 'Popular';
 
 const MENU_ITEMS = [
   {
@@ -57,9 +65,14 @@ type RankingCardProps = {
 type RecentReviewCardProps = {
   review: RecentReview;
   onClick: (id: string) => any;
+  category: RatingField;
 };
 
-const RecentReviewCard = ({ review, onClick }: RecentReviewCardProps) => {
+const RecentReviewCard = ({
+  review,
+  onClick,
+  category,
+}: RecentReviewCardProps) => {
   return (
     <ListItem
       className="recent-review card"
@@ -72,7 +85,7 @@ const RecentReviewCard = ({ review, onClick }: RecentReviewCardProps) => {
       onClick={() => onClick(`${review.courseId}/${review.createdAt}`)}
     >
       <span className="recent-review-text ellipsis-text">
-        {review.grading.text}
+        {review[category]?.text}
       </span>
     </ListItem>
   );
@@ -80,89 +93,100 @@ const RecentReviewCard = ({ review, onClick }: RecentReviewCardProps) => {
 
 type RecentReviewListProps = {
   visible: Boolean;
+  category: RatingField;
 };
 
-const RecentReviewList = ({ visible }: RecentReviewListProps) => {
-  const [reviews, setReviews] = useState<RecentReview[]>([]);
-  const [page, setPage] = useState(0);
-  const history = useHistory();
-  const view = useContext(ViewContext);
-  const [getRecentReviews, { loading: recentReviewsLoading }] = useLazyQuery<{
-    reviews: RecentReview[];
-  }>(RECENT_REVIEWS_QUERY, {
-    onCompleted: data => {
-      console.log(data.reviews);
-      if (page) {
-        setReviews(prevReviews =>
-          prevReviews
-            .concat(data.reviews)
-            .filter(
-              (v, i, a) => a.findIndex(m => v.createdAt === m.createdAt) === i
-            )
-        );
-      } else {
-        setReviews(data.reviews);
-      }
-      if ((data?.reviews?.length || 0) < REVIEWS_PER_PAGE) {
-        setPage(null); // All pages fetched
-      } else {
-        setPage(page + 1);
-      }
-    },
-    onError: view.handleError,
-  });
-
-  useEffect(() => {
-    if (page === 0 && !recentReviewsLoading) {
-      getRecentReviews({
+const RecentReviewList = observer(
+  ({ visible, category }: RecentReviewListProps) => {
+    const [reviews, setReviews] = useState<RecentReview[]>([]);
+    const { current } = useRef<{
+      page: number | null;
+      stall: boolean;
+    }>({ page: 0, stall: false });
+    const history = useHistory();
+    const view = useContext(ViewContext);
+    const { loading: recentReviewsLoading, refetch: getRecentReviews } =
+      useQuery<any, any>(getRecentReviewQuery(category), {
+        skip: current.page === null,
         variables: {
-          page,
+          page: 0,
         },
+        onCompleted: data => {
+          console.log(data.reviews);
+          if (current.page) {
+            setReviews(prevReviews =>
+              prevReviews
+                .concat(data.reviews)
+                .filter(
+                  (v, i, a) =>
+                    a.findIndex(m => v.createdAt === m.createdAt) === i
+                )
+            );
+          } else {
+            current.stall = false;
+            setReviews(data.reviews);
+          }
+          if ((data?.reviews?.length || 0) < REVIEWS_PER_PAGE) {
+            current.page = null;
+          } else {
+            current.page += 1;
+          }
+        },
+        onError: view.handleError,
+        notifyOnNetworkStatusChange: true,
       });
-    }
-  }, [page, recentReviewsLoading]);
 
-  const listenToScroll = useDebounce(async () => {
-    const distanceFromBottom =
-      document.documentElement.scrollHeight -
-      document.documentElement.scrollTop -
-      window.innerHeight;
-    console.log(distanceFromBottom);
-    if (distanceFromBottom <= LAZY_LOAD_BUFFER) {
-      // Fetch more here;
-      if (page) {
-        console.log('Refetching');
-        getRecentReviews({
-          variables: { page },
-        });
+    useEffect(() => {
+      current.stall = true;
+      current.page = 0;
+      setReviews([]);
+    }, [category]);
+
+    const listenToScroll = useDebounce(async () => {
+      const distanceFromBottom =
+        document.documentElement.scrollHeight -
+        document.documentElement.scrollTop -
+        window.innerHeight;
+      console.log(`Distance: ${distanceFromBottom}`);
+      if (distanceFromBottom <= LAZY_LOAD_BUFFER) {
+        // Fetch more here;
+        console.log(`page: ${current.page} stall: ${current.stall}`);
+        if (current.page && !current.stall) {
+          console.log('Refetching');
+          getRecentReviews({ page: current.page });
+        }
       }
+    }, 300);
+
+    useEffect(() => {
+      window.addEventListener('scroll', listenToScroll, true);
+      return () => {
+        console.log(`Removed listener ${category}`);
+        window.removeEventListener('scroll', listenToScroll, true);
+      };
+    }, [visible, category]);
+
+    if (!visible) {
+      return null;
     }
-  }, 300);
-
-  useEffect(() => {
-    window.addEventListener('scroll', listenToScroll);
-    return () => window.removeEventListener('scroll', listenToScroll);
-  }, [listenToScroll, visible]);
-
-  if (!visible) {
-    return null;
+    return (
+      <>
+        <div className="grid-auto-row">
+          {reviews.map(review => (
+            <RecentReviewCard
+              key={review.createdAt}
+              review={review}
+              onClick={id => history.push(`/review/${id}`)}
+              category={category}
+            />
+          ))}
+          {recentReviewsLoading && <Loading />}
+        </div>
+        {current.page === null && <Footer />}
+      </>
+    );
   }
-  return (
-    <>
-      <div className="grid-auto-row">
-        {reviews.map(review => (
-          <RecentReviewCard
-            key={review.createdAt}
-            review={review}
-            onClick={id => history.push(`/review/${id}`)}
-          />
-        ))}
-        {recentReviewsLoading && <Loading />}
-      </div>
-      {page === null && <Footer />}
-    </>
-  );
-};
+);
 
 const RankingCard = ({
   rankList,
@@ -199,7 +223,7 @@ const RankingCard = ({
 
 const HomePanel = () => {
   useTitle('Review');
-  const [tab, setTab] = useState('Recents');
+  const [tab, setTab] = useState<ReviewHomeTab>('Recents');
   const [sortKey, setSortKey] = useState('overall');
   const [feedCourses, setFeedCourse] = useState([]);
   const history = useHistory();
@@ -230,18 +254,29 @@ const HomePanel = () => {
     };
     fetchFeedCourses();
   }, []);
+
   return (
     <>
       <div className="panel review-home-panel center-row grid-auto-row">
         <TabsContainer items={MENU_ITEMS} selected={tab} onSelect={setTab} />
-        {tab === 'Top Rated' && (
+        {(tab === 'Top Rated' || tab === 'Recents') && (
           <ChipsRow
-            items={['overall', ...RATING_FIELDS]}
-            select={sortKey}
-            setSelect={setSortKey}
+            items={[
+              tab === 'Top Rated' ? 'overall' : '',
+              ...RATING_FIELDS,
+            ].filter(item => item)}
+            select={tab === 'Top Rated' ? sortKey : user.recentReviewCategory}
+            setSelect={selected =>
+              tab === 'Top Rated'
+                ? setSortKey(selected)
+                : user.setStore('recentReviewCategory', selected)
+            }
           />
         )}
-        <RecentReviewList visible={tab === 'Recents'} />
+        <RecentReviewList
+          visible={tab === 'Recents'}
+          category={user.recentReviewCategory}
+        />
         <RankingCard
           rankList={rankedCourses?.ranking?.rankedCourses}
           sortKey={sortKey}
@@ -276,4 +311,4 @@ const HomePanel = () => {
   );
 };
 
-export default HomePanel;
+export default observer(HomePanel);

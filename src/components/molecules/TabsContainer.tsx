@@ -5,7 +5,7 @@ import './TabsContainer.scss';
 type TabsContainerProps = {
   items: MenuItem[];
   selected: string;
-  onSelect: (label: string) => void;
+  onSelect: (label: any) => void;
   mb?: boolean;
 };
 

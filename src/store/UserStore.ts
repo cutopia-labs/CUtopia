@@ -6,6 +6,7 @@ import {
   CourseTableEntry,
   DiscussionRecent,
   LoginState,
+  RatingField,
   Review,
   User,
 } from '../types';
@@ -24,6 +25,7 @@ const LOAD_KEYS = [
   'searchHistory',
   'discussionHistory',
   'reviewDrafts',
+  'recentReviewCategory',
 ];
 
 const RESET_KEYS = [...LOAD_KEYS, 'token'];
@@ -34,6 +36,7 @@ const DEFAULT_VALUES = {
   searchHistory: [],
   favoriteCourses: [],
   loginState: LoginState.INIT,
+  recentReviewCategory: 'grading',
 };
 
 const LOGOUT_KEYS = ['username', 'token'];
@@ -48,6 +51,7 @@ class UserStore extends StorePrototype {
   @observable searchHistory: string[] = [];
   @observable favoriteCourses: CourseConcise[] = [];
   @observable timetable: CourseTableEntry[];
+  @observable recentReviewCategory: RatingField;
 
   // User Session Data (Reload everytime init)
   @observable data: User;
