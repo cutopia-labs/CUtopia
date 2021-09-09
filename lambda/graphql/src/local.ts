@@ -1,10 +1,9 @@
 import { makeExecutableSchema } from '@graphql-tools/schema';
-const { ApolloServer } = require('apollo-server-express');
+import { ApolloServer } from 'apollo-server-express';
 import express from 'express';
 import { connect } from 'mongodb';
 import dotenv from 'dotenv';
 
-import { sign } from './jwt';
 import typeDefs from './schemas';
 import resolvers from './resolvers';
 import createContext from './context';
@@ -20,7 +19,20 @@ const schema = makeExecutableSchema({
 
 const server = new ApolloServer({
   schema,
-  // context: createContext,
+  context: req =>
+    // To fake a lambda request context
+    createContext({
+      event: {
+        headers: {
+          Authorization: req.req.headers.authorization,
+        },
+        requestContext: {
+          identity: {
+            sourceIp: 'localhost',
+          },
+        },
+      },
+    }),
   introspection: true,
 } as any);
 
@@ -50,11 +62,6 @@ const startApolloServer = async () => {
   app.use(express.json());
   server.applyMiddleware({ app });
   app.listen({ port: 4000 });
-  console.log(
-    `Token: ${sign({
-      user: 'mike',
-    })}`
-  );
   console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
 };
 
