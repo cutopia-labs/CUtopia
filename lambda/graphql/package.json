@@ -8,10 +8,8 @@
     "build": "rm -rf build && tsc && sh copyfile.sh",
     "predeploy": "yarn run build && rm -rf node_modules && rm -rf build/node_modules && yarn install --prod && cp -RL node_modules/ build/",
     "postdeploy": "rm -rf node_modules && yarn install --prod=false",
-    "local": "yarn run build-db && yarn run restart",
-    "restart": "yarn run build && node build/local.js",
-    "upgrade-db": "yarn upgrade mongodb && cp -RL node_modules/mongodb/ build/node_modules/",
-    "build-db": "yarn --cwd ../../mongodb run build && yarn upgrade mongodb"
+    "local": "nodemon build/local.js",
+    "upgrade-db": "yarn upgrade mongodb && cp -RL node_modules/mongodb/ build/node_modules/"
   },
   "author": "",
   "license": "ISC",
