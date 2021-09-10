@@ -114,7 +114,7 @@ export const verifyUser = async input => {
   user.veriCode = null;
   user.verified = true;
   await User.updateOne({ username }, user).exec();
-  userCache.set(username, user);
+  userCache.set(username, JSON.stringify(user));
   return true;
 };
 
@@ -155,7 +155,7 @@ export const getResetPasswordCodeAndEmail = async input => {
   const resetPwdCode = nanoid(5);
   user.resetPwdCode = resetPwdCode;
   await User.updateOne({ username }, user).exec();
-  userCache.set(username, user);
+  userCache.set(username, JSON.stringify(user));
   return {
     SID: user.SID,
     resetPwdCode,
@@ -182,7 +182,7 @@ export const resetPassword = async input => {
   user.password = await bcrypt.hash(newPassword, SALT_ROUNDS);
   user.resetPwdCode = null;
   await User.updateOne({ username }, user).exec();
-  userCache.set(username, user);
+  userCache.set(username, JSON.stringify(user));
   return true;
 };
 
@@ -198,7 +198,7 @@ export const incrementUpvotesCount = async input => {
     },
     { new: true }
   ).exec();
-  userCache.set(username, user);
+  userCache.set(username, JSON.stringify(user));
 };
 
 export const updateTimetableId = async input => {
@@ -215,7 +215,7 @@ export const updateTimetableId = async input => {
     },
     { new: true }
   ).exec();
-  userCache.set(username, user);
+  userCache.set(username, JSON.stringify(user));
 };
 
 export const getTimetablesOverview = async input => {
