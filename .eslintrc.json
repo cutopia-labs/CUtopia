@@ -19,6 +19,7 @@
   "rules": {
       "no-console": 0,
       "no-unused-vars": 0,
+      "no-var": 0,
       "space-infix-ops": ["error", { "int32Hint": false }],
       "comma-spacing": 2,
       "keyword-spacing": ["error", { "before": true }],

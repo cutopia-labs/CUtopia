@@ -13,7 +13,7 @@ const context = async ({ event: lambdaEvent }) => {
     return defaultContext;
   }
   const token = split[1];
-  const userContext = verify(token);
+  const userContext = await verify(token);
   return {
     ...defaultContext,
     user: userContext,

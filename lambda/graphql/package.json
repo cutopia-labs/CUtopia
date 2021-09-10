@@ -16,7 +16,7 @@
   "dependencies": {
     "apollo-server-lambda": "^3.1.2",
     "aws-sdk": "^2.983.0",
-    "cutopia-types": "^1.0.6",
+    "cutopia-types": "1.0.23",
     "dotenv": "^10.0.0",
     "graphql": "^15.4.0",
     "graphql-constraint-directive": "^2.1.1",

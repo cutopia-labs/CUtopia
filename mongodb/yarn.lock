@@ -1013,10 +1013,10 @@ cssstyle@^2.3.0:
   dependencies:
     cssom "~0.3.6"
 
-cutopia-types@^1.0.6:
-  version "1.0.20"
-  resolved "https://registry.yarnpkg.com/cutopia-types/-/cutopia-types-1.0.20.tgz#73551f2d942ea11f2cc3766435bb45a75037be17"
-  integrity sha512-vI3zpVVZ/H241DYVMgJvDvhq6G+ldChtGhJS9VuWTglMpmHq4yPpKOUKDXAG5XAlk8hcepk0RigGY4aUFpq/Tg==
+cutopia-types@^1.0.23:
+  version "1.0.23"
+  resolved "https://registry.yarnpkg.com/cutopia-types/-/cutopia-types-1.0.23.tgz#429bd1c43637f5f8c8ef6677ef640dcfbb4f0242"
+  integrity sha512-gv7mfEMLxrU3aQeiFuPkwglIaxvMLyQ6jm6oOkTErZ8igjSvAPKPbMiFNQeSkpAWx7kAFIC90cCKf708dvnIqw==
 
 data-urls@^2.0.0:
   version "2.0.0"

@@ -57,8 +57,7 @@ const userResolver = {
     */
     login: async (parent, { input }) => {
       const user = await login(input);
-      const { username } = input;
-      const token = sign({ username });
+      const token = sign({ username: input.username, password: user.password });
       return {
         token,
         me: user,
