@@ -113,7 +113,7 @@ export const verifyUser = async input => {
 
   user.veriCode = null;
   user.verified = true;
-  await user.save();
+  await User.updateOne({ username }, user).exec();
   userCache.set(username, user);
   return true;
 };
@@ -154,9 +154,8 @@ export const getResetPasswordCodeAndEmail = async input => {
 
   const resetPwdCode = nanoid(5);
   user.resetPwdCode = resetPwdCode;
-  await user.save();
+  await User.updateOne({ username }, user).exec();
   userCache.set(username, user);
-
   return {
     SID: user.SID,
     resetPwdCode,
@@ -165,6 +164,7 @@ export const getResetPasswordCodeAndEmail = async input => {
 
 export const resetPassword = async input => {
   const { username, newPassword, resetCode } = input;
+
   const user = await getUser({ username }, cachedUser => !cachedUser.verified);
 
   if (!user) {
@@ -181,7 +181,7 @@ export const resetPassword = async input => {
 
   user.password = await bcrypt.hash(newPassword, SALT_ROUNDS);
   user.resetPwdCode = null;
-  await user.save();
+  await User.updateOne({ username }, user).exec();
   userCache.set(username, user);
   return true;
 };
