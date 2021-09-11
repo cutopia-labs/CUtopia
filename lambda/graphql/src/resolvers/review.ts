@@ -15,10 +15,11 @@ import {
   ReviewResolvers,
 } from '../schemas/types';
 
+// TODO: add { upvoteUserIds, downvoteUserIds } in `parent` type in resolvers
 type ReviewResolver = {
   Query: QueryResolvers;
   Mutation: MutationResolvers;
-  Review: ReviewResolvers;
+  Review: any;
   ReviewDetails: ReviewDetailsResolvers;
 };
 

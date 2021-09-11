@@ -46,9 +46,11 @@ export const getDiscussion = async ({ courseId, page }: GetDiscussionProps) => {
     },
     numMessages: '$numMessages',
   });
-  console.log(`curr page ${page}`);
   return {
-    messages: discussion?.messages,
+    messages: discussion?.messages?.map(message => ({
+      ...message,
+      id: message._id,
+    })),
     nextPage:
       page * MESSAGES_PER_PAGE >= (discussion?.numMessages || 0) ? null : page,
   };
