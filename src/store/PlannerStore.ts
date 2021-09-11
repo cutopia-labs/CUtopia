@@ -272,12 +272,12 @@ class PlannerStore extends StorePrototype {
     withUndo(
       {
         prevData: [...this.plannerCourses],
-        setData: prevData => this.setStore('plannerCourses', prevData),
+        setData: prevData => this.updateStore('plannerCourses', prevData),
         message: 'Cleared planner!',
         viewStore: this.viewStore,
       },
       () => {
-        this.setStore('plannerCourses', []);
+        this.updateStore('plannerCourses', []);
       }
     );
   }
@@ -311,7 +311,7 @@ class PlannerStore extends StorePrototype {
     withUndo(
       {
         prevData: this.plannerCourses,
-        setData: prevData => this.setStore('plannerCourses', prevData),
+        setData: prevData => this.updateStore('plannerCourses', prevData),
         message: 'Removed unchecked courses',
         stringify: true,
         viewStore: this.viewStore,
@@ -346,9 +346,8 @@ class PlannerStore extends StorePrototype {
           ...course.sections,
         },
       };
-      storeData('plannerCourses', this.plannerCourses);
     } else {
-      this.setStore('plannerCourses', [...this.plannerCourses, course]);
+      this.updateStore('plannerCourses', [...this.plannerCourses, course]);
     }
   }
 
@@ -358,7 +357,7 @@ class PlannerStore extends StorePrototype {
       withUndo(
         {
           prevData: this.plannerCourses,
-          setData: prevData => this.setStore('plannerCourses', prevData),
+          setData: prevData => this.updateStore('plannerCourses', prevData),
           message: 'Section deleted!',
           stringify: true,
           viewStore: this.viewStore,
@@ -377,7 +376,6 @@ class PlannerStore extends StorePrototype {
             console.log('Delete the planner course');
             this.plannerCourses?.splice(index, 1);
           }
-          storeData('plannerCourses', this.plannerCourses);
         }
       );
     } else {
@@ -391,13 +389,12 @@ class PlannerStore extends StorePrototype {
       withUndo(
         {
           prevData: [...this.plannerCourses],
-          setData: prevData => this.setStore('plannerCourses', prevData),
+          setData: prevData => this.updateStore('plannerCourses', prevData),
           message: 'Course deleted!',
           viewStore: this.viewStore,
         },
         () => {
           this.plannerCourses?.splice(index, 1);
-          storeData('plannerCourses', this.plannerCourses);
         }
       );
     } else {

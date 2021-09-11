@@ -359,7 +359,9 @@ const PlannerTimetable = ({ className }: PlannerTimetableProps) => {
           ?.concat(planner.previewPlannerCourse)
           .filter(course => course)}
         timetableInfo={plannerStore.timetableInfo}
-        onImport={parsedData => planner.setStore('plannerCourses', parsedData)}
+        onImport={parsedData =>
+          planner.updateStore('plannerCourses', parsedData)
+        }
         onClear={() => planner.clearPlannerCourses()}
         onUpload={courses =>
           setShareCourses({
