@@ -4,6 +4,13 @@ import { verifyCourseId } from '../utils';
 
 import { courses } from '../data/courses';
 import processRating from '../utils/processRating';
+import {
+  AssessementComponentResolvers,
+  CourseResolvers,
+  CourseSectionResolvers,
+  QueryResolvers,
+  TermResolvers,
+} from '../schemas/types';
 
 export const coursesPreResolver = {
   courses: [
@@ -14,7 +21,16 @@ export const coursesPreResolver = {
   ],
 };
 
-const coursesResolver = {
+// TODO: add { idsContext, course } in `parent` type in resolvers
+type CourseResolver = {
+  Query: any;
+  Course: any;
+  Term: any;
+  CourseSection: any;
+  AssessementComponent: AssessementComponentResolvers;
+};
+
+const coursesResolver: CourseResolver = {
   Query: {
     courses: (parent, { filter }) => {
       const { requiredCourses = [], requiredTerm = null } = { ...filter };

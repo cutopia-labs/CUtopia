@@ -18,7 +18,7 @@ type Mutation {
   createUser(input: CreateUserInput!): Void
   verifyUser(input: VerifyUserInput!): Void @rateLimit(window: "1m", max: 10)
   login(input: LoginInput!): LoginResult! @rateLimit(window: "1m", max: 20)
-  sendResetPasswordCode(input: SendResetPasswordCodeIbnput!): Void @rateLimit(window: "1m", max: 10)
+  sendResetPasswordCode(input: SendResetPasswordCodeInput!): Void @rateLimit(window: "1m", max: 10)
   resetPassword(input: ResetPasswordInput!): Void @rateLimit(window: "1m", max: 10)
 }
 
@@ -43,7 +43,7 @@ type LoginResult {
   me: User
 }
 
-input SendResetPasswordCodeIbnput {
+input SendResetPasswordCodeInput {
   username: String!
 }
 

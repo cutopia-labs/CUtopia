@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-schema": "ts-node src/schemas/build.ts",
+    "build-gql-types": "graphql-codegen --config codegen.yml",
     "build": "rm -rf build && yarn run build-schema && tsc && sh copyfile.sh",
     "predeploy": "yarn run build && rm -rf node_modules && rm -rf build/node_modules && yarn install --prod && cp -RL node_modules/ build/",
     "postdeploy": "rm -rf node_modules && yarn install --prod=false",
@@ -36,7 +37,10 @@
     "yarn": ">=1.22.5"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "2.2.0",
     "@graphql-codegen/typescript": "2.2.2",
+    "@graphql-codegen/typescript-document-nodes": "2.1.4",
+    "@graphql-codegen/typescript-resolvers": "^2.2.1",
     "@types/jsonwebtoken": "^8.5.4",
     "apollo-server-express": "^3.1.2",
     "express": "^4.17.1",

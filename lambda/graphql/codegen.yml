@@ -1,0 +1,9 @@
+overwrite: true
+schema: src/schemas/bundle.graphql
+documents: null
+generates:
+  src/schemas/types.ts:
+    plugins:
+      - "typescript"
+      - "typescript-resolvers"
+      - "typescript-document-nodes"

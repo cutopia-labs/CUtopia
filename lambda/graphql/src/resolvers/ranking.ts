@@ -3,6 +3,7 @@ import NodeCache from 'node-cache';
 
 import { courses } from '../data/courses';
 import withCache from '../utils/withCache';
+import { QueryResolvers, RankTableResolvers } from '../schemas/types';
 
 const rankingCache = new NodeCache({
   stdTTL: 600,
@@ -24,7 +25,12 @@ export const getRankingWithCache = async (field: string) =>
     return resData;
   });
 
-const rankingResolver = {
+type RankingResolver = {
+  Query: QueryResolvers;
+  RankTable: RankTableResolvers;
+};
+
+const rankingResolver: RankingResolver = {
   Query: {
     ranking: () => ({}),
   },

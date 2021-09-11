@@ -6,9 +6,23 @@ import {
   voteReview,
 } from 'mongodb';
 import { VoteAction } from 'cutopia-types/lib/codes';
-import { verifyCourseId } from '../utils';
 
-const reviewsResolver = {
+import { verifyCourseId } from '../utils';
+import {
+  MutationResolvers,
+  QueryResolvers,
+  ReviewDetailsResolvers,
+  ReviewResolvers,
+} from '../schemas/types';
+
+type ReviewResolver = {
+  Query: QueryResolvers;
+  Mutation: MutationResolvers;
+  Review: ReviewResolvers;
+  ReviewDetails: ReviewDetailsResolvers;
+};
+
+const reviewsResolver: ReviewResolver = {
   Mutation: {
     createReview: async (parent, { input }, { user }) => {
       verifyCourseId(input.courseId);
