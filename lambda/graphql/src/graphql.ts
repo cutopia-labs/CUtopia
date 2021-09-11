@@ -25,11 +25,6 @@ let schema = makeExecutableSchema({
 schema = applyMiddleware(schema, ...middlewares);
 
 const isProduction = process.env.NODE_ENV === 'production';
-/*
-const allowedOrigins = isProduction
-  ? ['https://cutopia.app', 'https://dev.cutopia.app']
-  : '*';
-*/
 
 const server = new ApolloServer({
   schema,

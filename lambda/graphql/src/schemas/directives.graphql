@@ -1,9 +1,4 @@
-directive @auth(role: Role = USER) on FIELD_DEFINITION
-
-enum Role {
-  USER
-  OWNER
-}
+directive @auth() on FIELD_DEFINITION
 
 directive @rateLimit(
   max: Int

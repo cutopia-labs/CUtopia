@@ -2,7 +2,6 @@ import AWS from 'aws-sdk';
 import {
   createUser,
   verifyUser,
-  updateUser,
   getUser,
   getResetPasswordCodeAndEmail,
   resetPassword,
@@ -57,15 +56,6 @@ const userResolver: UserResolver = {
     verifyUser: async (parent, { input }) => {
       await verifyUser(input);
     },
-    /*
-    updateUser: async (parent, { input }, { user }) => {
-      const { username } = user;
-      await updateUser({
-        ...input,
-        username,
-      });
-    },
-    */
     login: async (parent, { input }) => {
       const user = await login(input);
       const token = sign({ username: input.username, password: user.password });
