@@ -11,6 +11,7 @@
     "predeploy": "yarn run build && rm -rf node_modules && rm -rf build/node_modules && yarn install --prod && cp -RL node_modules/ build/",
     "postdeploy": "rm -rf node_modules && yarn install --prod=false",
     "local": "nodemon build/local.js",
+    "local-gql": "yarn run build-schema && yarn run build-gql-types && sh copyfile.sh",
     "upgrade-db": "yarn upgrade mongodb && cp -RL node_modules/mongodb/ build/node_modules/"
   },
   "author": "",

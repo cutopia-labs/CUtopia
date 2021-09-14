@@ -1,4 +1,4 @@
-directive @auth() on FIELD_DEFINITION
+directive @auth on FIELD_DEFINITION
 
 directive @rateLimit(
   max: Int
