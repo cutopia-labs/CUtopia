@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */ // course_sections is not in camelcase when parsing the data
 import { getCourseData } from 'mongodb';
 import { verifyCourseId } from '../utils';
 
@@ -15,18 +14,25 @@ import {
 export const coursesPreResolver = {
   courses: [
     ['reviewLecturers', 'reviewTerms', 'rating'],
-    async parent => ({
-      courseData: await getCourseData({ courseId: parent.course.courseId }),
-    }),
+    async parent => {
+      const { lecturers, terms, rating } = await getCourseData({
+        courseId: parent.course.courseId,
+      });
+      return {
+        reviewLecturers: lecturers,
+        reviewTerms: terms,
+        rating,
+      };
+    },
   ],
 };
 
-// TODO: add { idsContext, course } in `parent` type in resolvers
+// TODO: add { requiredTerm } in `parent` type in resolvers
 type CourseResolver = {
   Query: any;
   Course: any;
-  Term: any;
-  CourseSection: any;
+  Term: TermResolvers;
+  CourseSection: CourseSectionResolvers;
   AssessementComponent: AssessementComponentResolvers;
 };
 
@@ -39,88 +45,49 @@ const coursesResolver: CourseResolver = {
         verifyCourseId(id);
       });
       */
-      const idsContext = {
-        courseCode: null,
-        term: null,
-        section: null,
+      return requiredCourses.map(code => ({
         requiredTerm,
-      };
-      return requiredCourses.map(id => ({
-        idsContext,
-        course: courses[id],
+        ...courses[code],
       }));
     },
   },
   Course: {
-    courseId: ({ course }) => course.courseId,
-    title: ({ course }) => course.title,
-    reviewLecturers: async ({ courseData }) => courseData?.lecturers,
-    reviewTerms: async ({ courseData }) => courseData?.terms,
-    career: ({ course }) => course.career,
-    units: ({ course }) => course.units,
-    grading: ({ course }) => course.grading,
-    components: ({ course }) => course.components,
-    campus: ({ course }) => course.campus,
-    academic_group: ({ course }) => course.academic_group,
-    requirements: ({ course }) => course.requirements,
-    description: ({ course }) => course.description,
-    outcome: ({ course }) => course.outcome,
-    syllabus: ({ course }) => course.syllabus,
-    required_readings: ({ course }) => course.required_readings,
-    recommended_readings: ({ course }) => course.recommended_readings,
-    terms: ({ idsContext, course }) => {
-      const { code, terms } = course;
-      const { requiredTerm } = idsContext;
+    terms: ({ requiredTerm, terms }) => {
       if (!requiredTerm || !terms) {
         return null;
       }
       return [
         {
-          idsContext: {
-            ...idsContext,
-            courseCode: code,
-            term: requiredTerm,
-          },
+          name: requiredTerm,
           course_sections: terms[requiredTerm],
         },
       ];
     },
-    assessments: ({ course }) => {
-      const { assessments } = course;
-      if (assessments === undefined) {
+    assessments: ({ assessments }) => {
+      if (!assessments) {
         return null;
       }
-      return Object.keys(assessments).map(assessment => ({
-        name: assessment,
-        percentage: assessments[assessment],
+      const assessmentsNames = Object.keys(assessments);
+      return assessmentsNames.map(name => ({
+        name,
+        percentage: assessments[name],
       }));
     },
-    rating: async ({ courseData }) => {
-      return courseData ? processRating(courseData.rating) : null;
-    },
+    rating: async ({ rating }) => (rating ? processRating(rating) : null),
   },
   Term: {
-    name: ({ idsContext }) => idsContext.term,
-    course_sections: ({ idsContext, course_sections }) => {
+    course_sections: ({ course_sections }) => {
       if (!course_sections) {
         return null;
       }
       const sectionsNames = Object.keys(course_sections);
-      return sectionsNames.map(section => ({
-        idsContext: {
-          ...idsContext,
-          section,
-        },
-        ...course_sections[section],
+      return sectionsNames.map(name => ({
+        name,
+        ...course_sections[name],
       }));
     },
   },
-  CourseSection: {
-    name: ({ idsContext, name }) => {
-      // when idsContext is undefined, the course section name is derived from database
-      return idsContext === undefined ? name : idsContext.section;
-    },
-  },
+  CourseSection: {},
   AssessementComponent: {},
 };
 
