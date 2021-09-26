@@ -28,9 +28,7 @@ class StorePrototype {
           const retrieved = await getStoreData(key);
           this.updateStore(
             key,
-            retrieved === null
-              ? (this.defaultValues || {})[key] || retrieved
-              : retrieved
+            retrieved === null ? (this.defaultValues || {})[key] : retrieved
           );
           delete defaultValues[key];
         })
