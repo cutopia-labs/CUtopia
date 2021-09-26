@@ -2,6 +2,9 @@
   background-color: var(--background);
   height: 10%;
   grid-template-columns: none;
+  .grid-auto-row {
+    grid-auto-rows: min-content;
+  }
 }
 
 .about-page-center {
