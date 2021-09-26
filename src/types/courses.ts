@@ -34,7 +34,7 @@ export interface Course {
   assessments?: AssessementComponent[];
   rating?: CourseRating;
   reviewLecturers?: string[];
-  reviewTerms?: string[]; //temp
+  reviewTerms?: string[];
 }
 
 export interface CourseInfo extends Course {
