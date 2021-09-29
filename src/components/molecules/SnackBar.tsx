@@ -24,7 +24,7 @@ const SnackBar = () => {
           action={
             Boolean(view.snackbar.label && view.snackbar.onClick) && (
               <Button
-                color="secondary"
+                color="inherit"
                 className="btn-container"
                 onClick={() => {
                   view.snackbar.onClick();
