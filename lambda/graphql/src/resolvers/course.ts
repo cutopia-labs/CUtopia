@@ -14,10 +14,9 @@ import {
 export const coursesPreResolver = {
   courses: [
     ['reviewLecturers', 'reviewTerms', 'rating'],
-    async parent => {
-      const { lecturers, terms, rating } = await getCourseData({
-        courseId: parent.course.courseId,
-      });
+    async ({ courseId }) => {
+      const { lecturers, terms, rating } =
+        (await getCourseData({ courseId })) || {};
       return {
         reviewLecturers: lecturers,
         reviewTerms: terms,
