@@ -45,7 +45,7 @@ export const getDiscussion = async ({ courseId, page }: GetDiscussionProps) => {
       $slice: ['$messages', -(++page * MESSAGES_PER_PAGE), MESSAGES_PER_PAGE],
     },
     numMessages: '$numMessages',
-  });
+  }).lean();
   return {
     messages: discussion?.messages?.map(message => ({
       ...message,
