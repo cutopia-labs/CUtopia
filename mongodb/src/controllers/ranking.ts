@@ -62,13 +62,13 @@ export const rankCourses = async () => {
 export const getRanking = async (field: string) =>
   withCache(rankingCache, field, async () => await Ranking.findById(field));
 
-type UpdaterRankingProps = {
+type UpdateRankingProps = {
   field: string;
   rank: RankEntry;
   limit?: number;
 };
 
-export const updateRanking = async (input: UpdaterRankingProps) => {
+export const updateRanking = async (input: UpdateRankingProps) => {
   Ranking.findByIdAndUpdate(input.field, {
     $push: {
       ranks: {

@@ -12,7 +12,3 @@ Resources:
     Properties:
       TopicName: !Sub ${AWS::StackName}-User
       DisplayName: "User"
-  ApiGateway:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      TemplateURL: ./api-gateway/gateway.yaml
