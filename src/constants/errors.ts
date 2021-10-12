@@ -1,7 +1,6 @@
 import { ErrorCode } from 'cutopia-types/lib/codes';
 
 export const ERROR_MESSAGES = {
-  [ErrorCode.AUTHORIZATION_REQUIRES_LOGIN]: 'Requires Login',
   [ErrorCode.AUTHORIZATION_REQUIRES_OWNER]:
     'No permission for the action (Not Owner)',
   [ErrorCode.AUTHORIZATION_INVALID_TOKEN]: 'Invalid token, please login again',
