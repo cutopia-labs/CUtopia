@@ -9,7 +9,7 @@ class AuthDirective extends SchemaDirectiveVisitor {
     field.resolve = async (...params) => {
       const [parent, args, context, info] = params;
       if (!context.user) {
-        throw Error(ErrorCode.AUTHORIZATION_REQUIRES_LOGIN.toString());
+        throw Error(ErrorCode.AUTHORIZATION_INVALID_TOKEN.toString());
       }
 
       return await resolve.apply(this, [parent, args, context, info]);

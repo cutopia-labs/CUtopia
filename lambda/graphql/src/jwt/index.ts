@@ -29,7 +29,7 @@ export const verify = async token => {
     cachedUser => cachedUser.password !== password
   );
   if (user.password !== password) {
-    throw Error(ErrorCode.AUTHORIZATION_PASSWORD_CHANGED.toString());
+    throw Error(ErrorCode.AUTHORIZATION_INVALID_TOKEN.toString());
   }
   return decoded;
 };
