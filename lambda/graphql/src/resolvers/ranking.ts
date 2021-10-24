@@ -17,9 +17,7 @@ export const getRankingWithCache = async (field: string) =>
     const result = await getRanking(field);
     const resData = result?.ranks?.map(rank => ({
       courseId: rank._id,
-      course: {
-        course: getCourseById(rank._id),
-      },
+      course: getCourseById(rank._id),
       [field]: rank.val,
     }));
     return resData;
