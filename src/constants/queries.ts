@@ -9,7 +9,6 @@ export const COURSE_INFO_QUERY = gql`
       components
       requirements
       description
-      syllabus
       academic_group
       assessments {
         name
