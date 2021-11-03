@@ -6,9 +6,13 @@
   z-index: 10;
   &.fixed {
     position: fixed;
-    --loading-margin: calc(50% - 20px);
+    --loading-content-width: 20px;
+    &.logo {
+      --loading-content-width: 46px
+    }
+    --loading-margin: calc(50% - var(--loading-content-width));
     &.padding {
-      --loading-margin: calc(50% - 20px - var(--page-margin) / 2);
+      --loading-margin: calc(50% - var(--loading-content-width) - var(--page-margin) / 2);
     }
     left: var(--loading-margin);
     top: var(--loading-margin);

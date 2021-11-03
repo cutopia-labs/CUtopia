@@ -4,22 +4,34 @@ import CircularProgress, {
 import clsx from 'clsx';
 
 import './Loading.scss';
+import Logo from './Logo';
 
 type LoadingProps = {
   fixed?: boolean;
   padding?: boolean;
+  logo?: boolean;
 };
 
 export default function Loading({
   fixed,
   padding = true,
+  logo,
   ...props
 }: LoadingProps & CircularProgressProps) {
   return (
     <div
-      className={clsx('loading-view', fixed && 'fixed', padding && 'padding')}
+      className={clsx(
+        'loading-view',
+        fixed && 'fixed',
+        padding && 'padding',
+        logo && 'logo'
+      )}
     >
-      <CircularProgress color="secondary" {...props} />
+      {logo ? (
+        <Logo shine />
+      ) : (
+        <CircularProgress color="secondary" {...props} />
+      )}
     </div>
   );
 }

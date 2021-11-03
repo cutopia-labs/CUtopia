@@ -91,7 +91,7 @@ const Navigator = () => {
     (userDataLoading || !user.data) &&
     user.loginState === LoginState.LOGGED_IN
   ) {
-    return <Loading fixed />;
+    return <Loading fixed padding={false} logo />;
   }
   return (
     <Router
