@@ -29,8 +29,8 @@ import ListItem from '../molecules/ListItem';
 import {
   SAVE_DRAFT_PROGRESS_BUFFER,
   SERVER_ADDR,
+  STATICS_EXPIRE_BEFORE,
   TARGET_REVIEW_WORD_COUNT,
-  WINDOW_LEAVE_MESSAGES,
 } from '../../constants/configs';
 import { RatingFieldWithOverall, Review, ReviewDetails } from '../../types';
 import SelectionGroup, { FormSection } from '../molecules/SectionGroup';
@@ -38,6 +38,7 @@ import useMobileQuery from '../../hooks/useMobileQuery';
 import handleCompleted from '../../helpers/handleCompleted';
 import LoadingButton from '../atoms/LoadingButton';
 import { getStoreData, storeData } from '../../helpers/store';
+import { WINDOW_LEAVE_MESSAGES } from '../../constants/messages';
 import CourseCard from './CourseCard';
 
 enum MODES {
@@ -87,8 +88,9 @@ const searchLecturers = async ({
   limit: number;
 }): Promise<string[] | false> => {
   try {
-    let instructors: string[] | undefined = getStoreData('instructors')?.data;
-    if (!instructors) {
+    const instructorsStore = getStoreData('instructors');
+    let instructors: string[] | undefined = instructorsStore?.data;
+    if (!instructors || instructorsStore.etag < STATICS_EXPIRE_BEFORE) {
       const res = await fetch(`${SERVER_ADDR}/static/instructors.json`, {
         method: 'GET',
         headers: {

@@ -26,7 +26,7 @@ export const MIN_DESKTOP_WIDTH = 1260;
 const AWS_REGION = 'ap-southeast-1';
 
 export const SERVER_ID =
-  process.env.NODE_ENV === 'production' ? 'eisbgazs16' : 'd8r6qarg78';
+  process.env.NODE_ENV === 'production' ? 'eisbgazs16' : 'eisbgazs16';
 
 export const SERVER_ADDR = `https://${SERVER_ID}.execute-api.${AWS_REGION}.amazonaws.com/Prod`;
 
@@ -42,9 +42,8 @@ export const SentryConfigs: BrowserOptions = {
   tracesSampleRate: 0.3,
 };
 
+// Return only current term sections in planner
 export const CURRENT_TERM = '2021-22 Term 2';
 
-export const WINDOW_LEAVE_MESSAGES = {
-  REVIEW_EDIT:
-    'Are you sure you want to leave? (Review will be saved as draft)',
-};
+// Update course list and instructors if etag before below (04/11/2021)
+export const STATICS_EXPIRE_BEFORE = 1635956672000;

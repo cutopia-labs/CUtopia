@@ -1,4 +1,8 @@
-import { SERVER_ADDR, SIMILAR_COURSE_LIMIT } from '../constants/configs';
+import {
+  SERVER_ADDR,
+  SIMILAR_COURSE_LIMIT,
+  STATICS_EXPIRE_BEFORE,
+} from '../constants/configs';
 import UserStore from '../store/UserStore';
 import { CourseConcise, CourseSearchItem, SearchPayload } from '../types';
 import { UGE_COURSE_CODES } from '../constants';
@@ -13,9 +17,10 @@ const CONDENSED_RULE = new RegExp('[^a-zA-Z0-9]', 'g');
 export const fetchCourses = async (): Promise<
   Record<string, CourseSearchItem[]> | undefined
 > => {
+  const courseListStore = getStoreData('courseList');
   let courseList: Record<string, CourseSearchItem[]> | undefined =
-    getStoreData('courseList')?.data;
-  if (!courseList) {
+    courseListStore?.data;
+  if (!courseList || courseListStore.etag < STATICS_EXPIRE_BEFORE) {
     const res = await fetch(`${SERVER_ADDR}/static/course_list.json`, {
       method: 'GET',
       headers: {

@@ -36,3 +36,8 @@ export const REPORT_MODES = {
     [ReviewReportType.OTHER]: 'other',
   },
 };
+
+export const WINDOW_LEAVE_MESSAGES = {
+  REVIEW_EDIT:
+    'Are you sure you want to leave? (Review will be saved as draft)',
+};
