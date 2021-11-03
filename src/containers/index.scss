@@ -93,7 +93,7 @@ textarea[type="number"] {
 }
 
 .center-page {
-  max-width: var(--max-width);
+  max-width: calc(var(--max-width) - 2 * var(--page-margin));
   width: var(--max-width);
   margin-left: auto;
   margin-right: auto;
