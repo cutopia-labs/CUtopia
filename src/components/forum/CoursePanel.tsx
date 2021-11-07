@@ -48,7 +48,7 @@ const CoursePanel = () => {
     id?: string;
     reviewId?: string;
   }>();
-  useTitle(courseId);
+  useTitle(`${courseId} | Review`);
   const [mode, setMode] = useState(COURSE_PANEL_MODES.INITIAL);
   const history = useHistory();
   const [FABOpen, setFABOpen] = useState(false);

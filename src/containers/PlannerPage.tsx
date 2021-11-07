@@ -70,7 +70,7 @@ const PlannerPage = () => {
     strict: true,
     exact: true,
   });
-  useTitle('Planner');
+  useTitle('Course Planner - CUtopia');
   const isMobile = window.matchMedia(
     `(max-width:${MIN_DESKTOP_WIDTH}px)`
   ).matches;

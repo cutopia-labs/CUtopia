@@ -60,7 +60,7 @@ const SELECTIONS = [
 ];
 
 const HomePage = () => {
-  useTitle('CUTOPIA');
+  useTitle('CUtopia');
   const user = useContext(UserContext);
   const planner = useContext(PlannerContext);
   const [tab, setTab] = useState('Courses');

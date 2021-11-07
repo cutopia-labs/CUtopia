@@ -36,6 +36,10 @@ const FOOTER_ITEMS = [
     },
   },
   {
+    label: 'Follow Us',
+    url: 'https://www.instagram.com/cutopia.app',
+  },
+  {
     label: 'Contact Us',
     url: 'mailto::cutopia.app@gmail.com',
   },
