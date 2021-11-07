@@ -10,9 +10,9 @@ const AboutTab = () => (
       <p>
         CUtopia is a community for students of The Chinese University of Hong
         Kong. It aims to establish a community that students can share opinions
-        towards courses and plan timetable with a nicer UX design. CUHK email
-        ending in <b>@link.cuhk.edu.hk</b> is required for registration to
-        ensure that all users are CUHK students.
+        towards courses and plan their timetable. CUHK email ending in{' '}
+        <b>@link.cuhk.edu.hk</b> is required for registration to ensure that all
+        users are CUHK students.
       </p>
       <p>
         CUtopia is a open source project (will open source after beta test) and
