@@ -99,20 +99,21 @@ class PlannerStore extends StorePrototype {
     return info;
   }
 
+  get currentSections() {
+    return this.plannerCourses
+      ?.map((course, i) =>
+        Object.values(course.sections).map(section => ({
+          hide: section.hide,
+          name: section.name,
+          courseId: course.courseId,
+          courseIndex: i,
+        }))
+      )
+      ?.flat();
+  }
+
   get hidedSections() {
-    const sections = [];
-    this.plannerCourses?.forEach((course, i) =>
-      Object.values(course.sections).forEach(section => {
-        if (section.hide) {
-          sections.push({
-            ...section,
-            courseId: course.courseId,
-            courseIndex: i,
-          });
-        }
-      })
-    );
-    return sections;
+    return this.currentSections.filter(section => section.hide);
   }
 
   get plannerList() {
@@ -200,15 +201,6 @@ class PlannerStore extends StorePrototype {
     }
     this.setStore('currentPlannerKey', key);
     this.viewStore.setSnackBar(`Switched to ${label}`);
-  }
-
-  @action sectionInPlanner(courseId, sectionId) {
-    const index = this.findIndexInPlanner(courseId);
-    if (index === -1 || !this.plannerCourses) {
-      return false;
-    } else {
-      return sectionId in this.plannerCourses[index].sections;
-    }
   }
 
   @action async addPlannerCourses(plannerCourses: PlannerCourse[]) {
@@ -320,14 +312,10 @@ class PlannerStore extends StorePrototype {
         const UPDATE_COPY: PlannerCourse[] = JSON.parse(
           JSON.stringify(this.plannerCourses)
         );
-        UPDATE_COPY.forEach((course, courseIndex) => {
-          Object.entries(course.sections).forEach(([k, v]) => {
-            if (v.hide) {
-              delete UPDATE_COPY[courseIndex].sections[k];
-            }
-          });
+        this.hidedSections.forEach(section => {
+          delete UPDATE_COPY[section.courseIndex].sections[section.name];
         });
-        this.setStore(
+        this.updateStore(
           'plannerCourses',
           this.filterEmptySectionCourses(UPDATE_COPY)
         );

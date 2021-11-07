@@ -1,7 +1,13 @@
 import { useContext } from 'react';
 import { observer } from 'mobx-react-lite';
 import { IconButton } from '@material-ui/core';
-import { Add, PersonOutline, Schedule, RoomOutlined } from '@material-ui/icons';
+import {
+  Add,
+  PersonOutline,
+  Schedule,
+  RoomOutlined,
+  DeleteOutline,
+} from '@material-ui/icons';
 
 import './CourseSections.scss';
 import { PlannerContext, ViewContext } from '../../store';
@@ -57,14 +63,12 @@ const SectionCard = ({
         <IconButton
           size="small"
           onClick={() => {
-            addSection(section);
-            // added ? deleteSection(section.name) : addSection(section)
+            added ? deleteSection(section.name) : addSection(section);
           }}
-          onMouseEnter={() => onAddHoverChange(true, section)}
+          onMouseEnter={() => !added && onAddHoverChange(true, section)}
           onMouseLeave={() => onAddHoverChange(false, section)}
         >
-          <Add />
-          {/* added ? <Delete /> : <Add /> */}
+          {added ? <DeleteOutline /> : <Add />}
         </IconButton>
       </span>
       <div className="section-detail">
@@ -100,15 +104,15 @@ const CourseSections = ({
   const planner = useContext(PlannerContext);
   const view = useContext(ViewContext);
   const addToPlanner = (section: CourseSection) => {
-    const { name, ...sectionData } = section;
     planner.addToPlannerCourses({
       sections: {
-        [name]: section,
+        [section.name]: section,
       },
       courseId,
       title,
       credits: parseInt(units, 10),
     });
+    planner.updateStore('previewPlannerCourse', null);
     view.setSnackBar(`Added ${courseId} ${name}`);
   };
   const deleteInPlanner = sectionId => {
@@ -136,7 +140,9 @@ const CourseSections = ({
             section={section}
             addSection={addToPlanner}
             deleteSection={deleteInPlanner}
-            added={planner.sectionInPlanner(courseId, section.name)}
+            added={planner.currentSections.some(
+              curSection => curSection.name == section.name
+            )}
             onAddHoverChange={handlePreviewCourse}
           />
         ))}

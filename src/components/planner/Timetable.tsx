@@ -84,12 +84,10 @@ const Timetable = ({ courses, timetableInfo }: TimetableProps) => {
     numOfDays: 5,
     numOfHours: 12,
   };
-  let colorIndex = 0;
-
   try {
     courses
       .filter(course => course)
-      .forEach((course, i) => {
+      .forEach((course, courseIndex) => {
         Object.entries(course.sections).forEach(([k, v]) => {
           (v.days || []).forEach((day, i) => {
             if (!v.hide) {
@@ -114,13 +112,12 @@ const Timetable = ({ courses, timetableInfo }: TimetableProps) => {
                 location: v.locations[i],
                 color:
                   colors.timetableColors[
-                    colorIndex % colors.randomColorsLength
+                    courseIndex % colors.randomColorsLength
                   ],
               });
             }
           });
         });
-        colorIndex++;
       });
     config.numOfHours = config.endHour - config.startHour + 1;
     console.log(config);
