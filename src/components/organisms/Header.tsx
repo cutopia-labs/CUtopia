@@ -12,7 +12,6 @@ import {
 } from '@material-ui/icons';
 import clsx from 'clsx';
 
-import { BsChatDots, BsFillChatDotsFill } from 'react-icons/bs';
 import './Header.scss';
 import Logo from '../atoms/Logo';
 import useMobileQuery from '../../hooks/useMobileQuery';
@@ -30,12 +29,6 @@ const SECTIONS = [
     filledIcon: <ChatBubble />,
     label: 'Review',
     link: '/review',
-  },
-  {
-    icon: <BsChatDots />,
-    filledIcon: <BsFillChatDotsFill />,
-    label: 'Discussion',
-    link: '/discussion',
   },
   {
     icon: <NoteOutlined />,

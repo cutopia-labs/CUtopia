@@ -18,7 +18,6 @@ import LandingPage from './LandingPage';
 import PlannerPage from './PlannerPage';
 import ForumPage from './ForumPage';
 import AboutPage, { ABOUT_PAGE_ROUTES } from './AboutPage';
-import DiscussionPage from './DiscussionPage';
 
 const ROUTES = [
   {
@@ -33,13 +32,6 @@ const ROUTES = [
       path: '/review',
     },
     children: <ForumPage />,
-  },
-  {
-    props: {
-      exact: true,
-      path: ['/discussion', '/discussion/:courseId'],
-    },
-    children: <DiscussionPage />,
   },
   {
     props: {
