@@ -48,7 +48,7 @@ const CoursePanel = () => {
     id?: string;
     reviewId?: string;
   }>();
-  useTitle(`${courseId} | Review`);
+  useTitle(`${courseId} Reviews - CUtopia`);
   const [mode, setMode] = useState(COURSE_PANEL_MODES.INITIAL);
   const history = useHistory();
   const [FABOpen, setFABOpen] = useState(false);

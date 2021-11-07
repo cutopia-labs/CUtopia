@@ -220,7 +220,7 @@ const SearchPanel = ({
 
   useEffect(() => {
     if (currentCourse) {
-      document.title = `${currentCourse} | Planner`;
+      document.title = `${currentCourse} Planner - CUtopia`;
     }
   }, [currentCourse]);
 

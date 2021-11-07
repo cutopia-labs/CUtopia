@@ -226,7 +226,7 @@ const RankingCard = ({
 };
 
 const HomePanel = () => {
-  useTitle('Review');
+  useTitle('Course Reviews - CUtopia');
   const [tab, setTab] = useState<ReviewHomeTab>('Recents');
   const [sortKey, setSortKey] = useState('overall');
   const [feedCourses, setFeedCourse] = useState([]);
