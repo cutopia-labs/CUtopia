@@ -28,7 +28,7 @@ export const verify = async token => {
     { username },
     cachedUser => cachedUser.password !== password
   );
-  if (user.password !== password) {
+  if (user?.password !== password) {
     throw Error(ErrorCode.AUTHORIZATION_INVALID_TOKEN.toString());
   }
   return decoded;
