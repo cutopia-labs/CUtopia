@@ -20,7 +20,7 @@ const replaceUnverifiedUser = async (filter, newUser, err) => {
     throw Error(err);
   }
   await User.replaceOne(filter, newUser).exec();
-  userCache.set(newUser.username, user);
+  userCache.set(newUser.username, JSON.stringify(user));
 };
 
 export const createUser = async input => {
@@ -41,7 +41,7 @@ export const createUser = async input => {
 
   try {
     await user.save();
-    userCache.set(username, user);
+    userCache.set(username, JSON.stringify(user));
   } catch (e) {
     if (e.code === 11000) {
       switch (Object.keys(e.keyValue)[0]) {
