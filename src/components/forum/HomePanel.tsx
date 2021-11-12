@@ -81,7 +81,7 @@ const RecentReviewCard = ({
       caption={`By ${review.username || 'Anonymous'} on ${getMMMDDYY(
         review.createdAt
       )}`}
-      right={<GradeIndicator grade={review.overall} />}
+      right={<GradeIndicator grade={review[category]?.grade} />}
       onClick={() => onClick(`${review.courseId}/${review.createdAt}`)}
     >
       <span className="recent-review-text ellipsis-text">

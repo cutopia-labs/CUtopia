@@ -82,11 +82,10 @@ export const RECENT_REVIEWS_GRADING_QUERY = gql`
     reviews(input: { ascending: false, sortBy: "createdAt", page: $page }) {
       courseId
       username
-      title
-      overall
       createdAt
       grading {
         text
+        grade
       }
     }
   }
@@ -97,11 +96,10 @@ export const RECENT_REVIEWS_CONTENT_QUERY = gql`
     reviews(input: { ascending: false, sortBy: "createdAt", page: $page }) {
       courseId
       username
-      title
-      overall
       createdAt
       content {
         text
+        grade
       }
     }
   }
@@ -112,11 +110,10 @@ export const RECENT_REVIEWS_TEACHING_QUERY = gql`
     reviews(input: { ascending: false, sortBy: "createdAt", page: $page }) {
       courseId
       username
-      title
-      overall
       createdAt
       teaching {
         text
+        grade
       }
     }
   }
@@ -127,11 +124,10 @@ export const RECENT_REVIEWS_DIFFICULTY_QUERY = gql`
     reviews(input: { ascending: false, sortBy: "createdAt", page: $page }) {
       courseId
       username
-      title
-      overall
       createdAt
       difficulty {
         text
+        grade
       }
     }
   }
