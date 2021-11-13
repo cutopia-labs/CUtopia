@@ -12,9 +12,14 @@ import {
 } from '../types';
 import { storeData, getStoreData, removeStoreItem } from '../helpers/store';
 
-import { TOKEN_EXPIRE_DAYS } from '../constants';
-import { HISTORY_MAX_LENGTH, LEVEL_UP_EXP } from '../constants/configs';
+import {
+  HISTORY_MAX_LENGTH,
+  LEVEL_UP_EXP,
+  TOKEN_EXPIRE_BEFORE,
+} from '../constants/configs';
 import withUndo from '../helpers/withUndo';
+import { getTokenExpireDate } from '../helpers';
+import { TOKEN_EXPIRE_DAYS } from '../constants';
 import ViewStore from './ViewStore';
 import StorePrototype from './StorePrototype';
 
@@ -99,15 +104,16 @@ class UserStore extends StorePrototype {
 
   @action async applyToken() {
     const savedToken = (await getStoreData('token')) || {};
-    console.log('Loaded Saved Token');
-    console.log(savedToken);
-    console.log(
-      `Token expired: ${new Date(savedToken).valueOf() > new Date().valueOf()}`
-    );
+    if (!savedToken.token) {
+      return;
+    }
+    console.log(getTokenExpireDate(TOKEN_EXPIRE_BEFORE, TOKEN_EXPIRE_DAYS));
     if (
-      savedToken.token &&
-      !(new Date(savedToken).valueOf() > new Date().valueOf())
+      savedToken.expire <
+      getTokenExpireDate(TOKEN_EXPIRE_BEFORE, TOKEN_EXPIRE_DAYS)
     ) {
+      removeStoreItem('token');
+    } else {
       this.setToken(savedToken.token);
     }
   }
@@ -115,7 +121,7 @@ class UserStore extends StorePrototype {
   @action async saveToken(token) {
     const savedToken = {
       token,
-      expire: new Date().setDate(new Date().getDate() + TOKEN_EXPIRE_DAYS),
+      expire: getTokenExpireDate(+new Date()),
     };
     storeData('token', savedToken);
     this.setToken(token);

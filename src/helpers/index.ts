@@ -1,4 +1,9 @@
-import { VALUE_TO_LETTER, GRADE_VALUES, GRADES } from '../constants';
+import {
+  VALUE_TO_LETTER,
+  GRADE_VALUES,
+  GRADES,
+  TOKEN_EXPIRE_DAYS,
+} from '../constants';
 import { VALID_COURSE_RULE } from '../constants/rules';
 import { Review } from '../types';
 
@@ -46,3 +51,10 @@ export const getReviewId = (review: Review) =>
 
 export const removeEmptyValues = (obj: Record<string, any>) =>
   Object.fromEntries(Object.entries(obj).filter(([_, v]) => v));
+
+export const getTokenExpireDate = (
+  timestamp: number,
+  deltaInDays: number = TOKEN_EXPIRE_DAYS
+) => {
+  return (timestamp += 60 * 60 * 24 * 1000 * deltaInDays);
+};
