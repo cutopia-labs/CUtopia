@@ -4,7 +4,6 @@ import {
   CourseConcise,
   CourseInfo,
   CourseTableEntry,
-  DiscussionRecent,
   LoginState,
   RatingField,
   Review,
@@ -28,7 +27,6 @@ const LOAD_KEYS = [
   'favoriteCourses',
   'timetable',
   'searchHistory',
-  'discussionHistory',
   'reviewDrafts',
   'recentReviewCategory',
 ];
@@ -37,7 +35,6 @@ const RESET_KEYS = [...LOAD_KEYS, 'token'];
 
 const DEFAULT_VALUES = {
   reviewDrafts: {},
-  discussionHistory: [],
   searchHistory: [],
   favoriteCourses: [],
   loginState: LoginState.INIT,
@@ -52,7 +49,6 @@ class UserStore extends StorePrototype {
 
   // User Saved Data
   @observable reviewDrafts: Record<string, Review> = {};
-  @observable discussionHistory: DiscussionRecent[] = [];
   @observable searchHistory: string[] = [];
   @observable favoriteCourses: CourseConcise[] = [];
   @observable timetable: CourseTableEntry[];
@@ -184,21 +180,6 @@ class UserStore extends StorePrototype {
   @action async deleteHistory(courseId) {
     const temp = this.searchHistory.filter(hist => hist !== courseId);
     this.setStore('searchHistory', temp);
-  }
-
-  @action async appendDiscussionHistory(item: DiscussionRecent) {
-    const index = this.discussionHistory.findIndex(
-      hist => hist.courseId === item.courseId
-    );
-    let temp = [...this.discussionHistory];
-    if (index === -1) {
-      if (temp.length >= HISTORY_MAX_LENGTH) {
-        temp.pop();
-      }
-    } else {
-      temp.splice(index, 1);
-    }
-    this.setStore('discussionHistory', [item, ...temp]);
   }
 
   @action updateReviewDrafts = (courseId: string, review: Review) => {
