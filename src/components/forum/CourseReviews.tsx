@@ -65,7 +65,7 @@ const CourseReviews: FC<Props> = ({
     ReviewsResult,
     ReviewsFilter
   >(REVIEWS_QUERY, {
-    skip: Boolean(reviewId || !courseInfo?.rating),
+    skip: Boolean(reviewId) || courseInfoLoading || !courseInfo?.rating,
     variables: {
       courseId,
       ...reviewsPayload,
@@ -87,7 +87,7 @@ const CourseReviews: FC<Props> = ({
     },
     onError: view.handleError,
     notifyOnNetworkStatusChange: true,
-    fetchPolicy: 'cache-first',
+    fetchPolicy: 'cache-and-network',
   });
 
   // Fetch a review based on reviewId
