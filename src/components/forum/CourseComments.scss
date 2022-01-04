@@ -1,0 +1,50 @@
+.message {
+  --message-spacing: 10px;
+  .text-icon {
+    margin-right: var(--message-spacing);
+  }
+}
+
+.message-username {
+  margin: 0px var(--message-spacing) 6px 0;
+  font-weight: 500;
+  font-size: 14px;
+  .caption {
+    margin-left: 4px;
+    font-size: 13px;
+  }
+}
+
+.message-text {
+  font-size: 14px;
+  font-weight: normal;
+}
+
+.messages-container {
+  row-gap: 20px;
+  .load-more-btn {
+    margin-right: auto;
+    margin-left: auto;
+    .MuiButton-label {
+      color: var(--primary);
+      font-size: 12px;
+    }
+    border: 2px solid var(--primary);
+  }
+}
+
+.message-input-container {
+  position: sticky;
+  bottom: 8px;
+  width:inherit;
+  padding: 0 var(--card-padding);
+  input {
+    flex: 1;
+    background-color: transparent;
+    padding-left: 0;
+    height: 58px;
+  }
+  .MuiIconButton-root {
+    margin-right: 4px;
+  }
+}
