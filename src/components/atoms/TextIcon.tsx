@@ -6,7 +6,9 @@ import colors from '../../constants/colors';
 import { hashing } from '../../helpers';
 
 type TextIconProps = {
-  text: string;
+  text?: string;
+  char?: string;
+  fontSize?: number;
   className?: string;
   backgroundColor?: string;
   size?: number;
@@ -14,9 +16,11 @@ type TextIconProps = {
 
 const TextIcon = ({
   text,
+  char,
   className,
   backgroundColor,
   size,
+  fontSize,
 }: TextIconProps) => (
   <Avatar
     style={{
@@ -26,12 +30,12 @@ const TextIcon = ({
       ...(size && {
         width: size,
         height: size,
-        fontSize: size / 2,
+        fontSize: fontSize || size / 2,
       }),
     }}
     className={clsx('text-icon', className)}
   >
-    {text.charAt(0)}
+    {char || text.charAt(0)}
   </Avatar>
 );
 

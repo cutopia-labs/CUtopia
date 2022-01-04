@@ -51,3 +51,26 @@ export const TOKEN_EXPIRE_DAYS = 7;
 export const VIEWS_LIMIT = 5;
 
 export const UGE_COURSE_CODES = ['UGEA', 'UGEB', 'UGEC', 'UGED'];
+
+export const EMOJIS = [
+  '🦦',
+  '🦝',
+  '🐨',
+  '🐼',
+  '🐶',
+  '🐧',
+  '🐱',
+  '🐤',
+  '🦑',
+  '🦉',
+  '🐸',
+  '🦊',
+  '🐘',
+  '🦋',
+  '🦈',
+  '🪶',
+  '🦜',
+  '🦔',
+];
+
+export const EMOJIS_LENGTH = 18;
