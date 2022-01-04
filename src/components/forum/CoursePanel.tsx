@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, FC } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { observer } from 'mobx-react-lite';
@@ -6,8 +6,9 @@ import { useTitle } from 'react-use';
 
 import './CoursePanel.scss';
 
+import { BsChat } from 'react-icons/bs';
 import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@material-ui/lab';
-import { Edit, Share } from '@material-ui/icons';
+import { ChatBubbleOutline, Edit, Share } from '@material-ui/icons';
 import copy from 'copy-to-clipboard';
 import { validCourse } from '../../helpers';
 import { COURSE_INFO_QUERY } from '../../constants/queries';
@@ -16,22 +17,36 @@ import useMobileQuery from '../../hooks/useMobileQuery';
 import { getSimilarCourses } from '../../helpers/getCourses';
 import FeedCard from '../molecules/FeedCard';
 import DiscussionCard from '../discussion/DiscussionCard';
+import TabsContainer from '../molecules/TabsContainer';
 import CourseCard from './CourseCard';
 import CourseReviews from './CourseReviews';
+import CourseComments from './CourseComments';
 
-const CoursePanel = () => {
+const MENU_ITEMS = [
+  {
+    label: 'Reviews',
+    icon: <ChatBubbleOutline />,
+  },
+  {
+    label: 'Comments',
+    icon: <BsChat />,
+  },
+];
+
+const CoursePanel: FC = () => {
   const { id: courseId, reviewId } = useParams<{
     id?: string;
     reviewId?: string;
   }>();
   useTitle(`${courseId} Reviews - CUtopia`);
   const history = useHistory();
+  const isMobile = useMobileQuery();
   const view = useContext(ViewContext);
   const user = useContext(UserContext);
   const [similarCourses, setSimilarCourse] = useState([]);
   const [FABOpen, setFABOpen] = useState(false);
-  const isMobile = useMobileQuery();
   const [FABHidden, setFABHidden] = useState(!isMobile);
+  const [tab, setTab] = useState('Reviews');
 
   // Fetch course info
   const { data: courseInfo, loading: courseInfoLoading } = useQuery(
@@ -81,15 +96,19 @@ const CoursePanel = () => {
             }}
             loading={courseInfoLoading}
           />
+          <TabsContainer items={MENU_ITEMS} selected={tab} onSelect={setTab} />
         </div>
-        <CourseReviews
-          courseId={courseId}
-          reviewId={reviewId}
-          courseInfo={courseInfo?.courses[0]}
-          isMobile={isMobile}
-          FABHidden={FABHidden}
-          setFABHidden={setFABHidden}
-        />
+        {tab == 'Reviews' && (
+          <CourseReviews
+            courseId={courseId}
+            reviewId={reviewId}
+            courseInfo={courseInfo?.courses[0]}
+            isMobile={isMobile}
+            FABHidden={FABHidden}
+            setFABHidden={setFABHidden}
+          />
+        )}
+        {tab == 'Comments' && <CourseComments />}
         <SpeedDial
           ariaLabel="SpeedDial"
           hidden={!isMobile || FABHidden}
