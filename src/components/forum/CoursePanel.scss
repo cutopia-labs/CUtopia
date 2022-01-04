@@ -1,17 +1,17 @@
 .course-panel-container {
   height: fit-content;
   position: relative;
-  .tabs-row {
-    margin-top: calc(- var(--card-padding));
-    border: 0px;
-  }
 }
 
 .course-panel {
   position: relative;
   padding: 0;
-  > .course-card {
-    padding: var(--card-padding);
+  .tabs-row {
+    border: 0px;
+    border-radius: 0;
+  }
+  > .course-card, .course-card-skeleton, .review-edit {
+    margin: var(--card-padding);
   }
   p {
     line-height: var(--line-height);

@@ -4,7 +4,7 @@ import { IconButton, Tooltip } from '@material-ui/core';
 import { ErrorOutline, Favorite, FavoriteBorder } from '@material-ui/icons';
 
 import './CourseCard.scss';
-import { useHistory, Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import { FiExternalLink } from 'react-icons/fi';
 import clsx from 'clsx';
 import { ReportCategory } from 'cutopia-types/lib/codes';
@@ -33,7 +33,6 @@ const CourseCard = ({ courseInfo, concise, loading }: CourseCardProps) => {
   const [skipHeightCheck, setSkipHeightCheck] = useState(concise);
   const user = useContext(UserContext);
   const isMobile = useMobileQuery();
-  const history = useHistory();
   const view = useContext(ViewContext);
 
   if (loading) {
