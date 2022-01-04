@@ -1,47 +1,23 @@
-import { useState, useEffect, useContext, useRef, useReducer } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { Edit, Share } from '@material-ui/icons';
 import { useQuery } from '@apollo/client';
-import { Divider } from '@material-ui/core';
-import { SpeedDial, SpeedDialIcon, SpeedDialAction } from '@material-ui/lab';
 import { observer } from 'mobx-react-lite';
-import pluralize from 'pluralize';
 import { useTitle } from 'react-use';
 
 import './CoursePanel.scss';
-import copy from 'copy-to-clipboard';
 
-import { ReportCategory } from 'cutopia-types/lib/codes';
-import { removeEmptyValues, validCourse } from '../../helpers';
-import {
-  COURSE_INFO_QUERY,
-  GET_REVIEW,
-  REVIEWS_QUERY,
-} from '../../constants/queries';
-import Loading from '../atoms/Loading';
+import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@material-ui/lab';
+import { Edit, Share } from '@material-ui/icons';
+import copy from 'copy-to-clipboard';
+import { validCourse } from '../../helpers';
+import { COURSE_INFO_QUERY } from '../../constants/queries';
 import { ViewContext, UserContext } from '../../store';
-import useDebounce from '../../hooks/useDebounce';
-import { LAZY_LOAD_BUFFER, REVIEWS_PER_PAGE } from '../../constants/configs';
-import { Review, ReviewsFilter, ReviewsResult } from '../../types';
-import Footer from '../molecules/Footer';
 import useMobileQuery from '../../hooks/useMobileQuery';
 import { getSimilarCourses } from '../../helpers/getCourses';
 import FeedCard from '../molecules/FeedCard';
 import DiscussionCard from '../discussion/DiscussionCard';
-import ReviewCard from './ReviewCard';
 import CourseCard from './CourseCard';
-import ReviewFilterBar from './ReviewFilterBar';
-
-export enum COURSE_PANEL_MODES {
-  INITIAL,
-  GET_TARGET_REVIEW,
-  FETCH_REVIEWS,
-}
-
-const getNextPage = (currPage: number, numReviews: number) => {
-  const numLoaded = currPage * REVIEWS_PER_PAGE;
-  return numReviews > numLoaded ? currPage + 1 : null;
-};
+import CourseReviews from './CourseReviews';
 
 const CoursePanel = () => {
   const { id: courseId, reviewId } = useParams<{
@@ -49,26 +25,27 @@ const CoursePanel = () => {
     reviewId?: string;
   }>();
   useTitle(`${courseId} Reviews - CUtopia`);
-  const [mode, setMode] = useState(COURSE_PANEL_MODES.INITIAL);
   const history = useHistory();
-  const [FABOpen, setFABOpen] = useState(false);
-  const [page, setPage] = useState(0);
-  const [reviews, setReviews] = useState([]);
   const view = useContext(ViewContext);
   const user = useContext(UserContext);
+  const [similarCourses, setSimilarCourse] = useState([]);
+  const [FABOpen, setFABOpen] = useState(false);
   const isMobile = useMobileQuery();
   const [FABHidden, setFABHidden] = useState(!isMobile);
-  const reviewFilterBarRef = useRef<HTMLDivElement | null>(null);
-  const [similarCourses, setSimilarCourse] = useState([]);
-  const [reviewsPayload, dispatchReviewsPayload] = useReducer(
-    (state: Partial<ReviewsFilter>, action: Partial<ReviewsFilter>) =>
-      removeEmptyValues({
-        ...state,
-        ...action,
-      }) as Partial<ReviewsFilter>,
+
+  // Fetch course info
+  const { data: courseInfo, loading: courseInfoLoading } = useQuery(
+    COURSE_INFO_QUERY,
     {
-      sortBy: 'createdAt',
-    } as Partial<ReviewsFilter>
+      skip: !courseId,
+      ...(courseId && {
+        variables: {
+          courseId,
+        },
+      }),
+      fetchPolicy: 'cache-first',
+      onError: view.handleError,
+    }
   );
 
   const FAB_GROUP_ACTIONS = Object.freeze([
@@ -82,165 +59,16 @@ const CoursePanel = () => {
     },
   ]);
 
-  // Fetch course info
-  const {
-    data: courseInfo,
-    loading: courseInfoLoading,
-    error,
-  } = useQuery(COURSE_INFO_QUERY, {
-    skip: !courseId,
-    ...(courseId && {
-      variables: {
-        courseId,
-      },
-    }),
-    fetchPolicy: 'cache-first',
-    onError: view.handleError,
-  });
-
-  // Fetch all reviews
-  const { loading: reviewsLoading, refetch: reviewsRefetch } = useQuery<
-    ReviewsResult,
-    ReviewsFilter
-  >(REVIEWS_QUERY, {
-    skip:
-      Boolean(reviewId) || courseInfoLoading || !courseInfo?.courses[0]?.rating,
-    variables: {
-      courseId,
-      ...reviewsPayload,
-    },
-    onCompleted: data => {
-      console.table(data);
-      if (page) {
-        setReviews(prevReviews =>
-          prevReviews
-            .concat(data.reviews)
-            .filter(
-              (v, i, a) => a.findIndex(m => v.createdAt === m.createdAt) === i
-            )
-        );
-      } else {
-        setReviews(data.reviews);
-      }
-      setPage(getNextPage(page, courseInfo?.courses[0]?.rating?.numReviews));
-    },
-    onError: view.handleError,
-    notifyOnNetworkStatusChange: true,
-    fetchPolicy: 'cache-first',
-  });
-
-  // Fetch a review based on reviewId
-  const { loading: reviewLoading } = useQuery(GET_REVIEW, {
-    variables: {
-      courseId,
-      createdAt: reviewId,
-    },
-    skip: !reviewId,
-    onCompleted: data => {
-      if (data.review) {
-        setReviews([data.review]);
-      }
-    },
-    onError: view.handleError,
-  });
-
-  const listenToScroll = useDebounce(async () => {
-    console.log(`Scroll dep ${reviewId}`);
-    const distanceFromBottom =
-      document.documentElement.scrollHeight -
-      document.documentElement.scrollTop -
-      window.innerHeight;
-    console.log(distanceFromBottom);
-    // Set Function Bar for Desktop
-    if (!isMobile) {
-      const reviewFilterBarTop =
-        reviewFilterBarRef?.current?.getBoundingClientRect()?.top;
-
-      console.log(
-        `Scroll height ${document.documentElement.scrollHeight} ${document.documentElement.scrollTop} ${reviewFilterBarTop}`
-      );
-
-      const desktopFABHidden = !(reviewFilterBarTop < 0);
-      setFABHidden(desktopFABHidden);
-    }
-    // Load and setFAB
-    if (distanceFromBottom <= LAZY_LOAD_BUFFER) {
-      // Fetch more here;
-      if (page && courseId && !reviewId) {
-        console.log('Refetching');
-        await reviewsRefetch({
-          courseId,
-          ...reviewsPayload,
-          page,
-        });
-        isMobile && setFABHidden(false);
-      } else {
-        setFABHidden(true);
-      }
-    } else {
-      isMobile && setFABHidden(false);
-    }
-  }, 300);
-
-  useEffect(() => {
-    if (reviews?.length) {
-      setPage(0);
-      reviewsRefetch({
-        courseId,
-        ...reviewsPayload,
-      });
-    }
-  }, [reviewsPayload]);
-
-  useEffect(() => {
-    window.addEventListener('scroll', listenToScroll);
-    return () => window.removeEventListener('scroll', listenToScroll);
-  }, [listenToScroll, reviewId]);
-
   const fetchSimilarCourses = async courseId => {
     setSimilarCourse(await getSimilarCourses(courseId));
   };
 
   useEffect(() => {
-    console.log(`Current id: ${courseId}`);
-    if (reviews?.length) {
-      setReviews([]);
-    }
     if (validCourse(courseId)) {
       user.saveHistory(courseId);
       fetchSimilarCourses(courseId);
-      setMode(COURSE_PANEL_MODES.FETCH_REVIEWS);
-    } else {
-      // Display ERROR PAGE
     }
   }, [courseId]);
-
-  useEffect(() => {
-    setMode(
-      reviewId
-        ? COURSE_PANEL_MODES.GET_TARGET_REVIEW
-        : COURSE_PANEL_MODES.FETCH_REVIEWS
-    );
-  }, [reviewId]);
-
-  const reportReview = (item: Review) => {
-    view.setDialog({
-      key: 'reportIssues',
-      contentProps: {
-        reportCategory: ReportCategory.REVIEW,
-        id: `${courseId}#${item.createdAt}`,
-      },
-    });
-  };
-
-  const shareReview = (item: Review) => {
-    copy(
-      reviewId
-        ? window.location.href
-        : `${window.location.href}/${item.createdAt}`
-    );
-    view.setSnackBar('Copied sharelink to clipboard!');
-  };
 
   return (
     <>
@@ -254,90 +82,37 @@ const CoursePanel = () => {
             loading={courseInfoLoading}
           />
         </div>
-        {!courseInfoLoading && (
-          <>
-            <ReviewFilterBar
-              forwardedRef={reviewFilterBarRef}
-              courseInfo={courseInfo?.courses[0]}
-              reviewsPayload={reviewsPayload}
-              dispatchReviewsPayload={dispatchReviewsPayload}
-              fetchAllAction={
-                Boolean(reviewId) && (() => history.push(`/review/${courseId}`))
-              }
-              writeAction={() => history.push(`/review/${courseId}/compose`)}
-              exceedLimit={!user.data.fullAccess}
-              isMobile={isMobile}
+        <CourseReviews
+          courseId={courseId}
+          reviewId={reviewId}
+          courseInfo={courseInfo?.courses[0]}
+          isMobile={isMobile}
+          FABHidden={FABHidden}
+          setFABHidden={setFABHidden}
+        />
+        <SpeedDial
+          ariaLabel="SpeedDial"
+          hidden={!isMobile || FABHidden}
+          icon={
+            <SpeedDialIcon
+              onClick={() => history.push(`/review/${courseId}/compose`)}
+              openIcon={<Edit />}
             />
-            <SpeedDial
-              ariaLabel="SpeedDial"
-              hidden={!isMobile || FABHidden}
-              icon={
-                <SpeedDialIcon
-                  onClick={() => history.push(`/review/${courseId}/compose`)}
-                  openIcon={<Edit />}
-                />
-              }
-              onClose={() => setFABOpen(false)}
-              onOpen={() => setFABOpen(true)}
-              open={FABOpen}
-              className="course-panel-fab"
-            >
-              {FAB_GROUP_ACTIONS.map(action => (
-                <SpeedDialAction
-                  key={action.name}
-                  icon={action.icon}
-                  tooltipTitle={action.name}
-                  onClick={action.action}
-                />
-              ))}
-            </SpeedDial>
-            {!isMobile && !FABHidden && (
-              <ReviewFilterBar
-                className="float"
-                isMobile={true}
-                courseInfo={courseInfo?.courses[0]}
-                reviewsPayload={reviewsPayload}
-                dispatchReviewsPayload={dispatchReviewsPayload}
-                fetchAllAction={
-                  Boolean(reviewId) &&
-                  (() => history.push(`/review/${courseId}`))
-                }
-                writeAction={() => history.push(`/review/${courseId}/compose`)}
-                exceedLimit={false}
-              />
-            )}
-          </>
-        )}
-        {Boolean(courseInfo?.courses[0]) && (
-          <span className="review-count caption center-row">
-            {reviewId ? (
-              <>
-                {`Showing 1 review`}
-                <span className="caption">{`(${courseInfo?.courses[0]?.rating?.numReviews} total)`}</span>
-              </>
-            ) : (
-              `${pluralize(
-                'review',
-                courseInfo?.courses[0]?.rating?.numReviews || 0,
-                true
-              )}`
-            )}
-            <Divider />
-          </span>
-        )}
-        <div className="grid-auto-row reviews-container">
-          {(reviews || []).map(item => (
-            <ReviewCard
-              key={item.createdAt}
-              review={item}
-              reportAction={reportReview}
-              shareAction={shareReview}
-              showAll={Boolean(reviewId)}
+          }
+          onClose={() => setFABOpen(false)}
+          onOpen={() => setFABOpen(true)}
+          open={FABOpen}
+          className="course-panel-fab"
+        >
+          {FAB_GROUP_ACTIONS.map(action => (
+            <SpeedDialAction
+              key={action.name}
+              icon={action.icon}
+              tooltipTitle={action.name}
+              onClick={action.action}
             />
           ))}
-          {(reviewLoading || reviewsLoading) && <Loading />}
-        </div>
-        {page === null && <Footer />}
+        </SpeedDial>
       </div>
       <div className="secondary-column sticky">
         <DiscussionCard courseId={courseId} />
