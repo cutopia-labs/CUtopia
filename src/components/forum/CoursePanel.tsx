@@ -16,7 +16,6 @@ import { ViewContext, UserContext } from '../../store';
 import useMobileQuery from '../../hooks/useMobileQuery';
 import { getSimilarCourses } from '../../helpers/getCourses';
 import FeedCard from '../molecules/FeedCard';
-import DiscussionCard from '../discussion/DiscussionCard';
 import TabsContainer from '../molecules/TabsContainer';
 import CourseCard from './CourseCard';
 import CourseReviews from './CourseReviews';
@@ -103,12 +102,13 @@ const CoursePanel: FC = () => {
             courseId={courseId}
             reviewId={reviewId}
             courseInfo={courseInfo?.courses[0]}
+            courseInfoLoading={courseInfoLoading}
             isMobile={isMobile}
             FABHidden={FABHidden}
             setFABHidden={setFABHidden}
           />
         )}
-        {tab == 'Comments' && <CourseComments />}
+        {tab == 'Comments' && <CourseComments courseId={courseId} />}
         <SpeedDial
           ariaLabel="SpeedDial"
           hidden={!isMobile || FABHidden}
@@ -134,7 +134,6 @@ const CoursePanel: FC = () => {
         </SpeedDial>
       </div>
       <div className="secondary-column sticky">
-        <DiscussionCard courseId={courseId} />
         {!isMobile && (
           <FeedCard
             title="Suggestions"

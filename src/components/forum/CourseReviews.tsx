@@ -28,6 +28,7 @@ type Props = {
   courseId: string;
   reviewId: string;
   courseInfo: CourseInfo;
+  courseInfoLoading: boolean;
   isMobile: boolean;
   FABHidden: boolean;
   setFABHidden: (b: boolean) => any;
@@ -37,6 +38,7 @@ const CourseReviews: FC<Props> = ({
   courseId,
   reviewId,
   courseInfo,
+  courseInfoLoading,
   isMobile,
   FABHidden,
   setFABHidden,
@@ -183,18 +185,20 @@ const CourseReviews: FC<Props> = ({
 
   return (
     <>
-      <ReviewFilterBar
-        forwardedRef={reviewFilterBarRef}
-        courseInfo={courseInfo}
-        reviewsPayload={reviewsPayload}
-        dispatchReviewsPayload={dispatchReviewsPayload}
-        fetchAllAction={
-          Boolean(reviewId) && (() => history.push(`/review/${courseId}`))
-        }
-        writeAction={() => history.push(`/review/${courseId}/compose`)}
-        exceedLimit={!user.data.fullAccess}
-        isMobile={isMobile}
-      />
+      {!courseInfoLoading && (
+        <ReviewFilterBar
+          forwardedRef={reviewFilterBarRef}
+          courseInfo={courseInfo}
+          reviewsPayload={reviewsPayload}
+          dispatchReviewsPayload={dispatchReviewsPayload}
+          fetchAllAction={
+            Boolean(reviewId) && (() => history.push(`/review/${courseId}`))
+          }
+          writeAction={() => history.push(`/review/${courseId}/compose`)}
+          exceedLimit={!user.data.fullAccess}
+          isMobile={isMobile}
+        />
+      )}
       {!isMobile && !FABHidden && (
         <ReviewFilterBar
           className="float"
