@@ -319,7 +319,7 @@ const SearchPanel = ({
       </div>
       <Divider />
       {!searchPayload && !currentCourse && (
-        <Card title="Recent" inPlace className="search-panel-recent">
+        <Card title="Recents" inPlace className="search-panel-recent">
           <ChipsRow
             className="recent-chips"
             chipClassName="chip-fill"

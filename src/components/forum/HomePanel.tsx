@@ -297,7 +297,7 @@ const HomePanel = () => {
         ) && <Footer />}
       </div>
       <div className="secondary-column sticky">
-        <Card title="Recent">
+        <Card title="Recents">
           <ChipsRow
             className="recent-chips"
             chipClassName="chip-fill"
