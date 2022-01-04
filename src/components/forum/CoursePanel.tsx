@@ -111,7 +111,7 @@ const CoursePanel: FC = () => {
         {tab == 'Comments' && <CourseComments courseId={courseId} />}
         <SpeedDial
           ariaLabel="SpeedDial"
-          hidden={!isMobile || FABHidden}
+          hidden={!isMobile || FABHidden || tab == 'Comments'}
           icon={
             <SpeedDialIcon
               onClick={() => history.push(`/review/${courseId}/compose`)}
