@@ -1,9 +1,9 @@
 import { observer } from 'mobx-react-lite';
 
 import '../styles/pages/LandingPage.module.scss';
+import Image from 'next/image';
 import LoginPanel from '../components/user/LoginPanel';
 import Logo from '../components/atoms/Logo';
-import Illustration from '../images/meditation.svg';
 import useMobileQuery from '../hooks/useMobileQuery';
 
 const LandingPage = () => {
@@ -17,9 +17,9 @@ const LandingPage = () => {
             Discover the courses that you want & plan your timetable.
           </h3>
           <div className="landing-image-container center-box">
-            <img
+            <Image
               className="landing-image"
-              src={Illustration}
+              src="/images/meditation.svg"
               alt=""
               draggable={false}
             />

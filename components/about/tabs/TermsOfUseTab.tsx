@@ -1,4 +1,4 @@
-import './Tab.module.scss';
+import '../../../styles/components/tabs/Tab.module.scss';
 import Card from '../../atoms/Card';
 import AboutSection from '../AboutSection';
 

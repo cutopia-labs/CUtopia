@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import './Logo.module.scss';
+import '../../styles/components/atoms/Logo.module.scss';
 
 type LogoProps = {
   shine?: boolean;

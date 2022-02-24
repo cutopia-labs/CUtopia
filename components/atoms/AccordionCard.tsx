@@ -1,4 +1,4 @@
-import '../../styles/components/atoms/AccordionCard.module.module.scss';
+import '../../styles/components/atoms/AccordionCard.module.scss';
 import {
   Accordion,
   AccordionDetails,
