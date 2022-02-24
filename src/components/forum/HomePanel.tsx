@@ -1,5 +1,4 @@
 import { useState, useContext, useEffect, useRef } from 'react';
-import { useHistory } from 'react-router-dom';
 import Link from 'next/link';
 import {
   ForumOutlined,
@@ -11,6 +10,7 @@ import { useQuery } from '@apollo/client';
 import './HomePanel.scss';
 import { useTitle } from 'react-use';
 import { observer } from 'mobx-react-lite';
+import { useRouter } from 'next/router';
 import GradeIndicator from '../atoms/GradeIndicator';
 import { RATING_FIELDS } from '../../constants';
 import {
@@ -103,7 +103,7 @@ const RecentReviewList = ({ visible, category }: RecentReviewListProps) => {
     page: number | null;
     stall: boolean;
   }>({ page: 0, stall: false });
-  const history = useHistory();
+  const router = useRouter();
   const view = useContext(ViewContext);
 
   useEffect(() => {
@@ -183,7 +183,7 @@ const RecentReviewList = ({ visible, category }: RecentReviewListProps) => {
           <RecentReviewCard
             key={review.createdAt}
             review={review}
-            onClick={id => history.push(`/review/${id}`)}
+            onClick={id => router.push(`/review/${id}`)}
             category={category}
           />
         ))}
@@ -231,7 +231,7 @@ const HomePanel = () => {
   const [tab, setTab] = useState<ReviewHomeTab>('Recents');
   const [sortKey, setSortKey] = useState('overall');
   const [feedCourses, setFeedCourse] = useState([]);
-  const history = useHistory();
+  const router = useRouter();
   const view = useContext(ViewContext);
   const user = useContext(UserContext);
 
@@ -303,13 +303,13 @@ const HomePanel = () => {
             className="recent-chips"
             chipClassName="chip-fill"
             items={user.searchHistory}
-            onItemClick={item => history.push(`/review/${item}`)}
+            onItemClick={item => router.push(`/review/${item}`)}
           />
         </Card>
         <FeedCard
           title="Suggestions"
           courses={feedCourses}
-          onItemClick={course => history.push(`/review/${course.courseId}`)}
+          onItemClick={course => router.push(`/review/${course.courseId}`)}
         />
       </div>
     </>

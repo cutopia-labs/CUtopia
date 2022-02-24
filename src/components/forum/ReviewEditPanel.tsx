@@ -13,12 +13,12 @@ import {
   Tooltip,
 } from '@material-ui/core';
 import { useMutation, useQuery } from '@apollo/client';
-import { Prompt, useHistory, useParams } from 'react-router-dom';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 
 import './ReviewEditPanel.scss';
 import { HiOutlineInformationCircle } from 'react-icons/hi';
 import { useBeforeunload } from 'react-beforeunload';
+import { useRouter } from 'next/router';
 import { ViewContext, UserContext } from '../../store';
 import { GET_REVIEW, COURSE_INFO_QUERY } from '../../constants/queries';
 import { ADD_REVIEW, EDIT_REVIEW } from '../../constants/mutations';
@@ -38,7 +38,6 @@ import useMobileQuery from '../../hooks/useMobileQuery';
 import handleCompleted from '../../helpers/handleCompleted';
 import LoadingButton from '../atoms/LoadingButton';
 import { getStoreData, storeData } from '../../helpers/store';
-import { WINDOW_LEAVE_MESSAGES } from '../../constants/messages';
 import CourseCard from './CourseCard';
 
 enum MODES {
@@ -220,7 +219,7 @@ const ReviewEdit = ({ courseId }) => {
           const id = data?.createReview?.createdAt;
           if (id) {
             user.deleteReveiwDraft(courseId);
-            history.push(`/review/${courseId}/${id}`);
+            router.push(`/review/${courseId}/${id}`);
           }
         },
         {
@@ -235,7 +234,7 @@ const ReviewEdit = ({ courseId }) => {
         () => {
           if (formData.createdAt) {
             user.deleteReveiwDraft(courseId);
-            history.push(`/review/${courseId}/${formData.createdAt}`);
+            router.push(`/review/${courseId}/${formData.createdAt}`);
           }
         },
         {
@@ -259,7 +258,7 @@ const ReviewEdit = ({ courseId }) => {
     }
   );
   const user = useContext(UserContext);
-  const history = useHistory();
+  const router = useRouter();
   const lecturerInputRef = useRef();
 
   // Fetch a review based on reviewId
@@ -388,13 +387,13 @@ const ReviewEdit = ({ courseId }) => {
       caption: 'Do you want to edit your posted review?',
       cancelButton: {
         label: 'Cancel',
-        action: () => history.push(`/review/${courseId}`),
+        action: () => router.push(`/review/${courseId}`),
       },
       confirmButton: {
         label: 'Edit',
         action: () => setMode(MODES.EDIT),
       },
-      onClose: () => history.push(`/review/${courseId}`),
+      onClose: () => router.push(`/review/${courseId}`),
     },
     [MODES.DRAFT_MODAL]: {
       title: 'Review draft found!',
@@ -556,6 +555,8 @@ const ReviewEdit = ({ courseId }) => {
           </DialogActions>
         </Dialog>
       )}
+      {/*
+        
       <Prompt
         when={progress > SAVE_DRAFT_PROGRESS_BUFFER && mode === MODES.INITIAL}
         message={(location, action) => {
@@ -569,15 +570,17 @@ const ReviewEdit = ({ courseId }) => {
           return isRedirect ? true : WINDOW_LEAVE_MESSAGES.REVIEW_EDIT;
         }}
       />
+        */}
     </div>
   );
 };
 
 const ReviewEditPanel = () => {
-  const { id: courseId, reviewId } = useParams<{
+  const router = useRouter();
+  const { id: courseId, reviewId } = router.query as {
     id?: string;
     reviewId?: string;
-  }>();
+  };
   const view = useContext(ViewContext);
   // Fetch course info
   const { data: courseInfo, loading: courseInfoLoading } = useQuery(

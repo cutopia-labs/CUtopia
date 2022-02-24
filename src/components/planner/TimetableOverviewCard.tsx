@@ -182,7 +182,7 @@ const TimetableOverviewCard = () => {
     if (planner.validKey(createdAt)) {
       planner.updateCurrentPlanner(createdAt);
     } else {
-      history.push(`/planner/share/${id}`);
+      router.push(`/planner/share/${id}`);
     }
   };
   const onShare = (id: string) => {

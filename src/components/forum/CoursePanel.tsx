@@ -1,5 +1,4 @@
 import { useState, useEffect, useContext, FC } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { observer } from 'mobx-react-lite';
 import { useTitle } from 'react-use';
@@ -10,6 +9,7 @@ import { BsChat } from 'react-icons/bs';
 import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@material-ui/lab';
 import { ChatBubbleOutline, Edit, Share } from '@material-ui/icons';
 import copy from 'copy-to-clipboard';
+import { useRouter } from 'next/router';
 import { validCourse } from '../../helpers';
 import { COURSE_INFO_QUERY } from '../../constants/queries';
 import { ViewContext, UserContext } from '../../store';
@@ -33,12 +33,12 @@ const MENU_ITEMS = [
 ];
 
 const CoursePanel: FC = () => {
-  const { id: courseId, reviewId } = useParams<{
+  const router = useRouter();
+  const { id: courseId, reviewId } = router.query as {
     id?: string;
     reviewId?: string;
-  }>();
+  };
   useTitle(`${courseId} Reviews - CUtopia`);
-  const history = useHistory();
   const isMobile = useMobileQuery();
   const view = useContext(ViewContext);
   const user = useContext(UserContext);
@@ -114,7 +114,7 @@ const CoursePanel: FC = () => {
           hidden={!isMobile || FABHidden || tab == 'Comments'}
           icon={
             <SpeedDialIcon
-              onClick={() => history.push(`/review/${courseId}/compose`)}
+              onClick={() => router.push(`/review/${courseId}/compose`)}
               openIcon={<Edit />}
             />
           }
@@ -138,7 +138,7 @@ const CoursePanel: FC = () => {
           <FeedCard
             title="Suggestions"
             courses={similarCourses}
-            onItemClick={course => history.push(`/review/${course.courseId}`)}
+            onItemClick={course => router.push(`/review/${course.courseId}`)}
           />
         )}
       </div>

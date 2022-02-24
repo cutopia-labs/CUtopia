@@ -133,7 +133,7 @@ const LoginPanel = () => {
         }
         return;
       }
-      history.push('/');
+      router.push('/');
     }
     setMode(mode || INITIAL_MODE);
   }, [location.pathname]);
@@ -141,7 +141,7 @@ const LoginPanel = () => {
   const [createUser, { loading: creatingUser, error: createError }] =
     useMutation(SEND_VERIFICATION, {
       onCompleted: handleCompleted(
-        () => history.push(MODE_PATH_LOOKUP[LoginPageMode.VERIFY]),
+        () => router.push(MODE_PATH_LOOKUP[LoginPageMode.VERIFY]),
         {
           message: 'Verification code send to your CUHK email',
           view,
@@ -158,7 +158,7 @@ const LoginPanel = () => {
       }),
       onError: e => {
         view.handleError(e);
-        history.push('/verify');
+        router.push('/verify');
       },
     }
   );
@@ -172,7 +172,7 @@ const LoginPanel = () => {
             username: data.login?.me?.username,
           });
         }
-        history.push('/');
+        router.push('/');
       }),
       onError: view.handleError,
     }
@@ -182,7 +182,7 @@ const LoginPanel = () => {
     {
       onCompleted: handleCompleted(
         () =>
-          history.push(MODE_PATH_LOOKUP[LoginPageMode.RESET_PASSWORD_VERIFY]),
+          router.push(MODE_PATH_LOOKUP[LoginPageMode.RESET_PASSWORD_VERIFY]),
         {
           message: 'Verification code has been send to your CUHK email',
           view,
@@ -195,7 +195,7 @@ const LoginPanel = () => {
     RESET_PASSWORD,
     {
       onCompleted: handleCompleted(
-        () => history.push(MODE_PATH_LOOKUP[LoginPageMode.CUTOPIA_LOGIN]),
+        () => router.push(MODE_PATH_LOOKUP[LoginPageMode.CUTOPIA_LOGIN]),
         {
           view,
         }
@@ -315,13 +315,13 @@ const LoginPanel = () => {
   const goBack = () => {
     switch (mode) {
       case LoginPageMode.VERIFY:
-        history.push(MODE_PATH_LOOKUP[LoginPageMode.CUTOPIA_LOGIN]);
+        router.push(MODE_PATH_LOOKUP[LoginPageMode.CUTOPIA_LOGIN]);
         break;
       case LoginPageMode.RESET_PASSWORD:
-        history.push(MODE_PATH_LOOKUP[LoginPageMode.CUTOPIA_LOGIN]);
+        router.push(MODE_PATH_LOOKUP[LoginPageMode.CUTOPIA_LOGIN]);
         break;
       case LoginPageMode.RESET_PASSWORD_VERIFY:
-        history.push(MODE_PATH_LOOKUP[LoginPageMode.RESET_PASSWORD]);
+        router.push(MODE_PATH_LOOKUP[LoginPageMode.RESET_PASSWORD]);
         break;
       default:
         break;
@@ -386,7 +386,7 @@ const LoginPanel = () => {
             <span
               className="label forgot-password"
               onClick={() =>
-                history.push(MODE_PATH_LOOKUP[LoginPageMode.RESET_PASSWORD])
+                router.push(MODE_PATH_LOOKUP[LoginPageMode.RESET_PASSWORD])
               }
             >
               Forgot Password?
@@ -428,7 +428,7 @@ const LoginPanel = () => {
           <span
             className="label"
             onClick={() =>
-              history.push(
+              router.push(
                 MODE_PATH_LOOKUP[
                   mode === LoginPageMode.CUTOPIA_LOGIN
                     ? LoginPageMode.CUTOPIA_SIGNUP

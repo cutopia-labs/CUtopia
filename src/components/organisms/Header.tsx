@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { IconButton, Menu, MenuItem } from '@material-ui/core';
 import {
   ChatBubble,
@@ -40,15 +40,14 @@ const SECTIONS = [
 ];
 
 const Header = () => {
-  const location = useLocation();
-  const history = useHistory();
+  const router = useRouter();
   const [visible, setVisible] = useState(false);
   const isMobile = useMobileQuery();
   const [anchorEl, setAnchorEl] = useState(null);
   const navSections = SECTIONS.map(section => {
     const active =
-      location.pathname.startsWith(section.link) &&
-      (section.link.length > 1 || section.link === location.pathname);
+      router.pathname.startsWith(section.link) &&
+      (section.link.length > 1 || section.link === router.pathname);
     return (
       <Link key={section.link} href={section.link}>
         <a
@@ -89,10 +88,7 @@ const Header = () => {
               {SECTIONS.map(section => (
                 <MenuItem
                   key={section.link}
-                  onClick={() => [
-                    history.push(section.link),
-                    setAnchorEl(null),
-                  ]}
+                  onClick={() => [router.push(section.link), setAnchorEl(null)]}
                 >
                   {section.label}
                 </MenuItem>

@@ -208,7 +208,7 @@ const PlannerTimetable = ({ className }: PlannerTimetableProps) => {
             message: 'Shared planner already loaded!',
             severity: 'warning',
           });
-          history.push('/planner');
+          router.push('/planner');
           return;
         }
         const importedPlanner: Planner = {
@@ -225,7 +225,7 @@ const PlannerTimetable = ({ className }: PlannerTimetableProps) => {
         };
         await planner.addPlanner(importedPlanner);
         planner.updateCurrentPlanner(importedPlanner.key);
-        history.push('/planner');
+        router.push('/planner');
       },
       onError: view.handleError,
     });
@@ -340,7 +340,7 @@ const PlannerTimetable = ({ className }: PlannerTimetableProps) => {
         `Found shareId ${shareId}, skipped loading and switch to ${planner.shareIds[shareId]}`
       );
       planner.updateCurrentPlanner(+planner.shareIds[shareId]);
-      history.push('/planner');
+      router.push('/planner');
       return;
     }
     getShareTimetable({

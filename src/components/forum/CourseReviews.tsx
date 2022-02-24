@@ -1,5 +1,4 @@
 import { useState, useEffect, useContext, useRef, useReducer, FC } from 'react';
-import { useHistory } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { Divider } from '@material-ui/core';
 import pluralize from 'pluralize';
@@ -8,6 +7,7 @@ import './CourseReviews.scss';
 import copy from 'copy-to-clipboard';
 
 import { ReportCategory } from 'cutopia-types/lib/codes';
+import { useRouter } from 'next/router';
 import { removeEmptyValues } from '../../helpers';
 import { GET_REVIEW, REVIEWS_QUERY } from '../../constants/queries';
 import Loading from '../atoms/Loading';
@@ -43,7 +43,7 @@ const CourseReviews: FC<Props> = ({
   FABHidden,
   setFABHidden,
 }) => {
-  const history = useHistory();
+  const router = useRouter();
   const [page, setPage] = useState(0);
   const [reviews, setReviews] = useState([]);
   const view = useContext(ViewContext);
@@ -192,9 +192,9 @@ const CourseReviews: FC<Props> = ({
           reviewsPayload={reviewsPayload}
           dispatchReviewsPayload={dispatchReviewsPayload}
           fetchAllAction={
-            Boolean(reviewId) && (() => history.push(`/review/${courseId}`))
+            Boolean(reviewId) && (() => router.push(`/review/${courseId}`))
           }
-          writeAction={() => history.push(`/review/${courseId}/compose`)}
+          writeAction={() => router.push(`/review/${courseId}/compose`)}
           exceedLimit={!user.data.fullAccess}
           isMobile={isMobile}
         />
@@ -207,9 +207,9 @@ const CourseReviews: FC<Props> = ({
           reviewsPayload={reviewsPayload}
           dispatchReviewsPayload={dispatchReviewsPayload}
           fetchAllAction={
-            Boolean(reviewId) && (() => history.push(`/review/${courseId}`))
+            Boolean(reviewId) && (() => router.push(`/review/${courseId}`))
           }
-          writeAction={() => history.push(`/review/${courseId}/compose`)}
+          writeAction={() => router.push(`/review/${courseId}/compose`)}
           exceedLimit={false}
         />
       )}

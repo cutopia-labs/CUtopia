@@ -1,5 +1,4 @@
 import { useState, useEffect, Fragment, useContext } from 'react';
-import { useHistory, useRouteMatch } from 'react-router-dom';
 import {
   InputBase,
   ListItem as MUIListItem,
@@ -22,6 +21,7 @@ import { useQuery } from '@apollo/client';
 import { observer } from 'mobx-react-lite';
 
 import './SearchPanel.scss';
+import { useRouter } from 'next/router';
 import ListItem from '../molecules/ListItem';
 import COURSE_CODES from '../../constants/courseCodes';
 import { ViewContext, UserContext } from '../../store';
@@ -208,15 +208,11 @@ const SearchPanel = ({
     searchPayloadProp
   );
   const [currentCourse, setCurrentCourse] = useState(null);
-  const history = useHistory();
+  const router = useRouter();
   const view = useContext(ViewContext);
   const user = useContext(UserContext);
   const isMobile = useMobileQuery();
-  const isPlanner = useRouteMatch<{
-    courseId?: string;
-  }>({
-    path: ['/planner/:courseId', '/planner'],
-  });
+  const isPlanner = router.pathname.includes('planner');
 
   useEffect(() => {
     if (currentCourse) {
@@ -225,7 +221,7 @@ const SearchPanel = ({
   }, [currentCourse]);
 
   useEffect(() => {
-    const courseId = isPlanner?.params?.courseId;
+    const courseId = router.query?.courseId as string;
     console.log(`Got ID ${courseId}`);
     if (courseId && validCourse(courseId) && (!onCoursePress || isMobile)) {
       console.log(`Planner Current course ${courseId}`);
@@ -233,7 +229,7 @@ const SearchPanel = ({
     } else {
       setCurrentCourse(null);
     }
-  }, [isPlanner?.params?.courseId, isMobile]);
+  }, [router.query?.courseId, isMobile]);
 
   // Fetch course info
   const {
@@ -259,8 +255,8 @@ const SearchPanel = ({
           offerredOnly: Boolean(isPlanner),
         }
       : null;
-    if (isPlanner?.params?.courseId) {
-      history.push('/planner');
+    if (router.query?.courseId) {
+      router.push('/planner');
     }
     setSearchPayloadState(newPayload);
     setSearchPayloadProp && setSearchPayloadProp(payload);
@@ -290,7 +286,7 @@ const SearchPanel = ({
                 setSearchPayload(null);
               }
               if (isPlanner) {
-                history.push('/planner');
+                router.push('/planner');
               }
             }}
           >
@@ -327,7 +323,7 @@ const SearchPanel = ({
             onItemClick={(item, e) => {
               e.stopPropagation();
               if (!skipDefaultAction) {
-                history.push(`/${isPlanner ? 'planner' : 'review'}/${item}`);
+                router.push(`/${isPlanner ? 'planner' : 'review'}/${item}`);
               }
               (!isMobile || !isPlanner) && onCoursePress && onCoursePress(item);
             }}
@@ -359,7 +355,7 @@ const SearchPanel = ({
               onClick={courseId => {
                 isPlanner && user.saveHistory(courseId);
                 if (!skipDefaultAction) {
-                  history.push(
+                  router.push(
                     `/${isPlanner ? 'planner' : 'review'}/${courseId}`
                   );
                 }
