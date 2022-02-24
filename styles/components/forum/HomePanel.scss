@@ -1,0 +1,106 @@
+.review-home-panel {
+  padding: 0;
+  grid-auto-rows: min-content;
+  .chips-row {
+    margin-right: auto;
+  }
+}
+.review-home-row {
+  align-items: flex-start;
+}
+.ranking-card {
+  overflow: hidden;
+  border-bottom: 0;
+  width: 100%;
+  & > * {
+    border-bottom: 1px solid var(--border);
+  }
+  &:first-child {
+    margin-left: 0;
+  }
+  .list-item-container {
+    height: auto;
+    border-bottom: none;
+    border-right: none;
+    .list-item-title-container {
+      margin-left: 0;
+    }
+    & > :last-child {
+      margin-right: 8px;
+      margin-bottom: 0;
+    }
+  }
+  .grade-indicator {
+    width: 57px;
+    height: 25px;
+  }
+}
+.ranking-card-header {
+  padding: 0 var(--card-padding);
+  height: 44px;
+  color: var(--primary);
+  background-color: var(--background-secondary);
+  & > :first-child {
+    margin-right: 10px;
+  }
+}
+.ranking-card-header-title {
+  font-size: 16px;
+  font-weight: 500;
+}
+.ranking-label {
+  width: 40px;
+  opacity: 0.5;
+}
+.sort-menu {
+  text-transform: capitalize;
+}
+
+.recent-review {
+  --recent-review-width: calc(100% - 2 * var(--card-padding));
+  width: var(--recent-review-width);
+  padding: 0 var(--card-padding) 12px var(--card-padding);
+  .list-item-title-container {
+    margin-left: 0;
+    .title {
+      color: var(--primary);
+    }
+  }
+  .recent-review-text {
+    line-height: var(--line-height);
+    width: 100%;
+    white-space: pre-line;
+    -webkit-line-clamp: 3;
+  }
+}
+
+.recent-chips {
+  margin: 4px var(--card-padding) var(--card-padding) var(--card-padding);
+}
+
+@media only screen and (max-width: 1260px) {
+  .review-home-panel {
+    .tabs-row {
+      position: sticky;
+      top: var(--header-height);
+      z-index: 2;
+    }
+    .chips-row {
+      padding: 0 var(--card-padding);
+      width: calc(100% - 2 * var(--card-padding));
+    }
+  }
+  .review-home-row {
+    flex-direction: column;
+  }
+  .ranking-card {
+    width: 100%;
+    &:last-child {
+      margin-left: 0;
+      margin-top: var(--card-padding);
+    }
+  }
+  .recent-review-text {
+    max-width: calc(100vw - 2 * var(--card-padding));
+  }
+}

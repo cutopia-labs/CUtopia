@@ -1,0 +1,19 @@
+.snackbar-container {
+  position: fixed;
+  display: flex;
+  z-index: 2000;
+  bottom: 30px;
+  margin-left: auto;
+  margin-right: auto;
+  width: fit-content;
+  right: 2.5%;
+  left: 2.5%;
+}
+
+.btn-container {
+  margin-left: auto;
+}
+.btn-title {
+  font-size: 14px;
+  text-transform: uppercase;
+}

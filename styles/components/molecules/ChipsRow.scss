@@ -1,0 +1,33 @@
+.chips-row {
+  display: flex;
+  flex-direction: row;
+  overflow-x: scroll;
+  width: 100%;
+  flex-wrap: wrap;
+  row-gap: 10px;
+  column-gap: 10px;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  div {
+    text-transform: capitalize;
+    border: 1px solid var(--underlay);
+    .MuiChip-label {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+    &.active {
+      background-color: var(--default-button-background);
+      color: white;
+      border: none;
+    }
+  }
+}
+
+
+@media only screen and (max-width: 1260px) {
+  .chips-row {
+    flex-wrap: nowrap;
+    overflow-x: scroll;
+  }
+}

@@ -1,0 +1,76 @@
+.login-panel {
+  height: auto;
+  width: 50%;
+  max-width: 400px;
+  font-size: 16px;
+  h2 {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  .title {
+    margin-bottom: 10px;
+  }
+  .caption {
+    opacity: 0.6;
+    line-height: 24px;
+  }
+  .go-back-icon {
+    color: var(--text);
+    margin: 0 10px 0 -16px;
+  }
+  .label {
+    font-size: 14px;
+    cursor: pointer;
+    margin-left: 12px;
+    color: var(--landing-page-btn-color);
+    font-weight: bold;
+    &.forgot-password {
+      margin-left: auto;
+    }
+  }
+  .text-filed-label {
+    margin-left: 0;
+    color: var(--text);
+    margin-bottom: -6px;
+    cursor: initial;
+  }
+  .input-container {
+    margin-top: 0;
+  }
+}
+.qrcode-row {
+  justify-content: space-between;
+  margin-bottom: 8px;
+  canvas {
+    padding: 2px;
+    background-color: white;
+  }
+}
+.forgot-password-row {
+  margin-top: 4px;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.forgot-password-container {
+  flex-direction: row;
+}
+.login-btn {
+  height: 40px;
+  margin-top: 10px !important;
+  border-radius: var(--border-radius) !important;
+  background: linear-gradient(195deg, var(--primary) 2.3%, rgba(220, 86, 227, 1) 88.5%);
+  box-shadow: none !important;
+  & > .MuiButton-label {
+    font-weight: bold;
+    text-transform: capitalize;
+  }
+  .MuiCircularProgress-svg {
+    color: white;
+  }
+}
+.switch-container {
+  margin-top: 10px;
+  color: #00000066;
+  font-size: 14px;
+}

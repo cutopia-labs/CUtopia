@@ -1,0 +1,47 @@
+.timetable-overview {
+  min-height: 48px;
+  &.MuiAccordion-root.Mui-expanded {
+    margin: 0;
+  }
+  .MuiAccordionSummary-root {
+    position: sticky;
+    top: 0;
+    background-color: var(--surface);
+    z-index: 2;
+  }
+  max-height: 620px;
+  overflow-y: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.timetable-overview-list-item {
+  cursor: initial;
+  flex-direction: row;
+  margin: 0;
+  .list-item-title-container {
+    margin-left: 0;
+    .caption {
+      display: flex;
+      align-items: center;
+      svg {
+        margin-left: 4px;
+        margin-right: 4px;
+        font-size: 16px;
+      }
+    }
+  }
+  .btn-container {
+    svg {
+      padding: 4px;
+    }
+  }
+}
+
+.menu-icon-container {
+  margin-right: var(--card-padding);
+  & .MuiSvgIcon-root {
+    font-size: 18px;
+  }
+}

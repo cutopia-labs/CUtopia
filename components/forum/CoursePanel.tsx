@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/client';
 import { observer } from 'mobx-react-lite';
 import { useTitle } from 'react-use';
 
-import './CoursePanel.scss';
+import '../../styles/components/forum/CoursePanel.scss';
 
 import { BsChat } from 'react-icons/bs';
 import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@material-ui/lab';

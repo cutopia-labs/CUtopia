@@ -1,7 +1,7 @@
 import { Avatar } from '@material-ui/core';
 import clsx from 'clsx';
 
-import './TextIcon.scss';
+import '../../styles/components/atoms/TextIcon.scss';
 import colors from '../../constants/colors';
 import { hashing } from '../../helpers';
 

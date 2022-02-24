@@ -7,7 +7,7 @@ import {
 } from '@material-ui/icons';
 import { useQuery } from '@apollo/client';
 
-import './HomePanel.scss';
+import '../../styles/components/forum/HomePanel.scss';
 import { useTitle } from 'react-use';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';

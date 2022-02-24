@@ -1,6 +1,5 @@
 import { Button, ButtonProps } from '@material-ui/core';
 
-import './LoadingButton.scss';
 import Loading from './Loading';
 
 type LoadingbuttonProps = {

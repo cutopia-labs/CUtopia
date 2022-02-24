@@ -12,7 +12,7 @@ import { GET_DISCUSSIONS } from '../../constants/queries';
 import { SEND_MESSAGE } from '../../constants/mutations';
 import Loading from '../atoms/Loading';
 
-import './CourseComments.scss';
+import '../../styles/components/forum/CourseComments.scss';
 import { getMMMDDYY } from '../../helpers/getTime';
 import { EMOJIS, EMOJIS_LENGTH } from '../../constants';
 import { hashing } from '../../helpers';

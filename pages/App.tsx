@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { Fragment, useContext, useEffect, useMemo, useState } from 'react';
 import {
   ApolloClient,
   InMemoryCache,
@@ -63,7 +63,9 @@ const AppWrapper = observer(() => {
 
   return (
     <ApolloProvider client={client}>
-      <ThemeProvider theme={theme}></ThemeProvider>
+      <ThemeProvider theme={theme}>
+        <Fragment></Fragment>
+      </ThemeProvider>
     </ApolloProvider>
   );
 });

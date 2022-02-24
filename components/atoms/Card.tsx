@@ -1,4 +1,3 @@
-import './Card.scss';
 import clsx from 'clsx';
 import CardHeader from './CardHeader';
 
