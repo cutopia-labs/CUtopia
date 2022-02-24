@@ -1,5 +1,6 @@
 import { useState, useContext, useEffect, useRef } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+import Link from 'next/link';
 import {
   ForumOutlined,
   ThumbUpOutlined,
@@ -205,7 +206,7 @@ const RankingCard = ({
       {rankList.map((course: PopularCourse | TopRatedCourse, i: number) => (
         <Link
           key={`${headerTitle}-${course.courseId}`}
-          to={`/review/${course.courseId}`}
+          href={`/review/${course.courseId}`}
         >
           <ListItem
             left={<span className="ranking-label center-box">{i + 1}</span>}

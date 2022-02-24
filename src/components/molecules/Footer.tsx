@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import './Footer.scss';
 import { ReportCategory } from 'cutopia-types/lib/codes';
 import { viewStore } from '../../store';
@@ -48,8 +48,8 @@ const FOOTER_ITEMS = [
 const renderItem = (item: MultiTypeLink) => {
   if (item.to) {
     return (
-      <Link key={item.to} className="footer-link hover" to={item.to}>
-        {item.label}
+      <Link key={item.to} href={item.to}>
+        <a className="footer-link hover">{item.label}</a>
       </Link>
     );
   }

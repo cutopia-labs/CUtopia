@@ -1,5 +1,4 @@
-import { Link } from 'react-router-dom';
-
+import Link from 'next/link';
 import './HomePageTabs.scss';
 import ListItem from '../molecules/ListItem';
 import Loading from '../atoms/Loading';
@@ -23,7 +22,7 @@ export const CoursesList = ({ loading, courses }: CoursesListProps) => {
       ) : (
         <div className="home-course-container card">
           {courses?.map(course => (
-            <Link key={course.courseId} to={`/review/${course.courseId}`}>
+            <Link key={course.courseId} href={`/review/${course.courseId}`}>
               <ListItem
                 className="home-course-list-item"
                 title={course.courseId}
@@ -51,7 +50,7 @@ export const ReviewsList = ({ reviewIds }: ReviewsListProps) => {
       {reviewIds?.map(id => {
         const [courseId, createdAt] = id.split('#');
         return (
-          <Link key={id} to={`/review/${courseId}/${createdAt}`}>
+          <Link key={id} href={`/review/${courseId}/${createdAt}`}>
             <ListItem
               className="home-course-list-item"
               title={courseId}

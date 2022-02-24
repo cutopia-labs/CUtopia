@@ -4,7 +4,7 @@ import { IconButton, Tooltip } from '@material-ui/core';
 import { ErrorOutline, Favorite, FavoriteBorder } from '@material-ui/icons';
 
 import './CourseCard.scss';
-import { Link as RouterLink } from 'react-router-dom';
+import { default as RouterLink } from 'next/link';
 import { FiExternalLink } from 'react-icons/fi';
 import clsx from 'clsx';
 import { ReportCategory } from 'cutopia-types/lib/codes';
@@ -120,12 +120,11 @@ const CourseCard = ({ courseInfo, concise, loading }: CourseCardProps) => {
           {courseInfo.rating && (
             <>
               <div className="sub-heading-container">
-                <RouterLink
-                  to={`/review/${courseInfo.courseId}`}
-                  className="reviews-link-heading sub-heading center-row"
-                >
-                  Reviews
-                  <FiExternalLink />
+                <RouterLink href={`/review/${courseInfo.courseId}`}>
+                  <a className="reviews-link-heading sub-heading center-row">
+                    Reviews
+                    <FiExternalLink />
+                  </a>
                 </RouterLink>
                 <GradeRow
                   rating={courseInfo.rating}

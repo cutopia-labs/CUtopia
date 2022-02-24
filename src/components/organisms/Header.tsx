@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Link, useHistory, useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
+import Link from 'next/link';
 import { IconButton, Menu, MenuItem } from '@material-ui/core';
 import {
   ChatBubble,
@@ -49,16 +50,16 @@ const Header = () => {
       location.pathname.startsWith(section.link) &&
       (section.link.length > 1 || section.link === location.pathname);
     return (
-      <Link
-        key={section.link}
-        to={section.link}
-        className={clsx(
-          'nav-label-container column center',
-          active && 'active'
-        )}
-      >
-        {active ? section.filledIcon : section.icon}
-        {section.label}
+      <Link key={section.link} href={section.link}>
+        <a
+          className={clsx(
+            'nav-label-container column center',
+            active && 'active'
+          )}
+        >
+          {active ? section.filledIcon : section.icon}
+          {section.label}
+        </a>
       </Link>
     );
   });
@@ -100,8 +101,10 @@ const Header = () => {
           </>
         )}
         {(!visible || !isMobile) && (
-          <Link className="header-logo" to="/">
-            <Logo />
+          <Link href="/">
+            <a className="header-logo">
+              <Logo />
+            </a>
           </Link>
         )}
         <nav className="header-nav row">
