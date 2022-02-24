@@ -7,7 +7,7 @@ import {
 } from '@material-ui/icons';
 import { observer } from 'mobx-react-lite';
 
-import './HomePage.scss';
+import '../styles/pages/HomePage.scss';
 import { useTitle } from 'react-use';
 import UserCard from '../components/home/UserCard';
 import { PlannerContext, UserContext } from '../store';

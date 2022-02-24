@@ -4,7 +4,7 @@ import {
   DescriptionOutlined,
 } from '@material-ui/icons';
 
-import './AboutPage.scss';
+import '../styles/pages/AboutPage.scss';
 import { useRouter } from 'next/router';
 import { AboutTab, PrivacyTab, TermsOfUseTab } from '../components/about/tabs';
 import Page from '../components/atoms/Page';

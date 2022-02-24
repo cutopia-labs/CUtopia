@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { useMediaQuery } from '@material-ui/core';
 
-import './Timetable.scss';
+import '../../styles/components/planner/Timetable.scss';
 import colors from '../../constants/colors';
 import { WEEKDAYS } from '../../constants';
 import {

@@ -12,7 +12,7 @@ import {
 import clsx from 'clsx';
 
 import { BsChatDots, BsFillChatDotsFill } from 'react-icons/bs';
-import './Header.scss';
+import '../../styles/components/organisms/Header.scss';
 import SearchInput from '../molecules/SearchInput';
 import useMobileQuery from '../../hooks/useMobileQuery';
 import useOuterClick from '../../hooks/useOuterClick';

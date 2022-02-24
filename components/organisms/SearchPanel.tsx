@@ -20,7 +20,7 @@ import {
 import { useQuery } from '@apollo/client';
 import { observer } from 'mobx-react-lite';
 
-import './SearchPanel.scss';
+import '../../styles/components/organisms/SearchPanel.scss';
 import { useRouter } from 'next/router';
 import ListItem from '../molecules/ListItem';
 import COURSE_CODES from '../../constants/courseCodes';

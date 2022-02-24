@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { FiExternalLink } from 'react-icons/fi';
 
-import './Link.scss';
+import '../../styles/components/molecules/Link.scss';
 
 type LinkProps = {
   url: string;

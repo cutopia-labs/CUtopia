@@ -6,7 +6,7 @@ import { ReportCategory } from 'cutopia-types/lib/codes';
 
 import ListItem from '../molecules/ListItem';
 import { UserContext, ViewContext } from '../../store';
-import './Dialog.scss';
+import '../../styles/components/templates/Dialog.scss';
 import { clearStore } from '../../helpers/store';
 import { REPORT_ISSUES_MESSAGES, REPORT_MODES } from '../../constants/messages';
 import Section from '../molecules/Section';

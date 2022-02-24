@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { PropsWithChildren } from 'react';
-import './Section.scss';
+import '../../styles/components/molecules/Section.scss';
 
 export type SectionProps = {
   title: string;

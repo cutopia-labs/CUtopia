@@ -1,7 +1,7 @@
 import { useContext, useReducer, useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 
-import './PlannerTimetable.scss';
+import '../../styles/components/planner/PlannerTimetable.scss';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { Button, Dialog } from '@material-ui/core';
 import copy from 'copy-to-clipboard';

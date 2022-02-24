@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { MenuItem } from '../../types';
-import './TabsContainer.scss';
+import '../../styles/components/molecules/TabsContainer.scss';
 
 type TabsContainerProps = {
   items: MenuItem[];

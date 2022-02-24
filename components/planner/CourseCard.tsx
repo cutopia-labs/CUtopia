@@ -3,7 +3,7 @@ import { IconButton, useTheme } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
 import { observer } from 'mobx-react-lite';
 
-import './CourseCard.scss';
+import '../../styles/components/planner/CourseCard.scss';
 import updateOpacity from '../../helpers/updateOpacity';
 import { PlannerContext } from '../../store';
 import { Event } from '../../types';

@@ -1,5 +1,5 @@
 import { Skeleton } from '@material-ui/lab';
-import './Skeleton.scss';
+import '../../styles/components/templates/Skeleton.scss';
 export const CourseCardSkeleton = (
   <div className="course-card-skeleton">
     <header className="center-row">

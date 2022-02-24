@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { PropsWithChildren } from 'react';
-import './DialogContentTemplate.scss';
+import '../../styles/components/templates/DialogContentTemplate.scss';
 
 type DialogContentTemplateProps = {
   className?: string;

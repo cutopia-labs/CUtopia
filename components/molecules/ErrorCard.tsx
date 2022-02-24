@@ -2,7 +2,7 @@ import Card from '../atoms/Card';
 import emptyPhoto from '../../images/undraw_empty_xct9.svg';
 import errorPhoto from '../../images/undraw_server_down_s4lk.svg';
 import notFoundPhoto from '../../images/404 Page Not Found _Monochromatic.svg';
-import './ErrorCard.scss';
+import '../../styles/components/molecules/ErrorCard.scss';
 import { ErrorCardMode } from '../../types';
 
 const CARD_ITEMS = {

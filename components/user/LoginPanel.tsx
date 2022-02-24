@@ -5,7 +5,7 @@ import * as Sentry from '@sentry/react';
 import { observer } from 'mobx-react-lite';
 import { useMutation } from '@apollo/client';
 
-import './LoginPanel.scss';
+import '../../styles/components/user/LoginPanel.scss';
 import { useLocation } from 'react-use';
 import { useRouter } from 'next/router';
 import TextField from '../atoms/TextField';
