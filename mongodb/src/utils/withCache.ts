@@ -11,11 +11,11 @@ const withCache = async (
   }
   const cachedData = JSON.parse(cache.get(cacheKey) || 'null');
   if (cachedData && (!fetchIf || !(await fetchIf(cachedData)))) {
-    console.log(`Cached: ${JSON.stringify(cachedData)}`);
+    // console.log(`Cached: ${JSON.stringify(cachedData)}`);
     return cachedData;
   }
   const fetchedData = await callback();
-  console.log(`Fetched: ${JSON.stringify(fetchedData)}`);
+  // console.log(`Fetched: ${JSON.stringify(fetchedData)}`);
   if (fetchedData) {
     cache.set(cacheKey, JSON.stringify(fetchedData));
   }
