@@ -31,7 +31,7 @@ class PlannerStore extends StorePrototype {
   @observable previewPlannerCourse: PlannerCourse;
   @observable currentPlannerKey: number;
   @observable plannerCourses: PlannerCourse[] = [];
-  @observable initiated: boolean = false; // prevent reaction of null timetable override planners
+  @observable initiated = false; // prevent reaction of null timetable override planners
   @observable remoteTimetableData: TimetableOverviewWithMode[] | null = null;
 
   viewStore: ViewStore;
@@ -222,7 +222,7 @@ class PlannerStore extends StorePrototype {
   @action async updatePlannerShareId(
     key: number,
     shareId: string | undefined,
-    save: boolean = true
+    save = true
   ) {
     if (this.validKey(key) && this.planners[key].shareId !== shareId) {
       this.planners[key].shareId = shareId;

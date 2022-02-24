@@ -93,7 +93,7 @@ const RecentReviewCard = ({
 };
 
 type RecentReviewListProps = {
-  visible: Boolean;
+  visible: boolean;
   category: RatingField;
 };
 

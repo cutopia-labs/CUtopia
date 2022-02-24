@@ -66,9 +66,9 @@ export const getCoursesFromQuery = async ({
         const condensed = text.replace(CONDENSED_RULE, '');
         try {
           // valid search contains suject and code
-          const subject = condensed.match(SUBJECT_RULE)[0].toUpperCase();
+          const subject = SUBJECT_RULE.exec(condensed)[0].toUpperCase();
           const rawCode =
-            condensed.match(CODE_RULE) || condensed.match(CODE_RULE_ALTER);
+            CODE_RULE.exec(condensed) || condensed.match(CODE_RULE_ALTER);
           const code = rawCode ? rawCode[0] : null;
           if (!(subject in courseList)) {
             throw 'Wrong subject, searching for title';

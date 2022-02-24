@@ -210,7 +210,7 @@ const TimetablePanel = ({
         )}
       </header>
       <Timetable
-        courses={((courses?.slice() || []) as any).concat(previewCourse) as any}
+        courses={((courses?.slice() || []) as any).concat(previewCourse)}
         timetableInfo={timetableInfo}
       />
       <Dialog

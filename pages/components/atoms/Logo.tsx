@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import './Logo.scss';
 
 type LogoProps = {
-  shine?: Boolean;
+  shine?: boolean;
 };
 
 const Logo = ({ shine }: LogoProps) => (

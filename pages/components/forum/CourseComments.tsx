@@ -19,7 +19,7 @@ import { hashing } from '../../helpers';
 
 type MessageProps = {
   message: DiscussionMessage;
-  isAuthor: Boolean;
+  isAuthor: boolean;
 };
 
 const Message: FC<MessageProps> = ({ message, isAuthor }) => {
