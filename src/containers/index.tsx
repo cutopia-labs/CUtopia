@@ -70,8 +70,10 @@ const Navigator = () => {
       }
     },
     onError: e => {
-      view.handleError(e);
-      user.updateStore('loginState', LoginState.LOGGED_OUT);
+      const handled = view.handleError(e);
+      if (!handled) {
+        user.updateStore('loginState', LoginState.LOGGED_OUT);
+      }
     },
   });
   useEffect(() => {

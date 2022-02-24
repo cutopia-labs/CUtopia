@@ -6,20 +6,23 @@ import { ERROR_MESSAGES } from '../constants/errors';
 import { userStore } from '../store';
 import ViewStore from '../store/ViewStore';
 
-const handleError = (e: ApolloError, view: ViewStore) => {
+const handleError = (e: ApolloError, view: ViewStore): boolean | null => {
   const err_code = parseInt(e.message, 10);
   const customErrors = isNaN(err_code) ? e.networkError?.result?.errors : null;
+  const alt_code = customErrors?.length
+    ? parseInt(customErrors[0]?.extensions?.code, 10)
+    : null;
   // Clear the invalid token and log out
   if (
-    customErrors?.length &&
-    parseInt(customErrors[0]?.extensions?.code, 10) ===
-      ErrorCode.AUTHORIZATION_INVALID_TOKEN
+    err_code === ErrorCode.AUTHORIZATION_INVALID_TOKEN ||
+    alt_code === ErrorCode.AUTHORIZATION_REFRESH_TOKEN
   ) {
-    console.log('Invalid token, logging out!');
-    userStore.logout();
-    const refreshedToken = customErrors[0]?.extensions?.refreshedToken;
-    if (refreshedToken) {
-      userStore.saveToken(refreshedToken);
+    if (alt_code === ErrorCode.AUTHORIZATION_REFRESH_TOKEN) {
+      userStore.saveToken(customErrors[0]?.extensions?.refreshedToken);
+      // Return true for index.tsx not to logout
+      return true;
+    } else {
+      userStore.logout();
     }
   }
   view.setSnackBar({
