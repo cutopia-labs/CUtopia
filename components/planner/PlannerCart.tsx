@@ -5,7 +5,7 @@ import { observer } from 'mobx-react-lite';
 import './PlannerCart.scss';
 import { Checkbox, IconButton, Tooltip } from '@material-ui/core';
 import { ClearAllRounded, Warning } from '@material-ui/icons';
-import { PlannerContext } from '../../pages/store';
+import { PlannerContext } from '../../store';
 
 import Card from '../atoms/Card';
 import ListItem from '../molecules/ListItem';

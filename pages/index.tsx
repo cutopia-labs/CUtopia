@@ -1,12 +1,16 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import * as Sentry from '@sentry/react';
 import { Integrations } from '@sentry/tracing';
 import Head from 'next/head';
 import Image from 'next/image';
-import styles from '../styles/Home.module.css';
+import { useLazyQuery } from '@apollo/client';
+import styles from '../styles/Home.module.scss';
 
-import './index.scss';
 import { SentryConfigs } from '../constants/configs';
+import { ViewContext, UserContext } from '../store';
+import { LoginState, User } from '../types';
+import { GET_USER } from '../constants/queries';
+import Loading from '../components/atoms/Loading';
 
 if (process.env.NODE_ENV === 'production') {
   console.log = () => {};
@@ -29,6 +33,40 @@ Sentry.init({
 });
 
 export default function Home() {
+  const user = useContext(UserContext);
+  const view = useContext(ViewContext);
+  const [getUser, { data: userData, loading: userDataLoading }] = useLazyQuery<{
+    me: User;
+  }>(GET_USER, {
+    onCompleted: data => {
+      if (data?.me?.username) {
+        user.updateStore('data', data.me);
+        Sentry.setUser({
+          username: data.me.username,
+        });
+      } else {
+        console.log(data);
+        user.updateStore('loginState', LoginState.LOGGED_OUT);
+      }
+    },
+    onError: e => {
+      const handled = view.handleError(e);
+      if (!handled) {
+        user.updateStore('loginState', LoginState.LOGGED_OUT);
+      }
+    },
+  });
+  useEffect(() => {
+    if (user.token && !user.data?.username) {
+      getUser();
+    }
+  }, [user.token]);
+  if (
+    (userDataLoading || !user.data) &&
+    user.loginState === LoginState.LOGGED_IN
+  ) {
+    return <Loading fixed padding={false} logo />;
+  }
   return (
     <div className={styles.container}>
       <Head>

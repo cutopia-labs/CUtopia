@@ -10,7 +10,7 @@ import {
 } from '@material-ui/icons';
 
 import './CourseSections.scss';
-import { PlannerContext, ViewContext } from '../../pages/store';
+import { PlannerContext, ViewContext } from '../../store';
 import { WEEKDAYS_TWO_ABBR } from '../../constants';
 import { CourseInfo, CourseSection, ErrorCardMode } from '../../types';
 import ErrorCard from '../molecules/ErrorCard';

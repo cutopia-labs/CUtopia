@@ -10,11 +10,10 @@ import { observer } from 'mobx-react-lite';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { useMediaQuery } from '@material-ui/core';
 
-import StoreProvider, { UserContext, PlannerContext } from './store';
+import StoreProvider, { UserContext, PlannerContext } from '../store';
 
-import Navigator from './containers';
-import { DARK_THEME, THEME } from './constants/colors';
-import { SERVER_CONFIG } from './constants/configs';
+import { DARK_THEME, THEME } from '../constants/colors';
+import { SERVER_CONFIG } from '../constants/configs';
 
 const AppWrapper = observer(() => {
   const [ready, setReady] = useState(false);
@@ -64,9 +63,7 @@ const AppWrapper = observer(() => {
 
   return (
     <ApolloProvider client={client}>
-      <ThemeProvider theme={theme}>
-        <Navigator />
-      </ThemeProvider>
+      <ThemeProvider theme={theme}></ThemeProvider>
     </ApolloProvider>
   );
 });

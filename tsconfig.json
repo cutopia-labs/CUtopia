@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [	
-      "dom",	
-      "dom.iterable",	
-      "esnext",	
-      "es5",	
-      "es6",	
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext",
+      "es5",
+      "es6",
       "es7"
     ],
     "allowJs": true,
@@ -23,8 +23,9 @@
     "noEmit": true,
     "noEmitOnError": true,
     "downlevelIteration": true,
-    "jsx": "react-jsx",
-    "experimentalDecorators": true
+    "jsx": "preserve",
+    "experimentalDecorators": true,
+    "incremental": true
   },
   "overrides": [
     {
@@ -35,6 +36,12 @@
       ]
     }
   ],
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
