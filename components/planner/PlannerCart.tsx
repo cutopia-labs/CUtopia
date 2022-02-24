@@ -5,12 +5,12 @@ import { observer } from 'mobx-react-lite';
 import './PlannerCart.scss';
 import { Checkbox, IconButton, Tooltip } from '@material-ui/core';
 import { ClearAllRounded, Warning } from '@material-ui/icons';
-import { PlannerContext } from '../../store';
+import { PlannerContext } from '../../pages/store';
 
 import Card from '../atoms/Card';
 import ListItem from '../molecules/ListItem';
 import { getSectionTime } from '../forum/CourseSections';
-import { CourseSection, ErrorCardMode } from '../../types';
+import { CourseSection, ErrorCardMode } from '../../pages/types';
 import ErrorCard from '../molecules/ErrorCard';
 
 const PlannerCart = () => {

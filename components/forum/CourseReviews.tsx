@@ -54,7 +54,7 @@ const CourseReviews: FC<Props> = ({
       removeEmptyValues({
         ...state,
         ...action,
-      }) as Partial<ReviewsFilter>,
+      }),
     {
       sortBy: 'createdAt',
     } as Partial<ReviewsFilter>
