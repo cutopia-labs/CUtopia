@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import '../../styles/components/atoms/TextField.scss';
+import '../../styles/components/atoms/TextField.module.scss';
 
 type Tag = 'input' | 'textarea';
 

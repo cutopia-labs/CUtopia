@@ -13,7 +13,7 @@ import copy from 'copy-to-clipboard';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 import { PLANNER_CONFIGS } from '../../constants/configs';
-import '../../styles/components/planner/TimetableOverviewCard.scss';
+import '../../styles/components/planner/TimetableOverviewCard.module.scss';
 import { GET_USER_TIMETABLES } from '../../constants/queries';
 import { getMMMDDYY } from '../../helpers/getTime';
 import { PlannerContext, plannerStore, ViewContext } from '../../store';

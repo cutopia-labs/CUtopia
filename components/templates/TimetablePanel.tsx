@@ -24,7 +24,7 @@ import {
   AiOutlineShareAlt,
 } from 'react-icons/ai';
 import { ViewContext } from '../../store';
-import '../../styles/components/templates/TimetablePanel.scss';
+import '../../styles/components/templates/TimetablePanel.module.scss';
 import Timetable from '../planner/Timetable';
 import Card from '../atoms/Card';
 import {

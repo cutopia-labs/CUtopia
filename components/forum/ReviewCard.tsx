@@ -6,7 +6,7 @@ import { RiShareForwardLine, RiFlag2Line } from 'react-icons/ri';
 import { useMutation } from '@apollo/client';
 import { IconButton } from '@material-ui/core';
 
-import '../../styles/components/forum/ReviewCard.scss';
+import '../../styles/components/forum/ReviewCard.module.scss';
 import clsx from 'clsx';
 import { RATING_FIELDS, VOTE_ACTIONS } from '../../constants';
 import { VOTE_REVIEW } from '../../constants/mutations';

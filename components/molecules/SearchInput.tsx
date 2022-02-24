@@ -2,7 +2,7 @@ import InputBase from '@material-ui/core/InputBase';
 import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
 
-import '../../styles/components/molecules/SearchInput.scss';
+import '../../styles/components/molecules/SearchInput.module.scss';
 import clsx from 'clsx';
 import { ArrowBack } from '@material-ui/icons';
 import { useRouter } from 'next/router';

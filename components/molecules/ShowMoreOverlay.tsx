@@ -1,6 +1,6 @@
 import { ExpandMore } from '@material-ui/icons';
 
-import '../../styles/components/molecules/ShowMoreOverlay.scss';
+import '../../styles/components/molecules/ShowMoreOverlay.module.scss';
 
 type ShowMoreOverlayProps = {
   visible: boolean;

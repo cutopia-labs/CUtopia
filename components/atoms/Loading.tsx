@@ -3,7 +3,7 @@ import CircularProgress, {
 } from '@material-ui/core/CircularProgress';
 import clsx from 'clsx';
 
-import '../../styles/components/atoms/Loading.scss';
+import '../../styles/components/atoms/Loading.module.scss';
 import Logo from './Logo';
 
 type LoadingProps = {

@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/client';
 import { Divider } from '@material-ui/core';
 import pluralize from 'pluralize';
 
-import '../../styles/components/forum/CourseReviews.scss';
+import '../../styles/components/forum/CourseReviews.module.scss';
 import copy from 'copy-to-clipboard';
 
 import { ReportCategory } from 'cutopia-types/lib/codes';

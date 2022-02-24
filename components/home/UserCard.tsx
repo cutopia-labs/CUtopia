@@ -5,7 +5,7 @@ import { SettingsOutlined } from '@material-ui/icons';
 import { IconButton, Tooltip } from '@material-ui/core';
 import { GoUnverified, GoVerified } from 'react-icons/go';
 
-import '../../styles/components/forum/UserCard.scss';
+import '../../styles/components/forum/UserCard.module.scss';
 import { ViewContext, UserContext } from '../../store';
 import { User } from '../../types';
 import { LEVEL_UP_EXP } from '../../constants/configs';

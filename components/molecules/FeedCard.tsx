@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import '../../styles/components/molecules/FeedCard.scss';
+import '../../styles/components/molecules/FeedCard.module.scss';
 import { CourseConcise } from '../../types';
 import Card, { CardProps } from '../atoms/Card';
 import ListItem from './ListItem';

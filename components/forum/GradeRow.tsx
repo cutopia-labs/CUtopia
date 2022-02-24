@@ -4,7 +4,7 @@ import { PropsWithChildren } from 'react';
 import { RATING_FIELDS } from '../../constants';
 import { CourseRating, Review } from '../../types';
 import GradeIndicator from '../atoms/GradeIndicator';
-import '../../styles/components/forum/GradeRow.scss';
+import '../../styles/components/forum/GradeRow.module.scss';
 
 type GradeRowProps = {
   rating: Review | CourseRating;

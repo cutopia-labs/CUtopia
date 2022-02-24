@@ -15,7 +15,7 @@ import {
 import { useMutation, useQuery } from '@apollo/client';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 
-import '../../styles/components/forum/ReviewEditPanel.scss';
+import '../../styles/components/forum/ReviewEditPanel.module.scss';
 import { HiOutlineInformationCircle } from 'react-icons/hi';
 import { useBeforeunload } from 'react-beforeunload';
 import { useRouter } from 'next/router';

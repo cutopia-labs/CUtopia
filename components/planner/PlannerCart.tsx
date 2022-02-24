@@ -2,7 +2,7 @@ import { useContext } from 'react';
 
 import { observer } from 'mobx-react-lite';
 
-import '../../styles/components/planner/PlannerCart.scss';
+import '../../styles/components/planner/PlannerCart.module.scss';
 import { Checkbox, IconButton, Tooltip } from '@material-ui/core';
 import { ClearAllRounded, Warning } from '@material-ui/icons';
 import { PlannerContext } from '../../store';

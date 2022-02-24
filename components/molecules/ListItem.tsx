@@ -1,4 +1,4 @@
-import '../../styles/components/molecules/ListItem.scss';
+import '../../styles/components/molecules/ListItem.module.scss';
 import clsx from 'clsx';
 import { PropsWithChildren } from 'react';
 import colors from '../../constants/colors';

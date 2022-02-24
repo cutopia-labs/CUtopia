@@ -1,4 +1,4 @@
-import '../../styles/components/atoms/GradeIndicator.scss';
+import '../../styles/components/atoms/GradeIndicator.module.scss';
 import colors from '../../constants/colors';
 import updateOpacity from '../../helpers/updateOpacity';
 import { getLabel } from '../../helpers';

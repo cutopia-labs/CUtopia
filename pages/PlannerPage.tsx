@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite';
 
 import Draggable from 'react-draggable';
 import { Fab } from '@material-ui/core';
-import '../styles/pages/PlannerPage.scss';
+import '../styles/pages/PlannerPage.module.scss';
 import { useTitle } from 'react-use';
 import { BsList } from 'react-icons/bs';
 import { AiTwotoneCalendar } from 'react-icons/ai';

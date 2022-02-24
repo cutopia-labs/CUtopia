@@ -1,4 +1,4 @@
-import '../../styles/components/atoms/Badge.scss';
+import '../../styles/components/atoms/Badge.module.scss';
 import clsx from 'clsx';
 import updateOpacity from '../../helpers/updateOpacity';
 import colors from '../../constants/colors';

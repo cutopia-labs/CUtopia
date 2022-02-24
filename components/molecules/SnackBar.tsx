@@ -3,7 +3,7 @@ import { Button, Portal } from '@material-ui/core';
 import { Check } from '@material-ui/icons';
 import { observer } from 'mobx-react-lite';
 
-import '../../styles/components/molecules/SnackBar.scss';
+import '../../styles/components/molecules/SnackBar.module.scss';
 import { Alert } from '@material-ui/lab';
 import { ViewContext } from '../../store';
 

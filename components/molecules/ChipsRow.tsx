@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { MouseEvent } from 'react';
 import { ErrorCardMode } from '../../types';
 
-import '../../styles/components/molecules/ChipsRow.scss';
+import '../../styles/components/molecules/ChipsRow.module.scss';
 import ErrorCard from './ErrorCard';
 
 type ChipsRowProps = {

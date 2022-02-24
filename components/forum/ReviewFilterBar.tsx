@@ -5,7 +5,7 @@ import { TiArrowSortedUp } from 'react-icons/ti';
 import { AiTwotoneCalendar } from 'react-icons/ai';
 import { FaUserAlt } from 'react-icons/fa';
 
-import '../../styles/components/forum/ReviewFilterBar.scss';
+import '../../styles/components/forum/ReviewFilterBar.module.scss';
 import { FiEdit } from 'react-icons/fi';
 import clsx from 'clsx';
 

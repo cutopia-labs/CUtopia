@@ -4,7 +4,7 @@ import { Integrations } from '@sentry/tracing';
 import Head from 'next/head';
 import Image from 'next/image';
 import { useLazyQuery } from '@apollo/client';
-import styles from '../styles/Home.module.scss';
+import styles from '../styles/Home.module.module.scss';
 
 import { SentryConfigs } from '../constants/configs';
 import { ViewContext, UserContext } from '../store';

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import '../../styles/components/home/HomePageTabs.scss';
+import '../../styles/components/home/HomePageTabs.module.scss';
 import ListItem from '../molecules/ListItem';
 import Loading from '../atoms/Loading';
 import { getMMMDDYY } from '../../helpers/getTime';

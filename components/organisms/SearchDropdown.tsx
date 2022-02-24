@@ -1,4 +1,4 @@
-import './SearchDropdown.scss';
+import './SearchDropdown.module.scss';
 
 import { useState, useRef } from 'react';
 import {
@@ -12,7 +12,7 @@ import {
 import clsx from 'clsx';
 
 import { BsChatDots, BsFillChatDotsFill } from 'react-icons/bs';
-import '../../styles/components/organisms/Header.scss';
+import '../../styles/components/organisms/Header.module.scss';
 import SearchInput from '../molecules/SearchInput';
 import useMobileQuery from '../../hooks/useMobileQuery';
 import useOuterClick from '../../hooks/useOuterClick';

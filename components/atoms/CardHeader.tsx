@@ -1,4 +1,4 @@
-import '../../styles/components/atoms/CardHeader.scss';
+import '../../styles/components/atoms/CardHeader.module.scss';
 import clsx from 'clsx';
 import { PropsWithChildren } from 'react';
 

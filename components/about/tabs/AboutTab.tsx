@@ -1,6 +1,6 @@
 import { Link } from '@material-ui/core';
 
-import './Tab.scss';
+import './Tab.module.scss';
 import Card from '../../atoms/Card';
 import AboutSection from '../AboutSection';
 

@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite';
 
-import '../styles/pages/LandingPage.scss';
+import '../styles/pages/LandingPage.module.scss';
 import LoginPanel from '../components/user/LoginPanel';
 import Logo from '../components/atoms/Logo';
 import Illustration from '../images/meditation.svg';

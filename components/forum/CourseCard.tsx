@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite';
 import { IconButton, Tooltip } from '@material-ui/core';
 import { ErrorOutline, Favorite, FavoriteBorder } from '@material-ui/icons';
 
-import '../../styles/components/forum/CourseCard.scss';
+import '../../styles/components/forum/CourseCard.module.scss';
 import { default as RouterLink } from 'next/link';
 import { FiExternalLink } from 'react-icons/fi';
 import clsx from 'clsx';
