@@ -10,8 +10,8 @@ import {
 import { IconButton, MenuItem, Menu } from '@material-ui/core';
 import { MoreHoriz, Timer } from '@material-ui/icons';
 import copy from 'copy-to-clipboard';
-import { useHistory } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
+import { useRouter } from 'next/router';
 import { PLANNER_CONFIGS } from '../../constants/configs';
 import './TimetableOverviewCard.scss';
 import { GET_USER_TIMETABLES } from '../../constants/queries';
@@ -152,7 +152,7 @@ const TimetableOverviewListItem = ({
 };
 
 const TimetableOverviewCard = () => {
-  const history = useHistory();
+  const router = useRouter();
   const [expanded, setExpanded] = useState(false);
   const view = useContext(ViewContext);
   const planner = useContext(PlannerContext);

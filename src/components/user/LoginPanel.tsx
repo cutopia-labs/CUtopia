@@ -7,7 +7,7 @@ import { useMutation } from '@apollo/client';
 
 import './LoginPanel.scss';
 import { useLocation } from 'react-use';
-import { useHistory } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import TextField from '../atoms/TextField';
 import { UserContext, ViewContext } from '../../store';
 import {
@@ -88,7 +88,7 @@ Allow only alphas + digits + @$!%*#?&^_-
 
 const LoginPanel = () => {
   const location = useLocation();
-  const history = useHistory();
+  const router = useRouter();
   const [mode, setMode] = useState(INITIAL_MODE);
   const [username, setUsername] = useState('');
   const [verificationCode, setVerificationCode] = useState('');

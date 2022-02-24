@@ -5,7 +5,7 @@ import {
 } from '@material-ui/icons';
 
 import './AboutPage.scss';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { AboutTab, PrivacyTab, TermsOfUseTab } from '../components/about/tabs';
 import Page from '../components/atoms/Page';
 import TabsContainer from '../components/molecules/TabsContainer';
@@ -26,12 +26,11 @@ export const ABOUT_PAGE_ROUTES = [
 ];
 
 const AboutPage = () => {
-  const history = useHistory();
-  const location = useLocation();
+  const router = useRouter();
 
   const renderTab = () => {
-    console.log(location.pathname);
-    switch (location?.pathname.slice(1)) {
+    console.log(router.pathname);
+    switch (router?.pathname.slice(1)) {
       case 'about':
         return <AboutTab />;
       case 'privacy':
@@ -46,7 +45,7 @@ const AboutPage = () => {
       <div className="grid-auto-row">
         <TabsContainer
           items={ABOUT_PAGE_ROUTES}
-          selected={location.pathname.slice(1)}
+          selected={router.pathname.slice(1)}
           onSelect={label => router.push(`/${label}`)}
         />
         {renderTab()}

@@ -7,7 +7,7 @@ import './PlannerPage.scss';
 import { useTitle } from 'react-use';
 import { BsList } from 'react-icons/bs';
 import { AiTwotoneCalendar } from 'react-icons/ai';
-import { useRouteMatch } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import SearchPanel from '../components/organisms/SearchPanel';
 import Page from '../components/atoms/Page';
 import PlannerTimetable from '../components/planner/PlannerTimetable';
@@ -65,11 +65,9 @@ const PlannerMobileFab = ({ targetMode, setMode }: PlannerMobileFabProps) => {
 };
 
 const PlannerPage = () => {
-  const isPlannerShare = useRouteMatch({
-    path: '/planner/share/:shareId',
-    strict: true,
-    exact: true,
-  });
+  const router = useRouter();
+  const isPlannerShare =
+    router.pathname.includes('planner/share') && router.query.shareId;
   useTitle('Course Planner - CUtopia');
   const isMobile = window.matchMedia(
     `(max-width:${MIN_DESKTOP_WIDTH}px)`
