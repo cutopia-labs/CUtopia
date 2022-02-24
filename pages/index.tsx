@@ -6,7 +6,7 @@ import Image from 'next/image';
 import styles from '../styles/Home.module.css';
 
 import './index.scss';
-import { SentryConfigs } from './constants/configs';
+import { SentryConfigs } from '../constants/configs';
 
 if (process.env.NODE_ENV === 'production') {
   console.log = () => {};

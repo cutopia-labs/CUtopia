@@ -1,7 +1,7 @@
 import './ListItem.scss';
 import clsx from 'clsx';
 import { PropsWithChildren } from 'react';
-import colors from '../../pages/constants/colors';
+import colors from '../../constants/colors';
 
 export type ListItemProps = {
   title?: string;

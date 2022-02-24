@@ -10,7 +10,7 @@ import { PlannerContext } from '../../pages/store';
 import Card from '../atoms/Card';
 import ListItem from '../molecules/ListItem';
 import { getSectionTime } from '../forum/CourseSections';
-import { CourseSection, ErrorCardMode } from '../../pages/types';
+import { CourseSection, ErrorCardMode } from '../../types';
 import ErrorCard from '../molecules/ErrorCard';
 
 const PlannerCart = () => {

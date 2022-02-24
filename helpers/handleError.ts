@@ -2,7 +2,7 @@
 
 import { ApolloError } from '@apollo/client';
 import { ErrorCode } from 'cutopia-types/lib/codes';
-import { ERROR_MESSAGES } from '../pages/constants/errors';
+import { ERROR_MESSAGES } from '../constants/errors';
 import { userStore } from '../store';
 import ViewStore from '../store/ViewStore';
 

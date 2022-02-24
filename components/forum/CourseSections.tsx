@@ -11,10 +11,10 @@ import {
 
 import './CourseSections.scss';
 import { PlannerContext, ViewContext } from '../../pages/store';
-import { WEEKDAYS_TWO_ABBR } from '../../pages/constants';
-import { CourseInfo, CourseSection, ErrorCardMode } from '../../pages/types';
+import { WEEKDAYS_TWO_ABBR } from '../../constants';
+import { CourseInfo, CourseSection, ErrorCardMode } from '../../types';
 import ErrorCard from '../molecules/ErrorCard';
-import { CURRENT_TERM } from '../../pages/constants/configs';
+import { CURRENT_TERM } from '../../constants/configs';
 
 type SectionCardProps = {
   section: CourseSection;
