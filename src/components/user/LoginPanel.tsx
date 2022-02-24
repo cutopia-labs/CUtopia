@@ -366,7 +366,6 @@ const LoginPanel = () => {
           <TextField
             error={errors.password}
             placeholder={MODE_ITEMS[mode].password}
-            defaultValue=""
             value={password}
             onChangeText={text => setPassword(text)}
             type={invisible ? 'password' : 'text'}
