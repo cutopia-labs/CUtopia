@@ -13,8 +13,8 @@ import Page from '../components/atoms/Page';
 import PlannerTimetable from '../components/planner/PlannerTimetable';
 import PlannerCart from '../components/planner/PlannerCart';
 
-import { MIN_DESKTOP_WIDTH } from '../constants/configs';
 import TimetableOverviewCard from '../components/planner/TimetableOverviewCard';
+import useMobileQuery from '../hooks/useMobileQuery';
 
 enum PlannerMode {
   INITIAL,
@@ -69,9 +69,7 @@ const PlannerPage = () => {
   const isPlannerShare =
     router.pathname.includes('planner/share') && router.query.shareId;
   useTitle('Course Planner - CUtopia');
-  const isMobile = window.matchMedia(
-    `(max-width:${MIN_DESKTOP_WIDTH}px)`
-  ).matches;
+  const isMobile = useMobileQuery();
 
   console.log(`is Mobile ${isMobile}`);
 

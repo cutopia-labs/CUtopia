@@ -33,7 +33,7 @@
   "scripts": {
     "start": "next start",
     "restart": "rm -f node_modules/.cache/.eslintcache && rm -f ./eslintcache && yarn start --reset-cache",
-    "build": "GENERATE_SOURCEMAP=false next build",
+    "build": "next build",
     "test": "next test",
     "eject": "next eject",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx src",
