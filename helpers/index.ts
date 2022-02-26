@@ -6,6 +6,7 @@ import {
 } from '../constants';
 import { VALID_COURSE_RULE } from '../constants/rules';
 import { Review } from '../types';
+import { getStoreData } from './store';
 
 export const getSubjectAndCode = (courseId: string) => ({
   subject: courseId.substring(0, 4),
@@ -58,3 +59,5 @@ export const getTokenExpireDate = (
 ) => {
   return (timestamp += 60 * 60 * 24 * 1000 * deltaInDays);
 };
+
+export const getToken = () => getStoreData('token')?.token;
