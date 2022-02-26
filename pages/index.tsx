@@ -2,8 +2,8 @@ import React, { useContext, useEffect } from 'react';
 import * as Sentry from '@sentry/react';
 import { Integrations } from '@sentry/tracing';
 import Head from 'next/head';
-import Image from 'next/image';
 import { useLazyQuery } from '@apollo/client';
+import { enableStaticRendering } from 'mobx-react-lite';
 import styles from '../styles/Home.module.scss';
 
 import { SentryConfigs } from '../constants/configs';
@@ -11,6 +11,7 @@ import { ViewContext, UserContext } from '../store';
 import { LoginState, User } from '../types';
 import { GET_USER } from '../constants/queries';
 import Loading from '../components/atoms/Loading';
+import HomePage from './HomePage';
 
 if (process.env.NODE_ENV === 'production') {
   console.log = () => {};
@@ -31,6 +32,8 @@ Sentry.init({
   },
   */
 });
+
+enableStaticRendering(typeof window === 'undefined');
 
 export default function Home() {
   const user = useContext(UserContext);
@@ -68,7 +71,7 @@ export default function Home() {
     return <Loading fixed padding={false} logo />;
   }
   return (
-    <div className={styles.container}>
+    <div className={styles.App}>
       <Head>
         <link rel="icon" href="%PUBLIC_URL%/cutopia-logo.png" />
         <title>CUtopia</title>
@@ -87,60 +90,7 @@ export default function Home() {
           rel="stylesheet"
         />
       </Head>
-
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
+      <HomePage />
     </div>
   );
 }

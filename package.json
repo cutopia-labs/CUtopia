@@ -35,6 +35,7 @@
     "restart": "rm -f node_modules/.cache/.eslintcache && rm -f ./eslintcache && yarn start --reset-cache",
     "build": "next build",
     "test": "next test",
+    "dev": "next dev",
     "eject": "next eject",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx src",
     "prepare": "husky install"
@@ -82,7 +83,6 @@
     "eslint-plugin-unused-imports": "^1.1.4",
     "husky": "^7.0.2",
     "lint-staged": ">=11.1.2",
-    "node-sass": "^6.0.1",
     "prettier": "^2.3.2",
     "typescript": "^4.4.2"
   },
