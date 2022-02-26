@@ -62,12 +62,12 @@ const UserCard = ({ userData }: UserCardProps) => {
           <SettingsOutlined />
         </IconButton>
       </div>
-      <div className="user-about-card center-row">
-        <div className="user-about-card-item column">
+      <div className="user-aboutCard center-row">
+        <div className="user-aboutCard-item column">
           <div className="sub-title">{userData?.reviewIds?.length || 0}</div>
           <div className="light-caption">Reviews</div>
         </div>
-        <div className="user-about-card-item column">
+        <div className="user-aboutCard-item column">
           <div className="sub-title">{userData?.upvotes || 0}</div>
           <div className="light-caption">Upvotes</div>
         </div>

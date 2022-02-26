@@ -17,7 +17,7 @@ const Section = ({
   subheading,
 }: PropsWithChildren<SectionProps>) => (
   <div className={clsx('section-container', className)}>
-    <div className={labelClassName || (subheading ? 'sub-heading' : 'label')}>
+    <div className={labelClassName || (subheading ? 'subHeading' : 'label')}>
       {title}
     </div>
     {children}

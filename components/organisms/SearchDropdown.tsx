@@ -1,4 +1,4 @@
-import './SearchDropdown.module.scss';
+import '../../styles/components/organisms/SearchDropdown.module.scss';
 
 import { useState, useRef } from 'react';
 import {

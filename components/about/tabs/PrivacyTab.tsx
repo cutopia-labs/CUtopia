@@ -5,8 +5,8 @@ import Card from '../../atoms/Card';
 import AboutSection from '../AboutSection';
 
 const PrivacyTab = () => (
-  <Card className="about-card grid-auto-row">
-    <AboutSection title="Privacy" labelClassName="about-title sub-heading">
+  <Card className="aboutCard grid-auto-row">
+    <AboutSection title="Privacy" labelClassName="aboutTitle subHeading">
       <p>
         {' '}
         We need your student id for verification purposes only. Reviews are

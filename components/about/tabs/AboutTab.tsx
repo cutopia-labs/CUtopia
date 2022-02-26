@@ -1,12 +1,16 @@
 import { Link } from '@material-ui/core';
+import clsx from 'clsx';
 
-import '../../../styles/components/tabs/Tab.module.scss';
+import styles from '../../../styles/components/tabs/Tab.module.scss';
 import Card from '../../atoms/Card';
 import AboutSection from '../AboutSection';
 
 const AboutTab = () => (
-  <Card className="about-card row-gap">
-    <AboutSection title="About us" labelClassName="about-title sub-heading">
+  <Card className={clsx(styles.aboutCard, 'rowGap')}>
+    <AboutSection
+      title="About us"
+      labelClassName={clsx(styles.aboutTitle, 'subHeading')}
+    >
       <p>
         CUtopia is a community for students of The Chinese University of Hong
         Kong. It aims to establish a community that students can share opinions

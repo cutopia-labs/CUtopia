@@ -4,8 +4,8 @@ import AboutSection from '../AboutSection';
 
 const TermsOfUseTab = () => {
   return (
-    <Card className="about-card">
-      <AboutSection title="Terms" labelClassName="about-title sub-heading">
+    <Card className="aboutCard">
+      <AboutSection title="Terms" labelClassName="aboutTitle subHeading">
         <p>Drafting...</p>
       </AboutSection>
     </Card>

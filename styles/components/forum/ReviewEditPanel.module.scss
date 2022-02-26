@@ -1,5 +1,5 @@
 .review-edit {
-  --review-row-gap: 18px;
+  --review-rowGap: 18px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -8,7 +8,7 @@
   margin: var(--card-padding) 0;
   padding: var(--card-padding) 10px;
   position: relative;
-  row-gap: var(--review-row-gap);
+  row-gap: var(--review-rowGap);
   .input-container {
     width: calc(100% - 36px);
   }

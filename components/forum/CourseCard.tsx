@@ -119,9 +119,9 @@ const CourseCard = ({ courseInfo, concise, loading }: CourseCardProps) => {
           )}
           {courseInfo.rating && (
             <>
-              <div className="sub-heading-container">
+              <div className="subHeading-container">
                 <RouterLink href={`/review/${courseInfo.courseId}`}>
-                  <a className="reviews-link-heading sub-heading center-row">
+                  <a className="reviews-link-heading subHeading center-row">
                     Reviews
                     <FiExternalLink />
                   </a>
