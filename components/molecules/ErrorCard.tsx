@@ -2,6 +2,7 @@ import Card from '../atoms/Card';
 import '../../styles/components/molecules/ErrorCard.module.scss';
 import { ErrorCardMode } from '../../types';
 import Image from 'next/image';
+import { FC } from 'react';
 
 const CARD_ITEMS = {
   [ErrorCardMode.NULL]: {
@@ -24,9 +25,16 @@ type ErrorCardProps = {
   caption?: string;
 };
 
-const ErrorCard = ({ mode, inPlace = true, caption }: ErrorCardProps) => (
+const ErrorCard: FC<ErrorCardProps> = ({ mode, inPlace = true, caption }) => (
   <Card inPlace={inPlace} className="error-card-container center column">
-    <Image src={CARD_ITEMS[mode]?.image} alt="Empty!" draggable={false} />
+    <Image
+      src={CARD_ITEMS[mode]?.image}
+      alt="Empty!"
+      draggable={false}
+      width="100%"
+      height="100%"
+      layout="responsive"
+    />
     <span className="caption">{caption || CARD_ITEMS[mode]?.caption}</span>
   </Card>
 );
