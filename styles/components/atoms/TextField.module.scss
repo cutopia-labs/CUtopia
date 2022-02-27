@@ -1,20 +1,6 @@
-.input-container {
-  height: 48px;
-  padding: 0 16px;
-  border-radius: var(--border-radius);
-  background-color: var(--background-warm);
-  color: var(--text);
-  font-size: 16px;
-}
 .error-label {
   color: #f3284d;
   font-size: 14px;
   font-weight: 500;
   margin-left: 3px;
-}
-textarea {
-  &.input-container {
-    padding: 16px;
-    font-family: Arial;
-  }
 }

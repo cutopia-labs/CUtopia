@@ -1,13 +1,13 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, FC } from 'react';
 import { observer } from 'mobx-react-lite';
 import { IconButton, Tooltip } from '@material-ui/core';
 import { ErrorOutline, Favorite, FavoriteBorder } from '@material-ui/icons';
 
-import '../../styles/components/forum/CourseCard.module.scss';
 import { default as RouterLink } from 'next/link';
 import { FiExternalLink } from 'react-icons/fi';
 import clsx from 'clsx';
 import { ReportCategory } from 'cutopia-types/lib/codes';
+import styles from '../../styles/components/forum/CourseCard.module.scss';
 import ShowMoreOverlay from '../molecules/ShowMoreOverlay';
 import Badge from '../atoms/Badge';
 import { UserContext, ViewContext } from '../../store';
@@ -25,9 +25,15 @@ type CourseCardProps = {
   courseInfo: CourseInfo;
   concise?: boolean;
   loading?: boolean;
+  style?: string;
 };
 
-const CourseCard = ({ courseInfo, concise, loading }: CourseCardProps) => {
+const CourseCard: FC<CourseCardProps> = ({
+  courseInfo,
+  concise,
+  loading,
+  style,
+}) => {
   const [showMore, setShowMore] = useState(true);
   const [skipHeightCheck, setSkipHeightCheck] = useState(concise);
   const user = useContext(UserContext);
@@ -45,12 +51,14 @@ const CourseCard = ({ courseInfo, concise, loading }: CourseCardProps) => {
   return (
     <div
       className={clsx(
-        'course-card grid-auto-row',
-        concise && 'concise',
-        !showMore && 'retracted'
+        styles.courseCard,
+        'grid-auto-row',
+        concise && styles.concise,
+        !showMore && styles.retracted,
+        style
       )}
       ref={ref => {
-        // Wrap if course-card is too long
+        // Wrap if courseCard is too long
         if (
           !skipHeightCheck &&
           ref &&
@@ -60,8 +68,8 @@ const CourseCard = ({ courseInfo, concise, loading }: CourseCardProps) => {
         }
       }}
     >
-      <header className="course-card-header">
-        <div className="course-card-title-container column">
+      <header className="courseCard-header">
+        <div className="courseCard-title-container column">
           <span className="center-row">
             <span className="title">{courseInfo.courseId}</span>
             <IconButton

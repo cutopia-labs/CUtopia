@@ -436,7 +436,7 @@ const ReviewEdit = ({ courseId }) => {
       </div>
       <FormSection title="term">
         <div
-          className="term-selection-anchor input-container"
+          className="term-selection-anchor inputContainer"
           onClick={e => setAnchorEl(e.currentTarget)}
         >
           {formData.term || 'Please select a term'}

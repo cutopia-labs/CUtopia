@@ -3,13 +3,12 @@ import { useQuery } from '@apollo/client';
 import { observer } from 'mobx-react-lite';
 import { useTitle } from 'react-use';
 
-import '../../styles/components/forum/CoursePanel.module.scss';
-
 import { BsChat } from 'react-icons/bs';
 import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@material-ui/lab';
 import { ChatBubbleOutline, Edit, Share } from '@material-ui/icons';
 import copy from 'copy-to-clipboard';
 import { useRouter } from 'next/router';
+import styles from '../../styles/components/forum/CoursePanel.module.scss';
 import { validCourse } from '../../helpers';
 import { COURSE_INFO_QUERY } from '../../constants/queries';
 import { ViewContext, UserContext } from '../../store';
@@ -94,6 +93,7 @@ const CoursePanel: FC = () => {
               courseId,
             }}
             loading={courseInfoLoading}
+            style={styles.courseCard}
           />
           <TabsContainer items={MENU_ITEMS} selected={tab} onSelect={setTab} />
         </div>

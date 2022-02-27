@@ -1,8 +1,9 @@
+.forumTextIcon {
+  margin-right: var(--message-spacing);
+}
+
 .message {
   --message-spacing: 10px;
-  .text-icon {
-    margin-right: var(--message-spacing);
-  }
 }
 
 .message-username {
@@ -33,7 +34,7 @@
   }
 }
 
-.message-input-container {
+.message-inputContainer {
   position: sticky;
   bottom: 8px;
   margin-top: 10px;

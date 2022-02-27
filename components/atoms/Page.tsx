@@ -13,7 +13,6 @@ const Page = ({
   className,
   center,
   padding,
-  column,
 }: PropsWithChildren<PageProps>) => {
   return (
     <div

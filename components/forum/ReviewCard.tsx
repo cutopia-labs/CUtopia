@@ -103,7 +103,7 @@ const ReviewCard = ({
       {selectedCriteria === 'overall' ? (
         <div
           ref={ref => {
-            // Wrap if course-card is too long
+            // Wrap if courseCard is too long
             if (
               !skipHeightCheck &&
               ref &&

@@ -145,7 +145,7 @@ const TimetablePanel = ({
             >
               <h4 className="subheading">Title</h4>
               <form
-                className="timetable-label-input-container"
+                className="timetable-label-inputContainer"
                 onSubmit={e => {
                   e.preventDefault();
                   if (labelInput !== selected.label) {

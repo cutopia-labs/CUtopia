@@ -274,7 +274,7 @@ const SearchPanel = ({
 
   return (
     <Card className="search-panel">
-      <div className="search-input-container row">
+      <div className="search-inputContainer row">
         {(searchPayload &&
           (searchPayload.mode !== 'query' || searchPayload.text)) ||
         currentCourse ? (

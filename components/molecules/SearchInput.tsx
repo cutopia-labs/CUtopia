@@ -73,7 +73,7 @@ export default function SearchInput({
   return (
     <form
       className={clsx(
-        'search-input-container',
+        'search-inputContainer',
         isMobile && 'mobile',
         visible && 'active'
       )}

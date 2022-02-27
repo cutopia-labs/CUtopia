@@ -8,7 +8,7 @@
     --search-panel-width: calc(var(--search-dropdown-width) - 2px); // 2px for border
     border-radius: 0;
     border-top: 0;
-    .search-input-container {
+    .search-inputContainer {
       display: none;
     }
     .MuiDivider-root {
@@ -17,7 +17,7 @@
       }
     }
   }
-  .search-input-container {
+  .search-inputContainer {
     border-radius: 6px;
     background-color: var(--background-search);
     height: calc(var(--header-height) - 20px);
@@ -52,7 +52,7 @@
       display: initial;
       top: 0;
     }
-    .search-input-container {
+    .search-inputContainer {
       border: none;
       &.active {
         width: calc(100vw - 40px);

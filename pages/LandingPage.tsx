@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite';
 
-import '../styles/pages/LandingPage.module.scss';
 import Image from 'next/image';
+import styles from '../styles/pages/LandingPage.module.scss';
 import LoginPanel from '../components/user/LoginPanel';
 import Logo from '../components/atoms/Logo';
 import useMobileQuery from '../hooks/useMobileQuery';
@@ -27,7 +27,7 @@ const LandingPage = () => {
         </div>
       )}
       <div className="right column">
-        {isMobile && <Logo />}
+        {isMobile && <Logo style={styles.landingLogo} />}
         <LoginPanel />
       </div>
     </div>

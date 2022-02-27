@@ -12,7 +12,7 @@ import { GET_DISCUSSIONS } from '../../constants/queries';
 import { SEND_MESSAGE } from '../../constants/mutations';
 import Loading from '../atoms/Loading';
 
-import '../../styles/components/forum/CourseComments.module.scss';
+import styles from '../../styles/components/forum/CourseComments.module.scss';
 import { getMMMDDYY } from '../../helpers/getTime';
 import { EMOJIS, EMOJIS_LENGTH } from '../../constants';
 import { hashing } from '../../helpers';
@@ -26,6 +26,7 @@ const Message: FC<MessageProps> = ({ message, isAuthor }) => {
   return (
     <div className="message row">
       <TextIcon
+        className={styles.forumTextIcon}
         char={EMOJIS[hashing(message.user, EMOJIS_LENGTH)]}
         size={30}
         fontSize={22}
@@ -160,7 +161,7 @@ const CourseComments: FC<CourseCommentsProps> = ({ courseId }) => {
           {discussionLoading && <Loading />}
         </div>
       )}
-      <div className="message-input-container card">
+      <div className="message-inputContainer card">
         <form onSubmit={onSubmit} className="center-row">
           <TextField
             value={messageInput}

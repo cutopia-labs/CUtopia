@@ -1,3 +1,10 @@
+.landingLogo {
+  color: var(--landing-page-logo-color);
+  margin-right: auto;
+  font-size: 26px;
+  opacity: 1;
+}
+
 .landing-page {
   --landing-page-color: #7E696A;
   --landing-page-logo-color: #AF8F8F;
@@ -41,13 +48,6 @@
     background: var(--landing-page-bg-color);
     color: var(--landing-page-color);
     padding: 42px;
-
-    > .logo-container {
-      color: var(--landing-page-logo-color);
-      margin-right: auto;
-      font-size: 26px;
-      opacity: 1;
-    }
     > .landing-image-container {
       flex: 1;
     }
@@ -104,15 +104,12 @@
       width: calc(100vw - 2 * var(--card-padding));
       padding: var(--card-padding);
     }
-    .right {
-      .logo-container {
-        margin-right: auto;
-        margin-left: 5%;
-        margin-bottom: 30px;
-      }
-    }
   }
-
+  .landingLogo {
+    margin-right: auto;
+    margin-left: 5%;
+    margin-bottom: 30px;
+  }
   .banner-box {
     flex: 1;
   }

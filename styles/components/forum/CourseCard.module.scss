@@ -1,9 +1,26 @@
-.course-card {
+.retracted {
+  max-height: 580px;
+}
+
+.concise {
+  padding: var(--card-padding);
+  overflow: initial;
+  & > .courseCard-header {
+    align-items: center;
+    .courseCard-title-container {
+      margin-right: auto;
+      width: 100%;
+    }
+    & .badge {
+      margin-right: 0;
+      margin-bottom: 0;
+    }
+  }
+}
+
+.courseCard {
   position: relative;
   overflow: hidden;
-  &.retracted {
-    max-height: 580px;
-  }
   .grade-row {
     height: 46px;
     min-width: 550px;
@@ -21,19 +38,6 @@
     line-height: var(--line-height-caption);
   }
   &.concise {
-    padding: var(--card-padding);
-    overflow: initial;
-    & > .course-card-header {
-      align-items: center;
-      .course-card-title-container {
-        margin-right: auto;
-        width: 100%;
-      }
-      & .badge {
-        margin-right: 0;
-        margin-bottom: 0;
-      }
-    }
   }
   .link-container {
     font-size: initial;
@@ -57,10 +61,10 @@
     }
   }
 }
-.course-card-title-container {
+.courseCard-title-container {
   margin-right: 8px;
 }
-.course-card-header {
+.courseCard-header {
   display: flex;
   flex: 1;
   width: 100%;
@@ -90,7 +94,7 @@
 }
 
 @media only screen and (max-width: 1260px) {
-  .course-card {
+  .courseCard {
     .grade-row {
       overflow: initial;
     }

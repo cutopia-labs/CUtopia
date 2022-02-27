@@ -9,11 +9,11 @@
   padding: var(--card-padding) 10px;
   position: relative;
   row-gap: var(--review-rowGap);
-  .input-container {
+  .inputContainer {
     width: calc(100% - 36px);
   }
   textarea {
-    &.input-container {
+    &.inputContainer {
       min-height: 100px;
     }
   }

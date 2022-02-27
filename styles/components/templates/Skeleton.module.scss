@@ -1,4 +1,4 @@
-.course-card-skeleton {
+.courseCard-skeleton {
   header {
     justify-content: space-between;
     :first-child {
@@ -15,7 +15,7 @@
 }
 
 @media only screen and (max-width: 1260px) {
-  .course-card-skeleton {
+  .courseCard-skeleton {
     header {
       justify-content: space-between;
       flex-direction: column;

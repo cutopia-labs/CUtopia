@@ -3,6 +3,10 @@
   position: relative;
 }
 
+.courseCard {
+  margin: var(--card-padding);
+}
+
 .course-panel {
   position: relative;
   padding: 0;
@@ -10,7 +14,7 @@
     border: 0px;
     border-radius: 0;
   }
-  > .course-card, .course-card-skeleton, .review-edit {
+  > .courseCard, .courseCard-skeleton, .review-edit {
     margin: var(--card-padding);
   }
   p {

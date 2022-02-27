@@ -20,25 +20,29 @@ const regexEqual = (x, y) => {
 };
 
 module.exports = {
-  webpack: config => {
-    const oneOf = config.module.rules.find(
-      rule => typeof rule.oneOf === 'object'
-    );
-
-    if (oneOf) {
-      const moduleCssRule = oneOf.oneOf.find(rule =>
-        regexEqual(rule.test, /\.module\.scss$/)
+  webpack(config) {
+    const sassRules = config.module.rules
+      .find(rule => typeof rule.oneOf === 'object')
+      .oneOf.find(
+        rule =>
+          rule.sideEffects === false &&
+          regexEqual(rule.test, /\.module\.(scss|sass)$/)
       );
 
-      if (moduleCssRule) {
-        const cssLoader = moduleCssRule.use.find(({ loader }) =>
-          loader.includes('css-loader')
-        );
-        if (cssLoader) {
-          cssLoader.options.modules.mode = 'local';
-        }
-      }
-    }
+    sassRules.use = sassRules.use.map(rule =>
+      rule.loader.includes('css-loader/dist')
+        ? {
+            ...rule,
+            options: {
+              ...rule.options,
+              modules: {
+                ...rule.modules,
+                localIdentName: '[hash:base64:5]',
+              },
+            },
+          }
+        : rule
+    );
 
     return config;
   },

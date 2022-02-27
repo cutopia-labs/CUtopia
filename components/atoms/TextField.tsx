@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import '../../styles/components/atoms/TextField.module.scss';
+import styles from '../../styles/components/atoms/TextField.module.scss';
 
 type Tag = 'input' | 'textarea';
 
@@ -34,11 +34,11 @@ const TextField = ({
   return (
     <>
       {Boolean(label) && (
-        <span className="label text-filed-label">{label}</span>
+        <span className={clsx('label', styles.textFieldLabel)}>{label}</span>
       )}
       <TagName
         ref={inputRef as any}
-        className={clsx('input-container', className)}
+        className={clsx('inputContainer', className)}
         placeholder={placeholder}
         defaultValue={defaultValue}
         type={type}

@@ -67,15 +67,15 @@ const CourseCard = ({
   const planner = useContext(PlannerContext);
 
   return (
-    <div className="timetable-course-card" style={styles.courseCard}>
+    <div className="timetable-courseCard" style={styles.courseCard}>
       <span
-        className="timetable-course-card-title"
+        className="timetable-courseCard-title"
         style={styles.courseCardTitle}
       >
         {`${course.courseId} ${course.section}`}
       </span>
       <span
-        className="timetable-course-card-location"
+        className="timetable-courseCard-location"
         style={styles.courseCardLocation}
       >
         {course.location}
@@ -83,7 +83,7 @@ const CourseCard = ({
       <IconButton
         size="small"
         color="primary"
-        className="timetable-course-card-delete"
+        className="timetable-courseCard-delete"
         style={{
           color: textColor,
         }}
