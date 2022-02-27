@@ -1,13 +1,13 @@
 import { observer } from 'mobx-react-lite';
 
 import '../styles/pages/ForumPage.module.scss';
-import CoursePanel from '../components/forum/CoursePanel';
+import CoursePanel from '../components/review/CoursePanel';
 import Page from '../components/atoms/Page';
-import HomePanel from '../components/forum/HomePanel';
-import ReviewEditPanel from '../components/forum/ReviewEditPanel';
+import HomePanel from '../components/review/HomePanel';
+import ReviewEditPanel from '../components/review/ReviewEditPanel';
 
 const ForumPage = () => (
-  <Page className="forum-page" center padding>
+  <Page className="review-page" center padding>
     <HomePanel />
     <ReviewEditPanel />
     <CoursePanel />

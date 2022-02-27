@@ -9,7 +9,7 @@ import {
   DeleteOutline,
 } from '@material-ui/icons';
 
-import '../../styles/components/forum/CourseSections.module.scss';
+import '../../styles/components/review/CourseSections.module.scss';
 import { PlannerContext, ViewContext } from '../../store';
 import { WEEKDAYS_TWO_ABBR } from '../../constants';
 import { CourseInfo, CourseSection, ErrorCardMode } from '../../types';

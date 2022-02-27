@@ -9,7 +9,7 @@ import { PlannerContext } from '../../store';
 
 import Card from '../atoms/Card';
 import ListItem from '../molecules/ListItem';
-import { getSectionTime } from '../forum/CourseSections';
+import { getSectionTime } from '../review/CourseSections';
 import { CourseSection, ErrorCardMode } from '../../types';
 import ErrorCard from '../molecules/ErrorCard';
 

@@ -3,7 +3,7 @@ import Button from '@material-ui/core/Button';
 import { Fragment } from 'react';
 import { BiDownvote, BiUpvote } from 'react-icons/bi';
 
-import '../../styles/components/forum/LikeButtonRow.module.scss';
+import '../../styles/components/review/LikeButtonRow.module.scss';
 
 const LikeButton = ({ isLike, selected, disabled, caption, onClick }) => (
   <Button

@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/client';
 import { Divider } from '@material-ui/core';
 import pluralize from 'pluralize';
 
-import '../../styles/components/forum/CourseReviews.module.scss';
+import '../../styles/components/review/CourseReviews.module.scss';
 import copy from 'copy-to-clipboard';
 
 import { ReportCategory } from 'cutopia-types/lib/codes';
@@ -195,7 +195,7 @@ const CourseReviews: FC<Props> = ({
             Boolean(reviewId) && (() => router.push(`/review/${courseId}`))
           }
           writeAction={() => router.push(`/review/${courseId}/compose`)}
-          exceedLimit={!user.data.fullAccess}
+          exceedLimit={false}
           isMobile={isMobile}
         />
       )}

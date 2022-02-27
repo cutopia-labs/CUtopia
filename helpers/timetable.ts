@@ -1,4 +1,4 @@
-import { getSectionTime } from '../components/forum/CourseSections';
+import { getSectionTime } from '../components/review/CourseSections';
 import { CourseSection } from '../types';
 
 export const getDurationInHour = (section: CourseSection, i: number) => {

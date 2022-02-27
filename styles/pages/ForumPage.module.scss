@@ -1,9 +1,9 @@
-.forum-page {
+.review-page {
   grid-template-columns: minmax(0, 1fr) min-content;
 }
 
 @media only screen and (max-width: 1260px) {
-  .forum-page {
+  .review-page {
     max-width: initial;
     grid-template-columns: none;
   }
