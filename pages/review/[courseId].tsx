@@ -1,5 +1,4 @@
 import { useState, useEffect, useContext, FC } from 'react';
-import { useQuery } from '@apollo/client';
 import { observer } from 'mobx-react-lite';
 
 import { BsChat } from 'react-icons/bs';
@@ -52,21 +51,6 @@ const CoursePanel: FC<Props> = ({ course }) => {
   const [FABHidden, setFABHidden] = useState(!isMobile);
   const [tab, setTab] = useState('Reviews');
 
-  // Fetch course info
-  const { data: courseInfo, loading: courseInfoLoading } = useQuery(
-    COURSE_INFO_QUERY,
-    {
-      skip: !courseId,
-      ...(courseId && {
-        variables: {
-          courseId,
-        },
-      }),
-      fetchPolicy: 'cache-first',
-      onError: view.handleError,
-    }
-  );
-
   const FAB_GROUP_ACTIONS = Object.freeze([
     {
       icon: <Share />,
@@ -98,10 +82,10 @@ const CoursePanel: FC<Props> = ({ course }) => {
         <div className="course-panel panel card">
           <CourseCard
             courseInfo={{
-              ...courseInfo?.courses[0],
+              ...course,
               courseId,
             }}
-            loading={courseInfoLoading}
+            loading={false}
             style={styles.courseCard}
           />
           <TabsContainer items={MENU_ITEMS} selected={tab} onSelect={setTab} />
@@ -110,8 +94,8 @@ const CoursePanel: FC<Props> = ({ course }) => {
           <CourseReviews
             courseId={courseId}
             reviewId={reviewId}
-            courseInfo={courseInfo?.courses[0]}
-            courseInfoLoading={courseInfoLoading}
+            courseInfo={course}
+            courseInfoLoading={false}
             isMobile={isMobile}
             FABHidden={FABHidden}
             setFABHidden={setFABHidden}
@@ -178,8 +162,8 @@ export const getStaticPaths: GetStaticPaths<{}> = async () => {
       params: {
         courseId: cid,
       },
-    })), //indicates that no page needs be created at build time
-    fallback: 'blocking', //indicates the type of fallback
+    })),
+    fallback: false,
   };
 };
 
