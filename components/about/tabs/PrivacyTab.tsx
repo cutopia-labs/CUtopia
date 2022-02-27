@@ -1,12 +1,17 @@
 import { Link } from '@material-ui/core';
+import clsx from 'clsx';
+import { FC } from 'react';
 
-import '../../../styles/components/tabs/Tab.module.scss';
+import styles from '../../../styles/components/about/About.module.scss';
 import Card from '../../atoms/Card';
 import AboutSection from '../AboutSection';
 
-const PrivacyTab = () => (
-  <Card className="aboutCard grid-auto-row">
-    <AboutSection title="Privacy" labelClassName="aboutTitle subHeading">
+const PrivacyTab: FC = () => (
+  <Card className={clsx(styles.aboutCard, 'grid-auto-row')}>
+    <AboutSection
+      title="Privacy"
+      labelClassName={clsx(styles.aboutTitle, 'subHeading')}
+    >
       <p>
         {' '}
         We need your student id for verification purposes only. Reviews are

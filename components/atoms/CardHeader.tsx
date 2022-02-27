@@ -1,6 +1,6 @@
-import '../../styles/components/atoms/CardHeader.module.scss';
 import clsx from 'clsx';
 import { PropsWithChildren } from 'react';
+import styles from '../../styles/components/atoms/CardHeader.module.scss';
 
 type CardHeaderProps = {
   left?: JSX.Element;
@@ -15,7 +15,10 @@ const CardHeader = ({
   title,
   ...props
 }: PropsWithChildren<CardHeaderProps>) => (
-  <header className={clsx('card-header center-row', className)} {...props}>
+  <header
+    className={clsx(styles.cardHeader, 'center-row', className)}
+    {...props}
+  >
     {left}
     <h4>{title}</h4>
     {children}

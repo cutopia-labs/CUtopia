@@ -10,21 +10,24 @@ type LoadingProps = {
   fixed?: boolean;
   padding?: boolean;
   logo?: boolean;
+  style?: string;
 };
 
 export default function Loading({
   fixed,
   padding = true,
   logo,
+  style,
   ...props
 }: LoadingProps & CircularProgressProps) {
   return (
     <div
       className={clsx(
-        'loading-view',
+        'loadingView',
         fixed && 'fixed',
         padding && 'padding',
-        logo && 'logo'
+        logo && 'logo',
+        style
       )}
     >
       {logo ? (

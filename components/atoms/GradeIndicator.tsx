@@ -1,4 +1,4 @@
-import '../../styles/components/atoms/GradeIndicator.module.scss';
+import clsx from 'clsx';
 import colors from '../../constants/colors';
 import updateOpacity from '../../helpers/updateOpacity';
 import { getLabel } from '../../helpers';
@@ -16,9 +16,7 @@ export default function GradeIndicator({
   const color = colors.gradeColors[label.charAt(0)];
   return (
     <div
-      className={`grade-indicator${
-        additionalClassName ? ` ${additionalClassName}` : ''
-      }`}
+      className={clsx('grade-indicator', additionalClassName)}
       style={{
         background: updateOpacity(color, 0.2),
         color: updateOpacity(color, 0.8),

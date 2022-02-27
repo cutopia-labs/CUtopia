@@ -1,5 +1,6 @@
-import '../../styles/components/atoms/Badge.module.scss';
 import clsx from 'clsx';
+import { FC } from 'react';
+import styles from '../../styles/components/atoms/Badge.module.scss';
 import updateOpacity from '../../helpers/updateOpacity';
 import colors from '../../constants/colors';
 
@@ -11,14 +12,14 @@ type BadgeProps = {
   color?: string;
 };
 
-const Badge = ({
+const Badge: FC<BadgeProps & React.HTMLAttributes<HTMLSpanElement>> = ({
   index,
   text,
   value,
   isGrade,
   color,
   className,
-}: BadgeProps & React.HTMLAttributes<HTMLSpanElement>) => {
+}) => {
   const badgeColor = isGrade
     ? colors.gradeColors[value]
     : colors.randomColors[
@@ -28,13 +29,13 @@ const Badge = ({
       ];
   return (
     <span
-      className={clsx('badge', className)}
+      className={clsx(styles.badge, className)}
       style={{
         backgroundColor: color || updateOpacity(badgeColor, isGrade ? 1 : 0.7),
       }}
     >
-      <span className="badge-text">{text}</span>
-      {Boolean(value) && <p className="badge-text-value">{`${value}`}</p>}
+      <span className={styles.badgeText}>{text}</span>
+      {Boolean(value) && <p className={styles.badgeTextValue}>{`${value}`}</p>}
     </span>
   );
 };

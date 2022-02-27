@@ -1,4 +1,3 @@
-import '../../styles/components/atoms/AccordionCard.module.scss';
 import {
   Accordion,
   AccordionDetails,
@@ -8,6 +7,7 @@ import {
 import { ExpandMore } from '@material-ui/icons';
 import clsx from 'clsx';
 import { FC } from 'react';
+import styles from '../../styles/components/atoms/AccordionCard.module.scss';
 
 const AccordionCard: FC<AccordionProps> = ({
   expanded,
@@ -19,7 +19,7 @@ const AccordionCard: FC<AccordionProps> = ({
   <Accordion
     expanded={expanded}
     onChange={onChange}
-    className={clsx('accordion-card', className)}
+    className={clsx(styles.accordionCard, className)}
     elevation={0}
   >
     <AccordionSummary expandIcon={<ExpandMore />}>

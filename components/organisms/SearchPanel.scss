@@ -1,3 +1,9 @@
+.searchLoading {
+  svg {
+    color: var(--accent);
+  }
+}
+
 .search-panel {
   --search-panel-width: 326px;
   width: var(--search-panel-width);
@@ -13,11 +19,6 @@
   overflow-x: hidden;
   svg {
     color: var(--text);
-  }
-  .loading-view {
-    svg {
-      color: var(--accent);
-    }
   }
   &::-webkit-scrollbar {
     display: none;

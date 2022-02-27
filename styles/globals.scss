@@ -319,6 +319,16 @@ h4 {
   margin-top: 5px;
 }
 
+.grade-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  font-weight: 800;
+}
+
 /* Scrollbar styles */
 
 /* Mobile Styles */

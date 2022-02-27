@@ -20,8 +20,8 @@ import {
 import { useQuery } from '@apollo/client';
 import { observer } from 'mobx-react-lite';
 
-import '../../styles/components/organisms/SearchPanel.module.scss';
 import { useRouter } from 'next/router';
+import styles from '../../styles/components/organisms/SearchPanel.module.scss';
 import ListItem from '../molecules/ListItem';
 import COURSE_CODES from '../../constants/courseCodes';
 import { ViewContext, UserContext } from '../../store';
@@ -91,7 +91,7 @@ export const SearchResult = ({
   }, [searchPayload]);
 
   if (results === null) {
-    return <Loading />;
+    return <Loading style={styles.searchLoading} />;
   }
 
   if (!results) {
