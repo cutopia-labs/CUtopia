@@ -21,6 +21,7 @@ import CourseReviews from '../../components/review/CourseReviews';
 import CourseComments from '../../components/review/CourseComments';
 import { CourseInfo } from '../../types';
 import client from '../../helpers/apollo-client';
+import Page from '../../components/atoms/Page';
 
 const MENU_ITEMS = [
   {
@@ -74,7 +75,7 @@ const CoursePanel: FC<Props> = ({ course }) => {
   }, [courseId]);
 
   return (
-    <>
+    <Page className="review-page" center padding>
       <Head>
         <title>{`${courseId} Reviews - ${course.title} - CUtopia`}</title>
       </Head>
@@ -135,7 +136,7 @@ const CoursePanel: FC<Props> = ({ course }) => {
           />
         )}
       </div>
-    </>
+    </Page>
   );
 };
 
@@ -147,7 +148,6 @@ export const getStaticProps = async ({ params }) => {
     },
     fetchPolicy: 'cache-first',
   });
-  console.log(res);
   return {
     props: {
       course: res.data?.courses[0],
@@ -158,11 +158,13 @@ export const getStaticProps = async ({ params }) => {
 export const getStaticPaths: GetStaticPaths<{}> = async () => {
   const courses = Object.values(await import('../../data/courses.json'));
   return {
-    paths: courses.slice(0, 20).map(cid => ({
-      params: {
-        courseId: cid,
-      },
-    })),
+    paths: [...courses]
+      .filter(cid => typeof cid === 'string')
+      .map(cid => ({
+        params: {
+          courseId: cid,
+        },
+      })),
     fallback: false,
   };
 };
