@@ -6,8 +6,8 @@ import { RiShareForwardLine, RiFlag2Line } from 'react-icons/ri';
 import { useMutation } from '@apollo/client';
 import { IconButton } from '@material-ui/core';
 
-import '../../styles/components/review/ReviewCard.module.scss';
 import clsx from 'clsx';
+import styles from '../../styles/components/review/ReviewCard.module.scss';
 import { RATING_FIELDS, VOTE_ACTIONS } from '../../constants';
 import { VOTE_REVIEW } from '../../constants/mutations';
 import { getMMMDDYY } from '../../helpers/getTime';
@@ -121,6 +121,7 @@ const ReviewCard = ({
             </div>
           ))}
           <ShowMoreOverlay
+            style={styles.reviewShowMoreOverlay}
             visible={!showMore}
             onShowMore={() => [setShowMore(true), setSkipHeightCheck(true)]}
           />

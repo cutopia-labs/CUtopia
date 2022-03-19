@@ -1,4 +1,4 @@
-.show-more-overlay {
+.showMoreOverlay {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -16,7 +16,7 @@
   bottom: 0;
 }
 
-.show-more-label {
+.showMoreLabel {
   margin-top: 80px;
   cursor: pointer;
   color: var(--primary);
@@ -25,7 +25,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  .show-more-overlay {
+  .showMoreOverlay {
     background-image: linear-gradient(to bottom, rgba(31, 31, 31, 0.2) 0, var(--surface) 100%);
   }
 }

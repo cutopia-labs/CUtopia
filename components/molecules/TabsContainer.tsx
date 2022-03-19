@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { MenuItem } from '../../types';
-import '../../styles/components/molecules/TabsContainer.module.scss';
+import styles from '../../styles/components/molecules/TabsContainer.module.scss';
 
 type TabsContainerProps = {
   items: MenuItem[];
@@ -20,7 +20,7 @@ const TabsContainer = ({
       <div
         key={item.label}
         className={clsx(
-          'tab',
+          styles.tab,
           'center-row',
           item.label === selected && 'active'
         )}

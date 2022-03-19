@@ -1,6 +1,5 @@
-import '../../styles/components/molecules/ListItem.module.scss';
 import clsx from 'clsx';
-import { PropsWithChildren } from 'react';
+import { FC } from 'react';
 import colors from '../../constants/colors';
 
 export type ListItemProps = {
@@ -17,7 +16,7 @@ export type ListItemProps = {
   onMouseDown?: (...args: any[]) => any;
 };
 
-const ListItem = ({
+const ListItem: FC<ListItemProps> = ({
   title,
   caption,
   onClick,
@@ -30,7 +29,7 @@ const ListItem = ({
   onMouseDown,
   noHover,
   children,
-}: PropsWithChildren<ListItemProps>) => {
+}) => {
   const listContent = (
     <>
       {ribbonIndex !== undefined && (

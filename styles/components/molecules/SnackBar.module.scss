@@ -1,4 +1,4 @@
-.snackbar-container {
+.snackbarContainer {
   position: fixed;
   display: flex;
   z-index: 2000;
@@ -10,10 +10,6 @@
   left: 2.5%;
 }
 
-.btn-container {
+.snackButton {
   margin-left: auto;
-}
-.btn-title {
-  font-size: 14px;
-  text-transform: uppercase;
 }

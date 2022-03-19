@@ -106,7 +106,7 @@
   &.retracted {
     overflow: hidden;
     max-height: 360px;
-    .show-more-overlay {
+    .reviewShowMoreOverlay {
       padding-bottom: 10px;
       svg {
         color: var(--primary);

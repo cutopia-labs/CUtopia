@@ -1,20 +1,23 @@
 import { ExpandMore } from '@material-ui/icons';
+import clsx from 'clsx';
+import { FC } from 'react';
 
-import '../../styles/components/molecules/ShowMoreOverlay.module.scss';
+import styles from '../../styles/components/molecules/ShowMoreOverlay.module.scss';
 
 type ShowMoreOverlayProps = {
   visible: boolean;
   onShowMore: (...args: any[]) => any;
+  style?: string;
 };
-
-export default function ShowMoreOverlay({
+const ShowMoreOverlay: FC<ShowMoreOverlayProps> = ({
   visible,
   onShowMore,
-}: ShowMoreOverlayProps) {
+  style,
+}) => {
   if (visible) {
     return (
-      <div className="show-more-overlay" onClick={onShowMore}>
-        <div className="show-more-label center-row">
+      <div className={clsx(styles.showMoreOverlay, style)} onClick={onShowMore}>
+        <div className={clsx(styles.showMoreLabel, 'center-row')}>
           Show More
           <ExpandMore />
         </div>
@@ -23,4 +26,6 @@ export default function ShowMoreOverlay({
   }
 
   return null;
-}
+};
+
+export default ShowMoreOverlay;
