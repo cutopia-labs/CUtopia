@@ -1,5 +1,5 @@
 
-.reviews-filter {
+.reviewsFilter {
   display: flex;
   padding: 12px 8px;
   align-items: center;
@@ -9,7 +9,7 @@
     color: var(--text);
   }
   flex-direction: row;
-  .filter-row {
+  .filterRow {
     .reviewsFilterLabel {
       margin: 0;
       font-weight: 500;
@@ -31,23 +31,17 @@
     }
   }
 }
-.reviews-filter-menu {
+.reviewsFilterMenu {
 }
-.reviews-filter-ratings {
+.reviewsFilter-ratings {
   align-items: center;
-}
-.reviewsFilterLabel {
-  text-transform: capitalize;
-  margin: 0 10px;
-  font-size: 14px;
-  color: var(--text);
 }
 
 @media only screen and (max-width: 1260px) {
-  .reviews-filter {
+  .reviewsFilter {
     padding: 12px var(--card-padding);
   }
-  .filter-row {
+  .filterRow {
     button {
       .MuiButton-endIcon {
         margin-left: 0;

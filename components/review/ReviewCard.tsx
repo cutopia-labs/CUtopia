@@ -67,17 +67,17 @@ const ReviewCard = ({
     return <div />;
   }
   return (
-    <div className={clsx('review-card card', !showMore && 'retracted')}>
-      <div className="reviews-filter review">
+    <div className={clsx(styles.reviewCard, 'card', !showMore && 'retracted')}>
+      <div className="reviewsFilter review">
         {Boolean(review.title) && (
-          <div className="review-title center-row ellipsis-text">
+          <div className={clsx(styles.reviewTitle, 'center-row ellipsis-text')}>
             <BiMessageRounded />
             {review.title}
           </div>
         )}
         <div
           className={clsx(
-            'review-info-row',
+            styles.reviewInfoRow,
             !Boolean(review.title) && 'no-title'
           )}
         >
@@ -93,7 +93,7 @@ const ReviewCard = ({
         <GradeRow
           rating={review}
           isReview
-          additionalClassName="gradeRow tabs-row review-gradeRow"
+          additionalClassName={clsx(styles.reviewGradeRow, 'gradeRow tabs-row')}
           additionalChildClassName="tab"
           selected={selectedCriteria}
           setSelected={setSelectedCriteria}
@@ -112,12 +112,14 @@ const ReviewCard = ({
               setShowMore(false);
             }
           }}
-          className={`review-text-full${showMore ? '' : ' retracted'}`}
+          className={clsx(styles.reviewTextFull, !showMore && 'retracted')}
         >
           {RATING_FIELDS.map(field => (
-            <div key={field} className="review-text-container">
-              <p className="review-text-label review-text">{field}</p>
-              <p className="review-text">{review[field].text}</p>
+            <div key={field}>
+              <p className={clsx(styles.reviewTextLabel, styles.reviewText)}>
+                {field}
+              </p>
+              <p className={styles.reviewText}>{review[field].text}</p>
             </div>
           ))}
           <ShowMoreOverlay
@@ -127,23 +129,21 @@ const ReviewCard = ({
           />
         </div>
       ) : (
-        <div className="review-text-container">
-          <p className="review-text-label review-text">{selectedCriteria}</p>
-          <p className="review-text">{review[selectedCriteria].text}</p>
+        <div>
+          <p className={clsx(styles.reviewTextLabel, styles.reviewText)}>
+            {selectedCriteria}
+          </p>
+          <p className={styles.reviewText}>{review[selectedCriteria].text}</p>
         </div>
       )}
-      <div
-        className={`review-bottom-row center-row${
-          showMore ? '' : ' retracted'
-        }`}
-      >
-        <span className="review-title-author">
+      <div className={clsx(styles.reviewBottomRow, !showMore && 'retracted')}>
+        <span className={styles.reviewTitleAuthor}>
           {`@`}
           <span>{review.anonymous ? 'Anonymous' : review.username}</span>
           {' • '}
           {getMMMDDYY(review.createdAt)}
         </span>
-        <div className="review-bottom-btn-row right center-row">
+        <div className={clsx(styles.reviewBottomBtnRow, 'right center-row')}>
           <LikeButtonsRow
             liked={liked}
             myVote={review.myVote}
@@ -160,14 +160,14 @@ const ReviewCard = ({
             }
           />
           <IconButton
-            className="share-icon-btn"
+            className={styles.shareIconBtn}
             size="small"
             onClick={() => reportAction(review)}
           >
             <RiFlag2Line />
           </IconButton>
           <IconButton
-            className="share-icon-btn"
+            className={styles.shareIconBtn}
             size="small"
             onClick={() => shareAction(review)}
           >

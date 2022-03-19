@@ -1,14 +1,14 @@
-.review-card {
-  --review-card-inner-padding-horizontal: 18px;
-  --review-card-inner-padding-vertical: 12px;
+.reviewCard {
+  --reviewCard-inner-padding-horizontal: 18px;
+  --reviewCard-inner-padding-vertical: 12px;
   position: relative;
   overflow: hidden;
   svg {
     color: var(--caption);
   }
 }
-.review-title {
-  margin: var(--review-card-inner-padding-vertical) var(--review-card-inner-padding-horizontal);
+.reviewTitle {
+  margin: var(--reviewCard-inner-padding-vertical) var(--reviewCard-inner-padding-horizontal);
   font-size: 14px;
   font-weight: 500;
   color: var(--caption);
@@ -16,18 +16,18 @@
   padding-left: 24px;
   svg {
     position: absolute;
-    left: var(--review-card-inner-padding-horizontal);
+    left: var(--reviewCard-inner-padding-horizontal);
     top: 14px;
     font-size: 18px;
   }
 }
-.review-title-author {
+.reviewTitleAuthor {
   color: var(--caption);
   font-weight: normal;
   font-size: 14px;
 }
 
-.reviews-filter {
+.reviewsFilter {
   &.review {
     margin: 0;
     padding: 0;
@@ -36,7 +36,7 @@
   }
 }
 .gradeRow {
-  &.review-gradeRow {
+  &.reviewGradeRow {
     background-color: transparent;
     border-radius: 0;
     .ratingContainer {
@@ -48,20 +48,20 @@
     }
   }
 }
-.review-text {
+.reviewText {
   text-align: start;
   font-size: 14px;
   line-height: var(--line-height-caption);
   margin: 0;
-  padding: 0 var(--review-card-inner-padding-horizontal) var(--review-card-inner-padding-vertical)
-    var(--review-card-inner-padding-horizontal);
+  padding: 0 var(--reviewCard-inner-padding-horizontal) var(--reviewCard-inner-padding-vertical)
+    var(--reviewCard-inner-padding-horizontal);
   white-space: pre-wrap;
 }
-.review-info-row {
+.reviewInfoRow {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  padding: var(--review-card-inner-padding-vertical) var(--review-card-inner-padding-horizontal);
+  padding: var(--reviewCard-inner-padding-vertical) var(--reviewCard-inner-padding-horizontal);
   width: 100%;
   .reviewsFilterLabel {
     margin: 0;
@@ -99,7 +99,7 @@
     }
   }
 }
-.review-text-full {
+.reviewTextFull {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   position: relative;
@@ -118,25 +118,25 @@
     display: none;
   }
 }
-.review-text-label {
+.reviewTextLabel {
   text-align: start;
   text-transform: capitalize;
   color: var(--primary);
-  padding: var(--review-card-inner-padding-vertical) var(--review-card-inner-padding-horizontal);
+  padding: var(--reviewCard-inner-padding-vertical) var(--reviewCard-inner-padding-horizontal);
   font-weight: bold;
 }
-.review-bottom-row {
-  padding: 8px var(--review-card-inner-padding-horizontal);
+.reviewBottomRow {
+  padding: 8px var(--reviewCard-inner-padding-horizontal);
   border-top: 1px solid var(--border);
   &.retracted {
     margin-top: 0;
   }
-  .share-icon-btn {
+  .shareIconBtn {
     color: var(--text);
     opacity: 0.8;
   }
 }
-.review-bottom-btn-row {
+.reviewBottomBtnRow {
   display: grid;
   grid-template-columns: min-content min-content min-content;
   grid-column-gap: var(--card-padding);
@@ -147,14 +147,14 @@
       font-size: 12px;
     }
   }
-  .review-text {
-    width: calc(100vw - 2 * var(--review-card-inner-padding-horizontal));
+  .reviewText {
+    width: calc(100vw - 2 * var(--reviewCard-inner-padding-horizontal));
     overflow-wrap: break-word;
   }
-  .review-text-full {
+  .reviewTextFull {
     grid-template-columns: repeat(1, 1fr);
   }
-  .review-card {
+  .reviewCard {
     .tab {
       &:hover {
         padding-top: none;
@@ -162,7 +162,7 @@
       }
     }
   }
-  .gradeRow.review-gradeRow {
+  .gradeRow.reviewGradeRow {
     & > div:first-child {
       display: none;
     }

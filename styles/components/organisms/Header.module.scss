@@ -22,22 +22,6 @@
   }
 }
 
-.header-search-result {
-  height: fit-content;
-  z-index: 30;
-  border-bottom: none;
-  border-right: none;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-  width: var(--searchDropdown-width);
-  max-height: calc(90vh - var(--header-height));
-  overflow-y: scroll;
-  overflow-x: hidden;
-  & > .list-item-container {
-    height: auto;
-  }
-}
-
 .headerNav {
   margin-left: auto;
 }
@@ -89,9 +73,5 @@
     .headerLogo {
       margin-left: 12px;
     }
-  }
-  .header-search-result {
-    left: 0;
-    width: var(--searchDropdown-width); // 2px for border width
   }
 }

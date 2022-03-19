@@ -14,7 +14,7 @@ export const FormSection = ({
   children,
 }: PropsWithChildren<FormSectionProps>) => (
   <>
-    <span className={clsx('form-section-title', className)}>{title}</span>
+    <span className={clsx('formSectionTitle', className)}>{title}</span>
     {children}
   </>
 );

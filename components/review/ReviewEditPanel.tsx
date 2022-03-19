@@ -18,6 +18,7 @@ import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { HiOutlineInformationCircle } from 'react-icons/hi';
 import { useBeforeunload } from 'react-beforeunload';
 import { useRouter } from 'next/router';
+import clsx from 'clsx';
 import styles from '../../styles/components/review/ReviewEditPanel.module.scss';
 import { ViewContext, UserContext } from '../../store';
 import { GET_REVIEW, COURSE_INFO_QUERY } from '../../constants/queries';
@@ -140,14 +141,20 @@ const ReviewSection = ({
   onChangeText,
   onChangeGrade,
 }: ReviewSectionProps) => (
-  <div className="review-section-container grid-auto-row">
-    <div className="review-section-header center-row">
+  <div className={clsx(styles.reviewSectionContainer, 'grid-auto-row')}>
+    <div className={clsx(styles.reviewSectionHeader, 'center-row')}>
       <Tooltip
         enterTouchDelay={0}
         title={ReviewHelperText[type]}
         placement="right"
       >
-        <span className="review-section-title form-section-title center-row">
+        <span
+          className={clsx(
+            styles.reviewSectionTitle,
+            styles.formSectionTitle,
+            'center-row'
+          )}
+        >
           {type}
           {Boolean(ReviewHelperText[type]) && <HiOutlineInformationCircle />}
         </span>
@@ -185,7 +192,7 @@ const ReviewSubmit = ({
 }: ReviewSubmitProps) => (
   <LoadingButton
     loading={loading}
-    className="submit-btn"
+    className={styles.submitBtn}
     onClick={onSubmit}
     variant="contained"
     disabled={disabled}
@@ -194,7 +201,7 @@ const ReviewSubmit = ({
     {progress >= 100 ? 'Submit' : 'Write More'}
     {!disabled && !loading && progress < 100 && (
       <span
-        className="progress"
+        className={styles.progress}
         style={{
           width: `calc(${progress}% + 32px)`, // 32px is MuiLabel pdding
         }}
@@ -419,14 +426,14 @@ const ReviewEdit = ({ courseId }) => {
   };
 
   return (
-    <div className="review-edit grid-auto-row">
+    <div className={clsx(styles.reviewEdit, 'grid-auto-row')}>
       {reviewLoading && <Loading fixed />}
-      <div className="review-header-container center-row">
+      <div className={clsx(styles.reviewHeaderContainer, 'center-row')}>
         <span className="title">Your Review</span>
         <span className="light-caption">前人種樹，後人乘涼</span>
         <Tooltip title="Anonymity">
           <IconButton
-            className="anonymous-switch"
+            className={styles.anonymousSwitch}
             aria-label="anonymous"
             onClick={() => dispatchFormData({ anonymous: !formData.anonymous })}
           >
@@ -436,7 +443,7 @@ const ReviewEdit = ({ courseId }) => {
       </div>
       <FormSection title="term">
         <div
-          className="term-selection-anchor inputContainer"
+          className={clsx(styles.termSelectionAnchor, 'input-container')}
           onClick={e => setAnchorEl(e.currentTarget)}
         >
           {formData.term || 'Please select a term'}
@@ -479,7 +486,7 @@ const ReviewEdit = ({ courseId }) => {
           onBlur={() => setShowLecturers(false)}
         />
         {showLecturers && Boolean(formData.lecturer) && (
-          <div className="header-search-result card">
+          <div className={clsx(styles.headerSearchResult, 'card')}>
             {!instructorsSearchResult ? (
               <Loading />
             ) : (
@@ -496,7 +503,7 @@ const ReviewEdit = ({ courseId }) => {
           </div>
         )}
       </FormSection>
-      <div className="review-sections-container grid-auto-row">
+      <div className={clsx(styles.reviewSectionsContainer, 'grid-auto-row')}>
         {RATING_FIELDS.map(type => (
           <ReviewSection
             key={type}
@@ -511,7 +518,7 @@ const ReviewEdit = ({ courseId }) => {
           />
         ))}
       </div>
-      <div className="submit-btn-row center-row">
+      <div className={clsx(styles.submitBtnRow, 'center-row')}>
         <ReviewSection
           type="overall"
           value={formData.overall}
@@ -528,7 +535,7 @@ const ReviewEdit = ({ courseId }) => {
         <Dialog
           open={mode === MODES.EDIT_MODAL || mode === MODES.DRAFT_MODAL}
           onClose={reviewModal[mode].onClose}
-          className="review-edit-dialog"
+          className={styles.reviewEditDialog}
         >
           <DialogTitle id="alert-dialog-title">
             {reviewModal[mode].title}
@@ -597,7 +604,7 @@ const ReviewEditPanel = () => {
     }
   );
   return (
-    <div className="review-edit-panel course-panel panel card">
+    <div className="reviewEdit-panel course-panel panel card">
       {!courseInfoLoading && courseInfo && courseInfo.courses && (
         <CourseCard
           courseInfo={{

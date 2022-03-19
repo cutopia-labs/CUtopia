@@ -5,9 +5,9 @@ import { TiArrowSortedUp } from 'react-icons/ti';
 import { AiTwotoneCalendar } from 'react-icons/ai';
 import { FaUserAlt } from 'react-icons/fa';
 
-import '../../styles/components/review/ReviewFilterBar.module.scss';
 import { FiEdit } from 'react-icons/fi';
 import clsx from 'clsx';
+import styles from '../../styles/components/review/ReviewFilterBar.module.scss';
 
 import { CourseInfo, ReviewsFilter } from '../../types';
 import { reverseMapping } from '../../helpers';
@@ -97,17 +97,19 @@ const ReviewFilterBar = ({
   return (
     <div
       ref={forwardedRef}
-      className={clsx('panel card reviews-filter row', className)}
+      className={clsx(styles.reviewsFilter, 'panel card row', className)}
     >
       {courseInfo?.rating ? (
         <>
-          <div className="filter-row center-row grid-auto-column">
+          <div
+            className={clsx(styles.filterRow, 'center-row grid-auto-column')}
+          >
             {!fetchAllAction &&
               Object.entries(REVIEWS_CONFIGS).map(([k, v]) => (
                 <Button
                   key={v.key}
                   className={clsx(
-                    'capsule-btn reviews-sort',
+                    'capsule-btn',
                     (reviewsPayload[v.key] ||
                       parseInt(k, 10) === ReviewFilterBarMode.SORTING) &&
                       'selected'
@@ -133,7 +135,7 @@ const ReviewFilterBar = ({
             </div>
           </div>
           <Menu
-            className="reviews-filter-menu"
+            className={styles.reviewsFilterMenu}
             anchorEl={anchorEl}
             open={Boolean(anchorEl)}
             onClose={() => setAnchorEl(null)}
