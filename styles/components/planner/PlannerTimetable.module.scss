@@ -2,8 +2,8 @@
   margin-top: 4px;
 }
 
-.planner-share-dialog {
-  .share-link-row {
+.plannerShareDialog {
+  .shareLinkRow {
     height: 46px;
     .copy {
       height: 100%;
@@ -17,31 +17,8 @@
   flex: 1;
 }
 
-.share-btn-row {
-  width: 100%;
-  justify-content: center;
-  .share, .copy {
-    background-color: var(--text);
-    color: var(--reversed-text);
-    &:hover {
-      background-color: var(--text);
-    }
-  }
-  .share {
-    padding: auto 12px;
-    width: 100%;
-    margin-top: 2px;
-    height: 40px;
-    &.Mui-disabled {
-      cursor: not-allowed;
-      background-color: var(--caption-light);
-      color: var(--reversed-text);
-    }
-  }
-}
-
 @media only screen and (max-width: 1260px) {
-  .planner-timetable-container {
+  .plannerTimetableContainer {
     max-width: 100vw;
   }
   .plannerFooter {
@@ -50,7 +27,7 @@
   .plannerInputContainer {
     width: 100%;
   }
-  .planner-share-dialog {
+  .plannerShareDialog {
     .MuiPaper-root {
       margin: 0;
     }

@@ -128,7 +128,7 @@ const ReportIssuesDialogContent = observer(
               onChangeText={text => dispatchIssueData({ description: text })}
             />
           </Section>
-          <div className="share-btn-row center-row">
+          <div className="shareBtnRow center-row">
             <LoadingButton
               loading={reportLoading}
               className="share loading-btn"

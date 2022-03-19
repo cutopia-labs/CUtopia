@@ -1,4 +1,4 @@
-.timetable-overview {
+.timetableOverview {
   min-height: 48px;
   &.MuiAccordion-root.Mui-expanded {
     margin: 0;
@@ -16,7 +16,7 @@
   }
 }
 
-.timetable-overview-list-item {
+.ttOverviewListItem {
   cursor: initial;
   flex-direction: row;
   margin: 0;
@@ -32,14 +32,14 @@
       }
     }
   }
-  .btn-container {
+  .btnContainer {
     svg {
       padding: 4px;
     }
   }
 }
 
-.menu-icon-container {
+.menuIconContainer {
   margin-right: var(--card-padding);
   & .MuiSvgIcon-root {
     font-size: 18px;

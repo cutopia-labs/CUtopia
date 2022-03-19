@@ -84,7 +84,7 @@ const PlannerPage = () => {
           <>
             <SearchPanel />
             <PlannerTimetable />
-            <div className="planner-cart-column secondary-column">
+            <div className="plannerCart-column secondary-column">
               <TimetableOverviewCard />
               <PlannerCart />
             </div>
@@ -94,7 +94,7 @@ const PlannerPage = () => {
         return <PlannerTimetable />;
       case PlannerMode.CART:
         return (
-          <div className="planner-cart-column secondary-column">
+          <div className="plannerCart-column secondary-column">
             <TimetableOverviewCard />
             <PlannerCart />
           </div>

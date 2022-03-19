@@ -1,4 +1,4 @@
-.timetable-courseCard {
+.timetableCourseCard {
   display: flex;
   flex-direction: column;
   position: absolute;
@@ -10,14 +10,14 @@
   transition: transform 0.3s;
   user-select: none;
   padding: 4px 6px;
-  .timetable-courseCard-delete {
+  .timetableCourseCardDelete {
     display: none;
   }
   &:hover {
     height: fit-content !important;
     transform: scale(1.2);
     z-index: 10;
-    .timetable-courseCard-delete {
+    .timetableCourseCardDelete {
       display: inline-flex;
       position: absolute;
       color: white;
@@ -32,13 +32,13 @@
   }
 }
 
-.timetable-courseCard-title {
+.timetableCourseCardTitle {
   display: flex;
   font-size: 12px;
   font-weight: bold;
   text-align: initial;
 }
-.timetable-courseCard-location {
+.timetableCourseCardLocation {
   margin-top: 2px;
   font-size: 10px;
   text-align: initial;

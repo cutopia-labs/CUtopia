@@ -2,9 +2,10 @@ import { useContext } from 'react';
 
 import { observer } from 'mobx-react-lite';
 
-import '../../styles/components/planner/PlannerCart.module.scss';
 import { Checkbox, IconButton, Tooltip } from '@material-ui/core';
 import { ClearAllRounded, Warning } from '@material-ui/icons';
+import clsx from 'clsx';
+import styles from '../../styles/components/planner/PlannerCart.module.scss';
 import { PlannerContext } from '../../store';
 
 import Card from '../atoms/Card';
@@ -30,8 +31,8 @@ const PlannerCart = () => {
     );
   };
   return (
-    <Card className="planner-cart">
-      <header className="planner-cart-header column">
+    <Card className={styles.plannerCart}>
+      <header className="column">
         <div className="center-row">
           <h4>Cart</h4>
           {Boolean(planner.hidedSections?.length) && (
@@ -45,7 +46,7 @@ const PlannerCart = () => {
             </Tooltip>
           )}
         </div>
-        <div className="timetable-info-row row">
+        <div className={clsx(styles.timetableInfoRow, 'row')}>
           <span className="column">
             <span className="sub-title">
               {planner.timetableInfo.totalCredits || 0}
@@ -74,14 +75,14 @@ const PlannerCart = () => {
                 left={
                   overlap ? (
                     <Tooltip
-                      className="planner-cart-list-icon"
+                      className={styles.plannerCartListIcon}
                       title={`Overlap with ${overlap.name}`}
                     >
                       <Warning />
                     </Tooltip>
                   ) : (
                     <Checkbox
-                      className="planner-cart-checkbox"
+                      className={styles.plannerCartCheckbox}
                       checked={!section.hide}
                       size="small"
                       disableTouchRipple

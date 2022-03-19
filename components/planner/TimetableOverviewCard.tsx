@@ -12,8 +12,9 @@ import { MoreHoriz, Timer } from '@material-ui/icons';
 import copy from 'copy-to-clipboard';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
+import clsx from 'clsx';
 import { PLANNER_CONFIGS } from '../../constants/configs';
-import '../../styles/components/planner/TimetableOverviewCard.module.scss';
+import styles from '../../styles/components/planner/TimetableOverviewCard.module.scss';
 import { GET_USER_TIMETABLES } from '../../constants/queries';
 import { getMMMDDYY } from '../../helpers/getTime';
 import { PlannerContext, plannerStore, ViewContext } from '../../store';
@@ -99,7 +100,7 @@ const TimetableOverviewListItem = ({
   }
   return (
     <ListItem
-      className="timetable-overview-list-item"
+      className={styles.ttOverviewListItem}
       noHover
       noBorder
       title={item.tableName || PLANNER_CONFIGS.DEFAULT_TABLE_NAME}
@@ -110,7 +111,7 @@ const TimetableOverviewListItem = ({
         </>
       }
     >
-      <span className="btn-container center-row">
+      <span className={clsx(styles.btnContainer, 'center-row')}>
         <IconButton
           size="small"
           color="primary"
@@ -126,7 +127,6 @@ const TimetableOverviewListItem = ({
           <MoreHoriz />
         </IconButton>
         <Menu
-          className="timetable-more-menu"
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
           onClose={() => setAnchorEl(null)}
@@ -139,7 +139,7 @@ const TimetableOverviewListItem = ({
                 setAnchorEl(null);
               }}
             >
-              <span className="menu-icon-container center-box">
+              <span className={clsx(styles.menuIconContainer, 'center-box')}>
                 {item.icon}
               </span>
               {item.label}
@@ -227,7 +227,7 @@ const TimetableOverviewCard = () => {
   };
   return (
     <AccordionCard
-      className="timetable-overview"
+      className={styles.timetableOverview}
       expanded={expanded}
       onChange={(e, expanded) => setExpanded(expanded)}
       title="Remote"

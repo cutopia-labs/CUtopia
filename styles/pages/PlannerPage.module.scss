@@ -3,14 +3,14 @@
   grid-template-columns: min-content 1fr min-content;
 }
 
-.planner-cart-column {
+.plannerCart-column {
   width: 280px;
   height: calc(100vh - var(--header-height) - 3 * var(--page-margin));
   grid-template-rows: min-content minmax(0, 1fr);
 }
 
 @media only screen and (max-width: 1260px) {
-  .planner-cart-column {
+  .plannerCart-column {
     height: auto;
   }
   .planner-page {
@@ -18,7 +18,7 @@
     min-height: calc(100vh - var(--header-height) - 2px);
     height: fit-content;
     width: 100vw;
-    .planner-cart-column {
+    .plannerCart-column {
       width: 100%;
       display: grid;
     }

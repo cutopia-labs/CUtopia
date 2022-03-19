@@ -1,11 +1,11 @@
-.timetable-container {
+.timetableContainer {
   display: flex;
   flex: 1;
   flex-direction: column;
   --left-bar-width: 42px;
   margin: 16px 0;
 }
-.weekday-row {
+.weekdayRow {
   display: flex;
   margin-left: var(--left-bar-width);
   margin-bottom: 10px;
@@ -16,7 +16,7 @@
     justify-content: center;
     flex: 1;
   }
-  .weekday-text {
+  .weekdayText {
     color: var(--text);
     opacity: 1;
     .caption {
@@ -27,11 +27,11 @@
     }
   }
 }
-.timetable-canvas {
+.timetableCanvas {
   display: flex;
   flex: 1;
 }
-.timetable-ticks {
+.timetableTicks {
   display: flex;
   flex-direction: column;
   width: calc(var(--left-bar-width) - 10px);
@@ -39,13 +39,13 @@
   padding-right: 10px;
   text-align: right;
   opacity: 0.7;
-  .time-line-box {
+  .timeLineBox {
     flex: 1;
     line-height: 14px;
     margin-top: -7px;
   }
 }
-.timetable-courses-container {
+.timetableCoursesContainer {
   flex: 1;
   position: relative;
   display: flex;
@@ -54,7 +54,7 @@
 }
 
 @media only screen and (max-width: 560px) {
-  .timetable-container {
+  .timetableContainer {
     --left-bar-width: 42px;
     width: 126vw;
   }

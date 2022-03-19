@@ -1,7 +1,8 @@
 import { useContext } from 'react';
 import { useMediaQuery } from '@material-ui/core';
 
-import '../../styles/components/planner/Timetable.module.scss';
+import clsx from 'clsx';
+import styles from '../../styles/components/planner/Timetable.module.scss';
 import colors from '../../constants/colors';
 import { WEEKDAYS } from '../../constants';
 import {
@@ -24,7 +25,7 @@ const TimetableTicks = ({ config }: PropsWithConfig<{}>) => {
         { length: config.endHour - config.startHour + 1 },
         (_, i) => config.startHour + i
       ).map(hour => (
-        <div className="time-line-box" key={`Timeline:${hour}`}>
+        <div className={styles.timeLineBox} key={`Timeline:${hour}`}>
           {hour !== config.startHour
             ? `${hour > 9 ? '' + hour : '0' + hour}:00`
             : ''}
@@ -54,8 +55,8 @@ const WeekdayText = ({
         const thatDay = new Date();
         thatDay.setDate(new Date().getDate() + differenceOfDate);
         return (
-          <div className="weekday-cell" key={`weekday-${day}`}>
-            <span className="weekday-text column center">
+          <div key={`weekday-${day}`}>
+            <span className={clsx(styles.weekdayText, 'column center')}>
               {`${WEEKDAYS[day - 1]}${withDate ? ` ${thatDay.getDate()}` : ''}`}
               <span className="caption">
                 {`(${timetableInfo?.weekdayAverageHour[day] || 0} hrs)`}
@@ -132,15 +133,15 @@ const Timetable = ({ courses, timetableInfo }: TimetableProps) => {
   console.log(config);
 
   return (
-    <div className="timetable-container">
-      <div className="weekday-row">
+    <div className={styles.timetableContainer}>
+      <div className={styles.weekdayRow}>
         <WeekdayText config={config} timetableInfo={timetableInfo} />
       </div>
-      <div className="timetable-canvas">
-        <div className="timetable-ticks">
+      <div className={styles.timetableCanvas}>
+        <div className={styles.timetableTicks}>
           <TimetableTicks config={config} />
         </div>
-        <div className="timetable-courses-container">
+        <div className={styles.timetableCoursesContainer}>
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <pattern

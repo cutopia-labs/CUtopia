@@ -5,6 +5,7 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import { Button, Dialog } from '@material-ui/core';
 import copy from 'copy-to-clipboard';
 import { useRouter } from 'next/router';
+import clsx from 'clsx';
 import styles from '../../styles/components/planner/PlannerTimetable.module.scss';
 import TimetablePanel from '../templates/TimetablePanel';
 import { ViewContext, PlannerContext, plannerStore } from '../../store';
@@ -125,7 +126,7 @@ const TimetableShareDialogContent = ({
     ))}
     {shareConfig.shareLink ? (
       <Section title="Share Link">
-        <div className="share-btn-row center-row share-link-row">
+        <div className={clsx(styles.shareLinkRow, 'shareBtnRow center-row')}>
           <TextField
             className={styles.plannerInputContainer}
             value={shareConfig.shareLink}
@@ -146,7 +147,7 @@ const TimetableShareDialogContent = ({
         </div>
       </Section>
     ) : (
-      <div className="share-btn-row center-row">
+      <div className="shareBtnRow center-row">
         <LoadingButton
           loading={uploadTimetableLoading}
           className="share loading-btn"
@@ -348,7 +349,7 @@ const PlannerTimetable = ({ className }: PlannerTimetableProps) => {
   }, [shareId, planner]);
 
   return (
-    <div className="planner-timetable-container column">
+    <div className={clsx(styles.plannerTimetableContainer, 'column')}>
       {getUploadTimetableLoading && <Loading fixed />}
       <TimetablePanel
         className={className}
@@ -390,7 +391,7 @@ const PlannerTimetable = ({ className }: PlannerTimetableProps) => {
           enter: 120,
           exit: 0,
         }}
-        className="planner-share-dialog"
+        className={styles.plannerShareDialog}
         onClose={() => setShareCourses(null)}
         TransitionProps={{
           onExited: () => setShareCourses(null),

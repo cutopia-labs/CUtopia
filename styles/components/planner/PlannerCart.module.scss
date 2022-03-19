@@ -1,4 +1,4 @@
-.planner-cart {
+.plannerCart {
   max-height: 100%;
   height: fit-content;
   padding-top: 8px;
@@ -21,13 +21,13 @@
     justify-content: space-between;
     position: relative;
     --list-item-inner-padding: var(--card-padding);
-    .planner-cart-list-icon {
+    .plannerCartListIcon {
       margin-right: 8px;
       margin-left: 16px;
       font-size: 1.2rem;
       color: var(--error);
     }
-    .planner-cart-checkbox {
+    .plannerCartCheckbox {
       margin-left: 6px;
     }
     .list-item-title-container {
@@ -36,7 +36,7 @@
   }
 }
 
-.timetable-info-row {
+.timetableInfoRow {
   margin: 10px 0 14px 0;
   span {
     flex: 1;

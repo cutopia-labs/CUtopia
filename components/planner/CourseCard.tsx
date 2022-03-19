@@ -1,9 +1,9 @@
-import { useContext } from 'react';
+import { FC, useContext } from 'react';
 import { IconButton, useTheme } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
 import { observer } from 'mobx-react-lite';
 
-import '../../styles/components/planner/CourseCard.module.scss';
+import staticStyles from '../../styles/components/planner/CourseCard.module.scss';
 import updateOpacity from '../../helpers/updateOpacity';
 import { PlannerContext } from '../../store';
 import { Event } from '../../types';
@@ -34,12 +34,11 @@ const useStyles = (
   },
 });
 
-const CourseCard = ({
-  course,
-  config,
-}: PropsWithConfig<{
-  course: Event;
-}>) => {
+const CourseCard: FC<
+  PropsWithConfig<{
+    course: Event;
+  }>
+> = ({ course, config }) => {
   const theme = useTheme();
   const sTime = course.startTime.split(':');
   const eTime = course.endTime.split(':');
@@ -67,15 +66,15 @@ const CourseCard = ({
   const planner = useContext(PlannerContext);
 
   return (
-    <div className="timetable-courseCard" style={styles.courseCard}>
+    <div className={staticStyles.timetableCourseCard} style={styles.courseCard}>
       <span
-        className="timetable-courseCard-title"
+        className={staticStyles.timetableCourseCardTitle}
         style={styles.courseCardTitle}
       >
         {`${course.courseId} ${course.section}`}
       </span>
       <span
-        className="timetable-courseCard-location"
+        className={staticStyles.timetableCourseCardLocation}
         style={styles.courseCardLocation}
       >
         {course.location}
@@ -83,7 +82,7 @@ const CourseCard = ({
       <IconButton
         size="small"
         color="primary"
-        className="timetable-courseCard-delete"
+        className={staticStyles.timetableCourseCardDelete}
         style={{
           color: textColor,
         }}
