@@ -1,20 +1,20 @@
-.home-course-container {
+.homeCourseContainer {
   height: fit-content;
   overflow: visible;
-  .home-course-list-item {
+  .homeCourseListItem {
     height: auto;
     border-bottom: 1px solid var(--border);
     align-items: flex-start;
   }
   & > a {
     &:last-child {
-      .home-course-list-item {
+      .homeCourseListItem {
         border-bottom: none;
       }
     }
   }
 }
-.home-course-list-item {
+.homeCourseListItem {
   & > span {
     margin: 0 16px;
   }

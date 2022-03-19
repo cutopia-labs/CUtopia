@@ -5,9 +5,9 @@ import * as Sentry from '@sentry/react';
 import { observer } from 'mobx-react-lite';
 import { useMutation } from '@apollo/client';
 
-import '../../styles/components/user/LoginPanel.module.scss';
 import { useLocation } from 'react-use';
 import { useRouter } from 'next/router';
+import styles from '../../styles/components/user/LoginPanel.module.scss';
 import TextField from '../atoms/TextField';
 import { UserContext, ViewContext } from '../../store';
 import {
@@ -345,6 +345,7 @@ const LoginPanel = () => {
       <form className="grid-auto-row" onSubmit={onSubmit}>
         {MODE_ITEMS[mode].userId && (
           <TextField
+            className={styles.loginInputContainer}
             error={errors.userId}
             placeholder={MODE_ITEMS[mode].userId}
             type="number"
@@ -355,6 +356,7 @@ const LoginPanel = () => {
         )}
         {MODE_ITEMS[mode].username && (
           <TextField
+            className={styles.loginInputContainer}
             error={errors.username}
             placeholder={MODE_ITEMS[mode].username}
             value={username}
@@ -364,6 +366,7 @@ const LoginPanel = () => {
         )}
         {MODE_ITEMS[mode].password && (
           <TextField
+            className={styles.loginInputContainer}
             error={errors.password}
             placeholder={MODE_ITEMS[mode].password}
             value={password}
@@ -374,6 +377,7 @@ const LoginPanel = () => {
         )}
         {MODE_ITEMS[mode].verificationCode && (
           <TextField
+            className={styles.loginInputContainer}
             error={errors.verification}
             placeholder={MODE_ITEMS[mode].verificationCode}
             value={verificationCode}

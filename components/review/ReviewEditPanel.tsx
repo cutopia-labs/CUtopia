@@ -15,10 +15,10 @@ import {
 import { useMutation, useQuery } from '@apollo/client';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 
-import '../../styles/components/review/ReviewEditPanel.module.scss';
 import { HiOutlineInformationCircle } from 'react-icons/hi';
 import { useBeforeunload } from 'react-beforeunload';
 import { useRouter } from 'next/router';
+import styles from '../../styles/components/review/ReviewEditPanel.module.scss';
 import { ViewContext, UserContext } from '../../store';
 import { GET_REVIEW, COURSE_INFO_QUERY } from '../../constants/queries';
 import { ADD_REVIEW, EDIT_REVIEW } from '../../constants/mutations';
@@ -160,7 +160,7 @@ const ReviewSection = ({
     </div>
     {typeof value !== 'number' && (
       <TextField
-        className="review-section-input"
+        className={styles.reviewInputContainer}
         Tag="textarea"
         placeholder={`Leave your opinion about ${type} here.`}
         value={value.text}

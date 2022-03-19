@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import '../../styles/components/home/HomePageTabs.module.scss';
+import clsx from 'clsx';
+import styles from '../../styles/components/home/HomePageTabs.module.scss';
 import ListItem from '../molecules/ListItem';
 import Loading from '../atoms/Loading';
 import { getMMMDDYY } from '../../helpers/getTime';
@@ -20,11 +21,11 @@ export const CoursesList = ({ loading, courses }: CoursesListProps) => {
       {loading ? (
         <Loading />
       ) : (
-        <div className="home-course-container card">
+        <div className={clsx(styles.homeCourseContainer, 'card')}>
           {courses?.map(course => (
             <Link key={course.courseId} href={`/review/${course.courseId}`}>
               <ListItem
-                className="home-course-list-item"
+                className={styles.homeCourseListItem}
                 title={course.courseId}
                 caption={course.title}
                 noBorder
@@ -46,13 +47,13 @@ export const ReviewsList = ({ reviewIds }: ReviewsListProps) => {
     return <ErrorCard mode={ErrorCardMode.NULL} inPlace={false} />;
   }
   return (
-    <div className="home-course-container card">
+    <div className={clsx(styles.homeCourseContainer, 'card')}>
       {reviewIds?.map(id => {
         const [courseId, createdAt] = id.split('#');
         return (
           <Link key={id} href={`/review/${courseId}/${createdAt}`}>
             <ListItem
-              className="home-course-list-item"
+              className={styles.homeCourseListItem}
               title={courseId}
               caption={getMMMDDYY(createdAt)}
               noBorder

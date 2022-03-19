@@ -9,17 +9,16 @@
   padding: var(--card-padding) 10px;
   position: relative;
   row-gap: var(--review-rowGap);
-  .inputContainer {
-    width: calc(100% - 36px);
-  }
-  textarea {
-    &.inputContainer {
-      min-height: 100px;
-    }
-  }
   .header-search-result {
     position: absolute;
     margin-top: 70px;
+  }
+}
+
+.reviewInputContainer {
+  width: calc(100% - 36px);
+  & textarea {
+    min-height: 100px;
   }
 }
 

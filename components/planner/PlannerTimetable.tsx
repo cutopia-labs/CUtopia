@@ -1,11 +1,11 @@
 import { useContext, useReducer, useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 
-import '../../styles/components/planner/PlannerTimetable.module.scss';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { Button, Dialog } from '@material-ui/core';
 import copy from 'copy-to-clipboard';
 import { useRouter } from 'next/router';
+import styles from '../../styles/components/planner/PlannerTimetable.module.scss';
 import TimetablePanel from '../templates/TimetablePanel';
 import { ViewContext, PlannerContext, plannerStore } from '../../store';
 import { PLANNER_CONFIGS } from '../../constants/configs';
@@ -127,6 +127,7 @@ const TimetableShareDialogContent = ({
       <Section title="Share Link">
         <div className="share-btn-row center-row share-link-row">
           <TextField
+            className={styles.plannerInputContainer}
             value={shareConfig.shareLink}
             onChangeText={() => {}}
             disabled

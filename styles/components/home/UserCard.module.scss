@@ -1,10 +1,10 @@
-.user-card {
+.userCard {
   height: fit-content;
-  .user-card-divider {
+  .userCard-divider {
     margin: 0 var(--card-padding);
   }
 }
-.user-card-header {
+.userCardHeader {
   padding: var(--card-padding);
   .char-icon {
     background-color: var(--primary);
@@ -29,7 +29,7 @@
     }
   }
 }
-.user-card-header-details {
+.userCardHeaderDetails {
   height: 36px;
   margin-left: 8px;
 }
@@ -50,7 +50,7 @@
     }
   }
 }
-.user-aboutCard {
+.userAboutCard {
   margin-top: var(--card-padding);
   padding: var(--card-padding);
   padding-top: 0;

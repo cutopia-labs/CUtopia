@@ -38,7 +38,7 @@ const TextField = ({
       )}
       <TagName
         ref={inputRef as any}
-        className={clsx('inputContainer', className)}
+        className={clsx(styles.inputContainer, className)}
         placeholder={placeholder}
         defaultValue={defaultValue}
         type={type}

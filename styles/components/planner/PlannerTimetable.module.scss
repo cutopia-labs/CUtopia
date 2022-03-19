@@ -12,10 +12,11 @@
       margin-left: 6px;
       width: 72px;
     }
-    .inputContainer {
-      flex: 1;
-    }
   }
+}
+
+.plannerInputContainer {
+  flex: 1;
 }
 
 .share-btn-row {
@@ -48,15 +49,15 @@
       display: none;
     }
   }
+  .plannerInputContainer {
+    width: 100%;
+  }
   .planner-share-dialog {
     .MuiPaper-root {
       margin: 0;
     }
     .content-container {
       width: calc(90vw - 2 * var(--card-padding));
-    }
-    .inputContainer {
-      width: 100%;
     }
   }
 }

@@ -5,7 +5,8 @@ import { SettingsOutlined } from '@material-ui/icons';
 import { IconButton, Tooltip } from '@material-ui/core';
 import { GoUnverified, GoVerified } from 'react-icons/go';
 
-import '../../styles/components/home/UserCard.module.scss';
+import clsx from 'clsx';
+import styles from '../../styles/components/home/UserCard.module.scss';
 import { ViewContext, UserContext } from '../../store';
 import { User } from '../../types';
 import { LEVEL_UP_EXP } from '../../constants/configs';
@@ -19,12 +20,12 @@ const UserCard = ({ userData }: UserCardProps) => {
   const view = useContext(ViewContext);
 
   return (
-    <div className="user-card card">
-      <div className="user-card-header center-row">
+    <div className={clsx(styles.userCard, 'card')}>
+      <div className={clsx(styles.userCardHeader, 'center-row')}>
         <Avatar className="char-icon">
           {user.data?.username?.charAt(0) || ''}
         </Avatar>
-        <div className="user-card-header-details column">
+        <div className={clsx(styles.userCardHeaderDetails, 'column')}>
           <div className="title center-row">
             {user.data?.username}
             <Tooltip
@@ -62,12 +63,12 @@ const UserCard = ({ userData }: UserCardProps) => {
           <SettingsOutlined />
         </IconButton>
       </div>
-      <div className="user-aboutCard center-row">
-        <div className="user-aboutCard-item column">
+      <div className={clsx(styles.userAboutCard, 'center-row')}>
+        <div className={clsx(styles.userAboutCardItem, 'column')}>
           <div className="sub-title">{userData?.reviewIds?.length || 0}</div>
           <div className="light-caption">Reviews</div>
         </div>
-        <div className="user-aboutCard-item column">
+        <div className={clsx(styles.userAboutCardItem, 'column')}>
           <div className="sub-title">{userData?.upvotes || 0}</div>
           <div className="light-caption">Upvotes</div>
         </div>
