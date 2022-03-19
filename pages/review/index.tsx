@@ -11,17 +11,17 @@ import '../../styles/components/review/HomePanel.module.scss';
 import { useTitle } from 'react-use';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
-import GradeIndicator from '../atoms/GradeIndicator';
+import GradeIndicator from '../../components/atoms/GradeIndicator';
 import { RATING_FIELDS } from '../../constants';
 import {
   TOP_RATED_COURSES_QUERY,
   POPULAR_COURSES_QUERY,
 } from '../../constants/queries';
-import Loading from '../atoms/Loading';
-import ListItem from '../molecules/ListItem';
-import Badge from '../atoms/Badge';
-import ChipsRow from '../molecules/ChipsRow';
-import TabsContainer from '../molecules/TabsContainer';
+import Loading from '../../components/atoms/Loading';
+import ListItem from '../../components/molecules/ListItem';
+import Badge from '../../components/atoms/Badge';
+import ChipsRow from '../../components/molecules/ChipsRow';
+import TabsContainer from '../../components/molecules/TabsContainer';
 import {
   PopularCourse,
   RatingField,
@@ -31,10 +31,10 @@ import {
 
 import { UserContext, ViewContext } from '../../store';
 import { getMMMDDYY } from '../../helpers/getTime';
-import Footer from '../molecules/Footer';
-import FeedCard from '../molecules/FeedCard';
+import Footer from '../../components/molecules/Footer';
+import FeedCard from '../../components/molecules/FeedCard';
 import { getRandomGeCourses } from '../../helpers/getCourses';
-import Card from '../atoms/Card';
+import Card from '../../components/atoms/Card';
 import { LAZY_LOAD_BUFFER, REVIEWS_PER_PAGE } from '../../constants/configs';
 import useDebounce from '../../hooks/useDebounce';
 import { getRecentReviewQuery } from '../../helpers/dynamicQueries';
