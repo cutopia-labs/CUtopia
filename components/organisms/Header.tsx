@@ -13,7 +13,7 @@ import {
 } from '@material-ui/icons';
 import clsx from 'clsx';
 
-import '../../styles/pages/HomePage.module.scss';
+import styles from '../../styles/pages/HomePage.module.scss';
 import Logo from '../atoms/Logo';
 import useMobileQuery from '../../hooks/useMobileQuery';
 import SearchDropdown from './SearchDropdown';
@@ -52,7 +52,8 @@ const Header = () => {
       <Link key={section.link} href={section.link}>
         <a
           className={clsx(
-            'nav-label-container column center',
+            styles.navLabelContainer,
+            'column center',
             active && 'active'
           )}
         >
@@ -64,8 +65,8 @@ const Header = () => {
   });
 
   return (
-    <header className="header-background-container">
-      <div className="header-container row">
+    <header className={styles.headerBgContainer}>
+      <div className={clsx(styles.headerContainer, 'row')}>
         {isMobile && (
           <>
             {!visible && (
@@ -79,7 +80,7 @@ const Header = () => {
             )}
             <Menu
               id="simple-menu"
-              className="sort-menu"
+              className={styles.sortMenu}
               anchorEl={anchorEl}
               keepMounted
               open={Boolean(anchorEl)}
@@ -98,13 +99,13 @@ const Header = () => {
         )}
         {(!visible || !isMobile) && (
           <Link href="/">
-            <a className="header-logo">
+            <a className={styles.headerLogo}>
               <Logo />
             </a>
           </Link>
         )}
-        <nav className="header-nav row">
-          <SearchDropdown />
+        <nav className={clsx(styles.headerNav, 'row')}>
+          <SearchDropdown style={styles.headerSearchDropdown} />
           {!isMobile && navSections}
         </nav>
       </div>

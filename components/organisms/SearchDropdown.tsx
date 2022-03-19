@@ -1,6 +1,4 @@
-import '../../styles/components/organisms/SearchDropdown.module.scss';
-
-import { useState, useRef } from 'react';
+import { useState, useRef, FC } from 'react';
 import {
   ChatBubble,
   ChatBubbleOutlineOutlined,
@@ -12,7 +10,7 @@ import {
 import clsx from 'clsx';
 
 import { BsChatDots, BsFillChatDotsFill } from 'react-icons/bs';
-import '../../styles/components/organisms/Header.module.scss';
+import styles from '../../styles/components/organisms/SearchDropdown.module.scss';
 import SearchInput from '../molecules/SearchInput';
 import useMobileQuery from '../../hooks/useMobileQuery';
 import useOuterClick from '../../hooks/useOuterClick';
@@ -46,8 +44,8 @@ const SECTIONS = [
   },
 ];
 
-const SearchDropdown = (props: SearchPanelProps) => {
-  const { onCoursePress, ...searchPanelProps } = props || {};
+const SearchDropdown: FC<SearchPanelProps> = props => {
+  const { onCoursePress, style, ...searchPanelProps } = props || {};
   const [searchPayload, setSearchPayload] = useState<SearchPayload | null>(
     null
   );
@@ -68,7 +66,12 @@ const SearchDropdown = (props: SearchPanelProps) => {
 
   return (
     <div
-      className={clsx('search-dropdown column', visible && 'active')}
+      className={clsx(
+        styles.searchDropdown,
+        'column',
+        visible && 'active',
+        style
+      )}
       ref={searchDropDownRef}
     >
       <SearchInput
@@ -82,6 +85,7 @@ const SearchDropdown = (props: SearchPanelProps) => {
       />
       {visible && (
         <SearchPanel
+          style={styles.searchPanel}
           searchPayloadProp={searchPayload}
           onCoursePress={courseId => {
             setSearchPayload(null);

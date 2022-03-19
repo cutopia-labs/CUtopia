@@ -304,7 +304,7 @@ h4 {
   height: fit-content;
 }
 
-.chip-fill.MuiButtonBase-root {
+.chipFill.MuiButtonBase-root {
   background-color: var(--background-chip);
   border-radius: var(--border-radius);
   border: none;
@@ -391,7 +391,7 @@ textarea {
 }
 
 /* Search Input */
-.search-inputContainer {
+.searchInputContainer {
   display: flex;
   align-items: center;
   padding: 2px 4px;
@@ -420,6 +420,13 @@ textarea {
 }
 
 /* Scrollbar styles */
+
+/* Others */
+
+.recentChips {
+  margin: 4px var(--card-padding) var(--card-padding) var(--card-padding);
+}
+
 
 /* Mobile Styles */
 

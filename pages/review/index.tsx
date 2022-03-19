@@ -301,8 +301,8 @@ const HomePanel = () => {
       <div className="secondary-column sticky">
         <Card title="Recents">
           <ChipsRow
-            className="recent-chips"
-            chipClassName="chip-fill"
+            className="recentChips"
+            chipClassName="chipFill"
             items={user.searchHistory}
             onItemClick={item => router.push(`/review/${item}`)}
           />

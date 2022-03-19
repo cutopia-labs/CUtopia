@@ -1,4 +1,4 @@
-import { useState, useEffect, Fragment, useContext } from 'react';
+import { useState, useEffect, Fragment, useContext, FC } from 'react';
 import {
   InputBase,
   ListItem as MUIListItem,
@@ -21,6 +21,7 @@ import { useQuery } from '@apollo/client';
 import { observer } from 'mobx-react-lite';
 
 import { useRouter } from 'next/router';
+import clsx from 'clsx';
 import styles from '../../styles/components/organisms/SearchPanel.module.scss';
 import ListItem from '../molecules/ListItem';
 import COURSE_CODES from '../../constants/courseCodes';
@@ -113,7 +114,10 @@ export const SearchResult = ({
               placement="right"
             >
               <div
-                className="list-item-container search-list-item disabled"
+                className={clsx(
+                  styles.searchListItem,
+                  'list-item-container disabled'
+                )}
                 key={`listitem-${course.c}`}
               >
                 <div className="list-item-title-container column">
@@ -124,7 +128,7 @@ export const SearchResult = ({
             </Tooltip>
           ) : (
             <ListItem
-              className="search-list-item"
+              className={styles.searchListItem}
               key={`listitem-${course.c}`}
               ribbonIndex={i}
               chevron
@@ -145,7 +149,7 @@ export const SearchResult = ({
 const DepartmentList = ({ setSearchPayload }) => {
   const [currentSchool, setCurrentSchool] = useState(null);
   return (
-    <div className="schools-container">
+    <div>
       {Object.entries(COURSE_CODES).map(([k, v]) => (
         <Fragment key={k}>
           <MUIListItem
@@ -166,10 +170,9 @@ const DepartmentList = ({ setSearchPayload }) => {
             {k === currentSchool ? <ExpandLess /> : <ExpandMore />}
           </MUIListItem>
           <Collapse in={k === currentSchool} timeout="auto" unmountOnExit>
-            <div className="code-list">
+            <div className={styles.codeList}>
               {v.map((code, i) => (
                 <ListItem
-                  className="search-panel-subject-code"
                   key={code}
                   title={code}
                   ribbonIndex={i}
@@ -196,14 +199,16 @@ export type SearchPanelProps = {
   setSearchPayloadProp?: (payload: SearchPayload) => void;
   onCoursePress?: (...args: any[]) => any;
   skipDefaultAction?: boolean;
+  style?: string;
 };
 
-const SearchPanel = ({
+const SearchPanel: FC<SearchPanelProps> = ({
   searchPayloadProp,
   setSearchPayloadProp,
   onCoursePress,
   skipDefaultAction,
-}: SearchPanelProps) => {
+  style,
+}) => {
   const [searchPayload, setSearchPayloadState] = useState<SearchPayload | null>(
     searchPayloadProp
   );
@@ -273,14 +278,14 @@ const SearchPanel = ({
   }, [searchPayloadProp]);
 
   return (
-    <Card className="search-panel">
-      <div className="search-inputContainer row">
+    <Card className={clsx(styles.searchPanel, style)}>
+      <div className="searchInputContainer row">
         {(searchPayload &&
           (searchPayload.mode !== 'query' || searchPayload.text)) ||
         currentCourse ? (
           <IconButton
             size="small"
-            className="go-back-btn"
+            className={styles.goBackBtn}
             onClick={() => {
               if (!currentCourse) {
                 setSearchPayload(null);
@@ -293,11 +298,11 @@ const SearchPanel = ({
             <ArrowBack />
           </IconButton>
         ) : (
-          <div className="search-icon">
+          <div className={styles.searchIcon}>
             <Search />
           </div>
         )}
-        <form className="search-form" onSubmit={e => e.preventDefault()}>
+        <form className={styles.searchForm} onSubmit={e => e.preventDefault()}>
           <InputBase
             className="search-input"
             placeholder="Search…"
@@ -315,10 +320,10 @@ const SearchPanel = ({
       </div>
       <Divider />
       {!searchPayload && !currentCourse && (
-        <Card title="Recents" inPlace className="search-panel-recent">
+        <Card title="Recents" inPlace>
           <ChipsRow
-            className="recent-chips"
-            chipClassName="chip-fill"
+            className="recentChips"
+            chipClassName="chipFill"
             items={user.searchHistory.slice(0, 3)}
             onItemClick={(item, e) => {
               e.stopPropagation();
@@ -377,7 +382,6 @@ const SearchPanel = ({
                   }
                   setSearchPayload({ mode: item.label });
                 }}
-                className="search-panel-mode-item"
               >
                 <ListItemIcon>{item.icon}</ListItemIcon>
                 <ListItemText primary={item.label} />

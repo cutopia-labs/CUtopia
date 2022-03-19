@@ -52,7 +52,7 @@
   width: 40px;
   opacity: 0.5;
 }
-.sort-menu {
+.sortMenu {
   text-transform: capitalize;
 }
 
@@ -72,10 +72,6 @@
     white-space: pre-line;
     -webkit-line-clamp: 3;
   }
-}
-
-.recent-chips {
-  margin: 4px var(--card-padding) var(--card-padding) var(--card-padding);
 }
 
 @media only screen and (max-width: 1260px) {
