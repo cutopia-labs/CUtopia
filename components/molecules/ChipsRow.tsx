@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { MouseEvent } from 'react';
 import { ErrorCardMode } from '../../types';
 
-import '../../styles/components/molecules/ChipsRow.module.scss';
+import styles from '../../styles/components/molecules/ChipsRow.module.scss';
 import ErrorCard from './ErrorCard';
 
 type ChipsRowProps = {
@@ -28,7 +28,7 @@ const ChipsRow = ({
   }
   const multipleSelection = typeof select !== 'string';
   return (
-    <div className={clsx('chips-row', className)} {...props}>
+    <div className={clsx(styles.chipsRow, className)} {...props}>
       {items.map(item => {
         const selected = multipleSelection
           ? select?.includes(item)
@@ -36,7 +36,7 @@ const ChipsRow = ({
         return (
           <Chip
             key={item}
-            className={clsx('chip-item', selected && 'active', chipClassName)}
+            className={clsx(selected && 'active', chipClassName)}
             onClick={e => {
               if (onItemClick) {
                 onItemClick(item, e);

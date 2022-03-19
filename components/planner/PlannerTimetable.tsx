@@ -384,7 +384,7 @@ const PlannerTimetable = ({ className }: PlannerTimetableProps) => {
         setLabel={(label: string) => planner.setPlannerLabel(label)}
         deleteTable={(key: number) => planner.deletePlanner(key)}
       />
-      {!isHome && <Footer />}
+      {!isHome && <Footer style={styles.plannerFooter} />}
       <Dialog
         transitionDuration={{
           enter: 120,

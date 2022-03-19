@@ -193,6 +193,7 @@ const CourseCard: FC<CourseCardProps> = ({
           )}
           <Section title="Past Paper" subheading>
             <Link
+              style={styles.courseLinkContainer}
               url={`https://julac.hosted.exlibrisgroup.com/primo-explore/search?query=any,contains,${courseInfo.courseId}&tab=default_tab&search_scope=Exam&sortby=date&vid=CUHK&lang=en_US`}
               label="Search on CUHK library"
             />

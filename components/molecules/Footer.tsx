@@ -1,7 +1,8 @@
 import clsx from 'clsx';
 import Link from 'next/link';
-import '../../styles/components/molecules/Footer.module.scss';
 import { ReportCategory } from 'cutopia-types/lib/codes';
+import { FC } from 'react';
+import styles from '../../styles/components/molecules/Footer.module.scss';
 import { viewStore } from '../../store';
 
 type MultiTypeLink = {
@@ -49,13 +50,17 @@ const renderItem = (item: MultiTypeLink) => {
   if (item.to) {
     return (
       <Link key={item.to} href={item.to}>
-        <a className="footer-link hover">{item.label}</a>
+        <a className={clsx(styles.footerLink, 'hover')}>{item.label}</a>
       </Link>
     );
   }
   if (item.url) {
     return (
-      <a key={item.url} className="footer-link hover" href={item.url}>
+      <a
+        key={item.url}
+        className={clsx(styles.footerLink, 'hover')}
+        href={item.url}
+      >
         {item.label}
       </a>
     );
@@ -64,7 +69,7 @@ const renderItem = (item: MultiTypeLink) => {
     return (
       <span
         key={item.label}
-        className="footer-link hover"
+        className={clsx(styles.footerLink, 'hover')}
         onClick={item.onClick}
       >
         {item.label}
@@ -76,10 +81,11 @@ const renderItem = (item: MultiTypeLink) => {
 
 type FooterProps = {
   mt?: boolean;
+  style?: string;
 };
 
-const Footer = ({ mt }: FooterProps) => (
-  <div className={clsx('footer', mt && 'mt')}>
+const Footer: FC<FooterProps> = ({ mt, style }) => (
+  <div className={clsx(styles.footer, mt && 'mt', style)}>
     {FOOTER_ITEMS.map(item => renderItem(item))}
   </div>
 );

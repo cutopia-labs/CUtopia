@@ -7,10 +7,10 @@ import {
 } from '@material-ui/icons';
 import { useQuery } from '@apollo/client';
 
-import '../../styles/components/review/HomePanel.module.scss';
 import { useTitle } from 'react-use';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
+import styles from '../../styles/components/review/HomePanel.module.scss';
 import GradeIndicator from '../atoms/GradeIndicator';
 import { RATING_FIELDS } from '../../constants';
 import {
@@ -266,6 +266,7 @@ const HomePanel = () => {
         <TabsContainer items={MENU_ITEMS} selected={tab} onSelect={setTab} />
         {(tab === 'Top Rated' || tab === 'Recents') && (
           <ChipsRow
+            style={styles.homeChipsRow}
             items={[
               tab === 'Top Rated' ? 'overall' : '',
               ...RATING_FIELDS,

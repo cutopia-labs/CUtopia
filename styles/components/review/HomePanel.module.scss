@@ -1,9 +1,9 @@
 .review-home-panel {
   padding: 0;
   grid-auto-rows: min-content;
-  .chips-row {
-    margin-right: auto;
-  }
+}
+.homeChipsRow {
+  margin-right: auto;
 }
 .review-home-row {
   align-items: flex-start;
@@ -85,10 +85,10 @@
       top: var(--header-height);
       z-index: 2;
     }
-    .chips-row {
-      padding: 0 var(--card-padding);
-      width: calc(100% - 2 * var(--card-padding));
-    }
+  }
+  .homeChipsRow {
+    padding: 0 var(--card-padding);
+    width: calc(100% - 2 * var(--card-padding));
   }
   .review-home-row {
     flex-direction: column;

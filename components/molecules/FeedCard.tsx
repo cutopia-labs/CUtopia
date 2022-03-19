@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import '../../styles/components/molecules/FeedCard.module.scss';
+import styles from '../../styles/components/molecules/FeedCard.module.scss';
 import { CourseConcise } from '../../types';
 import Card, { CardProps } from '../atoms/Card';
 import ListItem from './ListItem';
@@ -17,7 +17,7 @@ const FeedCard = ({
   onItemClick,
   ...props
 }: FeedCardProps & CardProps) => (
-  <Card className={clsx('feed-card', className)} title={title} {...props}>
+  <Card className={clsx(styles.feedCard, className)} title={title} {...props}>
     {courses.map(course => (
       <ListItem
         key={course.courseId}

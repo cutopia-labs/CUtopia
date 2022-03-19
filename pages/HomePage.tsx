@@ -7,8 +7,8 @@ import {
 } from '@material-ui/icons';
 import { observer } from 'mobx-react-lite';
 
-import '../styles/pages/HomePage.module.scss';
 import { useTitle } from 'react-use';
+import styles from '../styles/pages/HomePage.module.scss';
 import UserCard from '../components/home/UserCard';
 import { PlannerContext, UserContext } from '../store';
 import { CoursesList, ReviewsList } from '../components/home/HomePageTabs';
@@ -39,7 +39,12 @@ const LinksCard = () => (
   <Card className="links-card">
     <Typography>Links</Typography>
     {LINKS.map(link => (
-      <Link url={link.url} label={link.name} key={link.url} />
+      <Link
+        style={styles.homeLinkContainer}
+        url={link.url}
+        label={link.name}
+        key={link.url}
+      />
     ))}
   </Card>
 );

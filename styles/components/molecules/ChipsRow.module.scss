@@ -1,4 +1,4 @@
-.chips-row {
+.chipsRow {
   display: flex;
   flex-direction: row;
   overflow-x: scroll;
@@ -26,7 +26,7 @@
 
 
 @media only screen and (max-width: 1260px) {
-  .chips-row {
+  .chipsRow {
     flex-wrap: nowrap;
     overflow-x: scroll;
   }
