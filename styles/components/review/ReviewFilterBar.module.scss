@@ -10,7 +10,7 @@
   }
   flex-direction: row;
   .filter-row {
-    .reviews-filter-label {
+    .reviewsFilterLabel {
       margin: 0;
       font-weight: 500;
     }
@@ -36,13 +36,12 @@
 .reviews-filter-ratings {
   align-items: center;
 }
-.reviews-filter-label {
+.reviewsFilterLabel {
   text-transform: capitalize;
   margin: 0 10px;
   font-size: 14px;
   color: var(--text);
 }
-
 
 @media only screen and (max-width: 1260px) {
   .reviews-filter {

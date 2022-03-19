@@ -3,7 +3,6 @@ import { useQuery } from '@apollo/client';
 import { Divider } from '@material-ui/core';
 import pluralize from 'pluralize';
 
-import '../../styles/components/review/CourseReviews.module.scss';
 import copy from 'copy-to-clipboard';
 
 import { ReportCategory } from 'cutopia-types/lib/codes';
@@ -226,7 +225,7 @@ const CourseReviews: FC<Props> = ({
           <Divider />
         </span>
       )}
-      <div className="grid-auto-row reviews-container">
+      <div className="grid-auto-row">
         {(reviews || []).map(item => (
           <ReviewCard
             key={item.createdAt}

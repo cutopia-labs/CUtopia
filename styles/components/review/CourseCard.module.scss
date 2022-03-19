@@ -5,9 +5,9 @@
 .concise {
   padding: var(--card-padding);
   overflow: initial;
-  & > .courseCard-header {
+  & > .courseCardHeader {
     align-items: center;
-    .courseCard-title-container {
+    .courseCardTitleContainer {
       margin-right: auto;
       width: 100%;
     }
@@ -21,7 +21,7 @@
 .courseCard {
   position: relative;
   overflow: hidden;
-  .grade-row {
+  .gradeRow {
     height: 46px;
     min-width: 550px;
     margin-top: auto;
@@ -45,10 +45,10 @@
   width: fit-content;
 }
 
-.requirement-section {
+.requirementSection {
   width: 100%;
 }
-.subHeading-container {
+.subHeadingContainer {
   width: 100%;
   .past-papers-container {
     display: flex;
@@ -62,10 +62,10 @@
     }
   }
 }
-.courseCard-title-container {
+.courseCardTitleContainer {
   margin-right: 8px;
 }
-.courseCard-header {
+.courseCardHeader {
   display: flex;
   flex: 1;
   width: 100%;
@@ -87,7 +87,7 @@
   }
 }
 
-.reviews-link-heading {
+.reviewsLinkHeading {
   cursor: pointer;
   svg {
     margin-left: 6px;
@@ -96,7 +96,7 @@
 
 @media only screen and (max-width: 1260px) {
   .courseCard {
-    .grade-row {
+    .gradeRow {
       overflow: initial;
     }
   }

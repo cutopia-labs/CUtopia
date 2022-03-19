@@ -1,10 +1,10 @@
 import clsx from 'clsx';
-import { PropsWithChildren } from 'react';
+import { FC } from 'react';
 
 import { RATING_FIELDS } from '../../constants';
 import { CourseRating, Review } from '../../types';
 import GradeIndicator from '../atoms/GradeIndicator';
-import '../../styles/components/review/GradeRow.module.scss';
+import styles from '../../styles/components/review/GradeRow.module.scss';
 
 type GradeRowProps = {
   rating: Review | CourseRating;
@@ -16,7 +16,7 @@ type GradeRowProps = {
   isMobile?: boolean;
 };
 
-const GradeRow = ({
+const GradeRow: FC<GradeRowProps> = ({
   rating,
   children,
   isReview,
@@ -25,13 +25,13 @@ const GradeRow = ({
   additionalClassName,
   additionalChildClassName,
   isMobile,
-}: PropsWithChildren<GradeRowProps>) => (
-  <div className={clsx('grade-row', additionalClassName)}>
+}) => (
+  <div className={clsx(styles.gradeRow, additionalClassName)}>
     {!isReview && (
       <GradeIndicator
         grade={rating.overall}
         additionalClassName={clsx(
-          'reviews-filter-grade-indicator',
+          styles.reviewsFilterGradeIndicator,
           !isReview && 'overall'
         )}
       />
@@ -42,7 +42,8 @@ const GradeRow = ({
         <div
           key={field}
           className={clsx(
-            'center-row rating-container',
+            styles.ratingContainer,
+            'center-row',
             selected === field && 'active',
             additionalChildClassName
           )}
@@ -53,7 +54,7 @@ const GradeRow = ({
           }}
         >
           {field !== 'overall' && (
-            <div className="reviews-filter-label" key={field}>
+            <div className="reviewsFilterLabel" key={field}>
               {`${field}${isMobile ? '' : ':'}`}
             </div>
           )}
@@ -63,7 +64,7 @@ const GradeRow = ({
                 ? rating[field].grade
                 : rating[field]
             }
-            additionalClassName="reviews-filter-grade-indicator"
+            additionalClassName={styles.reviewsFilterGradeIndicator}
           />
         </div>
       ))}

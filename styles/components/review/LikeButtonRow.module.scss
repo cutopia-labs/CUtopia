@@ -1,4 +1,4 @@
-.like-btn {
+.likeBtn {
   margin-right: 8px;
   height: 30px;
   align-items: center;
@@ -6,11 +6,12 @@
   flex-direction: row;
   opacity: 0.8;
 }
-.like-btn-row {
+.likeBtnRow {
   background-color: var(--background);
   border-radius: 50px;
   overflow: hidden;
-  & > .like-btn {
+  margin-left: auto;
+  & > .likeBtn {
     border-radius: 0;
     &.active.Mui-disabled {
       svg {
@@ -30,5 +31,11 @@
       color: var(--text);
       opacity: 0.8;
     }
+  }
+}
+
+@media only screen and (max-width: 1260px) {
+  .likeBtnRow {
+    margin-left: 6px;
   }
 }

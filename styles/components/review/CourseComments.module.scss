@@ -6,7 +6,7 @@
   --message-spacing: 10px;
 }
 
-.message-username {
+.messageUsername {
   margin: 0px var(--message-spacing) 6px 0;
   font-weight: 500;
   font-size: 14px;
@@ -16,14 +16,14 @@
   }
 }
 
-.message-text {
+.messageText {
   font-size: 14px;
   font-weight: normal;
 }
 
-.messages-container {
+.messagesContainer {
   row-gap: 20px;
-  .load-more-btn {
+  .loadMoreBtn {
     margin-right: auto;
     margin-left: auto;
     .MuiButton-label {
@@ -34,7 +34,7 @@
   }
 }
 
-.message-inputContainer {
+.messageInputContainer {
   position: sticky;
   bottom: 8px;
   margin-top: 10px;

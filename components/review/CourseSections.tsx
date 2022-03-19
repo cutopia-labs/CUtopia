@@ -9,7 +9,8 @@ import {
   DeleteOutline,
 } from '@material-ui/icons';
 
-import '../../styles/components/review/CourseSections.module.scss';
+import clsx from 'clsx';
+import styles from '../../styles/components/review/CourseSections.module.scss';
 import { PlannerContext, ViewContext } from '../../store';
 import { WEEKDAYS_TWO_ABBR } from '../../constants';
 import { CourseInfo, CourseSection, ErrorCardMode } from '../../types';
@@ -57,8 +58,8 @@ const SectionCard = ({
     },
   ];
   return (
-    <div className="course-section-card">
-      <span className="section-header course-term-label">
+    <div className={styles.courseSectionCard}>
+      <span className={clsx(styles.sectionHeader, styles.courseTermLabel)}>
         {section.name}
         <IconButton
           size="small"
@@ -71,9 +72,9 @@ const SectionCard = ({
           {added ? <DeleteOutline /> : <Add />}
         </IconButton>
       </span>
-      <div className="section-detail">
+      <div className={styles.sectionDetail}>
         {SECTION_CARD_ITEMS.map(item => (
-          <div className="section-detail-item" key={item.val}>
+          <div className={styles.sectionDetailItem} key={item.val}>
             {item.icon}
             {item.val}
           </div>
@@ -131,9 +132,11 @@ const CourseSections = ({
     planner.updateStore('previewPlannerCourse', previewCourse);
   };
   return (
-    <div className="course-sections">
-      <div className="course-section-wrapper">
-        <span className="course-term-label">{`${courseTerms[currentTermIndex].name}`}</span>
+    <div className={styles.courseSections}>
+      <div className={styles.courseSectionWrapper}>
+        <span
+          className={styles.courseTermLabel}
+        >{`${courseTerms[currentTermIndex].name}`}</span>
         {courseTerms[currentTermIndex].course_sections.map(section => (
           <SectionCard
             key={section.name}

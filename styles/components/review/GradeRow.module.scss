@@ -1,4 +1,4 @@
-.grade-row {
+.gradeRow {
   display: flex;
   align-items: center;
   overflow: hidden;
@@ -16,27 +16,27 @@
   }
 }
 
-.grade-indicator.reviews-filter-grade-indicator.overall {
+.grade-indicator.reviewsFilterGradeIndicator.overall {
   margin: -10px 6px -10px 0px !important;
   height: 50px;
   border-radius: 0;
 }
 
-.rating-container {
+.ratingContainer {
   cursor: default;
   padding: 0 10px;
   height: 30px;
-  > .reviews-filter-label {
+  > .reviewsFilterLabel {
     margin: 0 10px 0 0;
   }
 }
 
-.grade-row {
+.gradeRow {
   &.review-header {
-    > div > .rating-container {
+    > div > .ratingContainer {
       height: 38px;
     }
-    .rating-container.active {
+    .ratingContainer.active {
       border-bottom: 2px solid var(--accent);
     }
   }
@@ -45,7 +45,7 @@
     height: auto;
     flex-wrap: wrap;
     justify-content: flex-start;
-    > .rating-container {
+    > .ratingContainer {
       flex: 1;
       justify-content: space-between;
       margin: 6px;

@@ -123,7 +123,7 @@ const ReviewFilterBar = ({
                   {getLabel(parseInt(k, 10), reviewsPayload)}
                 </Button>
               ))}
-            <div className="reviews-filter-label caption">
+            <div className="reviewsFilterLabel caption">
               {/* exceedLimit && `Limit exceeded (post 1 reviews to unlock)` */}
               {fetchAllAction && (
                 <Button size="small" color="primary" onClick={fetchAllAction}>

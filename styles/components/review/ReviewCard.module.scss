@@ -35,11 +35,11 @@
     background-color: var(--background-secondary);
   }
 }
-.grade-row {
-  &.review-grade-row {
+.gradeRow {
+  &.review-gradeRow {
     background-color: transparent;
     border-radius: 0;
-    .rating-container {
+    .ratingContainer {
       height: 48px;
       padding: 0 10px;
       &:hover {
@@ -63,7 +63,7 @@
   justify-content: flex-start;
   padding: var(--review-card-inner-padding-vertical) var(--review-card-inner-padding-horizontal);
   width: 100%;
-  .reviews-filter-label {
+  .reviewsFilterLabel {
     margin: 0;
   }
   .term {
@@ -89,7 +89,7 @@
     margin-left: 16px;
   }
 }
-.reviews-filter-label {
+.reviewsFilterLabel {
   &.author {
     text-transform: none;
     margin: 0;
@@ -131,9 +131,6 @@
   &.retracted {
     margin-top: 0;
   }
-  .like-btn-row {
-    margin-left: auto;
-  }
   .share-icon-btn {
     color: var(--text);
     opacity: 0.8;
@@ -145,7 +142,7 @@
   grid-column-gap: var(--card-padding);
 }
 @media only screen and (max-width: 1260px) {
-  .reviews-filter-label {
+  .reviewsFilterLabel {
     &.author {
       font-size: 12px;
     }
@@ -157,14 +154,6 @@
   .review-text-full {
     grid-template-columns: repeat(1, 1fr);
   }
-  .review-bottom-row {
-    .like-btn-row {
-      margin-left: 6px;
-      .like-btn {
-        padding: 0;
-      }
-    }
-  }
   .review-card {
     .tab {
       &:hover {
@@ -173,18 +162,18 @@
       }
     }
   }
-  .grade-row.review-grade-row {
+  .gradeRow.review-gradeRow {
     & > div:first-child {
       display: none;
     }
-    .rating-container {
+    .ratingContainer {
       flex-direction: column;
       height: 62px;
       justify-content: center;
       flex: 1;
     }
-    .rating-container {
-      > .reviews-filter-label {
+    .ratingContainer {
+      > .reviewsFilterLabel {
         margin-bottom: 10px;
       }
       &.active {

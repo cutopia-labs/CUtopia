@@ -1,27 +1,27 @@
-.course-sections {
+.courseSections {
   display: flex;
   flex-direction: column;
   width: 100%;
 }
-.course-section-wrapper {
+.courseSectionWrapper {
   display: flex;
   flex-direction: column;
   width: 100%;
 }
-.course-term-label {
+.courseTermLabel {
   display: flex;
   font-size: 14px;
   font-weight: bold;
   width: 100%;
   margin-bottom: 4px;
 }
-.course-section-card {
+.courseSectionCard {
   padding: 12px;
   background-color: var(--background-secondary);
   border-radius: 12px;
   margin-top: 12px;
 }
-.section-header {
+.sectionHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -31,12 +31,12 @@
     color: var(--text);
   }
 }
-.section-detail {
+.sectionDetail {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
 }
-.section-detail-item {
+.sectionDetailItem {
   min-width: 50%;
   display: flex;
   align-items: center;

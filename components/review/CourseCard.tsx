@@ -68,8 +68,8 @@ const CourseCard: FC<CourseCardProps> = ({
         }
       }}
     >
-      <header className="courseCard-header">
-        <div className="courseCard-title-container column">
+      <header className={styles.courseCardHeader}>
+        <div className={clsx(styles.courseCardTitleContainer, 'column')}>
           <span className="center-row">
             <span className="title">{courseInfo.courseId}</span>
             <IconButton
@@ -110,7 +110,7 @@ const CourseCard: FC<CourseCardProps> = ({
               />
             )}
           </span>
-          <span className="course-title caption">{courseInfo.title}</span>
+          <span className="caption">{courseInfo.title}</span>
         </div>
         {courseInfo.rating && !concise && !isMobile && (
           <GradeRow rating={courseInfo.rating} />
@@ -120,16 +120,21 @@ const CourseCard: FC<CourseCardProps> = ({
         <>
           {courseInfo.requirements && (
             <SectionText
-              className="requirement-section"
+              className={styles.requirementSection}
               title="Requirements"
               caption={courseInfo.requirements}
             />
           )}
           {courseInfo.rating && (
             <>
-              <div className="subHeading-container">
+              <div className={styles.subHeadingContainer}>
                 <RouterLink href={`/review/${courseInfo.courseId}`}>
-                  <a className="reviews-link-heading subHeading center-row">
+                  <a
+                    className={clsx(
+                      styles.reviewsLinkHeading,
+                      'subHeading center-row'
+                    )}
+                  >
                     Reviews
                     <FiExternalLink />
                   </a>
@@ -148,7 +153,7 @@ const CourseCard: FC<CourseCardProps> = ({
       ) : (
         <>
           {Boolean(courseInfo?.units) && (
-            <div className="badges-row course-badge-row">
+            <div className="badges-row">
               {[
                 [
                   courseInfo.units

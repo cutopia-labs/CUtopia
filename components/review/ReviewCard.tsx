@@ -83,9 +83,9 @@ const ReviewCard = ({
         >
           <div className="center-row">
             <AiTwotoneCalendar />
-            <span className="reviews-filter-label term">{review.term}</span>
-            <span className="reviews-filter-label separator">•</span>
-            <span className="reviews-filter-label lecturer">
+            <span className="reviewsFilterLabel term">{review.term}</span>
+            <span className="reviewsFilterLabel separator">•</span>
+            <span className="reviewsFilterLabel lecturer">
               {review.lecturer}
             </span>
           </div>
@@ -93,7 +93,7 @@ const ReviewCard = ({
         <GradeRow
           rating={review}
           isReview
-          additionalClassName="grade-row tabs-row review-grade-row"
+          additionalClassName="gradeRow tabs-row review-gradeRow"
           additionalChildClassName="tab"
           selected={selectedCriteria}
           setSelected={setSelectedCriteria}

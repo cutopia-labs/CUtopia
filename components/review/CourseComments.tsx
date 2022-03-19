@@ -4,6 +4,7 @@ import { RiSendPlaneLine } from 'react-icons/ri';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { observer } from 'mobx-react-lite';
 import pluralize from 'pluralize';
+import clsx from 'clsx';
 import { DiscussionMessage } from '../../types';
 import { UserContext, ViewContext } from '../../store';
 import TextField from '../atoms/TextField';
@@ -24,7 +25,7 @@ type MessageProps = {
 
 const Message: FC<MessageProps> = ({ message, isAuthor }) => {
   return (
-    <div className="message row">
+    <div className={clsx(styles.message, 'row')}>
       <TextIcon
         className={styles.forumTextIcon}
         char={EMOJIS[hashing(message.user, EMOJIS_LENGTH)]}
@@ -33,11 +34,13 @@ const Message: FC<MessageProps> = ({ message, isAuthor }) => {
         backgroundColor="transparent"
       />
       <span>
-        <span className="message-username center-row">
+        <span className={clsx(styles.messageUsername, 'center-row')}>
           {`${message.user} · `}
-          <span className="message-text caption">{getMMMDDYY(message.id)}</span>
+          <span className={clsx(styles.messageText, 'caption')}>
+            {getMMMDDYY(message.id)}
+          </span>
         </span>
-        <span className="message-text">{message.text}</span>
+        <span className={styles.messageText}>{message.text}</span>
       </span>
     </div>
   );
@@ -140,7 +143,7 @@ const CourseComments: FC<CourseCommentsProps> = ({ courseId }) => {
       {Boolean(messages?.length) && (
         <div
           ref={messagesContainerRef}
-          className="messages-container card padding column"
+          className={clsx(styles.messagesContainer, 'card padding column')}
         >
           {messages.map(message => (
             <Message
@@ -153,7 +156,7 @@ const CourseComments: FC<CourseCommentsProps> = ({ courseId }) => {
             <Button
               color="primary"
               onClick={() => loadMore()}
-              className="load-more-btn capsule-btn"
+              className={clsx(styles.loadMoreBtn, 'capsule-btn')}
             >
               Load More
             </Button>
@@ -161,7 +164,7 @@ const CourseComments: FC<CourseCommentsProps> = ({ courseId }) => {
           {discussionLoading && <Loading />}
         </div>
       )}
-      <div className="message-inputContainer card">
+      <div className={clsx(styles.messageInputContainer, 'card')}>
         <form onSubmit={onSubmit} className="center-row">
           <TextField
             value={messageInput}
