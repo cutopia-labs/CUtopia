@@ -1,4 +1,4 @@
-.planner-timetable-selection-menu {
+.timetableSelectionMenu {
   --menu-padding-horizontal: 16px;
   --menu-padding-vertical: 6px;
   & .MuiPaper-root { // Menu contianer
@@ -13,25 +13,25 @@
       color: var(--accent);
     }
   }
-  & .timetable-label-inputContainer {
+  & .timetableLabelInputContainer {
     margin: 0 var(--menu-padding-horizontal) var(--menu-padding-vertical) var(--menu-padding-horizontal);
   }
   & .MuiButtonBase-root:last-child {
     color: var(--accent);
     font-weight: bold;
   }
-  & .timetable-select-item .MuiIconButton-root {
+  & .timetableSelectItem .MuiIconButton-root {
     margin-left: auto;
   }
 }
 
-.time-table-panel {
+.timetablePanel {
   & > header {
     justify-content: space-between;
     .title {
       font-size: 18px;
     }
-    .btn-row {
+    .btnRow {
       & > button {
         margin-left: 24px;
         color: var(--text);
@@ -51,7 +51,7 @@
 }
 
 @media only screen and (max-width: 1260px) {
-  .time-table-panel {
+  .timetablePanel {
     padding: var(--card-padding);
     overflow-x: scroll;
     & > header {

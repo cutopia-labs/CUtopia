@@ -541,7 +541,7 @@ const ReviewEdit = ({ courseId }) => {
             {reviewModal[mode].title}
           </DialogTitle>
           <DialogContent>
-            <DialogContentText id="alert-dialog-description">
+            <DialogContentText id="alert-dialogDescription">
               {reviewModal[mode].caption}
             </DialogContentText>
           </DialogContent>

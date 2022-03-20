@@ -1,4 +1,4 @@
-.issue-report-dialog {
+.issueReportDialog {
   .report-issue-category {
     height: 42px;
     text-transform: capitalize;
@@ -14,12 +14,12 @@
     text-transform: capitalize;
   }
 }
-.dialog-description.inputContainer {
+.dialogDescription.inputContainer {
   height: 36px;
   font-size: 14px;
 }
 
-.global-modal-container {
+.globalModalContainer {
   .MuiDialog-paper {
     min-width: 280px;
     overflow-x: hidden;
@@ -27,7 +27,7 @@
 }
 
 @media only screen and (max-width: 1260px) {
-  .issue-report-dialog {
+  .issueReportDialog {
     .issueChipsRow {
       flex-wrap: wrap;
     }

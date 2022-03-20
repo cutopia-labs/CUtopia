@@ -26,7 +26,7 @@ const UserSettingsDialogContent = observer(() => {
       <DialogTitle id="form-dialog-title">Settings</DialogTitle>
       <ListItem
         noBorder
-        className="log-out-row"
+        className={styles.logOutRow}
         onClick={() => {
           user.logout();
           clearStore();
@@ -36,7 +36,7 @@ const UserSettingsDialogContent = observer(() => {
       <Divider />
       <ListItem
         noBorder
-        className="log-out-row"
+        className={styles.logOutRow}
         onClick={() => {
           user.logout();
           view.setDialog(null);
@@ -94,7 +94,7 @@ const ReportIssuesDialogContent = observer(
     };
     return (
       <DialogContentTemplate
-        className="issue-report-dialog"
+        className={styles.issueReportDialog}
         title="Report Issues"
         caption={`${REPORT_ISSUES_MESSAGES[reportCategory]}${
           id ? ` ${id}` : ''
@@ -121,7 +121,7 @@ const ReportIssuesDialogContent = observer(
           </Section>
           <Section title="Description">
             <TextField
-              className="dialog-description"
+              className={styles.dialogDescription}
               placeholder="Please describe the issue..."
               value={issueData.description}
               Tag="textarea"
@@ -154,7 +154,7 @@ const Dialog = () => {
   const ContentFC = DialogContentMap[view.dialog?.key];
   return (
     <MUIDialog
-      className="global-modal-container"
+      className={styles.globalModalContainer}
       open={Boolean(view.dialog)}
       onClose={(e, reason) => {
         view.dialog?.props?.onClose(e, reason);

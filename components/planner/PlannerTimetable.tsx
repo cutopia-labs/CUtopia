@@ -399,6 +399,7 @@ const PlannerTimetable = ({ className }: PlannerTimetableProps) => {
         open={Boolean(shareCourses)}
       >
         <DialogContentTemplate
+          className={styles.contentContainer}
           title={MODE_ASSETS[shareCourses?.mode]?.title}
           caption={`${
             planner.currentPlanner?.label || PLANNER_CONFIGS.DEFAULT_TABLE_NAME

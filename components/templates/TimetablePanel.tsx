@@ -24,7 +24,7 @@ import {
   AiOutlineShareAlt,
 } from 'react-icons/ai';
 import { ViewContext } from '../../store';
-import '../../styles/components/templates/TimetablePanel.module.scss';
+import styles from '../../styles/components/templates/TimetablePanel.module.scss';
 import Timetable from '../planner/Timetable';
 import Card from '../atoms/Card';
 import {
@@ -126,7 +126,7 @@ const TimetablePanel = ({
     },
   ];
   return (
-    <Card className={clsx('panel time-table-panel column', className)}>
+    <Card className={clsx(styles.timetablePanel, 'panel column', className)}>
       <header className="center-row">
         {selections?.length ? (
           <>
@@ -138,14 +138,14 @@ const TimetablePanel = ({
               {selected.label || PLANNER_CONFIGS.DEFAULT_TABLE_NAME}
             </Button>
             <Menu
-              className="planner-timetable-selection-menu"
+              className={styles.timetableSelectionMenu}
               anchorEl={anchorEl}
               open={Boolean(anchorEl)}
               onClose={() => setAnchorEl(null)}
             >
               <h4 className="subheading">Title</h4>
               <form
-                className="timetable-label-inputContainer"
+                className={styles.timetableLabelInputContainer}
                 onSubmit={e => {
                   e.preventDefault();
                   if (labelInput !== selected.label) {
@@ -169,7 +169,7 @@ const TimetablePanel = ({
               <h4 className="subheading">Timetables</h4>
               {selections.map(item => (
                 <MenuItem
-                  className="timetable-select-item"
+                  className={styles.timetableSelectItem}
                   key={item.key}
                   onClick={() => [onSelect(item.key), setAnchorEl(null)]}
                   selected={selected.key === item.key}
@@ -200,7 +200,7 @@ const TimetablePanel = ({
           <span className="title">{title}</span>
         )}
         {Boolean(courses?.length) && (
-          <div className="btn-row center-row">
+          <div className={clsx(styles.btnRow, 'center-row')}>
             {FUNCTION_BUTTONS.map(item => (
               <IconButton key={item.key} size="small" onClick={item.action}>
                 {item.icon}
