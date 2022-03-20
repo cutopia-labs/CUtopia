@@ -35,8 +35,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    .login-panel {
-      .login-btn {
+    .loginPanel {
+      .loginBtn {
         background: var(--landing-page-btn-color);
       }
     }
@@ -118,7 +118,7 @@
     background-color: var(--background);
     height: 100vh;
 
-    > .login-panel {
+    > .loginPanel {
       width: 90%;
     }
   }

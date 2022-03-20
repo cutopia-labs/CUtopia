@@ -28,7 +28,7 @@ const LandingPage = () => {
       )}
       <div className="right column">
         {isMobile && <Logo style={styles.landingLogo} />}
-        <LoginPanel />
+        <LoginPanel className={styles.loginPanel} />
       </div>
     </div>
   );

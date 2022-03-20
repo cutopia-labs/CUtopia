@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext, useEffect, FC } from 'react';
 import { Button, IconButton, CircularProgress } from '@material-ui/core';
 import { ArrowBack } from '@material-ui/icons';
 import * as Sentry from '@sentry/react';
@@ -7,6 +7,7 @@ import { useMutation } from '@apollo/client';
 
 import { useLocation } from 'react-use';
 import { useRouter } from 'next/router';
+import clsx from 'clsx';
 import styles from '../../styles/components/user/LoginPanel.module.scss';
 import TextField from '../atoms/TextField';
 import { UserContext, ViewContext } from '../../store';
@@ -86,7 +87,11 @@ Allow only alphas + digits + @$!%*#?&^_-
 8 - 15 length
 */
 
-const LoginPanel = () => {
+type Props = {
+  className?: string;
+};
+
+const LoginPanel: FC<Props> = ({ className }) => {
   const location = useLocation();
   const router = useRouter();
   const [mode, setMode] = useState(INITIAL_MODE);
@@ -329,12 +334,12 @@ const LoginPanel = () => {
   };
 
   return (
-    <div className="login-panel grid-auto-row">
-      <div className="center-row qrcode-row">
+    <div className={clsx(styles.loginPanel, 'grid-auto-row', className)}>
+      <div className={clsx(styles.qrcodeRow, 'center-row')}>
         <div>
           {mode !== LoginPageMode.CUTOPIA_LOGIN &&
             mode !== LoginPageMode.CUTOPIA_SIGNUP && (
-              <IconButton className="go-back-icon" onClick={goBack}>
+              <IconButton className={styles.goBackIcon} onClick={goBack}>
                 <ArrowBack />
               </IconButton>
             )}
@@ -386,9 +391,9 @@ const LoginPanel = () => {
           />
         )}
         {mode === LoginPageMode.CUTOPIA_LOGIN && (
-          <div className="center-row forgot-password-row">
+          <div className={clsx(styles.forgotPwdRow, 'center-row')}>
             <span
-              className="label forgot-password"
+              className={clsx(styles.label, 'forgotPwdLabel')}
               onClick={() =>
                 router.push(MODE_PATH_LOOKUP[LoginPageMode.RESET_PASSWORD])
               }
@@ -399,7 +404,7 @@ const LoginPanel = () => {
         )}
         <Button
           variant="contained"
-          className="login-btn"
+          className={styles.loginBtn}
           color="primary"
           type="submit"
           disabled={
@@ -423,14 +428,14 @@ const LoginPanel = () => {
       </form>
       {(mode === LoginPageMode.CUTOPIA_LOGIN ||
         mode === LoginPageMode.CUTOPIA_SIGNUP) && (
-        <div className="switch-container center-row">
+        <div className={clsx(styles.switchContainer, 'center-row')}>
           <span className="caption">
             {mode === LoginPageMode.CUTOPIA_LOGIN
               ? "Don't have an account?"
               : 'Already have an account?'}
           </span>
           <span
-            className="label"
+            className={styles.label}
             onClick={() =>
               router.push(
                 MODE_PATH_LOOKUP[

@@ -1,4 +1,4 @@
-.login-panel {
+.loginPanel {
   height: auto;
   width: 50%;
   max-width: 400px;
@@ -14,19 +14,9 @@
     opacity: 0.6;
     line-height: 24px;
   }
-  .go-back-icon {
+  .goBackIcon {
     color: var(--text);
     margin: 0 10px 0 -16px;
-  }
-  .label {
-    font-size: 14px;
-    cursor: pointer;
-    margin-left: 12px;
-    color: var(--landing-page-btn-color);
-    font-weight: bold;
-    &.forgot-password {
-      margin-left: auto;
-    }
   }
   .textFieldLabel {
     margin-left: 0;
@@ -35,10 +25,17 @@
     cursor: initial;
   }
 }
+.label {
+  font-size: 14px;
+  cursor: pointer;
+  margin-left: 12px;
+  color: var(--landing-page-btn-color);
+  font-weight: bold;
+}
 .loginInputContainer {
   margin-top: 0;
 }
-.qrcode-row {
+.qrcodeRow {
   justify-content: space-between;
   margin-bottom: 8px;
   canvas {
@@ -46,16 +43,19 @@
     background-color: white;
   }
 }
-.forgot-password-row {
+.forgotPwdRow {
   margin-top: 4px;
   align-items: center;
   flex-direction: row;
   justify-content: space-between;
+  > .forgotPwdLabel {
+    margin-left: auto;
+  }
 }
 .forgot-password-container {
   flex-direction: row;
 }
-.login-btn {
+.loginBtn {
   height: 40px;
   margin-top: 10px !important;
   border-radius: var(--border-radius) !important;
@@ -69,7 +69,7 @@
     color: white;
   }
 }
-.switch-container {
+.switchContainer {
   margin-top: 10px;
   color: #00000066;
   font-size: 14px;
