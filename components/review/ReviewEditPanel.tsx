@@ -604,7 +604,7 @@ const ReviewEditPanel = () => {
     }
   );
   return (
-    <div className="reviewEdit-panel course-panel panel card">
+    <div className="reviewEdit-panel coursePanel panel card">
       {!courseInfoLoading && courseInfo && courseInfo.courses && (
         <CourseCard
           courseInfo={{

@@ -8,6 +8,7 @@ import copy from 'copy-to-clipboard';
 import { useRouter } from 'next/router';
 import { GetStaticPaths } from 'next';
 import Head from 'next/head';
+import clsx from 'clsx';
 import styles from '../../styles/components/review/CoursePanel.module.scss';
 import { validCourse } from '../../helpers';
 import { COURSE_INFO_QUERY } from '../../constants/queries';
@@ -75,12 +76,12 @@ const CoursePanel: FC<Props> = ({ course }) => {
   }, [courseId]);
 
   return (
-    <Page className="review-page" center padding>
+    <Page className={styles.reviewPage} center padding>
       <Head>
         <title>{`${courseId} Reviews - ${course.title} - CUtopia`}</title>
       </Head>
-      <div className="course-panel-container grid-auto-row">
-        <div className="course-panel panel card">
+      <div className={clsx(styles.coursePanelContainer, 'grid-auto-row')}>
+        <div className={clsx(styles.coursePanel, 'panel card')}>
           <CourseCard
             courseInfo={{
               ...course,
@@ -115,7 +116,7 @@ const CoursePanel: FC<Props> = ({ course }) => {
           onClose={() => setFABOpen(false)}
           onOpen={() => setFABOpen(true)}
           open={FABOpen}
-          className="course-panel-fab"
+          className={styles.coursePanelFab}
         >
           {FAB_GROUP_ACTIONS.map(action => (
             <SpeedDialAction

@@ -1,4 +1,4 @@
-.review-home-panel {
+.reviewHomePanel {
   padding: 0;
   grid-auto-rows: min-content;
 }
@@ -8,7 +8,7 @@
 .review-home-row {
   align-items: flex-start;
 }
-.ranking-card {
+.rankingCard {
   overflow: hidden;
   border-bottom: 0;
   width: 100%;
@@ -35,7 +35,7 @@
     height: 25px;
   }
 }
-.ranking-card-header {
+.rankingCard-header {
   padding: 0 var(--card-padding);
   height: 44px;
   color: var(--primary);
@@ -44,11 +44,11 @@
     margin-right: 10px;
   }
 }
-.ranking-card-header-title {
+.rankingCard-header-title {
   font-size: 16px;
   font-weight: 500;
 }
-.ranking-label {
+.rankingLabel {
   width: 40px;
   opacity: 0.5;
 }
@@ -56,9 +56,9 @@
   text-transform: capitalize;
 }
 
-.recent-review {
-  --recent-review-width: calc(100% - 2 * var(--card-padding));
-  width: var(--recent-review-width);
+.recentReview {
+  --recentReview-width: calc(100% - 2 * var(--card-padding));
+  width: var(--recentReview-width);
   padding: 0 var(--card-padding) 12px var(--card-padding);
   .list-item-title-container {
     margin-left: 0;
@@ -66,7 +66,7 @@
       color: var(--primary);
     }
   }
-  .recent-reviewText {
+  .recentReviewText {
     line-height: var(--line-height);
     width: 100%;
     white-space: pre-line;
@@ -75,7 +75,7 @@
 }
 
 @media only screen and (max-width: 1260px) {
-  .review-home-panel {
+  .reviewHomePanel {
     .tabs-row {
       position: sticky;
       top: var(--header-height);
@@ -89,14 +89,14 @@
   .review-home-row {
     flex-direction: column;
   }
-  .ranking-card {
+  .rankingCard {
     width: 100%;
     &:last-child {
       margin-left: 0;
       margin-top: var(--card-padding);
     }
   }
-  .recent-reviewText {
+  .recentReviewText {
     max-width: calc(100vw - 2 * var(--card-padding));
   }
 }

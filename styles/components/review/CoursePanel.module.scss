@@ -1,13 +1,17 @@
-.course-panel-container {
+.coursePanelContainer {
   height: fit-content;
   position: relative;
+}
+
+.reviewPage {
+  grid-template-columns: minmax(0, 1fr) min-content;
 }
 
 .courseCard {
   margin: var(--card-padding);
 }
 
-.course-panel {
+.coursePanel {
   position: relative;
   padding: 0;
   .tabs-row {
@@ -32,7 +36,7 @@
   height: 16px;
   background-color: #3b3b3b80;
 }
-.course-panel-fab {
+.coursePanelFab {
   position: fixed;
   right: calc((100vw - var(--max-width)) / 2 + 32px);
   bottom: 20px;
@@ -45,10 +49,10 @@
 }
 
 @media only screen and (max-width: 1260px) {
-  .course-panel {
+  .coursePanel {
     max-height: none;
   }
-  .course-panel-fab {
+  .coursePanelFab {
     right: 20px;
   }
 }

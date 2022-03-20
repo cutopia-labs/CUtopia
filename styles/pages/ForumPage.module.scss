@@ -1,9 +1,9 @@
-.review-page {
+.reviewPage {
   grid-template-columns: minmax(0, 1fr) min-content;
 }
 
 @media only screen and (max-width: 1260px) {
-  .review-page {
+  .reviewPage {
     max-width: initial;
     grid-template-columns: none;
   }

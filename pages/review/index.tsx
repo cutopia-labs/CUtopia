@@ -7,10 +7,11 @@ import {
 } from '@material-ui/icons';
 import { useQuery } from '@apollo/client';
 
-import '../../styles/components/review/HomePanel.module.scss';
 import { useTitle } from 'react-use';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
+import clsx from 'clsx';
+import styles from '../../styles/components/review/HomePanel.module.scss';
 import GradeIndicator from '../../components/atoms/GradeIndicator';
 import { RATING_FIELDS } from '../../constants';
 import {
@@ -77,7 +78,7 @@ const RecentReviewCard = ({
 }: RecentReviewCardProps) => {
   return (
     <ListItem
-      className="recent-review card"
+      className={clsx(styles.recentReview, 'card')}
       title={review.courseId}
       noBorder
       caption={`By ${review.username || 'Anonymous'} on ${getMMMDDYY(
@@ -86,7 +87,7 @@ const RecentReviewCard = ({
       right={<GradeIndicator grade={review[category]?.grade} />}
       onClick={() => onClick(`${review.courseId}/${review.createdAt}`)}
     >
-      <span className="recent-reviewText ellipsis-text">
+      <span className={clsx(styles.recentReviewText, 'ellipsis-text')}>
         {review[category]?.text}
       </span>
     </ListItem>
@@ -203,14 +204,18 @@ const RankingCard = ({
   if (loading) return <Loading />;
   if (!rankList || !rankList.length) return null;
   return (
-    <div className="ranking-card card">
+    <div className={clsx(styles.rankingCard, 'card')}>
       {rankList.map((course: PopularCourse | TopRatedCourse, i: number) => (
         <Link
           key={`${headerTitle}-${course.courseId}`}
           href={`/review/${course.courseId}`}
         >
           <ListItem
-            left={<span className="ranking-label center-box">{i + 1}</span>}
+            left={
+              <span className={clsx(styles.rankingLabel, 'center-box')}>
+                {i + 1}
+              </span>
+            }
             right={
               course.numReviews ? (
                 <Badge index={0} text={`${course.numReviews} reviews`} />
@@ -262,8 +267,13 @@ const HomePanel = () => {
   }, []);
 
   return (
-    <Page className="review-page" center padding>
-      <div className="panel review-home-panel center-row grid-auto-row">
+    <Page className={styles.reviewPage} center padding>
+      <div
+        className={clsx(
+          styles.reviewHomePanel,
+          'panel center-row grid-auto-row'
+        )}
+      >
         <TabsContainer items={MENU_ITEMS} selected={tab} onSelect={setTab} />
         {(tab === 'Top Rated' || tab === 'Recents') && (
           <ChipsRow
