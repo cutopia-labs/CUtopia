@@ -225,11 +225,11 @@ const SearchPanel: FC<SearchPanelProps> = ({
   }, [currentCourse]);
 
   useEffect(() => {
-    const courseId = router.query?.courseId as string;
+    const courseId = router.query?.courseId;
     console.log(`Got ID ${courseId}`);
-    if (courseId && validCourse(courseId) && (!onCoursePress || isMobile)) {
+    if (courseId && validCourse(courseId[0]) && (!onCoursePress || isMobile)) {
       console.log(`Planner Current course ${courseId}`);
-      setCurrentCourse(courseId);
+      setCurrentCourse(courseId[0]); // { "courseId": ["param1"] } // `GET /planner/courseId` (single-element array)
     } else {
       setCurrentCourse(null);
     }
@@ -327,7 +327,11 @@ const SearchPanel: FC<SearchPanelProps> = ({
             onItemClick={(item, e) => {
               e.stopPropagation();
               if (!skipDefaultAction) {
-                router.push(`/${isPlanner ? 'planner' : 'review'}/${item}`);
+                router.push(
+                  `/${isPlanner ? 'planner' : 'review'}/${item}`,
+                  undefined,
+                  { shallow: true }
+                );
               }
               (!isMobile || !isPlanner) && onCoursePress && onCoursePress(item);
             }}
@@ -360,7 +364,9 @@ const SearchPanel: FC<SearchPanelProps> = ({
                 isPlanner && user.saveHistory(courseId);
                 if (!skipDefaultAction) {
                   router.push(
-                    `/${isPlanner ? 'planner' : 'review'}/${courseId}`
+                    `/${isPlanner ? 'planner' : 'review'}/${courseId}`,
+                    undefined,
+                    { shallow: isPlanner } // Do not trigger refresh (TODO: reload reviews)
                   );
                 }
                 onCoursePress &&

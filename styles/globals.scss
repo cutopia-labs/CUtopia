@@ -497,7 +497,7 @@ textarea {
   .page {
     flex: 1;
     display: grid;
-    grid-template-columns: none;
+    grid-template-columns: none !important;
     grid-template-rows: min-content 1fr;
     min-height: calc(100vh - var(--header-height) - 2 * var(--card-padding));
     padding: 0;

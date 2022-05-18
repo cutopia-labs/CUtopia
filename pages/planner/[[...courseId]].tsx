@@ -3,18 +3,18 @@ import { observer } from 'mobx-react-lite';
 
 import Draggable from 'react-draggable';
 import { Fab } from '@material-ui/core';
-import '../styles/pages/PlannerPage.module.scss';
+import '../../styles/pages/PlannerPage.module.scss';
 import { useTitle } from 'react-use';
 import { BsList } from 'react-icons/bs';
 import { AiTwotoneCalendar } from 'react-icons/ai';
 import { useRouter } from 'next/router';
-import SearchPanel from '../components/organisms/SearchPanel';
-import Page from '../components/atoms/Page';
-import PlannerTimetable from '../components/planner/PlannerTimetable';
-import PlannerCart from '../components/planner/PlannerCart';
+import SearchPanel from '../../components/organisms/SearchPanel';
+import Page from '../../components/atoms/Page';
+import PlannerTimetable from '../../components/planner/PlannerTimetable';
+import PlannerCart from '../../components/planner/PlannerCart';
 
-import TimetableOverviewCard from '../components/planner/TimetableOverviewCard';
-import useMobileQuery from '../hooks/useMobileQuery';
+import TimetableOverviewCard from '../../components/planner/TimetableOverviewCard';
+import useMobileQuery from '../../hooks/useMobileQuery';
 
 enum PlannerMode {
   INITIAL,
