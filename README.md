@@ -6,7 +6,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 In the project directory, you can run:
 
-### `next dev`
+### `yarn dev`
 
 Runs the Next.js app in development mode.
 

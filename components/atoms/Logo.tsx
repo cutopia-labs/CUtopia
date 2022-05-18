@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { FC } from 'react';
-import '../../styles/components/atoms/Logo.module.scss';
+import styles from '../../styles/components/atoms/Logo.module.scss';
 
 type LogoProps = {
   shine?: boolean;
@@ -8,8 +8,11 @@ type LogoProps = {
 };
 
 const Logo: FC<LogoProps> = ({ shine }) => (
-  <div className={clsx('logoContainer', shine && 'shine')}>
-    cutopia{!shine && <span className="logo-beta center-box">Beta</span>}
+  <div className={clsx(styles.logoContainer, shine && 'shine')}>
+    cutopia
+    {!shine && (
+      <span className={clsx(styles.logoBeta, 'center-box')}>Beta</span>
+    )}
   </div>
 );
 

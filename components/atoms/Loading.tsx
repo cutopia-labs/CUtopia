@@ -3,7 +3,7 @@ import CircularProgress, {
 } from '@material-ui/core/CircularProgress';
 import clsx from 'clsx';
 
-import '../../styles/components/atoms/Loading.module.scss';
+import styles from '../../styles/components/atoms/Loading.module.scss';
 import Logo from './Logo';
 
 type LoadingProps = {
@@ -23,7 +23,7 @@ export default function Loading({
   return (
     <div
       className={clsx(
-        'loadingView',
+        styles.loadingView,
         fixed && 'fixed',
         padding && 'padding',
         logo && 'logo',
