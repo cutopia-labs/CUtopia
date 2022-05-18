@@ -5,6 +5,8 @@ import SearchIcon from '@material-ui/icons/Search';
 import clsx from 'clsx';
 import { ArrowBack } from '@material-ui/icons';
 import { useRouter } from 'next/router';
+import { FC } from 'react';
+import styles from '../../styles/components/molecules/SearchInput.module.scss';
 
 enum SearchInputMode {
   SHOW_DROPDOWN,
@@ -13,7 +15,7 @@ enum SearchInputMode {
   SEARCH_RESULT,
 }
 
-export default function SearchInput({
+const SearchInput: FC<any> = ({
   searchPayload,
   setSearchPayload,
   onSubmit,
@@ -21,7 +23,7 @@ export default function SearchInput({
   setVisible,
   isMobile,
   inputRef,
-}) {
+}) => {
   const router = useRouter();
   const plannerCourseMatch =
     router.pathname.includes('planner') && router.query.courseId;
@@ -72,9 +74,9 @@ export default function SearchInput({
   return (
     <form
       className={clsx(
-        'searchInputContainer',
+        styles.searchInputContainer,
         isMobile && 'mobile',
-        visible && 'active'
+        visible && styles.active
       )}
       onSubmit={onSubmit}
     >
@@ -110,4 +112,6 @@ export default function SearchInput({
       />
     </form>
   );
-}
+};
+
+export default SearchInput;

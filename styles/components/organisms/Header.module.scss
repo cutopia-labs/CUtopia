@@ -54,24 +54,19 @@
   .headerContainer {
     padding: 0 var(--card-padding);
     max-width: 100%;
-    .headerSearchDropdown {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      width: fit-content;
-      margin-left: auto;
-      .searchInputContainer {
-        margin-right: 0;
-        background-color: transparent;
-        width: 34px;
-      }
-      .search-input {
-        visibility: hidden;
-      }
+  }
+  .headerSearchDropdown {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    width: fit-content;
+    margin-left: auto;
+    .search-input {
+      visibility: hidden;
     }
-    .headerLogo {
-      margin-left: 12px;
-    }
+  }
+  .headerLogo {
+    margin-left: 12px;
   }
 }

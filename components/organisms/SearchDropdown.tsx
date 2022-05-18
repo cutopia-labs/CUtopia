@@ -32,7 +32,7 @@ const SearchDropdown: FC<SearchPanelProps> = props => {
       className={clsx(
         styles.searchDropdown,
         'column',
-        visible && 'active',
+        visible && styles.active,
         style
       )}
       ref={searchDropDownRef}

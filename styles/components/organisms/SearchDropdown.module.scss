@@ -17,58 +17,22 @@
       }
     }
   }
-  .searchInputContainer {
-    border-radius: 6px;
-    background-color: var(--background-search);
-    height: calc(var(--header-height) - 20px);
-    padding: 0 10px;
-    width: 220px;
-    transition: width 300ms cubic-bezier(0.7, 0, 0.3, 1) 0ms;
-    &.active {
-      width: calc(var(--searchDropdown-width) - 20px);
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
-      input {
-        width: 100%;
-      }
-    }
-    & > .search-input-divider {
-      background-color: rgba(255, 255, 255, 0.3);
-    }
-  }
 }
 
 @media only screen and (max-width: 1260px) {
   .searchDropdown {
     --searchDropdown-width: 100vw;
-    &.active {
-      width: 100vw;
-      overflow-x: hidden;
-      height: fit-content;
-      margin-left: initial;
-      background-color: var(--surface);
-    }
+    margin-left: auto;
     .searchPanel {
       display: initial;
       top: 0;
     }
-    .searchInputContainer {
-      border: none;
-      &.active {
-        width: calc(100vw - 40px);
-        margin: 0 10px 10px 10px;
-        height: 42px;
-        background-color: var(--background-search);
-        border-bottom-left-radius: var(--border-radius);
-        border-bottom-right-radius: var(--border-radius);
-        .search-input {
-          visibility: visible;
-          width: 100%;
-        }
-      }
-      .search-input {
-        margin-left: 0;
-      }
-    }
+  }
+  .active {
+    width: 100vw;
+    overflow-x: hidden;
+    height: fit-content;
+    margin-left: initial;
+    background-color: var(--surface);
   }
 }
