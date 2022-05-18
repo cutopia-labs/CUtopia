@@ -47,8 +47,6 @@ import ChipsRow from '../molecules/ChipsRow';
 import useMobileQuery from '../../hooks/useMobileQuery';
 import CourseCard from '../review/CourseCard';
 
-type SearchPanelMode = 'review' | 'planner' | 'discussion';
-
 /*
 c: courseId
 t: title
@@ -218,6 +216,7 @@ const SearchPanel: FC<SearchPanelProps> = ({
   const user = useContext(UserContext);
   const isMobile = useMobileQuery();
   const isPlanner = router.pathname.includes('planner');
+  console.log(`planner: ${isPlanner}`);
 
   useEffect(() => {
     if (currentCourse) {
@@ -260,7 +259,7 @@ const SearchPanel: FC<SearchPanelProps> = ({
           offerredOnly: Boolean(isPlanner),
         }
       : null;
-    if (router.query?.courseId) {
+    if (isPlanner && router.query?.courseId) {
       router.push('/planner');
     }
     setSearchPayloadState(newPayload);

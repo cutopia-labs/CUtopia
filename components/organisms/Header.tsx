@@ -13,7 +13,7 @@ import {
 } from '@material-ui/icons';
 import clsx from 'clsx';
 
-import styles from '../../styles/pages/HomePage.module.scss';
+import styles from '../../styles/components/organisms/Header.module.scss';
 import Logo from '../atoms/Logo';
 import useMobileQuery from '../../hooks/useMobileQuery';
 import SearchDropdown from './SearchDropdown';
