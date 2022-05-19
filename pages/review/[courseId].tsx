@@ -23,6 +23,7 @@ import CourseComments from '../../components/review/CourseComments';
 import { CourseInfo } from '../../types';
 import client from '../../helpers/apollo-client';
 import Page from '../../components/atoms/Page';
+import authenticatedRoute from '../../components/molecules/authenticatedRoute';
 
 const MENU_ITEMS = [
   {
@@ -170,4 +171,4 @@ export const getStaticPaths: GetStaticPaths<{}> = async () => {
   };
 };
 
-export default observer(CoursePanel);
+export default observer(authenticatedRoute(CoursePanel));

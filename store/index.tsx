@@ -49,12 +49,6 @@ export const getStores = () => {
   return { viewStore, userStore, plannerStore };
 };
 
-type Stores = {
-  userStore: UserStore;
-  viewStore: ViewStore;
-  plannerStore: PlannerStore;
-};
-
 const StoreProvider: FC = ({ children }) => {
   const { userStore, plannerStore, viewStore } = getStores();
   const [ready, setReady] = useState(false);
@@ -63,9 +57,7 @@ const StoreProvider: FC = ({ children }) => {
     plannerStore.init();
     setReady(true);
   }, []);
-  if (!ready) {
-    return null;
-  }
+  if (!ready) return null;
   return (
     <UserContext.Provider value={userStore}>
       <PlannerContext.Provider value={plannerStore}>
