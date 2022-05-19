@@ -20,7 +20,8 @@ const LandingPage = () => {
             <Image
               className="landing-image"
               src="/images/meditation.svg"
-              alt=""
+              layout="fill"
+              alt="yet-another-image"
               draggable={false}
             />
           </div>
