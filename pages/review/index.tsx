@@ -122,7 +122,8 @@ const RecentReviewList = ({ visible, category }: RecentReviewListProps) => {
   const { loading: recentReviewsLoading, refetch: getRecentReviews } = useQuery<
     any,
     any
-  >(getRecentReviewQuery(category), {
+  >(getRecentReviewQuery('grading'), {
+    // TODO: replace by localStorage category
     variables: {
       page: 0,
     },

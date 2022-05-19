@@ -1,3 +1,6 @@
+.reviewPage {
+  grid-template-columns: minmax(0,1fr) min-content;
+}
 .reviewHomePanel {
   padding: 0;
   grid-auto-rows: min-content;
