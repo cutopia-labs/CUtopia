@@ -35,6 +35,7 @@ const authenticatedRoute: HOC = (Component = null, options = {}) => {
         },
       });
     useEffect(() => {
+      console.log(`Current user ${user.data}`);
       if (user.token && !user.data?.username) {
         getUser();
       }

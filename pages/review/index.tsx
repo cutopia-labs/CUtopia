@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, FC } from 'react';
 import Link from 'next/link';
 import {
   ForumOutlined,
@@ -40,6 +40,7 @@ import { LAZY_LOAD_BUFFER, REVIEWS_PER_PAGE } from '../../constants/configs';
 import useDebounce from '../../hooks/useDebounce';
 import { getRecentReviewQuery } from '../../helpers/dynamicQueries';
 import Page from '../../components/atoms/Page';
+import authenticatedRoute from '../../components/molecules/authenticatedRoute';
 
 type ReviewHomeTab = 'Recents' | 'Top Rated' | 'Popular';
 
@@ -71,11 +72,11 @@ type RecentReviewCardProps = {
   category: RatingField;
 };
 
-const RecentReviewCard = ({
+const RecentReviewCard: FC<RecentReviewCardProps> = ({
   review,
   onClick,
   category,
-}: RecentReviewCardProps) => {
+}) => {
   return (
     <ListItem
       className={clsx(styles.recentReview, 'card')}
@@ -99,7 +100,7 @@ type RecentReviewListProps = {
   category: RatingField;
 };
 
-const RecentReviewList = ({ visible, category }: RecentReviewListProps) => {
+const RecentReviewList: FC<RecentReviewListProps> = ({ visible, category }) => {
   const [reviews, setReviews] = useState<RecentReview[]>([]);
   const { current } = useRef<{
     page: number | null;
@@ -233,7 +234,7 @@ const RankingCard = ({
   );
 };
 
-const HomePanel = () => {
+const HomePanel: FC = () => {
   useTitle('Course Reviews - CUtopia');
   const [tab, setTab] = useState<ReviewHomeTab>('Recents');
   const [sortKey, setSortKey] = useState('overall');
@@ -328,4 +329,4 @@ const HomePanel = () => {
   );
 };
 
-export default observer(HomePanel);
+export default observer(authenticatedRoute(HomePanel));
