@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import {
   ForumOutlined,
@@ -30,7 +30,7 @@ import {
   TopRatedCourse,
 } from '../../types';
 
-import { UserContext, ViewContext } from '../../store';
+import { useView, useUser } from '../../store';
 import { getMMMDDYY } from '../../helpers/getTime';
 import Footer from '../../components/molecules/Footer';
 import FeedCard from '../../components/molecules/FeedCard';
@@ -106,7 +106,7 @@ const RecentReviewList = ({ visible, category }: RecentReviewListProps) => {
     stall: boolean;
   }>({ page: 0, stall: false });
   const router = useRouter();
-  const view = useContext(ViewContext);
+  const view = useView();
 
   useEffect(() => {
     setReviews([]); // if come from react nav, it gonna set empty arr to be empty again
@@ -239,8 +239,8 @@ const HomePanel = () => {
   const [sortKey, setSortKey] = useState('overall');
   const [feedCourses, setFeedCourse] = useState([]);
   const router = useRouter();
-  const view = useContext(ViewContext);
-  const user = useContext(UserContext);
+  const view = useView();
+  const user = useUser();
 
   const { data: popularCourses, loading: popularCoursesLoading } = useQuery(
     POPULAR_COURSES_QUERY,

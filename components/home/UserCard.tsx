@@ -1,4 +1,3 @@
-import { useContext } from 'react';
 import { observer } from 'mobx-react-lite';
 import Avatar from '@material-ui/core/Avatar';
 import { SettingsOutlined } from '@material-ui/icons';
@@ -7,7 +6,7 @@ import { GoUnverified, GoVerified } from 'react-icons/go';
 
 import clsx from 'clsx';
 import styles from '../../styles/components/home/UserCard.module.scss';
-import { ViewContext, UserContext } from '../../store';
+import { useUser, useView } from '../../store';
 import { User } from '../../types';
 import { LEVEL_UP_EXP } from '../../constants/configs';
 
@@ -16,8 +15,8 @@ type UserCardProps = {
 };
 
 const UserCard = ({ userData }: UserCardProps) => {
-  const user = useContext(UserContext);
-  const view = useContext(ViewContext);
+  const user = useUser();
+  const view = useView();
 
   return (
     <div className={clsx(styles.userCard, 'card')}>

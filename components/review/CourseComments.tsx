@@ -1,4 +1,4 @@
-import { useContext, useState, useRef, useEffect, FC } from 'react';
+import { useState, useRef, useEffect, FC } from 'react';
 import { Button, Divider, IconButton } from '@material-ui/core';
 import { RiSendPlaneLine } from 'react-icons/ri';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -6,7 +6,7 @@ import { observer } from 'mobx-react-lite';
 import pluralize from 'pluralize';
 import clsx from 'clsx';
 import { DiscussionMessage } from '../../types';
-import { UserContext, ViewContext } from '../../store';
+import { useView, useUser } from '../../store';
 import TextField from '../atoms/TextField';
 import TextIcon from '../atoms/TextIcon';
 import { GET_DISCUSSIONS } from '../../constants/queries';
@@ -54,9 +54,9 @@ const CourseComments: FC<CourseCommentsProps> = ({ courseId }) => {
   const [messages, setMessages] = useState<DiscussionMessage[]>([]);
   const [messageInput, setMessageInput] = useState('');
   const [page, setPage] = useState<number | null>(0);
-  const user = useContext(UserContext);
+  const user = useUser();
   const messagesContainerRef = useRef<HTMLDivElement>(null);
-  const view = useContext(ViewContext);
+  const view = useView();
   const onSubmit = async e => {
     const messageId = +new Date();
     e.preventDefault();

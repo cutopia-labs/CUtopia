@@ -1,4 +1,3 @@
-import { useContext } from 'react';
 import { useMediaQuery } from '@material-ui/core';
 
 import clsx from 'clsx';
@@ -11,7 +10,7 @@ import {
   EventConfig,
   TimetableInfo,
 } from '../../types';
-import { ViewContext } from '../../store';
+import { useView } from '../../store';
 import CourseCard from './CourseCard';
 
 export type PropsWithConfig<T> = T & {
@@ -75,7 +74,7 @@ type TimetableProps = {
 };
 
 const Timetable = ({ courses, timetableInfo }: TimetableProps) => {
-  const view = useContext(ViewContext);
+  const view = useView();
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
   const events: Event[] = [];

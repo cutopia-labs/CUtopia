@@ -1,11 +1,11 @@
-import { useContext, useReducer } from 'react';
+import { useReducer } from 'react';
 import { Dialog as MUIDialog, DialogTitle, Divider } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 import { useMutation } from '@apollo/client';
 import { ReportCategory } from 'cutopia-types/lib/codes';
 
 import ListItem from '../molecules/ListItem';
-import { UserContext, ViewContext } from '../../store';
+import { useView, useUser } from '../../store';
 import styles from '../../styles/components/templates/Dialog.module.scss';
 import { clearStore } from '../../helpers/store';
 import { REPORT_ISSUES_MESSAGES, REPORT_MODES } from '../../constants/messages';
@@ -19,8 +19,8 @@ import { reverseMapping } from '../../helpers';
 import DialogContentTemplate from './DialogContentTemplate';
 
 const UserSettingsDialogContent = observer(() => {
-  const user = useContext(UserContext);
-  const view = useContext(ViewContext);
+  const user = useUser();
+  const view = useView();
   return (
     <>
       <DialogTitle id="form-dialog-title">Settings</DialogTitle>
@@ -57,7 +57,7 @@ const ReportIssuesDialogContent = observer(
   ({ reportCategory, id }: ReportIssuesDialogContentProps) => {
     const currentModeMessages = REPORT_MODES[reportCategory];
     const currentModeMessagesLookup = reverseMapping(currentModeMessages);
-    const view = useContext(ViewContext);
+    const view = useView();
     const [issueData, dispatchIssueData] = useReducer(
       (state, action) => ({ ...state, ...action }),
       {
@@ -148,7 +148,7 @@ const DialogContentMap = {
 };
 
 const Dialog = () => {
-  const view = useContext(ViewContext);
+  const view = useView();
   const ContentFC = DialogContentMap[view.dialog?.key];
   return (
     <MUIDialog

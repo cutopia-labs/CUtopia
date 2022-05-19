@@ -1,4 +1,4 @@
-import { useState, useEffect, Fragment, useContext, FC } from 'react';
+import { useState, useEffect, Fragment, FC } from 'react';
 import {
   InputBase,
   ListItem as MUIListItem,
@@ -25,7 +25,7 @@ import clsx from 'clsx';
 import styles from '../../styles/components/organisms/SearchPanel.module.scss';
 import ListItem from '../molecules/ListItem';
 import COURSE_CODES from '../../constants/courseCodes';
-import { ViewContext, UserContext } from '../../store';
+import { useView, useUser } from '../../store';
 import { COURSE_SECTIONS_QUERY } from '../../constants/queries';
 import { validCourse } from '../../helpers';
 import Loading from '../atoms/Loading';
@@ -212,8 +212,8 @@ const SearchPanel: FC<SearchPanelProps> = ({
   );
   const [currentCourse, setCurrentCourse] = useState(null);
   const router = useRouter();
-  const view = useContext(ViewContext);
-  const user = useContext(UserContext);
+  const view = useView();
+  const user = useUser();
   const isMobile = useMobileQuery();
   const isPlanner = router.pathname.includes('planner');
   console.log(`planner: ${isPlanner}`);

@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect, FC } from 'react';
+import { useState, useEffect, FC } from 'react';
 import { Button, IconButton, CircularProgress } from '@material-ui/core';
 import { ArrowBack } from '@material-ui/icons';
 import * as Sentry from '@sentry/react';
@@ -10,7 +10,7 @@ import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import styles from '../../styles/components/user/LoginPanel.module.scss';
 import TextField from '../atoms/TextField';
-import { UserContext, ViewContext } from '../../store';
+import { useView, useUser } from '../../store';
 import {
   LOGIN_CUTOPIA,
   SEND_VERIFICATION,
@@ -107,8 +107,8 @@ const LoginPanel: FC<Props> = ({ className }) => {
     password: null,
   });
 
-  const user = useContext(UserContext);
-  const view = useContext(ViewContext);
+  const user = useUser();
+  const view = useView();
 
   useEffect(() => {
     const mode = PATH_MODE_LOOKUP[location.pathname];

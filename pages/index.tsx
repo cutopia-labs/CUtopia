@@ -1,13 +1,12 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import * as Sentry from '@sentry/react';
 import { Integrations } from '@sentry/tracing';
 import Head from 'next/head';
 import { useLazyQuery } from '@apollo/client';
-import { enableStaticRendering } from 'mobx-react-lite';
 import styles from '../styles/Home.module.scss';
 
 import { SentryConfigs } from '../constants/configs';
-import { ViewContext, UserContext } from '../store';
+import { useUser, useView } from '../store';
 import { LoginState, User } from '../types';
 import { GET_USER } from '../constants/queries';
 import Loading from '../components/atoms/Loading';
@@ -33,11 +32,9 @@ Sentry.init({
   */
 });
 
-enableStaticRendering(typeof window === 'undefined');
-
 export default function Home() {
-  const user = useContext(UserContext);
-  const view = useContext(ViewContext);
+  const user = useUser();
+  const view = useView();
   const [getUser, { data: userData, loading: userDataLoading }] = useLazyQuery<{
     me: User;
   }>(GET_USER, {

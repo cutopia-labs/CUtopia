@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useRef, useReducer, FC } from 'react';
+import { useState, useEffect, useRef, useReducer, FC } from 'react';
 import { useQuery } from '@apollo/client';
 import { Divider } from '@material-ui/core';
 import pluralize from 'pluralize';
@@ -10,7 +10,7 @@ import { useRouter } from 'next/router';
 import { removeEmptyValues } from '../../helpers';
 import { GET_REVIEW, REVIEWS_QUERY } from '../../constants/queries';
 import Loading from '../atoms/Loading';
-import { ViewContext, UserContext } from '../../store';
+import { useView, useUser } from '../../store';
 import useDebounce from '../../hooks/useDebounce';
 import { LAZY_LOAD_BUFFER, REVIEWS_PER_PAGE } from '../../constants/configs';
 import { CourseInfo, Review, ReviewsFilter, ReviewsResult } from '../../types';
@@ -45,8 +45,8 @@ const CourseReviews: FC<Props> = ({
   const router = useRouter();
   const [page, setPage] = useState(0);
   const [reviews, setReviews] = useState([]);
-  const view = useContext(ViewContext);
-  const user = useContext(UserContext);
+  const view = useView();
+  const user = useUser();
   const reviewFilterBarRef = useRef<HTMLDivElement | null>(null);
   const [reviewsPayload, dispatchReviewsPayload] = useReducer(
     (state: Partial<ReviewsFilter>, action: Partial<ReviewsFilter>) =>

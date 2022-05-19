@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { AiTwotoneCalendar } from 'react-icons/ai';
 import { BiMessageRounded } from 'react-icons/bi';
@@ -13,7 +13,7 @@ import { VOTE_REVIEW } from '../../constants/mutations';
 import { getMMMDDYY } from '../../helpers/getTime';
 import ShowMoreOverlay from '../molecules/ShowMoreOverlay';
 import { Review } from '../../types';
-import { ViewContext } from '../../store';
+import { useView } from '../../store';
 import useMobileQuery from '../../hooks/useMobileQuery';
 import { getReviewId } from '../../helpers';
 import GradeRow from './GradeRow';
@@ -35,7 +35,7 @@ const ReviewCard = ({
   reportAction,
 }: ReviewCardProps) => {
   const [selectedCriteria, setSelectedCriteria] = useState('overall');
-  const view = useContext(ViewContext);
+  const view = useView();
   const [voteReview, { loading, error }] = useMutation(VOTE_REVIEW, {
     onError: view.handleError,
   });

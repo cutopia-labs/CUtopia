@@ -1,4 +1,4 @@
-import { useContext, useReducer, useState, useEffect } from 'react';
+import { useReducer, useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import styles from '../../styles/components/planner/PlannerTimetable.module.scss';
 import TimetablePanel from '../templates/TimetablePanel';
-import { ViewContext, PlannerContext, plannerStore } from '../../store';
+import { useView, usePlanner } from '../../store';
 import { PLANNER_CONFIGS } from '../../constants/configs';
 import { SHARE_TIMETABLE } from '../../constants/mutations';
 import {
@@ -180,13 +180,13 @@ const getSnackbarMessage = (
 });
 
 const PlannerTimetable = ({ className }: PlannerTimetableProps) => {
-  const planner = useContext(PlannerContext);
+  const planner = usePlanner();
   const router = useRouter();
   const isHome = router.pathname == '/';
   const { shareId } = router.query as {
     shareId?: string;
   };
-  const view = useContext(ViewContext);
+  const view = useView();
   const [shareCourses, setShareCourses] = useState<{
     courses: PlannerCourse[];
     mode: ShareTimetableMode;
@@ -356,7 +356,7 @@ const PlannerTimetable = ({ className }: PlannerTimetableProps) => {
         courses={planner.plannerCourses
           ?.concat(planner.previewPlannerCourse)
           .filter(course => course)}
-        timetableInfo={plannerStore.timetableInfo}
+        timetableInfo={planner.timetableInfo}
         onImport={parsedData =>
           planner.updateStore('plannerCourses', parsedData)
         }

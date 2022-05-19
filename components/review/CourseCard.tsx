@@ -1,4 +1,4 @@
-import { useState, useContext, FC } from 'react';
+import { useState, FC } from 'react';
 import { observer } from 'mobx-react-lite';
 import { IconButton, Tooltip } from '@material-ui/core';
 import { ErrorOutline, Favorite, FavoriteBorder } from '@material-ui/icons';
@@ -10,7 +10,7 @@ import { ReportCategory } from 'cutopia-types/lib/codes';
 import styles from '../../styles/components/review/CourseCard.module.scss';
 import ShowMoreOverlay from '../molecules/ShowMoreOverlay';
 import Badge from '../atoms/Badge';
-import { UserContext, ViewContext } from '../../store';
+import { useView, useUser } from '../../store';
 import { COURSE_CARD_MAX_HEIGHT } from '../../constants/configs';
 import { CourseInfo } from '../../types';
 import Link from '../molecules/Link';
@@ -36,9 +36,9 @@ const CourseCard: FC<CourseCardProps> = ({
 }) => {
   const [showMore, setShowMore] = useState(true);
   const [skipHeightCheck, setSkipHeightCheck] = useState(concise);
-  const user = useContext(UserContext);
+  const user = useUser();
   const isMobile = useMobileQuery();
-  const view = useContext(ViewContext);
+  const view = useView();
 
   if (loading) {
     return CourseCardSkeleton;

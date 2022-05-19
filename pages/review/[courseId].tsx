@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, FC } from 'react';
+import { useState, useEffect, FC } from 'react';
 import { observer } from 'mobx-react-lite';
 
 import { BsChat } from 'react-icons/bs';
@@ -12,7 +12,7 @@ import clsx from 'clsx';
 import styles from '../../styles/components/review/CoursePanel.module.scss';
 import { validCourse } from '../../helpers';
 import { COURSE_INFO_QUERY } from '../../constants/queries';
-import { ViewContext, UserContext } from '../../store';
+import { useUser, useView } from '../../store';
 import useMobileQuery from '../../hooks/useMobileQuery';
 import { getSimilarCourses } from '../../helpers/getCourses';
 import FeedCard from '../../components/molecules/FeedCard';
@@ -46,8 +46,8 @@ const CoursePanel: FC<Props> = ({ course }) => {
     reviewId?: string;
   };
   const isMobile = useMobileQuery();
-  const view = useContext(ViewContext);
-  const user = useContext(UserContext);
+  const view = useView();
+  const user = useUser();
   const [similarCourses, setSimilarCourse] = useState([]);
   const [FABOpen, setFABOpen] = useState(false);
   const [FABHidden, setFABHidden] = useState(!isMobile);

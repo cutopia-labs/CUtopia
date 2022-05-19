@@ -1,12 +1,10 @@
-import { useContext } from 'react';
-
 import { observer } from 'mobx-react-lite';
 
 import { Checkbox, IconButton, Tooltip } from '@material-ui/core';
 import { ClearAllRounded, Warning } from '@material-ui/icons';
 import clsx from 'clsx';
 import styles from '../../styles/components/planner/PlannerCart.module.scss';
-import { PlannerContext } from '../../store';
+import { usePlanner } from '../../store';
 
 import Card from '../atoms/Card';
 import ListItem from '../molecules/ListItem';
@@ -15,7 +13,7 @@ import { CourseSection, ErrorCardMode } from '../../types';
 import ErrorCard from '../molecules/ErrorCard';
 
 const PlannerCart = () => {
-  const planner = useContext(PlannerContext);
+  const planner = usePlanner();
   const toggleHide = (
     section: CourseSection,
     index: number,

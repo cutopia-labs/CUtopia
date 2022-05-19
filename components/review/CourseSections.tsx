@@ -1,4 +1,3 @@
-import { useContext } from 'react';
 import { observer } from 'mobx-react-lite';
 import { IconButton } from '@material-ui/core';
 import {
@@ -11,7 +10,7 @@ import {
 
 import clsx from 'clsx';
 import styles from '../../styles/components/review/CourseSections.module.scss';
-import { PlannerContext, ViewContext } from '../../store';
+import { usePlanner, useView } from '../../store';
 import { WEEKDAYS_TWO_ABBR } from '../../constants';
 import { CourseInfo, CourseSection, ErrorCardMode } from '../../types';
 import ErrorCard from '../molecules/ErrorCard';
@@ -102,8 +101,8 @@ const CourseSections = ({
   ) {
     return <ErrorCard mode={ErrorCardMode.NULL} />;
   }
-  const planner = useContext(PlannerContext);
-  const view = useContext(ViewContext);
+  const planner = usePlanner();
+  const view = useView();
   const addToPlanner = (section: CourseSection) => {
     planner.addToPlannerCourses({
       sections: {

@@ -1,11 +1,11 @@
-import { FC, useContext } from 'react';
+import { FC } from 'react';
 import { IconButton, useTheme } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
 import { observer } from 'mobx-react-lite';
 
 import staticStyles from '../../styles/components/planner/CourseCard.module.scss';
 import updateOpacity from '../../helpers/updateOpacity';
-import { PlannerContext } from '../../store';
+import { usePlanner } from '../../store';
 import { Event } from '../../types';
 import colorMixing from '../../helpers/colorMixing';
 import { PropsWithConfig } from './Timetable';
@@ -63,7 +63,7 @@ const CourseCard: FC<
     course.day,
     config.numOfDays
   );
-  const planner = useContext(PlannerContext);
+  const planner = usePlanner();
 
   return (
     <div className={staticStyles.timetableCourseCard} style={styles.courseCard}>

@@ -1,5 +1,5 @@
 import { useLazyQuery, useMutation } from '@apollo/client';
-import { useEffect, useContext, useState } from 'react';
+import { useEffect, useState } from 'react';
 import pluralize from 'pluralize';
 
 import {
@@ -17,7 +17,7 @@ import { PLANNER_CONFIGS } from '../../constants/configs';
 import styles from '../../styles/components/planner/TimetableOverviewCard.module.scss';
 import { GET_USER_TIMETABLES } from '../../constants/queries';
 import { getMMMDDYY } from '../../helpers/getTime';
-import { PlannerContext, plannerStore, ViewContext } from '../../store';
+import { usePlanner, useView } from '../../store';
 import {
   ErrorCardMode,
   TimetableOverviewMode,
@@ -154,8 +154,8 @@ const TimetableOverviewListItem = ({
 const TimetableOverviewCard = () => {
   const router = useRouter();
   const [expanded, setExpanded] = useState(false);
-  const view = useContext(ViewContext);
-  const planner = useContext(PlannerContext);
+  const view = useView();
+  const planner = usePlanner();
   const [removeTimetable, { loading: removeTimetableLoading }] =
     useMutation(REMOVE_TIMETABLE);
   const [
@@ -164,10 +164,7 @@ const TimetableOverviewCard = () => {
   ] = useLazyQuery(GET_USER_TIMETABLES, {
     onCompleted: async data => {
       console.log(`fetched tiemtabnle`);
-      plannerStore.updateStore(
-        'remoteTimetableData',
-        getCombinedTimetable(data)
-      );
+      planner.updateStore('remoteTimetableData', getCombinedTimetable(data));
     },
     onError: view.handleError,
   });

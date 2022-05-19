@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Button,
   Dialog,
@@ -23,7 +23,7 @@ import {
   AiOutlineDelete,
   AiOutlineShareAlt,
 } from 'react-icons/ai';
-import { ViewContext } from '../../store';
+import { useView } from '../../store';
 import styles from '../../styles/components/templates/TimetablePanel.module.scss';
 import Timetable from '../planner/Timetable';
 import Card from '../atoms/Card';
@@ -74,7 +74,7 @@ const TimetablePanel = ({
   deleteTable,
   className,
 }: TimetablePanelProps) => {
-  const view = useContext(ViewContext);
+  const view = useView();
   const [modalMode, setModalMode] = useState(MODAL_MODES.NO_MODAL);
   const [importInput, setImportInput] = useState('');
   const [labelInput, setLabelInput] = useState('');

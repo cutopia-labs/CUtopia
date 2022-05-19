@@ -1,14 +1,14 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Portal } from '@material-ui/core';
 import { Check } from '@material-ui/icons';
 import { observer } from 'mobx-react-lite';
 
 import { Alert } from '@material-ui/lab';
 import styles from '../../styles/components/molecules/SnackBar.module.scss';
-import { ViewContext } from '../../store';
+import { useView } from '../../store';
 
 const SnackBar = () => {
-  const view = useContext(ViewContext);
+  const view = useView();
   const [buttonClicked, setButtonClicked] = useState(false);
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { Typography } from '@material-ui/core';
 import {
   ChatBubbleOutlineOutlined,
@@ -10,7 +10,7 @@ import { observer } from 'mobx-react-lite';
 import { useTitle } from 'react-use';
 import styles from '../styles/pages/HomePage.module.scss';
 import UserCard from '../components/home/UserCard';
-import { PlannerContext, UserContext } from '../store';
+import { useUser, usePlanner } from '../store';
 import { CoursesList, ReviewsList } from '../components/home/HomePageTabs';
 import TabsContainer from '../components/molecules/TabsContainer';
 import Page from '../components/atoms/Page';
@@ -66,8 +66,8 @@ const SELECTIONS = [
 
 const HomePage = () => {
   useTitle('CUtopia');
-  const user = useContext(UserContext);
-  const planner = useContext(PlannerContext);
+  const user = useUser();
+  const planner = usePlanner();
   const [tab, setTab] = useState('Courses');
   const isMobile = useMobileQuery();
 

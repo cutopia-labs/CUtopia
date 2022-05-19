@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useReducer, useRef } from 'react';
+import { useState, useEffect, useReducer, useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   Menu,
@@ -20,7 +20,7 @@ import { useBeforeunload } from 'react-beforeunload';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import styles from '../../styles/components/review/ReviewEditPanel.module.scss';
-import { ViewContext, UserContext } from '../../store';
+import { useView, useUser } from '../../store';
 import { GET_REVIEW, COURSE_INFO_QUERY } from '../../constants/queries';
 import { ADD_REVIEW, EDIT_REVIEW } from '../../constants/mutations';
 import { GRADES, RATING_FIELDS } from '../../constants';
@@ -210,7 +210,7 @@ const ReviewSubmit = ({
   </LoadingButton>
 );
 const ReviewEdit = ({ courseId }) => {
-  const view = useContext(ViewContext);
+  const view = useView();
   const [mode, setMode] = useState(MODES.INITIAL);
   const [targetReview, setTargetReview] = useState<string | Review>('');
   const [progress, setProgress] = useState(0);
@@ -264,7 +264,7 @@ const ReviewEdit = ({ courseId }) => {
       ...Object.fromEntries(RATING_FIELDS.map(type => [type, DEFAULT_REVIEW])),
     }
   );
-  const user = useContext(UserContext);
+  const user = useUser();
   const router = useRouter();
   const lecturerInputRef = useRef();
 
@@ -588,7 +588,7 @@ const ReviewEditPanel = () => {
     id?: string;
     reviewId?: string;
   };
-  const view = useContext(ViewContext);
+  const view = useView();
   // Fetch course info
   const { data: courseInfo, loading: courseInfoLoading } = useQuery(
     COURSE_INFO_QUERY,
