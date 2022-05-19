@@ -8,6 +8,7 @@ import {
 import { observer } from 'mobx-react-lite';
 
 import { useTitle } from 'react-use';
+import clsx from 'clsx';
 import styles from '../styles/pages/HomePage.module.scss';
 import UserCard from '../components/home/UserCard';
 import { useUser, usePlanner } from '../store';
@@ -86,8 +87,8 @@ const HomePage: FC = () => {
   };
 
   return (
-    <Page className="home-page" center padding>
-      <div className="home-page-left grid-auto-row">
+    <Page className={styles.homePage} center padding>
+      <div className={clsx(styles.homePageLeft, 'grid-auto-row')}>
         <UserCard userData={user.data} />
         <LinksCard />
         {!isMobile && <Footer />}
