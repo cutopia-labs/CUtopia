@@ -31,7 +31,7 @@ class PlannerStore extends StorePrototype {
   @observable previewPlannerCourse: PlannerCourse;
   @observable currentPlannerKey: number;
   @observable plannerCourses: PlannerCourse[] = [];
-  @observable initiated = false; // prevent reaction of null timetable override planners
+  @observable initiated: boolean = false; // prevent reaction of null timetable override planners
   @observable remoteTimetableData: TimetableOverviewWithMode[] | null = null;
 
   viewStore: ViewStore;
@@ -42,8 +42,8 @@ class PlannerStore extends StorePrototype {
     this.viewStore = viewStore;
   }
 
-  @action async init() {
-    await this.loadStore();
+  @action init = () => {
+    this.loadStore();
     if (!this.currentPlannerKey) {
       console.log('Creating new planners');
       const now = +new Date();
@@ -56,7 +56,7 @@ class PlannerStore extends StorePrototype {
       });
     }
     this.plannerCourses = this.planners[this.currentPlannerKey]?.courses || [];
-  }
+  };
 
   get shareIds() {
     return Object.fromEntries(
@@ -170,17 +170,17 @@ class PlannerStore extends StorePrototype {
   }
 
   // reset
-  @action async reset() {
+  @action reset = () => {
     this.resetStore();
-  }
+  };
 
-  @action.bound findIndexInPlanner = courseId =>
+  @action findIndexInPlanner = courseId =>
     this.plannerCourses?.findIndex(item => item.courseId === courseId);
 
-  @action.bound validKey = (key: number) =>
+  @action validKey = (key: number) =>
     Boolean(this.initiated && this.planners && key && key in this.planners);
 
-  @action updateCurrentPlanner(key: number) {
+  @action updateCurrentPlanner = (key: number) => {
     let label = PLANNER_CONFIGS.DEFAULT_TABLE_NAME;
     if (this.validKey(key)) {
       if (this.currentPlannerKey === key) {
@@ -201,44 +201,44 @@ class PlannerStore extends StorePrototype {
     }
     this.setStore('currentPlannerKey', key);
     this.viewStore.setSnackBar(`Switched to ${label}`);
-  }
+  };
 
-  @action async addPlannerCourses(plannerCourses: PlannerCourse[]) {
+  @action addPlannerCourses = (plannerCourses: PlannerCourse[]) => {
     this.addPlanner({
       key: +new Date(),
       courses: plannerCourses,
     });
-  }
+  };
 
-  @action async updatePlanners(key: number, plannerCourses: PlannerCourse[]) {
+  @action updatePlanners = (key: number, plannerCourses: PlannerCourse[]) => {
     if (this.validKey(key)) {
       this.planners[key].courses = plannerCourses;
       // as the local one is updated, cannot treat it as uploaded
       this.updatePlannerShareId(key, undefined, false);
       storeData('planners', this.planners);
     }
-  }
+  };
 
-  @action async updatePlannerShareId(
+  @action updatePlannerShareId = (
     key: number,
     shareId: string | undefined,
-    save = true
-  ) {
+    save: boolean = true
+  ) => {
     if (this.validKey(key) && this.planners[key].shareId !== shareId) {
       this.planners[key].shareId = shareId;
       if (save) {
         storeData('planners', this.planners);
       }
     }
-  }
+  };
 
-  @action async addPlanner(planner: Planner) {
+  @action addPlanner = (planner: Planner) => {
     this.planners[planner.key] = planner;
     console.log(`Updated planner with ${toJS(this.planners)}`);
     storeData('planners', this.planners);
-  }
+  };
 
-  @action async deletePlanner(key: number) {
+  @action deletePlanner = (key: number) => {
     if (this.validKey(key)) {
       withUndo(
         {
@@ -258,9 +258,9 @@ class PlannerStore extends StorePrototype {
     } else {
       this.viewStore.setSnackBar('Error... OuO');
     }
-  }
+  };
 
-  @action async clearPlannerCourses() {
+  @action clearPlannerCourses = () => {
     withUndo(
       {
         prevData: [...this.plannerCourses],
@@ -272,17 +272,17 @@ class PlannerStore extends StorePrototype {
         this.updateStore('plannerCourses', []);
       }
     );
-  }
+  };
 
-  @action async updatePlannerCourse(course: PlannerCourse, index: number) {
+  @action updatePlannerCourse = (course: PlannerCourse, index: number) => {
     this.plannerCourses[index] = course;
-  }
+  };
 
-  @action async updatePlannerSection(
+  @action updatePlannerSection = (
     section: CourseSection,
     index: number,
     sectionKey: string
-  ) {
+  ) => {
     this.plannerCourses[index] = {
       ...this.plannerCourses[index],
       sections: {
@@ -290,16 +290,14 @@ class PlannerStore extends StorePrototype {
         [sectionKey]: section,
       },
     };
-  }
+  };
 
-  @action.bound filterEmptySectionCourses = (
-    plannerCourses?: PlannerCourse[]
-  ) =>
+  @action filterEmptySectionCourses = (plannerCourses?: PlannerCourse[]) =>
     (plannerCourses || this.plannerCourses).filter(
       course => Object.keys(course.sections)?.length
     );
 
-  @action async removeHidedCourses() {
+  @action removeHidedCourses = () => {
     withUndo(
       {
         prevData: this.plannerCourses,
@@ -321,9 +319,9 @@ class PlannerStore extends StorePrototype {
         );
       }
     );
-  }
+  };
 
-  @action async addToPlannerCourses(course: PlannerCourse) {
+  @action addToPlannerCourses = (course: PlannerCourse) => {
     const index = this.findIndexInPlanner(course.courseId);
     if (index !== -1) {
       this.plannerCourses[index] = {
@@ -337,9 +335,9 @@ class PlannerStore extends StorePrototype {
     } else {
       this.updateStore('plannerCourses', [...this.plannerCourses, course]);
     }
-  }
+  };
 
-  @action async deleteSectionInPlannerCourses({ courseId, sectionId }) {
+  @action deleteSectionInPlannerCourses = ({ courseId, sectionId }) => {
     const index = this.findIndexInPlanner(courseId);
     if (index !== -1) {
       withUndo(
@@ -369,9 +367,9 @@ class PlannerStore extends StorePrototype {
     } else {
       this.viewStore.setSnackBar('Error... OuO');
     }
-  }
+  };
 
-  @action async deleteInPlannerCourses(courseId) {
+  @action deleteInPlannerCourses = courseId => {
     const index = this.findIndexInPlanner(courseId);
     if (index !== -1) {
       withUndo(
@@ -388,12 +386,12 @@ class PlannerStore extends StorePrototype {
     } else {
       this.viewStore.setSnackBar('Error... OuO');
     }
-  }
+  };
 
-  @action async setPlannerLabel(label: string) {
+  @action setPlannerLabel = (label: string) => {
     this.planners[this.currentPlannerKey].label = label;
     storeData('planners', this.planners);
-  }
+  };
 }
 
 export default PlannerStore;

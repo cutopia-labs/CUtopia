@@ -20,38 +20,34 @@ class StorePrototype {
     this[key] = value;
   }
 
-  @action loadStore = async () => {
+  @action loadStore = () => {
     const defaultValues = { ...this.defaultValues };
     if (this.onLoadKeys) {
-      await Promise.all(
-        this.onLoadKeys.map(async key => {
-          const retrieved = await getStoreData(key);
-          this.updateStore(
-            key,
-            retrieved === null ? (this.defaultValues || {})[key] : retrieved
-          );
-          delete defaultValues[key];
-        })
-      );
+      this.onLoadKeys.forEach(key => {
+        const retrieved = getStoreData(key);
+        this.updateStore(
+          key,
+          retrieved === null ? (this.defaultValues || {})[key] : retrieved
+        );
+        delete defaultValues[key];
+      });
     }
     this.initStore(defaultValues);
   };
 
-  @action setStore = async (key: string, value: any) => {
+  @action setStore = (key: string, value: any) => {
     this.updateStore(key, value);
-    await storeData(key, value);
+    storeData(key, value);
   };
 
-  @action resetStore = async () => {
+  @action resetStore = () => {
     const defaultValues = { ...this.defaultValues };
     if (this.onResetKeys) {
-      await Promise.all(
-        this.onResetKeys.map(async key => {
-          await removeStoreItem(key);
-          this.updateStore(key, (this.defaultValues || {})[key] || null);
-          delete defaultValues[key];
-        })
-      );
+      this.onResetKeys.forEach(key => {
+        removeStoreItem(key);
+        this.updateStore(key, (this.defaultValues || {})[key] || null);
+        delete defaultValues[key];
+      });
     }
     this.initStore(defaultValues);
   };

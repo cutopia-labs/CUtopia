@@ -69,9 +69,9 @@ class UserStore extends StorePrototype {
     makeObservable(this);
   }
 
-  @action async init() {
-    await this.loadStore();
-    await this.applyToken();
+  @action init() {
+    this.loadStore();
+    this.applyToken();
     if (this.loginState === LoginState.INIT) {
       this.loginState = LoginState.LOGGED_OUT;
     }
@@ -84,22 +84,22 @@ class UserStore extends StorePrototype {
   }
 
   // CUtopia
-  @action async saveUser(username: string, token: string, data: Partial<User>) {
+  @action saveUser = (username: string, token: string, data: Partial<User>) => {
     // need set date before set token cuz set token first will trigger query user.me
     this.updateUserData(data);
-    await this.saveToken(token);
+    this.saveToken(token);
     this.viewStore.setSnackBar(`Logged in as ${username}`);
-  }
+  };
 
-  @action updateUserData(data: Partial<User>) {
+  @action updateUserData = (data: Partial<User>) => {
     if (data?.username) {
       console.log(data);
       this.updateStore('data', data);
     }
-  }
+  };
 
-  @action async applyToken() {
-    const savedToken = (await getStoreData('token')) || {};
+  @action applyToken = () => {
+    const savedToken = getStoreData('token') || {};
     if (!savedToken.token) {
       return;
     }
@@ -112,43 +112,41 @@ class UserStore extends StorePrototype {
     } else {
       this.setToken(savedToken.token);
     }
-  }
+  };
 
-  @action async saveToken(token) {
+  @action saveToken = (token: string) => {
     const savedToken = {
       token,
       expire: getTokenExpireDate(+new Date()),
     };
     storeData('token', savedToken);
     this.setToken(token);
-  }
+  };
 
-  @action.bound setToken(token) {
+  @action setToken = (token: string) => {
     this.token = token;
     this.loginState = LoginState.LOGGED_IN;
-  }
+  };
 
-  @action async logout() {
+  @action logout = () => {
     this.setLogout();
-    await Promise.all(
-      LOGOUT_KEYS.map(async key => {
-        await removeStoreItem(key);
-      })
-    );
-  }
+    LOGOUT_KEYS.forEach(key => {
+      removeStoreItem(key);
+    });
+  };
 
-  @action.bound setLogout() {
+  @action setLogout = () => {
     this.loginState = LoginState.LOGGED_OUT;
     this.username = null;
     this.token = null;
-  }
+  };
 
   // Fav courses
 
-  @action checkIsFavourite = courseId =>
+  @action checkIsFavourite = (courseId: string) =>
     this.favoriteCourses.some(course => course.courseId === courseId);
 
-  @action async toggleFavourite(courseInfo: CourseInfo, isFavourite?: boolean) {
+  @action toggleFavourite = (courseInfo: CourseInfo, isFavourite?: boolean) => {
     if (isFavourite || this.checkIsFavourite(courseInfo.courseId)) {
       this.setStore(
         'favoriteCourses',
@@ -157,7 +155,7 @@ class UserStore extends StorePrototype {
         )
       );
     } else {
-      await this.setStore(
+      this.setStore(
         'favoriteCourses',
         this.favoriteCourses.concat({
           courseId: courseInfo.courseId,
@@ -165,22 +163,22 @@ class UserStore extends StorePrototype {
         })
       );
     }
-  }
+  };
 
   // Search History
-  @action async saveHistory(courseId: string) {
+  @action saveHistory = (courseId: string) => {
     let temp = [...this.searchHistory];
     if (temp.length >= HISTORY_MAX_LENGTH) {
       temp.pop();
     }
     temp = [courseId].concat(temp.filter(saved => saved !== courseId));
     this.setStore('searchHistory', temp);
-  }
+  };
 
-  @action async deleteHistory(courseId) {
+  @action deleteHistory = (courseId: string) => {
     const temp = this.searchHistory.filter(hist => hist !== courseId);
     this.setStore('searchHistory', temp);
-  }
+  };
 
   @action updateReviewDrafts = (courseId: string, review: Review) => {
     withUndo(
@@ -205,9 +203,9 @@ class UserStore extends StorePrototype {
   };
 
   // reset
-  @action async reset() {
+  @action reset = () => {
     this.resetStore();
-  }
+  };
 }
 
 export default UserStore;
