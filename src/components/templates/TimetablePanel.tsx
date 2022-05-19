@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, FC } from 'react';
 import {
   Button,
   Dialog,
@@ -58,7 +58,7 @@ type TimetablePanelProps = {
   className?: string;
 };
 
-const TimetablePanel = ({
+const TimetablePanel: FC<TimetablePanelProps> = ({
   title,
   courses,
   timetableInfo,
@@ -73,7 +73,7 @@ const TimetablePanel = ({
   setLabel,
   deleteTable,
   className,
-}: TimetablePanelProps) => {
+}) => {
   const view = useView();
   const [modalMode, setModalMode] = useState(MODAL_MODES.NO_MODAL);
   const [importInput, setImportInput] = useState('');

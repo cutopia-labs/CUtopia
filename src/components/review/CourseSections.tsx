@@ -9,6 +9,7 @@ import {
 } from '@material-ui/icons';
 
 import clsx from 'clsx';
+import { FC } from 'react';
 import styles from '../../styles/components/review/CourseSections.module.scss';
 import { usePlanner, useView } from '../../store';
 import { WEEKDAYS_TWO_ABBR } from '../../constants';
@@ -34,13 +35,13 @@ export const getSectionTime = (section: CourseSection) =>
     )
     .join(', ');
 
-const SectionCard = ({
+const SectionCard: FC<SectionCardProps> = ({
   section,
   addSection,
   deleteSection,
   added,
   onAddHoverChange,
-}: SectionCardProps) => {
+}) => {
   // TODO: Delete if added not yet implemented since plannerCourses observable is not deep enough to observe such change
   const SECTION_CARD_ITEMS = [
     {
@@ -88,9 +89,9 @@ type CourseSectionsProps = {
   onAddHoverChange?: (hover: boolean, courseSection: CourseSection) => void;
 };
 
-const CourseSections = ({
+const CourseSections: FC<CourseSectionsProps> = ({
   courseInfo: { terms: courseTerms, courseId, title, units },
-}: CourseSectionsProps) => {
+}) => {
   const currentTermIndex = (courseTerms || []).findIndex(
     term => term.name === CURRENT_TERM
   );

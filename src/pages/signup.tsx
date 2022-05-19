@@ -1,12 +1,13 @@
 import { observer } from 'mobx-react-lite';
 
 import Image from 'next/image';
+import { FC } from 'react';
 import styles from '../styles/pages/LandingPage.module.scss';
 import LoginPanel from '../components/user/LoginPanel';
 import Logo from '../components/atoms/Logo';
 import useMobileQuery from '../hooks/useMobileQuery';
 
-const LandingPage = () => {
+const LandingPage: FC = () => {
   const isMobile = useMobileQuery();
   return (
     <div className="landing-page">

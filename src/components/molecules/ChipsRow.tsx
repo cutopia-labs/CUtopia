@@ -1,6 +1,6 @@
 import { Chip } from '@material-ui/core';
 import clsx from 'clsx';
-import { MouseEvent } from 'react';
+import { FC, MouseEvent } from 'react';
 import { ErrorCardMode } from '../../types';
 
 import styles from '../../styles/components/molecules/ChipsRow.module.scss';
@@ -14,7 +14,7 @@ type ChipsRowProps = {
   chipClassName?: string;
 };
 
-const ChipsRow = ({
+const ChipsRow: FC<ChipsRowProps & React.HTMLProps<HTMLDivElement>> = ({
   items,
   select,
   setSelect,
@@ -22,7 +22,7 @@ const ChipsRow = ({
   chipClassName,
   onItemClick,
   ...props
-}: ChipsRowProps & React.HTMLProps<HTMLDivElement>) => {
+}) => {
   if (!items.length) {
     return <ErrorCard mode={ErrorCardMode.NULL} />;
   }

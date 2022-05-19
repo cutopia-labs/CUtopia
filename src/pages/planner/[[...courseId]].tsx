@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, FC } from 'react';
 import { observer } from 'mobx-react-lite';
 
 import Draggable from 'react-draggable';
@@ -36,7 +36,10 @@ const PLANNER_MOBILE_FAB_ITEM = {
   },
 };
 
-const PlannerMobileFab = ({ targetMode, setMode }: PlannerMobileFabProps) => {
+const PlannerMobileFab: FC<PlannerMobileFabProps> = ({
+  targetMode,
+  setMode,
+}) => {
   const isDraggingRef = useRef(false);
   return (
     <Draggable
@@ -64,7 +67,7 @@ const PlannerMobileFab = ({ targetMode, setMode }: PlannerMobileFabProps) => {
   );
 };
 
-const PlannerPage = () => {
+const PlannerPage: FC = () => {
   const router = useRouter();
   const isPlannerShare =
     router.pathname.includes('planner/share') && router.query.shareId;

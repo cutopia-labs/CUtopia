@@ -1,4 +1,4 @@
-import { useState, useEffect, useReducer, useRef } from 'react';
+import { useState, useEffect, useReducer, useRef, FC } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   Menu,
@@ -135,12 +135,12 @@ const ReviewHelperText = {
   overall: 'Your overall rating about this course',
 };
 
-const ReviewSection = ({
+const ReviewSection: FC<ReviewSectionProps> = ({
   type,
   value,
   onChangeText,
   onChangeGrade,
-}: ReviewSectionProps) => (
+}) => (
   <div className={clsx(styles.reviewSectionContainer, 'grid-auto-row')}>
     <div className={clsx(styles.reviewSectionHeader, 'center-row')}>
       <Tooltip
@@ -209,7 +209,7 @@ const ReviewSubmit = ({
     )}
   </LoadingButton>
 );
-const ReviewEdit = ({ courseId }) => {
+const ReviewEdit: FC<{ courseId: string }> = ({ courseId }) => {
   const view = useView();
   const [mode, setMode] = useState(MODES.INITIAL);
   const [targetReview, setTargetReview] = useState<string | Review>('');
@@ -582,7 +582,7 @@ const ReviewEdit = ({ courseId }) => {
   );
 };
 
-const ReviewEditPanel = () => {
+const ReviewEditPanel: FC = () => {
   const router = useRouter();
   const { id: courseId, reviewId } = router.query as {
     id?: string;

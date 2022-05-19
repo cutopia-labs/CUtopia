@@ -1,4 +1,4 @@
-import { PropsWithChildren } from 'react';
+import { FC } from 'react';
 import clsx from 'clsx';
 
 type PageProps = {
@@ -8,12 +8,7 @@ type PageProps = {
   column?: boolean;
 };
 
-const Page = ({
-  children,
-  className,
-  center,
-  padding,
-}: PropsWithChildren<PageProps>) => {
+const Page: FC<PageProps> = ({ children, className, center, padding }) => {
   return (
     <div
       className={clsx(

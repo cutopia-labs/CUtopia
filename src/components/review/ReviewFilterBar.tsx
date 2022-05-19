@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import { ExpandMore } from '@material-ui/icons';
 import { Button, IconButton, Menu, MenuItem } from '@material-ui/core';
 import { TiArrowSortedUp } from 'react-icons/ti';
@@ -34,7 +34,7 @@ enum ReviewFilterBarMode {
   TERM,
 }
 
-const ReviewFilterBar = ({
+const ReviewFilterBar: FC<ReviewFilterBarProps> = ({
   forwardedRef,
   courseInfo,
   reviewsPayload,
@@ -44,7 +44,7 @@ const ReviewFilterBar = ({
   exceedLimit,
   className,
   isMobile,
-}: ReviewFilterBarProps) => {
+}) => {
   const [mode, setMode] = useState(ReviewFilterBarMode.INITIAL);
   const [anchorEl, setAnchorEl] = useState(null);
 

@@ -1,6 +1,7 @@
 import { useMediaQuery } from '@material-ui/core';
 
 import clsx from 'clsx';
+import { FC } from 'react';
 import styles from '../../styles/components/planner/Timetable.module.scss';
 import colors from '../../constants/colors';
 import { WEEKDAYS } from '../../constants';
@@ -17,7 +18,7 @@ export type PropsWithConfig<T> = T & {
   config: EventConfig;
 };
 
-const TimetableTicks = ({ config }: PropsWithConfig<{}>) => {
+const TimetableTicks: FC<PropsWithConfig<{}>> = ({ config }) => {
   return (
     <>
       {Array.from(
@@ -39,11 +40,11 @@ type WeekdayTextProps = {
   timetableInfo?: TimetableInfo;
 };
 
-const WeekdayText = ({
+const WeekdayText: FC<PropsWithConfig<WeekdayTextProps>> = ({
   withDate,
   config,
   timetableInfo,
-}: PropsWithConfig<WeekdayTextProps>) => {
+}) => {
   const currentDay = new Date();
   const currentWeekday = currentDay.getDay() ? currentDay.getDay() : 7;
 
@@ -73,7 +74,7 @@ type TimetableProps = {
   timetableInfo: TimetableInfo;
 };
 
-const Timetable = ({ courses, timetableInfo }: TimetableProps) => {
+const Timetable: FC<TimetableProps> = ({ courses, timetableInfo }) => {
   const view = useView();
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 

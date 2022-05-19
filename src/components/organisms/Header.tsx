@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { IconButton, Menu, MenuItem } from '@material-ui/core';
@@ -39,7 +39,7 @@ const SECTIONS = [
   },
 ];
 
-const Header = () => {
+const Header: FC = () => {
   const router = useRouter();
   const [visible, setVisible] = useState(false);
   const isMobile = useMobileQuery();

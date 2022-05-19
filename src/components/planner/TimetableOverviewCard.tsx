@@ -1,5 +1,5 @@
 import { useLazyQuery, useMutation } from '@apollo/client';
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import pluralize from 'pluralize';
 
 import {
@@ -77,12 +77,12 @@ type TimetableOverviewListItemProps = {
   onDelete: (id: string, expire: number) => void;
 };
 
-const TimetableOverviewListItem = ({
+const TimetableOverviewListItem: FC<TimetableOverviewListItemProps> = ({
   item,
   onShare,
   onDownload,
   onDelete,
-}: TimetableOverviewListItemProps) => {
+}) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const menuItems = [
     {
@@ -151,7 +151,7 @@ const TimetableOverviewListItem = ({
   );
 };
 
-const TimetableOverviewCard = () => {
+const TimetableOverviewCard: FC = () => {
   const router = useRouter();
   const [expanded, setExpanded] = useState(false);
   const view = useView();

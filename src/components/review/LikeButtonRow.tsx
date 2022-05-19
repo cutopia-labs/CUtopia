@@ -1,7 +1,7 @@
 import { Divider } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import clsx from 'clsx';
-import { Fragment } from 'react';
+import { FC, Fragment } from 'react';
 import { BiDownvote, BiUpvote } from 'react-icons/bi';
 
 import styles from '../../styles/components/review/LikeButtonRow.module.scss';
@@ -19,13 +19,13 @@ const LikeButton = ({ isLike, selected, disabled, caption, onClick }) => (
   </Button>
 );
 
-export default function LikeButtonsRow({
+const LikeButtonsRow: FC<any> = ({
   liked,
   myVote,
   updateVote,
   likeCaption,
   dislikeCaption,
-}) {
+}) => {
   return (
     <div className={clsx(styles.likeBtnRow, 'center-row')}>
       {[1, 0].map(label => (
@@ -42,4 +42,6 @@ export default function LikeButtonsRow({
       ))}
     </div>
   );
-}
+};
+
+export default LikeButtonsRow;

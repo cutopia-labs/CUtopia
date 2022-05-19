@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { PropsWithChildren } from 'react';
+import { FC } from 'react';
 import styles from '../../styles/components/templates/DialogContentTemplate.module.scss';
 
 type DialogContentTemplateProps = {
@@ -8,12 +8,12 @@ type DialogContentTemplateProps = {
   caption?: string;
 };
 
-const DialogContentTemplate = ({
+const DialogContentTemplate: FC<DialogContentTemplateProps> = ({
   className,
   children,
   title,
   caption,
-}: PropsWithChildren<DialogContentTemplateProps>) => (
+}) => (
   <div className={clsx(styles.contentContainer, 'grid-auto-row', className)}>
     <div className="sub-title">{title}</div>
     <div className={clsx(styles.dialogCaption, 'caption')}>{caption}</div>

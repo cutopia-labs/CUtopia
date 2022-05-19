@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { AiTwotoneCalendar } from 'react-icons/ai';
 import { BiMessageRounded } from 'react-icons/bi';
@@ -27,13 +27,13 @@ type ReviewCardProps = {
   reportAction?: (item: Review) => void;
 };
 
-const ReviewCard = ({
+const ReviewCard: FC<ReviewCardProps> = ({
   review,
   concise,
   showAll,
   shareAction,
   reportAction,
-}: ReviewCardProps) => {
+}) => {
   const [selectedCriteria, setSelectedCriteria] = useState('overall');
   const view = useView();
   const [voteReview, { loading, error }] = useMutation(VOTE_REVIEW, {

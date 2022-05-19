@@ -1,4 +1,4 @@
-import { useReducer } from 'react';
+import { FC, useReducer } from 'react';
 import { Dialog as MUIDialog, DialogTitle, Divider } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 import { useMutation } from '@apollo/client';
@@ -18,7 +18,7 @@ import ChipsRow from '../molecules/ChipsRow';
 import { reverseMapping } from '../../helpers';
 import DialogContentTemplate from './DialogContentTemplate';
 
-const UserSettingsDialogContent = observer(() => {
+const UserSettingsDialogContent: FC = observer(() => {
   const user = useUser();
   const view = useView();
   return (
@@ -53,8 +53,8 @@ type ReportIssuesDialogContentProps = {
   id?: string;
 };
 
-const ReportIssuesDialogContent = observer(
-  ({ reportCategory, id }: ReportIssuesDialogContentProps) => {
+const ReportIssuesDialogContent: FC<ReportIssuesDialogContentProps> = observer(
+  ({ reportCategory, id }) => {
     const currentModeMessages = REPORT_MODES[reportCategory];
     const currentModeMessagesLookup = reverseMapping(currentModeMessages);
     const view = useView();
@@ -147,7 +147,7 @@ const DialogContentMap = {
   reportIssues: ReportIssuesDialogContent,
 };
 
-const Dialog = () => {
+const Dialog: FC = () => {
   const view = useView();
   const ContentFC = DialogContentMap[view.dialog?.key];
   return (

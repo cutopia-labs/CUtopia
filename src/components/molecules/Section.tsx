@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { PropsWithChildren } from 'react';
+import { FC } from 'react';
 import styles from '../../styles/components/molecules/Section.module.scss';
 
 export type SectionProps = {
@@ -9,13 +9,13 @@ export type SectionProps = {
   subheading?: boolean;
 };
 
-const Section = ({
+const Section: FC<SectionProps> = ({
   title,
   children,
   className,
   labelClassName,
   subheading,
-}: PropsWithChildren<SectionProps>) => (
+}) => (
   <div className={clsx(styles.sectionContainer, className)}>
     <div className={labelClassName || (subheading ? 'subHeading' : 'label')}>
       {title}

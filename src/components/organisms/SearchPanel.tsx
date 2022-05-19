@@ -67,13 +67,13 @@ type SearchResultProps = {
   limit?: number;
 };
 
-export const SearchResult = ({
+export const SearchResult: FC<SearchResultProps> = ({
   searchPayload,
   user,
   onClick,
   onMouseDown,
   limit,
-}: SearchResultProps) => {
+}) => {
   const [results, setResults] = useState<CourseSearchItem[] | null | false>(
     null
   );
@@ -144,7 +144,9 @@ export const SearchResult = ({
   );
 };
 
-const DepartmentList = ({ setSearchPayload }) => {
+type DepartmentListProps = { setSearchPayload: any };
+
+const DepartmentList: FC<DepartmentListProps> = ({ setSearchPayload }) => {
   const [currentSchool, setCurrentSchool] = useState(null);
   return (
     <div>

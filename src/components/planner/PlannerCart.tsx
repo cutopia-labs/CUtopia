@@ -3,6 +3,7 @@ import { observer } from 'mobx-react-lite';
 import { Checkbox, IconButton, Tooltip } from '@material-ui/core';
 import { ClearAllRounded, Warning } from '@material-ui/icons';
 import clsx from 'clsx';
+import { FC } from 'react';
 import styles from '../../styles/components/planner/PlannerCart.module.scss';
 import { usePlanner } from '../../store';
 
@@ -12,7 +13,7 @@ import { getSectionTime } from '../review/CourseSections';
 import { CourseSection, ErrorCardMode } from '../../types';
 import ErrorCard from '../molecules/ErrorCard';
 
-const PlannerCart = () => {
+const PlannerCart: FC = () => {
   const planner = usePlanner();
   const toggleHide = (
     section: CourseSection,

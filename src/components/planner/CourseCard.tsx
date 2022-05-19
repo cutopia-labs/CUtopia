@@ -10,7 +10,7 @@ import { Event } from '../../types';
 import colorMixing from '../../helpers/colorMixing';
 import { PropsWithConfig } from './Timetable';
 
-const useStyles = (
+const getStyles = (
   durationHeight: string,
   topMarginValue: string,
   bgColor: string,
@@ -55,7 +55,7 @@ const CourseCard: FC<
     theme.palette.background.paper
   );
   const textColor = updateOpacity(course.color, 0.8);
-  const styles = useStyles(
+  const styles = getStyles(
     durationHeight,
     topMarginValue,
     bgColor,

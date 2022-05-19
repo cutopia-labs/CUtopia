@@ -2,6 +2,7 @@ import CircularProgress, {
   CircularProgressProps,
 } from '@material-ui/core/CircularProgress';
 import clsx from 'clsx';
+import { FC } from 'react';
 
 import styles from '../../styles/components/atoms/Loading.module.scss';
 import Logo from './Logo';
@@ -13,13 +14,13 @@ type LoadingProps = {
   style?: string;
 };
 
-export default function Loading({
+const Loading: FC<LoadingProps & CircularProgressProps> = ({
   fixed,
   padding = true,
   logo,
   style,
   ...props
-}: LoadingProps & CircularProgressProps) {
+}) => {
   return (
     <div
       className={clsx(
@@ -37,4 +38,6 @@ export default function Loading({
       )}
     </div>
   );
-}
+};
+
+export default Loading;

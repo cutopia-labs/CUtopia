@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { FC } from 'react';
 import CardHeader from './CardHeader';
 
 type CardOwnProps = {
@@ -9,14 +10,14 @@ type CardOwnProps = {
 
 export type CardProps = CardOwnProps & React.HTMLProps<HTMLDivElement>;
 
-const Card = ({
+const Card: FC<CardProps> = ({
   className,
   children,
   title,
   titleContent,
   inPlace,
   ...props
-}: CardProps) => (
+}) => (
   <div className={clsx(inPlace ? 'column' : 'card', className)} {...props}>
     {Boolean(title) && <CardHeader title={title}>{titleContent}</CardHeader>}
     {children}

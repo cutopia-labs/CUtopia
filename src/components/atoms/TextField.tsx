@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { FC } from 'react';
 import styles from '../../styles/components/atoms/TextField.module.scss';
 
 type Tag = 'input' | 'textarea';
@@ -14,7 +15,9 @@ type TextFieldProps = {
   disabled?: boolean;
 };
 
-const TextField = ({
+const TextField: FC<
+  React.HTMLAttributes<HTMLInputElement | HTMLTextAreaElement> & TextFieldProps
+> = ({
   value,
   onChangeText,
   placeholder,
@@ -28,8 +31,7 @@ const TextField = ({
   onFocus,
   disabled,
   className,
-}: React.HTMLAttributes<HTMLInputElement | HTMLTextAreaElement> &
-  TextFieldProps) => {
+}) => {
   const TagName = Tag || 'input';
   return (
     <>

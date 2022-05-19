@@ -5,6 +5,7 @@ import { IconButton, Tooltip } from '@material-ui/core';
 import { GoUnverified, GoVerified } from 'react-icons/go';
 
 import clsx from 'clsx';
+import { FC } from 'react';
 import styles from '../../styles/components/home/UserCard.module.scss';
 import { useUser, useView } from '../../store';
 import { User } from '../../types';
@@ -14,7 +15,7 @@ type UserCardProps = {
   userData: User;
 };
 
-const UserCard = ({ userData }: UserCardProps) => {
+const UserCard: FC<UserCardProps> = ({ userData }) => {
   const user = useUser();
   const view = useView();
 

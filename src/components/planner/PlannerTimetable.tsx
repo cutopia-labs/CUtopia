@@ -1,4 +1,4 @@
-import { useReducer, useState, useEffect } from 'react';
+import { useReducer, useState, useEffect, FC } from 'react';
 import { observer } from 'mobx-react-lite';
 
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -179,7 +179,7 @@ const getSnackbarMessage = (
   },
 });
 
-const PlannerTimetable = ({ className }: PlannerTimetableProps) => {
+const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
   const planner = usePlanner();
   const router = useRouter();
   const isHome = router.pathname == '/';

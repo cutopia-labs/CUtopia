@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { PropsWithChildren } from 'react';
+import { FC } from 'react';
 import colors from '../../constants/colors';
 import { Grade } from '../../types';
 
@@ -8,11 +8,11 @@ type FormSectionProps = {
   className?: string;
 };
 
-export const FormSection = ({
+export const FormSection: FC<FormSectionProps> = ({
   title,
   className,
   children,
-}: PropsWithChildren<FormSectionProps>) => (
+}) => (
   <>
     <span className={clsx('formSectionTitle', className)}>{title}</span>
     {children}

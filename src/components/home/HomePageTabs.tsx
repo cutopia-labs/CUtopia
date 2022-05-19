@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import clsx from 'clsx';
+import { FC } from 'react';
 import styles from '../../styles/components/home/HomePageTabs.module.scss';
 import ListItem from '../molecules/ListItem';
 import Loading from '../atoms/Loading';
@@ -12,7 +13,7 @@ type CoursesListProps = {
   courses: CourseConcise[];
 };
 
-export const CoursesList = ({ loading, courses }: CoursesListProps) => {
+export const CoursesList: FC<CoursesListProps> = ({ loading, courses }) => {
   if (!courses.length) {
     return <ErrorCard mode={ErrorCardMode.NULL} inPlace={false} />;
   }
@@ -42,7 +43,7 @@ type ReviewsListProps = {
   reviewIds: string[];
 };
 
-export const ReviewsList = ({ reviewIds }: ReviewsListProps) => {
+export const ReviewsList: FC<ReviewsListProps> = ({ reviewIds }) => {
   if (!reviewIds?.length) {
     return <ErrorCard mode={ErrorCardMode.NULL} inPlace={false} />;
   }

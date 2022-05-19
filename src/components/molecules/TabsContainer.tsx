@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { FC } from 'react';
 import { MenuItem } from '../../types';
 import styles from '../../styles/components/molecules/TabsContainer.module.scss';
 
@@ -9,12 +10,12 @@ type TabsContainerProps = {
   mb?: boolean;
 };
 
-const TabsContainer = ({
+const TabsContainer: FC<TabsContainerProps> = ({
   items,
   selected,
   onSelect,
   mb,
-}: TabsContainerProps) => (
+}) => (
   <div className={clsx('card', 'tabs-row', mb && 'mb')}>
     {items.map(item => (
       <div

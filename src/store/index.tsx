@@ -7,9 +7,9 @@ import UserStore from './UserStore';
 import ViewStore from './ViewStore';
 import PlannerStore from './PlannerStore';
 
-let viewStore: ViewStore;
-let userStore: UserStore;
-let plannerStore: PlannerStore;
+export let viewStore: ViewStore;
+export let userStore: UserStore;
+export let plannerStore: PlannerStore;
 
 // enable static rendering ONLY on server
 enableStaticRendering(isServer);
