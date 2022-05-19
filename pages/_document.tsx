@@ -5,8 +5,6 @@ const Document: FC = () => (
   <Html>
     <Head>
       <link rel="icon" href="%PUBLIC_URL%/cutopia-logo.png" />
-      <title>CUtopia</title>
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta name="theme-color" content="#000000" />
       <meta
         name="description"
