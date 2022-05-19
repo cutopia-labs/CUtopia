@@ -1,13 +1,18 @@
-import { createContext } from 'react';
+import { createContext, FC, useContext, useEffect, useState } from 'react';
 
 import { reaction } from 'mobx';
+import { enableStaticRendering } from 'mobx-react-lite';
+import { isServer } from '../helpers';
 import UserStore from './UserStore';
 import ViewStore from './ViewStore';
 import PlannerStore from './PlannerStore';
 
-export const viewStore = new ViewStore();
-export const userStore = new UserStore(viewStore);
-export const plannerStore = new PlannerStore(viewStore);
+let viewStore: ViewStore;
+let userStore: UserStore;
+let plannerStore: PlannerStore;
+
+// enable static rendering ONLY on server
+enableStaticRendering(isServer);
 
 reaction(
   () => ({
@@ -19,11 +24,48 @@ reaction(
   }
 );
 
-export const UserContext = createContext(null as UserStore);
-export const ViewContext = createContext(null as ViewStore);
-export const PlannerContext = createContext(null as PlannerStore);
+const UserContext = createContext(null as UserStore);
+const ViewContext = createContext(null as ViewStore);
+const PlannerContext = createContext(null as PlannerStore);
 
-export default function StoreProvider({ children }) {
+export const useView = () => useContext(ViewContext);
+export const useUser = () => useContext(UserContext);
+export const usePlanner = () => useContext(PlannerContext);
+
+export const getStores = () => {
+  console.log('Store inited');
+  if (isServer) {
+    return {
+      viewStore: new ViewStore(),
+      userStore: new UserStore(viewStore),
+      plannerStore: new PlannerStore(viewStore),
+    };
+  }
+  if (!viewStore || !userStore || !plannerStore) {
+    viewStore = new ViewStore();
+    userStore = new UserStore(viewStore);
+    plannerStore = new PlannerStore(viewStore);
+  }
+  return { viewStore, userStore, plannerStore };
+};
+
+type Stores = {
+  userStore: UserStore;
+  viewStore: ViewStore;
+  plannerStore: PlannerStore;
+};
+
+const StoreProvider: FC = ({ children }) => {
+  const { userStore, plannerStore, viewStore } = getStores();
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    userStore.init();
+    plannerStore.init();
+    setReady(true);
+  }, []);
+  if (!ready) {
+    return null;
+  }
   return (
     <UserContext.Provider value={userStore}>
       <PlannerContext.Provider value={plannerStore}>
@@ -33,4 +75,6 @@ export default function StoreProvider({ children }) {
       </PlannerContext.Provider>
     </UserContext.Provider>
   );
-}
+};
+
+export default StoreProvider;

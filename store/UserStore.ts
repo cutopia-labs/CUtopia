@@ -70,6 +70,7 @@ class UserStore extends StorePrototype {
   }
 
   @action init() {
+    console.log('Init user store');
     this.loadStore();
     this.applyToken();
     if (this.loginState === LoginState.INIT) {

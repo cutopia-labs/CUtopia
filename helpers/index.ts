@@ -61,3 +61,5 @@ export const getTokenExpireDate = (
 };
 
 export const getToken = () => getStoreData('token')?.token;
+
+export const isServer = typeof window === 'undefined';

@@ -43,9 +43,9 @@ class PlannerStore extends StorePrototype {
   }
 
   @action init = () => {
+    console.log('Init planner store');
     this.loadStore();
     if (!this.currentPlannerKey) {
-      console.log('Creating new planners');
       const now = +new Date();
       this.setStore('currentPlannerKey', now);
       this.setStore('planners', {
