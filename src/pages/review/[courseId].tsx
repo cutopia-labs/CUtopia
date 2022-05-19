@@ -158,7 +158,7 @@ export const getStaticProps = async ({ params }) => {
 };
 
 export const getStaticPaths: GetStaticPaths<{}> = async () => {
-  const courses = Object.values(await import('../../data/courses.json'));
+  const courses = Object.values(await import('../../../data/courses.json'));
   return {
     paths: [...courses]
       .filter(cid => typeof cid === 'string')
