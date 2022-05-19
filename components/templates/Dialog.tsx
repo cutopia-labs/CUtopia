@@ -1,4 +1,4 @@
-import { useContext, useReducer, useState } from 'react';
+import { useContext, useReducer } from 'react';
 import { Dialog as MUIDialog, DialogTitle, Divider } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 import { useMutation } from '@apollo/client';
@@ -57,7 +57,6 @@ const ReportIssuesDialogContent = observer(
   ({ reportCategory, id }: ReportIssuesDialogContentProps) => {
     const currentModeMessages = REPORT_MODES[reportCategory];
     const currentModeMessagesLookup = reverseMapping(currentModeMessages);
-    const [anchorEl, setAnchorEl] = useState(null);
     const view = useContext(ViewContext);
     const [issueData, dispatchIssueData] = useReducer(
       (state, action) => ({ ...state, ...action }),
@@ -114,7 +113,6 @@ const ReportIssuesDialogContent = observer(
                       )
                     : [...issueData.types, item],
                 }),
-                setAnchorEl(null),
               ]}
               multiple
             />
