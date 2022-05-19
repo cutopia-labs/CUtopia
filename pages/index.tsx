@@ -1,109 +1,104 @@
-import React, { useEffect } from 'react';
-import * as Sentry from '@sentry/react';
-import { Integrations } from '@sentry/tracing';
-import Head from 'next/head';
-import { useLazyQuery } from '@apollo/client';
-import styles from '../styles/Home.module.scss';
+import { FC, useState } from 'react';
+import { Typography } from '@material-ui/core';
+import {
+  ChatBubbleOutlineOutlined,
+  SchoolOutlined,
+  NoteOutlined,
+} from '@material-ui/icons';
+import { observer } from 'mobx-react-lite';
 
-import { SentryConfigs } from '../constants/configs';
-import { useUser, useView } from '../store';
-import { LoginState, User } from '../types';
-import { GET_USER } from '../constants/queries';
-import Loading from '../components/atoms/Loading';
-import HomePage from './HomePage';
+import { useTitle } from 'react-use';
+import styles from '../styles/pages/HomePage.module.scss';
+import UserCard from '../components/home/UserCard';
+import { useUser, usePlanner } from '../store';
+import { CoursesList, ReviewsList } from '../components/home/HomePageTabs';
+import TabsContainer from '../components/molecules/TabsContainer';
+import Page from '../components/atoms/Page';
+import Card from '../components/atoms/Card';
+import Link from '../components/molecules/Link';
+import PlannerTimetable from '../components/planner/PlannerTimetable';
+import Footer from '../components/molecules/Footer';
+import useMobileQuery from '../hooks/useMobileQuery';
+import authenticatedRoute from '../components/molecules/authenticatedRoute';
 
-if (process.env.NODE_ENV === 'production') {
-  console.log = () => {};
-  console.warn = () => {};
-  console.table = () => {};
-}
-
-Sentry.init({
-  ...SentryConfigs,
-  integrations: [new Integrations.BrowserTracing()],
-  /* Temp disable cuz it showed multiple
-  beforeSend(event, hint) {
-    // Check if it is an exception, and if so, show the report dialog
-    if (event.exception) {
-      Sentry.showReportDialog({ eventId: event.event_id });
-    }
-    return event;
+const LINKS = [
+  {
+    name: 'CUSIS',
+    url: 'https://cusis.cuhk.edu.hk/',
   },
-  */
-});
+  {
+    name: 'Blackboard',
+    url: 'https://blackboard.cuhk.edu.hk/',
+  },
+  {
+    name: 'Curriculum Handbook',
+    url: 'http://rgsntl.rgs.cuhk.edu.hk/aqs_prd_applx/Public/Handbook/Default.aspx?id=2&tv=T&lang=en',
+  },
+];
 
-export default function Home() {
-  const user = useUser();
-  const view = useView();
-  const [getUser, { data: userData, loading: userDataLoading }] = useLazyQuery<{
-    me: User;
-  }>(GET_USER, {
-    onCompleted: data => {
-      if (data?.me?.username) {
-        user.updateStore('data', data.me);
-        Sentry.setUser({
-          username: data.me.username,
-        });
-      } else {
-        console.log(data);
-        user.updateStore('loginState', LoginState.LOGGED_OUT);
-      }
-    },
-    onError: e => {
-      const handled = view.handleError(e);
-      if (!handled) {
-        user.updateStore('loginState', LoginState.LOGGED_OUT);
-      }
-    },
-  });
-  useEffect(() => {
-    if (user.token && !user.data?.username) {
-      getUser();
-    }
-  }, [user.token]);
-  if (
-    (userDataLoading || !user.data) &&
-    user.loginState === LoginState.LOGGED_IN
-  ) {
-    return <Loading fixed padding={false} logo />;
-  }
-  return (
-    <div className={styles.App}>
-      <Head>
-        <link rel="icon" href="%PUBLIC_URL%/cutopia-logo.png" />
-        <title>CUtopia</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#000000" />
-        <meta
-          name="description"
-          content="CUtopia is a course review and planning platform for CUHK students."
-        />
-        <link rel="apple-touch-icon" href="%PUBLIC_URL%/cutopia-logo.png" />
-        <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" />
-        <link
-          href={`https://fonts.googleapis.com/css2?family=Pacifico&display=swap`}
-          rel="stylesheet"
-        />
-      </Head>
-      <HomePage />
-    </div>
-  );
-}
-
-/*
-ReactDOM.render(
-  <React.StrictMode>
-    <Sentry.ErrorBoundary
-      fallback={<ErrorCard mode={ErrorCardMode.ERROR} />}
-      showDialog
-    >
-      <App />
-    </Sentry.ErrorBoundary>
-  </React.StrictMode>,
-  document.getElementById('root')
+const LinksCard: FC = () => (
+  <Card className="links-card">
+    <Typography>Links</Typography>
+    {LINKS.map(link => (
+      <Link
+        style={styles.homeLinkContainer}
+        url={link.url}
+        label={link.name}
+        key={link.url}
+      />
+    ))}
+  </Card>
 );
-*/
 
-// reportWebVitals(console.log);
+const SELECTIONS = [
+  {
+    label: 'Courses',
+    icon: <SchoolOutlined />,
+  },
+  {
+    label: 'Reviews',
+    icon: <ChatBubbleOutlineOutlined />,
+  },
+  {
+    label: 'Planner',
+    icon: <NoteOutlined />,
+  },
+];
+
+const HomePage: FC = () => {
+  useTitle('CUtopia');
+  const user = useUser();
+  const planner = usePlanner();
+  const [tab, setTab] = useState('Courses');
+  const isMobile = useMobileQuery();
+
+  const renderTab = () => {
+    switch (tab) {
+      case 'Courses':
+        return <CoursesList loading={false} courses={planner.plannerCourses} />;
+      case 'Reviews':
+        return <ReviewsList reviewIds={user.data?.reviewIds} />;
+      case 'Planner':
+        return <PlannerTimetable className="home-page-timetable" />;
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <Page className="home-page" center padding>
+      <div className="home-page-left grid-auto-row">
+        <UserCard userData={user.data} />
+        <LinksCard />
+        {!isMobile && <Footer />}
+      </div>
+      <div className="home-page-right grid-auto-row">
+        <TabsContainer items={SELECTIONS} selected={tab} onSelect={setTab} />
+        {renderTab()}
+        {isMobile && <Footer />}
+      </div>
+    </Page>
+  );
+};
+
+export default observer(authenticatedRoute(HomePage));

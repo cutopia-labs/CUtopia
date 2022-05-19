@@ -6,6 +6,7 @@ import {
 
 import '../styles/pages/AboutPage.module.scss';
 import { useRouter } from 'next/router';
+import { FC } from 'react';
 import { AboutTab, PrivacyTab, TermsOfUseTab } from '../components/about/tabs';
 import Page from '../components/atoms/Page';
 import TabsContainer from '../components/molecules/TabsContainer';
@@ -25,7 +26,7 @@ export const ABOUT_PAGE_ROUTES = [
   },
 ];
 
-const AboutPage = () => {
+const AboutPage: FC = () => {
   const router = useRouter();
 
   const renderTab = () => {
