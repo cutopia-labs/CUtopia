@@ -28,7 +28,7 @@ const GradeRow: FC<GradeRowProps> = ({
   additionalChildClassName,
   isMobile,
 }) => (
-  <div className={clsx(styles.gradeRow, style, concise && styles.concise)}>
+  <div className={clsx(styles.gradeRow, concise && styles.concise, style)}>
     {['overall', ...RATING_FIELDS]
       .filter(x => x)
       .map(field => (
@@ -47,7 +47,10 @@ const GradeRow: FC<GradeRowProps> = ({
           }}
         >
           {field !== 'overall' && (
-            <div className="reviewsFilterLabel" key={field}>
+            <div
+              className={clsx('reviewsFilterLabel', styles.reviewsFilterLabel)}
+              key={field}
+            >
               {`${field}${isMobile ? '' : ':'}`}
             </div>
           )}

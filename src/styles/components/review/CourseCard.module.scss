@@ -50,10 +50,14 @@
   }
 }
 
-.gradeRowConcise {
+// select multiple classname for CSS precedence
+.gradeRow.gradeRowConcise {
   min-width: auto;
   margin-top: 0;
   margin-bottom: 0;
+  > div:nth-child(2) {
+    padding-left: 10px;
+  }
 }
 
 .courseLinkContainer {
