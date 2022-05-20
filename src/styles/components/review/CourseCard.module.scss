@@ -21,25 +21,41 @@
 .courseCard {
   position: relative;
   overflow: hidden;
-  .gradeRow {
-    height: 46px;
-    min-width: 550px;
-    margin-top: auto;
-    margin-bottom: auto;
-    &.concise {
-      min-width: auto;
-      margin-top: 0;
-      margin-bottom: 0;
-    }
-  }
   .caption {
     margin: 0;
     overflow-wrap: anywhere;
     line-height: var(--line-height-caption);
   }
-  &.concise {
+}
+
+.gradeRow {
+  height: 46px;
+  min-width: 550px;
+  margin-top: auto;
+  margin-bottom: auto;
+  /* Styles for overall indicator */
+  // container
+  & div:first-child {
+    padding: 0;
+  }
+  // inner
+  > div:first-child > div {
+    margin: -10px 6px -10px 0px !important;
+    height: 50px;
+    width: 40px;
+    border-radius: 0;
+  }
+  > div:nth-child(2) {
+    padding-left: 0;
   }
 }
+
+.gradeRowConcise {
+  min-width: auto;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
 .courseLinkContainer {
   font-size: initial;
   width: fit-content;
@@ -95,9 +111,7 @@
 }
 
 @media only screen and (max-width: 1260px) {
-  .courseCard {
-    .gradeRow {
-      overflow: initial;
-    }
+  .gradeRow {
+    overflow: initial;
   }
 }

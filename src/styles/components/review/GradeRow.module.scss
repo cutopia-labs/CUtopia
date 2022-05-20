@@ -16,18 +16,36 @@
   }
 }
 
-.grade-indicator.reviewsFilterGradeIndicator.overall {
-  margin: -10px 6px -10px 0px !important;
-  height: 50px;
-  border-radius: 0;
+.reviewsFilterGradeIndicator {
+  border-radius: 8px;
+  height: auto;
+  width: auto;
+  padding: 2px 6px;
+  min-width: 28px;
+  font-size: 14px;
 }
 
 .ratingContainer {
   cursor: default;
-  padding: 0 10px;
+  padding: 0 4px;
   height: 30px;
   > .reviewsFilterLabel {
     margin: 0 10px 0 0;
+  }
+}
+
+.concise {
+  margin-bottom: var(--card-padding);
+  height: auto;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  > .div {
+    flex: 1;
+    justify-content: space-between;
+    margin: 6px;
+  }
+  > div:first-child {
+    display: none;
   }
 }
 
@@ -38,20 +56,6 @@
     }
     .ratingContainer.active {
       border-bottom: 2px solid var(--accent);
-    }
-  }
-  &.concise {
-    margin-bottom: var(--card-padding);
-    height: auto;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    > .ratingContainer {
-      flex: 1;
-      justify-content: space-between;
-      margin: 6px;
-    }
-    .overall {
-      display: none;
     }
   }
   &.review-header {

@@ -11,9 +11,10 @@ type GradeRowProps = {
   isReview?: boolean;
   selected?: string;
   setSelected?: (label: string) => void;
-  additionalClassName?: string;
+  style?: string;
   additionalChildClassName?: string;
   isMobile?: boolean;
+  concise?: boolean;
 };
 
 const GradeRow: FC<GradeRowProps> = ({
@@ -22,21 +23,13 @@ const GradeRow: FC<GradeRowProps> = ({
   isReview,
   selected,
   setSelected,
-  additionalClassName,
+  concise,
+  style,
   additionalChildClassName,
   isMobile,
 }) => (
-  <div className={clsx(styles.gradeRow, additionalClassName)}>
-    {!isReview && (
-      <GradeIndicator
-        grade={rating.overall}
-        additionalClassName={clsx(
-          styles.reviewsFilterGradeIndicator,
-          !isReview && 'overall'
-        )}
-      />
-    )}
-    {[isReview ? 'overall' : '', ...RATING_FIELDS]
+  <div className={clsx(styles.gradeRow, style, concise && styles.concise)}>
+    {['overall', ...RATING_FIELDS]
       .filter(x => x)
       .map(field => (
         <div
@@ -64,7 +57,7 @@ const GradeRow: FC<GradeRowProps> = ({
                 ? rating[field].grade
                 : rating[field]
             }
-            additionalClassName={styles.reviewsFilterGradeIndicator}
+            style={styles.reviewsFilterGradeIndicator}
           />
         </div>
       ))}

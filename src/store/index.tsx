@@ -35,6 +35,7 @@ export const usePlanner = () => useContext(PlannerContext);
 export const getStores = () => {
   console.log('Store inited');
   if (isServer) {
+    console.log('Store inited - Server');
     return {
       viewStore: new ViewStore(),
       userStore: new UserStore(viewStore),
@@ -42,6 +43,7 @@ export const getStores = () => {
     };
   }
   if (!viewStore || !userStore || !plannerStore) {
+    console.log('Store inited - Client');
     viewStore = new ViewStore();
     userStore = new UserStore(viewStore);
     plannerStore = new PlannerStore(viewStore);

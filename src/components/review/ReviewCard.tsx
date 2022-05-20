@@ -93,7 +93,7 @@ const ReviewCard: FC<ReviewCardProps> = ({
         <GradeRow
           rating={review}
           isReview
-          additionalClassName={clsx(styles.reviewGradeRow, 'gradeRow tabs-row')}
+          style={clsx(styles.reviewGradeRow, 'gradeRow tabs-row')}
           additionalChildClassName="tab"
           selected={selectedCriteria}
           setSelected={setSelectedCriteria}

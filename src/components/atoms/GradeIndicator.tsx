@@ -3,21 +3,19 @@ import { FC } from 'react';
 import colors from '../../constants/colors';
 import updateOpacity from '../../helpers/updateOpacity';
 import { getLabel } from '../../helpers';
+import styles from '../../styles/components/atoms/GradeIndicator.module.scss';
 
 type GradeIndicatorProps = {
   grade: string | number;
-  additionalClassName?: string;
+  style?: string;
 };
 
-const GradeIndicator: FC<GradeIndicatorProps> = ({
-  grade,
-  additionalClassName,
-}) => {
+const GradeIndicator: FC<GradeIndicatorProps> = ({ grade, style }) => {
   const label = getLabel(grade);
   const color = colors.gradeColors[label.charAt(0)];
   return (
     <div
-      className={clsx('grade-indicator', additionalClassName)}
+      className={clsx(styles.gradeIndicator, style)}
       style={{
         background: updateOpacity(color, 0.2),
         color: updateOpacity(color, 0.8),
