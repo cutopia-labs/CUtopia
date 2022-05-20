@@ -21,9 +21,93 @@ import { CourseCardSkeleton } from '../templates/Skeleton';
 import CourseSections from './CourseSections';
 import GradeRow from './GradeRow';
 
+type CourseInfoProps = {
+  courseInfo: CourseInfo;
+};
+
+const CourseBadgeRow: FC<CourseInfoProps> = ({ courseInfo }) => {
+  if (!courseInfo?.units) return null;
+  return (
+    <div className="badges-row">
+      {[
+        [
+          courseInfo.units
+            ? `${parseInt(courseInfo.units, 10)} Credits`
+            : undefined,
+        ],
+        [courseInfo.academic_group],
+        ...(Array.isArray(courseInfo.components)
+          ? courseInfo.components
+          : (courseInfo.components || '').match(/[A-Z][a-z]+/g) || []
+        ).map(item => item && [item]),
+        ...(courseInfo.assessments || []).map(assessment => [
+          assessment.name,
+          parseInt(assessment.percentage, 10) || false,
+        ]),
+      ]
+        .filter(([k, v]) => k !== undefined)
+        .map(([k, v], i) => (
+          <Badge index={i} text={k} value={v} key={k + v} />
+        ))}
+    </div>
+  );
+};
+
+const CourseConcise: FC<CourseInfoProps> = ({ courseInfo }) => (
+  <>
+    {courseInfo.requirements && (
+      <SectionText
+        className={styles.requirementSection}
+        title="Requirements"
+        caption={courseInfo.requirements}
+      />
+    )}
+    {courseInfo.rating && (
+      <>
+        <div className={styles.subHeadingContainer}>
+          <RouterLink href={`/review/${courseInfo.courseId}`}>
+            <a
+              className={clsx(
+                styles.reviewsLinkHeading,
+                'subHeading center-row'
+              )}
+            >
+              Reviews
+              <FiExternalLink />
+            </a>
+          </RouterLink>
+          <GradeRow
+            rating={courseInfo.rating}
+            concise
+            style={clsx(styles.gradeRowConcise, styles.gradeRow)}
+          />
+        </div>
+      </>
+    )}
+    <Section title="Sections" subheading>
+      <CourseSections courseInfo={courseInfo} />
+    </Section>
+  </>
+);
+
+const CourseDetails: FC<CourseInfoProps> = ({ courseInfo }) => (
+  <>
+    {Boolean(courseInfo.requirements) && (
+      <SectionText title={'requirements'} caption={courseInfo.requirements} />
+    )}
+    <Section title="Past Paper" subheading>
+      <Link
+        style={styles.courseLinkContainer}
+        url={`https://julac.hosted.exlibrisgroup.com/primo-explore/search?query=any,contains,${courseInfo.courseId}&tab=default_tab&search_scope=Exam&sortby=date&vid=CUHK&lang=en_US`}
+        label="Search on CUHK library"
+      />
+    </Section>
+  </>
+);
+
 type CourseCardProps = {
   courseInfo: CourseInfo;
-  concise?: boolean;
+  concise?: boolean; // if concise, meaning that it's for planner search result
   loading?: boolean;
   style?: string;
 };
@@ -113,74 +197,23 @@ const CourseCard: FC<CourseCardProps> = ({
           <span className="caption">{courseInfo.title}</span>
         </div>
         {courseInfo.rating && !concise && !isMobile && (
-          <GradeRow rating={courseInfo.rating} />
+          <GradeRow rating={courseInfo.rating} style={styles.gradeRow} />
         )}
       </header>
       {concise ? (
-        <>
-          {courseInfo.requirements && (
-            <SectionText
-              className={styles.requirementSection}
-              title="Requirements"
-              caption={courseInfo.requirements}
-            />
-          )}
-          {courseInfo.rating && (
-            <>
-              <div className={styles.subHeadingContainer}>
-                <RouterLink href={`/review/${courseInfo.courseId}`}>
-                  <a
-                    className={clsx(
-                      styles.reviewsLinkHeading,
-                      'subHeading center-row'
-                    )}
-                  >
-                    Reviews
-                    <FiExternalLink />
-                  </a>
-                </RouterLink>
-                <GradeRow
-                  rating={courseInfo.rating}
-                  additionalClassName="concise"
-                />
-              </div>
-            </>
-          )}
-          <Section title="Sections" subheading>
-            <CourseSections courseInfo={courseInfo} />
-          </Section>
-        </>
+        <CourseConcise courseInfo={courseInfo} />
       ) : (
-        <>
-          {Boolean(courseInfo?.units) && (
-            <div className="badges-row">
-              {[
-                [
-                  courseInfo.units
-                    ? `${parseInt(courseInfo.units, 10)} Credits`
-                    : undefined,
-                ],
-                [courseInfo.academic_group],
-                ...(Array.isArray(courseInfo.components)
-                  ? courseInfo.components
-                  : (courseInfo.components || '').match(/[A-Z][a-z]+/g) || []
-                ).map(item => item && [item]),
-                ...(courseInfo.assessments || []).map(assessment => [
-                  assessment.name,
-                  parseInt(assessment.percentage, 10) || false,
-                ]),
-              ]
-                .filter(([k, v]) => k !== undefined)
-                .map(([k, v], i) => (
-                  <Badge index={i} text={k} value={v} key={k + v} />
-                ))}
-            </div>
-          )}
-        </>
+        <CourseBadgeRow courseInfo={courseInfo} />
       )}
-      {courseInfo.rating && isMobile && !concise && (
-        <GradeRow rating={courseInfo.rating} additionalClassName="concise" />
-      )}
+      {courseInfo.rating &&
+        isMobile && // for mobile display grades
+        !concise && (
+          <GradeRow
+            rating={courseInfo.rating}
+            style={clsx(styles.gradeRowConcise, styles.gradeRow)}
+            concise
+          />
+        )}
       {Boolean(courseInfo.description) && (
         <p className="caption description">{courseInfo.description}</p>
       )}
@@ -188,23 +221,7 @@ const CourseCard: FC<CourseCardProps> = ({
         visible={!showMore}
         onShowMore={() => [setShowMore(true), setSkipHeightCheck(true)]}
       />
-      {!concise && (
-        <>
-          {Boolean(courseInfo.requirements) && (
-            <SectionText
-              title={'requirements'}
-              caption={courseInfo.requirements}
-            />
-          )}
-          <Section title="Past Paper" subheading>
-            <Link
-              style={styles.courseLinkContainer}
-              url={`https://julac.hosted.exlibrisgroup.com/primo-explore/search?query=any,contains,${courseInfo.courseId}&tab=default_tab&search_scope=Exam&sortby=date&vid=CUHK&lang=en_US`}
-              label="Search on CUHK library"
-            />
-          </Section>
-        </>
-      )}
+      {!concise && <CourseDetails courseInfo={courseInfo} />}
     </div>
   );
 };
