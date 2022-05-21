@@ -415,6 +415,36 @@ textarea {
 	overflow: hidden;
 }
 
+.tab {
+	display: flex;
+	height: 48px;
+	padding: 0 var(--card-padding);
+	cursor: pointer;
+	transition: width 300ms cubic-bezier(0.7, 0, 0.3, 1) 0ms;
+  opacity: 0.8;
+	svg {
+		font-size: 16px;
+		padding-top: 0;
+	}
+	.caption {
+		text-transform: capitalize!important;
+		margin-left: 6px;
+		font-size: 14px;
+    font-weight: 500;
+	}
+	&:hover {
+    background-color: var(--background-chip);
+	}
+	&.active {
+    opacity: 1;
+    box-shadow: inset 0px -2px 0px var(--primary);
+	}
+}
+.tab.active, .tab:hover {
+	padding-top: 0;
+}
+
+
 /* Scrollbar styles */
 
 /* Others */

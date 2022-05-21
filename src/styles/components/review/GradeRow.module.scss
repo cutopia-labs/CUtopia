@@ -5,14 +5,8 @@
   background-color: var(--background-secondary);
   border-radius: var(--border-radius);
   flex-wrap: wrap;
-  > div:first-child {
-    height: 33px;
-  }
   svg {
     color: #3b3b3bbf;
-  }
-  > div:first-child > div {
-    margin: 6px;
   }
 }
 

@@ -68,7 +68,7 @@ const ReviewCard: FC<ReviewCardProps> = ({
   }
   return (
     <div className={clsx(styles.reviewCard, 'card', !showMore && 'retracted')}>
-      <div className="reviewsFilter review">
+      <div className={clsx(styles.reviewHeader, 'row')}>
         {Boolean(review.title) && (
           <div className={clsx(styles.reviewTitle, 'center-row ellipsis-text')}>
             <BiMessageRounded />
@@ -78,23 +78,27 @@ const ReviewCard: FC<ReviewCardProps> = ({
         <div
           className={clsx(
             styles.reviewInfoRow,
-            !Boolean(review.title) && 'no-title'
+            !Boolean(review.title) && styles.noTitle,
+            'center-row'
           )}
         >
-          <div className="center-row">
-            <AiTwotoneCalendar />
-            <span className="reviewsFilterLabel term">{review.term}</span>
-            <span className="reviewsFilterLabel separator">•</span>
-            <span className="reviewsFilterLabel lecturer">
-              {review.lecturer}
-            </span>
-          </div>
+          <AiTwotoneCalendar />
+          <span className={clsx('reviewsFilterLabel', styles.term)}>
+            {review.term}
+          </span>
+          <span className={clsx('reviewsFilterLabel', styles.separator)}>
+            •
+          </span>
+          <span className={clsx('reviewsFilterLabel', styles.lecturer)}>
+            {review.lecturer}
+          </span>
         </div>
         <GradeRow
           rating={review}
           isReview
-          style={clsx(styles.reviewGradeRow, 'gradeRow tabs-row')}
-          additionalChildClassName="tab"
+          style={clsx(styles.reviewGradeRow, styles.gradeRow, 'tabs-row')}
+          additionalChildClassName={clsx(styles.gradeIndicatorContainer, 'tab')}
+          gradeIndicatorStyle={styles.gradeIndicator}
           selected={selectedCriteria}
           setSelected={setSelectedCriteria}
           isMobile={isMobile}

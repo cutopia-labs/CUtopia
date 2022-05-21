@@ -12,6 +12,7 @@ type GradeRowProps = {
   selected?: string;
   setSelected?: (label: string) => void;
   style?: string;
+  gradeIndicatorStyle?: string;
   additionalChildClassName?: string;
   isMobile?: boolean;
   concise?: boolean;
@@ -26,6 +27,7 @@ const GradeRow: FC<GradeRowProps> = ({
   concise,
   style,
   additionalChildClassName,
+  gradeIndicatorStyle,
   isMobile,
 }) => (
   <div className={clsx(styles.gradeRow, concise && styles.concise, style)}>
@@ -60,7 +62,10 @@ const GradeRow: FC<GradeRowProps> = ({
                 ? rating[field].grade
                 : rating[field]
             }
-            style={styles.reviewsFilterGradeIndicator}
+            style={clsx(
+              styles.reviewsFilterGradeIndicator,
+              gradeIndicatorStyle
+            )}
           />
         </div>
       ))}

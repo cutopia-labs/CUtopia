@@ -27,27 +27,42 @@
   font-size: 14px;
 }
 
-.reviewsFilter {
-  &.review {
+.reviewHeader {
+    padding: 12px 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    svg {
+      color: var(--text);
+    }
     margin: 0;
     padding: 0;
     border-radius: 0;
     background-color: var(--background-secondary);
-  }
 }
-.gradeRow {
-  &.reviewGradeRow {
+
+.gradeRow.reviewGradeRow {
     background-color: transparent;
     border-radius: 0;
-    .ratingContainer {
-      height: 48px;
-      padding: 0 10px;
-      &:hover {
-        padding-top: 0;
-      }
+    > :first-child { // i.e. overall class
+      padding: 0 16px;
     }
+}
+
+.gradeIndicatorContainer {
+  height: 48px;
+  padding: 0 10px;
+  &:first {
+    width: 48px;
   }
 }
+
+.gradeIndicator {
+  &:hover {
+    padding-top: 0;
+  }
+}
+
+
 .reviewText {
   text-align: start;
   font-size: 14px;
@@ -57,13 +72,14 @@
     var(--reviewCard-inner-padding-horizontal);
   white-space: pre-wrap;
 }
+
 .reviewInfoRow {
   display: flex;
   align-items: center;
   justify-content: flex-start;
   padding: var(--reviewCard-inner-padding-vertical) var(--reviewCard-inner-padding-horizontal);
   width: 100%;
-  .reviewsFilterLabel {
+  :global(.reviewsFilterLabel) {
     margin: 0;
   }
   .term {
@@ -81,12 +97,8 @@
     font-size: 15px;
     color: var(--primary);
   }
-  &.no-title {
+  &.noTitle {
     margin-top: 8px;
-  }
-  & > :nth-child(2) {
-    flex: 1;
-    margin-left: 16px;
   }
 }
 .reviewsFilterLabel {
@@ -142,10 +154,8 @@
   grid-column-gap: var(--card-padding);
 }
 @media only screen and (max-width: 1260px) {
-  .reviewsFilterLabel {
-    &.author {
-      font-size: 12px;
-    }
+  .reviewsFilter {
+    padding: 12px var(--card-padding);
   }
   .reviewText {
     width: calc(100vw - 2 * var(--reviewCard-inner-padding-horizontal));
@@ -155,7 +165,7 @@
     grid-template-columns: repeat(1, 1fr);
   }
   .reviewCard {
-    .tab {
+    :global(.tab) {
       &:hover {
         padding-top: none;
         border-bottom: none;
@@ -166,19 +176,17 @@
     & > div:first-child {
       display: none;
     }
-    .ratingContainer {
+    .gradeIndicatorContainer {
       flex-direction: column;
       height: 62px;
       justify-content: center;
       flex: 1;
     }
-    .ratingContainer {
-      > .reviewsFilterLabel {
-        margin-bottom: 10px;
-      }
-      &.active {
-        border: none;
-      }
+    .gradeIndicatorContainer {
+       > :global(.reviewsFilterLabel) {
+         margin-bottom: 10px;
+         margin-right: 0;
+        }
     }
   }
 }
