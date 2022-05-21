@@ -1,25 +1,35 @@
-## Initialize
-Installing all packages below:
+## Initialization
+### Install packages
 - [Nodejs](https://nodejs.org/en/)
 - [Yarn](https://classic.yarnpkg.com/lang/en/docs/install/#debian-stable)
 - [MongoDB Compass](https://www.mongodb.com/products/compass)
 - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 
-Installing node modules dependencies:
+### Install node modules
 ```sh
-sh package-install.sh
+sh tools/install-package.sh
 ```
-Creating .env files according to [Environment Variable Settings](#environment-variable-settings).
 
-## Develop
-### Compiling scripts
+### Create envorinment files
 ```sh
-sh local-compile.sh
+sh tools/create-env.sh
 ```
-### Starting server
+
+### Generate RSA key pair
+They key pair is used for JWT login token encryption.
+```sh
+sh tools/generate-jwtRS256.sh
+```
+
+## Development
+### Compile scripts
+```sh
+sh tools/watch-local-files.sh
+```
+### Start server
 Run below in another terminal after scripts are compiled:
 ```sh
-sh local-server.sh
+sh tools/run-local-server.sh
 ```
 
 ### GraphQL playground
@@ -27,20 +37,19 @@ After server started, GraphQL playground is available at:
 http://localhost:4000/graphql
 
 
-## Deploy
+## Deployment
 
-### Configuring AWS credientals for deployment
+### Configure AWS credientals
 Generate your AWS access key as instructed [here](https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html#access-keys-and-secret-access-keys). Then run the command below and paste the generated key:
 
 ```sh
 aws configure
 ```
 
-### Deploying to AWS
+### Deploy to AWS
 ```sh
-sh deploy.sh stack-name
+sh tools/deploy.sh cutopia-dev
 ```
-> Example: `sh deploy.sh mike-dev`
 
 ### Configure API Gateway manually for static resources
 1. Create Resource
@@ -61,51 +70,3 @@ sh deploy.sh stack-name
 > Use Lambda Proxy Integration: true
 4. Deploy API
 > Choose stage of deployment (Prod)
-
-## Environment Variable Settings
-### mongodb/.env
-```
-ATLAS_URI=Your MongoDB connection key
-ATLAS_DEV_URI=Your MongoDB connection key for running Jest test scripts
-```
-### lambda/graphql/.env
-```
-NODE_ENV=production
-ATLAS_URI=Your MongoDB connection key
-```
-
-### lambda/emailer/.env
-This env file can be ignored if you are not developing emailer.
-
-Currently, it is assumed three email addresses are available for resending emails in case of failure.
-```
-GMAIL_ADDRESS_0=Your email address
-GMAIL_CLIENT_ID_0=Your client id
-GMAIL_CLIENT_SECRET_0=Your client secret
-GMAIL_REFRESH_TOKEN_0=Your refresh token
-GMAIL_ACCESS_TOKEN_0=Your access token
-
-GMAIL_ADDRESS_1=Your email address
-GMAIL_CLIENT_ID_1=Your client id
-GMAIL_CLIENT_SECRET_1=Your client secret
-GMAIL_REFRESH_TOKEN_1=Your refresh token
-GMAIL_ACCESS_TOKEN_1=Your access token
-
-GMAIL_ADDRESS_2=Your email address
-GMAIL_CLIENT_ID_2=Your client id
-GMAIL_CLIENT_SECRET_2=Your client secret
-GMAIL_REFRESH_TOKEN_2=Your refresh token
-GMAIL_ACCESS_TOKEN_2=Your access token
-
-ATLAS_URI=Your MongoDB connection key
-```
-
-### lambda/cron-remove-timetable/.env
-```
-ATLAS_URI=Your MongoDB connection key
-```
-
-### lambda/cron-remove-update-ranking/.env
-```
-ATLAS_URI=Your MongoDB connection key
-```
