@@ -1,33 +1,48 @@
 ## Initialize
-Installing dependencies
+Installing all packages below:
+- [Nodejs](https://nodejs.org/en/)
+- [Yarn](https://classic.yarnpkg.com/lang/en/docs/install/#debian-stable)
+- [MongoDB Compass](https://www.mongodb.com/products/compass)
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+
+Installing node modules dependencies:
 ```sh
 sh package-install.sh
 ```
-Creating .env files according to [Environment Variable Settings](#environment-variable-settings)
+Creating .env files according to [Environment Variable Settings](#environment-variable-settings).
+
 ## Develop
-#### Compiling scripts
+### Compiling scripts
 ```sh
 sh local-compile.sh
 ```
-#### Starting server
-Run below in a separate terminal after scripts are compiled 
+### Starting server
+Run below in another terminal after scripts are compiled:
 ```sh
 sh local-server.sh
 ```
 
-#### GraphQL playground
+### GraphQL playground
 After server started, GraphQL playground is available at:
 http://localhost:4000/graphql
 
 
 ## Deploy
 
+### Configuring AWS credientals for deployment
+Generate your AWS access key as instructed [here](https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html#access-keys-and-secret-access-keys). Then run the command below and paste the generated key:
+
+```sh
+aws configure
+```
+
+### Deploying to AWS
 ```sh
 sh deploy.sh stack-name
 ```
 > Example: `sh deploy.sh mike-dev`
 
-### Config API Gateway manually for static resources
+### Configure API Gateway manually for static resources
 1. Create Resource
 > /static
 > 
@@ -48,19 +63,21 @@ sh deploy.sh stack-name
 > Choose stage of deployment (Prod)
 
 ## Environment Variable Settings
-#### mongodb/.env
+### mongodb/.env
 ```
 ATLAS_URI=Your MongoDB connection key
-ATLAS_DEV_URI=Your MongoDB connection key for dev
+ATLAS_DEV_URI=Your MongoDB connection key for running Jest test scripts
 ```
-#### lambda/graphql/.env
+### lambda/graphql/.env
 ```
 NODE_ENV=production
 ATLAS_URI=Your MongoDB connection key
 ```
 
-#### lambda/emailer/.env
-Currently, it is assumed three email addresses are available for resending emails in case of failure
+### lambda/emailer/.env
+This env file can be ignored if you are not developing emailer.
+
+Currently, it is assumed three email addresses are available for resending emails in case of failure.
 ```
 GMAIL_ADDRESS_0=Your email address
 GMAIL_CLIENT_ID_0=Your client id
@@ -83,12 +100,12 @@ GMAIL_ACCESS_TOKEN_2=Your access token
 ATLAS_URI=Your MongoDB connection key
 ```
 
-#### lambda/cron-remove-timetable/.env
+### lambda/cron-remove-timetable/.env
 ```
 ATLAS_URI=Your MongoDB connection key
 ```
 
-#### lambda/cron-remove-update-ranking/.env
+### lambda/cron-remove-update-ranking/.env
 ```
 ATLAS_URI=Your MongoDB connection key
 ```
