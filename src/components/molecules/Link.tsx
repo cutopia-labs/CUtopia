@@ -16,7 +16,7 @@ const Link: FC<LinkProps> = ({ url, label, truncate, icon = true, style }) => (
   <div className={clsx(styles.linkContainer, 'center-row', style)}>
     {icon && <FiExternalLink />}
     <a
-      className={clsx(truncate && 'truncate')}
+      className={clsx(truncate && styles.truncate)}
       style={{ maxWidth: `${truncate}px` }}
       href={url}
       target="_blank"
