@@ -1,3 +1,9 @@
+## Initialize
+Installing dependencies
+```sh
+sh package-install.sh
+```
+Creating .env files according to [Environment Variable Settings](#environment-variable-settings)
 ## Develop
 #### Compiling scripts
 ```sh
