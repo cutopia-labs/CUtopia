@@ -56,7 +56,9 @@ aws configure
 sh tools/deploy.sh cutopia-dev
 ```
 
-### Configure API Gateway manually for static resources
+### Configure API Gateway
+Follow the steps below to enable access to static resources, i.e. instructors.json and course_list.json:
+
 1. Create Resource
 > /static
 > 
@@ -75,3 +77,15 @@ sh tools/deploy.sh cutopia-dev
 > Use Lambda Proxy Integration: true
 4. Deploy API
 > Choose stage of deployment (Prod)
+
+## Test
+### Server load test
+This tool exams the time taken to handle enormous requests during peak period. The settings are: 50 users login their accounts, then fetch latest reviews and reviews of a course.
+
+It is expected that the time taken will be much lesser when running the script for the second time, because most Lambda servers are warmed up.
+
+
+```sh
+cd tools/load-test/
+node .
+```

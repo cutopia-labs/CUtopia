@@ -66,14 +66,8 @@ const testOne = async label => {
   });
   await client.request(getReviews, {
     reviewsInput: {
-      courseId: 'ENGG2760',
+      courseId: 'CSCI3230',
       sortBy: 'upvotes',
-    },
-  });
-  await client.request(getReviews, {
-    reviewsInput: {
-      courseId: 'MATH1510',
-      sortBy: 'createdAt',
     },
   });
   console.timeEnd(`boom ${label}`);
@@ -81,7 +75,7 @@ const testOne = async label => {
 
 const testAll = async () => {
   console.time('all boom');
-  await Promise.all(Array.from({ length: 10 }, (_, i) => i).map(testOne));
+  await Promise.all(Array.from({ length: 50 }, (_, i) => i).map(testOne));
   console.timeEnd('all boom');
 };
 

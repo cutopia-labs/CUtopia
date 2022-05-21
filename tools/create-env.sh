@@ -44,3 +44,9 @@ ATLAS_URI=Your MongoDB connection key\
 echo "\
 ATLAS_URI=Your MongoDB connection key\
 " > lambda/cron-update-ranking/.env
+
+echo "\
+GRAPHQL_ENDPOINT=https://{API Gateway ID}.{region}.amazonaws.com/Stage/graphql
+AUTH_USERNAME=username of a CUtopia account
+AUTH_PASSWORD=password of a CUtopia account\
+" > tools/load-test/.env
