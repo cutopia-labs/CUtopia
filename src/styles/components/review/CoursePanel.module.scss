@@ -14,7 +14,7 @@
 .coursePanel {
   position: relative;
   padding: 0;
-  .tabs-row {
+  :global(.tabs-row) {
     border: 0px;
     border-radius: 0;
   }
