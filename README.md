@@ -1,6 +1,6 @@
 ## Initialization
 ### Install packages
-- [Nodejs](https://nodejs.org/en/)
+- [Node.js](https://nodejs.org/en/)
 - [Yarn](https://classic.yarnpkg.com/lang/en/docs/install/#debian-stable)
 - [MongoDB Compass](https://www.mongodb.com/products/compass)
 - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
@@ -10,16 +10,21 @@
 sh tools/install-package.sh
 ```
 
-### Create envorinment files
+### Create environment files
+After running the command below, remember to replace all **ATLAS_URI** in the .env files with your MongoDB connection URI.
+
 ```sh
 sh tools/create-env.sh
 ```
 
 ### Generate RSA key pair
-They key pair is used for JWT login token encryption.
+The key pair is used for JWT login token encryption and saved in lambda/graphql/src/jwt.
 ```sh
 sh tools/generate-jwtRS256.sh
 ```
+
+### (Optional) Retrieve latest course data
+You may retrieve the latest course data using [CUHK course scraper](https://github.com/mikezzb/cuhk-course-scraper), then put the data in lambda/graphql/src/data/courses.
 
 ## Development
 ### Compile scripts
