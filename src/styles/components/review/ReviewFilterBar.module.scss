@@ -15,14 +15,6 @@
       font-weight: 500;
     }
   }
-  &.float {
-    position: fixed;
-    z-index: 20;
-    bottom: 0;
-    right: 0;
-    width: inherit;
-    box-shadow: 0 4px 10px rgba(46, 43, 43, 0.1);
-  }
   button {
     &.edit {
       font-size: 18px;
@@ -30,8 +22,6 @@
       height: 32px;
     }
   }
-}
-.reviewsFilterMenu {
 }
 .reviewsFilter-ratings {
   align-items: center;

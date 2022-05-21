@@ -94,83 +94,94 @@ const ReviewFilterBar: FC<ReviewFilterBarProps> = ({
     setAnchorEl(null);
   };
 
+  // If no review yet / exceed limit, then show only write btn
+  if (!courseInfo?.rating || exceedLimit) {
+    return (
+      <div
+        ref={forwardedRef}
+        className={clsx(styles.reviewsFilter, 'panel card row', className)}
+      >
+        <span>
+          {exceedLimit
+            ? 'Limit exceeded (post 1 reviews to unlock)'
+            : 'No review yet'}
+        </span>
+        <span className="right grid-auto-column">
+          <IconButton className="edit" size="small" onClick={writeAction}>
+            <FiEdit />
+          </IconButton>
+        </span>
+      </div>
+    );
+  }
+
   return (
     <div
       ref={forwardedRef}
       className={clsx(styles.reviewsFilter, 'panel card row', className)}
     >
-      {courseInfo?.rating ? (
-        <>
-          <div
-            className={clsx(styles.filterRow, 'center-row grid-auto-column')}
-          >
-            {!fetchAllAction &&
-              Object.entries(REVIEWS_CONFIGS).map(([k, v]) => (
-                <Button
-                  key={v.key}
-                  className={clsx(
-                    'capsule-btn',
-                    (reviewsPayload[v.key] ||
-                      parseInt(k, 10) === ReviewFilterBarMode.SORTING) &&
-                      'selected'
-                  )}
-                  size="small"
-                  onClick={e => [
-                    setMode(parseInt(k, 10)),
-                    setAnchorEl(e.currentTarget),
-                  ]}
-                  startIcon={v.icon}
-                  endIcon={<ExpandMore />}
-                >
-                  {getLabel(parseInt(k, 10), reviewsPayload)}
-                </Button>
-              ))}
-            <div className="reviewsFilterLabel caption">
-              {/* exceedLimit && `Limit exceeded (post 1 reviews to unlock)` */}
-              {fetchAllAction && (
-                <Button size="small" color="primary" onClick={fetchAllAction}>
-                  Fetch All
-                </Button>
+      <div className={clsx(styles.filterRow, 'center-row grid-auto-column')}>
+        {!fetchAllAction &&
+          Object.entries(REVIEWS_CONFIGS).map(([k, v]) => (
+            <Button
+              key={v.key}
+              className={clsx(
+                'capsule-btn',
+                (reviewsPayload[v.key] ||
+                  parseInt(k, 10) === ReviewFilterBarMode.SORTING) &&
+                  'selected'
               )}
-            </div>
-          </div>
-          <Menu
-            className={styles.reviewsFilterMenu}
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={() => setAnchorEl(null)}
-            TransitionProps={{
-              onExited: () => setMode(ReviewFilterBarMode.INITIAL),
-            }}
-            disableScrollLock={true}
-          >
-            {(REVIEWS_CONFIGS[mode]?.selections || []).map((field: string) => {
-              console.log(
-                `sorting ${field} ${
-                  SORTING_FIELDS_REVERSE[reviewsPayload.sortBy || 'createdAt']
-                }`
-              );
-              const selected =
-                mode === ReviewFilterBarMode.SORTING
-                  ? SORTING_FIELDS_REVERSE[
-                      reviewsPayload.sortBy || 'createdAt'
-                    ] === field
-                  : reviewsPayload[REVIEWS_CONFIGS[mode].key] === field;
-              return (
-                <MenuItem
-                  key={field}
-                  onClick={() => onSelect(field, selected)}
-                  selected={selected}
-                >
-                  {field}
-                </MenuItem>
-              );
-            })}
-          </Menu>
-        </>
-      ) : (
-        <span>No review yet</span>
-      )}
+              size="small"
+              onClick={e => [
+                setMode(parseInt(k, 10)),
+                setAnchorEl(e.currentTarget),
+              ]}
+              startIcon={v.icon}
+              endIcon={<ExpandMore />}
+            >
+              {getLabel(parseInt(k, 10), reviewsPayload)}
+            </Button>
+          ))}
+        <div className="reviewsFilterLabel caption">
+          {fetchAllAction && (
+            <Button size="small" color="primary" onClick={fetchAllAction}>
+              Fetch All
+            </Button>
+          )}
+        </div>
+      </div>
+      <Menu
+        className={styles.reviewsFilterMenu}
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={() => setAnchorEl(null)}
+        TransitionProps={{
+          onExited: () => setMode(ReviewFilterBarMode.INITIAL),
+        }}
+        disableScrollLock={true}
+      >
+        {(REVIEWS_CONFIGS[mode]?.selections || []).map((field: string) => {
+          console.log(
+            `sorting ${field} ${
+              SORTING_FIELDS_REVERSE[reviewsPayload.sortBy || 'createdAt']
+            }`
+          );
+          const selected =
+            mode === ReviewFilterBarMode.SORTING
+              ? SORTING_FIELDS_REVERSE[reviewsPayload.sortBy || 'createdAt'] ===
+                field
+              : reviewsPayload[REVIEWS_CONFIGS[mode].key] === field;
+          return (
+            <MenuItem
+              key={field}
+              onClick={() => onSelect(field, selected)}
+              selected={selected}
+            >
+              {field}
+            </MenuItem>
+          );
+        })}
+      </Menu>
       <span className="right grid-auto-column">
         <IconButton className="edit" size="small" onClick={writeAction}>
           <FiEdit />

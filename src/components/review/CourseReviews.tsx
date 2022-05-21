@@ -4,9 +4,9 @@ import { Divider } from '@material-ui/core';
 import pluralize from 'pluralize';
 
 import copy from 'copy-to-clipboard';
-
 import { ReportCategory } from 'cutopia-types/lib/codes';
 import { useRouter } from 'next/router';
+import styles from '../../styles/components/review/CourseReviews.module.scss';
 import { removeEmptyValues } from '../../helpers';
 import { GET_REVIEW, REVIEWS_QUERY } from '../../constants/queries';
 import Loading from '../atoms/Loading';
@@ -200,7 +200,7 @@ const CourseReviews: FC<Props> = ({
       )}
       {!isMobile && !FABHidden && (
         <ReviewFilterBar
-          className="float"
+          className={styles.floatReviewFilter}
           isMobile={true}
           courseInfo={courseInfo}
           reviewsPayload={reviewsPayload}
