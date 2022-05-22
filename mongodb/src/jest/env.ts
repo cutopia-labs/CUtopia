@@ -9,7 +9,7 @@ import User from '../models/user.model';
 
 dotenv.config();
 
-const createTestUser = async () => {
+export const createTestUser = async () => {
   const now = +new Date();
   const hash = await bcrypt.hash(nanoid(10), SALT_ROUNDS);
   const user = new User({
@@ -23,18 +23,19 @@ const createTestUser = async () => {
   return user;
 };
 
-const deleteTestUser = async ({ username, SID }) =>
+export const deleteTestUser = async ({ username, SID }) =>
   User.findOneAndDelete({
     username,
     SID,
   });
 
 export const setup = async () => {
+  if (process.env.ATLAS_DEV_URI.includes('production')) {
+    throw Error(
+      "Please make sure that ATLAS_DEV_URI does not contain 'production'."
+    );
+  }
   await connect(process.env.ATLAS_DEV_URI);
-  return await createTestUser(); // most tests require an existing user
 };
 
-export const teardown = async testUser => {
-  await deleteTestUser(testUser);
-  await mongoose.connection.close();
-};
+export const teardown = async () => await mongoose.connection.close();

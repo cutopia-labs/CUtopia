@@ -1,15 +1,25 @@
+import { describe, expect, beforeAll, afterAll, it } from '@jest/globals';
 import { ErrorCode } from 'cutopia-types/lib/codes';
 import { nanoid } from 'nanoid';
 import { createReview, getReviews, voteReview } from './review';
 import { getUser } from './user';
-import { setup, teardown } from '../jest/env';
+import { createTestUser, deleteTestUser, setup, teardown } from '../jest/env';
+import ReviewModel from '../models/review.model';
 
 describe('Review', () => {
   let testUser;
 
-  beforeAll(async () => (testUser = await setup()));
+  beforeAll(async () => {
+    await setup();
+    // Empty the review documents
+    await ReviewModel.deleteMany({});
+    testUser = await createTestUser();
+  });
 
-  afterAll(async () => await teardown(testUser));
+  afterAll(async () => {
+    await deleteTestUser(testUser);
+    await teardown();
+  });
 
   it('Create, Vote and Get', async () => {
     const { username } = testUser;
@@ -39,14 +49,14 @@ describe('Review', () => {
       },
     };
 
-    const { id } = await createReview(review);
+    const { createdAt } = await createReview(review);
     const fakeId = nanoid(10);
     expect(createReview(review)).rejects.toThrow(
       ErrorCode.CREATE_REVIEW_ALREADY_CREATED.toString()
     );
 
     const voteReviewInput = {
-      id,
+      _id: `${review['courseId']}#${createdAt}`,
       username,
       vote: 1,
     };
@@ -56,33 +66,33 @@ describe('Review', () => {
     );
     expect(
       voteReview({
-        id,
+        _id: `${review['courseId']}#${createdAt}`,
         username,
         vote: -1,
       })
     ).rejects.toThrow(ErrorCode.VOTE_REVIEW_INVALID_VALUE.toString());
     expect(
       voteReview({
-        id: fakeId,
+        _id: fakeId,
         username,
         vote: 1,
       })
     ).rejects.toThrow(ErrorCode.VOTE_REVIEW_DNE.toString());
 
-    /*
     const reviews = await getReviews({
-      courseId: 'ABCD1234',
+      courseId: 'AIST1110',
       sortBy: 'upvotes',
       ascending: false,
     });
     expect(reviews[0]).toMatchObject({
       ...review,
+      _id: `${review['courseId']}#${createdAt}`,
+      createdAt,
       upvotes: 1,
       upvoteUserIds: [username],
       downvotes: 0,
       downvoteUserIds: [],
     });
-    */
     const reviewAuthor = await getUser({
       username,
       fields: ['upvotes'],

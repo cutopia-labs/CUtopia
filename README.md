@@ -80,12 +80,18 @@ Follow the steps below to enable access to static resources, i.e. instructors.js
 
 ## Test
 ### Server load test
-This tool exams the time taken to handle enormous requests during peak period. The settings are: 50 users login their accounts, then fetch latest reviews and reviews of a course.
+This tool exams the time taken to handle enormous requests during peak period. The settings are: 50 users concurrently login their accounts, then fetch latest reviews and reviews of a course.
 
-It is expected that the time taken will be much lesser when running the script for the second time, because most Lambda servers are warmed up.
-
+It is expected that the time taken will be much lesser when running the script for the second time, because most Lambda instances are warmed up.
 
 ```sh
 cd tools/load-test/
 node .
+```
+
+### MongoDB unit tests
+To guarantee the functionality of database API, please run the Jest tests if the MongoDB controllers/models are modified.
+
+```sh
+yarn --cwd mongodb test --runInBand
 ```
