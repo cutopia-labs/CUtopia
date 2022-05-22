@@ -140,7 +140,7 @@ const ReviewCard: FC<ReviewCardProps> = ({
           <p className={styles.reviewText}>{review[selectedCriteria].text}</p>
         </div>
       )}
-      <div className={clsx(styles.reviewBottomRow, !showMore && 'retracted')}>
+      <div className={clsx(styles.reviewBottomRow, 'center-row')}>
         <span className={styles.reviewTitleAuthor}>
           {`@`}
           <span>{review.anonymous ? 'Anonymous' : review.username}</span>

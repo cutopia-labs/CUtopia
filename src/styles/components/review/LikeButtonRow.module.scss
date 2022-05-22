@@ -13,7 +13,7 @@
   margin-left: auto;
   & > .likeBtn {
     border-radius: 0;
-    &.active.Mui-disabled {
+    &:global(.active.Mui-disabled) {
       svg {
         color: var(--primary);
       }
@@ -22,12 +22,12 @@
       border: none;
     }
   }
-  .MuiDivider-root {
+  :global(.MuiDivider-root) {
     width: 1px;
     height: 20px;
   }
-  & > .MuiButton-root {
-    &.Mui-disabled {
+  & > :global(.MuiButton-root) {
+    &:global(.Mui-disabled) {
       color: var(--text);
       opacity: 0.8;
     }
