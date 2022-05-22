@@ -5,6 +5,7 @@
   background-color: var(--background-secondary);
   border-radius: var(--border-radius);
   flex-wrap: wrap;
+  min-width: 530px; // to display all grades
   svg {
     color: #3b3b3bbf;
   }

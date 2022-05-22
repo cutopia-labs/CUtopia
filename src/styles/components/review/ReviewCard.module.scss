@@ -115,7 +115,7 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   position: relative;
-  &.retracted {
+  &:global(.retracted) {
     overflow: hidden;
     max-height: 360px;
     .reviewShowMoreOverlay {
@@ -130,6 +130,7 @@
     display: none;
   }
 }
+
 .reviewTextLabel {
   text-align: start;
   text-transform: capitalize;
@@ -140,7 +141,7 @@
 .reviewBottomRow {
   padding: 8px var(--reviewCard-inner-padding-horizontal);
   border-top: 1px solid var(--border);
-  &.retracted {
+  &:global(.retracted) {
     margin-top: 0;
   }
   .shareIconBtn {
