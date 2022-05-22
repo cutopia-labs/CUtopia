@@ -21,7 +21,7 @@ import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import styles from '../../styles/components/review/ReviewEditPanel.module.scss';
 import { useView, useUser } from '../../store';
-import { GET_REVIEW, COURSE_INFO_QUERY } from '../../constants/queries';
+import { GET_REVIEW } from '../../constants/queries';
 import { ADD_REVIEW, EDIT_REVIEW } from '../../constants/mutations';
 import { GRADES, RATING_FIELDS } from '../../constants';
 import TextField from '../atoms/TextField';
@@ -33,7 +33,12 @@ import {
   STATICS_EXPIRE_BEFORE,
   TARGET_REVIEW_WORD_COUNT,
 } from '../../constants/configs';
-import { RatingFieldWithOverall, Review, ReviewDetails } from '../../types';
+import {
+  CourseInfo,
+  RatingFieldWithOverall,
+  Review,
+  ReviewDetails,
+} from '../../types';
 import SelectionGroup, { FormSection } from '../molecules/SectionGroup';
 import useMobileQuery from '../../hooks/useMobileQuery';
 import handleCompleted from '../../helpers/handleCompleted';
@@ -209,7 +214,14 @@ const ReviewSubmit = ({
     )}
   </LoadingButton>
 );
-const ReviewEdit: FC<{ courseId: string }> = ({ courseId }) => {
+
+type Props = {
+  courseInfo: CourseInfo;
+};
+
+const ReviewEditPanel: FC<Props> = ({ courseInfo }) => {
+  const courseId = courseInfo.courseId;
+
   const view = useView();
   const [mode, setMode] = useState(MODES.INITIAL);
   const [targetReview, setTargetReview] = useState<string | Review>('');
@@ -426,143 +438,148 @@ const ReviewEdit: FC<{ courseId: string }> = ({ courseId }) => {
   };
 
   return (
-    <div className={clsx(styles.reviewEdit, 'grid-auto-row')}>
-      {reviewLoading && <Loading fixed />}
-      <div className={clsx(styles.reviewHeaderContainer, 'center-row')}>
-        <span className="title">Your Review</span>
-        <span className="light-caption">前人種樹，後人乘涼</span>
-        <Tooltip title="Anonymity">
-          <IconButton
-            className={styles.anonymousSwitch}
-            aria-label="anonymous"
-            onClick={() => dispatchFormData({ anonymous: !formData.anonymous })}
-          >
-            {formData.anonymous ? <VisibilityOff /> : <Visibility />}
-          </IconButton>
-        </Tooltip>
-      </div>
-      <FormSection title="term">
-        <div
-          className={clsx(styles.termSelectionAnchor, 'input-container')}
-          onClick={e => setAnchorEl(e.currentTarget)}
-        >
-          {formData.term || 'Please select a term'}
+    <div className="reviewEdit-panel coursePanel panel card">
+      <CourseCard courseInfo={courseInfo} />
+
+      <div className={clsx(styles.reviewEdit, 'grid-auto-row')}>
+        {reviewLoading && <Loading fixed />}
+        <div className={clsx(styles.reviewHeaderContainer, 'center-row')}>
+          <span className="title">Your Review</span>
+          <span className="light-caption">前人種樹，後人乘涼</span>
+          <Tooltip title="Anonymity">
+            <IconButton
+              className={styles.anonymousSwitch}
+              aria-label="anonymous"
+              onClick={() =>
+                dispatchFormData({ anonymous: !formData.anonymous })
+              }
+            >
+              {formData.anonymous ? <VisibilityOff /> : <Visibility />}
+            </IconButton>
+          </Tooltip>
         </div>
-      </FormSection>
-      <Menu
-        id="lock-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={() => setAnchorEl(null)}
-      >
-        {TERMS_OPTIONS.map((option, i) => (
-          <MenuItem
-            key={option}
-            selected={option === formData.term}
-            onClick={() => [
-              dispatchFormData({ term: option }),
-              setAnchorEl(null),
-            ]}
+        <FormSection title="term">
+          <div
+            className={clsx(styles.termSelectionAnchor, 'input-container')}
+            onClick={e => setAnchorEl(e.currentTarget)}
           >
-            {option}
-          </MenuItem>
-        ))}
-      </Menu>
-      <FormSection title="title">
-        <TextField
-          placeholder="(Optional) Your Review Title"
-          value={formData.title}
-          onChangeText={text => dispatchFormData({ title: text })}
-        />
-      </FormSection>
-      <FormSection title="lecturer" className="lecturer">
-        <TextField
-          placeholder="Please input your course instructor here."
-          value={formData.lecturer}
-          onChangeText={text => dispatchFormData({ lecturer: text })}
-          inputRef={lecturerInputRef}
-          onFocus={() => setShowLecturers(true)}
-          onBlur={() => setShowLecturers(false)}
-        />
-        {showLecturers && Boolean(formData.lecturer) && (
-          <div className={clsx(styles.headerSearchResult, 'card')}>
-            {!instructorsSearchResult ? (
-              <Loading />
-            ) : (
-              instructorsSearchResult
-                .filter(item => formData.lecturer !== item)
-                .map(lecturer => (
-                  <ListItem
-                    key={`listitem-${lecturer}`}
-                    onMouseDown={() => dispatchFormData({ lecturer })}
-                    title={lecturer}
-                  />
-                ))
-            )}
+            {formData.term || 'Please select a term'}
           </div>
-        )}
-      </FormSection>
-      <div className={clsx(styles.reviewSectionsContainer, 'grid-auto-row')}>
-        {RATING_FIELDS.map(type => (
-          <ReviewSection
-            key={type}
-            type={type}
-            value={formData[type]}
-            onChangeText={text =>
-              dispatchFormData({ [type]: { ...formData[type], text } })
-            }
-            onChangeGrade={grade =>
-              dispatchFormData({ [type]: { ...formData[type], grade } })
-            }
-          />
-        ))}
-      </div>
-      <div className={clsx(styles.submitBtnRow, 'center-row')}>
-        <ReviewSection
-          type="overall"
-          value={formData.overall}
-          onChangeGrade={grade => dispatchFormData({ overall: grade })}
-        />
-        <ReviewSubmit
-          disabled={!validation()}
-          onSubmit={submit}
-          progress={progress}
-          loading={addReviewLoading || editReviewLoading}
-        />
-      </div>
-      {(mode === MODES.DRAFT_MODAL || mode === MODES.EDIT_MODAL) && (
-        <Dialog
-          open={mode === MODES.EDIT_MODAL || mode === MODES.DRAFT_MODAL}
-          onClose={reviewModal[mode].onClose}
-          className={styles.reviewEditDialog}
+        </FormSection>
+        <Menu
+          id="lock-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={() => setAnchorEl(null)}
         >
-          <DialogTitle id="alert-dialog-title">
-            {reviewModal[mode].title}
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialogDescription">
-              {reviewModal[mode].caption}
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              onClick={reviewModal[mode].cancelButton.action}
-              color="primary"
+          {TERMS_OPTIONS.map((option, i) => (
+            <MenuItem
+              key={option}
+              selected={option === formData.term}
+              onClick={() => [
+                dispatchFormData({ term: option }),
+                setAnchorEl(null),
+              ]}
             >
-              {reviewModal[mode].cancelButton.label}
-            </Button>
-            <Button
-              onClick={reviewModal[mode].confirmButton.action}
-              color="primary"
-              autoFocus
-            >
-              {reviewModal[mode].confirmButton.label}
-            </Button>
-          </DialogActions>
-        </Dialog>
-      )}
-      {/*
+              {option}
+            </MenuItem>
+          ))}
+        </Menu>
+        <FormSection title="title">
+          <TextField
+            placeholder="(Optional) Your Review Title"
+            value={formData.title}
+            onChangeText={text => dispatchFormData({ title: text })}
+          />
+        </FormSection>
+        <FormSection title="lecturer" className="lecturer">
+          <TextField
+            placeholder="Please input your course instructor here."
+            value={formData.lecturer}
+            onChangeText={text => dispatchFormData({ lecturer: text })}
+            inputRef={lecturerInputRef}
+            onFocus={() => setShowLecturers(true)}
+            onBlur={() => setShowLecturers(false)}
+          />
+          {showLecturers && Boolean(formData.lecturer) && (
+            <div className={clsx(styles.headerSearchResult, 'card')}>
+              {!instructorsSearchResult ? (
+                <Loading />
+              ) : (
+                instructorsSearchResult
+                  .filter(item => formData.lecturer !== item)
+                  .map(lecturer => (
+                    <ListItem
+                      key={`listitem-${lecturer}`}
+                      onMouseDown={() => dispatchFormData({ lecturer })}
+                      title={lecturer}
+                    />
+                  ))
+              )}
+            </div>
+          )}
+        </FormSection>
+        <div className={clsx(styles.reviewSectionsContainer, 'grid-auto-row')}>
+          {RATING_FIELDS.map(type => (
+            <ReviewSection
+              key={type}
+              type={type}
+              value={formData[type]}
+              onChangeText={text =>
+                dispatchFormData({ [type]: { ...formData[type], text } })
+              }
+              onChangeGrade={grade =>
+                dispatchFormData({ [type]: { ...formData[type], grade } })
+              }
+            />
+          ))}
+        </div>
+        <div className={clsx(styles.submitBtnRow, 'center-row')}>
+          <ReviewSection
+            type="overall"
+            value={formData.overall}
+            onChangeGrade={grade => dispatchFormData({ overall: grade })}
+          />
+          <ReviewSubmit
+            disabled={!validation()}
+            onSubmit={submit}
+            progress={progress}
+            loading={addReviewLoading || editReviewLoading}
+          />
+        </div>
+        {(mode === MODES.DRAFT_MODAL || mode === MODES.EDIT_MODAL) && (
+          <Dialog
+            open={mode === MODES.EDIT_MODAL || mode === MODES.DRAFT_MODAL}
+            onClose={reviewModal[mode].onClose}
+            className={styles.reviewEditDialog}
+          >
+            <DialogTitle id="alert-dialog-title">
+              {reviewModal[mode].title}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialogDescription">
+                {reviewModal[mode].caption}
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                onClick={reviewModal[mode].cancelButton.action}
+                color="primary"
+              >
+                {reviewModal[mode].cancelButton.label}
+              </Button>
+              <Button
+                onClick={reviewModal[mode].confirmButton.action}
+                color="primary"
+                autoFocus
+              >
+                {reviewModal[mode].confirmButton.label}
+              </Button>
+            </DialogActions>
+          </Dialog>
+        )}
+        {/*
         
       <Prompt
         when={progress > SAVE_DRAFT_PROGRESS_BUFFER && mode === MODES.INITIAL}
@@ -578,42 +595,7 @@ const ReviewEdit: FC<{ courseId: string }> = ({ courseId }) => {
         }}
       />
         */}
-    </div>
-  );
-};
-
-const ReviewEditPanel: FC = () => {
-  const router = useRouter();
-  const { id: courseId, reviewId } = router.query as {
-    id?: string;
-    reviewId?: string;
-  };
-  const view = useView();
-  // Fetch course info
-  const { data: courseInfo, loading: courseInfoLoading } = useQuery(
-    COURSE_INFO_QUERY,
-    {
-      skip: !courseId,
-      ...(courseId && {
-        variables: {
-          courseId,
-        },
-      }),
-      fetchPolicy: 'cache-first',
-      onError: view.handleError,
-    }
-  );
-  return (
-    <div className="reviewEdit-panel coursePanel panel card">
-      {!courseInfoLoading && courseInfo && courseInfo.courses && (
-        <CourseCard
-          courseInfo={{
-            ...courseInfo.courses[0],
-            courseId,
-          }}
-        />
-      )}
-      <ReviewEdit courseId={courseId} />
+      </div>
     </div>
   );
 };

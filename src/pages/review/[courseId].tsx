@@ -24,6 +24,7 @@ import { CourseInfo } from '../../types';
 import client from '../../helpers/apollo-client';
 import Page from '../../components/atoms/Page';
 import authenticatedRoute from '../../components/molecules/authenticatedRoute';
+import ReviewEditPanel from '../../components/review/ReviewEditPanel';
 
 const MENU_ITEMS = [
   {
@@ -37,16 +38,16 @@ const MENU_ITEMS = [
 ];
 
 type Props = {
-  course: CourseInfo;
+  courseInfo: CourseInfo;
 };
 
-const CoursePanel: FC<Props> = ({ course }) => {
+const CoursePanel: FC<Props> = ({ courseInfo }) => {
   const router = useRouter();
   console.log(router.query);
   const { courseId, rid, mode } = router.query as {
     courseId?: string;
-    rid?: string;
-    mode?: string; // i.e. 'edit'
+    rid?: string; // review Id (query param)
+    mode?: string; // i.e. 'edit' (query param)
   };
   const isMobile = useMobileQuery();
   const view = useView();
@@ -81,18 +82,17 @@ const CoursePanel: FC<Props> = ({ course }) => {
     }
   }, [courseId]);
 
+  if (mode == 'edit') return <ReviewEditPanel courseInfo={courseInfo} />;
+
   return (
     <Page className={styles.reviewPage} center padding>
       <Head>
-        <title>{`${courseId} Reviews - ${course.title} - CUtopia`}</title>
+        <title>{`${courseId} Reviews - ${courseInfo.title} - CUtopia`}</title>
       </Head>
       <div className={clsx(styles.coursePanelContainer, 'grid-auto-row')}>
         <div className={clsx(styles.coursePanel, 'panel card')}>
           <CourseCard
-            courseInfo={{
-              ...course,
-              courseId,
-            }}
+            courseInfo={courseInfo}
             loading={false}
             style={styles.courseCard}
           />
@@ -102,7 +102,7 @@ const CoursePanel: FC<Props> = ({ course }) => {
           <CourseReviews
             courseId={courseId}
             reviewId={rid}
-            courseInfo={course}
+            courseInfo={courseInfo}
             courseInfoLoading={false}
             isMobile={isMobile}
             FABHidden={FABHidden}
@@ -153,7 +153,7 @@ export const getStaticProps = async ({ params }) => {
   });
   return {
     props: {
-      course: res.data?.courses[0],
+      courseInfo: { ...res.data?.courses[0], courseId: params.courseId },
     },
   };
 };
