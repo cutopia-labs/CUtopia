@@ -182,6 +182,9 @@ const CourseReviews: FC<Props> = ({
     view.setSnackBar('Copied sharelink to clipboard!');
   };
 
+  const writeReview = () =>
+    router.push(`/review/${courseId}?mode=edit`, undefined, { shallow: true });
+
   return (
     <>
       {!courseInfoLoading && (
@@ -193,7 +196,7 @@ const CourseReviews: FC<Props> = ({
           fetchAllAction={
             Boolean(reviewId) && (() => router.push(`/review/${courseId}`))
           }
-          writeAction={() => router.push(`/review/${courseId}/compose`)}
+          writeAction={writeReview}
           exceedLimit={false}
           isMobile={isMobile}
         />
@@ -208,7 +211,7 @@ const CourseReviews: FC<Props> = ({
           fetchAllAction={
             Boolean(reviewId) && (() => router.push(`/review/${courseId}`))
           }
-          writeAction={() => router.push(`/review/${courseId}/compose`)}
+          writeAction={writeReview}
           exceedLimit={false}
         />
       )}

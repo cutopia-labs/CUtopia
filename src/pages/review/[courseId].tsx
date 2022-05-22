@@ -42,9 +42,11 @@ type Props = {
 
 const CoursePanel: FC<Props> = ({ course }) => {
   const router = useRouter();
-  const { courseId, reviewId } = router.query as {
+  console.log(router.query);
+  const { courseId, rid, mode } = router.query as {
     courseId?: string;
-    reviewId?: string;
+    rid?: string;
+    mode?: string; // i.e. 'edit'
   };
   const isMobile = useMobileQuery();
   const view = useView();
@@ -68,6 +70,9 @@ const CoursePanel: FC<Props> = ({ course }) => {
   const fetchSimilarCourses = async courseId => {
     setSimilarCourse(await getSimilarCourses(courseId));
   };
+
+  const writeReview = () =>
+    router.push(`/review/${courseId}?mode=edit`, undefined, { shallow: true });
 
   useEffect(() => {
     if (validCourse(courseId)) {
@@ -96,7 +101,7 @@ const CoursePanel: FC<Props> = ({ course }) => {
         {tab == 'Reviews' && (
           <CourseReviews
             courseId={courseId}
-            reviewId={reviewId}
+            reviewId={rid}
             courseInfo={course}
             courseInfoLoading={false}
             isMobile={isMobile}
@@ -108,12 +113,7 @@ const CoursePanel: FC<Props> = ({ course }) => {
         <SpeedDial
           ariaLabel="SpeedDial"
           hidden={!isMobile || FABHidden || tab == 'Comments'}
-          icon={
-            <SpeedDialIcon
-              onClick={() => router.push(`/review/${courseId}/compose`)}
-              openIcon={<Edit />}
-            />
-          }
+          icon={<SpeedDialIcon onClick={writeReview} openIcon={<Edit />} />}
           onClose={() => setFABOpen(false)}
           onOpen={() => setFABOpen(true)}
           open={FABOpen}
@@ -142,6 +142,7 @@ const CoursePanel: FC<Props> = ({ course }) => {
   );
 };
 
+// SSR to get course info
 export const getStaticProps = async ({ params }) => {
   const res = await client.query({
     query: COURSE_INFO_QUERY,
@@ -157,6 +158,7 @@ export const getStaticProps = async ({ params }) => {
   };
 };
 
+// Get all valid paths to prerender (i.e. valid courseId)
 export const getStaticPaths: GetStaticPaths<{}> = async () => {
   const courses = Object.values(await import('../../../data/courses.json'));
   return {

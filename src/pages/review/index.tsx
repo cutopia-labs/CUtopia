@@ -86,7 +86,7 @@ const RecentReviewCard: FC<RecentReviewCardProps> = ({
         review.createdAt
       )}`}
       right={<GradeIndicator grade={review[category]?.grade} />}
-      onClick={() => onClick(`${review.courseId}/${review.createdAt}`)}
+      onClick={() => onClick(`${review.courseId}?rid=${review.createdAt}`)}
     >
       <span className={clsx(styles.recentReviewText, 'ellipsis-text')}>
         {review[category]?.text}
