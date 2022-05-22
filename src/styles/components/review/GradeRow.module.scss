@@ -5,7 +5,6 @@
   background-color: var(--background-secondary);
   border-radius: var(--border-radius);
   flex-wrap: wrap;
-  min-width: 530px; // to display all grades
   svg {
     color: #3b3b3bbf;
   }
@@ -43,25 +42,5 @@
   }
   > div:first-child {
     display: none;
-  }
-}
-
-.gradeRow {
-  &.review-header {
-    > div > .ratingContainer {
-      height: 38px;
-    }
-    .ratingContainer.active {
-      border-bottom: 2px solid var(--accent);
-    }
-  }
-  &.review-header {
-    .center-row {
-      height: auto;
-    }
-
-    > div:first-child > div {
-      margin: 0;
-    }
   }
 }

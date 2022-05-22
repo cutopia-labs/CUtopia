@@ -33,6 +33,7 @@
   column-gap: 4px;
   margin-top: auto;
   margin-bottom: auto;
+  min-width: 530px; // to display all grades
   /* Styles for overall indicator */
   // container
   & div:first-child {
@@ -114,5 +115,6 @@
 @media only screen and (max-width: 1260px) {
   .gradeRow {
     overflow: initial;
+    min-width: initial;
   }
 }
