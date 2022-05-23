@@ -1,5 +1,5 @@
 .feedCard {
-  .list-item-caption {
+  :global(.list-item-caption) {
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
@@ -7,7 +7,7 @@
     -webkit-box-orient: vertical;
     margin-top: 5px;
   }
-  .list-item-title-container {
+  :global(.list-item-title-container) {
     margin: 0 16px;
   }
 }
