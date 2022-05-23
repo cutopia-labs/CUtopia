@@ -1,4 +1,9 @@
-import { verify } from '../jwt';
+import { Token, verify } from '../jwt';
+
+export interface Context {
+  user: Token;
+  ip: string;
+}
 
 const context = async ({ event: lambdaEvent }) => {
   const ip = lambdaEvent.requestContext.identity.sourceIp;

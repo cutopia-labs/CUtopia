@@ -7,3 +7,6 @@ generates:
       - "typescript"
       - "typescript-resolvers"
       - "typescript-document-nodes"
+    config:
+      # path is relative to src/schemas
+      contextType: ../context/index#Context
