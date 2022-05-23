@@ -105,13 +105,14 @@
     color: white;
     position: relative;
     overflow: hidden;
-    .MuiButton-label {
+    :global(.MuiButton-label) {
       position: relative;
     }
     &:hover {
       background-color: var(--default-button-background);
     }
   }
+  
 }
 
 .progress {
