@@ -28,12 +28,12 @@
 	svg {
 		font-size: 16px;
 	}
-	.caption {
+	:global(.caption) {
 		margin-left: 6px;
 		font-size: 14px;
 	}
 }
-.bottom-border-row .bottom-border-item.active,
+.bottom-border-row .bottom-border-item:global(.active),
 .bottom-border-row .bottom-border-item:hover {
 	padding-top: 0;
 }

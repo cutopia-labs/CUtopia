@@ -3,7 +3,7 @@
   img {
     width: 35%;
   }  
-  .caption {
+  :global(.caption) {
     padding-top: 4%;
     color: var(--caption-light);
   }

@@ -43,7 +43,7 @@
       cursor: not-allowed;
       border-left: 3px solid rgba(97, 97, 97, 0.6);
     }
-    .list-item-color-bar {
+    :global(.list-item-color-bar) {
       position: absolute;
     }
   }

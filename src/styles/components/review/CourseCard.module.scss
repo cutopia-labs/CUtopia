@@ -97,7 +97,7 @@
     height: 40px;
     color: var(--text);
   }
-  .active {
+  :global(.active) {
     color: var(--primary);
   }
   :global(.title) {

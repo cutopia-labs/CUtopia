@@ -10,7 +10,7 @@
   margin: 0px var(--message-spacing) 6px 0;
   font-weight: 500;
   font-size: 14px;
-  .caption {
+  :global(.caption) {
     margin-left: 4px;
     font-size: 13px;
   }

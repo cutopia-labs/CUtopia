@@ -3,7 +3,7 @@
     height: 42px;
     text-transform: capitalize;
     font-size: 14px;
-    &.caption {
+    &:global(.caption) {
       color: var(--caption);
     }
   }

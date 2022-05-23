@@ -19,7 +19,7 @@
   .weekdayText {
     color: var(--text);
     opacity: 1;
-    .caption {
+    :global(.caption) {
       opacity: 1;
       font-size: 11px;
       margin-top: 4px;
