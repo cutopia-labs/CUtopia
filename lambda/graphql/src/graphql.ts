@@ -24,12 +24,10 @@ let schema = makeExecutableSchema({
 } as any);
 schema = applyMiddleware(schema, ...middlewares);
 
-const isProduction = process.env.NODE_ENV === 'production';
-
 const server = new ApolloServer({
   schema,
   context: createContext,
-  introspection: !isProduction,
+  introspection: false,
   plugins: [loggingPlugin],
 });
 

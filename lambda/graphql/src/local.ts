@@ -38,16 +38,13 @@ const server = new ApolloServer({
       },
     }),
   introspection: true,
-} as any);
+});
 
 const startApolloServer = async () => {
   await server.start();
 
-  await connect(process.env.ATLAS_URI);
+  await connect(process.env.ATLAS_DEV_URI);
   const app = express();
-  app.get('/', (req, res) => {
-    res.send('Hello World!');
-  });
   app.use(
     '/static',
     express.static(__dirname + '/data/static', {

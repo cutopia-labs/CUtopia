@@ -7,7 +7,8 @@ ATLAS_DEV_URI=Your MongoDB connection key for running Jest test scripts\
 # GraphQL env
 echo "\
 NODE_ENV=production
-ATLAS_URI=Your MongoDB connection key\
+ATLAS_URI=Your MongoDB connection key
+ATLAS_DEV_URI=Your MongoDB connection key for dev\
 " > lambda/graphql/.env
 
 # Emailer env
@@ -45,6 +46,7 @@ echo "\
 ATLAS_URI=Your MongoDB connection key\
 " > lambda/cron-update-ranking/.env
 
+# Env of Lambda load test
 echo "\
 GRAPHQL_ENDPOINT=https://{API Gateway ID}.{region}.amazonaws.com/Stage/graphql
 AUTH_USERNAME=username of a CUtopia account
