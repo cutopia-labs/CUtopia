@@ -17,12 +17,12 @@
     position: absolute;
     margin-top: 70px;
   }
-}
-
-.reviewInputContainer {
-  width: calc(100% - 36px);
-  & textarea {
+  :global(.input-container){
+    width: calc(100% - 36px);
+  }
+  textarea:global(.input-container) {
     min-height: 100px;
+
   }
 }
 

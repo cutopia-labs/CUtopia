@@ -18,7 +18,7 @@
     color: var(--text);
     margin: 0 10px 0 -16px;
   }
-  .textFieldLabel {
+  :global(.textFieldLabel) {
     margin-left: 0;
     color: var(--text);
     margin-bottom: -6px;

@@ -36,11 +36,11 @@ const TextField: FC<
   return (
     <>
       {Boolean(label) && (
-        <span className={clsx('label', styles.textFieldLabel)}>{label}</span>
+        <span className={clsx('label', 'textFieldLabel')}>{label}</span>
       )}
       <TagName
         ref={inputRef as any}
-        className={clsx(styles.inputContainer, className)}
+        className={clsx('input-container', className)}
         placeholder={placeholder}
         defaultValue={defaultValue}
         type={type}
