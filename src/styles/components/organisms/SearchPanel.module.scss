@@ -30,12 +30,12 @@
     top: 0;
     z-index: 2;
   }
-  .list-item-container {
+  :global(.list-item-container) {
     height: auto;
     justify-content: space-between;
     position: relative;
     &.disabled {
-      .title {
+      :global(.title) {
         color: var(--caption);
       }
       background-color: var(--background);
@@ -91,7 +91,7 @@
 .searchListItem {
   align-items: flex-start;
   flex: 1;
-  .list-item-title-container {
+  :global(.list-item-title-container) {
     margin-left: 24px;
   }
 }

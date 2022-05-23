@@ -10,7 +10,7 @@
     background-color: var(--primary);
     color: white;
   }
-  .title {
+  :global(.title) {
     font-size: 16px;
     margin-bottom: auto;
     span {
@@ -38,12 +38,12 @@
     margin-left: auto;
   }
 }
-.list-item-container {
+:global(.list-item-container) {
   &.logOutRow {
     width: calc(100% - 24px);
     padding: 12px 0 12px 14px;
     height: 32px;
-    .title {
+    :global(.title) {
       font-weight: normal;
       text-transform: capitalize;
       font-size: 16px;

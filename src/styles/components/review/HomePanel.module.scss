@@ -21,11 +21,11 @@
   &:first-child {
     margin-left: 0;
   }
-  .list-item-container {
+  :global(.list-item-container) {
     height: auto;
     border-bottom: none;
     border-right: none;
-    .list-item-title-container {
+    :global(.list-item-title-container) {
       margin-left: 0;
     }
     & > :last-child {
@@ -63,9 +63,9 @@
   --recentReview-width: calc(100% - 2 * var(--card-padding));
   width: var(--recentReview-width);
   padding: 0 var(--card-padding) 12px var(--card-padding);
-  .list-item-title-container {
+  :global(.list-item-title-container) {
     margin-left: 0;
-    .title {
+    :global(.title) {
       color: var(--primary);
     }
   }

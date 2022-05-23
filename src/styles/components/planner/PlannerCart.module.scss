@@ -16,7 +16,7 @@
       color: var(--text);
     }
   }
-  .list-item-container {
+  :global(.list-item-container) {
     height: auto;
     justify-content: space-between;
     position: relative;
@@ -30,7 +30,7 @@
     .plannerCartCheckbox {
       margin-left: 6px;
     }
-    .list-item-title-container {
+    :global(.list-item-title-container) {
       margin-left: 6px;
     }
   }

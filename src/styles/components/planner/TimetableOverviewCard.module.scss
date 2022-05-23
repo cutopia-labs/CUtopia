@@ -20,9 +20,9 @@
   cursor: initial;
   flex-direction: row;
   margin: 0;
-  .list-item-title-container {
+  :global(.list-item-title-container) {
     margin-left: 0;
-    .caption {
+    :global(.caption) {
       display: flex;
       align-items: center;
       svg {

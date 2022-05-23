@@ -28,7 +28,7 @@
 .timetablePanel {
   & > header {
     justify-content: space-between;
-    .title {
+    :global(.title) {
       font-size: 18px;
     }
     .btnRow {
