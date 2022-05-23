@@ -73,28 +73,6 @@
   }
 }
 
-.selection-group {
-  background-color: var(--background-secondary);
-  border-radius: 4px;
-  margin-right: 4px;
-  overflow: hidden;
-}
-
-.selecion-item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  height: 26px;
-  width: 26px;
-  opacity: 0.4;
-  &.selected {
-    color: white;
-    font-weight: 500;
-    opacity: 1;
-  }
-}
-
 .reviewSectionsContainer {
   display: grid;
   grid-template-columns: repeat(2, 1fr);

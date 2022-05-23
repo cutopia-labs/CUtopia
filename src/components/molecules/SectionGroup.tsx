@@ -2,6 +2,7 @@ import clsx from 'clsx';
 import { FC } from 'react';
 import colors from '../../constants/colors';
 import { Grade } from '../../types';
+import styles from '../../styles/components/molecules/SectionGroup.module.scss';
 
 type FormSectionProps = {
   title: string;
@@ -14,7 +15,7 @@ export const FormSection: FC<FormSectionProps> = ({
   children,
 }) => (
   <>
-    <span className={clsx('formSectionTitle', className)}>{title}</span>
+    <span className={clsx(className)}>{title}</span>
     {children}
   </>
 );
@@ -30,11 +31,14 @@ const SelectionGroup = ({
   selectedIndex,
   onSelect,
 }: SelectionGroupProps) => (
-  <div className="selection-group center-row">
+  <div className={clsx(styles.selectionGroup, 'center-row')}>
     {selections.map((selection, i) => (
       <span
         key={selection}
-        className={`selecion-item${selectedIndex === i ? ' selected' : ''}`}
+        className={clsx(
+          styles.selectionItem,
+          selectedIndex === i && 'selected'
+        )}
         onClick={() => onSelect(i)}
         style={
           selectedIndex === i

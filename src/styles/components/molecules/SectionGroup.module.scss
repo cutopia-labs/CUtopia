@@ -1,0 +1,23 @@
+
+.selectionGroup {
+  background-color: var(--background-secondary);
+  border-radius: 4px;
+  margin-right: 4px;
+  overflow: hidden;
+}
+
+.selectionItem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  height: 26px;
+  width: 26px;
+  opacity: 0.4;
+  &:global(.selected) {
+    color: white;
+    font-weight: 500;
+    opacity: 1;
+  }
+}
+
