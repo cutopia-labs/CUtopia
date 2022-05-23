@@ -1,3 +1,7 @@
+.reviewEditPage {
+  grid-template-columns: none;
+}
+
 .reviewEdit {
   --review-rowGap: 18px;
   display: flex;
@@ -26,11 +30,11 @@
   width: 100%;
   align-items: center;
 
-  .title {
+  :global(.title){
     width: fit-content;
   }
 
-  .light-caption {
+  :global(.light-caption) {
     margin-left: 10px;
   }
 

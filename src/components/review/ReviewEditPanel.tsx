@@ -44,6 +44,7 @@ import useMobileQuery from '../../hooks/useMobileQuery';
 import handleCompleted from '../../helpers/handleCompleted';
 import LoadingButton from '../atoms/LoadingButton';
 import { getStoreData, storeData } from '../../helpers/store';
+import Page from '../../components/atoms/Page';
 import CourseCard from './CourseCard';
 
 enum MODES {
@@ -438,148 +439,153 @@ const ReviewEditPanel: FC<Props> = ({ courseInfo }) => {
   };
 
   return (
-    <div className="reviewEdit-panel coursePanel panel card">
-      <CourseCard courseInfo={courseInfo} />
-
-      <div className={clsx(styles.reviewEdit, 'grid-auto-row')}>
-        {reviewLoading && <Loading fixed />}
-        <div className={clsx(styles.reviewHeaderContainer, 'center-row')}>
-          <span className="title">Your Review</span>
-          <span className="light-caption">前人種樹，後人乘涼</span>
-          <Tooltip title="Anonymity">
-            <IconButton
-              className={styles.anonymousSwitch}
-              aria-label="anonymous"
-              onClick={() =>
-                dispatchFormData({ anonymous: !formData.anonymous })
-              }
-            >
-              {formData.anonymous ? <VisibilityOff /> : <Visibility />}
-            </IconButton>
-          </Tooltip>
-        </div>
-        <FormSection title="term">
-          <div
-            className={clsx(styles.termSelectionAnchor, 'input-container')}
-            onClick={e => setAnchorEl(e.currentTarget)}
-          >
-            {formData.term || 'Please select a term'}
+    <Page className={styles.reviewEditPage} center padding>
+      <div className="reviewEdit-panel coursePanel panel card">
+        <CourseCard courseInfo={courseInfo} />
+        <div className={clsx(styles.reviewEdit, 'grid-auto-row')}>
+          {reviewLoading && <Loading fixed />}
+          <div className={clsx(styles.reviewHeaderContainer, 'center-row')}>
+            <span className="title">Your Review</span>
+            <span className="light-caption">前人種樹，後人乘涼</span>
+            <Tooltip title="Anonymity">
+              <IconButton
+                className={styles.anonymousSwitch}
+                aria-label="anonymous"
+                onClick={() =>
+                  dispatchFormData({ anonymous: !formData.anonymous })
+                }
+              >
+                {formData.anonymous ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </Tooltip>
           </div>
-        </FormSection>
-        <Menu
-          id="lock-menu"
-          anchorEl={anchorEl}
-          keepMounted
-          open={Boolean(anchorEl)}
-          onClose={() => setAnchorEl(null)}
-        >
-          {TERMS_OPTIONS.map((option, i) => (
-            <MenuItem
-              key={option}
-              selected={option === formData.term}
-              onClick={() => [
-                dispatchFormData({ term: option }),
-                setAnchorEl(null),
-              ]}
+          <FormSection title="term" className={styles.formSectionTitle}>
+            <div
+              className={clsx(styles.termSelectionAnchor, 'input-container')}
+              onClick={e => setAnchorEl(e.currentTarget)}
             >
-              {option}
-            </MenuItem>
-          ))}
-        </Menu>
-        <FormSection title="title">
-          <TextField
-            placeholder="(Optional) Your Review Title"
-            value={formData.title}
-            onChangeText={text => dispatchFormData({ title: text })}
-          />
-        </FormSection>
-        <FormSection title="lecturer" className="lecturer">
-          <TextField
-            placeholder="Please input your course instructor here."
-            value={formData.lecturer}
-            onChangeText={text => dispatchFormData({ lecturer: text })}
-            inputRef={lecturerInputRef}
-            onFocus={() => setShowLecturers(true)}
-            onBlur={() => setShowLecturers(false)}
-          />
-          {showLecturers && Boolean(formData.lecturer) && (
-            <div className={clsx(styles.headerSearchResult, 'card')}>
-              {!instructorsSearchResult ? (
-                <Loading />
-              ) : (
-                instructorsSearchResult
-                  .filter(item => formData.lecturer !== item)
-                  .map(lecturer => (
-                    <ListItem
-                      key={`listitem-${lecturer}`}
-                      onMouseDown={() => dispatchFormData({ lecturer })}
-                      title={lecturer}
-                    />
-                  ))
-              )}
+              {formData.term || 'Please select a term'}
             </div>
-          )}
-        </FormSection>
-        <div className={clsx(styles.reviewSectionsContainer, 'grid-auto-row')}>
-          {RATING_FIELDS.map(type => (
-            <ReviewSection
-              key={type}
-              type={type}
-              value={formData[type]}
-              onChangeText={text =>
-                dispatchFormData({ [type]: { ...formData[type], text } })
-              }
-              onChangeGrade={grade =>
-                dispatchFormData({ [type]: { ...formData[type], grade } })
-              }
-            />
-          ))}
-        </div>
-        <div className={clsx(styles.submitBtnRow, 'center-row')}>
-          <ReviewSection
-            type="overall"
-            value={formData.overall}
-            onChangeGrade={grade => dispatchFormData({ overall: grade })}
-          />
-          <ReviewSubmit
-            disabled={!validation()}
-            onSubmit={submit}
-            progress={progress}
-            loading={addReviewLoading || editReviewLoading}
-          />
-        </div>
-        {(mode === MODES.DRAFT_MODAL || mode === MODES.EDIT_MODAL) && (
-          <Dialog
-            open={mode === MODES.EDIT_MODAL || mode === MODES.DRAFT_MODAL}
-            onClose={reviewModal[mode].onClose}
-            className={styles.reviewEditDialog}
+          </FormSection>
+          <Menu
+            id="lock-menu"
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={() => setAnchorEl(null)}
           >
-            <DialogTitle id="alert-dialog-title">
-              {reviewModal[mode].title}
-            </DialogTitle>
-            <DialogContent>
-              <DialogContentText id="alert-dialogDescription">
-                {reviewModal[mode].caption}
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button
-                onClick={reviewModal[mode].cancelButton.action}
-                color="primary"
+            {TERMS_OPTIONS.map((option, i) => (
+              <MenuItem
+                key={option}
+                selected={option === formData.term}
+                onClick={() => [
+                  dispatchFormData({ term: option }),
+                  setAnchorEl(null),
+                ]}
               >
-                {reviewModal[mode].cancelButton.label}
-              </Button>
-              <Button
-                onClick={reviewModal[mode].confirmButton.action}
-                color="primary"
-                autoFocus
-              >
-                {reviewModal[mode].confirmButton.label}
-              </Button>
-            </DialogActions>
-          </Dialog>
-        )}
-        {/*
+                {option}
+              </MenuItem>
+            ))}
+          </Menu>
+          <FormSection title="title" className={styles.formSectionTitle}>
+            <TextField
+              placeholder="(Optional) Your Review Title"
+              value={formData.title}
+              onChangeText={text => dispatchFormData({ title: text })}
+            />
+          </FormSection>
+          <FormSection
+            title="lecturer"
+            className={clsx('lecturer', styles.formSectionTitle)}
+          >
+            <TextField
+              placeholder="Please input your course instructor here."
+              value={formData.lecturer}
+              onChangeText={text => dispatchFormData({ lecturer: text })}
+              inputRef={lecturerInputRef}
+              onFocus={() => setShowLecturers(true)}
+              onBlur={() => setShowLecturers(false)}
+            />
+            {showLecturers && Boolean(formData.lecturer) && (
+              <div className={clsx(styles.headerSearchResult, 'card')}>
+                {!instructorsSearchResult ? (
+                  <Loading />
+                ) : (
+                  instructorsSearchResult
+                    .filter(item => formData.lecturer !== item)
+                    .map(lecturer => (
+                      <ListItem
+                        key={`listitem-${lecturer}`}
+                        onMouseDown={() => dispatchFormData({ lecturer })}
+                        title={lecturer}
+                      />
+                    ))
+                )}
+              </div>
+            )}
+          </FormSection>
+          <div
+            className={clsx(styles.reviewSectionsContainer, 'grid-auto-row')}
+          >
+            {RATING_FIELDS.map(type => (
+              <ReviewSection
+                key={type}
+                type={type}
+                value={formData[type]}
+                onChangeText={text =>
+                  dispatchFormData({ [type]: { ...formData[type], text } })
+                }
+                onChangeGrade={grade =>
+                  dispatchFormData({ [type]: { ...formData[type], grade } })
+                }
+              />
+            ))}
+          </div>
+          <div className={clsx(styles.submitBtnRow, 'center-row')}>
+            <ReviewSection
+              type="overall"
+              value={formData.overall}
+              onChangeGrade={grade => dispatchFormData({ overall: grade })}
+            />
+            <ReviewSubmit
+              disabled={!validation()}
+              onSubmit={submit}
+              progress={progress}
+              loading={addReviewLoading || editReviewLoading}
+            />
+          </div>
+          {(mode === MODES.DRAFT_MODAL || mode === MODES.EDIT_MODAL) && (
+            <Dialog
+              open={mode === MODES.EDIT_MODAL || mode === MODES.DRAFT_MODAL}
+              onClose={reviewModal[mode].onClose}
+              className={styles.reviewEditDialog}
+            >
+              <DialogTitle id="alert-dialog-title">
+                {reviewModal[mode].title}
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialogDescription">
+                  {reviewModal[mode].caption}
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  onClick={reviewModal[mode].cancelButton.action}
+                  color="primary"
+                >
+                  {reviewModal[mode].cancelButton.label}
+                </Button>
+                <Button
+                  onClick={reviewModal[mode].confirmButton.action}
+                  color="primary"
+                  autoFocus
+                >
+                  {reviewModal[mode].confirmButton.label}
+                </Button>
+              </DialogActions>
+            </Dialog>
+          )}
+          {/*
         
       <Prompt
         when={progress > SAVE_DRAFT_PROGRESS_BUFFER && mode === MODES.INITIAL}
@@ -595,8 +601,9 @@ const ReviewEditPanel: FC<Props> = ({ courseInfo }) => {
         }}
       />
         */}
+        </div>
       </div>
-    </div>
+    </Page>
   );
 };
 

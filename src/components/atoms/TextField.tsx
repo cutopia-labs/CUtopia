@@ -50,7 +50,7 @@ const TextField: FC<
         onBlur={onBlur}
         disabled={disabled}
       />
-      {Boolean(error) && <div className="error-label">{error}</div>}
+      {Boolean(error) && <div className={styles.errorLabel}>{error}</div>}
     </>
   );
 };
