@@ -10,7 +10,7 @@
 }
 
 .category-menu {
-  .MuiListItem-root {
+  :global(.MuiListItem-root) {
     text-transform: capitalize;
   }
 }
@@ -20,7 +20,7 @@
 }
 
 .globalModalContainer {
-  .MuiDialog-paper {
+  :global(.MuiDialog-paper) {
     min-width: 280px;
     overflow-x: hidden;
   }

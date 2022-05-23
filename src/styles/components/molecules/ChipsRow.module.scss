@@ -12,7 +12,7 @@
   div {
     text-transform: capitalize;
     border: 1px solid var(--underlay);
-    .MuiChip-label {
+    :global(.MuiChip-label) {
       padding-left: 10px;
       padding-right: 10px;
     }

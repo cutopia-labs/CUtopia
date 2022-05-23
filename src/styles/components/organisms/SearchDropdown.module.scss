@@ -11,7 +11,7 @@
     .searchInputContainer {
       display: none;
     }
-    .MuiDivider-root {
+    :global(.MuiDivider-root) {
       &:first-of-type {
         display: none;
       }

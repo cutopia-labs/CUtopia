@@ -33,7 +33,7 @@
   }
   .filterRow {
     button {
-      .MuiButton-endIcon {
+      :global(.MuiButton-endIcon) {
         margin-left: 0;
       }
     }

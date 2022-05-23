@@ -1,9 +1,9 @@
 .timetableOverview {
   min-height: 48px;
-  &.MuiAccordion-root.Mui-expanded {
+  &:global(.MuiAccordion-root.Mui-expanded) {
     margin: 0;
   }
-  .MuiAccordionSummary-root {
+  :global(.MuiAccordionSummary-root) {
     position: sticky;
     top: 0;
     background-color: var(--surface);
@@ -41,7 +41,7 @@
 
 .menuIconContainer {
   margin-right: var(--card-padding);
-  & .MuiSvgIcon-root {
+  & :global(.MuiSvgIcon-root) {
     font-size: 18px;
   }
 }

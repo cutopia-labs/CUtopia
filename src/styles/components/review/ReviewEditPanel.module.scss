@@ -140,7 +140,7 @@
 }
 
 .reviewEditDialog {
-  .MuiDialog-paper {
+  :global(.MuiDialog-paper) {
     min-width: 320px;
   }
 }
@@ -181,7 +181,7 @@
     margin-left: 11px;
   }
   .reviewEditDialog {
-    .MuiDialog-paper {
+    :global(.MuiDialog-paper) {
       min-width: 280px;
     }
   }

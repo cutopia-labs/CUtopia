@@ -224,7 +224,7 @@ h4 {
   margin-bottom: var(--card-padding);
 }
 
-.MuiDivider-root {
+:global(.MuiDivider-root) {
   background-color: var(--border) !important;
 }
 
@@ -273,7 +273,7 @@ h4 {
   flex-wrap: wrap;
 }
 
-.capsule-btn.MuiButton-root {
+.capsule-btn:global(.MuiButton-root) {
   --capsule-font-color: var(--caption);
   &.selected {
     --capsule-font-color: var(--primary);
@@ -282,10 +282,10 @@ h4 {
   }
   border-radius: 50px;
   padding: 4px 12px;
-  .MuiButton-label {
+  :global(.MuiButton-label) {
     font-weight: bold;
   }
-  .MuiButton-label,
+  :global(.MuiButton-label),
   svg {
     color: var(--capsule-font-color);
   }
@@ -310,7 +310,7 @@ h4 {
   height: fit-content;
 }
 
-.chipFill.MuiButtonBase-root {
+.chipFill:global(.MuiButtonBase-root) {
   background-color: var(--background-chip);
   border-radius: var(--border-radius);
   border: none;
@@ -480,7 +480,7 @@ textarea {
   font-size: 14px;
   font-weight: 500;
   margin-left: 2px;
-  .MuiDivider-root {
+  :global(.MuiDivider-root) {
     flex: 1;
     margin-left: var(--card-padding);
   }

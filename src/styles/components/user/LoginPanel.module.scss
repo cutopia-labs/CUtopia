@@ -61,11 +61,11 @@
   border-radius: var(--border-radius) !important;
   background: linear-gradient(195deg, var(--primary) 2.3%, rgba(220, 86, 227, 1) 88.5%);
   box-shadow: none !important;
-  & > .MuiButton-label {
+  & > :global(.MuiButton-label) {
     font-weight: bold;
     text-transform: capitalize;
   }
-  .MuiCircularProgress-svg {
+  :global(.MuiCircularProgress-svg) {
     color: white;
   }
 }

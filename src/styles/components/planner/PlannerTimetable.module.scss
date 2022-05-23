@@ -28,7 +28,7 @@
     width: 100%;
   }
   .plannerShareDialog {
-    .MuiPaper-root {
+    :global(.MuiPaper-root) {
       margin: 0;
     }
     .contentContainer {

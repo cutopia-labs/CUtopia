@@ -1,11 +1,11 @@
 .accordionCard {
-  .MuiAccordionSummary-root.Mui-expanded {
+  :global(.MuiAccordionSummary-root.Mui-expanded) {
     min-height: auto;
   }  
-  .MuiAccordionSummary-content.Mui-expanded {
+  :global(.MuiAccordionSummary-content.Mui-expanded) {
     margin: auto;
   }
-  .MuiAccordionDetails-root {
+  :global(.MuiAccordionDetails-root) {
     flex-direction: column;
   }
 }
