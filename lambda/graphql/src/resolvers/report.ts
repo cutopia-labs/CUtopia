@@ -1,11 +1,7 @@
 import { report } from 'mongodb';
-import { MutationResolvers } from '../schemas/types';
+import { Resolvers } from '../schemas/types';
 
-type ReportResolver = {
-  Mutation: MutationResolvers;
-};
-
-const reportResolver: ReportResolver = {
+const reportResolver: Resolvers = {
   Mutation: {
     report: async (parent, { input }, { user }) => {
       const { username } = user;

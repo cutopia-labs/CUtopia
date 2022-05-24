@@ -10,3 +10,9 @@ generates:
     config:
       # path is relative to src/schemas
       contextType: ../context/index#Context
+      # map GraphQL types to MongoDB model types
+      # for accessing fields that exist in MongoDB model only
+      # e.g. upvoteUserIds in Review
+      mappers:
+        Review: cutopia-types/lib/types#Review
+      mapperTypeSuffix: MongoDB

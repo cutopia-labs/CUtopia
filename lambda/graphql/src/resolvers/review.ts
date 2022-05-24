@@ -8,22 +8,9 @@ import {
 import { VoteAction } from 'cutopia-types/lib/codes';
 
 import { verifyCourseId } from '../utils';
-import {
-  MutationResolvers,
-  QueryResolvers,
-  ReviewDetailsResolvers,
-  ReviewResolvers,
-} from '../schemas/types';
+import { Resolvers } from '../schemas/types';
 
-// TODO: add { upvoteUserIds, downvoteUserIds } in `parent` type in resolvers
-type ReviewResolver = {
-  Query: QueryResolvers;
-  Mutation: MutationResolvers;
-  Review: any;
-  ReviewDetails: ReviewDetailsResolvers;
-};
-
-const reviewsResolver: ReviewResolver = {
+const reviewsResolver: Resolvers = {
   Mutation: {
     createReview: async (parent, { input }, { user }) => {
       verifyCourseId(input.courseId);

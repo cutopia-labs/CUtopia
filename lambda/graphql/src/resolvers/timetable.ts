@@ -4,19 +4,9 @@ import {
   getTimetable,
   getTimetablesOverview,
 } from 'mongodb';
-import {
-  MutationResolvers,
-  QueryResolvers,
-  UserResolvers,
-} from '../schemas/types';
+import { Resolvers } from '../schemas/types';
 
-type TimetableResolver = {
-  Query: QueryResolvers;
-  Mutation: MutationResolvers;
-  User: UserResolvers;
-};
-
-const timetableResolver: TimetableResolver = {
+const timetableResolver: Resolvers = {
   User: {
     timetables: async (parent, args, { user }) => {
       const { username } = user;

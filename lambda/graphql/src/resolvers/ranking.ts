@@ -3,7 +3,7 @@ import NodeCache from 'node-cache';
 
 import { courses } from '../data/courses';
 import withCache from '../utils/withCache';
-import { QueryResolvers, RankTableResolvers } from '../schemas/types';
+import { Resolvers } from '../schemas/types';
 
 const rankingCache = new NodeCache({
   stdTTL: 600,
@@ -15,6 +15,8 @@ export const getCourseById = courseId => courses[courseId];
 export const getRankingWithCache = async (field: string) =>
   withCache(rankingCache, `${field}-ranking`, async () => {
     const result = await getRanking(field);
+    // Remark: "sections" field in Course is null when querying with "rankedCourses"
+    // and it is not used when showing the ranked courses
     const resData = result?.ranks?.map(rank => ({
       courseId: rank._id,
       course: getCourseById(rank._id),
@@ -23,12 +25,7 @@ export const getRankingWithCache = async (field: string) =>
     return resData;
   });
 
-type RankingResolver = {
-  Query: QueryResolvers;
-  RankTable: RankTableResolvers;
-};
-
-const rankingResolver: RankingResolver = {
+const rankingResolver: Resolvers = {
   Query: {
     ranking: () => ({}),
   },

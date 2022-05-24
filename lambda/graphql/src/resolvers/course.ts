@@ -3,13 +3,7 @@ import { verifyCourseId } from '../utils';
 
 import { courses } from '../data/courses';
 import processRating from '../utils/processRating';
-import {
-  AssessementComponentResolvers,
-  CourseResolvers,
-  CourseSectionResolvers,
-  QueryResolvers,
-  TermResolvers,
-} from '../schemas/types';
+import { Resolvers } from '../schemas/types';
 
 export const coursesPreResolver = {
   courses: [
@@ -26,16 +20,7 @@ export const coursesPreResolver = {
   ],
 };
 
-// TODO: add { requiredTerm } in `parent` type in resolvers
-type CourseResolver = {
-  Query: any;
-  Course: any;
-  Term: TermResolvers;
-  CourseSection: CourseSectionResolvers;
-  AssessementComponent: AssessementComponentResolvers;
-};
-
-const coursesResolver: CourseResolver = {
+const coursesResolver: Resolvers = {
   Query: {
     courses: (parent, { filter }) => {
       const { requiredCourses = [], requiredTerm = null } = { ...filter };
@@ -45,22 +30,21 @@ const coursesResolver: CourseResolver = {
       });
       */
       return requiredCourses.map(code => ({
-        requiredTerm,
+        sections: courses[code]['terms'][requiredTerm],
         ...courses[code],
       }));
     },
   },
   Course: {
-    terms: ({ requiredTerm, terms }) => {
-      if (!requiredTerm || !terms) {
+    sections: ({ sections }) => {
+      if (!sections) {
         return null;
       }
-      return [
-        {
-          name: requiredTerm,
-          course_sections: terms[requiredTerm],
-        },
-      ];
+      const sectionsNames = Object.keys(sections);
+      return sectionsNames.map(name => ({
+        name,
+        ...sections[name],
+      }));
     },
     assessments: ({ assessments }) => {
       if (!assessments) {
@@ -73,18 +57,6 @@ const coursesResolver: CourseResolver = {
       }));
     },
     rating: async ({ rating }) => (rating ? processRating(rating) : null),
-  },
-  Term: {
-    course_sections: ({ course_sections }) => {
-      if (!course_sections) {
-        return null;
-      }
-      const sectionsNames = Object.keys(course_sections);
-      return sectionsNames.map(name => ({
-        name,
-        ...course_sections[name],
-      }));
-    },
   },
   CourseSection: {},
   AssessementComponent: {},

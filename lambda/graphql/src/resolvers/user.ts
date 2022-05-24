@@ -8,11 +8,7 @@ import {
   login,
 } from 'mongodb';
 import { sign } from '../jwt';
-import {
-  MutationResolvers,
-  QueryResolvers,
-  UserResolvers,
-} from '../schemas/types';
+import { Resolvers } from '../schemas/types';
 
 const SNS = new AWS.SNS({ apiVersion: '2010-03-31' });
 
@@ -24,13 +20,7 @@ const sendEmail = async message => {
   await SNS.publish(params).promise();
 };
 
-type UserResolver = {
-  Query: QueryResolvers;
-  Mutation: MutationResolvers;
-  User: UserResolvers;
-};
-
-const userResolver: UserResolver = {
+const userResolver: Resolvers = {
   Query: {
     me: async (parent, args, { user }) => {
       const { username } = user;

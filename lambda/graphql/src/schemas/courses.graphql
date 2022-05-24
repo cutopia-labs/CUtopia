@@ -24,7 +24,7 @@ type Course {
   syllabus: String
   required_readings: String
   recommended_readings: String
-  terms: [Term]
+  sections: [CourseSection]
   assessments: [AssessementComponent]
   rating: CourseRating
 }
@@ -36,11 +36,6 @@ type CourseRating {
   content: Float!
   difficulty: Float!
   teaching: Float!
-}
-
-type Term {
-  name: String!
-  course_sections: [CourseSection]
 }
 
 type CourseSection {
