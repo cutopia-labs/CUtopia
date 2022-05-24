@@ -4,17 +4,10 @@ import { useRouter } from 'next/router';
 import { FC, useEffect, useState } from 'react';
 import { GET_USER } from '../../constants/queries';
 import { useUser, useView } from '../../store';
-import { User, LoginState } from '../../types';
+import { User, AuthState } from '../../types';
 import Loading from '../atoms/Loading';
 
 type HOC = (Component: FC, options?: Record<any, any>) => FC;
-
-enum AuthState {
-  INIT,
-  LOGGED_OUT,
-  LOADING,
-  LOGGED_IN,
-}
 
 const authenticatedRoute: HOC = (Component = null, options = {}) => {
   const AuthenticatedRoute: FC = props => {
@@ -32,28 +25,30 @@ const authenticatedRoute: HOC = (Component = null, options = {}) => {
             Sentry.setUser({
               username: data.me.username,
             });
-            user.updateStore('loginState', LoginState.LOGGED_IN);
             setAuthState(AuthState.LOGGED_IN);
           } else {
-            console.log(data);
-            user.updateStore('loginState', LoginState.LOGGED_OUT);
             setAuthState(AuthState.LOGGED_OUT);
           }
         },
         onError: e => {
           const handled = view.handleError(e);
-          if (!handled) {
-            user.updateStore('loginState', LoginState.LOGGED_OUT);
-          }
+          setAuthState(AuthState.LOGGED_OUT);
         },
       });
     useEffect(() => {
       console.log(`Current user ${user.data}`);
+      // If no prev login data, then redirect to login page
       if (!user.token) {
         setAuthState(AuthState.LOGGED_OUT);
         return;
       }
-      if (!user.data?.username) {
+      // If logged in for current session, then return component
+      if (user.data?.username) {
+        setAuthState(AuthState.LOGGED_IN);
+        return;
+      }
+      // If has prev token but not logged in, then check if token valid
+      else {
         setAuthState(AuthState.LOADING);
         getUser();
         return;
@@ -61,6 +56,7 @@ const authenticatedRoute: HOC = (Component = null, options = {}) => {
     }, [user.token]);
 
     useEffect(() => {
+      user.updateStore('loginState', authState);
       if (authState === AuthState.LOGGED_OUT) {
         router.push({
           pathname: '/login',

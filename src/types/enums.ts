@@ -7,9 +7,10 @@ export enum LoginPageMode {
   RESET_PASSWORD_VERIFY,
 }
 
-export enum LoginState {
+export enum AuthState {
   INIT,
   LOGGED_OUT,
+  LOADING,
   LOGGED_IN,
 }
 

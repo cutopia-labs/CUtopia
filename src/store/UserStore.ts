@@ -4,7 +4,7 @@ import {
   CourseConcise,
   CourseInfo,
   CourseTableEntry,
-  LoginState,
+  AuthState,
   RatingField,
   Review,
   User,
@@ -37,7 +37,7 @@ const DEFAULT_VALUES = {
   reviewDrafts: {},
   searchHistory: [],
   favoriteCourses: [],
-  loginState: LoginState.INIT,
+  loginState: AuthState.INIT,
   recentReviewCategory: 'grading',
 };
 
@@ -45,7 +45,7 @@ const LOGOUT_KEYS = ['username', 'token'];
 
 class UserStore extends StorePrototype {
   // General State
-  @observable loginState: LoginState;
+  @observable loginState: AuthState;
 
   // User Saved Data
   @observable reviewDrafts: Record<string, Review> = {};
@@ -73,8 +73,8 @@ class UserStore extends StorePrototype {
     console.log('Init user store');
     this.loadStore();
     this.applyToken();
-    if (this.loginState === LoginState.INIT) {
-      this.loginState = LoginState.LOGGED_OUT;
+    if (this.loginState === AuthState.INIT) {
+      this.loginState = AuthState.LOGGED_OUT;
     }
   }
 
@@ -126,7 +126,7 @@ class UserStore extends StorePrototype {
 
   @action setToken = (token: string) => {
     this.token = token;
-    this.loginState = LoginState.LOGGED_IN;
+    this.loginState = AuthState.LOGGED_IN;
   };
 
   @action logout = () => {
@@ -137,7 +137,7 @@ class UserStore extends StorePrototype {
   };
 
   @action setLogout = () => {
-    this.loginState = LoginState.LOGGED_OUT;
+    this.loginState = AuthState.LOGGED_OUT;
     this.username = null;
     this.token = null;
   };
