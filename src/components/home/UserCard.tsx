@@ -22,7 +22,7 @@ const UserCard: FC<UserCardProps> = ({ userData }) => {
   return (
     <div className={clsx(styles.userCard, 'card')}>
       <div className={clsx(styles.userCardHeader, 'center-row')}>
-        <Avatar className="char-icon">
+        <Avatar className={styles.charIcon}>
           {user.data?.username?.charAt(0) || ''}
         </Avatar>
         <div className={clsx(styles.userCardHeaderDetails, 'column')}>

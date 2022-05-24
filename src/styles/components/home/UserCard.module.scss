@@ -1,14 +1,12 @@
 .userCard {
   height: fit-content;
-  .userCard-divider {
-    margin: 0 var(--card-padding);
-  }
 }
 .userCardHeader {
   padding: var(--card-padding);
-  .char-icon {
+  .charIcon {
     background-color: var(--primary);
     color: white;
+    text-transform: uppercase;
   }
   :global(.title) {
     font-size: 16px;
@@ -33,23 +31,7 @@
   height: 36px;
   margin-left: 8px;
 }
-.toggle-row {
-  span {
-    margin-left: auto;
-  }
-}
-:global(.list-item-container) {
-  &.logOutRow {
-    width: calc(100% - 24px);
-    padding: 12px 0 12px 14px;
-    height: 32px;
-    :global(.title) {
-      font-weight: normal;
-      text-transform: capitalize;
-      font-size: 16px;
-    }
-  }
-}
+
 .userAboutCard {
   margin-top: var(--card-padding);
   padding: var(--card-padding);

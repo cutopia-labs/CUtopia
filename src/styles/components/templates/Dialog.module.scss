@@ -9,6 +9,20 @@
   }
 }
 
+
+:global(.list-item-container) {
+  &.logOutRow {
+    width: calc(100% - 24px);
+    padding: 12px 0 12px 14px;
+    height: 32px;
+    :global(.title) {
+      font-weight: normal;
+      text-transform: capitalize;
+      font-size: 16px;
+    }
+  }
+}
+
 .category-menu {
   :global(.MuiListItem-root) {
     text-transform: capitalize;
