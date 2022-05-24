@@ -7,7 +7,11 @@ import LoginPanel from '../components/user/LoginPanel';
 import Logo from '../components/atoms/Logo';
 import useMobileQuery from '../hooks/useMobileQuery';
 
-const LandingPage: FC = () => {
+type Props = {
+  returnUrl?: string;
+};
+
+const LandingPage: FC<Props> = ({ returnUrl }) => {
   const isMobile = useMobileQuery();
   return (
     <div className="landing-page">
@@ -30,7 +34,7 @@ const LandingPage: FC = () => {
       )}
       <div className="right column">
         {isMobile && <Logo style={styles.landingLogo} />}
-        <LoginPanel className={styles.loginPanel} />
+        <LoginPanel className={styles.loginPanel} returnUrl={returnUrl} />
       </div>
     </div>
   );

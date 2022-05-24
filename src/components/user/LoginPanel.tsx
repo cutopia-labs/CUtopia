@@ -89,9 +89,10 @@ Allow only alphas + digits + @$!%*#?&^_-
 
 type Props = {
   className?: string;
+  returnUrl?: string; // redirect to returnUrl after login
 };
 
-const LoginPanel: FC<Props> = ({ className }) => {
+const LoginPanel: FC<Props> = ({ className, returnUrl }) => {
   const location = useLocation();
   const router = useRouter();
   const [mode, setMode] = useState(INITIAL_MODE);
