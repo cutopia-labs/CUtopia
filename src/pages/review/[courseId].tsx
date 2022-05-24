@@ -11,7 +11,6 @@ import Head from 'next/head';
 import clsx from 'clsx';
 import styles from '../../styles/components/review/CoursePanel.module.scss';
 import { validCourse } from '../../helpers';
-import { COURSE_INFO_QUERY } from '../../constants/queries';
 import { useUser, useView } from '../../store';
 import useMobileQuery from '../../hooks/useMobileQuery';
 import { getSimilarCourses } from '../../helpers/getCourses';
@@ -21,7 +20,6 @@ import CourseCard from '../../components/review/CourseCard';
 import CourseReviews from '../../components/review/CourseReviews';
 import CourseComments from '../../components/review/CourseComments';
 import { CourseInfo } from '../../types';
-import client from '../../helpers/apollo-client';
 import Page from '../../components/atoms/Page';
 import authenticatedRoute from '../../components/molecules/authenticatedRoute';
 import ReviewEditPanel from '../../components/review/ReviewEditPanel';
@@ -144,16 +142,10 @@ const CoursePanel: FC<Props> = ({ courseInfo }) => {
 
 // SSR to get course info
 export const getStaticProps = async ({ params }) => {
-  const res = await client.query({
-    query: COURSE_INFO_QUERY,
-    variables: {
-      courseId: params.courseId,
-    },
-    fetchPolicy: 'cache-first',
-  });
+  const { courses } = await import('../../../data/coursesLoader');
   return {
     props: {
-      courseInfo: { ...res.data?.courses[0], courseId: params.courseId },
+      courseInfo: courses[params.courseId],
     },
   };
 };
