@@ -1,4 +1,12 @@
+.loginPage {
+  height: 100%;
+  flex: 1;
+}
+
 .loginPanel {
+  background-color: var(--surface);
+  border-radius: var(--border-radius);
+  padding: 36px;
   height: auto;
   width: 50%;
   max-width: 400px;
@@ -56,14 +64,15 @@
   flex-direction: row;
 }
 .loginBtn {
-  height: 40px;
+  height: 50px;
   margin-top: 10px !important;
   border-radius: var(--border-radius) !important;
-  background: linear-gradient(195deg, var(--primary) 2.3%, rgba(220, 86, 227, 1) 88.5%);
+  background: var(--default-button-background) !important;
   box-shadow: none !important;
   & > :global(.MuiButton-label) {
     font-weight: bold;
     text-transform: capitalize;
+    font-size: 18px;
   }
   :global(.MuiCircularProgress-svg) {
     color: white;

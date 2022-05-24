@@ -335,122 +335,124 @@ const LoginPanel: FC<Props> = ({ className, returnUrl }) => {
   };
 
   return (
-    <div className={clsx(styles.loginPanel, 'grid-auto-row', className)}>
-      <div className={clsx(styles.qrcodeRow, 'center-row')}>
-        <div>
-          {mode !== LoginPageMode.CUTOPIA_LOGIN &&
-            mode !== LoginPageMode.CUTOPIA_SIGNUP && (
-              <IconButton className={styles.goBackIcon} onClick={goBack}>
-                <ArrowBack />
-              </IconButton>
-            )}
-          <h2 className="title">{MODE_ITEMS[mode].title}</h2>
-          <span className="caption">{MODE_ITEMS[mode].caption}</span>
-        </div>
-      </div>
-      <form className="grid-auto-row" onSubmit={onSubmit}>
-        {MODE_ITEMS[mode].userId && (
-          <TextField
-            className={styles.loginInputContainer}
-            error={errors.userId}
-            placeholder={MODE_ITEMS[mode].userId}
-            type="number"
-            value={userId}
-            onChangeText={text => setUserId(text)}
-            label="CUHK SID"
-          />
-        )}
-        {MODE_ITEMS[mode].username && (
-          <TextField
-            className={styles.loginInputContainer}
-            error={errors.username}
-            placeholder={MODE_ITEMS[mode].username}
-            value={username}
-            onChangeText={text => setUsername(text)}
-            label="Username"
-          />
-        )}
-        {MODE_ITEMS[mode].password && (
-          <TextField
-            className={styles.loginInputContainer}
-            error={errors.password}
-            placeholder={MODE_ITEMS[mode].password}
-            value={password}
-            onChangeText={text => setPassword(text)}
-            type={invisible ? 'password' : 'text'}
-            label="Password"
-          />
-        )}
-        {MODE_ITEMS[mode].verificationCode && (
-          <TextField
-            className={styles.loginInputContainer}
-            error={errors.verification}
-            placeholder={MODE_ITEMS[mode].verificationCode}
-            value={verificationCode}
-            onChangeText={text => setVerificationCode(text)}
-            label="Verification Code"
-          />
-        )}
-        {mode === LoginPageMode.CUTOPIA_LOGIN && (
-          <div className={clsx(styles.forgotPwdRow, 'center-row')}>
-            <span
-              className={clsx(styles.label, 'forgotPwdLabel')}
-              onClick={() =>
-                router.push(MODE_PATH_LOOKUP[LoginPageMode.RESET_PASSWORD])
-              }
-            >
-              Forgot Password?
-            </span>
+    <div className={clsx(styles.loginPage, 'center column')}>
+      <div className={clsx(styles.loginPanel, 'grid-auto-row', className)}>
+        <div className={clsx(styles.qrcodeRow, 'center-row')}>
+          <div>
+            {mode !== LoginPageMode.CUTOPIA_LOGIN &&
+              mode !== LoginPageMode.CUTOPIA_SIGNUP && (
+                <IconButton className={styles.goBackIcon} onClick={goBack}>
+                  <ArrowBack />
+                </IconButton>
+              )}
+            <h2 className="title">{MODE_ITEMS[mode].title}</h2>
+            <span className="caption">{MODE_ITEMS[mode].caption}</span>
           </div>
-        )}
-        <Button
-          variant="contained"
-          className={styles.loginBtn}
-          color="primary"
-          type="submit"
-          disabled={
-            loggingInCUtopia ||
+        </div>
+        <form className="grid-auto-row" onSubmit={onSubmit}>
+          {MODE_ITEMS[mode].userId && (
+            <TextField
+              className={styles.loginInputContainer}
+              error={errors.userId}
+              placeholder={MODE_ITEMS[mode].userId}
+              type="number"
+              value={userId}
+              onChangeText={text => setUserId(text)}
+              label="CUHK SID"
+            />
+          )}
+          {MODE_ITEMS[mode].username && (
+            <TextField
+              className={styles.loginInputContainer}
+              error={errors.username}
+              placeholder={MODE_ITEMS[mode].username}
+              value={username}
+              onChangeText={text => setUsername(text)}
+              label="Username"
+            />
+          )}
+          {MODE_ITEMS[mode].password && (
+            <TextField
+              className={styles.loginInputContainer}
+              error={errors.password}
+              placeholder={MODE_ITEMS[mode].password}
+              value={password}
+              onChangeText={text => setPassword(text)}
+              type={invisible ? 'password' : 'text'}
+              label="Password"
+            />
+          )}
+          {MODE_ITEMS[mode].verificationCode && (
+            <TextField
+              className={styles.loginInputContainer}
+              error={errors.verification}
+              placeholder={MODE_ITEMS[mode].verificationCode}
+              value={verificationCode}
+              onChangeText={text => setVerificationCode(text)}
+              label="Verification Code"
+            />
+          )}
+          {mode === LoginPageMode.CUTOPIA_LOGIN && (
+            <div className={clsx(styles.forgotPwdRow, 'center-row')}>
+              <span
+                className={clsx(styles.label, styles.forgotPwdLabel)}
+                onClick={() =>
+                  router.push(MODE_PATH_LOOKUP[LoginPageMode.RESET_PASSWORD])
+                }
+              >
+                Forgot Password?
+              </span>
+            </div>
+          )}
+          <Button
+            variant="contained"
+            className={styles.loginBtn}
+            color="primary"
+            type="submit"
+            disabled={
+              loggingInCUtopia ||
+              creatingUser ||
+              verifying ||
+              sendingResetCode ||
+              resettingPassword
+            }
+          >
+            {loggingInCUtopia ||
             creatingUser ||
             verifying ||
             sendingResetCode ||
-            resettingPassword
-          }
-        >
-          {loggingInCUtopia ||
-          creatingUser ||
-          verifying ||
-          sendingResetCode ||
-          resettingPassword ? (
-            <CircularProgress size={24} />
-          ) : (
-            MODE_ITEMS[mode].button
-          )}
-        </Button>
-      </form>
-      {(mode === LoginPageMode.CUTOPIA_LOGIN ||
-        mode === LoginPageMode.CUTOPIA_SIGNUP) && (
-        <div className={clsx(styles.switchContainer, 'center-row')}>
-          <span className="caption">
-            {mode === LoginPageMode.CUTOPIA_LOGIN
-              ? "Don't have an account?"
-              : 'Already have an account?'}
-          </span>
-          <span
-            className={styles.label}
-            onClick={() =>
-              router.push(
-                MODE_PATH_LOOKUP[
-                  mode === LoginPageMode.CUTOPIA_LOGIN
-                    ? LoginPageMode.CUTOPIA_SIGNUP
-                    : LoginPageMode.CUTOPIA_LOGIN
-                ]
-              )
-            }
-          >
-            {mode === LoginPageMode.CUTOPIA_SIGNUP ? 'Log In' : 'Sign Up'}
-          </span>
-        </div>
-      )}
+            resettingPassword ? (
+              <CircularProgress size={24} />
+            ) : (
+              MODE_ITEMS[mode].button
+            )}
+          </Button>
+        </form>
+        {(mode === LoginPageMode.CUTOPIA_LOGIN ||
+          mode === LoginPageMode.CUTOPIA_SIGNUP) && (
+          <div className={clsx(styles.switchContainer, 'center-row')}>
+            <span className="caption">
+              {mode === LoginPageMode.CUTOPIA_LOGIN
+                ? "Don't have an account?"
+                : 'Already have an account?'}
+            </span>
+            <span
+              className={styles.label}
+              onClick={() =>
+                router.push(
+                  MODE_PATH_LOOKUP[
+                    mode === LoginPageMode.CUTOPIA_LOGIN
+                      ? LoginPageMode.CUTOPIA_SIGNUP
+                      : LoginPageMode.CUTOPIA_LOGIN
+                  ]
+                )
+              }
+            >
+              {mode === LoginPageMode.CUTOPIA_SIGNUP ? 'Log In' : 'Sign Up'}
+            </span>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
