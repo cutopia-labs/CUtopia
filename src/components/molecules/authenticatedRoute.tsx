@@ -33,6 +33,7 @@ const authenticatedRoute: HOC = (Component = null, options = {}) => {
               username: data.me.username,
             });
             user.updateStore('loginState', LoginState.LOGGED_IN);
+            setAuthState(AuthState.LOGGED_IN);
           } else {
             console.log(data);
             user.updateStore('loginState', LoginState.LOGGED_OUT);
