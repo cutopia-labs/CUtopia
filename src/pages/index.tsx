@@ -38,7 +38,7 @@ const LINKS = [
 ];
 
 const LinksCard: FC = () => (
-  <Card className="links-card">
+  <Card className={styles.linksCard}>
     <Typography>Links</Typography>
     {LINKS.map(link => (
       <Link
@@ -80,7 +80,7 @@ const HomePage: FC = () => {
       case 'Reviews':
         return <ReviewsList reviewIds={user.data?.reviewIds} />;
       case 'Planner':
-        return <PlannerTimetable className="home-page-timetable" />;
+        return <PlannerTimetable className={styles.homePageTimetable} />;
       default:
         return null;
     }
@@ -93,7 +93,7 @@ const HomePage: FC = () => {
         <LinksCard />
         {!isMobile && <Footer />}
       </div>
-      <div className="home-page-right grid-auto-row">
+      <div className={clsx(styles.homePageRight, 'grid-auto-row')}>
         <TabsContainer items={SELECTIONS} selected={tab} onSelect={setTab} />
         {renderTab()}
         {isMobile && <Footer />}

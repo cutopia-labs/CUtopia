@@ -57,7 +57,7 @@
   flex-direction: row;
   & > div {
     flex: 1;
-    .sub-title {
+    :global(.sub-title) {
       margin-bottom: 6px;
     }
   }

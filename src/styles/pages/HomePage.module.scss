@@ -1,53 +1,33 @@
 .homePage {
 	background-color: var(--background);
 	height: 100%;
-	.center-page {
-		padding: var(--page-margin);
-		background-color: var(--background);
-	}
-	.bottom-border-row {
-		min-height: 50px;
-		height: 50px;
-		margin-bottom: var(--card-padding);
-	}
 }
+
 .homePageLeft {
   height: 0;
 	width: 300px;
 	position: sticky;
 	top: calc(var(--header-height) + var(--page-margin));
 }
+
 .homePageRight {
 	flex: 1;
 	height: fit-content;
 }
-.bottom-border-item {
-	display: flex;
-	height: 48px;
-	padding: 0 var(--card-padding);
-	svg {
-		font-size: 16px;
-	}
-	:global(.caption) {
-		margin-left: 6px;
-		font-size: 14px;
-	}
-}
-.bottom-border-row .bottom-border-item:global(.active),
-.bottom-border-row .bottom-border-item:hover {
-	padding-top: 0;
-}
-.homePage-timetable {
+
+.homePageTimetable {
 	min-height: calc(100vh - 202px);
   margin-left: 0;
 }
-.links-card {
+
+.linksCard {
 	padding: var(--card-padding);
   row-gap: 8px;
-	.sub-title {
+	:global(.sub-title) {
 		margin-bottom: 8px;
 	}
 }
+
 .homeLinkContainer {
 	font-size: 14px;
 	&:hover {
@@ -57,14 +37,15 @@
 		margin-right: 8px;
 	}
 }
+
 @media only screen and (max-width: 1260px) {
   .homePage {
-    .center-page {
+    :global(.center-page) {
       flex-direction: column;
       overflow-y: visible;
       overflow-x: hidden;
     }
-    .tabs-row {
+    :global(.tabs-row) {
       height: auto;
       flex-shrink: 0;
       width: 100%;
@@ -72,13 +53,13 @@
       overflow-x: scroll;
     }
   }
-  .homePage-left {
+  .homePageLeft {
     position: relative;
     height: fit-content;
     width: 100%;
     top: 0;
   }
-  .homePage-right {
+  .homePageRight {
     width: 100%;
     margin-top: var(--card-padding);
     margin-left: 0;
