@@ -4,8 +4,6 @@ import { ArrowBack } from '@material-ui/icons';
 import * as Sentry from '@sentry/react';
 import { observer } from 'mobx-react-lite';
 import { useMutation } from '@apollo/client';
-
-import { useLocation } from 'react-use';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import styles from '../styles/pages/login.module.scss';
@@ -22,7 +20,7 @@ import { LoginPageMode } from '../types';
 import handleCompleted from '../helpers/handleCompleted';
 import { reverseMapping } from '../helpers';
 
-const INITIAL_MODE = LoginPageMode.CUTOPIA_SIGNUP;
+const INITIAL_MODE = LoginPageMode.CUTOPIA_LOGIN;
 const MODE_ITEMS = {
   [LoginPageMode.CUTOPIA_LOGIN]: {
     title: 'Log In',
@@ -63,15 +61,20 @@ const MODE_ITEMS = {
 };
 
 const PATH_MODE_LOOKUP = {
-  '/': INITIAL_MODE,
-  '/signup': LoginPageMode.CUTOPIA_SIGNUP,
-  '/login': LoginPageMode.CUTOPIA_LOGIN,
-  '/verify': LoginPageMode.VERIFY,
-  '/forgot': LoginPageMode.RESET_PASSWORD,
-  '/reset-pasword': LoginPageMode.RESET_PASSWORD_VERIFY,
+  'signup': LoginPageMode.CUTOPIA_SIGNUP,
+  'login': LoginPageMode.CUTOPIA_LOGIN,
+  'verify': LoginPageMode.VERIFY,
+  'forgot': LoginPageMode.RESET_PASSWORD,
+  'reset-pwd': LoginPageMode.RESET_PASSWORD_VERIFY,
 };
 
 const MODE_PATH_LOOKUP = reverseMapping(PATH_MODE_LOOKUP);
+
+const PREVIOUS_MODE_LOOKUP = {
+  [LoginPageMode.VERIFY]: LoginPageMode.CUTOPIA_LOGIN,
+  [LoginPageMode.RESET_PASSWORD]: LoginPageMode.CUTOPIA_LOGIN,
+  [LoginPageMode.RESET_PASSWORD_VERIFY]: LoginPageMode.RESET_PASSWORD,
+};
 
 const USER_ID_RULE = new RegExp('^[0-9]{10}$');
 const USERNAME_RULE = new RegExp(
@@ -92,9 +95,19 @@ type Props = {
   returnUrl?: string; // redirect to returnUrl after login
 };
 
+type QueryParams = {
+  mode: string;
+  username: string;
+  code: string;
+};
+
 const LoginPanel: FC<Props> = ({ className, returnUrl }) => {
-  const location = useLocation();
   const router = useRouter();
+  const {
+    mode: queryMode,
+    username: queryUsername,
+    code: queryCode,
+  } = router.query as QueryParams;
   const [mode, setMode] = useState(INITIAL_MODE);
   const [username, setUsername] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
@@ -112,42 +125,38 @@ const LoginPanel: FC<Props> = ({ className, returnUrl }) => {
   const view = useView();
 
   useEffect(() => {
-    const mode = PATH_MODE_LOOKUP[location.pathname];
-    if (!mode) {
-      if (location.pathname.startsWith('/account')) {
-        const subpath = location.pathname.substring(9);
-        const params = new URLSearchParams(location.search.substring(1));
-        const username = params.get('user');
-        const code = params.get('code');
-        setUsername(username);
-        setVerificationCode(code);
-        switch (subpath) {
-          case 'verify': {
-            verifyUser({
-              variables: {
-                username,
-                code,
-              },
-            });
-            setMode(LoginPageMode.VERIFY);
-            break;
-          }
-          case 'reset-password': {
-            setMode(LoginPageMode.RESET_PASSWORD_VERIFY);
-            break;
-          }
-        }
-        return;
-      }
-      router.push('/');
+    console.log(
+      `Query mode: ${queryMode}, username: ${queryUsername}, code: ${queryCode}`
+    );
+    const mode = queryMode ? PATH_MODE_LOOKUP[queryMode] : INITIAL_MODE;
+    if (queryUsername || queryCode) {
+      setUsername(queryUsername);
+      setVerificationCode(queryCode);
     }
-    setMode(mode || INITIAL_MODE);
-  }, [location.pathname]);
+    // Handle verify
+    if (mode === LoginPageMode.VERIFY) {
+      verifyUser({
+        variables: {
+          username: queryUsername,
+          code: queryCode,
+        },
+      });
+      setMode(LoginPageMode.VERIFY);
+      return;
+    }
+    setMode(mode);
+  }, [queryMode]);
 
   const [createUser, { loading: creatingUser, error: createError }] =
     useMutation(SEND_VERIFICATION, {
       onCompleted: handleCompleted(
-        () => router.push(MODE_PATH_LOOKUP[LoginPageMode.VERIFY]),
+        () =>
+          router.push({
+            pathname: '/login',
+            query: {
+              mode: MODE_PATH_LOOKUP[LoginPageMode.VERIFY],
+            },
+          }),
         {
           message: 'Verification code send to your CUHK email',
           view,
@@ -164,7 +173,12 @@ const LoginPanel: FC<Props> = ({ className, returnUrl }) => {
       }),
       onError: e => {
         view.handleError(e);
-        router.push('/verify');
+        router.push({
+          pathname: '/login',
+          query: {
+            mode: MODE_PATH_LOOKUP[LoginPageMode.VERIFY],
+          },
+        });
       },
     }
   );
@@ -172,13 +186,13 @@ const LoginPanel: FC<Props> = ({ className, returnUrl }) => {
     LOGIN_CUTOPIA,
     {
       onCompleted: handleCompleted(async data => {
-        await user.saveUser(username, data.login?.token, data.login?.me);
+        user.saveUser(username, data.login?.token, data.login?.me);
         if (data.login?.me?.username) {
           Sentry.setUser({
             username: data.login?.me?.username,
           });
         }
-        router.push('/');
+        router.push(returnUrl || '/review'); // return to prev page or review home page
       }),
       onError: view.handleError,
     }
@@ -188,7 +202,12 @@ const LoginPanel: FC<Props> = ({ className, returnUrl }) => {
     {
       onCompleted: handleCompleted(
         () =>
-          router.push(MODE_PATH_LOOKUP[LoginPageMode.RESET_PASSWORD_VERIFY]),
+          router.push({
+            pathname: '/login',
+            query: {
+              mode: MODE_PATH_LOOKUP[LoginPageMode.RESET_PASSWORD_VERIFY],
+            },
+          }),
         {
           message: 'Verification code has been send to your CUHK email',
           view,
@@ -201,7 +220,13 @@ const LoginPanel: FC<Props> = ({ className, returnUrl }) => {
     RESET_PASSWORD,
     {
       onCompleted: handleCompleted(
-        () => router.push(MODE_PATH_LOOKUP[LoginPageMode.CUTOPIA_LOGIN]),
+        () =>
+          router.push({
+            pathname: '/login',
+            query: {
+              mode: MODE_PATH_LOOKUP[LoginPageMode.CUTOPIA_LOGIN],
+            },
+          }),
         {
           view,
         }
@@ -319,18 +344,15 @@ const LoginPanel: FC<Props> = ({ className, returnUrl }) => {
   };
 
   const goBack = () => {
-    switch (mode) {
-      case LoginPageMode.VERIFY:
-        router.push(MODE_PATH_LOOKUP[LoginPageMode.CUTOPIA_LOGIN]);
-        break;
-      case LoginPageMode.RESET_PASSWORD:
-        router.push(MODE_PATH_LOOKUP[LoginPageMode.CUTOPIA_LOGIN]);
-        break;
-      case LoginPageMode.RESET_PASSWORD_VERIFY:
-        router.push(MODE_PATH_LOOKUP[LoginPageMode.RESET_PASSWORD]);
-        break;
-      default:
-        break;
+    const prevMode = PREVIOUS_MODE_LOOKUP[mode];
+    // If prev mode is a valid mode
+    if (prevMode >= 0) {
+      router.push({
+        pathname: '/login',
+        query: {
+          mode: MODE_PATH_LOOKUP[prevMode],
+        },
+      });
     }
   };
 
@@ -397,7 +419,12 @@ const LoginPanel: FC<Props> = ({ className, returnUrl }) => {
               <span
                 className={clsx(styles.label, styles.forgotPwdLabel)}
                 onClick={() =>
-                  router.push(MODE_PATH_LOOKUP[LoginPageMode.RESET_PASSWORD])
+                  router.push({
+                    pathname: '/login',
+                    query: {
+                      mode: MODE_PATH_LOOKUP[LoginPageMode.RESET_PASSWORD],
+                    },
+                  })
                 }
               >
                 Forgot Password?
@@ -439,13 +466,16 @@ const LoginPanel: FC<Props> = ({ className, returnUrl }) => {
             <span
               className={styles.label}
               onClick={() =>
-                router.push(
-                  MODE_PATH_LOOKUP[
-                    mode === LoginPageMode.CUTOPIA_LOGIN
-                      ? LoginPageMode.CUTOPIA_SIGNUP
-                      : LoginPageMode.CUTOPIA_LOGIN
-                  ]
-                )
+                router.push({
+                  pathname: 'login',
+                  query: {
+                    mode: MODE_PATH_LOOKUP[
+                      mode === LoginPageMode.CUTOPIA_LOGIN
+                        ? LoginPageMode.CUTOPIA_SIGNUP
+                        : LoginPageMode.CUTOPIA_LOGIN
+                    ],
+                  },
+                })
               }
             >
               {mode === LoginPageMode.CUTOPIA_SIGNUP ? 'Log In' : 'Sign Up'}
