@@ -33,7 +33,7 @@
   "scripts": {
     "start": "next start",
     "restart": "rm -f node_modules/.cache/.eslintcache && rm -f ./eslintcache && yarn start --reset-cache",
-    "build": "next build",
+    "build": "next build --profile",
     "test": "next test",
     "dev": "next dev",
     "eject": "next eject",
