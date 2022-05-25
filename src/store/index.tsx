@@ -14,16 +14,6 @@ export let plannerStore: PlannerStore;
 // enable static rendering ONLY on server
 enableStaticRendering(isServer);
 
-reaction(
-  () => ({
-    plannerCourses: plannerStore.plannerCourses?.map(course => course),
-    key: plannerStore.currentPlannerKey,
-  }),
-  ({ plannerCourses, key }) => {
-    plannerStore.updatePlanners(key, plannerCourses);
-  }
-);
-
 const UserContext = createContext(null as UserStore);
 const ViewContext = createContext(null as ViewStore);
 const PlannerContext = createContext(null as PlannerStore);
@@ -57,6 +47,15 @@ const StoreProvider: FC = ({ children }) => {
   useEffect(() => {
     userStore.init();
     plannerStore.init();
+    reaction(
+      () => ({
+        plannerCourses: plannerStore.plannerCourses?.map(course => course),
+        key: plannerStore.currentPlannerKey,
+      }),
+      ({ plannerCourses, key }) => {
+        plannerStore.updatePlanners(key, plannerCourses);
+      }
+    );
     setReady(true);
   }, []);
   if (!ready) return null;
