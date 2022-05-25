@@ -4,11 +4,11 @@
   flex-direction: column;
   margin: 10px 0;
   align-items: flex-end;
-  .searchPanel {
+  :global(.searchPanel) {
     --searchPanel-width: calc(var(--searchDropdown-width) - 2px); // 2px for border
     border-radius: 0;
     border-top: 0;
-    .searchInputContainer {
+    :global(.searchPanelInputContainer) {
       display: none;
     }
     :global(.MuiDivider-root) {
@@ -23,7 +23,7 @@
   .searchDropdown {
     --searchDropdown-width: 100vw;
     margin-left: auto;
-    .searchPanel {
+    :global(.searchPanel) {
       display: initial;
       top: 0;
     }

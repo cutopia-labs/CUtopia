@@ -23,12 +23,13 @@
   &::-webkit-scrollbar {
     display: none;
   }
-  .searchInputContainer {
+  .searchPanelInputContainer {
     background-color: var(--surface);
     padding: 6px 16px;
     position: sticky;
     top: 0;
     z-index: 2;
+    align-items: center;
   }
   :global(.list-item-container) {
     height: auto;
@@ -52,16 +53,15 @@
     width: fit-content;
   }
 }
-.searchInputContainer {
+.searchPanelInputContainer {
   .goBackBtn {
     margin-left: -4px;
-    margin-right: 20px;
     height: 30px;
     width: 30px;
   }
 }
-.searchIcon {
-  margin-right: 20px;
+.goBackBtn, .searchIcon {
+  margin-right: 6px;
 }
 .searchForm {
   display: flex;

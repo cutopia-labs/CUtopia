@@ -75,6 +75,7 @@ const SearchInput: FC<any> = ({
     <form
       className={clsx(
         styles.searchInputContainer,
+        '.searchInputContainer',
         isMobile && 'mobile',
         visible && styles.active
       )}

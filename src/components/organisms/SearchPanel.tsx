@@ -279,8 +279,13 @@ const SearchPanel: FC<SearchPanelProps> = ({
   }, [searchPayloadProp]);
 
   return (
-    <Card className={clsx(styles.searchPanel, style)}>
-      <div className="searchInputContainer row">
+    <Card className={clsx(styles.searchPanel, 'searchPanel', style)}>
+      <div
+        className={clsx(
+          styles.searchPanelInputContainer,
+          'searchPanelInputContainer row'
+        )}
+      >
         {(searchPayload &&
           (searchPayload.mode !== 'query' || searchPayload.text)) ||
         currentCourse ? (
@@ -323,7 +328,7 @@ const SearchPanel: FC<SearchPanelProps> = ({
       {!searchPayload && !currentCourse && (
         <Card title="Recents" inPlace>
           <ChipsRow
-            className="recentChips"
+            className={clsx(styles.recentChips)}
             chipClassName="chipFill"
             items={user.searchHistory.slice(0, 3)}
             onItemClick={(item, e) => {
