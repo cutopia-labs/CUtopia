@@ -3,7 +3,7 @@ import type { AppProps } from 'next/app';
 import { FC, useMemo } from 'react';
 import { ApolloProvider } from '@apollo/client';
 import { ThemeProvider } from '@material-ui/core/styles';
-import { Snackbar, useMediaQuery } from '@material-ui/core';
+import { useMediaQuery } from '@material-ui/core';
 import { Integrations } from '@sentry/tracing';
 import * as Sentry from '@sentry/react';
 
@@ -13,6 +13,7 @@ import { DARK_THEME, THEME } from '../constants/colors';
 import client from '../helpers/apollo-client';
 import Header from '../components/organisms/Header';
 import Dialog from '../components/templates/Dialog';
+import SnackBar from '../components/molecules/SnackBar';
 import { SentryConfigs } from '../constants/configs';
 
 // clear all console output
@@ -40,7 +41,7 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
         <ThemeProvider theme={theme}>
           <Header />
           <Component {...pageProps} />
-          <Snackbar />
+          <SnackBar />
           <Dialog />
         </ThemeProvider>
       </ApolloProvider>
