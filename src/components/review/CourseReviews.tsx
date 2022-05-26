@@ -220,7 +220,9 @@ const CourseReviews: FC<Props> = ({
           {reviewId ? (
             <>
               {`Showing 1 review`}
-              <span className="caption">{`(${courseInfo?.rating?.numReviews} total)`}</span>
+              <span className="caption">{`(${
+                courseInfo?.rating?.numReviews || ''
+              } total)`}</span>
             </>
           ) : (
             `${pluralize('review', courseInfo?.rating?.numReviews || 0, true)}`

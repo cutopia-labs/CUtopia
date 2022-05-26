@@ -9,6 +9,7 @@ import { useRouter } from 'next/router';
 import { GetStaticPaths } from 'next';
 import Head from 'next/head';
 import clsx from 'clsx';
+import { useQuery } from '@apollo/client';
 import styles from '../../styles/components/review/CoursePanel.module.scss';
 import { validCourse } from '../../helpers';
 import { useUser, useView } from '../../store';
@@ -23,6 +24,7 @@ import { CourseInfo } from '../../types';
 import Page from '../../components/atoms/Page';
 import authenticatedRoute from '../../components/molecules/authenticatedRoute';
 import ReviewEditPanel from '../../components/review/ReviewEditPanel';
+import { COURSE_INFO_QUERY } from '../../constants/queries';
 
 const MENU_ITEMS = [
   {
@@ -65,6 +67,20 @@ const CoursePanel: FC<Props> = ({ courseInfo }) => {
       },
     },
   ]);
+  // Fetch course info
+  const { data: courseRating, loading: courseRatingLoading } = useQuery(
+    COURSE_INFO_QUERY,
+    {
+      skip: !courseId,
+      ...(courseId && {
+        variables: {
+          courseId,
+        },
+      }),
+      fetchPolicy: 'cache-first',
+      onError: view.handleError,
+    }
+  );
 
   const fetchSimilarCourses = async courseId => {
     setSimilarCourse(await getSimilarCourses(courseId));
@@ -100,8 +116,11 @@ const CoursePanel: FC<Props> = ({ courseInfo }) => {
           <CourseReviews
             courseId={courseId}
             reviewId={rid}
-            courseInfo={courseInfo}
-            courseInfoLoading={false}
+            courseInfo={{
+              ...courseInfo,
+              ...courseRating?.courses[0],
+            }}
+            courseInfoLoading={courseRatingLoading}
             isMobile={isMobile}
             FABHidden={FABHidden}
             setFABHidden={setFABHidden}
