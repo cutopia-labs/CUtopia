@@ -4,7 +4,7 @@ import { FC } from 'react';
 const Document: FC = () => (
   <Html>
     <Head>
-      <link rel="icon" href="%PUBLIC_URL%/cutopia-logo.png" />
+      <link rel="icon" href="/cutopia-logo.png" />
       <meta name="theme-color" content="#000000" />
       <meta
         name="description"

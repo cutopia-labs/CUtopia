@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { FC } from 'react';
 import clsx from 'clsx';
 import Card from '../atoms/Card';
@@ -31,13 +30,12 @@ const ErrorCard: FC<ErrorCardProps> = ({ mode, inPlace = true, caption }) => (
     inPlace={inPlace}
     className={clsx(styles.errorCardContainer, 'center column')}
   >
-    <Image
+    <img
       src={CARD_ITEMS[mode]?.image}
       alt="Empty!"
       draggable={false}
       width="100%"
       height="100%"
-      layout="responsive"
     />
     <span className="caption">{caption || CARD_ITEMS[mode]?.caption}</span>
   </Card>
