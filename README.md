@@ -23,9 +23,6 @@ The key pair is used for JWT login token encryption and saved in lambda/graphql/
 sh tools/generate-jwtRS256.sh
 ```
 
-### (Optional) Retrieve latest course data
-You may retrieve the latest course data using [CUHK course scraper](https://github.com/mikezzb/cuhk-course-scraper), then put the data in lambda/graphql/src/data/courses.
-
 ## Development
 ### Compile scripts
 ```sh

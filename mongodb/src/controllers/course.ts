@@ -7,9 +7,9 @@ const courseCache = new NodeCache({
 });
 
 export const getCourseData = async input =>
-  withCache(courseCache, input.courseId, async () => {
-    return await Course.findById(input.courseId);
-  });
+  withCache(courseCache, input.courseId, async () =>
+    Course.findById(input.courseId)
+  );
 
 export type Review = {
   _id: string;

@@ -1,7 +1,6 @@
-import { getRanking } from 'mongodb';
+import { getCourseData, getRanking } from 'mongodb';
 import NodeCache from 'node-cache';
 
-import { courses } from '../data/courses';
 import withCache from '../utils/withCache';
 import { Resolvers } from '../schemas/types';
 
@@ -10,18 +9,27 @@ const rankingCache = new NodeCache({
   useClones: false,
 });
 
-export const getCourseById = courseId => courses[courseId];
-
 export const getRankingWithCache = async (field: string) =>
   withCache(rankingCache, `${field}-ranking`, async () => {
     const result = await getRanking(field);
-    // Remark: "sections" field in Course is null when querying with "rankedCourses"
-    // and it is not used when showing the ranked courses
-    const resData = result?.ranks?.map(rank => ({
-      courseId: rank._id,
-      course: getCourseById(rank._id),
-      [field]: rank.val,
-    }));
+    const resData = result?.ranks?.map(async rank => {
+      const courseId = rank._id;
+      const {
+        lecturers: reviewLecturers,
+        terms: reviewTerms,
+        rating,
+      } = (await getCourseData({ courseId })) || {};
+      return {
+        courseId,
+        course: {
+          courseId,
+          reviewLecturers,
+          reviewTerms,
+          rating,
+        },
+        [field]: rank.val,
+      };
+    });
     return resData;
   });
 

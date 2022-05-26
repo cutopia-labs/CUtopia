@@ -8,18 +8,14 @@ import typeDefs from './schemas';
 import resolvers from './resolvers';
 import createContext from './context';
 import schemaDirectives from './directives';
-import { applyMiddleware } from 'graphql-middleware';
-import middlewares from './middlewares';
 
 dotenv.config();
 
-let schema = makeExecutableSchema({
+const schema = makeExecutableSchema({
   typeDefs,
   resolvers,
   ...schemaDirectives,
-} as any);
-
-schema = applyMiddleware(schema, ...middlewares);
+});
 
 const server = new ApolloServer({
   schema,

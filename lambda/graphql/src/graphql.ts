@@ -1,6 +1,5 @@
 import { ApolloServer } from 'apollo-server-lambda';
 import { makeExecutableSchema } from '@graphql-tools/schema';
-import { applyMiddleware } from 'graphql-middleware';
 import express from 'express';
 import { connect } from 'mongodb';
 import dotenv from 'dotenv';
@@ -9,7 +8,6 @@ import typeDefs from './schemas';
 import resolvers from './resolvers';
 import schemaDirectives from './directives';
 import createContext from './context';
-import middlewares from './middlewares';
 import loggingPlugin from './plugins/logging';
 
 dotenv.config();
@@ -17,12 +15,11 @@ dotenv.config();
 // no need to await, mongoose buffers function calls internally
 connect(process.env.ATLAS_URI);
 
-let schema = makeExecutableSchema({
+const schema = makeExecutableSchema({
   typeDefs,
   resolvers,
   ...schemaDirectives,
-} as any);
-schema = applyMiddleware(schema, ...middlewares);
+});
 
 const server = new ApolloServer({
   schema,

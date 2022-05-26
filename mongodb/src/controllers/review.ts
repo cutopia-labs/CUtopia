@@ -48,11 +48,12 @@ export const createReview = async input => {
 };
 
 export const getReview = async input =>
-  withCache(reviewCache, `${input.courseId}_${input.createdAt}`, async () => {
-    return await Review.findById(
-      generateReviewId(input.courseId, input.createdAt)
-    ).exec();
-  });
+  withCache(
+    reviewCache,
+    generateReviewId(input.courseId, input.createdAt),
+    async () =>
+      Review.findById(generateReviewId(input.courseId, input.createdAt)).exec()
+  );
 
 export const voteReview = async input => {
   const { _id, username, vote } = input;
