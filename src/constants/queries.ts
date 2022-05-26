@@ -4,16 +4,6 @@ import { gql } from '@apollo/client';
 export const COURSE_INFO_QUERY = gql`
   query ($courseId: String!) {
     courses(filter: { requiredCourses: [$courseId] }) {
-      units
-      title
-      components
-      requirements
-      description
-      academic_group
-      assessments {
-        name
-        percentage
-      }
       rating {
         numReviews
         overall
