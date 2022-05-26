@@ -106,7 +106,10 @@ const CoursePanel: FC<Props> = ({ courseInfo }) => {
       <div className={clsx(styles.coursePanelContainer, 'grid-auto-row')}>
         <div className={clsx(styles.coursePanel, 'panel card')}>
           <CourseCard
-            courseInfo={courseInfo}
+            courseInfo={{
+              ...courseInfo,
+              ...courseRating?.courses[0],
+            }}
             loading={false}
             style={styles.courseCard}
           />
