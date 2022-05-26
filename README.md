@@ -2,6 +2,7 @@
 ### Install packages
 - [Node.js](https://nodejs.org/en/)
 - [Yarn](https://classic.yarnpkg.com/lang/en/docs/install/#debian-stable)
+- [Docker](https://www.docker.com/)
 - [MongoDB Compass](https://www.mongodb.com/products/compass)
 - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 
@@ -52,6 +53,9 @@ aws configure
 ```sh
 sh tools/deploy.sh cutopia-dev
 ```
+
+### Logs
+All messages logged (e.g. using console.log) can be found in [CloudWatch](https://aws.amazon.com/cloudwatch/). To view the messages, click "Log groups" in the sidebar, then click the desired log group (e.g. /aws/lambda/cutopia-dev-Lambda-{ID}-GraphQL-{ID}).
 
 ### Configure API Gateway
 Follow the steps below to enable access to static resources, i.e. instructors.json and course_list.json:

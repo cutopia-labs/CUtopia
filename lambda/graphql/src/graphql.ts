@@ -12,8 +12,10 @@ import loggingPlugin from './plugins/logging';
 
 dotenv.config();
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 // no need to await, mongoose buffers function calls internally
-connect(process.env.ATLAS_URI);
+connect(isProduction ? process.env.ATLAS_URI : process.env.ATLAS_DEV_URI);
 
 const schema = makeExecutableSchema({
   typeDefs,
@@ -24,7 +26,7 @@ const schema = makeExecutableSchema({
 const server = new ApolloServer({
   schema,
   context: createContext,
-  introspection: false,
+  introspection: !isProduction,
   plugins: [loggingPlugin],
 });
 

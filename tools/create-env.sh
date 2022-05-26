@@ -1,6 +1,5 @@
 # MongoDB env
 echo "\
-ATLAS_URI=Your MongoDB connection key
 ATLAS_DEV_URI=Your MongoDB connection key for running Jest test scripts\
 " > mongodb/.env
 
