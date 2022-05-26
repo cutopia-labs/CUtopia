@@ -50,12 +50,16 @@ aws configure
 ```
 
 ### Deploy to AWS
+When you run the script below for the first time, a few questions about the deployment config will be asked in console. Follow the default values for all settings, except setting the "GraphQL may not have authorization defined, Is this okay? [y/N]" to "y".
+
 ```sh
 sh tools/deploy.sh cutopia-dev
 ```
 
+Once the server is successfully deployed, open the [API Gateway console](https://aws.amazon.com/api-gateway/) and find the API ID of your server. Then, the GraphQL playground is available at https://{API ID}.execute-api.{server region}.amazonaws.com/Stage/graphql.
+
 ### Logs
-All messages logged (e.g. using console.log) can be found in [CloudWatch](https://aws.amazon.com/cloudwatch/). To view the messages, click "Log groups" in the sidebar, then click the desired log group (e.g. /aws/lambda/cutopia-dev-Lambda-{ID}-GraphQL-{ID}).
+All messages logged (e.g. using console.log in GraphQL) can be found in [CloudWatch](https://aws.amazon.com/cloudwatch/). To view the messages, click "Log groups" in the sidebar, then click the desired log group (e.g. /aws/lambda/cutopia-dev-Lambda-{ID}-GraphQL-{ID}).
 
 ### Configure API Gateway
 Follow the steps below to enable access to static resources, i.e. instructors.json and course_list.json:
