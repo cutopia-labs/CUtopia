@@ -45,13 +45,6 @@ Resources:
             Method: post
             Path: /graphql
           Type: Api
-      # temporary solution (NAT instance) for mongodb access
-      # until mongodb atlas serverless supports vpc peering
-      VpcConfig:
-        SecurityGroupIds:
-          - sg-03ed907b42c26a4ed
-        SubnetIds:
-          - subnet-0d9182dad41e3aafa
       Environment:
         Variables:
           UserSNSTopic: !Ref UserSNSTopic
@@ -107,11 +100,6 @@ Resources:
           Type: SNS
           Properties:
             Topic: !Ref UserSNSTopic
-      VpcConfig:
-        SecurityGroupIds:
-          - sg-03ed907b42c26a4ed
-        SubnetIds:
-          - subnet-0d9182dad41e3aafa
       Role: !GetAtt LambdaRole.Arn
       Runtime: nodejs14.x
       Timeout: 20
@@ -122,11 +110,6 @@ Resources:
       CodeUri: ./cron-update-ranking
       Handler: index.handler
       Role: !GetAtt LambdaRole.Arn
-      VpcConfig:
-        SecurityGroupIds:
-          - sg-03ed907b42c26a4ed
-        SubnetIds:
-          - subnet-0d9182dad41e3aafa
       Runtime: nodejs14.x
       Timeout: 20
       MemorySize: 512
@@ -136,11 +119,6 @@ Resources:
       CodeUri: ./cron-remove-timetable
       Handler: index.handler
       Role: !GetAtt LambdaRole.Arn
-      VpcConfig:
-        SecurityGroupIds:
-          - sg-03ed907b42c26a4ed
-        SubnetIds:
-          - subnet-0d9182dad41e3aafa
       Runtime: nodejs14.x
       Timeout: 20
       MemorySize: 512
@@ -150,11 +128,6 @@ Resources:
       CodeUri: ./emailer
       Handler: resend.handler
       Role: !GetAtt LambdaRole.Arn
-      VpcConfig:
-        SecurityGroupIds:
-          - sg-03ed907b42c26a4ed
-        SubnetIds:
-          - subnet-0d9182dad41e3aafa
       Runtime: nodejs14.x
       Timeout: 20
       MemorySize: 512
