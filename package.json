@@ -33,10 +33,10 @@
   "scripts": {
     "start": "next start",
     "restart": "rm -f node_modules/.cache/.eslintcache && rm -f ./eslintcache && yarn start --reset-cache",
-    "build": "next build && next export",
+    "build": "next build && next export -o build",
     "test": "next test",
-    "export": "next export",
-    "serve": "serve -s out",
+    "export": "next export -o build",
+    "serve": "serve -s build",
     "dev": "next dev",
     "eject": "next eject",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx src",
