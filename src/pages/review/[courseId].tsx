@@ -82,7 +82,7 @@ const CoursePanel: FC<Props> = ({ courseInfo }) => {
     }
   );
 
-  const fetchSimilarCourses = async courseId => {
+  const fetchSimilarCourses = async (courseId: string) => {
     setSimilarCourse(await getSimilarCourses(courseId));
   };
 
