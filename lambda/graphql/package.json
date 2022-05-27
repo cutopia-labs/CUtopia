@@ -17,17 +17,18 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "apollo-server-lambda": "^3.1.2",
-    "aws-sdk": "^2.983.0",
+    "@graphql-tools/load-files": "^6.5.3",
+    "apollo-server-lambda": "^3.8.1",
+    "aws-sdk": "^2.1144.0",
     "cutopia-types": "^1.0.23",
-    "dotenv": "^10.0.0",
-    "graphql": "^15.4.0",
-    "graphql-constraint-directive": "^2.1.1",
+    "dotenv": "^16.0.1",
+    "graphql": "^16.5.0",
+    "graphql-constraint-directive": "^3.1.1",
     "graphql-fields": "^2.0.3",
     "graphql-middleware": "^6.1.28",
-    "graphql-rate-limit": "^3.1.0",
-    "graphql-scalars": "^1.10.0",
-    "graphql-tools": "^7.0.2",
+    "graphql-rate-limit": "^3.3.0",
+    "graphql-scalars": "^1.17.0",
+    "graphql-tools": "^8.2.11",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "file:../../mongodb/lib",
     "node-cache": "^5.1.2"
@@ -38,14 +39,14 @@
     "yarn": ">=1.22.5"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "2.2.0",
-    "@graphql-codegen/typescript": "2.2.2",
-    "@graphql-codegen/typescript-document-nodes": "2.1.4",
-    "@graphql-codegen/typescript-resolvers": "^2.2.1",
-    "@types/jsonwebtoken": "^8.5.4",
-    "apollo-server-express": "^3.1.2",
-    "express": "^4.17.1",
-    "ts-node": "^10.2.0",
-    "webpack": "^5.50.0"
+    "@graphql-codegen/cli": "2.6.2",
+    "@graphql-codegen/typescript": "2.4.11",
+    "@graphql-codegen/typescript-document-nodes": "2.2.11",
+    "@graphql-codegen/typescript-resolvers": "^2.6.4",
+    "@types/jsonwebtoken": "^8.5.8",
+    "apollo-server-express": "^3.8.1",
+    "express": "^4.18.1",
+    "ts-node": "^10.8.0",
+    "webpack": "^5.72.1"
   }
 }

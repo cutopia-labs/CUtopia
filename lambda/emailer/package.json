@@ -9,10 +9,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "dotenv": "^10.0.0",
-    "googleapis": "^67.0.0",
+    "dotenv": "^16.0.1",
+    "googleapis": "^100.0.0",
     "mongodb": "file:../../mongodb/lib",
-    "nodemailer": "^6.4.17"
+    "nodemailer": "^6.7.5"
   },
   "engines": {
     "node": ">=v14.0.0",
