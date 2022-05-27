@@ -10,8 +10,8 @@ const Document: FC = () => (
         name="description"
         content="CUtopia is a course review and planning platform for CUHK students."
       />
-      <link rel="apple-touch-icon" href="%PUBLIC_URL%/cutopia-logo.png" />
-      <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+      <link rel="apple-touch-icon" href="/cutopia-logo.png" />
+      <link rel="manifest" href="/manifest.json" />
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" />
       <link
