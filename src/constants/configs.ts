@@ -50,3 +50,5 @@ export const CURRENT_TERM = '2021-22 Term 2';
 export const STATICS_EXPIRE_BEFORE = 1636530032000;
 
 export const TOKEN_EXPIRE_BEFORE = 1636518372000;
+
+export const LOGIN_REDIRECT_PAGE = '/review';

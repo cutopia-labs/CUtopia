@@ -19,6 +19,7 @@ import {
 import { LoginPageMode } from '../types';
 import handleCompleted from '../helpers/handleCompleted';
 import { reverseMapping } from '../helpers';
+import { LOGIN_REDIRECT_PAGE } from '../constants/configs';
 
 const INITIAL_MODE = LoginPageMode.CUTOPIA_LOGIN;
 const MODE_ITEMS = {
@@ -192,7 +193,7 @@ const LoginPanel: FC<Props> = ({ className, returnUrl }) => {
             username: data.login?.me?.username,
           });
         }
-        router.push(returnUrl || '/review'); // return to prev page or review home page
+        router.push(returnUrl || LOGIN_REDIRECT_PAGE); // return to prev page or review home page
       }),
       onError: view.handleError,
     }
