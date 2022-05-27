@@ -20,6 +20,10 @@ const regexEqual = (x, y) => {
 };
 
 module.exports = {
+  sassOptions: {
+    includePaths: [path.join(__dirname, 'styles')],
+  },
+  trailingSlash: true,
   webpack(config) {
     const sassRules = config.module.rules
       .find(rule => typeof rule.oneOf === 'object')
@@ -45,8 +49,5 @@ module.exports = {
     );
 
     return config;
-  },
-  sassOptions: {
-    includePaths: [path.join(__dirname, 'styles')],
   },
 };
