@@ -1,5 +1,5 @@
 type Mutation {
-  report(input: ReportInput!): String! @auth @rateLimit(window: "1m", max: 10)
+  report(input: ReportInput!): String! @auth @rateLimit(duration: 60, limit: 10)
 }
 
 input ReportInput {

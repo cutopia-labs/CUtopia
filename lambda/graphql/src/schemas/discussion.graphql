@@ -1,5 +1,5 @@
 type Mutation {
-  sendMessage(input: SendMessageInput!): SendMessageResult @auth @rateLimit(window: "1s", max: 5)
+  sendMessage(input: SendMessageInput!): SendMessageResult @auth @rateLimit(duration: 1, limit: 5)
 }
 
 type Query {

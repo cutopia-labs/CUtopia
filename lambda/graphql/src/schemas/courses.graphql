@@ -1,5 +1,5 @@
 type Query {
-  courses(filter: CourseFilter): [Course]! @rateLimit(window: "1m", max: 100)
+  courses(filter: CourseFilter): [Course]! @rateLimit(duration: 60, limit: 100)
 }
 
 input CourseFilter {

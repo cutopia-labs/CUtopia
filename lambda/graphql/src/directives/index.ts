@@ -1,20 +1,37 @@
-import AuthDirective from './auth-directive';
-import { createRateLimitDirective } from 'graphql-rate-limit';
-import { constraintDirective } from 'graphql-constraint-directive';
+import authDirective from './auth';
+import {
+  constraintDirective,
+  constraintDirectiveTypeDefs,
+} from 'graphql-constraint-directive';
+import {
+  defaultKeyGenerator,
+  rateLimitDirective,
+} from 'graphql-rate-limit-directive';
 import { ErrorCode } from 'cutopia-types/lib/codes';
+import { Context } from '../context';
 
-const RateLimitDirective = createRateLimitDirective({
-  identifyContext: context =>
-    context.user ? context.user.username : context.ip,
-  createError: () => new Error(ErrorCode.EXCEED_RATE_LIMIT.toString()),
-});
+const { authDirectiveTypeDefs, authDirectiveTransformer } =
+  authDirective('auth');
+// reference: https://github.com/ravangen/graphql-rate-limit/tree/master/examples/context
+const { rateLimitDirectiveTypeDefs, rateLimitDirectiveTransformer } =
+  rateLimitDirective({
+    keyGenerator: (...params) =>
+      `${(params[3] as Context).ip}:${defaultKeyGenerator(...params)}`,
+    onLimit: () => {
+      throw new Error(ErrorCode.EXCEED_RATE_LIMIT.toString());
+    },
+  });
 
-const directives = {
-  schemaDirectives: {
-    auth: AuthDirective,
-    rateLimit: RateLimitDirective,
-  },
-  schemaTransforms: [constraintDirective()],
+const directivesTypeDefs = [
+  authDirectiveTypeDefs,
+  rateLimitDirectiveTypeDefs,
+  constraintDirectiveTypeDefs,
+];
+const addDirectivesToSchema = schema => {
+  let newSchema = authDirectiveTransformer(schema);
+  newSchema = rateLimitDirectiveTransformer(schema);
+  newSchema = constraintDirective()(newSchema);
+  return newSchema;
 };
 
-export default directives;
+export { directivesTypeDefs, addDirectivesToSchema };

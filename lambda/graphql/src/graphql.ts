@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 
 import typeDefs from './schemas';
 import resolvers from './resolvers';
-import schemaDirectives from './directives';
+import { directivesTypeDefs, addDirectivesToSchema } from './directives';
 import createContext from './context';
 import loggingPlugin from './plugins/logging';
 
@@ -17,11 +17,11 @@ const isProduction = process.env.NODE_ENV === 'production';
 // no need to await, mongoose buffers function calls internally
 connect(isProduction ? process.env.ATLAS_URI : process.env.ATLAS_DEV_URI);
 
-const schema = makeExecutableSchema({
-  typeDefs,
+let schema = makeExecutableSchema({
+  typeDefs: [...directivesTypeDefs, ...typeDefs],
   resolvers,
-  ...schemaDirectives,
 });
+schema = addDirectivesToSchema(schema);
 
 const server = new ApolloServer({
   schema,

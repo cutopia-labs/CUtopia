@@ -26,12 +26,13 @@
     "graphql-constraint-directive": "^3.1.1",
     "graphql-fields": "^2.0.3",
     "graphql-middleware": "^6.1.28",
-    "graphql-rate-limit": "^3.3.0",
+    "graphql-rate-limit-directive": "^2.0.2",
     "graphql-scalars": "^1.17.0",
     "graphql-tools": "^8.2.11",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "file:../../mongodb/lib",
-    "node-cache": "^5.1.2"
+    "node-cache": "^5.1.2",
+    "rate-limiter-flexible": "^2.3.7"
   },
   "engines": {
     "node": ">=v14.0.0",

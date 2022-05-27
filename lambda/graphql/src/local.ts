@@ -7,15 +7,15 @@ import dotenv from 'dotenv';
 import typeDefs from './schemas';
 import resolvers from './resolvers';
 import createContext from './context';
-import schemaDirectives from './directives';
+import { directivesTypeDefs, addDirectivesToSchema } from './directives';
 
 dotenv.config();
 
-const schema = makeExecutableSchema({
-  typeDefs,
+let schema = makeExecutableSchema({
+  typeDefs: [...directivesTypeDefs, ...typeDefs],
   resolvers,
-  ...schemaDirectives,
 });
+schema = addDirectivesToSchema(schema);
 
 const server = new ApolloServer({
   schema,
