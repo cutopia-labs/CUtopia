@@ -52,7 +52,7 @@ export const ReviewsList: FC<ReviewsListProps> = ({ reviewIds }) => {
       {reviewIds?.map(id => {
         const [courseId, createdAt] = id.split('#');
         return (
-          <Link key={id} href={`/review/${courseId}/${createdAt}`}>
+          <Link key={id} href={`/review/${courseId}?rid=${createdAt}`}>
             <ListItem
               className={styles.homeCourseListItem}
               title={courseId}
