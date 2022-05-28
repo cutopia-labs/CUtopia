@@ -52,3 +52,21 @@ export const STATICS_EXPIRE_BEFORE = 1636530032000;
 export const TOKEN_EXPIRE_BEFORE = 1636518372000;
 
 export const LOGIN_REDIRECT_PAGE = '/review';
+
+export const PLANNER_COURSE_INFO_ATTRS = [
+  'units',
+  'title',
+  'academic_group',
+  'terms',
+  'requirements',
+];
+
+export const REVIEW_COURSE_INFO_ATTRS = [
+  'units',
+  'title',
+  'components',
+  'requirements',
+  'description',
+  'academic_group',
+  'assessments',
+];

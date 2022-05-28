@@ -50,6 +50,7 @@ const CoursePanel: FC<Props> = ({ courseInfo }) => {
     rid?: string; // review Id (query param)
     mode?: string; // i.e. 'edit' (query param)
   };
+  courseInfo.courseId = courseId;
   const isMobile = useMobileQuery();
   const view = useView();
   const user = useUser();
