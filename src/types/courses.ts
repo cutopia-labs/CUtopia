@@ -39,7 +39,7 @@ export interface Course {
 
 export interface CourseInfo extends Course {
   courseId: string;
-  sections?: [CourseSection]; // For planner use
+  sections?: CourseSection[]; // For planner use
 }
 
 export type CourseRating = {
@@ -53,7 +53,7 @@ export type CourseRating = {
 
 export type Term = {
   name: string;
-  course_sections?: [CourseSection];
+  course_sections?: CourseSection[];
 };
 
 export type PlannerCourse = {
