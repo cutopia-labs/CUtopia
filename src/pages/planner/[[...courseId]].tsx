@@ -4,11 +4,11 @@ import { observer } from 'mobx-react-lite';
 import Draggable from 'react-draggable';
 import { Fab } from '@material-ui/core';
 import '../../styles/pages/PlannerPage.module.scss';
-import { useTitle } from 'react-use';
 import { BsList } from 'react-icons/bs';
 import { AiTwotoneCalendar } from 'react-icons/ai';
 import { useRouter } from 'next/router';
 import { GetStaticPaths } from 'next';
+import Head from 'next/head';
 import SearchPanel from '../../components/organisms/SearchPanel';
 import Page from '../../components/atoms/Page';
 import PlannerTimetable from '../../components/planner/PlannerTimetable';
@@ -17,6 +17,7 @@ import PlannerCart from '../../components/planner/PlannerCart';
 import TimetableOverviewCard from '../../components/planner/TimetableOverviewCard';
 import useMobileQuery from '../../hooks/useMobileQuery';
 import authenticatedRoute from '../../components/molecules/authenticatedRoute';
+import { CourseInfo } from '../../types';
 
 enum PlannerMode {
   INITIAL,
@@ -69,14 +70,17 @@ const PlannerMobileFab: FC<PlannerMobileFabProps> = ({
   );
 };
 
-const PlannerPage: FC = () => {
+type Props = {
+  courseInfo?: CourseInfo;
+};
+
+const PlannerPage: FC<Props> = ({ courseInfo }) => {
   const router = useRouter();
   const isPlannerShare =
     router.pathname.includes('planner/share') && router.query.shareId;
-  useTitle('Course Planner - CUtopia');
   const isMobile = useMobileQuery();
 
-  console.log(`is Mobile ${isMobile}`);
+  console.log(`Props: ${courseInfo?.courseId}`);
 
   const [mode, setMode] = useState<PlannerMode>(
     isMobile ? PlannerMode.TIMETABLE : PlannerMode.INITIAL
@@ -118,6 +122,9 @@ const PlannerPage: FC = () => {
   return (
     <>
       <Page className="planner-page" center padding>
+        <Head>
+          <title>{'Course Planner - CUtopia'}</title>
+        </Head>
         {renderContent()}
       </Page>
       {isMobile && (
@@ -138,7 +145,7 @@ export const getStaticProps = async ({ params }) => {
   return {
     props: params?.courseId
       ? {
-          courseInfo: courses[params.courseId],
+          courseInfo: courses[params?.courseId[0]],
         }
       : {}, // For index, the props are empty
   };
