@@ -1,9 +1,6 @@
 const path = require('path');
 
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: true,
-};
 
 /**
  * Stolen from https://stackoverflow.com/questions/10776600/testing-for-equality-of-regular-expressions
@@ -23,7 +20,6 @@ module.exports = {
   sassOptions: {
     includePaths: [path.join(__dirname, 'styles')],
   },
-  trailingSlash: true,
   webpack(config) {
     const sassRules = config.module.rules
       .find(rule => typeof rule.oneOf === 'object')
