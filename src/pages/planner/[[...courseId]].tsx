@@ -15,6 +15,7 @@ import PlannerCart from '../../components/planner/PlannerCart';
 
 import TimetableOverviewCard from '../../components/planner/TimetableOverviewCard';
 import useMobileQuery from '../../hooks/useMobileQuery';
+import authenticatedRoute from '../../components/molecules/authenticatedRoute';
 
 enum PlannerMode {
   INITIAL,
@@ -130,4 +131,4 @@ const PlannerPage: FC = () => {
   );
 };
 
-export default observer(PlannerPage);
+export default observer(authenticatedRoute(PlannerPage));
