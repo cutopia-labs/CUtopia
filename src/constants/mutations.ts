@@ -52,7 +52,7 @@ export const RESET_PASSWORD = gql`
 export const ADD_REVIEW = gql`
   mutation (
     $anonymous: Boolean!
-    $courseId: String!
+    $courseId: CourseID!
     $title: String
     $term: String!
     $lecturer: String!
@@ -84,7 +84,7 @@ export const ADD_REVIEW = gql`
 export const EDIT_REVIEW = gql`
   mutation (
     $anonymous: Boolean!
-    $courseId: String!
+    $courseId: CourseID!
     $overall: overall_Int_min_0_max_4!
     $grading: ReviewDetailsInput!
     $teaching: ReviewDetailsInput!
@@ -150,7 +150,7 @@ export const REMOVE_TIMETABLE = gql`
 `;
 
 export const SEND_MESSAGE = gql`
-  mutation ($courseId: String!, $text: String!) {
+  mutation ($courseId: CourseID!, $text: String!) {
     sendMessage(input: { courseId: $courseId, text: $text }) {
       id
     }

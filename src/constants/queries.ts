@@ -2,7 +2,7 @@ import { gql } from '@apollo/client';
 
 // Course Information Query
 export const COURSE_INFO_QUERY = gql`
-  query ($courseId: String!) {
+  query ($courseId: CourseID!) {
     courses(filter: { requiredCourses: [$courseId] }) {
       rating {
         numReviews
@@ -21,7 +21,7 @@ export const COURSE_INFO_QUERY = gql`
 // Review Queries
 export const REVIEWS_QUERY = gql`
   query (
-    $courseId: String
+    $courseId: CourseID
     $sortBy: String
     $page: Int
     $lecturer: String
@@ -126,7 +126,7 @@ export const RECENT_REVIEWS_DIFFICULTY_QUERY = gql`
 // Add createdAt later
 
 export const GET_REVIEW = gql`
-  query ($courseId: String!, $createdAt: String!) {
+  query ($courseId: CourseID!, $createdAt: String!) {
     review(input: { courseId: $courseId, createdAt: $createdAt }) {
       courseId
       username
@@ -220,7 +220,7 @@ export const POPULAR_COURSES_QUERY = gql`
 `;
 
 export const COURSE_SECTIONS_QUERY = gql`
-  query ($courseId: String!, $term: String!) {
+  query ($courseId: CourseID!, $term: String!) {
     courses(filter: { requiredCourses: [$courseId], requiredTerm: $term }) {
       units
       title
@@ -281,7 +281,7 @@ export const GET_MY_DISCUSSIONS = gql`
 `;
 
 export const GET_DISCUSSIONS = gql`
-  query ($courseId: String!, $page: Int) {
+  query ($courseId: CourseID!, $page: Int) {
     discussion(input: { courseId: $courseId, page: $page }) {
       messages {
         text
