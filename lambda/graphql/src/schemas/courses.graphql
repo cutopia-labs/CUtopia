@@ -3,11 +3,11 @@ type Query {
 }
 
 input CourseFilter {
-  requiredCourses: [String]!
+  requiredCourses: [CourseID]!
 }
 
 type Course {
-  courseId: String!
+  courseId: CourseID!
   reviewLecturers: [String]
   reviewTerms: [String]
   rating: CourseRating

@@ -8,13 +8,13 @@ import { writeFileSync } from 'fs';
 
 const graphqlFiles = [
   'courses.graphql',
-  'directives.graphql',
+  'discussion.graphql',
   'ranking.graphql',
   'report.graphql',
   'reviews.graphql',
+  'scalars.graphql',
   'timetable.graphql',
   'user.graphql',
-  'discussion.graphql',
 ].map(relativePath => join(__dirname, relativePath));
 
 const typesArray = loadFilesSync(graphqlFiles);

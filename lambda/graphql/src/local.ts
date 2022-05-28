@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 
 import typeDefs from './schemas';
 import resolvers from './resolvers';
+import scalarResolvers from './scalars';
 import createContext from './context';
 import { directivesTypeDefs, addDirectivesToSchema } from './directives';
 
@@ -13,7 +14,10 @@ dotenv.config();
 
 let schema = makeExecutableSchema({
   typeDefs: [...directivesTypeDefs, ...typeDefs],
-  resolvers,
+  resolvers: {
+    ...scalarResolvers,
+    ...resolvers,
+  },
 });
 schema = addDirectivesToSchema(schema);
 

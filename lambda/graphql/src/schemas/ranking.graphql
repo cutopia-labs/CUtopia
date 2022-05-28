@@ -11,7 +11,7 @@ input RankingFilter {
 }
 
 type RankedCourse {
-  courseId: String!
+  courseId: CourseID!
   course: Course!
   numReviews: Int
   overall: Float

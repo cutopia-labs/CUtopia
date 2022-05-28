@@ -7,13 +7,11 @@ import {
 } from 'mongodb';
 import { VoteAction } from 'cutopia-types/lib/codes';
 
-import { verifyCourseId } from '../utils';
 import { Resolvers } from '../schemas/types';
 
 const reviewsResolver: Resolvers = {
   Mutation: {
     createReview: async (parent, { input }, { user }) => {
-      verifyCourseId(input.courseId);
       const { username } = user;
       const { createdAt } = await createReview({
         ...input,
@@ -31,7 +29,6 @@ const reviewsResolver: Resolvers = {
       });
     },
     editReview: async (parent, { input }, { user }) => {
-      verifyCourseId(input.courseId);
       const { username } = user;
       await editReview({
         ...input,
@@ -40,9 +37,7 @@ const reviewsResolver: Resolvers = {
     },
   },
   Review: {
-    username: ({ username, anonymous }) => {
-      return anonymous ? 'Anonymous' : username;
-    },
+    username: ({ username, anonymous }) => (anonymous ? 'Anonymous' : username),
     myVote: ({ upvoteUserIds, downvoteUserIds }, args, { user }) => {
       if (user) {
         const { username } = user;
@@ -57,18 +52,8 @@ const reviewsResolver: Resolvers = {
     },
   },
   Query: {
-    reviews: async (parent, { input }) => {
-      /* TODO: Not sure check or not, cuz rare + add lambda billed time?
-      if (input.courseId) {
-        verifyCourseId(input.courseId);
-      }
-      */
-      return await getReviews(input);
-    },
-    review: async (parent, { input }) => {
-      verifyCourseId(input.courseId);
-      return await getReview(input);
-    },
+    reviews: async (parent, { input }) => getReviews(input),
+    review: async (parent, { input }) => getReview(input),
   },
   ReviewDetails: {},
 };

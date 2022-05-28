@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 
 import typeDefs from './schemas';
 import resolvers from './resolvers';
+import scalarResolvers from './scalars';
 import { directivesTypeDefs, addDirectivesToSchema } from './directives';
 import createContext from './context';
 import loggingPlugin from './plugins/logging';
@@ -19,7 +20,10 @@ connect(isProduction ? process.env.ATLAS_URI : process.env.ATLAS_DEV_URI);
 
 let schema = makeExecutableSchema({
   typeDefs: [...directivesTypeDefs, ...typeDefs],
-  resolvers,
+  resolvers: {
+    ...scalarResolvers,
+    ...resolvers,
+  },
 });
 schema = addDirectivesToSchema(schema);
 

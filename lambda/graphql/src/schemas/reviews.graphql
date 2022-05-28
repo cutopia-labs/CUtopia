@@ -16,7 +16,7 @@ type ReviewsResult {
 
 input ReviewsFilter {
   "Set courseId to null to get the latest reviews"
-  courseId: String
+  courseId: CourseID
   "Filter by lecturer and term"
   lecturer: String
   term: String
@@ -27,14 +27,14 @@ input ReviewsFilter {
 }
 
 input ReviewFilter {
-  courseId: String!
+  courseId: CourseID!
   createdAt: String!
 }
 
 input CreateReviewInput {
   anonymous: Boolean!
   title: String
-  courseId: String!
+  courseId: CourseID!
   term: String!
   lecturer: String!
   overall: Int! @constraint(min: 0, max: 4)
@@ -50,7 +50,7 @@ type CreateReviewResult {
 
 input EditReviewInput {
   title: String
-  courseId: String!
+  courseId: CourseID!
   anonymous: Boolean
   overall: Int @constraint(min: 0, max: 4)
   grading: ReviewDetailsInput
@@ -75,7 +75,7 @@ input VoteReviewInput {
 
 type Review {
   _id: String!
-  courseId: String!
+  courseId: CourseID!
   username: String!
   anonymous: Boolean!
   title: String

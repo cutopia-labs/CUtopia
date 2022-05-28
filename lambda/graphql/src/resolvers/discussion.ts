@@ -1,11 +1,9 @@
 import { getDiscussion, sendDiscussionMessage } from 'mongodb';
 import { Resolvers } from '../schemas/types';
-import { verifyCourseId } from '../utils';
 
 const discussionResolver: Resolvers = {
   Mutation: {
     sendMessage: async (parent, { input }, { user }) => {
-      // verifyCourseId(input.courseId); TODO: NOT SURE CHECK OR NOT
       const { username } = user;
       const id = await sendDiscussionMessage({
         ...input,
@@ -15,10 +13,7 @@ const discussionResolver: Resolvers = {
     },
   },
   Query: {
-    discussion: async (parent, { input }) => {
-      verifyCourseId(input.courseId);
-      return await getDiscussion(input);
-    },
+    discussion: async (parent, { input }) => getDiscussion(input),
   },
 };
 
