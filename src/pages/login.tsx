@@ -135,15 +135,13 @@ const LoginPanel: FC<Props> = ({ className, returnUrl }) => {
       setVerificationCode(queryCode);
     }
     // Handle verify
-    if (mode === LoginPageMode.VERIFY) {
+    if (mode === LoginPageMode.VERIFY && queryUsername && queryCode) {
       verifyUser({
         variables: {
           username: queryUsername,
           code: queryCode,
         },
       });
-      setMode(LoginPageMode.VERIFY);
-      return;
     }
     setMode(mode);
   }, [queryMode]);
