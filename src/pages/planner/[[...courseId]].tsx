@@ -8,6 +8,7 @@ import { useTitle } from 'react-use';
 import { BsList } from 'react-icons/bs';
 import { AiTwotoneCalendar } from 'react-icons/ai';
 import { useRouter } from 'next/router';
+import { GetStaticPaths } from 'next';
 import SearchPanel from '../../components/organisms/SearchPanel';
 import Page from '../../components/atoms/Page';
 import PlannerTimetable from '../../components/planner/PlannerTimetable';
@@ -129,6 +130,43 @@ const PlannerPage: FC = () => {
       )}
     </>
   );
+};
+
+// SSR to get course info
+export const getStaticProps = async ({ params }) => {
+  const { courses } = await import('../../../data/coursesLoader');
+  return {
+    props: params?.courseId
+      ? {
+          courseInfo: courses[params.courseId],
+        }
+      : {}, // For index, the props are empty
+  };
+};
+
+// Get all valid paths to prerender (i.e. valid courseId)
+export const getStaticPaths: GetStaticPaths<any> = async () => {
+  const courses = Object.values(await import('../../../data/courses.json'));
+  const paths = [
+    {
+      // the index path
+      params: {
+        courseId: false,
+      },
+    },
+    // the courses path
+    ...[...courses]
+      .filter(cid => typeof cid === 'string')
+      .map(cid => ({
+        params: {
+          courseId: [cid],
+        },
+      })),
+  ];
+  return {
+    paths,
+    fallback: false,
+  };
 };
 
 export default observer(authenticatedRoute(PlannerPage));
