@@ -40,7 +40,7 @@ export const rankCourses = async () => {
         difficulty: rankField('difficulty'),
         teaching: rankField('teaching'),
         overall: rankField('overall'),
-      },
+      } as any,
     },
     // $facet does not support $merge in nested pipeline and seems
     // splitting one document into multiples with different fields is not feasible ($unwind does not help)

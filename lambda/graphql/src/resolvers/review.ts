@@ -17,9 +17,7 @@ const reviewsResolver: Resolvers = {
         ...input,
         username,
       });
-      return {
-        createdAt,
-      };
+      return { createdAt };
     },
     voteReview: async (parent, { input }, { user }) => {
       const { username } = user;

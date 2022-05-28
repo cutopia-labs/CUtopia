@@ -1,12 +1,11 @@
 import { getCourseData } from 'mongodb';
 
-import processRating from '../utils/processRating';
 import { Resolvers } from '../schemas/types';
 
 const coursesResolver: Resolvers = {
   Query: {
     courses: (parent, { filter }) => {
-      const { requiredCourses = [] } = { ...filter };
+      const { requiredCourses } = filter;
       return requiredCourses.map(async courseId => {
         const {
           lecturers: reviewLecturers,
@@ -23,7 +22,19 @@ const coursesResolver: Resolvers = {
     },
   },
   Course: {
-    rating: async ({ rating }) => (rating ? processRating(rating) : null),
+    rating: async ({ rating }) => {
+      if (!rating) {
+        return null;
+      }
+      return {
+        numReviews: rating.numReviews,
+        overall: rating.overall / rating.numReviews,
+        grading: rating.grading / rating.numReviews,
+        content: rating.content / rating.numReviews,
+        teaching: rating.teaching / rating.numReviews,
+        difficulty: rating.difficulty / rating.numReviews,
+      };
+    },
   },
 };
 

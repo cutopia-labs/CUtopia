@@ -28,9 +28,7 @@ const userResolver: Resolvers = {
     },
   },
   User: {
-    level: ({ exp }) => {
-      return Math.floor(exp / 5);
-    },
+    level: ({ exp }) => Math.floor(exp / 5),
   },
   Mutation: {
     createUser: async (parent, { input }) => {
@@ -43,9 +41,7 @@ const userResolver: Resolvers = {
         SID,
       });
     },
-    verifyUser: async (parent, { input }) => {
-      await verifyUser(input);
-    },
+    verifyUser: async (parent, { input }) => verifyUser(input),
     login: async (parent, { input }) => {
       const user = await login(input);
       const token = sign({ username: input.username, password: user.password });
@@ -63,9 +59,7 @@ const userResolver: Resolvers = {
         SID,
       });
     },
-    resetPassword: async (parent, { input }) => {
-      await resetPassword(input);
-    },
+    resetPassword: async (parent, { input }) => resetPassword(input),
   },
 };
 
