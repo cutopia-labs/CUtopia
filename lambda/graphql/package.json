@@ -18,6 +18,7 @@
   "license": "ISC",
   "dependencies": {
     "@graphql-tools/load-files": "^6.5.3",
+    "@graphql-tools/utils": "^8.6.12",
     "apollo-server-lambda": "^3.8.1",
     "aws-sdk": "^2.1144.0",
     "cutopia-types": "^1.0.23",
