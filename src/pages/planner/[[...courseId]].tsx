@@ -17,7 +17,12 @@ import PlannerCart from '../../components/planner/PlannerCart';
 import TimetableOverviewCard from '../../components/planner/TimetableOverviewCard';
 import useMobileQuery from '../../hooks/useMobileQuery';
 import authenticatedRoute from '../../components/molecules/authenticatedRoute';
-import { CourseInfo } from '../../types';
+import { CourseInfo, CourseSection } from '../../types';
+import { getAttrs } from '../../helpers';
+import {
+  CURRENT_TERM,
+  PLANNER_COURSE_INFO_ATTRS,
+} from '../../constants/configs';
 
 enum PlannerMode {
   INITIAL,
@@ -76,10 +81,13 @@ type Props = {
 
 const PlannerPage: FC<Props> = ({ courseInfo }) => {
   const router = useRouter();
+  const { courseId: queryCourseId } = router.query;
   const isPlannerShare =
     router.pathname.includes('planner/share') && router.query.shareId;
   const isMobile = useMobileQuery();
-
+  if (courseInfo) {
+    courseInfo.courseId = queryCourseId[0];
+  }
   console.log(`Props: ${courseInfo?.courseId}`);
 
   const [mode, setMode] = useState<PlannerMode>(
@@ -91,7 +99,7 @@ const PlannerPage: FC<Props> = ({ courseInfo }) => {
       case PlannerMode.INITIAL:
         return (
           <>
-            <SearchPanel />
+            <SearchPanel courseInfo={courseInfo} />
             <PlannerTimetable />
             <div className="plannerCart-column secondary-column">
               <TimetableOverviewCard />
@@ -141,13 +149,30 @@ const PlannerPage: FC<Props> = ({ courseInfo }) => {
 
 // SSR to get course info
 export const getStaticProps = async ({ params }) => {
+  if (!params?.courseId) return { props: {} };
   const { courses } = await import('../../../data/coursesLoader');
+  /* Pre Processing */
+  // Get only selected attrs
+  const courseInfo = getAttrs(
+    courses[params.courseId[0]],
+    ...PLANNER_COURSE_INFO_ATTRS
+  ) as CourseInfo;
+  // Get only current term's sections
+  courseInfo.sections =
+    CURRENT_TERM in courseInfo.terms
+      ? (Object.entries(courseInfo.terms[CURRENT_TERM]).map(
+          ([k, v]: [k: string, v: Record<string, any>]) => ({
+            name: k,
+            ...v,
+          })
+        ) as CourseSection[])
+      : null;
+  // Remove terms info to save space
+  delete courseInfo.terms;
   return {
-    props: params?.courseId
-      ? {
-          courseInfo: courses[params?.courseId[0]],
-        }
-      : {}, // For index, the props are empty
+    props: {
+      courseInfo,
+    },
   };
 };
 
