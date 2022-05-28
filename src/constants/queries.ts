@@ -219,13 +219,9 @@ export const POPULAR_COURSES_QUERY = gql`
   }
 `;
 
-export const COURSE_SECTIONS_QUERY = gql`
-  query ($courseId: CourseID!, $term: String!) {
-    courses(filter: { requiredCourses: [$courseId], requiredTerm: $term }) {
-      units
-      title
-      academic_group
-      requirements
+export const COURSE_RATING_QUERY = gql`
+  query ($courseId: CourseID!) {
+    courses(filter: { requiredCourses: [$courseId] }) {
       rating {
         numReviews
         overall
@@ -233,14 +229,6 @@ export const COURSE_SECTIONS_QUERY = gql`
         content
         difficulty
         teaching
-      }
-      sections {
-        name
-        startTimes
-        endTimes
-        days
-        locations
-        instructors
       }
     }
   }

@@ -17,7 +17,6 @@ import Link from '../molecules/Link';
 import useMobileQuery from '../../hooks/useMobileQuery';
 import Section from '../molecules/Section';
 import SectionText from '../molecules/SectionText';
-import { CourseCardSkeleton } from '../templates/Skeleton';
 import CourseSections from './CourseSections';
 import GradeRow from './GradeRow';
 
@@ -123,10 +122,6 @@ const CourseCard: FC<CourseCardProps> = ({
   const user = useUser();
   const isMobile = useMobileQuery();
   const view = useView();
-
-  if (loading) {
-    return CourseCardSkeleton;
-  }
 
   const isFavorited = user.favoriteCourses.some(
     course => course.courseId === courseInfo.courseId

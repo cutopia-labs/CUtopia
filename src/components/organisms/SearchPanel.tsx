@@ -26,7 +26,7 @@ import styles from '../../styles/components/organisms/SearchPanel.module.scss';
 import ListItem from '../molecules/ListItem';
 import COURSE_CODES from '../../constants/courseCodes';
 import { useView, useUser } from '../../store';
-import { COURSE_SECTIONS_QUERY } from '../../constants/queries';
+import { COURSE_RATING_QUERY } from '../../constants/queries';
 import { validCourse } from '../../helpers';
 import Loading from '../atoms/Loading';
 import {
@@ -34,6 +34,7 @@ import {
   MAX_SEARCH_RESULT_LENGTH,
 } from '../../constants/configs';
 import {
+  CourseInfo,
   CourseSearchItem,
   ErrorCardMode,
   SearchMode,
@@ -199,6 +200,7 @@ export type SearchPanelProps = {
   setSearchPayloadProp?: (payload: SearchPayload) => void;
   onCoursePress?: (...args: any[]) => any;
   skipDefaultAction?: boolean;
+  courseInfo?: CourseInfo;
   style?: string;
 };
 
@@ -207,6 +209,7 @@ const SearchPanel: FC<SearchPanelProps> = ({
   setSearchPayloadProp,
   onCoursePress,
   skipDefaultAction,
+  courseInfo,
   style,
 }) => {
   const [searchPayload, setSearchPayloadState] = useState<SearchPayload | null>(
@@ -227,22 +230,22 @@ const SearchPanel: FC<SearchPanelProps> = ({
   }, [currentCourse]);
 
   useEffect(() => {
-    const courseId = router.query?.courseId;
+    const courseId = courseInfo?.courseId;
     console.log(`Got ID ${courseId}`);
-    if (courseId && validCourse(courseId[0]) && (!onCoursePress || isMobile)) {
+    if (courseId && validCourse(courseId) && (!onCoursePress || isMobile)) {
       console.log(`Planner Current course ${courseId}`);
-      setCurrentCourse(courseId[0]); // { "courseId": ["param1"] } // `GET /planner/courseId` (single-element array)
+      setCurrentCourse(courseId);
     } else {
       setCurrentCourse(null);
     }
-  }, [router.query?.courseId, isMobile]);
+  }, [courseInfo?.courseId, isMobile]);
 
   // Fetch course info
   const {
-    data: courseInfo,
-    loading: courseInfoLoading,
+    data: courseRating,
+    loading: courseRatingLoading,
     error,
-  } = useQuery(COURSE_SECTIONS_QUERY, {
+  } = useQuery(COURSE_RATING_QUERY, {
     skip: !currentCourse || !validCourse(currentCourse),
     ...(currentCourse && {
       variables: {
@@ -346,19 +349,14 @@ const SearchPanel: FC<SearchPanelProps> = ({
         </Card>
       )}
       {Boolean(currentCourse) && (
-        <>
-          {courseInfo && !courseInfoLoading ? (
-            <CourseCard
-              courseInfo={{
-                ...courseInfo.courses[0],
-                courseId: currentCourse,
-              }}
-              concise
-            />
-          ) : (
-            <Loading />
-          )}
-        </>
+        <CourseCard
+          courseInfo={{
+            ...courseInfo,
+            ...courseRating?.courses[0],
+          }}
+          concise
+          loading={courseRatingLoading}
+        />
       )}
       {!currentCourse &&
         (searchPayload?.mode &&
