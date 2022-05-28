@@ -39,6 +39,7 @@ export interface Course {
 
 export interface CourseInfo extends Course {
   courseId: string;
+  sections?: [CourseSection]; // For planner use
 }
 
 export type CourseRating = {

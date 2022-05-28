@@ -90,16 +90,9 @@ type CourseSectionsProps = {
 };
 
 const CourseSections: FC<CourseSectionsProps> = ({
-  courseInfo: { terms: courseTerms, courseId, title, units },
+  courseInfo: { sections: courseSections, courseId, title, units },
 }) => {
-  const currentTermIndex = (courseTerms || []).findIndex(
-    term => term.name === CURRENT_TERM
-  );
-  if (
-    !courseTerms?.length ||
-    currentTermIndex === -1 ||
-    !courseTerms[currentTermIndex]?.course_sections
-  ) {
+  if (!courseSections) {
     return <ErrorCard mode={ErrorCardMode.NULL} />;
   }
   const planner = usePlanner();
@@ -134,10 +127,8 @@ const CourseSections: FC<CourseSectionsProps> = ({
   return (
     <div className={styles.courseSections}>
       <div className={styles.courseSectionWrapper}>
-        <span
-          className={styles.courseTermLabel}
-        >{`${courseTerms[currentTermIndex].name}`}</span>
-        {courseTerms[currentTermIndex].course_sections.map(section => (
+        <span className={styles.courseTermLabel}>{`${CURRENT_TERM}`}</span>
+        {courseSections.map(section => (
           <SectionCard
             key={section.name}
             section={section}

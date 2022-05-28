@@ -234,16 +234,13 @@ export const COURSE_SECTIONS_QUERY = gql`
         difficulty
         teaching
       }
-      terms {
+      sections {
         name
-        course_sections {
-          name
-          startTimes
-          endTimes
-          days
-          locations
-          instructors
-        }
+        startTimes
+        endTimes
+        days
+        locations
+        instructors
       }
     }
   }
