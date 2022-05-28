@@ -11,7 +11,7 @@ import Head from 'next/head';
 import clsx from 'clsx';
 import { useQuery } from '@apollo/client';
 import styles from '../../styles/components/review/CoursePanel.module.scss';
-import { validCourse } from '../../helpers';
+import { getAttrs, validCourse } from '../../helpers';
 import { useUser, useView } from '../../store';
 import useMobileQuery from '../../hooks/useMobileQuery';
 import { getSimilarCourses } from '../../helpers/getCourses';
@@ -25,6 +25,7 @@ import Page from '../../components/atoms/Page';
 import authenticatedRoute from '../../components/molecules/authenticatedRoute';
 import ReviewEditPanel from '../../components/review/ReviewEditPanel';
 import { COURSE_INFO_QUERY } from '../../constants/queries';
+import { REVIEW_COURSE_INFO_ATTRS } from '../../constants/configs';
 
 const MENU_ITEMS = [
   {
@@ -167,7 +168,10 @@ export const getStaticProps = async ({ params }) => {
   const { courses } = await import('../../../data/coursesLoader');
   return {
     props: {
-      courseInfo: courses[params.courseId],
+      courseInfo: getAttrs(
+        courses[params.courseId],
+        ...REVIEW_COURSE_INFO_ATTRS
+      ),
     },
   };
 };

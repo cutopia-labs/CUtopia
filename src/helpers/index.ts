@@ -63,3 +63,8 @@ export const getTokenExpireDate = (
 export const getToken = () => getStoreData('token')?.token;
 
 export const isServer = typeof window === 'undefined';
+
+export const getAttrs = (obj: Record<string, any>, ...attrs: string[]) =>
+  Object.fromEntries(
+    attrs.filter(attr => attr in obj).map(attr => [attr, obj[attr]])
+  );
