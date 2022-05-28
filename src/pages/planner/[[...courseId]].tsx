@@ -85,7 +85,7 @@ const PlannerPage: FC<Props> = ({ courseInfo }) => {
   const isPlannerShare =
     router.pathname.includes('planner/share') && router.query.shareId;
   const isMobile = useMobileQuery();
-  if (courseInfo) {
+  if (queryCourseId && courseInfo) {
     courseInfo.courseId = queryCourseId[0];
   }
   console.log(`Props: ${courseInfo?.courseId}`);

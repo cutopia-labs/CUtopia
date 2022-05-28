@@ -168,6 +168,7 @@ const TimetableOverviewCard: FC = () => {
     },
     onError: view.handleError,
   });
+  console.log('Remote being mounted!!!');
   useEffect(() => {
     if (expanded && !userTimetableLoading && !userTimetable) {
       getUserTimetable();

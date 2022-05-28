@@ -264,7 +264,7 @@ const SearchPanel: FC<SearchPanelProps> = ({
           offerredOnly: Boolean(isPlanner),
         }
       : null;
-    if (isPlanner && router.query?.courseId) {
+    if (courseInfo?.courseId) {
       router.push('/planner');
     }
     setSearchPayloadState(newPayload);
@@ -337,11 +337,7 @@ const SearchPanel: FC<SearchPanelProps> = ({
             onItemClick={(item, e) => {
               e.stopPropagation();
               if (!skipDefaultAction) {
-                router.push(
-                  `/${isPlanner ? 'planner' : 'review'}/${item}`,
-                  undefined,
-                  { shallow: true }
-                );
+                router.push(`/${isPlanner ? 'planner' : 'review'}/${item}`);
               }
               (!isMobile || !isPlanner) && onCoursePress && onCoursePress(item);
             }}
@@ -368,10 +364,8 @@ const SearchPanel: FC<SearchPanelProps> = ({
               onClick={courseId => {
                 isPlanner && user.saveHistory(courseId);
                 if (!skipDefaultAction) {
-                  router.push(
-                    `/${isPlanner ? 'planner' : 'review'}/${courseId}`,
-                    undefined,
-                    { shallow: isPlanner } // Do not trigger refresh (TODO: reload reviews)
+                  router.replace(
+                    `/${isPlanner ? 'planner' : 'review'}/${courseId}`
                   );
                 }
                 onCoursePress &&
