@@ -7,7 +7,6 @@ import '../../styles/pages/PlannerPage.module.scss';
 import { BsList } from 'react-icons/bs';
 import { AiTwotoneCalendar } from 'react-icons/ai';
 import { useRouter } from 'next/router';
-import { GetStaticPaths } from 'next';
 import Head from 'next/head';
 import SearchPanel from '../../components/organisms/SearchPanel';
 import Page from '../../components/atoms/Page';
@@ -17,12 +16,6 @@ import PlannerCart from '../../components/planner/PlannerCart';
 import TimetableOverviewCard from '../../components/planner/TimetableOverviewCard';
 import useMobileQuery from '../../hooks/useMobileQuery';
 import authenticatedRoute from '../../components/molecules/authenticatedRoute';
-import { CourseInfo, CourseSection } from '../../types';
-import { getAttrs } from '../../helpers';
-import {
-  CURRENT_TERM,
-  PLANNER_COURSE_INFO_ATTRS,
-} from '../../constants/configs';
 
 enum PlannerMode {
   INITIAL,
@@ -75,18 +68,10 @@ const PlannerMobileFab: FC<PlannerMobileFabProps> = ({
   );
 };
 
-type Props = {
-  courseInfo?: CourseInfo;
-};
-
-const PlannerPage: FC<Props> = ({ courseInfo }) => {
+const PlannerPage: FC = () => {
   const router = useRouter();
   const { courseId: queryCourseId, sid: shareId } = router.query;
   const isMobile = useMobileQuery();
-  if (queryCourseId && courseInfo) {
-    courseInfo.courseId = queryCourseId[0];
-  }
-  console.log(`Props: ${courseInfo?.courseId} w/ sid: ${shareId}`);
 
   const [mode, setMode] = useState<PlannerMode>(
     isMobile ? PlannerMode.TIMETABLE : PlannerMode.INITIAL
@@ -97,7 +82,7 @@ const PlannerPage: FC<Props> = ({ courseInfo }) => {
       case PlannerMode.INITIAL:
         return (
           <>
-            <SearchPanel courseInfo={courseInfo} />
+            <SearchPanel />
             <PlannerTimetable />
             <div className="plannerCart-column secondary-column">
               <TimetableOverviewCard />
@@ -143,60 +128,6 @@ const PlannerPage: FC<Props> = ({ courseInfo }) => {
       )}
     </>
   );
-};
-
-// SSR to get course info
-export const getStaticProps = async ({ params }) => {
-  if (!params?.courseId) return { props: {} };
-  const { courses } = await import('../../../data/coursesLoader');
-  /* Pre Processing */
-  // Get only selected attrs
-  const courseInfo = getAttrs(
-    courses[params.courseId[0]],
-    ...PLANNER_COURSE_INFO_ATTRS
-  ) as CourseInfo;
-  // Get only current term's sections
-  courseInfo.sections =
-    CURRENT_TERM in courseInfo.terms
-      ? (Object.entries(courseInfo.terms[CURRENT_TERM]).map(
-          ([k, v]: [k: string, v: Record<string, any>]) => ({
-            name: k,
-            ...v,
-          })
-        ) as CourseSection[])
-      : null;
-  // Remove terms info to save space
-  delete courseInfo.terms;
-  return {
-    props: {
-      courseInfo,
-    },
-  };
-};
-
-// Get all valid paths to prerender (i.e. valid courseId)
-export const getStaticPaths: GetStaticPaths<any> = async () => {
-  const courses = Object.values(await import('../../../data/courses.json'));
-  const paths = [
-    {
-      // the index path
-      params: {
-        courseId: false,
-      },
-    },
-    // the courses path
-    ...[...courses]
-      .filter(cid => typeof cid === 'string')
-      .map(cid => ({
-        params: {
-          courseId: [cid],
-        },
-      })),
-  ];
-  return {
-    paths,
-    fallback: false,
-  };
 };
 
 export default observer(authenticatedRoute(PlannerPage));

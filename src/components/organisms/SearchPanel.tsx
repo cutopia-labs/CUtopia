@@ -26,7 +26,7 @@ import styles from '../../styles/components/organisms/SearchPanel.module.scss';
 import ListItem from '../molecules/ListItem';
 import COURSE_CODES from '../../constants/courseCodes';
 import { useView, useUser } from '../../store';
-import { COURSE_RATING_QUERY } from '../../constants/queries';
+import { COURSE_SECTIONS_QUERY } from '../../constants/queries';
 import { validCourse } from '../../helpers';
 import Loading from '../atoms/Loading';
 import {
@@ -34,7 +34,6 @@ import {
   MAX_SEARCH_RESULT_LENGTH,
 } from '../../constants/configs';
 import {
-  CourseInfo,
   CourseSearchItem,
   ErrorCardMode,
   SearchMode,
@@ -200,7 +199,6 @@ export type SearchPanelProps = {
   setSearchPayloadProp?: (payload: SearchPayload) => void;
   onCoursePress?: (...args: any[]) => any;
   skipDefaultAction?: boolean;
-  courseInfo?: CourseInfo;
   style?: string;
 };
 
@@ -209,7 +207,6 @@ const SearchPanel: FC<SearchPanelProps> = ({
   setSearchPayloadProp,
   onCoursePress,
   skipDefaultAction,
-  courseInfo,
   style,
 }) => {
   const [searchPayload, setSearchPayloadState] = useState<SearchPayload | null>(
@@ -230,22 +227,22 @@ const SearchPanel: FC<SearchPanelProps> = ({
   }, [currentCourse]);
 
   useEffect(() => {
-    const courseId = courseInfo?.courseId;
+    const courseId = router.query?.courseId;
     console.log(`Got ID ${courseId}`);
-    if (courseId && validCourse(courseId) && (!onCoursePress || isMobile)) {
+    if (courseId && validCourse(courseId[0]) && (!onCoursePress || isMobile)) {
       console.log(`Planner Current course ${courseId}`);
-      setCurrentCourse(courseId);
+      setCurrentCourse(courseId[0]); // { "courseId": ["param1"] } // `GET /planner/courseId` (single-element array)
     } else {
       setCurrentCourse(null);
     }
-  }, [courseInfo?.courseId, isMobile]);
+  }, [router.query?.courseId, isMobile]);
 
   // Fetch course info
   const {
-    data: courseRating,
-    loading: courseRatingLoading,
+    data: courseInfo,
+    loading: courseInfoLoading,
     error,
-  } = useQuery(COURSE_RATING_QUERY, {
+  } = useQuery(COURSE_SECTIONS_QUERY, {
     skip: !currentCourse || !validCourse(currentCourse),
     ...(currentCourse && {
       variables: {
@@ -264,7 +261,7 @@ const SearchPanel: FC<SearchPanelProps> = ({
           offerredOnly: Boolean(isPlanner),
         }
       : null;
-    if (courseInfo?.courseId) {
+    if (isPlanner && router.query?.courseId) {
       router.push('/planner');
     }
     setSearchPayloadState(newPayload);
@@ -337,7 +334,11 @@ const SearchPanel: FC<SearchPanelProps> = ({
             onItemClick={(item, e) => {
               e.stopPropagation();
               if (!skipDefaultAction) {
-                router.push(`/${isPlanner ? 'planner' : 'review'}/${item}`);
+                router.push(
+                  `/${isPlanner ? 'planner' : 'review'}/${item}`,
+                  undefined,
+                  { shallow: true }
+                );
               }
               (!isMobile || !isPlanner) && onCoursePress && onCoursePress(item);
             }}
@@ -345,14 +346,19 @@ const SearchPanel: FC<SearchPanelProps> = ({
         </Card>
       )}
       {Boolean(currentCourse) && (
-        <CourseCard
-          courseInfo={{
-            ...courseInfo,
-            ...courseRating?.courses[0],
-          }}
-          concise
-          loading={courseRatingLoading}
-        />
+        <>
+          {courseInfo && !courseInfoLoading ? (
+            <CourseCard
+              courseInfo={{
+                ...courseInfo.courses[0],
+                courseId: currentCourse,
+              }}
+              concise
+            />
+          ) : (
+            <Loading />
+          )}
+        </>
       )}
       {!currentCourse &&
         (searchPayload?.mode &&
@@ -364,8 +370,10 @@ const SearchPanel: FC<SearchPanelProps> = ({
               onClick={courseId => {
                 isPlanner && user.saveHistory(courseId);
                 if (!skipDefaultAction) {
-                  router.replace(
-                    `/${isPlanner ? 'planner' : 'review'}/${courseId}`
+                  router.push(
+                    `/${isPlanner ? 'planner' : 'review'}/${courseId}`,
+                    undefined,
+                    { shallow: isPlanner } // Do not trigger refresh (TODO: reload reviews)
                   );
                 }
                 onCoursePress &&
