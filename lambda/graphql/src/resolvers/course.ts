@@ -1,11 +1,11 @@
 import { getCourseData } from 'mongodb';
-
+import { courses } from '../data/courses';
 import { Resolvers } from '../schemas/types';
 
 const coursesResolver: Resolvers = {
   Query: {
     courses: (parent, { filter }) => {
-      const { requiredCourses } = filter;
+      const { requiredCourses, requiredTerm } = filter;
       return requiredCourses.map(async courseId => {
         const {
           lecturers: reviewLecturers,
@@ -13,6 +13,10 @@ const coursesResolver: Resolvers = {
           rating,
         } = (await getCourseData({ courseId })) || {};
         return {
+          ...courses[courseId],
+          sections: requiredTerm
+            ? courses[courseId]['terms'][requiredTerm]
+            : null,
           courseId,
           reviewLecturers,
           reviewTerms,
@@ -34,6 +38,26 @@ const coursesResolver: Resolvers = {
         teaching: rating.teaching / rating.numReviews,
         difficulty: rating.difficulty / rating.numReviews,
       };
+    },
+    sections: ({ sections }) => {
+      if (!sections) {
+        return null;
+      }
+      const sectionsNames = Object.keys(sections);
+      return sectionsNames.map(name => ({
+        name,
+        ...sections[name],
+      }));
+    },
+    assessments: ({ assessments }) => {
+      if (!assessments) {
+        return null;
+      }
+      const assessmentsNames = Object.keys(assessments);
+      return assessmentsNames.map(name => ({
+        name,
+        percentage: assessments[name],
+      }));
     },
   },
 };
