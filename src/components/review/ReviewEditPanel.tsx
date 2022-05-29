@@ -29,7 +29,6 @@ import Loading from '../atoms/Loading';
 import ListItem from '../molecules/ListItem';
 import {
   SAVE_DRAFT_PROGRESS_BUFFER,
-  SERVER_ADDR,
   STATICS_EXPIRE_BEFORE,
   TARGET_REVIEW_WORD_COUNT,
 } from '../../constants/configs';
@@ -97,7 +96,7 @@ const searchLecturers = async ({
     const instructorsStore = getStoreData('instructors');
     let instructors: string[] | undefined = instructorsStore?.data;
     if (!instructors || instructorsStore.etag < STATICS_EXPIRE_BEFORE) {
-      const res = await fetch(`${SERVER_ADDR}/static/instructors.json`, {
+      const res = await fetch(`/resources/instructors.json`, {
         method: 'GET',
         headers: {
           Accept: 'application/json',

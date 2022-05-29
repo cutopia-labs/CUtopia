@@ -60,7 +60,7 @@ const authenticatedRoute: HOC = (Component = null, options = {}) => {
       if (authState === AuthState.LOGGED_OUT) {
         router.push({
           pathname: '/login',
-          // query: { returnUrl: router.asPath },
+          query: { returnUrl: router.asPath },
         });
       }
     }, [authState]);

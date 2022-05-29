@@ -1,5 +1,4 @@
 import {
-  SERVER_ADDR,
   SIMILAR_COURSE_LIMIT,
   STATICS_EXPIRE_BEFORE,
 } from '../constants/configs';
@@ -21,7 +20,7 @@ export const fetchCourses = async (): Promise<
   let courseList: Record<string, CourseSearchItem[]> | undefined =
     courseListStore?.data;
   if (!courseList || courseListStore.etag < STATICS_EXPIRE_BEFORE) {
-    const res = await fetch(`${SERVER_ADDR}/static/course_list.json`, {
+    const res = await fetch(`/resources/course_list.json`, {
       method: 'GET',
       headers: {
         Accept: 'application/json',
