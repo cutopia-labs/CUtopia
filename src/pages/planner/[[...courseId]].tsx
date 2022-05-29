@@ -81,14 +81,12 @@ type Props = {
 
 const PlannerPage: FC<Props> = ({ courseInfo }) => {
   const router = useRouter();
-  const { courseId: queryCourseId } = router.query;
-  const isPlannerShare =
-    router.pathname.includes('planner/share') && router.query.shareId;
+  const { courseId: queryCourseId, sid: shareId } = router.query;
   const isMobile = useMobileQuery();
   if (queryCourseId && courseInfo) {
     courseInfo.courseId = queryCourseId[0];
   }
-  console.log(`Props: ${courseInfo?.courseId}`);
+  console.log(`Props: ${courseInfo?.courseId} w/ sid: ${shareId}`);
 
   const [mode, setMode] = useState<PlannerMode>(
     isMobile ? PlannerMode.TIMETABLE : PlannerMode.INITIAL
@@ -120,12 +118,12 @@ const PlannerPage: FC<Props> = ({ courseInfo }) => {
   };
 
   useEffect(() => {
-    if (isMobile && isPlannerShare) {
+    if (isMobile && shareId) {
       if (mode !== PlannerMode.TIMETABLE) {
         setMode(PlannerMode.TIMETABLE);
       }
     }
-  }, [isPlannerShare, mode]);
+  }, [shareId, mode]);
 
   return (
     <>

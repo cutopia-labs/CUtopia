@@ -180,7 +180,7 @@ const TimetableOverviewCard: FC = () => {
     if (planner.validKey(createdAt)) {
       planner.updateCurrentPlanner(createdAt);
     } else {
-      router.push(`/planner/share/${id}`);
+      router.push(`/planner?sid=${id}`, undefined, { shallow: true });
     }
   };
   const onShare = (id: string) => {

@@ -101,7 +101,7 @@ const MODE_ASSETS = {
 };
 
 export const generateTimetableURL = (id: string) =>
-  `${window.location.protocol}//${window.location.host}/planner/share/${id}`;
+  `${window.location.protocol}//${window.location.host}/planner?sid=${id}`;
 
 const TimetableShareDialogContent = ({
   shareConfig,
@@ -183,8 +183,8 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
   const planner = usePlanner();
   const router = useRouter();
   const isHome = router.pathname == '/';
-  const { shareId } = router.query as {
-    shareId?: string;
+  const { sid: shareId } = router.query as {
+    sid?: string;
   };
   const view = useView();
   const [shareCourses, setShareCourses] = useState<{
