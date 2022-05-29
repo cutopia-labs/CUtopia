@@ -184,15 +184,18 @@ const LoginPanel: FC<Props> = ({ className, returnUrl }) => {
   const [loginCUtopia, { loading: loggingInCUtopia }] = useMutation(
     LOGIN_CUTOPIA,
     {
-      onCompleted: handleCompleted(async data => {
-        user.saveUser(username, data.login?.token, data.login?.me);
-        if (data.login?.me?.username) {
-          Sentry.setUser({
-            username: data.login?.me?.username,
-          });
-        }
-        router.push(returnUrl || LOGIN_REDIRECT_PAGE); // return to prev page or review home page
-      }),
+      onCompleted: handleCompleted(
+        async data => {
+          user.saveUser(username, data.login?.token, data.login?.me);
+          if (data.login?.me?.username) {
+            Sentry.setUser({
+              username: data.login?.me?.username,
+            });
+          }
+          router.push(returnUrl || LOGIN_REDIRECT_PAGE); // return to prev page or review home page
+        },
+        { mute: true } // login snackbar called user store
+      ),
       onError: view.handleError,
     }
   );

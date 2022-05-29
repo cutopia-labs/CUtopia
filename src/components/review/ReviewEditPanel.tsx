@@ -244,6 +244,7 @@ const ReviewEditPanel: FC<Props> = ({ courseInfo }) => {
           }
         },
         {
+          view,
           message: 'Review added!',
         }
       ),
@@ -263,6 +264,7 @@ const ReviewEditPanel: FC<Props> = ({ courseInfo }) => {
           }
         },
         {
+          view,
           message:
             'Review edited! (Changes may take several minites to take effect)',
         }
