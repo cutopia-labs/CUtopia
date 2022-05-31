@@ -4,14 +4,14 @@
   justify-content: center;
   align-items: center;
   z-index: 10;
-  &.fixed {
+  &:global(.fixed) {
     position: fixed;
     --loading-content-width: 20px;
-    &.logo {
+    &:global(.logo) {
       --loading-content-width: 46px
     }
     --loading-margin: calc(50% - var(--loading-content-width));
-    &.padding {
+    &:global(.padding) {
       --loading-margin: calc(50% - var(--loading-content-width) - var(--page-margin) / 2);
     }
     left: var(--loading-margin);
