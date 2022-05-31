@@ -70,3 +70,5 @@ export const REVIEW_COURSE_INFO_ATTRS = [
   'academic_group',
   'assessments',
 ];
+
+export const TIMETABLE_SYNC_INTERVAL = 5000;

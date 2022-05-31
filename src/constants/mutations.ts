@@ -127,6 +127,7 @@ export const SHARE_TIMETABLE = gql`
       }
     ) {
       _id
+      createdAt
     }
   }
 `;

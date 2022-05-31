@@ -1,37 +1,37 @@
-import { makeObservable, observable, action, toJS } from 'mobx';
+import { makeObservable, observable, action } from 'mobx';
 
 import {
   PlannerCourse,
   Planner,
-  PlannerItem,
   CourseSection,
   OverlapSections,
   TimetableInfo,
   TimetableOverviewWithMode,
 } from '../types';
-import { storeData } from '../helpers/store';
 
-import { PLANNER_CONFIGS } from '../constants/configs';
+import { TIMETABLE_SYNC_INTERVAL } from '../constants/configs';
 import withUndo from '../helpers/withUndo';
 import { getDurationInHour, timeInRange } from '../helpers/timetable';
 import ViewStore from './ViewStore';
 import StorePrototype from './StorePrototype';
 
-const LOAD_KEYS = ['planners', 'plannerTerm', 'currentPlannerKey'];
+const LOAD_KEYS = ['plannerId'];
 
 const RESET_KEYS = LOAD_KEYS;
 
-const DEFAULT_VALUES = {
-  initiated: true,
+const DEFAULT_VALUES = {};
+
+const samePlanner = (a: PlannerCourse[], b: PlannerCourse[]) => {
+  return JSON.stringify(a) === JSON.stringify(b);
 };
 
 class PlannerStore extends StorePrototype {
-  @observable planners: Record<string | number, Planner> = {};
-  @observable plannerTerm: string;
+  @observable syncIntervalId: NodeJS.Timer;
+  @observable planner: Planner; // Store info like current id, old courses, and tableName
+  @observable plannerId: string;
+  @observable plannerName: string;
   @observable previewPlannerCourse: PlannerCourse;
-  @observable currentPlannerKey: number;
-  @observable plannerCourses: PlannerCourse[] = [];
-  @observable initiated: boolean = false; // prevent reaction of null timetable override planners
+  @observable plannerCourses: PlannerCourse[] = null;
   @observable remoteTimetableData: TimetableOverviewWithMode[] | null = null;
 
   viewStore: ViewStore;
@@ -42,29 +42,45 @@ class PlannerStore extends StorePrototype {
     this.viewStore = viewStore;
   }
 
+  samePlanner = () =>
+    this.plannerId === this.planner.id &&
+    this.plannerName === this.planner.tableName &&
+    JSON.stringify(this.plannerCourses) ===
+      JSON.stringify(this.planner.courses);
+
   @action init = () => {
     console.log('Init planner store');
     this.loadStore();
-    if (!this.currentPlannerKey) {
-      const now = +new Date();
-      this.setStore('currentPlannerKey', now);
-      this.setStore('planners', {
-        [now]: {
-          key: now,
-          courses: [],
-        },
-      });
-    }
-    this.plannerCourses = this.planners[this.currentPlannerKey]?.courses || [];
   };
 
-  get shareIds() {
-    return Object.fromEntries(
-      Object.entries(this.planners).map(([key, planner]) => [
-        planner.shareId,
-        key,
-      ])
-    );
+  @action newPlanner = (id: string, createdAt: number) => {
+    this.plannerId = id;
+    this.planner.id = id;
+    this.planner.createdAt = createdAt;
+    this.planner.courses = [];
+    this.plannerCourses = [];
+  };
+
+  @action clearSync = () => clearInterval(this.syncIntervalId);
+
+  @action syncPlanner = uploadTimetable => {
+    this.clearSync();
+    this.syncIntervalId = setInterval(() => {
+      // compare w/ prev planner to find for delta
+      if (this.samePlanner()) return;
+      // If dirty, then upload timetable
+      const variables = {
+        _id: this.plannerId,
+        entries: this.plannerCourses,
+      };
+      uploadTimetable({
+        variables,
+      });
+    }, TIMETABLE_SYNC_INTERVAL);
+  };
+
+  get timetableIds() {
+    return this.remoteTimetableData.map(d => d._id);
   }
 
   get timetableInfo(): TimetableInfo {
@@ -100,8 +116,8 @@ class PlannerStore extends StorePrototype {
   }
 
   get currentSections() {
-    return this.plannerCourses
-      ?.map((course, i) =>
+    return (this.plannerCourses || [])
+      .map((course, i) =>
         Object.values(course.sections).map(section => ({
           hide: section.hide,
           name: section.name,
@@ -114,17 +130,6 @@ class PlannerStore extends StorePrototype {
 
   get hidedSections() {
     return this.currentSections.filter(section => section.hide);
-  }
-
-  get plannerList() {
-    return Object.values(this.planners).map(planner => ({
-      key: planner.key,
-      label: planner.label || PLANNER_CONFIGS.DEFAULT_TABLE_NAME,
-    })) as PlannerItem[];
-  }
-
-  get currentPlanner() {
-    return this.planners[this.currentPlannerKey];
   }
 
   get overlapSections() {
@@ -177,87 +182,11 @@ class PlannerStore extends StorePrototype {
   @action findIndexInPlanner = courseId =>
     this.plannerCourses?.findIndex(item => item.courseId === courseId);
 
-  @action validKey = (key: number) =>
-    Boolean(this.initiated && this.planners && key && key in this.planners);
-
-  @action updateCurrentPlanner = (key: number) => {
-    let label = PLANNER_CONFIGS.DEFAULT_TABLE_NAME;
-    if (this.validKey(key)) {
-      if (this.currentPlannerKey === key) {
-        this.viewStore.setSnackBar(`Switched to ${label}`);
-        return;
-      }
-      this.plannerCourses = this.planners[key].courses;
-      this.currentPlannerKey = key;
-      label = this.planners[key].label || label;
-    } else {
-      key = key || +new Date();
-      this.planners[key] = {
-        key,
-        courses: [],
-      };
-      storeData('planners', this.planners);
-      this.plannerCourses = [];
-    }
-    this.setStore('currentPlannerKey', key);
-    this.viewStore.setSnackBar(`Switched to ${label}`);
-  };
-
-  @action addPlannerCourses = (plannerCourses: PlannerCourse[]) => {
-    this.addPlanner({
-      key: +new Date(),
-      courses: plannerCourses,
-    });
-  };
-
-  @action updatePlanners = (key: number, plannerCourses: PlannerCourse[]) => {
-    if (this.validKey(key)) {
-      this.planners[key].courses = plannerCourses;
-      // as the local one is updated, cannot treat it as uploaded
-      this.updatePlannerShareId(key, undefined, false);
-      storeData('planners', this.planners);
-    }
-  };
-
-  @action updatePlannerShareId = (
-    key: number,
-    shareId: string | undefined,
-    save: boolean = true
-  ) => {
-    if (this.validKey(key) && this.planners[key].shareId !== shareId) {
-      this.planners[key].shareId = shareId;
-      if (save) {
-        storeData('planners', this.planners);
-      }
-    }
-  };
-
-  @action addPlanner = (planner: Planner) => {
-    this.planners[planner.key] = planner;
-    console.log(`Updated planner with ${toJS(this.planners)}`);
-    storeData('planners', this.planners);
-  };
-
-  @action deletePlanner = (key: number) => {
-    if (this.validKey(key)) {
-      withUndo(
-        {
-          prevData: this.planners,
-          setData: prevData => this.setStore('planners', prevData),
-          message: 'Deleted planner!',
-          stringify: true,
-          viewStore: this.viewStore,
-        },
-        () => {
-          delete this.planners[key];
-          this.updateCurrentPlanner(
-            parseInt(Object.keys(this.planners)[0], 10)
-          );
-        }
-      );
-    } else {
-      this.viewStore.setSnackBar('Error... OuO');
-    }
+  @action updateCurrentPlanner = (planner: Planner) => {
+    this.setStore('plannerId', planner.id); // Store current planner Id and update mem
+    this.planner = planner;
+    this.plannerName = planner.tableName;
+    this.plannerCourses = JSON.parse(JSON.stringify(planner.courses));
   };
 
   @action clearPlannerCourses = () => {
@@ -388,9 +317,8 @@ class PlannerStore extends StorePrototype {
     }
   };
 
-  @action setPlannerLabel = (label: string) => {
-    this.planners[this.currentPlannerKey].label = label;
-    storeData('planners', this.planners);
+  @action setPlannerLabel = (tableName: string) => {
+    this.planner.tableName = tableName;
   };
 }
 
