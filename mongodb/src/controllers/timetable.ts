@@ -27,7 +27,7 @@ export const getTimetable = async input =>
   });
 
 export const uploadTimetable = async input => {
-  const { username, expire, entries } = input;
+  const { _id, username, expire, entries } = input;
   if (entries.length > UPLOAD_TIMETABLE_ENTRY_LIMIT) {
     throw Error(ErrorCode.UPLOAD_TIMETABLE_EXCEED_ENTRY_LIMIT.toString());
   }
@@ -38,24 +38,28 @@ export const uploadTimetable = async input => {
   ).exec();
   if (
     user.timetables.length + user.sharedTimetables.length >
-    UPLOAD_TIMETABLE_TOTAL_LIMIT
+      UPLOAD_TIMETABLE_TOTAL_LIMIT &&
+    !_id
   ) {
     throw Error(ErrorCode.UPLOAD_TIMETABLE_EXCEED_TOTAL_LIMIT.toString());
   }
 
-  const newTimetable = new Timetable({
-    ...input,
-    expire,
-    expireAt: expire > 0 ? +new Date() + expire * 24 * 60 * 60 * 1000 : -1,
-  });
-
-  await updateTimetableId({
-    operation: 'add',
-    _id: newTimetable._id,
-    username,
-    expire,
-  });
-  await newTimetable.save();
+  const newTimetable = new Timetable(input);
+  if (expire !== undefined) {
+    newTimetable.expireAt =
+      expire > 0 ? +new Date() + expire * 24 * 60 * 60 * 1000 : -1;
+  }
+  if (_id) {
+    await Timetable.updateOne({ _id, username }, newTimetable);
+  } else {
+    await updateTimetableId({
+      operation: 'add',
+      _id: newTimetable._id,
+      username,
+      expire,
+    });
+    await newTimetable.save();
+  }
   return {
     _id: newTimetable._id,
     createdAt: newTimetable.createdAt,

@@ -22,13 +22,11 @@ const timetableResolver: Resolvers = {
   Mutation: {
     uploadTimetable: async (parent, { input }, { user }) => {
       const { username } = user;
-      const { entries, tableName, expire } = input;
-      return await uploadTimetable({ username, entries, tableName, expire });
+      return await uploadTimetable({ ...input, username });
     },
     removeTimetable: async (parent, { input }, { user }) => {
       const { username } = user;
-      const { _id, expire } = input;
-      await removeTimetable({ username, _id, expire });
+      await removeTimetable({ ...input, username });
     },
   },
 };
