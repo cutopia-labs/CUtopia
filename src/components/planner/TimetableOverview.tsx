@@ -22,6 +22,7 @@ import {
 } from '../../types';
 import { PLANNER_CONFIGS } from '../../constants/configs';
 import { GET_USER_TIMETABLES } from '../../constants/queries';
+import Loading from '../atoms/Loading';
 
 const getTimetableOverviewMode = (expire: number) => {
   if (expire > 0) {
@@ -126,27 +127,31 @@ const TimetableOverview: FC<TimetableOverviewProps> = ({
         </form>
         <Divider />
         <h4 className="subheading">Timetables</h4>
-        {planner.remoteTimetableData?.map(item => (
-          <MenuItem
-            className={styles.timetableSelectItem}
-            key={item._id}
-            onClick={() => [switchTimetable(item._id), setAnchorEl(null)]}
-            selected={planner.plannerId === item._id}
-          >
-            {item.tableName || PLANNER_CONFIGS.DEFAULT_TABLE_NAME}
-            <IconButton
-              onClick={e => {
-                e.stopPropagation();
-                e.preventDefault();
-                deleteTable(item._id, item.expire);
-              }}
-              size="small"
-              color="secondary"
+        {!planner.remoteTimetableData ? (
+          <Loading />
+        ) : (
+          planner.remoteTimetableData.map(item => (
+            <MenuItem
+              className={styles.timetableSelectItem}
+              key={item._id}
+              onClick={() => [switchTimetable(item._id), setAnchorEl(null)]}
+              selected={planner.plannerId === item._id}
             >
-              <DeleteOutline />
-            </IconButton>
-          </MenuItem>
-        ))}
+              {item.tableName || PLANNER_CONFIGS.DEFAULT_TABLE_NAME}
+              <IconButton
+                onClick={e => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  deleteTable(item._id, item.expire);
+                }}
+                size="small"
+                color="secondary"
+              >
+                <DeleteOutline />
+              </IconButton>
+            </MenuItem>
+          ))
+        )}
         <Divider />
         <MenuItem onClick={() => [createTimetable(), setAnchorEl(null)]}>
           Create New
