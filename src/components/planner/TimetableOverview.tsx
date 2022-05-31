@@ -102,10 +102,13 @@ const TimetableOverview: FC<TimetableOverviewProps> = ({
           className={styles.timetableLabelInputContainer}
           onSubmit={e => {
             e.preventDefault();
-            if (labelInput !== planner.plannerName) {
-              updateTimetable({
-                tableName: labelInput,
-              });
+            planner.updateStore('plannerName', labelInput);
+            // update the remoteTimetable data as well
+            const idx = planner.remoteTimetableData.findIndex(
+              d => d._id === planner.plannerId
+            );
+            if (idx >= 0) {
+              planner.remoteTimetableData[idx].tableName = labelInput;
             }
           }}
         >
