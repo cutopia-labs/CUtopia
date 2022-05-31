@@ -176,12 +176,7 @@ const TimetableOverviewCard: FC = () => {
   }, [expanded]);
 
   const onDownload = (id: string, createdAt: number) => {
-    // if key match (createdAt), then do not load but switch
-    if (planner.validKey(createdAt)) {
-      planner.updateCurrentPlanner(createdAt);
-    } else {
-      router.push(`/planner?sid=${id}`, undefined, { shallow: true });
-    }
+    router.push(`/planner?sid=${id}`, undefined, { shallow: true });
   };
   const onShare = (id: string) => {
     copy(generateTimetableURL(id));
@@ -199,8 +194,12 @@ const TimetableOverviewCard: FC = () => {
         'remoteTimetableData',
         [...planner.remoteTimetableData].filter(item => item._id !== id)
       );
-      planner.updatePlannerShareId(+planner.shareIds[id], undefined);
       view.setSnackBar('Deleted!');
+      // i.e. if current planner is deleted
+      if (id === planner.plannerId) {
+        // Back to homepage
+        router.push(`/planner`, undefined, { shallow: true });
+      }
     } catch (e) {
       // To skip remove entry in state in case of any error
       view.handleError(e);
