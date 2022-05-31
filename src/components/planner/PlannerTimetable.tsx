@@ -1,6 +1,7 @@
 import { useReducer, useState, useEffect, FC } from 'react';
 import { observer } from 'mobx-react-lite';
 
+import { reaction } from 'mobx';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { Button, Dialog } from '@material-ui/core';
 import copy from 'copy-to-clipboard';
@@ -8,10 +9,14 @@ import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import styles from '../../styles/components/planner/PlannerTimetable.module.scss';
 import { useView, usePlanner } from '../../store';
-import { PLANNER_CONFIGS } from '../../constants/configs';
+import {
+  PLANNER_CONFIGS,
+  TIMETABLE_SYNC_INTERVAL,
+} from '../../constants/configs';
 import { REMOVE_TIMETABLE, SHARE_TIMETABLE } from '../../constants/mutations';
 import {
   Planner,
+  PlannerCourse,
   SnackBarProps,
   TimetableOverviewMode,
   UploadTimetable,
@@ -163,6 +168,23 @@ const TimetableShareDialogContent = ({
 const SHARE_ID_RULE = new RegExp('^[A-Za-z0-9_-]{8}$', 'i');
 
 const validShareId = (id: string) => id && SHARE_ID_RULE.test(id);
+
+const getDelta = (
+  planner: Planner,
+  courses: PlannerCourse[],
+  tableName: string
+) => {
+  console.log(JSON.stringify(planner?.courses));
+  console.log(JSON.stringify(courses) + ', ' + tableName);
+  const delta = {};
+  if (tableName !== planner?.tableName) {
+    delta['tableName'] = tableName;
+  }
+  if (JSON.stringify(courses) !== JSON.stringify(planner?.courses)) {
+    delta['entries'] = courses;
+  }
+  return Object.keys(delta).length ? delta : null;
+};
 
 const getSnackbarMessage = (
   shareId: string,
@@ -319,10 +341,50 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
     });
   };
 
+  // on mount
+  useEffect(() => {
+    // start sync
+    const disposer = reaction(
+      () => ({
+        delta: getDelta(
+          planner.planner,
+          planner.plannerCourses,
+          planner.plannerName
+        ),
+        _id: planner.plannerId,
+      }),
+      ({ delta, _id }) => {
+        console.log(`Syncing planner: ${JSON.stringify(delta)}`);
+        if (!delta) return;
+        // If dirty, then upload timetable
+        uploadTimetable({
+          variables: {
+            _id,
+            ...delta,
+          },
+        });
+        console.log({
+          _id,
+          ...delta,
+        });
+        delta['courses'] = delta['entries'];
+        planner.planner = {
+          ...planner.planner,
+          ...delta,
+        };
+      },
+      {
+        delay: TIMETABLE_SYNC_INTERVAL,
+      }
+    );
+    // end sync b4 unmount (handle unload here!)
+    return () => disposer();
+  }, []);
+
   useEffect(() => {
     // if no planner, then init / load one
     if (!planner.plannerId) {
-      createTimetable();
+      // createTimetable();
       return;
     }
     // otherwise switch to current planner
@@ -361,10 +423,6 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
 
   const shareTimetable = () => {};
 
-  const switchTimetable = (id: string) => {
-    router.push(`/planner?sid=${id}`, undefined, { shallow: true });
-  };
-
   const updateTimetable = data => {
     uploadTimetable({
       variables: {
@@ -375,12 +433,15 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
   };
 
   const createTimetable = async () => {
-    await uploadTimetable({
+    console.log('Called create timetable');
+    const res = await uploadTimetable({
       variables: {
         entries: [],
         expire: -1,
       },
     });
+    const newTimetable = res.data?.uploadTimetable;
+    planner.newPlanner(newTimetable?._id, newTimetable?.createdAt);
   };
 
   return (
