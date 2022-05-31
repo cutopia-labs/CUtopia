@@ -23,15 +23,15 @@ import {
   AiOutlineDelete,
   AiOutlineShareAlt,
 } from 'react-icons/ai';
-import { useView } from '../../store';
+import { usePlanner, useView } from '../../store';
 import styles from '../../styles/components/templates/TimetablePanel.module.scss';
 import Timetable from '../planner/Timetable';
 import Card from '../atoms/Card';
 import {
   CourseTableEntry,
   PlannerCourse,
-  PlannerItem,
   TimetableInfo,
+  TimetableOverviewWithMode,
 } from '../../types';
 import { PLANNER_CONFIGS } from '../../constants/configs';
 
@@ -43,9 +43,6 @@ enum MODAL_MODES {
 
 type TimetablePanelProps = {
   title?: string;
-  selections?: PlannerItem[];
-  selected?: PlannerItem;
-  onSelect?: (selected: any) => any;
   courses?: CourseTableEntry[] | PlannerCourse[];
   timetableInfo?: TimetableInfo;
   previewCourse?: CourseTableEntry | PlannerCourse;
@@ -53,9 +50,97 @@ type TimetablePanelProps = {
   onUpload?: (...args: any[]) => any;
   onShare?: (...args: any[]) => any;
   onClear?: (...args: any[]) => any;
-  setLabel?: (label: string) => any;
-  deleteTable?: (key: number) => any;
   className?: string;
+} & TimetableOverviewProps;
+
+type TimetableOverviewProps = {
+  selections?: TimetableOverviewWithMode[];
+  selected?: Partial<TimetableOverviewWithMode>;
+  onSelect?: (selected: any) => any;
+  setLabel?: (label: string) => any;
+  deleteTable?: (id: string, expire: number) => any;
+};
+
+const TimetableOverview: FC<TimetableOverviewProps> = ({
+  selected,
+  selections,
+  onSelect,
+  setLabel,
+  deleteTable,
+}) => {
+  const [labelInput, setLabelInput] = useState('');
+  const [anchorEl, setAnchorEl] = useState(null);
+  useEffect(() => {
+    setLabelInput(selected?.tableName);
+  }, [selected]);
+
+  return (
+    <>
+      <Button
+        size="small"
+        onClick={e => setAnchorEl(e.currentTarget)}
+        endIcon={<ExpandMore />}
+      >
+        {selected.tableName || PLANNER_CONFIGS.DEFAULT_TABLE_NAME}
+      </Button>
+      <Menu
+        className={styles.timetableSelectionMenu}
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={() => setAnchorEl(null)}
+      >
+        <h4 className="subheading">Title</h4>
+        <form
+          className={styles.timetableLabelInputContainer}
+          onSubmit={e => {
+            e.preventDefault();
+            if (labelInput !== selected.tableName) {
+              setLabel(labelInput);
+            }
+          }}
+        >
+          <InputBase
+            placeholder="Enter Label"
+            value={labelInput}
+            onChange={e => {
+              setLabelInput(e.target.value);
+            }}
+            inputProps={{ 'aria-label': 'search' }}
+          />
+          <IconButton type="submit" size="small">
+            {labelInput === selected.tableName ? <Edit /> : <Check />}
+          </IconButton>
+        </form>
+        <Divider />
+        <h4 className="subheading">Timetables</h4>
+        {selections.map(item => (
+          <MenuItem
+            className={styles.timetableSelectItem}
+            key={item._id}
+            onClick={() => [onSelect(item._id), setAnchorEl(null)]}
+            selected={selected._id === item._id}
+          >
+            {item.tableName || PLANNER_CONFIGS.DEFAULT_TABLE_NAME}
+            <IconButton
+              onClick={e => {
+                e.stopPropagation();
+                e.preventDefault();
+                deleteTable(item._id, item.expire);
+              }}
+              size="small"
+              color="secondary"
+            >
+              <DeleteOutline />
+            </IconButton>
+          </MenuItem>
+        ))}
+        <Divider />
+        <MenuItem onClick={() => [onSelect(+new Date()), setAnchorEl(null)]}>
+          Create New
+        </MenuItem>
+      </Menu>
+    </>
+  );
 };
 
 const TimetablePanel: FC<TimetablePanelProps> = ({
@@ -75,14 +160,9 @@ const TimetablePanel: FC<TimetablePanelProps> = ({
   className,
 }) => {
   const view = useView();
+  const planner = usePlanner();
   const [modalMode, setModalMode] = useState(MODAL_MODES.NO_MODAL);
   const [importInput, setImportInput] = useState('');
-  const [labelInput, setLabelInput] = useState('');
-  const [anchorEl, setAnchorEl] = useState(null);
-
-  useEffect(() => {
-    setLabelInput(selected?.label);
-  }, [selected]);
 
   const FUNCTION_BUTTONS = [
     {
@@ -128,77 +208,13 @@ const TimetablePanel: FC<TimetablePanelProps> = ({
   return (
     <Card className={clsx(styles.timetablePanel, 'panel column', className)}>
       <header className="center-row">
-        {selections?.length ? (
-          <>
-            <Button
-              size="small"
-              onClick={e => setAnchorEl(e.currentTarget)}
-              endIcon={<ExpandMore />}
-            >
-              {selected.label || PLANNER_CONFIGS.DEFAULT_TABLE_NAME}
-            </Button>
-            <Menu
-              className={styles.timetableSelectionMenu}
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={() => setAnchorEl(null)}
-            >
-              <h4 className="subheading">Title</h4>
-              <form
-                className={styles.timetableLabelInputContainer}
-                onSubmit={e => {
-                  e.preventDefault();
-                  if (labelInput !== selected.label) {
-                    setLabel(labelInput);
-                  }
-                }}
-              >
-                <InputBase
-                  placeholder="Enter Label"
-                  value={labelInput}
-                  onChange={e => {
-                    setLabelInput(e.target.value);
-                  }}
-                  inputProps={{ 'aria-label': 'search' }}
-                />
-                <IconButton type="submit" size="small">
-                  {labelInput === selected.label ? <Edit /> : <Check />}
-                </IconButton>
-              </form>
-              <Divider />
-              <h4 className="subheading">Timetables</h4>
-              {selections.map(item => (
-                <MenuItem
-                  className={styles.timetableSelectItem}
-                  key={item.key}
-                  onClick={() => [onSelect(item.key), setAnchorEl(null)]}
-                  selected={selected.key === item.key}
-                >
-                  {item.label}
-                  <IconButton
-                    onClick={e => {
-                      e.stopPropagation();
-                      e.preventDefault();
-                      deleteTable(item.key);
-                    }}
-                    size="small"
-                    color="secondary"
-                  >
-                    <DeleteOutline />
-                  </IconButton>
-                </MenuItem>
-              ))}
-              <Divider />
-              <MenuItem
-                onClick={() => [onSelect(+new Date()), setAnchorEl(null)]}
-              >
-                Create New
-              </MenuItem>
-            </Menu>
-          </>
-        ) : (
-          <span className="title">{title}</span>
-        )}
+        <TimetableOverview
+          setLabel={setLabel}
+          selected={selected}
+          selections={selections}
+          onSelect={onSelect}
+          deleteTable={deleteTable}
+        />
         {Boolean(courses?.length) && (
           <div className={clsx(styles.btnRow, 'center-row')}>
             {FUNCTION_BUTTONS.map(item => (
