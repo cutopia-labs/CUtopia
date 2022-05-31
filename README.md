@@ -68,28 +68,6 @@ Once the server is successfully deployed, open the [API Gateway](https://aws.ama
 ### Logs
 All messages logged (e.g. using console.log in GraphQL) can be found in [CloudWatch](https://aws.amazon.com/cloudwatch/). To view the messages, click "Log groups" in the sidebar, then click the desired log group (e.g. /aws/lambda/cutopia-dev-Lambda-{ID}-GraphQL-{ID}).
 
-### Configure API Gateway
-Follow the steps below to enable access to static resources, i.e. instructors.json and course_list.json:
-
-1. Create Resource
-> /static
-> 
-> Enable API Gateway CORS: True
-
-2. Create Child Resources for all files under static
-> Configure as proxy resource: True
-> 
-> Resource Path `static_file_name_with_extension`
->
-> Enable API Gateway CORS: True
-3. Add Methods (e.g. GET, OPTION) for all files under child resources
-> 
-> Integration type: Lambda fn
-> 
-> Use Lambda Proxy Integration: true
-4. Deploy API
-> Choose stage of deployment (Prod)
-
 ## Test
 ### Server load test
 This tool exams the time taken to handle enormous requests during peak period. The settings are: 50 users concurrently login their accounts, then fetch latest reviews and reviews of a course.
