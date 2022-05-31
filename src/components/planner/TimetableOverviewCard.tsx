@@ -163,7 +163,7 @@ const TimetableOverviewCard: FC = () => {
     { data: userTimetable, loading: userTimetableLoading },
   ] = useLazyQuery(GET_USER_TIMETABLES, {
     onCompleted: async data => {
-      console.log(`fetched tiemtabnle`);
+      console.log(`fetched tiemtable`);
       planner.updateStore('remoteTimetableData', getCombinedTimetable(data));
     },
     onError: view.handleError,
