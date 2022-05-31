@@ -9,7 +9,6 @@ import {
   TimetableOverviewWithMode,
 } from '../types';
 
-import { TIMETABLE_SYNC_INTERVAL } from '../constants/configs';
 import withUndo from '../helpers/withUndo';
 import { getDurationInHour, timeInRange } from '../helpers/timetable';
 import ViewStore from './ViewStore';
@@ -21,17 +20,13 @@ const RESET_KEYS = LOAD_KEYS;
 
 const DEFAULT_VALUES = {};
 
-const samePlanner = (a: PlannerCourse[], b: PlannerCourse[]) => {
-  return JSON.stringify(a) === JSON.stringify(b);
-};
-
 class PlannerStore extends StorePrototype {
   @observable syncIntervalId: NodeJS.Timer;
   @observable planner: Planner; // Store info like current id, old courses, and tableName
   @observable plannerId: string;
   @observable plannerName: string;
   @observable previewPlannerCourse: PlannerCourse;
-  @observable plannerCourses: PlannerCourse[] = null;
+  @observable plannerCourses: PlannerCourse[] = [];
   @observable remoteTimetableData: TimetableOverviewWithMode[] | null = null;
 
   viewStore: ViewStore;
@@ -42,42 +37,23 @@ class PlannerStore extends StorePrototype {
     this.viewStore = viewStore;
   }
 
-  samePlanner = () =>
-    this.plannerId === this.planner.id &&
-    this.plannerName === this.planner.tableName &&
-    JSON.stringify(this.plannerCourses) ===
-      JSON.stringify(this.planner.courses);
-
   @action init = () => {
     console.log('Init planner store');
     this.loadStore();
   };
 
   @action newPlanner = (id: string, createdAt: number) => {
+    const planner = {
+      id,
+      createdAt,
+      courses: [],
+    };
     this.plannerId = id;
-    this.planner.id = id;
-    this.planner.createdAt = createdAt;
-    this.planner.courses = [];
+    this.planner = planner;
     this.plannerCourses = [];
   };
 
   @action clearSync = () => clearInterval(this.syncIntervalId);
-
-  @action syncPlanner = uploadTimetable => {
-    this.clearSync();
-    this.syncIntervalId = setInterval(() => {
-      // compare w/ prev planner to find for delta
-      if (this.samePlanner()) return;
-      // If dirty, then upload timetable
-      const variables = {
-        _id: this.plannerId,
-        entries: this.plannerCourses,
-      };
-      uploadTimetable({
-        variables,
-      });
-    }, TIMETABLE_SYNC_INTERVAL);
-  };
 
   get timetableIds() {
     return this.remoteTimetableData.map(d => d._id);

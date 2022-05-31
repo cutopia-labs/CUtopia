@@ -1,6 +1,5 @@
 import { createContext, FC, useContext, useEffect, useState } from 'react';
 
-import { reaction } from 'mobx';
 import { enableStaticRendering } from 'mobx-react-lite';
 import { isServer } from '../helpers';
 import UserStore from './UserStore';
@@ -47,15 +46,6 @@ const StoreProvider: FC = ({ children }) => {
   useEffect(() => {
     userStore.init();
     plannerStore.init();
-    reaction(
-      () => ({
-        plannerCourses: plannerStore.plannerCourses?.map(course => course),
-        key: plannerStore.currentPlannerKey,
-      }),
-      ({ plannerCourses, key }) => {
-        plannerStore.updatePlanners(key, plannerCourses);
-      }
-    );
     setReady(true);
   }, []);
   if (!ready) return null;

@@ -1,4 +1,4 @@
-import { useLazyQuery } from '@apollo/client';
+import { DocumentNode, useLazyQuery } from '@apollo/client';
 import * as Sentry from '@sentry/react';
 import { useRouter } from 'next/router';
 import { FC, useEffect, useState } from 'react';
@@ -7,7 +7,11 @@ import { useUser, useView } from '../../store';
 import { User, AuthState } from '../../types';
 import Loading from '../atoms/Loading';
 
-type HOC = (Component: FC, options?: Record<any, any>) => FC;
+type Options = {
+  userQuery?: DocumentNode;
+};
+
+type HOC = (Component: FC, options?: Options) => FC;
 
 const authenticatedRoute: HOC = (Component = null, options = {}) => {
   const AuthenticatedRoute: FC = props => {
@@ -18,7 +22,7 @@ const authenticatedRoute: HOC = (Component = null, options = {}) => {
     const [getUser, { data: userData, loading: userDataLoading }] =
       useLazyQuery<{
         me: User;
-      }>(GET_USER, {
+      }>(options.userQuery || GET_USER, {
         onCompleted: data => {
           if (data?.me?.username) {
             user.updateStore('data', data.me);

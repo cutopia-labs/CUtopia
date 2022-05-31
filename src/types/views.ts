@@ -16,7 +16,7 @@ export interface MenuItem {
 }
 
 export interface PlannerItem extends MenuItem {
-  key: number;
+  id: string;
 }
 
 export interface SnackBarProps extends AlertProps {

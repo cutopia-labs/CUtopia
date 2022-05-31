@@ -1,3 +1,4 @@
+import { TimetableOverviewMode } from './enums';
 import { Events } from './events';
 
 export type RatingField = 'grading' | 'content' | 'difficulty' | 'teaching';
@@ -66,10 +67,11 @@ export type PlannerCourse = {
 };
 
 export type Planner = {
-  label?: string;
-  shareId?: string;
-  key: number; // timestamp
+  tableName?: string;
+  type?: TimetableOverviewMode;
+  createdAt?: number;
   courses: PlannerCourse[];
+  id: string;
 };
 
 export type TimetableInfo = {
