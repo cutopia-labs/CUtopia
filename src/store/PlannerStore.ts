@@ -186,7 +186,7 @@ class PlannerStore extends StorePrototype {
     this.setStore('plannerId', planner.id); // Store current planner Id and update mem
     this.planner = planner;
     this.plannerName = planner.tableName;
-    this.plannerCourses = JSON.parse(JSON.stringify(planner.courses));
+    this.plannerCourses = JSON.parse(JSON.stringify(this.planner.courses));
   };
 
   @action clearPlannerCourses = () => {

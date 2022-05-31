@@ -7,13 +7,11 @@ import copy from 'copy-to-clipboard';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import styles from '../../styles/components/planner/PlannerTimetable.module.scss';
-import TimetablePanel from '../templates/TimetablePanel';
 import { useView, usePlanner } from '../../store';
 import { PLANNER_CONFIGS } from '../../constants/configs';
-import { SHARE_TIMETABLE } from '../../constants/mutations';
+import { REMOVE_TIMETABLE, SHARE_TIMETABLE } from '../../constants/mutations';
 import {
   Planner,
-  PlannerCourse,
   SnackBarProps,
   TimetableOverviewMode,
   UploadTimetable,
@@ -28,6 +26,7 @@ import DialogContentTemplate from '../templates/DialogContentTemplate';
 import Section from '../molecules/Section';
 import ViewStore from '../../store/ViewStore';
 import Footer from '../molecules/Footer';
+import TimetablePanel from '../templates/TimetablePanel';
 
 enum ShareTimetableMode {
   UPLOAD, // user persist timetable / persist sharing ttb
@@ -188,9 +187,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
   };
   const view = useView();
   const [shareCourses, setShareCourses] = useState<{
-    courses: PlannerCourse[];
     mode: ShareTimetableMode;
-    key: number;
   } | null>(null);
   const [shareConfig, dispatchShareConfig] = useReducer(
     (state, action) => ({ ...state, ...action }),
@@ -201,18 +198,10 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
     useLazyQuery(GET_SHARE_TIMETABLE, {
       onCompleted: async (data: { timetable: UploadTimetable }) => {
         console.log(`loaded ${data?.timetable}`);
-        if (planner.validKey(data?.timetable?.createdAt)) {
-          view.setSnackBar({
-            message: 'Shared planner already loaded!',
-            severity: 'warning',
-          });
-          router.push('/planner');
-          return;
-        }
         const importedPlanner: Planner = {
-          key: data.timetable.createdAt,
-          label: data.timetable.tableName,
-          shareId,
+          createdAt: data.timetable.createdAt,
+          tableName: data.timetable.tableName,
+          id: shareId,
           courses:
             data.timetable.entries.map(course => ({
               ...course,
@@ -221,13 +210,38 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
               ),
             })) || [],
         };
-        await planner.addPlanner(importedPlanner);
-        planner.updateCurrentPlanner(importedPlanner.key);
+        planner.updateCurrentPlanner(importedPlanner);
         router.push('/planner');
       },
       onError: view.handleError,
     });
 
+  const [removeTimetable, { loading: removeTimetableLoading }] =
+    useMutation(REMOVE_TIMETABLE);
+
+  const onDelete = async (id: string, expire: number) => {
+    try {
+      await removeTimetable({
+        variables: {
+          id,
+          expire,
+        },
+      });
+      planner.updateStore(
+        'remoteTimetableData',
+        [...planner.remoteTimetableData].filter(item => item._id !== id)
+      );
+      view.setSnackBar('Deleted!');
+      // i.e. if current planner is deleted
+      if (id === planner.plannerId) {
+        // Back to homepage
+        router.push(`/planner`, undefined, { shallow: true });
+      }
+    } catch (e) {
+      // To skip remove entry in state in case of any error
+      view.handleError(e);
+    }
+  };
   const [uploadTimetable, { loading: uploadTimetableLoading }] = useMutation(
     SHARE_TIMETABLE,
     {
@@ -242,25 +256,24 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
           }
           const newTimetableOverview = {
             _id: uploadTimetable._id,
-            createdAt: shareCourses.key,
-            tableName: planner.currentPlanner?.label,
+            createdAt: uploadTimetable.createdAt,
+            tableName: planner.plannerName,
             expire: getExpire(shareConfig?.expire),
             mode: getModeFromExpire(getExpire(shareConfig?.expire) as any),
           };
+          // If uploaded a share timetable
           if (getExpire(shareConfig?.expire) !== -1) {
             const shareURL = generateTimetableURL(uploadTimetable?._id);
             dispatchShareConfig({
               shareLink: shareURL,
             });
             copy(shareURL);
-          } else {
-            setShareCourses(null);
           }
           planner.updateStore('remoteTimetableData', [
             ...(planner.remoteTimetableData || []),
             newTimetableOverview,
           ]);
-          planner.updatePlannerShareId(shareCourses.key, uploadTimetable?._id);
+          planner.setStore('plannerId', uploadTimetable?._id);
         },
         {
           view,
@@ -276,56 +289,54 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
 
   const onShareTimetTable = async e => {
     e.preventDefault();
-    console.table(shareCourses);
-    if (!shareCourses?.courses?.length) {
+    if (!planner.plannerCourses?.length) {
       return view.setSnackBar({
         severity: 'warning',
         message: 'Empty timetable!',
       });
     }
-    const prevShareId = planner.planners[shareCourses.key].shareId;
-    if (prevShareId) {
-      setShareCourses(null);
-      return view.setSnackBar(getSnackbarMessage(prevShareId, view));
-    }
-    if (shareCourses?.courses?.length) {
-      const data = {
-        entries: shareCourses.courses
-          .filter(
-            course =>
-              course &&
-              course.sections &&
-              Object.values(course.sections)?.length
-          )
-          .map(course => ({
-            ...course,
-            sections: Object.values(course?.sections || {})
-              .filter(section => section && !section.hide)
-              .map(section => {
-                const { hide, ...shareSection } = section;
-                return shareSection;
-              }),
-          })),
-        expire: getExpire(shareConfig.expire),
-        tableName: planner.currentPlanner?.label,
-      };
-      console.log(JSON.stringify(data));
-      await uploadTimetable({
-        variables: data,
-      });
-    }
+    const data = {
+      entries: planner.plannerCourses
+        .filter(
+          course =>
+            course && course.sections && Object.values(course.sections)?.length
+        )
+        .map(course => ({
+          ...course,
+          sections: Object.values(course?.sections || {})
+            .filter(section => section && !section.hide)
+            .map(section => {
+              const { hide, ...shareSection } = section;
+              return shareSection;
+            }),
+        })),
+      expire: getExpire(shareConfig.expire),
+      tableName: planner.plannerName,
+    };
+    console.log(JSON.stringify(data));
+    await uploadTimetable({
+      variables: data,
+    });
   };
+
+  useEffect(() => {
+    // if no planner, then init / load one
+    if (!planner.plannerId) {
+      createTimetable();
+      return;
+    }
+    // otherwise switch to current planner
+  }, [planner.plannerId]);
+
   useEffect(() => {
     dispatchShareConfig({
       expire: shareCourses?.mode === ShareTimetableMode.SHARE ? '7 days' : 'No',
       shareLink: '',
     });
-  }, [planner.currentPlannerKey, shareCourses]);
+  }, [planner.plannerId, shareCourses]);
 
   useEffect(() => {
-    if (!shareId) {
-      return;
-    }
+    if (!shareId) return;
     if (!validShareId(shareId)) {
       view.setSnackBar({
         message: 'Invalid shared timetable!',
@@ -333,11 +344,11 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
       });
       return;
     }
-    if (planner.shareIds[shareId]) {
-      console.log(
-        `Found shareId ${shareId}, skipped loading and switch to ${planner.shareIds[shareId]}`
-      );
-      planner.updateCurrentPlanner(+planner.shareIds[shareId]);
+    if (shareId === planner.plannerId) {
+      view.setSnackBar({
+        message: 'Shared planner already loaded!',
+        severity: 'warning',
+      });
       router.push('/planner');
       return;
     }
@@ -348,43 +359,46 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
     });
   }, [shareId, planner]);
 
+  const shareTimetable = () => {};
+
+  const switchTimetable = (id: string) => {
+    router.push(`/planner?sid=${id}`, undefined, { shallow: true });
+  };
+
+  const updateTimetable = data => {
+    uploadTimetable({
+      variables: {
+        _id: planner.plannerId,
+        ...data,
+      },
+    });
+  };
+
+  const createTimetable = async () => {
+    await uploadTimetable({
+      variables: {
+        entries: [],
+        expire: -1,
+      },
+    });
+  };
+
   return (
     <div className={clsx(styles.plannerTimetableContainer, 'column')}>
       {getUploadTimetableLoading && <Loading fixed />}
-      <TimetablePanel
-        className={className}
-        courses={planner.plannerCourses
-          ?.concat(planner.previewPlannerCourse)
-          .filter(course => course)}
-        timetableInfo={planner.timetableInfo}
-        onImport={parsedData =>
-          planner.updateStore('plannerCourses', parsedData)
-        }
-        onClear={() => planner.clearPlannerCourses()}
-        onUpload={courses =>
-          setShareCourses({
-            courses: courses,
-            mode: ShareTimetableMode.UPLOAD,
-            key: planner.currentPlannerKey,
-          })
-        }
-        onShare={courses =>
-          setShareCourses({
-            courses: courses,
-            mode: ShareTimetableMode.SHARE,
-            key: planner.currentPlannerKey,
-          })
-        }
-        selections={planner.plannerList}
-        onSelect={key => planner.updateCurrentPlanner(key)}
-        selected={{
-          key: planner.currentPlannerKey,
-          label:
-            planner.currentPlanner?.label || PLANNER_CONFIGS.DEFAULT_TABLE_NAME,
-        }}
-        setLabel={(label: string) => planner.setPlannerLabel(label)}
-        deleteTable={(key: number) => planner.deletePlanner(key)}
-      />
+      {
+        <TimetablePanel
+          className={className}
+          createTimetable={createTimetable}
+          onShare={() =>
+            setShareCourses({
+              mode: ShareTimetableMode.SHARE,
+            })
+          }
+          updateTimetable={updateTimetable}
+          deleteTable={(id: string, expire: number) => onDelete(id, expire)}
+        />
+      }
       {!isHome && <Footer style={styles.plannerFooter} />}
       <Dialog
         transitionDuration={{
@@ -402,8 +416,8 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
           className={styles.contentContainer}
           title={MODE_ASSETS[shareCourses?.mode]?.title}
           caption={`${
-            planner.currentPlanner?.label || PLANNER_CONFIGS.DEFAULT_TABLE_NAME
-          } (${planner.currentPlanner?.courses?.length} courses)`}
+            planner.plannerName || PLANNER_CONFIGS.DEFAULT_TABLE_NAME
+          } (${planner.plannerCourses?.length} courses)`}
         >
           <TimetableShareDialogContent
             shareConfig={shareConfig}
