@@ -196,19 +196,24 @@ const SHARE_ID_RULE = new RegExp('^[A-Za-z0-9_-]{8}$', 'i');
 
 const validShareId = (id: string) => id && SHARE_ID_RULE.test(id);
 
+type PlannerDelta = {
+  tableName?: string;
+  courses?: PlannerCourse[];
+};
+
 const getDelta = (
   planner: Planner,
   courses: PlannerCourse[],
   tableName: string
-) => {
+): PlannerDelta | null => {
   console.log(JSON.stringify(planner?.courses));
   console.log(JSON.stringify(courses) + ', ' + tableName);
-  const delta = {};
+  const delta: PlannerDelta = {};
   if (tableName !== planner?.tableName) {
     delta['tableName'] = tableName;
   }
   if (!isEqual(courses, planner?.courses)) {
-    delta['entries'] = courses;
+    delta.courses = courses;
   }
   return Object.keys(delta).length ? delta : null;
 };
@@ -372,16 +377,14 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
         /* If no update, do nothing */
         if (!delta) return;
         /* Update the prev planner course */
-        const deltaCopy = cloneDeep(delta);
-        deltaCopy['courses'] = deltaCopy['entries'];
-        delete deltaCopy['entries'];
         planner.planner = {
           ...planner.planner,
-          ...deltaCopy,
+          ...cloneDeep(delta),
         };
         /* Process the entries for gql */
-        if (delta['entries']) {
-          delta['entries'] = processEntriesForGql(delta['entries']);
+        if (delta.courses) {
+          delta['entries'] = processEntriesForGql(delta.courses);
+          delete delta.courses;
         }
         /* If dirty, then upload timetable */
         uploadTimetable({
