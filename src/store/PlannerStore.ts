@@ -1,5 +1,6 @@
 import { makeObservable, observable, action } from 'mobx';
 
+import { cloneDeep } from 'lodash';
 import {
   PlannerCourse,
   Planner,
@@ -20,6 +21,10 @@ const RESET_KEYS = LOAD_KEYS;
 
 const DEFAULT_VALUES = {};
 
+const STORAGE_CONFIG = {
+  plannerId: false,
+};
+
 class PlannerStore extends StorePrototype {
   @observable syncIntervalId: NodeJS.Timer;
   @observable planner: Planner; // Store info like current id, old courses, and tableName
@@ -32,7 +37,7 @@ class PlannerStore extends StorePrototype {
   viewStore: ViewStore;
 
   constructor(viewStore: ViewStore) {
-    super(LOAD_KEYS, RESET_KEYS, DEFAULT_VALUES);
+    super(LOAD_KEYS, RESET_KEYS, DEFAULT_VALUES, STORAGE_CONFIG);
     makeObservable(this);
     this.viewStore = viewStore;
   }
@@ -40,6 +45,7 @@ class PlannerStore extends StorePrototype {
   @action init = () => {
     console.log('Init planner store');
     this.loadStore();
+    console.log(`Loaded ${this.plannerId}`);
   };
 
   @action newPlanner = (id: string, createdAt: number) => {
@@ -162,7 +168,7 @@ class PlannerStore extends StorePrototype {
     this.setStore('plannerId', planner.id); // Store current planner Id and update mem
     this.planner = planner;
     this.plannerName = planner.tableName;
-    this.plannerCourses = JSON.parse(JSON.stringify(this.planner.courses));
+    this.plannerCourses = cloneDeep(this.planner.courses);
   };
 
   @action clearPlannerCourses = () => {
@@ -212,9 +218,7 @@ class PlannerStore extends StorePrototype {
         viewStore: this.viewStore,
       },
       () => {
-        const UPDATE_COPY: PlannerCourse[] = JSON.parse(
-          JSON.stringify(this.plannerCourses)
-        );
+        const UPDATE_COPY: PlannerCourse[] = cloneDeep(this.plannerCourses);
         this.hidedSections.forEach(section => {
           delete UPDATE_COPY[section.courseIndex].sections[section.name];
         });
@@ -254,9 +258,7 @@ class PlannerStore extends StorePrototype {
           viewStore: this.viewStore,
         },
         () => {
-          const sectionCopy = JSON.parse(
-            JSON.stringify(this.plannerCourses[index].sections)
-          );
+          const sectionCopy = cloneDeep(this.plannerCourses[index].sections);
           delete sectionCopy[sectionId];
           if (JSON.stringify(sectionCopy) !== JSON.stringify({})) {
             this.plannerCourses[index] = {

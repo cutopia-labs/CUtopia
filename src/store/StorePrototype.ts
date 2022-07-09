@@ -4,16 +4,19 @@ import { getStoreData, removeStoreItem, storeData } from '../helpers/store';
 class StorePrototype {
   onLoadKeys?: string[];
   onResetKeys?: string[];
-  defaultValues?: Record<string, any>;
+  defaultValues: Record<string, any>;
+  loadConfig: Record<string, boolean>;
 
   constructor(
     onLoadKeys?: string[],
     onResetKeys?: string[],
-    defaultValues?: Record<string, any>
+    defaultValues?: Record<string, any>,
+    loadConfig?: Record<string, any>
   ) {
     this.onLoadKeys = onLoadKeys;
     this.onResetKeys = onResetKeys;
-    this.defaultValues = defaultValues;
+    this.defaultValues = defaultValues || {};
+    this.loadConfig = loadConfig || {};
   }
 
   @action.bound updateStore(key: string, value: any) {
@@ -24,10 +27,13 @@ class StorePrototype {
     const defaultValues = { ...this.defaultValues };
     if (this.onLoadKeys) {
       this.onLoadKeys.forEach(key => {
-        const retrieved = getStoreData(key);
+        const retrieved = getStoreData(
+          key,
+          this.loadConfig[key] === undefined ? true : false
+        );
         this.updateStore(
           key,
-          retrieved === null ? (this.defaultValues || {})[key] : retrieved
+          retrieved === null ? this.defaultValues[key] : retrieved
         );
         delete defaultValues[key];
       });
@@ -37,7 +43,7 @@ class StorePrototype {
 
   @action setStore = (key: string, value: any) => {
     this.updateStore(key, value);
-    storeData(key, value);
+    storeData(key, value, this.loadConfig[key] === undefined ? true : false);
   };
 
   @action resetStore = () => {
@@ -45,7 +51,7 @@ class StorePrototype {
     if (this.onResetKeys) {
       this.onResetKeys.forEach(key => {
         removeStoreItem(key);
-        this.updateStore(key, (this.defaultValues || {})[key] || null);
+        this.updateStore(key, this.defaultValues[key] || null);
         delete defaultValues[key];
       });
     }
@@ -53,11 +59,9 @@ class StorePrototype {
   };
 
   @action initStore = (defaultValues?: Record<string, any>) => {
-    if (this.defaultValues) {
-      Object.entries(defaultValues || this.defaultValues).forEach(([k, v]) => {
-        this.updateStore(k, v);
-      });
-    }
+    Object.entries(defaultValues || this.defaultValues).forEach(([k, v]) => {
+      this.updateStore(k, v);
+    });
   };
 }
 
