@@ -5,22 +5,32 @@ class StorePrototype {
   onLoadKeys?: string[];
   onResetKeys?: string[];
   defaultValues: Record<string, any>;
-  loadConfig: Record<string, boolean>;
+  storageConfig: Record<string, boolean>;
 
   constructor(
     onLoadKeys?: string[],
     onResetKeys?: string[],
     defaultValues?: Record<string, any>,
-    loadConfig?: Record<string, any>
+    storageConfig?: Record<string, any>
   ) {
     this.onLoadKeys = onLoadKeys;
     this.onResetKeys = onResetKeys;
     this.defaultValues = defaultValues || {};
-    this.loadConfig = loadConfig || {};
+    this.storageConfig = storageConfig || {};
   }
 
-  @action.bound updateStore(key: string, value: any) {
-    this[key] = value;
+  @action.bound updateStore(
+    key: string,
+    value: any,
+    skipCheck: boolean = false
+  ) {
+    if (skipCheck) {
+      this[key] = value;
+      return;
+    }
+    if (this[key] !== value) {
+      this[key] = value;
+    }
   }
 
   @action loadStore = () => {
@@ -29,7 +39,7 @@ class StorePrototype {
       this.onLoadKeys.forEach(key => {
         const retrieved = getStoreData(
           key,
-          this.loadConfig[key] === undefined ? true : false
+          this.storageConfig[key] === undefined ? true : false
         );
         this.updateStore(
           key,
@@ -38,12 +48,14 @@ class StorePrototype {
         delete defaultValues[key];
       });
     }
+    /* If there are some unloaded keys in default values, load it */
     this.initStore(defaultValues);
   };
 
   @action setStore = (key: string, value: any) => {
-    this.updateStore(key, value);
-    storeData(key, value, this.loadConfig[key] === undefined ? true : false);
+    if (this[key] === value) return;
+    this.updateStore(key, value, true);
+    storeData(key, value, this.storageConfig[key] === undefined ? true : false);
   };
 
   @action resetStore = () => {
