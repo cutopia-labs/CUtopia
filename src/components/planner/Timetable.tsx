@@ -121,16 +121,12 @@ const Timetable: FC<TimetableProps> = ({ courses, timetableInfo }) => {
         });
       });
     config.numOfHours = config.endHour - config.startHour + 1;
-    console.log(config);
   } catch (error) {
-    console.log(error);
     view.setSnackBar({
       message: 'Invalid Timetable',
       severity: 'warning',
     });
   }
-
-  console.log(config);
 
   return (
     <div className={styles.timetableContainer}>

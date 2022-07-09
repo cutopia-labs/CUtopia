@@ -7,6 +7,7 @@ import { Button, Dialog } from '@material-ui/core';
 import copy from 'copy-to-clipboard';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
+import { cloneDeep, isEqual } from 'lodash';
 import styles from '../../styles/components/planner/PlannerTimetable.module.scss';
 import { useView, usePlanner } from '../../store';
 import {
@@ -109,6 +110,30 @@ const MODE_ASSETS = {
 export const generateTimetableURL = (id: string) =>
   `${window.location.protocol}//${window.location.host}/planner?sid=${id}`;
 
+export const processEntriesForGql = (
+  courses: PlannerCourse[],
+  skipHide: boolean = true
+) => {
+  return courses
+    .filter(
+      course =>
+        course && course.sections && Object.values(course.sections)?.length
+    )
+    .map(course => {
+      let sections = Object.values(course?.sections || {});
+      sections = skipHide
+        ? sections.filter(section => section && !section.hide)
+        : sections;
+      return {
+        ...course,
+        sections: sections.map(section => {
+          const { hide, ...shareSection } = section;
+          return shareSection;
+        }),
+      };
+    });
+};
+
 const TimetableShareDialogContent = ({
   shareConfig,
   dispatchShareConfig,
@@ -182,7 +207,7 @@ const getDelta = (
   if (tableName !== planner?.tableName) {
     delta['tableName'] = tableName;
   }
-  if (JSON.stringify(courses) !== JSON.stringify(planner?.courses)) {
+  if (!isEqual(courses, planner?.courses)) {
     delta['entries'] = courses;
   }
   return Object.keys(delta).length ? delta : null;
@@ -320,20 +345,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
       });
     }
     const data = {
-      entries: planner.plannerCourses
-        .filter(
-          course =>
-            course && course.sections && Object.values(course.sections)?.length
-        )
-        .map(course => ({
-          ...course,
-          sections: Object.values(course?.sections || {})
-            .filter(section => section && !section.hide)
-            .map(section => {
-              const { hide, ...shareSection } = section;
-              return shareSection;
-            }),
-        })),
+      entries: processEntriesForGql(planner.plannerCourses),
       expire: getExpire(shareConfig.expire),
       tableName: planner.plannerName,
     };
@@ -356,24 +368,33 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
         _id: planner.plannerId,
       }),
       ({ delta, _id }) => {
-        console.log(`Syncing planner: ${JSON.stringify(delta)}`);
+        console.log(`Syncing planner:\n${JSON.stringify(delta, null, 2)}`);
+        /* If no update, do nothing */
         if (!delta) return;
-        // If dirty, then upload timetable
+        /* Update the prev planner course */
+        const deltaCopy = cloneDeep(delta);
+        deltaCopy['courses'] = deltaCopy['entries'];
+        delete deltaCopy['entries'];
+        planner.planner = {
+          ...planner.planner,
+          ...deltaCopy,
+        };
+        /* Process the entries for gql */
+        if (delta['entries']) {
+          delta['entries'] = processEntriesForGql(delta['entries']);
+        }
+        /* If dirty, then upload timetable */
         uploadTimetable({
           variables: {
             _id,
             ...delta,
+            expire: EXPIRE_LOOKUP.upload,
           },
         });
         console.log({
           _id,
           ...delta,
         });
-        delta['courses'] = delta['entries'];
-        planner.planner = {
-          ...planner.planner,
-          ...delta,
-        };
       },
       {
         delay: TIMETABLE_SYNC_INTERVAL,
