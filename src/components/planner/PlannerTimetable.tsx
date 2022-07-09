@@ -17,6 +17,7 @@ import { REMOVE_TIMETABLE, SHARE_TIMETABLE } from '../../constants/mutations';
 import {
   Planner,
   PlannerCourse,
+  ShareTimetableMode,
   SnackBarProps,
   TimetableOverviewMode,
   UploadTimetable,
@@ -32,11 +33,7 @@ import Section from '../molecules/Section';
 import ViewStore from '../../store/ViewStore';
 import Footer from '../molecules/Footer';
 import TimetablePanel from '../templates/TimetablePanel';
-
-enum ShareTimetableMode {
-  UPLOAD, // user persist timetable / persist sharing ttb
-  SHARE,
-}
+import { EXPIRE_LOOKUP } from '../../constants';
 
 type PlannerTimetableProps = {
   className?: string;
@@ -52,24 +49,29 @@ const getModeFromExpire = (expire: number) => {
 };
 
 const getExpire = (str: string) => {
+  /* Handle invalid case */
   if (!str) {
     return null;
   }
+  /* If user choose share expire days */
   if (str.endsWith('day') || str.endsWith('days')) {
     return parseInt(str[0], 10);
   }
+  /* If no expire days, then its upload but not share */
   switch (str) {
+    /* If the upload is shareable */
     case 'Yes':
-      return 0;
+      return EXPIRE_LOOKUP.shareableUpload;
+    /* If it's private upload */
     case 'No':
-      return -1;
+      return EXPIRE_LOOKUP.upload;
   }
   return str;
 };
 
 const getLabelFromKey = {
-  [0]: 'Yes',
-  [-1]: 'No',
+  [EXPIRE_LOOKUP.shareableUpload]: 'Yes',
+  [EXPIRE_LOOKUP.upload]: 'No',
 };
 
 const EXPIRE_LABELS = ['1 day', '3 days', '7 days'];
@@ -284,7 +286,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
             mode: getModeFromExpire(getExpire(shareConfig?.expire) as any),
           };
           // If uploaded a share timetable
-          if (getExpire(shareConfig?.expire) !== -1) {
+          if (getExpire(shareConfig?.expire) !== EXPIRE_LOOKUP.upload) {
             const shareURL = generateTimetableURL(uploadTimetable?._id);
             dispatchShareConfig({
               shareLink: shareURL,
@@ -300,7 +302,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
         {
           view,
           message:
-            getExpire(shareConfig?.expire) === -1
+            getExpire(shareConfig?.expire) === EXPIRE_LOOKUP.upload
               ? 'Uploaded!'
               : 'Copied share link to your clipboard!',
         }
@@ -437,7 +439,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
     const res = await uploadTimetable({
       variables: {
         entries: [],
-        expire: -1,
+        expire: EXPIRE_LOOKUP.upload,
       },
     });
     const newTimetable = res.data?.uploadTimetable;

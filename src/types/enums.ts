@@ -25,3 +25,8 @@ export enum TimetableOverviewMode {
   SHARE,
   UPLOAD_SHARABLE,
 }
+
+export enum ShareTimetableMode {
+  UPLOAD, // user persist timetable / persist sharing ttb
+  SHARE,
+}

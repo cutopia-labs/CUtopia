@@ -1,5 +1,13 @@
 import { Grade, RatingField } from '../types';
 
+export const NON_SHARE_EXPIRE = -1;
+
+export const EXPIRE_LOOKUP = {
+  share: 7, // just to indicate share, the days shall be configurable
+  shareableUpload: 0,
+  upload: -1,
+};
+
 export const RATING_FIELDS = [
   'grading',
   'teaching',
