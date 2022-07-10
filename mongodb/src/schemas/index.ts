@@ -42,6 +42,7 @@ export const timetableSectionSchema = new Schema(
     startTimes: [requiredString],
     instructors: [requiredString],
     locations: [requiredString],
+    hide: Boolean,
     name: String,
   },
   {
