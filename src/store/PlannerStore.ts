@@ -19,7 +19,9 @@ const LOAD_KEYS = ['plannerId'];
 
 const RESET_KEYS = LOAD_KEYS;
 
-const DEFAULT_VALUES = {};
+const DEFAULT_VALUES = {
+  plannerId: '',
+};
 
 const STORAGE_CONFIG = {
   plannerId: false,

@@ -7,18 +7,20 @@ export function removeStoreItem(key: string) {
   }
 }
 
-export function getStoreData(key: string) {
+export function getStoreData(key: string, parse: boolean = true) {
   try {
-    return JSON.parse(localStorage.getItem(key));
+    const value = localStorage.getItem(key);
+    return parse ? JSON.parse(value) : value;
   } catch (e) {
-    console.log(`Loading error: ${e}`);
-    return '';
+    console.log(`Loading error at ${key}: ${e}`);
+    return localStorage.getItem(key);
   }
 }
 
-export function storeData(key: string, value: any) {
+export function storeData(key: string, value: any, stringify: boolean = true) {
   try {
-    return localStorage.setItem(key, JSON.stringify(value));
+    console.log(`Setting ${key} to ${value}`);
+    return localStorage.setItem(key, stringify ? JSON.stringify(value) : value);
   } catch (e) {
     console.log(`Saving error: ${e}`);
     return '';

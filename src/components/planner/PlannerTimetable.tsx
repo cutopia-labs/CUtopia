@@ -1,6 +1,5 @@
-import { useReducer, useState, useEffect, FC } from 'react';
+import { useReducer, useState, useEffect, FC, useRef } from 'react';
 import { observer } from 'mobx-react-lite';
-
 import { reaction } from 'mobx';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { Button, Dialog } from '@material-ui/core';
@@ -8,6 +7,7 @@ import copy from 'copy-to-clipboard';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import { cloneDeep, isEqual } from 'lodash';
+
 import styles from '../../styles/components/planner/PlannerTimetable.module.scss';
 import { useView, usePlanner } from '../../store';
 import {
@@ -26,7 +26,7 @@ import {
 import ChipsRow from '../molecules/ChipsRow';
 import TextField from '../atoms/TextField';
 import handleCompleted from '../../helpers/handleCompleted';
-import { GET_SHARE_TIMETABLE } from '../../constants/queries';
+import { GET_TIMETABLE } from '../../constants/queries';
 import LoadingButton from '../atoms/LoadingButton';
 import Loading from '../atoms/Loading';
 import DialogContentTemplate from '../templates/DialogContentTemplate';
@@ -110,11 +110,11 @@ const MODE_ASSETS = {
 export const generateTimetableURL = (id: string) =>
   `${window.location.protocol}//${window.location.host}/planner?sid=${id}`;
 
-export const processEntriesForGql = (
+export const coursesToEntries = (
   courses: PlannerCourse[],
   skipHide: boolean = true
-) => {
-  return courses
+) =>
+  courses
     .filter(
       course =>
         course && course.sections && Object.values(course.sections)?.length
@@ -132,7 +132,14 @@ export const processEntriesForGql = (
         }),
       };
     });
-};
+
+export const entriesToCourses = (entries: any[]) =>
+  entries.map(course => ({
+    ...course,
+    sections: Object.fromEntries(
+      course.sections.map(section => [section.name, section])
+    ),
+  })) || [];
 
 const TimetableShareDialogContent = ({
   shareConfig,
@@ -235,6 +242,7 @@ const getSnackbarMessage = (
 const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
   const planner = usePlanner();
   const router = useRouter();
+  const firstUpdate = useRef(true);
   const isHome = router.pathname == '/';
   const { sid: shareId } = router.query as {
     sid?: string;
@@ -248,27 +256,26 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
     {}
   );
 
-  const [getShareTimetable, { loading: getUploadTimetableLoading }] =
-    useLazyQuery(GET_SHARE_TIMETABLE, {
+  const [getTimetable, { loading: getUploadTimetableLoading }] = useLazyQuery(
+    GET_TIMETABLE,
+    {
       onCompleted: async (data: { timetable: UploadTimetable }) => {
         console.log(`loaded ${data?.timetable}`);
         const importedPlanner: Planner = {
           createdAt: data.timetable.createdAt,
           tableName: data.timetable.tableName,
-          id: shareId,
-          courses:
-            data.timetable.entries.map(course => ({
-              ...course,
-              sections: Object.fromEntries(
-                course.sections.map(section => [section.name, section])
-              ),
-            })) || [],
+          id: shareId || planner.plannerId,
+          courses: entriesToCourses(data.timetable.entries),
         };
         planner.updateCurrentPlanner(importedPlanner);
-        router.push('/planner');
+        /* If current path is a share path, then change to planner */
+        if (router.asPath !== '/planner') {
+          router.push('/planner');
+        }
       },
       onError: view.handleError,
-    });
+    }
+  );
 
   const [removeTimetable, { loading: removeTimetableLoading }] =
     useMutation(REMOVE_TIMETABLE);
@@ -286,9 +293,8 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
         [...planner.remoteTimetableData].filter(item => item._id !== id)
       );
       view.setSnackBar('Deleted!');
-      // i.e. if current planner is deleted
+      /* if current planner is deleted */
       if (id === planner.plannerId) {
-        // Back to homepage
         router.push(`/planner`, undefined, { shallow: true });
       }
     } catch (e) {
@@ -327,6 +333,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
             ...(planner.remoteTimetableData || []),
             newTimetableOverview,
           ]);
+          console.log(`Updating plannerId to ${uploadTimetable?._id}`);
           planner.setStore('plannerId', uploadTimetable?._id);
         },
         {
@@ -350,7 +357,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
       });
     }
     const data = {
-      entries: processEntriesForGql(planner.plannerCourses),
+      entries: coursesToEntries(planner.plannerCourses),
       expire: getExpire(shareConfig.expire),
       tableName: planner.plannerName,
     };
@@ -359,7 +366,6 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
       variables: data,
     });
   };
-
   // on mount
   useEffect(() => {
     // start sync
@@ -373,7 +379,9 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
         _id: planner.plannerId,
       }),
       ({ delta, _id }) => {
-        console.log(`Syncing planner:\n${JSON.stringify(delta, null, 2)}`);
+        console.log(
+          `ID: (${_id})\nSyncing planner:\n${JSON.stringify(delta, null, 2)}`
+        );
         /* If no update, do nothing */
         if (!delta) return;
         /* Update the prev planner course */
@@ -383,7 +391,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
         };
         /* Process the entries for gql */
         if (delta.courses) {
-          delta['entries'] = processEntriesForGql(delta.courses);
+          delta['entries'] = coursesToEntries(delta.courses);
           delete delta.courses;
         }
         /* If dirty, then upload timetable */
@@ -407,13 +415,22 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
     return () => disposer();
   }, []);
 
+  /*
+   * Init based on planner id
+   */
   useEffect(() => {
-    // if no planner, then init / load one
-    if (!planner.plannerId) {
-      // createTimetable();
+    console.log(`Planner ID: ${planner.plannerId}`);
+    /* if no planner, then init / load one */
+    if (planner.plannerId === '') {
+      createTimetable();
       return;
     }
-    // otherwise switch to current planner
+    /* otherwise load & switch to current planner */
+    getTimetable({
+      variables: {
+        id: planner.plannerId,
+      },
+    });
   }, [planner.plannerId]);
 
   useEffect(() => {
@@ -440,14 +457,12 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
       router.push('/planner');
       return;
     }
-    getShareTimetable({
+    getTimetable({
       variables: {
         id: shareId,
       },
     });
-  }, [shareId, planner]);
-
-  const shareTimetable = () => {};
+  }, [shareId, planner.plannerId]);
 
   const updateTimetable = data => {
     uploadTimetable({

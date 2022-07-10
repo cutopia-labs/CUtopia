@@ -246,7 +246,7 @@ export const COURSE_SECTIONS_QUERY = gql`
   }
 `;
 
-export const GET_SHARE_TIMETABLE = gql`
+export const GET_TIMETABLE = gql`
   query ($id: String!) {
     timetable(_id: $id) {
       entries {
