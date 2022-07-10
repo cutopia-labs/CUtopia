@@ -213,8 +213,8 @@ const getDelta = (
   courses: PlannerCourse[],
   tableName: string
 ): PlannerDelta | null => {
-  console.log(JSON.stringify(planner?.courses));
-  console.log(JSON.stringify(courses) + ', ' + tableName);
+  // console.log(JSON.stringify(planner?.courses));
+  // console.log(JSON.stringify(courses) + ', ' + tableName);
   const delta: PlannerDelta = {};
   if (tableName !== planner?.tableName) {
     delta['tableName'] = tableName;
@@ -260,7 +260,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
     GET_TIMETABLE,
     {
       onCompleted: async (data: { timetable: UploadTimetable }) => {
-        console.log(`loaded ${data?.timetable}`);
+        console.log(`loaded ${JSON.stringify(data?.timetable)}`);
         const importedPlanner: Planner = {
           createdAt: data.timetable.createdAt,
           tableName: data.timetable.tableName,
@@ -273,7 +273,11 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
           router.push('/planner');
         }
       },
-      onError: view.handleError,
+      onError: e => {
+        view.handleError(e);
+        /* Reset the planner id and create a new timetable */
+        planner.setStore('plannerId', '');
+      },
     }
   );
 
@@ -314,6 +318,12 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
               severity: 'error',
             });
           }
+          const isShare =
+            getExpire(shareConfig?.expire) !== EXPIRE_LOOKUP.upload;
+          const message = getUploadTimetableMessage(uploadTimetable, isShare);
+          if (message) {
+            view.setSnackBar(message);
+          }
           const newTimetableOverview = {
             _id: uploadTimetable._id,
             createdAt: uploadTimetable.createdAt,
@@ -322,8 +332,8 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
             mode: getModeFromExpire(getExpire(shareConfig?.expire) as any),
           };
           // If uploaded a share timetable
-          if (getExpire(shareConfig?.expire) !== EXPIRE_LOOKUP.upload) {
-            const shareURL = generateTimetableURL(uploadTimetable?._id);
+          if (isShare) {
+            const shareURL = generateTimetableURL(uploadTimetable._id);
             dispatchShareConfig({
               shareLink: shareURL,
             });
@@ -337,16 +347,28 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
           planner.setStore('plannerId', uploadTimetable?._id);
         },
         {
-          view,
-          message:
-            getExpire(shareConfig?.expire) === EXPIRE_LOOKUP.upload
-              ? 'Uploaded!'
-              : 'Copied share link to your clipboard!',
+          mute: true, // handle snackbar message in callback
         }
       ),
       onError: view.handleError,
     }
   );
+
+  const getUploadTimetableMessage = (
+    uploadTimetable,
+    isShare: boolean
+  ): string => {
+    const prevPlannerId = planner.plannerId;
+    /* If no prev planner id, then it's a newly created TTB */
+    if (prevPlannerId === '') {
+      return 'TimeTable Created';
+    }
+    /* If current planner id same as prev one, then it's update / share */
+    if (prevPlannerId === uploadTimetable._id) {
+      return isShare ? 'Copied share link to your clipboard!' : null;
+    }
+    return null;
+  };
 
   const onShareTimetTable = async e => {
     e.preventDefault();
@@ -478,7 +500,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
     const res = await uploadTimetable({
       variables: {
         entries: [],
-        expire: EXPIRE_LOOKUP.upload,
+        expire: EXPIRE_LOOKUP.default,
       },
     });
     const newTimetable = res.data?.uploadTimetable;
