@@ -71,6 +71,7 @@ export type Planner = {
   type?: TimetableOverviewMode;
   createdAt?: number;
   courses: PlannerCourse[];
+  expire?: number;
   id: string;
 };
 

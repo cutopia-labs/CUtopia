@@ -1,0 +1,62 @@
+.ttOverviewListItem {
+  cursor: initial;
+  flex-direction: row;
+  :global(.list-item-title-container) {
+    margin-left: 0;
+    :global(.caption) {
+      display: flex;
+      align-items: center;
+      svg {
+        margin-left: 4px;
+        margin-right: 4px;
+        font-size: 16px;
+      }
+    }
+  }
+  .btnContainer {
+    svg {
+      padding: 4px;
+    }
+  }
+}
+
+.menuItem {
+  &:global(.MuiMenuItem-root) {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+}
+
+.menuIconContainer {
+  margin-right: var(--card-padding);
+  & :global(.MuiSvgIcon-root) {
+    font-size: 18px;
+  }
+}
+
+.timetableSelectionMenu {
+  --menu-padding-horizontal: 16px;
+  --menu-padding-vertical: 6px;
+  & :global(.MuiPaper-root) { // Menu contianer
+    :global(.MuiSvgIcon-root) { // may not working for nested global?
+      font-size: 22px;
+    }
+    :global(.MuiList-root) {
+      padding: 0;
+    }
+    h4 {
+      margin: 12px var(--menu-padding-horizontal);
+      color: var(--accent);
+    }
+  }
+  & .timetableLabelInputContainer {
+    margin: 0 var(--menu-padding-horizontal) var(--menu-padding-vertical) var(--menu-padding-horizontal);
+  }
+  & :global(.MuiButtonBase-root):last-child {
+    color: var(--accent);
+    font-weight: bold;
+  }
+  & .timetableSelectItem :global(.MuiIconButton-root) {
+    margin-left: auto;
+  }
+}

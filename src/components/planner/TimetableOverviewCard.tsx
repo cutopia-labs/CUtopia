@@ -1,22 +1,11 @@
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { FC, useEffect, useState } from 'react';
-import pluralize from 'pluralize';
 
-import {
-  AiOutlineCloudDownload,
-  AiOutlineDelete,
-  AiOutlineShareAlt,
-} from 'react-icons/ai';
-import { IconButton, MenuItem, Menu } from '@material-ui/core';
-import { MoreHoriz, Timer } from '@material-ui/icons';
 import copy from 'copy-to-clipboard';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
-import clsx from 'clsx';
-import { PLANNER_CONFIGS } from '../../constants/configs';
 import styles from '../../styles/components/planner/TimetableOverviewCard.module.scss';
 import { GET_USER_TIMETABLES } from '../../constants/queries';
-import { getMMMDDYY } from '../../helpers/getTime';
 import { usePlanner, useView } from '../../store';
 import {
   ErrorCardMode,
@@ -27,22 +16,9 @@ import {
 import AccordionCard from '../atoms/AccordionCard';
 import Loading from '../atoms/Loading';
 import ErrorCard from '../molecules/ErrorCard';
-import ListItem from '../molecules/ListItem';
 import { REMOVE_TIMETABLE } from '../../constants/mutations';
 import { generateTimetableURL } from './PlannerTimetable';
-
-const getExpire = (mode: TimetableOverviewMode, expire: number) => {
-  if (mode === TimetableOverviewMode.SHARE) {
-    return (
-      <>
-        {' • '}
-        <Timer />
-        {`${pluralize('day', expire, true)}`}
-      </>
-    );
-  }
-  return '';
-};
+import { TimetableOverviewListItem } from './TimetableOverview';
 
 const getTimetableOverviewMode = (expire: number) => {
   if (expire > 0) {
@@ -68,87 +44,6 @@ const getCombinedTimetable = (data: UserData): TimetableOverviewWithMode[] => {
       ...item,
       mode: getTimetableOverviewMode(item.expire),
     }));
-};
-
-type TimetableOverviewListItemProps = {
-  item: TimetableOverviewWithMode;
-  onShare: (id: string) => void;
-  onDownload: (id: string, createdAt: number) => void;
-  onDelete: (id: string, expire: number) => void;
-};
-
-const TimetableOverviewListItem: FC<TimetableOverviewListItemProps> = ({
-  item,
-  onShare,
-  onDownload,
-  onDelete,
-}) => {
-  const [anchorEl, setAnchorEl] = useState(null);
-  const menuItems = [
-    {
-      label: 'Delete',
-      action: () => onDelete(item._id, item.expire),
-      icon: <AiOutlineDelete />,
-    },
-  ];
-  if (item.mode !== TimetableOverviewMode.UPLOAD) {
-    menuItems.push({
-      label: 'Share',
-      action: () => onShare(item._id),
-      icon: <AiOutlineShareAlt />,
-    });
-  }
-  return (
-    <ListItem
-      className={styles.ttOverviewListItem}
-      noHover
-      noBorder
-      title={item.tableName || PLANNER_CONFIGS.DEFAULT_TABLE_NAME}
-      caption={
-        <>
-          {getMMMDDYY(item.createdAt)}
-          {getExpire(item.mode, item.expire)}
-        </>
-      }
-    >
-      <span className={clsx(styles.btnContainer, 'center-row')}>
-        <IconButton
-          size="small"
-          color="primary"
-          onClick={() => onDownload(item._id, item.createdAt)}
-        >
-          <AiOutlineCloudDownload />
-        </IconButton>
-        <IconButton
-          size="small"
-          color="primary"
-          onClick={e => setAnchorEl(e.currentTarget)}
-        >
-          <MoreHoriz />
-        </IconButton>
-        <Menu
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={() => setAnchorEl(null)}
-        >
-          {menuItems.map(item => (
-            <MenuItem
-              key={item.label}
-              onClick={() => {
-                item.action();
-                setAnchorEl(null);
-              }}
-            >
-              <span className={clsx(styles.menuIconContainer, 'center-box')}>
-                {item.icon}
-              </span>
-              {item.label}
-            </MenuItem>
-          ))}
-        </Menu>
-      </span>
-    </ListItem>
-  );
 };
 
 const TimetableOverviewCard: FC = () => {
@@ -217,8 +112,9 @@ const TimetableOverviewCard: FC = () => {
         key={`${item.createdAt}${item._id}`}
         item={item}
         onShare={onShare}
-        onDownload={onDownload}
         onDelete={onDelete}
+        onClick={() => {}}
+        selected={false}
       />
     ));
   };

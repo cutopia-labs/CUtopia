@@ -9,12 +9,16 @@ import {
 } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 
-import { Check, DeleteOutline, Edit, ExpandMore } from '@material-ui/icons';
+import { Check, Edit, ExpandMore, Timer } from '@material-ui/icons';
 
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
+import copy from 'copy-to-clipboard';
+import { AiOutlineDelete } from 'react-icons/ai';
+import clsx from 'clsx';
+import pluralize from 'pluralize';
 import { usePlanner, useView } from '../../store';
-import styles from '../../styles/components/templates/TimetablePanel.module.scss';
+import styles from '../../styles/components/planner/TimetableOverview.module.scss';
 import {
   TimetableOverviewMode,
   TimetableOverviewWithMode,
@@ -23,6 +27,9 @@ import {
 import { PLANNER_CONFIGS } from '../../constants/configs';
 import { GET_USER_TIMETABLES } from '../../constants/queries';
 import Loading from '../atoms/Loading';
+import ListItem from '../molecules/ListItem';
+import { getMMMDDYY } from '../../helpers/getTime';
+import { generateTimetableURL } from './PlannerTimetable';
 
 const getTimetableOverviewMode = (expire: number) => {
   if (expire > 0) {
@@ -48,6 +55,85 @@ const getCombinedTimetable = (data: UserData): TimetableOverviewWithMode[] => {
       ...item,
       mode: getTimetableOverviewMode(item.expire),
     }));
+};
+
+const getExpire = (mode: TimetableOverviewMode, expire: number) => {
+  if (mode === TimetableOverviewMode.SHARE) {
+    return (
+      <>
+        {' • '}
+        <Timer />
+        {`${pluralize('day', expire, true)}`}
+      </>
+    );
+  }
+  return '';
+};
+
+type TimetableOverviewListItemProps = {
+  item: TimetableOverviewWithMode;
+  onShare: (id: string) => void;
+  onDelete: (id: string, expire: number) => void;
+  onClick: () => void;
+  selected: boolean;
+};
+
+export const TimetableOverviewListItem: FC<TimetableOverviewListItemProps> = ({
+  item,
+  onShare,
+  onDelete,
+  onClick,
+  selected,
+}) => {
+  const menuItems = [
+    {
+      label: 'Delete',
+      action: () => onDelete(item._id, item.expire),
+      icon: <AiOutlineDelete />,
+    },
+  ];
+  if (item.mode !== TimetableOverviewMode.UPLOAD) {
+    /*
+    menuItems.push({
+      label: 'Share',
+      action: () => onShare(item._id),
+      icon: <AiOutlineShareAlt />,
+    });
+    */
+  }
+  return (
+    <MenuItem className={styles.menuItem}>
+      <ListItem
+        className={styles.ttOverviewListItem}
+        noHover
+        noBorder
+        title={item.tableName || PLANNER_CONFIGS.DEFAULT_TABLE_NAME}
+        onClick={onClick}
+        caption={
+          <>
+            {getMMMDDYY(item.createdAt)}
+            {getExpire(item.mode, item.expire)}
+          </>
+        }
+      >
+        <span className={clsx(styles.btnContainer, 'center-row')}>
+          {menuItems.map(item => (
+            <IconButton
+              key={item.label}
+              size="small"
+              color="primary"
+              onClick={() => {
+                item.action();
+              }}
+            >
+              {' '}
+              {item.icon}
+            </IconButton>
+          ))}
+        </span>
+      </ListItem>
+    </MenuItem>
+  );
 };
 
 export type TimetableOverviewProps = {
@@ -79,6 +165,10 @@ const TimetableOverview: FC<TimetableOverviewProps> = ({
     },
     onError: view.handleError,
   });
+  const onShare = (id: string) => {
+    copy(generateTimetableURL(id));
+    view.setSnackBar('Copied share link!');
+  };
   const switchTimetable = (id: string) => {
     router.push(`/planner?sid=${id}`, undefined, { shallow: true });
   };
@@ -131,25 +221,17 @@ const TimetableOverview: FC<TimetableOverviewProps> = ({
           <Loading />
         ) : (
           planner.remoteTimetableData.map(item => (
-            <MenuItem
-              className={styles.timetableSelectItem}
-              key={item._id}
-              onClick={() => [switchTimetable(item._id), setAnchorEl(null)]}
+            <TimetableOverviewListItem
+              key={`${item.createdAt}${item._id}`}
+              item={item}
+              onShare={onShare}
+              onDelete={deleteTable}
+              onClick={() => {
+                switchTimetable(item._id);
+                setAnchorEl(null);
+              }}
               selected={planner.plannerId === item._id}
-            >
-              {item.tableName || PLANNER_CONFIGS.DEFAULT_TABLE_NAME}
-              <IconButton
-                onClick={e => {
-                  e.stopPropagation();
-                  e.preventDefault();
-                  deleteTable(item._id, item.expire);
-                }}
-                size="small"
-                color="secondary"
-              >
-                <DeleteOutline />
-              </IconButton>
-            </MenuItem>
+            />
           ))
         )}
         <Divider />
