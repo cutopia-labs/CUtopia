@@ -5,11 +5,14 @@ for d in $(find . -type f -name 'package.json' | grep -v "node_modules" | sed -r
     echo "Removing node_modules in $d"
     rm -rf $d/node_modules
   fi
-
   echo "Installing package in $d"
   if [ $isProd = "production" ]; then
     yarn --cwd $d install --prod
   else
     yarn --cwd $d install
+  fi
+  if [ $d = "./mongodb" ]; then
+    echo "Building mongodb"
+    yarn --cwd $d build
   fi
 done
