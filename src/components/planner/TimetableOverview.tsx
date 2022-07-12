@@ -14,7 +14,7 @@ import { Check, Edit, ExpandMore, Timer } from '@material-ui/icons';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import copy from 'copy-to-clipboard';
-import { AiOutlineDelete } from 'react-icons/ai';
+import { AiOutlineDelete, AiOutlineShareAlt } from 'react-icons/ai';
 import clsx from 'clsx';
 import pluralize from 'pluralize';
 import { usePlanner, useView } from '../../store';
@@ -93,13 +93,11 @@ export const TimetableOverviewListItem: FC<TimetableOverviewListItemProps> = ({
     },
   ];
   if (item.mode !== TimetableOverviewMode.UPLOAD) {
-    /*
-    menuItems.push({
+    menuItems.unshift({
       label: 'Share',
       action: () => onShare(item._id),
       icon: <AiOutlineShareAlt />,
     });
-    */
   }
   return (
     <MenuItem className={styles.menuItem}>
@@ -122,7 +120,8 @@ export const TimetableOverviewListItem: FC<TimetableOverviewListItemProps> = ({
               key={item.label}
               size="small"
               color="primary"
-              onClick={() => {
+              onClick={e => {
+                e.stopPropagation();
                 item.action();
               }}
             >
