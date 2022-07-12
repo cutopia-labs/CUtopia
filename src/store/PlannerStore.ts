@@ -21,6 +21,7 @@ const RESET_KEYS = LOAD_KEYS;
 
 const DEFAULT_VALUES = {
   plannerId: '',
+  plannerName: '',
 };
 
 const STORAGE_CONFIG = {
@@ -168,6 +169,7 @@ class PlannerStore extends StorePrototype {
 
   @action updateCurrentPlanner = (planner: Planner) => {
     this.setStore('plannerId', planner.id); // Store current planner Id and update mem
+    planner.tableName = planner.tableName || '';
     this.planner = planner;
     this.plannerName = planner.tableName;
     this.plannerCourses = cloneDeep(this.planner.courses);
