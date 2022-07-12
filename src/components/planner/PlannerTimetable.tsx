@@ -471,6 +471,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
       });
       return;
     }
+    /*
     if (shareId === planner.plannerId) {
       view.setSnackBar({
         message: 'Shared planner already loaded!',
@@ -479,6 +480,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
       router.push('/planner');
       return;
     }
+    */
     getTimetable({
       variables: {
         id: shareId,
@@ -500,7 +502,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
     const res = await uploadTimetable({
       variables: {
         entries: [],
-        expire: EXPIRE_LOOKUP.default,
+        expire: EXPIRE_LOOKUP.upload,
       },
     });
     const newTimetable = res.data?.uploadTimetable;
