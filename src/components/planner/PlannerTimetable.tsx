@@ -19,7 +19,6 @@ import {
   Planner,
   PlannerCourse,
   ShareTimetableMode,
-  SnackBarProps,
   TimetableOverviewMode,
   UploadTimetable,
 } from '../../types';
@@ -31,7 +30,6 @@ import LoadingButton from '../atoms/LoadingButton';
 import Loading from '../atoms/Loading';
 import DialogContentTemplate from '../templates/DialogContentTemplate';
 import Section from '../molecules/Section';
-import ViewStore from '../../store/ViewStore';
 import Footer from '../molecules/Footer';
 import TimetablePanel from '../templates/TimetablePanel';
 import { EXPIRE_LOOKUP } from '../../constants';
@@ -174,7 +172,7 @@ const TimetableShareDialogContent = ({
           <Button
             className="copy"
             variant="contained"
-            color="inherit"
+            color="secondary"
             onClick={() => [
               copy(shareConfig.shareLink),
               view.setSnackBar('Copied share link to your clipboard!'),
@@ -224,20 +222,6 @@ const getDelta = (
   }
   return Object.keys(delta).length ? delta : null;
 };
-
-const getSnackbarMessage = (
-  shareId: string,
-  view: ViewStore,
-  message?: string
-): SnackBarProps => ({
-  severity: 'warning',
-  message: message || 'Timetable already uploaded',
-  label: 'Share',
-  onClick: () => {
-    copy(generateTimetableURL(shareId));
-    view.setSnackBar('Copied shared link!');
-  },
-});
 
 const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
   const planner = usePlanner();
@@ -331,6 +315,10 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
             expire: getExpire(shareConfig?.expire),
             mode: getModeFromExpire(getExpire(shareConfig?.expire) as any),
           };
+          planner.updateStore('remoteTimetableData', [
+            ...(planner.remoteTimetableData || []),
+            newTimetableOverview,
+          ]);
           // If uploaded a share timetable
           if (isShare) {
             const shareURL = generateTimetableURL(uploadTimetable._id);
@@ -338,11 +326,9 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
               shareLink: shareURL,
             });
             copy(shareURL);
+            return;
           }
-          planner.updateStore('remoteTimetableData', [
-            ...(planner.remoteTimetableData || []),
-            newTimetableOverview,
-          ]);
+          /* Only switch to new timetable if it's NOT share */
           console.log(`Updating plannerId to ${uploadTimetable?._id}`);
           planner.setStore('plannerId', uploadTimetable?._id);
         },
@@ -365,9 +351,9 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
     }
     /* If current planner id same as prev one, then it's update / share */
     if (prevPlannerId === uploadTimetable._id) {
-      return isShare ? 'Copied share link to your clipboard!' : null;
+      return null;
     }
-    return null;
+    return isShare ? 'Copied share link to your clipboard!' : null;
   };
 
   const onShareTimetTable = async e => {

@@ -391,6 +391,20 @@ textarea {
   width: 100%;
 }
 
+/* Dialog */
+.contentContainer {
+  width: 40vw;
+  max-width: 380px;
+  height: auto;
+  padding: var(--card-padding);
+}
+
+.dialogCaption {
+  margin-top: -12px;
+  font-size: 12px;
+  color: var(--caption);
+}
+
 /* Search Input */
 
 .search-input {
@@ -533,6 +547,9 @@ textarea {
   }
   .review-count {
     margin: 0 6px;
+  }
+  .contentContainer {
+    width: calc(100vw - 32px * 2 - 2 * var(--card-padding));
   }
 }
 

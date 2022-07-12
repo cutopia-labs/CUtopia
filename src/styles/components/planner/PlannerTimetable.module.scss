@@ -5,7 +5,7 @@
 .plannerShareDialog {
   .shareLinkRow {
     height: 46px;
-    .copy {
+    :global(.copy) {
       height: 100%;
       margin-left: 6px;
       width: 72px;
