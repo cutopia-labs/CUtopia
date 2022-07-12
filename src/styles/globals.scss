@@ -352,6 +352,15 @@ textarea {
   }
   --list-item-inner-padding: 12px;
 }
+.list-item-container.disabled {
+  > .title {
+    color: var(--caption);
+  }
+  background-color: var(--background);
+  opacity: 0.6;
+  cursor: not-allowed;
+  border-left: 3px solid rgba(97, 97, 97, 0.6);
+}
 .list-item-color-bar {
   left: 0;
   top: 0;

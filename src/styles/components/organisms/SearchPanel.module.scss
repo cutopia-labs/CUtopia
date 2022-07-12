@@ -31,23 +31,6 @@
     z-index: 2;
     align-items: center;
   }
-  :global(.list-item-container) {
-    height: auto;
-    justify-content: space-between;
-    position: relative;
-    &.disabled {
-      :global(.title) {
-        color: var(--caption);
-      }
-      background-color: var(--background);
-      opacity: 0.6;
-      cursor: not-allowed;
-      border-left: 3px solid rgba(97, 97, 97, 0.6);
-    }
-    :global(.list-item-color-bar) {
-      position: absolute;
-    }
-  }
   .recentChips {
     margin: 0 var(--card-padding) 6px var(--card-padding);
     width: fit-content;
@@ -89,10 +72,16 @@
   overflow-x: hidden;
 }
 .searchListItem {
+  height: auto;
+  justify-content: space-between;
+  position: relative;
   align-items: flex-start;
   flex: 1;
   :global(.list-item-title-container) {
     margin-left: 24px;
+  }
+  :global(.list-item-color-bar) {
+    position: absolute;
   }
 }
 

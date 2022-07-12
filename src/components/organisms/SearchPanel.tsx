@@ -110,6 +110,7 @@ export const SearchResult: FC<SearchResultProps> = ({
             <Tooltip
               title="No information for current semester, please check CUSIS"
               placement="right"
+              key={`listitem-${course.c}`}
             >
               <div
                 className={clsx(
