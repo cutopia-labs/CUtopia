@@ -13,7 +13,6 @@ import Page from '../../components/atoms/Page';
 import PlannerTimetable from '../../components/planner/PlannerTimetable';
 import PlannerCart from '../../components/planner/PlannerCart';
 
-import TimetableOverviewCard from '../../components/planner/TimetableOverviewCard';
 import useMobileQuery from '../../hooks/useMobileQuery';
 import authenticatedRoute from '../../components/molecules/authenticatedRoute';
 
@@ -85,7 +84,6 @@ const PlannerPage: FC = () => {
             <SearchPanel />
             <PlannerTimetable />
             <div className="plannerCart-column secondary-column">
-              <TimetableOverviewCard />
               <PlannerCart />
             </div>
           </>
@@ -95,7 +93,6 @@ const PlannerPage: FC = () => {
       case PlannerMode.CART:
         return (
           <div className="plannerCart-column secondary-column">
-            <TimetableOverviewCard />
             <PlannerCart />
           </div>
         );
