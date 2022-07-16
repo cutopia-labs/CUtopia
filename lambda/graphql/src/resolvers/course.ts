@@ -1,5 +1,5 @@
 import { getCourseData } from 'mongodb';
-import { courses } from '../data/courses';
+import { courses } from '../tools/courses';
 import { Resolvers } from '../schemas/types';
 
 const coursesResolver: Resolvers = {
