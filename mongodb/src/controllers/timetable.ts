@@ -48,7 +48,7 @@ export const uploadTimetable = async input => {
     input.expireAt =
       expire > 0 ? +new Date() + expire * 24 * 60 * 60 * 1000 : -1;
   }
-  
+
   if (_id) {
     await Timetable.updateOne({ _id, username }, input);
   } else {
@@ -90,4 +90,9 @@ export const cleanExpiredTimetable = async input => {
       },
     ],
   });
+};
+
+export const switchTimetable = async input => {
+  const { _id, username } = input;
+  await User.updateOne({ username }, { timetableId: _id });
 };

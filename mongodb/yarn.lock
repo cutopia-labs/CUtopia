@@ -1093,9 +1093,9 @@ cross-spawn@^7.0.3:
     which "^2.0.1"
 
 cutopia-types@^1.0.23:
-  version "1.0.26"
-  resolved "https://registry.yarnpkg.com/cutopia-types/-/cutopia-types-1.0.26.tgz#9fed4adead0d514d16eae56fc84fe5078176ddce"
-  integrity sha512-pd2l9q3EYta4Ovvvgukx2VGYzt6l5h5TGofPSZoIV1RlvtMPPPwxEkRK9Nxdvd3tF+qfqJ59hgvfiJNvjULjvA==
+  version "1.0.27"
+  resolved "https://registry.yarnpkg.com/cutopia-types/-/cutopia-types-1.0.27.tgz#da37dd071aea8bedd4b69bbd4a30f485d45f0533"
+  integrity sha512-ZxP76+BZpnyeNWlaWrYp6i55hvPOFEFyNbJ1szS0qvrt4elZuNc4+PjfgZLsWPO7owax3/n+4sEKHvIVvGwH5Q==
 
 debug@4.x, debug@^4.1.0, debug@^4.1.1:
   version "4.3.2"

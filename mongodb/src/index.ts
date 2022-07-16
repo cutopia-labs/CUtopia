@@ -14,6 +14,8 @@ export {
   getTimetable,
   uploadTimetable,
   removeTimetable,
+  getTimetableId,
+  switchTimetable,
   cleanExpiredTimetable,
   createUser,
   verifyUser,

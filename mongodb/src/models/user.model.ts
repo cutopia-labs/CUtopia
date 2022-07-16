@@ -37,6 +37,10 @@ const userSchema = new Schema<User>(
       type: Boolean,
       default: false,
     },
+    timetableId: {
+      type: String,
+      default: null,
+    },
     timetables: [
       {
         type: String,
