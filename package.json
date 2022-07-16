@@ -41,7 +41,8 @@
     "dev": "next dev",
     "eject": "next eject",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx src",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "cleanup": "rm -r .next build node_modules out && yarn install && yarn run dev"
   },
   "eslintConfig": {
     "extends": [
