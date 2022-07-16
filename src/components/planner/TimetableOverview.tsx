@@ -100,7 +100,7 @@ export const TimetableOverviewListItem: FC<TimetableOverviewListItemProps> = ({
     });
   }
   return (
-    <MenuItem className={styles.menuItem}>
+    <MenuItem selected={selected} className={styles.menuItem}>
       <ListItem
         className={styles.ttOverviewListItem}
         noHover
