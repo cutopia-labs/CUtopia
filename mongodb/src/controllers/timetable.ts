@@ -10,21 +10,16 @@ import {
   UPLOAD_TIMETABLE_TOTAL_LIMIT,
 } from '../constant/configs';
 
-const timetableCache = new NodeCache({
-  stdTTL: 1800,
-});
-
-export const getTimetable = async input =>
-  withCache(timetableCache, input._id, async () => {
-    const timetable = await Timetable.findById(input._id);
-    if (!timetable) {
-      throw Error(ErrorCode.GET_TIMETABLE_INVALID_ID.toString());
-    }
-    if (timetable.expire === -1 && input.username !== timetable.username) {
-      throw Error(ErrorCode.GET_TIMETABLE_UNAUTHORIZED.toString());
-    }
-    return timetable;
-  });
+export const getTimetable = async input => {
+  const timetable = await Timetable.findById(input._id);
+  if (!timetable) {
+    throw Error(ErrorCode.GET_TIMETABLE_INVALID_ID.toString());
+  }
+  if (timetable.expire === -1 && input.username !== timetable.username) {
+    throw Error(ErrorCode.GET_TIMETABLE_UNAUTHORIZED.toString());
+  }
+  return timetable;
+};
 
 export const uploadTimetable = async input => {
   const { _id, username, expire, entries } = input;
