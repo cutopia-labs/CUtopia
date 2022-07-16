@@ -14,6 +14,7 @@ type User = {
   veriCode: string;
   verified: boolean;
   fullAccess: boolean;
+  timetableId: string;
   timetables: Timetable[];
   sharedTimetables: Timetable[];
 };
