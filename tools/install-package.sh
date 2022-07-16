@@ -1,6 +1,10 @@
 isProd=${NODE_ENV:-development}
 
 for d in $(find . -type f -name 'package.json' | grep -v "node_modules" | sed -r 's|/[^/]+$||'); do
+  # If the dir is nested in built directory, continue
+  if [ $d = ./mongodb/lib* ]; then
+    continue
+  fi
   if [ -d "$d/node_modules" ]; then
     echo "Removing node_modules in $d"
     rm -rf $d/node_modules
@@ -11,6 +15,7 @@ for d in $(find . -type f -name 'package.json' | grep -v "node_modules" | sed -r
   else
     yarn --cwd $d install
   fi
+  # Build the mongodb for lambda to install it
   if [ $d = "./mongodb" ]; then
     echo "Building mongodb"
     yarn --cwd $d build
