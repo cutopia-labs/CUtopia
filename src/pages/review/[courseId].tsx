@@ -166,7 +166,7 @@ const CoursePanel: FC<Props> = ({ courseInfo }) => {
 
 // SSR to get course info
 export const getStaticProps = async ({ params }) => {
-  const { courses } = await import('../../../data/coursesLoader');
+  const { courses } = await import('../../../tools/coursesLoader');
   return {
     props: {
       courseInfo: getAttrs(
@@ -179,7 +179,9 @@ export const getStaticProps = async ({ params }) => {
 
 // Get all valid paths to prerender (i.e. valid courseId)
 export const getStaticPaths: GetStaticPaths<{}> = async () => {
-  const courses = Object.values(await import('../../../data/courses.json'));
+  const courses = Object.values(
+    await import('../../../data/derived/courses.json')
+  );
   return {
     paths: [...courses]
       .filter(cid => typeof cid === 'string')
