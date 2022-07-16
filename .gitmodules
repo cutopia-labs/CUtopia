@@ -1,0 +1,4 @@
+[submodule "lambda/graphql/src/data"]
+	path = lambda/graphql/src/data
+	url = https://github.com/cutility/CUtopia-data.git
+	branch = master
