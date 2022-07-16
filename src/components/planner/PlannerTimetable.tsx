@@ -14,7 +14,7 @@ import {
   PLANNER_CONFIGS,
   TIMETABLE_SYNC_INTERVAL,
 } from '../../constants/configs';
-import { REMOVE_TIMETABLE, SHARE_TIMETABLE } from '../../constants/mutations';
+import { REMOVE_TIMETABLE, UPLOAD_TIMETABLE } from '../../constants/mutations';
 import {
   Planner,
   PlannerCourse,
@@ -110,7 +110,7 @@ export const generateTimetableURL = (id: string) =>
 
 export const coursesToEntries = (
   courses: PlannerCourse[],
-  skipHide: boolean = true
+  skipHide: boolean = false
 ) =>
   courses
     .filter(
@@ -125,8 +125,11 @@ export const coursesToEntries = (
       return {
         ...course,
         sections: sections.map(section => {
-          const { hide, ...shareSection } = section;
-          return shareSection;
+          /* Remove the hide attr if not hidden */
+          if (!section.hide) {
+            delete section.hide;
+          }
+          return section;
         }),
       };
     });
@@ -291,16 +294,15 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
     }
   };
   const [uploadTimetable, { loading: uploadTimetableLoading }] = useMutation(
-    SHARE_TIMETABLE,
+    UPLOAD_TIMETABLE,
     {
       onCompleted: handleCompleted(
         data => {
           const uploadTimetable = data?.uploadTimetable;
+          /* If no ttb id, then it's ttb sync result, no need switch plannerId */
           if (!uploadTimetable?._id) {
-            return view.setSnackBar({
-              message: 'Cannot generate timetable QAQ...',
-              severity: 'error',
-            });
+            console.log('Updated');
+            return;
           }
           const isShare =
             getExpire(shareConfig?.expire) !== EXPIRE_LOOKUP.upload;
@@ -407,7 +409,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
           variables: {
             _id,
             ...delta,
-            expire: EXPIRE_LOOKUP.upload,
+            expire: EXPIRE_LOOKUP.default,
           },
         });
         console.log({

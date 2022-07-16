@@ -111,10 +111,10 @@ export const VOTE_REVIEW = gql`
   }
 `;
 
-export const SHARE_TIMETABLE = gql`
+export const UPLOAD_TIMETABLE = gql`
   mutation (
-    $entries: [CourseTableEntryInput]!
-    $expire: Int!
+    $entries: [CourseTableEntryInput]
+    $expire: Int
     $tableName: String
     $_id: String
   ) {
