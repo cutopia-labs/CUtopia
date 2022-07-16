@@ -43,8 +43,8 @@ input UploadTimetableInput {
 }
 
 type UploadTimetableResult {
-  _id: String!
-  createdAt: Timestamp!
+  _id: String
+  createdAt: Timestamp
 }
 
 input RemoveTimetableInput {
