@@ -1,12 +1,14 @@
 ## Guidelines
 ### Semester Data Update
-1. Run the course scraper to generate static data & derived data
+1. Run the course scraper (and modify current term config) to generate static data & derived data
 
 2. Copy the courses into data/courses
 
 3. Copy the `course_list.json` and `instructors.json` into public/resources
 
 4. Copy the `subject_course_names.json` into data, and run `python derive.py` to generate `courses.json`
+
+5. Modify the current term & expire before in configs after BE deployed
 
 # Getting Started with Create React App
 
