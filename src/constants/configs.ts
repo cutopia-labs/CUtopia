@@ -27,7 +27,7 @@ const AWS_REGION = 'ap-southeast-1';
 
 // mike-dev: uvp03fp791
 export const SERVER_ID =
-  process.env.NODE_ENV === 'production' ? 'd8r6qarg78' : 'd8r6qarg78';
+  process.env.NODE_ENV === 'production' ? 'eisbgazs16' : 'd8r6qarg78';
 
 export const SERVER_ADDR = `https://${SERVER_ID}.execute-api.${AWS_REGION}.amazonaws.com/Prod`;
 
@@ -44,10 +44,10 @@ export const SentryConfigs: BrowserOptions = {
 };
 
 // Return only current term sections in planner
-export const CURRENT_TERM = '2021-22 Term 2';
+export const CURRENT_TERM = '2022-23 Term 1';
 
 // Update course list and instructors if etag before below (10/11/2021)
-export const STATICS_EXPIRE_BEFORE = 1636530032000;
+export const STATICS_EXPIRE_BEFORE = 1657979311000;
 
 export const TOKEN_EXPIRE_BEFORE = 1636518372000;
 
