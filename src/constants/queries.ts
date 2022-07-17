@@ -167,11 +167,12 @@ export const GET_USER = gql`
       username
       exp
       fullAccess
+      timetableId
     }
   }
 `;
 
-// User Info Query
+// User Timetables
 export const GET_USER_TIMETABLES = gql`
   query {
     me {

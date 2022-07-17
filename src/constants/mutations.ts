@@ -11,6 +11,7 @@ export const LOGIN_CUTOPIA = gql`
         username
         exp
         fullAccess
+        timetableId
       }
     }
   }
@@ -159,6 +160,15 @@ export const REMOVE_TIMETABLE = gql`
 export const SEND_MESSAGE = gql`
   mutation ($courseId: CourseID!, $text: String!) {
     sendMessage(input: { courseId: $courseId, text: $text }) {
+      id
+    }
+  }
+`;
+
+/* To switch timetableId */
+export const SWITCH_TIMETABLE = gql`
+  mutation ($id: String!) {
+    sendMessage(input: { _id: $id }) {
       id
     }
   }
