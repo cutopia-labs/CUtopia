@@ -242,29 +242,6 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
   const [removeTimetable, { loading: removeTimetableLoading }] =
     useMutation(REMOVE_TIMETABLE);
 
-  const onDelete = async (id: string, expire: number) => {
-    try {
-      await removeTimetable({
-        variables: {
-          id,
-          expire,
-        },
-      });
-      planner.updateStore(
-        'remoteTimetableData',
-        [...planner.remoteTimetableData].filter(item => item._id !== id)
-      );
-      view.setSnackBar('Deleted!');
-      /* if current planner is deleted */
-      if (id === planner.plannerId) {
-        router.push(`/planner`, undefined, { shallow: true });
-      }
-    } catch (e) {
-      // To skip remove entry in state in case of any error
-      view.handleError(e);
-    }
-  };
-
   const [uploadTimetable, { loading: uploadTimetableLoading }] = useMutation(
     UPLOAD_TIMETABLE,
     {
@@ -336,6 +313,44 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
       router.push('/planner');
     }
     if (msg) view.setSnackBar(msg);
+  };
+
+  const onDelete = async (id: string, expire: number) => {
+    try {
+      const isCurrentPlanner = id === planner.plannerId;
+      /* Get next timetable id if deleting current planner */
+      const variables: any = {
+        id,
+        expire,
+      };
+      if (isCurrentPlanner) {
+        let maxCreatedAt = 0;
+        let switchTo = '';
+        planner.remoteTimetableData.forEach(d => {
+          if (d.createdAt > maxCreatedAt) {
+            maxCreatedAt = d.createdAt;
+            switchTo = d._id;
+          }
+        });
+        variables.switchTo = '';
+      }
+      const { data } = await removeTimetable({
+        variables,
+      });
+      view.setSnackBar('Deleted!');
+      /* Update the remoteTimetableData */
+      planner.updateStore(
+        'remoteTimetableData',
+        [...planner.remoteTimetableData].filter(item => item._id !== id)
+      );
+      /* Switch to the new if deleting current planner */
+      if (isCurrentPlanner) {
+        applyTimetable(data?.removeTimetable, id);
+      }
+    } catch (e) {
+      // To skip remove entry in state in case of any error
+      view.handleError(e);
+    }
   };
 
   const switchTimetable = async (id: string) => {

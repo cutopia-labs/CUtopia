@@ -152,8 +152,25 @@ export const REPORT = gql`
 `;
 
 export const REMOVE_TIMETABLE = gql`
-  mutation ($id: String!, $expire: Int!) {
-    removeTimetable(input: { _id: $id, expire: $expire })
+  mutation ($id: String!, $expire: Int!, $switchTo: String!) {
+    removeTimetable(input: { _id: $id, expire: $expire, switchTo: $switchTo }) {
+      entries {
+        courseId
+        title
+        credits
+        sections {
+          name
+          startTimes
+          endTimes
+          days
+          locations
+          instructors
+          hide
+        }
+      }
+      tableName
+      createdAt
+    }
   }
 `;
 
