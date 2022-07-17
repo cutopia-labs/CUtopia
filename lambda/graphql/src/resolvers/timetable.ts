@@ -31,7 +31,7 @@ const timetableResolver: Resolvers = {
     },
     switchTimetable: async (parent, { input }, { user }) => {
       const { username } = user;
-      await switchTimetable({ ...input, username });
+      return await switchTimetable({ ...input, username });
     },
   },
 };

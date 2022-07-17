@@ -1,7 +1,5 @@
-import NodeCache from 'node-cache';
 import { ErrorCode } from 'cutopia-types/lib/codes';
 
-import withCache from '../utils/withCache';
 import Timetable from '../models/timetable.model';
 import User from '../models/user.model';
 import { updateTimetableId } from './user';
@@ -90,4 +88,5 @@ export const cleanExpiredTimetable = async input => {
 export const switchTimetable = async input => {
   const { _id, username } = input;
   await User.updateOne({ username }, { timetableId: _id });
+  return await Timetable.findOne({ username, _id });
 };
