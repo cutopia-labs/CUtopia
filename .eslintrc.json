@@ -25,6 +25,7 @@
       "keyword-spacing": ["error", { "before": true }],
       "semi": ["error", "always"],
       "quote-props": ["error", "as-needed"],
+      "prefer-const": ["error", {"destructuring": "all"}],
       "@typescript-eslint/no-unused-vars": 0, /* For express hanlder, DO NOT delete unused params */
       "@typescript-eslint/no-explicit-any": 0,
       "@typescript-eslint/explicit-module-boundary-types": 0,

@@ -61,7 +61,19 @@ export const uploadTimetable = async input => {
 };
 
 export const removeTimetable = async input => {
-  const { _id, switchTo, username, expire } = input;
+  let { _id, switchTo, username, expire } = input;
+  await Timetable.deleteOne({
+    _id,
+    username,
+    expire,
+  }).exec();
+
+  if (switchTo === null) {
+    // No timetable left after removing this last timetable
+    // so create a new empty timetable
+    expire = -1;
+    switchTo = (await uploadTimetable({ username, expire, entries: [] }))._id;
+  }
   await updateTimetableId({
     operation: 'remove',
     _id,
@@ -69,11 +81,6 @@ export const removeTimetable = async input => {
     username,
     expire,
   });
-  await Timetable.deleteOne({
-    _id,
-    username,
-    expire,
-  }).exec();
   if (switchTo) {
     return await Timetable.findOne({ username, _id: switchTo }).exec();
   }
