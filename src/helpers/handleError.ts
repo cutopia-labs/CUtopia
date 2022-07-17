@@ -25,6 +25,7 @@ const handleError = (e: ApolloError, view: ViewStore): boolean | null => {
       userStore.logout();
     }
   }
+  console.warn(e);
   view.setSnackBar({
     message: ERROR_MESSAGES[err_code] || e.message,
     severity: 'error',

@@ -42,6 +42,7 @@ export type UploadTimetable = {
   tableName?: string;
   createdAt: number;
   expireAt: number;
+  expire?: number;
 };
 
 export type OverlapSection = {

@@ -297,7 +297,8 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
   const applyTimetable = (
     timetable: UploadTimetable | null,
     id: string,
-    msg?: string
+    msg?: string,
+    addToOverview?: boolean
   ) => {
     timetable = timetable || ({} as any);
     const importedPlanner: Planner = {
@@ -306,6 +307,18 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
       id,
       courses: entriesToCourses(timetable.entries),
     };
+    if (addToOverview) {
+      const newTimetableOverview = {
+        _id: id,
+        ...importedPlanner,
+        expire: timetable.expire,
+        mode: getModeFromExpire(timetable.expire),
+      };
+      planner.updateStore('remoteTimetableData', [
+        ...(planner.remoteTimetableData || []),
+        newTimetableOverview,
+      ]);
+    }
     planner.updateCurrentPlanner(importedPlanner);
     /* If current path is a share path, then change to planner */
     msg = shareId ? 'Timetable loaded' : msg;
@@ -323,16 +336,19 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
         id,
         expire,
       };
+      /* Undefined switch to means not deleting current ttb, no need switch */
+      let switchTo = undefined;
       if (isCurrentPlanner) {
         let maxCreatedAt = 0;
-        let switchTo = '';
+        /* If it's the last ttb, then switch to null means create one */
+        switchTo = null;
         planner.remoteTimetableData.forEach(d => {
-          if (d.createdAt > maxCreatedAt) {
+          if (d.createdAt > maxCreatedAt && d._id !== id) {
             maxCreatedAt = d.createdAt;
             switchTo = d._id;
           }
         });
-        variables.switchTo = '';
+        variables.switchTo = switchTo;
       }
       const { data } = await removeTimetable({
         variables,
@@ -345,7 +361,21 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
       );
       /* Switch to the new if deleting current planner */
       if (isCurrentPlanner) {
-        applyTimetable(data?.removeTimetable, id);
+        console.log(
+          `Switch to ${
+            switchTo || data?.removeTimetable?._id
+          }\n${JSON.stringify(data?.removeTimetable, null, 2)}`
+        );
+        if (data?.removeTimetable) {
+          applyTimetable(
+            data?.removeTimetable,
+            switchTo || data?.removeTimetable?._id,
+            undefined,
+            !switchTo
+          );
+        } else {
+          createTimetable();
+        }
       }
     } catch (e) {
       // To skip remove entry in state in case of any error
