@@ -4,7 +4,13 @@ import { observer } from 'mobx-react-lite';
 
 import copy from 'copy-to-clipboard';
 import clsx from 'clsx';
-import { AiOutlineDelete, AiOutlineShareAlt } from 'react-icons/ai';
+import {
+  AiOutlineDelete,
+  AiOutlineLoading,
+  AiOutlineShareAlt,
+  AiOutlineSync,
+} from 'react-icons/ai';
+import { Done } from '@material-ui/icons';
 import { usePlanner, useView } from '../../store';
 import styles from '../../styles/components/templates/TimetablePanel.module.scss';
 import Timetable from '../planner/Timetable';
@@ -13,11 +19,18 @@ import Card from '../atoms/Card';
 import TimetableOverview, {
   TimetableOverviewProps,
 } from '../planner/TimetableOverview';
+import { PlannerSyncState } from '../../types';
 
 type TimetablePanelProps = {
   onShare?: (...args: any[]) => any;
   className?: string;
 } & TimetableOverviewProps;
+
+const SYNC_STATE_ICON = {
+  [PlannerSyncState.DIRTY]: <AiOutlineSync />,
+  [PlannerSyncState.SYNCING]: <AiOutlineLoading className="icon-spin" />,
+  [PlannerSyncState.SYNCED]: <Done />,
+};
 
 const TimetablePanel: FC<TimetablePanelProps> = ({
   onShare,
@@ -58,6 +71,7 @@ const TimetablePanel: FC<TimetablePanelProps> = ({
       icon: <AiOutlineDelete />,
     },
   ];
+
   return (
     <Card className={clsx(styles.timetablePanel, 'panel column', className)}>
       <header className="center-row">
@@ -67,6 +81,9 @@ const TimetablePanel: FC<TimetablePanelProps> = ({
         />
         {Boolean(courses?.length) && (
           <div className={clsx(styles.btnRow, 'center-row')}>
+            <IconButton size="small" onClick={() => console.log('clicked')}>
+              {SYNC_STATE_ICON[planner.syncState]}
+            </IconButton>
             {FUNCTION_BUTTONS.map(item => (
               <IconButton key={item.key} size="small" onClick={item.action}>
                 {item.icon}

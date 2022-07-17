@@ -6,7 +6,7 @@ import { Button, Dialog } from '@material-ui/core';
 import copy from 'copy-to-clipboard';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
-import { cloneDeep, isEqual } from 'lodash';
+import { cloneDeep } from 'lodash';
 
 import styles from '../../styles/components/planner/PlannerTimetable.module.scss';
 import { useView, usePlanner } from '../../store';
@@ -204,28 +204,6 @@ const SHARE_ID_RULE = new RegExp('^[A-Za-z0-9_-]{8}$', 'i');
 
 const validShareId = (id: string) => id && SHARE_ID_RULE.test(id);
 
-type PlannerDelta = {
-  tableName?: string;
-  courses?: PlannerCourse[];
-};
-
-const getDelta = (
-  planner: Planner,
-  courses: PlannerCourse[],
-  tableName: string
-): PlannerDelta | null => {
-  // console.log(JSON.stringify(planner?.courses));
-  // console.log(JSON.stringify(courses) + ', ' + tableName);
-  const delta: PlannerDelta = {};
-  if (tableName !== planner?.tableName) {
-    delta['tableName'] = tableName;
-  }
-  if (!isEqual(courses, planner?.courses)) {
-    delta.courses = courses;
-  }
-  return Object.keys(delta).length ? delta : null;
-};
-
 const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
   const planner = usePlanner();
   const router = useRouter();
@@ -342,30 +320,34 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
     }
   );
 
-  const updateTimetable = ({ delta, _id }) => {
+  const updateTimetable = async ({ delta, _id }) => {
     console.log(
       `ID: (${_id})\nSyncing planner:\n${JSON.stringify(delta, null, 2)}`
     );
-    /* If no update, do nothing */
-    if (!delta) return;
-    /* Update the prev planner course */
-    planner.planner = {
-      ...planner.planner,
-      ...cloneDeep(delta),
-    };
+    /* If no update / updating, do nothing */
+    if (!delta || planner.isSyncing) return;
+    /* Update sync states to syncing */
+    const deltaClone = cloneDeep(delta);
+    planner.updateStore('isSyncing', true);
     /* Process the entries for gql */
     if (delta.courses) {
       delta['entries'] = coursesToEntries(delta.courses);
       delete delta.courses;
     }
     /* If dirty, then upload timetable */
-    uploadTimetable({
+    await uploadTimetable({
       variables: {
         _id,
         ...delta,
         expire: EXPIRE_LOOKUP.default,
       },
     });
+    planner.updateStore('isSyncing', false);
+    /* Update planner (prev state) after synced */
+    planner.planner = {
+      ...planner.planner,
+      ...deltaClone,
+    };
     console.log({
       _id,
       ...delta,
@@ -411,11 +393,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
     // start sync
     const disposer = reaction(
       () => ({
-        delta: getDelta(
-          planner.planner,
-          planner.plannerCourses,
-          planner.plannerName
-        ),
+        delta: planner.delta,
         _id: planner.plannerId,
       }),
       updateTimetable,
