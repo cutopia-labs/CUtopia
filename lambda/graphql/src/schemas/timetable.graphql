@@ -51,8 +51,8 @@ type UploadTimetableResult {
 
 input RemoveTimetableInput {
   _id: String!
-  switchTo: String!
   expire: Int!
+  switchTo: String
 }
 
 type Timetable {

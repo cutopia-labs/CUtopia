@@ -74,7 +74,9 @@ export const removeTimetable = async input => {
     username,
     expire,
   }).exec();
-  return await Timetable.findOne({ username, _id: switchTo }).exec();
+  if (switchTo) {
+    return await Timetable.findOne({ username, _id: switchTo }).exec();
+  }
 };
 
 export const cleanExpiredTimetable = async input => {

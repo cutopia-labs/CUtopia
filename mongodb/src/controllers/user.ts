@@ -197,7 +197,8 @@ export const incrementUpvotesCount = async input => {
 
 export const updateTimetableId = async input => {
   const { username, _id, switchTo, operation, expire } = input;
-  const op = operation === 'add' ? '$addToSet' : '$pull';
+  const [op, id] =
+    operation === 'add' ? ['$addToSet', _id] : ['$pull', switchTo];
   const timetableField = expire >= 0 ? 'sharedTimetables' : 'timetables';
 
   const user = await User.findOneAndUpdate(
@@ -206,7 +207,7 @@ export const updateTimetableId = async input => {
       [op]: {
         [timetableField]: _id,
       },
-      timetableId: operation === 'add' ? _id : switchTo,
+      ...(id !== undefined && { timetableId: id }),
     },
     { new: true }
   ).exec();
