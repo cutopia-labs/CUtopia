@@ -342,6 +342,36 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
     }
   );
 
+  const updateTimetable = ({ delta, _id }) => {
+    console.log(
+      `ID: (${_id})\nSyncing planner:\n${JSON.stringify(delta, null, 2)}`
+    );
+    /* If no update, do nothing */
+    if (!delta) return;
+    /* Update the prev planner course */
+    planner.planner = {
+      ...planner.planner,
+      ...cloneDeep(delta),
+    };
+    /* Process the entries for gql */
+    if (delta.courses) {
+      delta['entries'] = coursesToEntries(delta.courses);
+      delete delta.courses;
+    }
+    /* If dirty, then upload timetable */
+    uploadTimetable({
+      variables: {
+        _id,
+        ...delta,
+        expire: EXPIRE_LOOKUP.default,
+      },
+    });
+    console.log({
+      _id,
+      ...delta,
+    });
+  };
+
   const getUploadTimetableMessage = (
     uploadTimetable,
     isShare: boolean
@@ -388,35 +418,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
         ),
         _id: planner.plannerId,
       }),
-      ({ delta, _id }) => {
-        console.log(
-          `ID: (${_id})\nSyncing planner:\n${JSON.stringify(delta, null, 2)}`
-        );
-        /* If no update, do nothing */
-        if (!delta) return;
-        /* Update the prev planner course */
-        planner.planner = {
-          ...planner.planner,
-          ...cloneDeep(delta),
-        };
-        /* Process the entries for gql */
-        if (delta.courses) {
-          delta['entries'] = coursesToEntries(delta.courses);
-          delete delta.courses;
-        }
-        /* If dirty, then upload timetable */
-        uploadTimetable({
-          variables: {
-            _id,
-            ...delta,
-            expire: EXPIRE_LOOKUP.default,
-          },
-        });
-        console.log({
-          _id,
-          ...delta,
-        });
-      },
+      updateTimetable,
       {
         delay: TIMETABLE_SYNC_INTERVAL,
       }
@@ -459,31 +461,12 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
       });
       return;
     }
-    /*
-    if (shareId === planner.plannerId) {
-      view.setSnackBar({
-        message: 'Shared planner already loaded!',
-        severity: 'warning',
-      });
-      router.push('/planner');
-      return;
-    }
-    */
     getTimetable({
       variables: {
         id: shareId,
       },
     });
   }, [shareId, planner.plannerId]);
-
-  const updateTimetable = data => {
-    uploadTimetable({
-      variables: {
-        _id: planner.plannerId,
-        ...data,
-      },
-    });
-  };
 
   const createTimetable = async () => {
     console.log('Called create timetable');
@@ -509,7 +492,6 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
               mode: ShareTimetableMode.SHARE,
             })
           }
-          updateTimetable={updateTimetable}
           deleteTable={(id: string, expire: number) => onDelete(id, expire)}
         />
       }

@@ -136,7 +136,6 @@ export const TimetableOverviewListItem: FC<TimetableOverviewListItemProps> = ({
 };
 
 export type TimetableOverviewProps = {
-  updateTimetable: (data: any) => any;
   createTimetable: () => any;
   deleteTable?: (id: string, expire: number) => any;
 };
@@ -144,7 +143,6 @@ export type TimetableOverviewProps = {
 const TimetableOverview: FC<TimetableOverviewProps> = ({
   deleteTable,
   createTimetable,
-  updateTimetable,
 }) => {
   const view = useView();
   const planner = usePlanner();

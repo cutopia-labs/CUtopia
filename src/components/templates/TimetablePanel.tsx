@@ -38,7 +38,6 @@ const TimetablePanel: FC<TimetablePanelProps> = ({
   onShare,
   deleteTable,
   className,
-  updateTimetable,
   createTimetable,
 }) => {
   const view = useView();
@@ -83,7 +82,6 @@ const TimetablePanel: FC<TimetablePanelProps> = ({
     <Card className={clsx(styles.timetablePanel, 'panel column', className)}>
       <header className="center-row">
         <TimetableOverview
-          updateTimetable={updateTimetable}
           deleteTable={deleteTable}
           createTimetable={createTimetable}
         />
