@@ -104,7 +104,12 @@ class UserStore extends StorePrototype {
     if (!savedToken.token) {
       return;
     }
-    console.log(getTokenExpireDate(TOKEN_EXPIRE_BEFORE, TOKEN_EXPIRE_DAYS));
+    console.log(
+      `Apply token ${savedToken.token}\n${getTokenExpireDate(
+        TOKEN_EXPIRE_BEFORE,
+        TOKEN_EXPIRE_DAYS
+      )}`
+    );
     if (
       savedToken.expire <
       getTokenExpireDate(TOKEN_EXPIRE_BEFORE, TOKEN_EXPIRE_DAYS)

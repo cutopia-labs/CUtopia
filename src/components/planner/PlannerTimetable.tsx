@@ -256,7 +256,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
         };
         planner.updateCurrentPlanner(importedPlanner);
         /* If current path is a share path, then change to planner */
-        if (router.asPath !== '/planner') {
+        if (shareId) {
           router.push('/planner');
         }
       },

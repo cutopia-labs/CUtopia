@@ -44,7 +44,7 @@ export const SentryConfigs: BrowserOptions = {
 };
 
 // Return only current term sections in planner
-export const CURRENT_TERM = '2022-23 Term 1';
+export const CURRENT_TERM = '2021-22 Term 2';
 
 // Update course list and instructors if etag before below (10/11/2021)
 export const STATICS_EXPIRE_BEFORE = 1657979311000;
