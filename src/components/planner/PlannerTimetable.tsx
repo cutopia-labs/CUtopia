@@ -317,7 +317,11 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
   const [switchTimetableMutation, { loading: switchTimetableLoading }] =
     useMutation(SWITCH_TIMETABLE);
 
-  const applyTimetable = (timetable: UploadTimetable | null, id: string) => {
+  const applyTimetable = (
+    timetable: UploadTimetable | null,
+    id: string,
+    msg?: string
+  ) => {
     timetable = timetable || ({} as any);
     const importedPlanner: Planner = {
       createdAt: timetable.createdAt,
@@ -327,15 +331,23 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
     };
     planner.updateCurrentPlanner(importedPlanner);
     /* If current path is a share path, then change to planner */
+    msg = shareId ? 'Timetable loaded' : msg;
     if (shareId) {
       router.push('/planner');
     }
+    if (msg) view.setSnackBar(msg);
   };
 
   const switchTimetable = async (id: string) => {
     try {
       const { data } = await switchTimetableMutation({ variables: { id } });
-      applyTimetable(data?.switchTimetable, id);
+      applyTimetable(
+        data?.switchTimetable,
+        id,
+        `Switched to ${
+          data?.switchTimetable?.tableName || PLANNER_CONFIGS.DEFAULT_TABLE_NAME
+        }`
+      );
     } catch (e) {
       console.warn(e);
       view.handleError(e);
@@ -482,7 +494,9 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
 
   return (
     <div className={clsx(styles.plannerTimetableContainer, 'column')}>
-      {(getTimetableLoading || switchTimetableLoading) && <Loading fixed />}
+      {(getTimetableLoading ||
+        switchTimetableLoading ||
+        removeTimetableLoading) && <Loading fixed />}
       {
         <TimetablePanel
           className={className}
