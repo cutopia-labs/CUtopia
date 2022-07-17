@@ -17,18 +17,15 @@ import { getDurationInHour, timeInRange } from '../helpers/timetable';
 import ViewStore from './ViewStore';
 import StorePrototype from './StorePrototype';
 
-const LOAD_KEYS = ['plannerId'];
+const LOAD_KEYS = [];
 
 const RESET_KEYS = LOAD_KEYS;
 
 const DEFAULT_VALUES = {
-  plannerId: '',
   plannerName: '',
 };
 
-const STORAGE_CONFIG = {
-  plannerId: false,
-};
+const STORAGE_CONFIG = {};
 
 class PlannerStore extends StorePrototype {
   @observable planner: Planner; // Store info like current id, old courses, and tableName
@@ -189,7 +186,7 @@ class PlannerStore extends StorePrototype {
     this.plannerCourses?.findIndex(item => item.courseId === courseId);
 
   @action updateCurrentPlanner = (planner: Planner) => {
-    this.setStore('plannerId', planner.id); // Store current planner Id and update mem
+    this.updateStore('plannerId', planner.id); // Store current planner Id and update mem
     planner.tableName = planner.tableName || '';
     this.planner = planner;
     this.plannerName = planner.tableName;

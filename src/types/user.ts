@@ -7,6 +7,7 @@ type User = {
   upvotes: number;
   exp: number;
   level: number;
+  timetableId: string;
   email?: string;
   timetables?: TimetableOverview[][];
   fullAccess?: boolean;

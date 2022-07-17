@@ -1,5 +1,7 @@
 import { Grade, RatingField } from '../types';
 
+export const CREATE_PLANNER_FLAG = 'CREATE';
+
 export const NON_SHARE_EXPIRE = -1;
 
 export const EXPIRE_LOOKUP = {

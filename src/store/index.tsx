@@ -27,15 +27,15 @@ export const getStores = () => {
     console.log('Store inited - Server');
     return {
       viewStore: new ViewStore(),
-      userStore: new UserStore(viewStore),
+      userStore: new UserStore(viewStore, plannerStore),
       plannerStore: new PlannerStore(viewStore),
     };
   }
   if (!viewStore || !userStore || !plannerStore) {
     console.log('Store inited - Client');
     viewStore = new ViewStore();
-    userStore = new UserStore(viewStore);
     plannerStore = new PlannerStore(viewStore);
+    userStore = new UserStore(viewStore, plannerStore);
   }
   return { viewStore, userStore, plannerStore };
 };

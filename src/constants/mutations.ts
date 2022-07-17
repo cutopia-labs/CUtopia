@@ -168,8 +168,23 @@ export const SEND_MESSAGE = gql`
 /* To switch timetableId */
 export const SWITCH_TIMETABLE = gql`
   mutation ($id: String!) {
-    sendMessage(input: { _id: $id }) {
-      id
+    switchTimetable(input: { _id: $id }) {
+      entries {
+        courseId
+        title
+        credits
+        sections {
+          name
+          startTimes
+          endTimes
+          days
+          locations
+          instructors
+          hide
+        }
+      }
+      tableName
+      createdAt
     }
   }
 `;

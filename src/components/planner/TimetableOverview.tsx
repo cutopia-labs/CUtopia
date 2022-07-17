@@ -137,12 +137,14 @@ export const TimetableOverviewListItem: FC<TimetableOverviewListItemProps> = ({
 
 export type TimetableOverviewProps = {
   createTimetable: () => any;
+  switchTimetable: (id: string) => any;
   deleteTable?: (id: string, expire: number) => any;
 };
 
 const TimetableOverview: FC<TimetableOverviewProps> = ({
   deleteTable,
   createTimetable,
+  switchTimetable,
 }) => {
   const view = useView();
   const planner = usePlanner();
@@ -165,9 +167,6 @@ const TimetableOverview: FC<TimetableOverviewProps> = ({
   const onShare = (id: string) => {
     copy(generateTimetableURL(id));
     view.setSnackBar('Copied share link!');
-  };
-  const switchTimetable = (id: string) => {
-    router.push(`/planner?sid=${id}`, undefined, { shallow: true });
   };
 
   return (

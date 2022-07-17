@@ -18,9 +18,10 @@ import {
 } from '../constants/configs';
 import withUndo from '../helpers/withUndo';
 import { getTokenExpireDate } from '../helpers';
-import { TOKEN_EXPIRE_DAYS } from '../constants';
+import { CREATE_PLANNER_FLAG, TOKEN_EXPIRE_DAYS } from '../constants';
 import ViewStore from './ViewStore';
 import StorePrototype from './StorePrototype';
+import PlannerStore from './PlannerStore';
 
 const LOAD_KEYS = [
   'username',
@@ -62,10 +63,12 @@ class UserStore extends StorePrototype {
   @observable token: string;
 
   viewStore: ViewStore;
+  plannerStore: PlannerStore;
 
-  constructor(viewStore: ViewStore) {
+  constructor(viewStore: ViewStore, plannerStore: PlannerStore) {
     super(LOAD_KEYS, RESET_KEYS, DEFAULT_VALUES);
     this.viewStore = viewStore;
+    this.plannerStore = plannerStore;
     makeObservable(this);
   }
 
@@ -96,6 +99,11 @@ class UserStore extends StorePrototype {
     if (data?.username) {
       console.log(data);
       this.updateStore('data', data);
+      console.log(`Update plannerId to ${data.timetableId}`);
+      this.plannerStore.updateStore(
+        'plannerId',
+        data.timetableId || CREATE_PLANNER_FLAG
+      );
     }
   };
 

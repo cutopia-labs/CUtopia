@@ -37,6 +37,7 @@ const TimetablePanel: FC<TimetablePanelProps> = ({
   deleteTable,
   className,
   createTimetable,
+  switchTimetable,
 }) => {
   const view = useView();
   const planner = usePlanner();
@@ -78,6 +79,7 @@ const TimetablePanel: FC<TimetablePanelProps> = ({
         <TimetableOverview
           deleteTable={deleteTable}
           createTimetable={createTimetable}
+          switchTimetable={switchTimetable}
         />
         {Boolean(courses?.length) && (
           <div className={clsx(styles.btnRow, 'center-row')}>

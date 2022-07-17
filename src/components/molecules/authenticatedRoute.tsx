@@ -25,7 +25,7 @@ const authenticatedRoute: HOC = (Component = null, options = {}) => {
       }>(options.userQuery || GET_USER, {
         onCompleted: data => {
           if (data?.me?.username) {
-            user.updateStore('data', data.me);
+            user.updateUserData(data.me);
             Sentry.setUser({
               username: data.me.username,
             });

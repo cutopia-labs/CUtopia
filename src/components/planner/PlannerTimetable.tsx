@@ -14,7 +14,11 @@ import {
   PLANNER_CONFIGS,
   TIMETABLE_SYNC_INTERVAL,
 } from '../../constants/configs';
-import { REMOVE_TIMETABLE, UPLOAD_TIMETABLE } from '../../constants/mutations';
+import {
+  REMOVE_TIMETABLE,
+  SWITCH_TIMETABLE,
+  UPLOAD_TIMETABLE,
+} from '../../constants/mutations';
 import {
   Planner,
   PlannerCourse,
@@ -25,14 +29,14 @@ import {
 import ChipsRow from '../molecules/ChipsRow';
 import TextField from '../atoms/TextField';
 import handleCompleted from '../../helpers/handleCompleted';
-import { GET_TIMETABLE } from '../../constants/queries';
 import LoadingButton from '../atoms/LoadingButton';
 import Loading from '../atoms/Loading';
 import DialogContentTemplate from '../templates/DialogContentTemplate';
 import Section from '../molecules/Section';
 import Footer from '../molecules/Footer';
 import TimetablePanel from '../templates/TimetablePanel';
-import { EXPIRE_LOOKUP } from '../../constants';
+import { CREATE_PLANNER_FLAG, EXPIRE_LOOKUP } from '../../constants';
+import { GET_TIMETABLE } from '../../constants/queries';
 
 type PlannerTimetableProps = {
   className?: string;
@@ -221,27 +225,16 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
     {}
   );
 
-  const [getTimetable, { loading: getUploadTimetableLoading }] = useLazyQuery(
+  const [getTimetable, { loading: getTimetableLoading }] = useLazyQuery(
     GET_TIMETABLE,
     {
       onCompleted: async (data: { timetable: UploadTimetable }) => {
-        console.log(`loaded ${JSON.stringify(data?.timetable)}`);
-        const importedPlanner: Planner = {
-          createdAt: data.timetable.createdAt,
-          tableName: data.timetable.tableName,
-          id: shareId || planner.plannerId,
-          courses: entriesToCourses(data.timetable.entries),
-        };
-        planner.updateCurrentPlanner(importedPlanner);
-        /* If current path is a share path, then change to planner */
-        if (shareId) {
-          router.push('/planner');
-        }
+        applyTimetable(data?.timetable, planner.plannerId);
       },
       onError: e => {
         view.handleError(e);
         /* Reset the planner id and create a new timetable */
-        planner.setStore('plannerId', '');
+        createTimetable();
       },
     }
   );
@@ -271,6 +264,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
       view.handleError(e);
     }
   };
+
   const [uploadTimetable, { loading: uploadTimetableLoading }] = useMutation(
     UPLOAD_TIMETABLE,
     {
@@ -308,9 +302,9 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
             copy(shareURL);
             return;
           }
-          /* Only switch to new timetable if it's NOT share */
+          /* If it's create new, then only need update local plannerId, cuz remote is updated */
           console.log(`Updating plannerId to ${uploadTimetable?._id}`);
-          planner.setStore('plannerId', uploadTimetable?._id);
+          planner.updateStore('plannerId', uploadTimetable?._id);
         },
         {
           mute: true, // handle snackbar message in callback
@@ -319,6 +313,35 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
       onError: view.handleError,
     }
   );
+
+  const [switchTimetableMutation, { loading: switchTimetableLoading }] =
+    useMutation(SWITCH_TIMETABLE);
+
+  const applyTimetable = (timetable: UploadTimetable | null, id: string) => {
+    timetable = timetable || ({} as any);
+    const importedPlanner: Planner = {
+      createdAt: timetable.createdAt,
+      tableName: timetable.tableName,
+      id,
+      courses: entriesToCourses(timetable.entries),
+    };
+    planner.updateCurrentPlanner(importedPlanner);
+    /* If current path is a share path, then change to planner */
+    if (shareId) {
+      router.push('/planner');
+    }
+  };
+
+  const switchTimetable = async (id: string) => {
+    try {
+      const { data } = await switchTimetableMutation({ variables: { id } });
+      applyTimetable(data?.switchTimetable, id);
+    } catch (e) {
+      console.warn(e);
+      view.handleError(e);
+      createTimetable();
+    }
+  };
 
   const updateTimetable = async ({ delta, _id }) => {
     console.log('Update timetable triggered');
@@ -412,16 +435,18 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
   useEffect(() => {
     console.log(`Planner ID: ${planner.plannerId}`);
     /* if no planner, then init / load one */
-    if (planner.plannerId === '') {
+    if (planner.plannerId === CREATE_PLANNER_FLAG) {
       createTimetable();
       return;
     }
-    /* otherwise load & switch to current planner */
-    getTimetable({
-      variables: {
-        id: planner.plannerId,
-      },
-    });
+    /* if prev planner id !== curr planner id, then get planner (e.g. load default ttb) */
+    if (planner.planner?.id !== planner.plannerId) {
+      getTimetable({
+        variables: {
+          id: planner.plannerId,
+        },
+      });
+    }
   }, [planner.plannerId]);
 
   useEffect(() => {
@@ -429,7 +454,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
       expire: shareCourses?.mode === ShareTimetableMode.SHARE ? '7 days' : 'No',
       shareLink: '',
     });
-  }, [planner.plannerId, shareCourses]);
+  }, [shareCourses]);
 
   useEffect(() => {
     if (!shareId) return;
@@ -440,12 +465,8 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
       });
       return;
     }
-    getTimetable({
-      variables: {
-        id: shareId,
-      },
-    });
-  }, [shareId, planner.plannerId]);
+    switchTimetable(shareId);
+  }, [shareId]);
 
   const createTimetable = async () => {
     console.log('Called create timetable');
@@ -461,7 +482,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
 
   return (
     <div className={clsx(styles.plannerTimetableContainer, 'column')}>
-      {getUploadTimetableLoading && <Loading fixed />}
+      {(getTimetableLoading || switchTimetableLoading) && <Loading fixed />}
       {
         <TimetablePanel
           className={className}
@@ -471,6 +492,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
               mode: ShareTimetableMode.SHARE,
             })
           }
+          switchTimetable={switchTimetable}
           deleteTable={(id: string, expire: number) => onDelete(id, expire)}
         />
       }

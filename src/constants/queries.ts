@@ -261,6 +261,7 @@ export const GET_TIMETABLE = gql`
           days
           locations
           instructors
+          hide
         }
       }
       tableName
