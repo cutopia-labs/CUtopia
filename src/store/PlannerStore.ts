@@ -70,7 +70,7 @@ class PlannerStore extends StorePrototype {
 
   get syncState(): PlannerSyncState {
     if (this.isSyncing) return PlannerSyncState.SYNCING;
-    return this.delta ? PlannerSyncState.SYNCING : PlannerSyncState.SYNCED;
+    return this.delta ? PlannerSyncState.DIRTY : PlannerSyncState.SYNCED;
   }
 
   get delta() {

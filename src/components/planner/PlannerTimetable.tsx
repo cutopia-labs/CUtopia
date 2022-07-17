@@ -321,6 +321,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
   );
 
   const updateTimetable = async ({ delta, _id }) => {
+    console.log('Update timetable triggered');
     console.log(
       `ID: (${_id})\nSyncing planner:\n${JSON.stringify(delta, null, 2)}`
     );
