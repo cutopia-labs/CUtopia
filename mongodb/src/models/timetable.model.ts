@@ -7,7 +7,6 @@ import {
   requiredString,
   createdAt,
 } from '../schemas';
-import User from './user.model';
 
 const timetableSchema = new Schema<Timetable>(
   {
@@ -28,19 +27,6 @@ const timetableSchema = new Schema<Timetable>(
     _id: false,
   }
 );
-timetableSchema.post('deleteOne', async function () {
-  // `this` is Query instead of Document
-  const { _id, username, expire } = (this as any).getFilter();
-  const timetableField = expire >= 0 ? 'sharedTimetables' : 'timetables';
-  await User.updateOne(
-    { username: username },
-    {
-      $pull: {
-        [timetableField]: _id,
-      },
-    }
-  ).exec();
-});
 
 const Timetable = model<Timetable>('Timetable', timetableSchema);
 

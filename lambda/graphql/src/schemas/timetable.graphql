@@ -1,6 +1,6 @@
 type Mutation {
   uploadTimetable(input: UploadTimetableInput!): UploadTimetableResult @auth @rateLimit(duration: 60, limit: 30)
-  removeTimetable(input: RemoveTimetableInput!): Void @auth @rateLimit(duration: 1, limit: 3)
+  removeTimetable(input: RemoveTimetableInput!): Timetable @auth @rateLimit(duration: 1, limit: 3)
   switchTimetable(input: SwitchTimetableInput!): Timetable @auth @rateLimit(duration: 1, limit: 3)
 }
 
@@ -51,6 +51,7 @@ type UploadTimetableResult {
 
 input RemoveTimetableInput {
   _id: String!
+  switchTo: String!
   expire: Int!
 }
 

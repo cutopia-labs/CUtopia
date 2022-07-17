@@ -27,7 +27,7 @@ const timetableResolver: Resolvers = {
     },
     removeTimetable: async (parent, { input }, { user }) => {
       const { username } = user;
-      await removeTimetable({ ...input, username });
+      return await removeTimetable({ ...input, username });
     },
     switchTimetable: async (parent, { input }, { user }) => {
       const { username } = user;
