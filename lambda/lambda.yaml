@@ -13,26 +13,6 @@ Resources:
         HttpGet:
           Properties:
             Method: get
-            Path: /static/course_list.json
-          Type: Api
-        HttpOptions:
-          Properties:
-            Method: options
-            Path: /static/course_list.json
-          Type: Api
-        HttpGet:
-          Properties:
-            Method: get
-            Path: /static/instructors.json
-          Type: Api
-        HttpOptions:
-          Properties:
-            Method: options
-            Path: /static/instructors.json
-          Type: Api
-        HttpGet:
-          Properties:
-            Method: get
             Path: /graphql
           Type: Api
         HttpOptions:
