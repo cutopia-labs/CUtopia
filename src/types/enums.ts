@@ -30,3 +30,9 @@ export enum ShareTimetableMode {
   UPLOAD, // user persist timetable / persist sharing ttb
   SHARE,
 }
+
+export enum PlannerSyncState {
+  DIRTY,
+  SYNCING,
+  SYNCED,
+}

@@ -1,4 +1,4 @@
-import { CourseSection } from './courses';
+import { CourseSection, PlannerCourse } from './courses';
 import { TimetableOverviewMode } from './enums';
 
 export interface Event {
@@ -65,3 +65,8 @@ export interface TimetableOverview {
 export interface TimetableOverviewWithMode extends TimetableOverview {
   mode: TimetableOverviewMode;
 }
+
+export type PlannerDelta = {
+  tableName?: string;
+  courses?: PlannerCourse[];
+};

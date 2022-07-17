@@ -1,6 +1,6 @@
 import { makeObservable, observable, action } from 'mobx';
 
-import { cloneDeep } from 'lodash';
+import { cloneDeep, isEqual } from 'lodash';
 import {
   PlannerCourse,
   Planner,
@@ -8,6 +8,8 @@ import {
   OverlapSections,
   TimetableInfo,
   TimetableOverviewWithMode,
+  PlannerDelta,
+  PlannerSyncState,
 } from '../types';
 
 import withUndo from '../helpers/withUndo';
@@ -29,13 +31,13 @@ const STORAGE_CONFIG = {
 };
 
 class PlannerStore extends StorePrototype {
-  @observable syncIntervalId: NodeJS.Timer;
   @observable planner: Planner; // Store info like current id, old courses, and tableName
   @observable plannerId: string;
   @observable plannerName: string;
   @observable previewPlannerCourse: PlannerCourse;
   @observable plannerCourses: PlannerCourse[] = [];
   @observable remoteTimetableData: TimetableOverviewWithMode[] | null = null;
+  @observable isSyncing: boolean = false;
 
   viewStore: ViewStore;
 
@@ -62,10 +64,29 @@ class PlannerStore extends StorePrototype {
     this.plannerCourses = [];
   };
 
-  @action clearSync = () => clearInterval(this.syncIntervalId);
-
   get timetableIds() {
     return this.remoteTimetableData.map(d => d._id);
+  }
+
+  get syncState(): PlannerSyncState {
+    if (this.isSyncing) return PlannerSyncState.SYNCING;
+    return this.delta ? PlannerSyncState.SYNCING : PlannerSyncState.SYNCED;
+  }
+
+  get delta() {
+    // console.log(JSON.stringify(planner?.courses));
+    // console.log(JSON.stringify(courses) + ', ' + tableName);
+    const delta: PlannerDelta = {};
+    let dirty = false;
+    if (this.plannerName !== this.planner?.tableName) {
+      delta['tableName'] = this.plannerName;
+      dirty = true;
+    }
+    if (!isEqual(this.plannerCourses, this.planner?.courses)) {
+      delta.courses = this.plannerCourses;
+      dirty = true;
+    }
+    return dirty ? delta : null;
   }
 
   get timetableInfo(): TimetableInfo {
