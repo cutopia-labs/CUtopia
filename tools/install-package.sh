@@ -2,7 +2,8 @@ isProd=${NODE_ENV:-development}
 
 for d in $(find . -type f -name 'package.json' | grep -v "node_modules" | sed -r 's|/[^/]+$||'); do
   # If the dir is nested in built directory, continue
-  if [ $d = ./mongodb/lib* ]; then
+  if [[ $d = */lib/* ]] || [[ $d = */build/* ]]; then
+    # echo "Skipped output dir in $d"
     continue
   fi
   if [ -d "$d/node_modules" ]; then

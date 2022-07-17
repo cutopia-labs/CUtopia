@@ -1,6 +1,5 @@
 import fs from 'fs';
 import { Course } from 'cutopia-types/lib/types';
-import path from 'path';
 
 const courses: Record<string, Course> = {};
 
