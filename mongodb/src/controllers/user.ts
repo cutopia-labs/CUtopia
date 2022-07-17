@@ -220,12 +220,3 @@ export const getTimetablesOverview = async input => {
     .exec();
   return [user.timetables, user.sharedTimetables];
 };
-
-export const getTimetableId = async input => {
-  const { username } = input;
-  const { timetableId } = await User.findOne(
-    { username },
-    'timetableId'
-  ).exec();
-  return timetableId;
-};

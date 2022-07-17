@@ -3,17 +3,12 @@ import {
   removeTimetable,
   getTimetable,
   getTimetablesOverview,
-  getTimetableId,
   switchTimetable,
 } from 'mongodb';
 import { Resolvers } from '../schemas/types';
 
 const timetableResolver: Resolvers = {
   User: {
-    timetableId: async (parent, args, { user }) => {
-      const { username } = user;
-      return await getTimetableId({ username });
-    },
     timetables: async (parent, args, { user }) => {
       const { username } = user;
       return await getTimetablesOverview({ username });
