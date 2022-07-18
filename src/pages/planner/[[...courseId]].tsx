@@ -1,13 +1,14 @@
-import { useState, useRef, useEffect, FC } from 'react';
+import { useState, useEffect, FC } from 'react';
 import { observer } from 'mobx-react-lite';
 
 import Draggable from 'react-draggable';
 import { Fab } from '@material-ui/core';
-import '../../styles/pages/PlannerPage.module.scss';
 import { BsList } from 'react-icons/bs';
 import { AiTwotoneCalendar } from 'react-icons/ai';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
+import clsx from 'clsx';
+import styles from '../../styles/pages/PlannerPage.module.scss';
 import SearchPanel from '../../components/organisms/SearchPanel';
 import Page from '../../components/atoms/Page';
 import PlannerTimetable from '../../components/planner/PlannerTimetable';
@@ -15,6 +16,7 @@ import PlannerCart from '../../components/planner/PlannerCart';
 
 import useMobileQuery from '../../hooks/useMobileQuery';
 import authenticatedRoute from '../../components/molecules/authenticatedRoute';
+import useClickObserver from '../../hooks/useClickObserver';
 
 enum PlannerMode {
   INITIAL,
@@ -36,28 +38,13 @@ const PLANNER_MOBILE_FAB_ITEM = {
   },
 };
 
-const PlannerMobileFab: FC<PlannerMobileFabProps> = ({
-  targetMode,
-  setMode,
-}) => {
-  const isDraggingRef = useRef(false);
+const PlannerMobileFab = ({ targetMode, setMode }: PlannerMobileFabProps) => {
   return (
-    <Draggable
-      bounds="parent"
-      onDrag={() => {
-        isDraggingRef.current = true;
-      }}
-      onStop={() => {
-        // i.e. not dragging but onclick
-        if (!isDraggingRef.current) {
-          setMode(targetMode);
-        }
-        isDraggingRef.current = false;
-      }}
-    >
+    <Draggable bounds="parent" {...useClickObserver(() => setMode(targetMode))}>
       <Fab
         disableRipple
-        id="planner-draggable-fab-container"
+        id="plannerDraggableFabContainer"
+        className={styles.plannerDraggableFabContainer}
         color="primary"
         aria-label="edit"
       >
@@ -83,7 +70,7 @@ const PlannerPage: FC = () => {
           <>
             <SearchPanel />
             <PlannerTimetable />
-            <div className="plannerCart-column secondary-column">
+            <div className={clsx(styles.plannerCartColumn, 'secondary-column')}>
               <PlannerCart />
             </div>
           </>
@@ -92,7 +79,7 @@ const PlannerPage: FC = () => {
         return <PlannerTimetable />;
       case PlannerMode.CART:
         return (
-          <div className="plannerCart-column secondary-column">
+          <div className={clsx(styles.plannerCartColumn, 'secondary-column')}>
             <PlannerCart />
           </div>
         );
@@ -109,7 +96,7 @@ const PlannerPage: FC = () => {
 
   return (
     <>
-      <Page className="planner-page" center padding>
+      <Page className={styles.plannerPage} center padding>
         <Head>
           <title>{'Course Planner - CUtopia'}</title>
         </Head>
