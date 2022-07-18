@@ -1,4 +1,4 @@
-import { useReducer, useState, useEffect, FC, useRef } from 'react';
+import { useReducer, useState, useEffect, FC } from 'react';
 import { observer } from 'mobx-react-lite';
 import { reaction } from 'mobx';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -37,6 +37,7 @@ import Footer from '../molecules/Footer';
 import TimetablePanel from '../templates/TimetablePanel';
 import { CREATE_PLANNER_FLAG, EXPIRE_LOOKUP } from '../../constants';
 import { GET_TIMETABLE } from '../../constants/queries';
+import useMobileQuery from '../../hooks/useMobileQuery';
 
 type PlannerTimetableProps = {
   className?: string;
@@ -211,7 +212,7 @@ const validShareId = (id: string) => id && SHARE_ID_RULE.test(id);
 const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
   const planner = usePlanner();
   const router = useRouter();
-  const firstUpdate = useRef(true);
+  const isMobile = useMobileQuery();
   const isHome = router.pathname == '/';
   const { sid: shareId } = router.query as {
     sid?: string;
@@ -555,7 +556,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
           deleteTable={(id: string, expire: number) => onDelete(id, expire)}
         />
       }
-      {!isHome && <Footer style={styles.plannerFooter} />}
+      {!isHome && !isMobile && <Footer style={styles.plannerFooter} />}
       <Dialog
         transitionDuration={{
           enter: 120,
