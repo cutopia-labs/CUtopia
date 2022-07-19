@@ -1,5 +1,5 @@
 import { TimetableOverviewMode } from './enums';
-import { Events } from './events';
+import { Events, TbaSections } from './events';
 
 export type RatingField = 'grading' | 'content' | 'difficulty' | 'teaching';
 
@@ -79,6 +79,7 @@ export type TimetableInfo = {
   totalCredits: number;
   averageHour: number;
   weekdayAverageHour: Record<string, number>;
+  tbaSections: TbaSections;
 };
 
 export interface CourseSection extends Events {

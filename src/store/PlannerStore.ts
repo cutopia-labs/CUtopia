@@ -14,6 +14,7 @@ import {
 
 import withUndo from '../helpers/withUndo';
 import { getDurationInHour, timeInRange } from '../helpers/timetable';
+import { makeSectionLabel } from '../constants';
 import ViewStore from './ViewStore';
 import StorePrototype from './StorePrototype';
 
@@ -92,21 +93,34 @@ class PlannerStore extends StorePrototype {
       totalCredits: 0,
       averageHour: 0,
       weekdayAverageHour: {},
+      tbaSections: {},
     };
-    this.plannerCourses?.forEach((course, i) => {
+    this.plannerCourses?.forEach((course, courseIdx) => {
       let unhide = false;
       Object.values(course.sections).forEach(section => {
         if (!section.hide) {
           unhide = true;
-          section.days.forEach((day, i) => {
+          for (let i = 0; i < section.days.length; i++) {
+            const day = section.days[i];
             if (day > maxDay) {
               maxDay = day;
             }
             info.weekdayAverageHour[day] = info.weekdayAverageHour[day] || 0;
-            info.weekdayAverageHour[day] += getDurationInHour(section, i);
-          });
+            const sectionDuration = getDurationInHour(section, i);
+            /* If no a number, then it's TBA section, remove from credit calc */
+            if (Number.isNaN(sectionDuration)) {
+              unhide = false;
+              info.tbaSections[makeSectionLabel(section, course.courseId)] = {
+                name: section.name,
+                courseIndex: courseIdx,
+              };
+              break;
+            }
+            info.weekdayAverageHour[day] += sectionDuration;
+          }
         }
       });
+      console.log(info);
       if (unhide) {
         info.totalCredits += course.credits;
       }
@@ -154,8 +168,8 @@ class PlannerStore extends StorePrototype {
         if (i === j || !sectionX || !sectionY) {
           return;
         }
-        const sectionXKey = `${sectionX.courseId} ${sectionX.name}`;
-        const sectionYKey = `${sectionY.courseId} ${sectionY.name}`;
+        const sectionXKey = makeSectionLabel(sectionX, sectionX.courseId);
+        const sectionYKey = makeSectionLabel(sectionY, sectionY.courseId);
         if (sectionXKey in overlapSections || sectionYKey in overlapSections) {
           return;
         }

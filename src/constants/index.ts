@@ -1,4 +1,4 @@
-import { Grade, RatingField } from '../types';
+import { CourseSection, Grade, RatingField } from '../types';
 
 export const CREATE_PLANNER_FLAG = 'CREATE';
 
@@ -85,3 +85,6 @@ export const EMOJIS = [
 ];
 
 export const EMOJIS_LENGTH = 18;
+
+export const makeSectionLabel = (section: CourseSection, courseId: string) =>
+  `${courseId} ${section.name}`;

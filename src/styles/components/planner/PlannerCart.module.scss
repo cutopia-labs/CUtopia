@@ -26,6 +26,9 @@
       margin-left: 16px;
       font-size: 1.2rem;
       color: var(--error);
+      &.warning {
+        color: rgb(255, 196, 0);
+      }
     }
     .plannerCartCheckbox {
       margin-left: 6px;

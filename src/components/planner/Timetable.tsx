@@ -94,6 +94,7 @@ const Timetable: FC<TimetableProps> = ({ courses, timetableInfo }) => {
             if (!v.hide) {
               const startHour = parseInt(v.startTimes[i].split(':')[0], 10);
               const endHour = parseInt(v.endTimes[i].split(':')[0], 10);
+              if (Number.isNaN(startHour) || Number.isNaN(endHour)) return;
               if (startHour < config.startHour) {
                 config.startHour = startHour;
               }

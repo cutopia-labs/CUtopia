@@ -65,6 +65,7 @@ const PlannerCart: FC = () => {
           Object.entries(course.sections).map(([k, section], sectionIndex) => {
             const sectionLabel = `${course.courseId} ${section.name}`;
             const overlap = planner.overlapSections[sectionLabel];
+            const isTba = planner.timetableInfo.tbaSections[sectionLabel];
             return (
               <ListItem
                 key={`cart-${sectionLabel}`}
@@ -72,12 +73,14 @@ const PlannerCart: FC = () => {
                 caption={getSectionTime(section)}
                 onClick={() => toggleHide(section, index, k)}
                 left={
-                  overlap ? (
+                  overlap || isTba ? (
                     <Tooltip
                       className={styles.plannerCartListIcon}
-                      title={`Overlap with ${overlap.name}`}
+                      title={
+                        isTba ? 'TBA Section' : `Overlap with ${overlap.name}`
+                      }
                     >
-                      <Warning />
+                      <Warning className={clsx(isTba && styles.warning)} />
                     </Tooltip>
                   ) : (
                     <Checkbox

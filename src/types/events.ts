@@ -55,6 +55,15 @@ export type OverlapSections = {
   [key: string]: OverlapSection;
 };
 
+export type TbaSection = {
+  name: string;
+  courseIndex: number;
+};
+
+export type TbaSections = {
+  [key: string]: TbaSection;
+};
+
 export interface TimetableOverview {
   _id: string;
   createdAt: number;
