@@ -94,16 +94,39 @@ const Timetable: FC<TimetableProps> = ({ courses, timetableInfo }) => {
             if (!v.hide) {
               const startHour = parseInt(v.startTimes[i].split(':')[0], 10);
               const endHour = parseInt(v.endTimes[i].split(':')[0], 10);
-              if (Number.isNaN(startHour) || Number.isNaN(endHour)) return;
+              day = parseInt(day as any, 10);
+              if (
+                Number.isNaN(startHour) ||
+                Number.isNaN(endHour) ||
+                Number.isNaN(day)
+              )
+                return;
               if (startHour < config.startHour) {
                 config.startHour = startHour;
               }
               if (endHour > config.endHour) {
                 config.endHour = endHour;
               }
+              /* If sunday course */
+              if (day === 0) {
+                day = 7;
+              }
               if (day > config.numOfDays) {
                 config.numOfDays = day;
               }
+              console.log({
+                courseId: course.courseId,
+                title: course.title,
+                section: k,
+                day: day,
+                startTime: v.startTimes[i],
+                endTime: v.endTimes[i],
+                location: v.locations[i],
+                color:
+                  colors.timetableColors[
+                    courseIndex % colors.randomColorsLength
+                  ],
+              });
               events.push({
                 courseId: course.courseId,
                 title: course.title,

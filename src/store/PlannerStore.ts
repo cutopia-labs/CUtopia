@@ -102,20 +102,19 @@ class PlannerStore extends StorePrototype {
           unhide = true;
           for (let i = 0; i < section.days.length; i++) {
             const day = section.days[i];
-            if (day > maxDay) {
-              maxDay = day;
-            }
-            info.weekdayAverageHour[day] = info.weekdayAverageHour[day] || 0;
             const sectionDuration = getDurationInHour(section, i);
             /* If no a number, then it's TBA section, remove from credit calc */
-            if (Number.isNaN(sectionDuration)) {
-              unhide = false;
+            if (Number.isNaN(sectionDuration) || Number.isNaN(day)) {
               info.tbaSections[makeSectionLabel(section, course.courseId)] = {
                 name: section.name,
                 courseIndex: courseIdx,
               };
               break;
             }
+            if (day > maxDay) {
+              maxDay = day;
+            }
+            info.weekdayAverageHour[day] = info.weekdayAverageHour[day] || 0;
             info.weekdayAverageHour[day] += sectionDuration;
           }
         }
@@ -125,6 +124,7 @@ class PlannerStore extends StorePrototype {
         info.totalCredits += course.credits;
       }
     });
+    console.log(info.weekdayAverageHour);
     Object.values(info.weekdayAverageHour).forEach(
       hr => (info.averageHour += hr)
     );

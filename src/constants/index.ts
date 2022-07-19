@@ -51,7 +51,7 @@ export const GRADE_VALUES = Object.freeze([
 ]);
 
 export const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-export const WEEKDAYS_TWO_ABBR = ['', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
+export const WEEKDAYS_TWO_ABBR = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 
 export const VOTE_ACTIONS = Object.freeze({
   UPVOTE: 1,
