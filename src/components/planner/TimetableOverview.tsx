@@ -151,9 +151,12 @@ const TimetableOverview: FC<TimetableOverviewProps> = ({
   const [labelInput, setLabelInput] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
   const router = useRouter();
+  /* For each click, update the planner name input field */
   useEffect(() => {
-    setLabelInput(planner?.plannerName);
-  }, [planner.plannerId]);
+    if (anchorEl) {
+      setLabelInput(planner?.plannerName);
+    }
+  }, [anchorEl]);
   const [
     getUserTimetable,
     { data: userTimetable, loading: userTimetableLoading },
