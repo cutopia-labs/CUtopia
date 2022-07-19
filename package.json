@@ -41,7 +41,7 @@
     "dev": "next dev",
     "eject": "next eject",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx src",
-    "prepare": "husky install",
+    "prepare": "husky install && yarn run update-data",
     "cleanup": "rm -r .next build node_modules out && yarn install && yarn run dev",
     "update-data": "git submodule update --init && cp -R data/resources public/"
   },
