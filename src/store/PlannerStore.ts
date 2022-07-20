@@ -123,7 +123,6 @@ class PlannerStore extends StorePrototype {
         info.totalCredits += course.credits;
       }
     });
-    console.log(info.weekdayAverageHour);
     Object.values(info.weekdayAverageHour).forEach(
       hr => (info.averageHour += hr)
     );
@@ -204,6 +203,13 @@ class PlannerStore extends StorePrototype {
     this.planner = planner;
     this.plannerName = planner.tableName;
     this.plannerCourses = cloneDeep(this.planner.courses);
+  };
+
+  @action.bound syncPlanner = delta => {
+    this.planner = {
+      ...this.planner,
+      ...delta,
+    };
   };
 
   @action clearPlannerCourses = () => {

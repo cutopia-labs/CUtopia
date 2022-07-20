@@ -71,4 +71,4 @@ export const REVIEW_COURSE_INFO_ATTRS = [
   'assessments',
 ];
 
-export const TIMETABLE_SYNC_INTERVAL = 2000;
+export const TIMETABLE_SYNC_INTERVAL = 4000;

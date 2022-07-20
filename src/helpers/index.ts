@@ -68,3 +68,7 @@ export const getAttrs = (obj: Record<string, any>, ...attrs: string[]) =>
   Object.fromEntries(
     attrs.filter(attr => attr in obj).map(attr => [attr, obj[attr]])
   );
+
+export const objStrEqual = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+
+export const jsonCloneDeep = obj => JSON.parse(JSON.stringify(obj));

@@ -114,19 +114,6 @@ const Timetable: FC<TimetableProps> = ({ courses, timetableInfo }) => {
               if (day > config.numOfDays) {
                 config.numOfDays = day;
               }
-              console.log({
-                courseId: course.courseId,
-                title: course.title,
-                section: k,
-                day: day,
-                startTime: v.startTimes[i],
-                endTime: v.endTimes[i],
-                location: v.locations[i],
-                color:
-                  colors.timetableColors[
-                    courseIndex % colors.randomColorsLength
-                  ],
-              });
               events.push({
                 courseId: course.courseId,
                 title: course.title,
