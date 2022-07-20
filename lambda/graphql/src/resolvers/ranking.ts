@@ -30,7 +30,7 @@ export const getRankingWithCache = async (field: string) =>
         [field]: rank.val,
       };
     });
-    return resData;
+    return await Promise.all(resData);
   });
 
 const rankingResolver: Resolvers = {
