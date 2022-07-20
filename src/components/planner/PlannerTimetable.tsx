@@ -6,7 +6,7 @@ import { Button, Dialog } from '@material-ui/core';
 import copy from 'copy-to-clipboard';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
-import { cloneDeep } from 'lodash';
+import { debounce } from 'lodash';
 
 import { useBeforeUnload } from 'react-use';
 import styles from '../../styles/components/planner/PlannerTimetable.module.scss';
@@ -133,10 +133,11 @@ export const coursesToEntries = (
         ...course,
         sections: sections.map(section => {
           /* Remove the hide attr if not hidden */
-          if (!section.hide) {
-            delete section.hide;
+          const { hide, ...copy } = section;
+          if (hide) {
+            (copy as any).hide = true;
           }
-          return section;
+          return copy;
         }),
       };
     });
@@ -145,7 +146,13 @@ export const entriesToCourses = (entries: any[]) =>
   entries.map(course => ({
     ...course,
     sections: Object.fromEntries(
-      course.sections.map(section => [section.name, section])
+      course.sections.map(section => {
+        const sectionCopy = {
+          ...section,
+          hide: section.hide || false, // Must set to false, otherwise will sync twice!!!
+        };
+        return [section.name, sectionCopy];
+      })
     ),
   })) || [];
 
@@ -388,6 +395,16 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
 
   const switchTimetable = async (id: string) => {
     try {
+      if (planner.syncState === PlannerSyncState.DIRTY) {
+        console.log('Is dirty');
+        /* May call twice? Ref: https://github.com/lodash/lodash/issues/4185 */
+        await updateTimetable({
+          delta: planner.delta,
+          _id: planner.plannerId,
+          syncing: planner.isSyncing,
+        });
+        updateTimetable.flush();
+      }
       const { data } = await switchTimetableMutation({ variables: { id } });
       applyTimetable(
         data?.switchTimetable,
@@ -403,40 +420,46 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
     }
   };
 
-  const updateTimetable = async ({ delta, _id }) => {
-    console.log('Update timetable triggered');
-    console.log(
-      `ID: (${_id})\nSyncing planner:\n${JSON.stringify(delta, null, 2)}`
-    );
-    /* If no update / updating, do nothing */
-    if (!delta || planner.isSyncing) return;
-    /* Update sync states to syncing */
-    const deltaClone = cloneDeep(delta);
-    planner.updateStore('isSyncing', true);
-    /* Process the entries for gql */
-    if (delta.courses) {
-      delta['entries'] = coursesToEntries(delta.courses);
-      delete delta.courses;
+  const updateTimetable = debounce(
+    async ({ delta, _id, syncing }) => {
+      console.log(`Update timetable fired ${JSON.stringify(delta)}`);
+      /* If no update / updating, do nothing */
+      if (!delta || syncing) return;
+      /* Update sync states to syncing */
+      planner.updateStore('isSyncing', true);
+      const deltaClone = JSON.parse(JSON.stringify(delta));
+      console.log(deltaClone);
+      /* Process the entries for gql */
+      if (delta.courses) {
+        delta['entries'] = coursesToEntries(delta.courses);
+        delete delta.courses;
+      }
+      /* If dirty, then upload timetable */
+      await uploadTimetable({
+        variables: {
+          _id,
+          ...delta,
+          expire: EXPIRE_LOOKUP.default,
+        },
+      });
+      /* Update planner (prev state) after synced */
+      planner.syncPlanner(deltaClone);
+      /*
+      console.log('Planner courses:');
+      console.log(toJS(planner.plannerCourses));
+      console.log('Planner:');
+      console.log(toJS(planner.planner.courses));
+      console.log(
+        `Isequal: ${isEqual(planner.plannerCourses, planner.planner.courses)}`
+      );
+      */
+      planner.updateStore('isSyncing', false);
+    },
+    TIMETABLE_SYNC_INTERVAL,
+    {
+      trailing: true,
     }
-    /* If dirty, then upload timetable */
-    await uploadTimetable({
-      variables: {
-        _id,
-        ...delta,
-        expire: EXPIRE_LOOKUP.default,
-      },
-    });
-    planner.updateStore('isSyncing', false);
-    /* Update planner (prev state) after synced */
-    planner.planner = {
-      ...planner.planner,
-      ...deltaClone,
-    };
-    console.log({
-      _id,
-      ...delta,
-    });
-  };
+  );
 
   const getUploadTimetableMessage = (
     uploadTimetable,
@@ -479,10 +502,13 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
       () => ({
         delta: planner.delta,
         _id: planner.plannerId,
+        syncing: planner.isSyncing,
       }),
-      updateTimetable,
-      {
-        delay: TIMETABLE_SYNC_INTERVAL,
+      data => {
+        console.log(
+          `(${+new Date()}) Reaction fired ${JSON.stringify(data.delta)}`
+        );
+        updateTimetable(data);
       }
     );
     // end sync b4 unmount (handle unload here!)
