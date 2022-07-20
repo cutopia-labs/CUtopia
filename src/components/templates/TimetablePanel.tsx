@@ -10,7 +10,6 @@ import {
   AiOutlineShareAlt,
   AiOutlineSync,
 } from 'react-icons/ai';
-import { Done } from '@material-ui/icons';
 import { usePlanner, useView } from '../../store';
 import styles from '../../styles/components/templates/TimetablePanel.module.scss';
 import Timetable from '../planner/Timetable';
@@ -29,7 +28,6 @@ type TimetablePanelProps = {
 const SYNC_STATE_ICON = {
   [PlannerSyncState.DIRTY]: <AiOutlineSync />,
   [PlannerSyncState.SYNCING]: <AiOutlineLoading className="icon-spin" />,
-  [PlannerSyncState.SYNCED]: <Done />,
 };
 
 const TimetablePanel: FC<TimetablePanelProps> = ({
@@ -83,9 +81,11 @@ const TimetablePanel: FC<TimetablePanelProps> = ({
         />
         {Boolean(courses?.length) && (
           <div className={clsx(styles.btnRow, 'center-row')}>
-            <IconButton size="small" onClick={() => console.log('clicked')}>
-              {SYNC_STATE_ICON[planner.syncState]}
-            </IconButton>
+            {planner.syncState !== PlannerSyncState.SYNCED && (
+              <IconButton size="small" onClick={() => console.log('clicked')}>
+                {SYNC_STATE_ICON[planner.syncState]}
+              </IconButton>
+            )}
             {FUNCTION_BUTTONS.map(item => (
               <IconButton key={item.key} size="small" onClick={item.action}>
                 {item.icon}
