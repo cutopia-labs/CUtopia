@@ -16,9 +16,9 @@ import { useMutation, useQuery } from '@apollo/client';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 
 import { HiOutlineInformationCircle } from 'react-icons/hi';
-import { useBeforeunload } from 'react-beforeunload';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
+import { useBeforeUnload } from 'react-use';
 import styles from '../../styles/components/review/ReviewEditPanel.module.scss';
 import { useView, useUser } from '../../store';
 import { GET_REVIEW } from '../../constants/queries';
@@ -360,11 +360,15 @@ const ReviewEditPanel: FC<Props> = ({ courseInfo }) => {
         }
       }
     }
+  }, [user.data?.reviewIds]);
+
+  // Check draft onMount to see if user have saved draft for this course
+  useEffect(() => {
     if (user.reviewDrafts[courseId]) {
       setTargetReview(user.reviewDrafts[courseId]);
       setMode(MODES.DRAFT_MODAL);
     }
-  }, [user.reviewDrafts, user.data?.reviewIds]);
+  }, []);
 
   // to fillin posted review if choose to edit
   useEffect(() => {
@@ -403,12 +407,15 @@ const ReviewEditPanel: FC<Props> = ({ courseInfo }) => {
     }).then(result => setInstructorsSearchResult(result));
   }, [formData.lecturer]);
 
-  useBeforeunload(e => {
-    if (progress > SAVE_DRAFT_PROGRESS_BUFFER && mode === MODES.INITIAL) {
+  useBeforeUnload(() => {
+    const unsaved =
+      progress > SAVE_DRAFT_PROGRESS_BUFFER && mode === MODES.INITIAL;
+    console.log(`Saved?: ${!unsaved}`);
+    if (unsaved) {
       user.updateReviewDrafts(courseId, formData);
-      e.preventDefault();
     }
-  });
+    return unsaved;
+  }, 'You have unsaved review, are you sure you want to leave?');
 
   const reviewModal = {
     [MODES.EDIT_MODAL]: {
