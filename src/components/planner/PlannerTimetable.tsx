@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import { cloneDeep } from 'lodash';
 
+import { useBeforeUnload } from 'react-use';
 import styles from '../../styles/components/planner/PlannerTimetable.module.scss';
 import { useView, usePlanner } from '../../store';
 import {
@@ -22,6 +23,7 @@ import {
 import {
   Planner,
   PlannerCourse,
+  PlannerSyncState,
   ShareTimetableMode,
   TimetableOverviewMode,
   UploadTimetable,
@@ -525,6 +527,21 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
     }
     switchTimetable(shareId);
   }, [shareId]);
+
+  // If planner is dirty, prevent unload
+  useBeforeUnload(() => {
+    console.log(
+      `Leave detected, dirty: ${planner.syncState === PlannerSyncState.DIRTY}`
+    );
+    if (planner.syncState === PlannerSyncState.DIRTY) {
+      updateTimetable({
+        delta: planner.delta,
+        _id: planner.plannerId,
+      });
+      return true;
+    }
+    return false;
+  }, 'Timetable syncing, please wait for a few seconds before leaving');
 
   const createTimetable = async () => {
     console.log('Called create timetable');

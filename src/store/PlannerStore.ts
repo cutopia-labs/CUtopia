@@ -119,7 +119,6 @@ class PlannerStore extends StorePrototype {
           }
         }
       });
-      console.log(info);
       if (unhide) {
         info.totalCredits += course.credits;
       }
