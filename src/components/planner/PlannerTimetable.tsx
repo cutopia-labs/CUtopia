@@ -321,8 +321,8 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
       const newTimetableOverview = {
         _id: id,
         ...importedPlanner,
-        expire: timetable.expire,
-        mode: getModeFromExpire(timetable.expire),
+        expireAt: timetable.expireAt,
+        mode: getModeFromExpire(timetable.expireAt),
       };
       planner.updateStore('remoteTimetableData', [
         ...(planner.remoteTimetableData || []),

@@ -72,6 +72,7 @@ export type Planner = {
   createdAt?: number;
   courses: PlannerCourse[];
   expire?: number;
+  expireAt?: number;
   id: string;
 };
 

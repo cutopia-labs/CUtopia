@@ -204,6 +204,7 @@ export const SWITCH_TIMETABLE = gql`
       }
       tableName
       createdAt
+      expireAt
     }
   }
 `;
