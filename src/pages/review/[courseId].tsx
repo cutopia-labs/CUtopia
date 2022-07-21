@@ -194,4 +194,4 @@ export const getStaticPaths: GetStaticPaths<{}> = async () => {
   };
 };
 
-export default observer(authenticatedRoute(CoursePanel));
+export default authenticatedRoute(observer(CoursePanel));

@@ -114,4 +114,4 @@ const PlannerPage: FC = () => {
   );
 };
 
-export default observer(authenticatedRoute(PlannerPage));
+export default authenticatedRoute(observer(PlannerPage));

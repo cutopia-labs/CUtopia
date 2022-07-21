@@ -102,4 +102,4 @@ const HomePage: FC = () => {
   );
 };
 
-export default observer(authenticatedRoute(HomePage));
+export default authenticatedRoute(observer(HomePage));
