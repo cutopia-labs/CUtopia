@@ -47,12 +47,6 @@ const userSchema = new Schema<User>(
         ref: 'Timetable',
       },
     ],
-    sharedTimetables: [
-      {
-        type: String,
-        ref: 'Timetable',
-      },
-    ],
   },
   {
     toJSON: { virtuals: true, getters: true },

@@ -25,15 +25,8 @@ export const uploadTimetable = async input => {
     throw Error(ErrorCode.UPLOAD_TIMETABLE_EXCEED_ENTRY_LIMIT.toString());
   }
 
-  const user = await User.findOne(
-    { username },
-    'timetables sharedTimetables'
-  ).exec();
-  if (
-    user.timetables.length + user.sharedTimetables.length >
-      UPLOAD_TIMETABLE_TOTAL_LIMIT &&
-    !_id
-  ) {
+  const user = await User.findOne({ username }, 'timetables').exec();
+  if (user.timetables.length > UPLOAD_TIMETABLE_TOTAL_LIMIT && !_id) {
     throw Error(ErrorCode.UPLOAD_TIMETABLE_EXCEED_TOTAL_LIMIT.toString());
   }
 
@@ -50,7 +43,6 @@ export const uploadTimetable = async input => {
       operation: 'add',
       _id: newTimetable._id,
       username,
-      expire,
     });
     await newTimetable.save();
     return {
@@ -61,25 +53,23 @@ export const uploadTimetable = async input => {
 };
 
 export const removeTimetable = async input => {
-  let { _id, switchTo, username, expire } = input;
+  let { _id, switchTo, username } = input;
   await Timetable.deleteOne({
     _id,
     username,
-    expire,
   }).exec();
 
   if (switchTo === null) {
     // No timetable left after removing this last timetable
     // so create a new empty timetable
-    expire = -1;
-    switchTo = (await uploadTimetable({ username, expire, entries: [] }))._id;
+    switchTo = (await uploadTimetable({ username, expire: -1, entries: [] }))
+      ._id;
   }
   await updateTimetableId({
     operation: 'remove',
     _id,
     switchTo,
     username,
-    expire,
   });
   if (switchTo) {
     return await Timetable.findOne({ username, _id: switchTo }).exec();

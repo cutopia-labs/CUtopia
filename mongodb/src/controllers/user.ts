@@ -201,18 +201,17 @@ export const incrementUpvotesCount = async input => {
 };
 
 export const updateTimetableId = async input => {
-  const { username, _id, switchTo, operation, expire } = input;
-  const [op, id] =
+  const { username, _id, switchTo, operation } = input;
+  const [op, timetableId] =
     operation === 'add' ? ['$addToSet', _id] : ['$pull', switchTo];
-  const timetableField = expire >= 0 ? 'sharedTimetables' : 'timetables';
 
   const user = await User.findOneAndUpdate(
     { username },
     {
       [op]: {
-        [timetableField]: _id,
+        timetables: _id,
       },
-      ...(id !== undefined && { timetableId: id }),
+      ...(timetableId !== undefined && { timetableId }),
     },
     { new: true }
   ).exec();
@@ -221,9 +220,8 @@ export const updateTimetableId = async input => {
 
 export const getTimetablesOverview = async input => {
   const { username } = input;
-  const user = await User.findOne({ username }, 'timetables sharedTimetables')
+  const user = await User.findOne({ username }, 'timetables')
     .populate('timetables', 'tableName createdAt expireAt expire')
-    .populate('sharedTimetables', 'tableName createdAt expireAt expire')
     .exec();
-  return [user.timetables, user.sharedTimetables];
+  return user.timetables;
 };

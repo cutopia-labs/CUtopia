@@ -10,7 +10,7 @@ type Query {
 
 type User {
   timetableId: String
-  timetables: [[TimetableOverview]]
+  timetables: [TimetableOverview]
 }
 
 type CourseTableEntry {
@@ -51,7 +51,6 @@ type UploadTimetableResult {
 
 input RemoveTimetableInput {
   _id: String!
-  expire: Int!
   switchTo: String
 }
 

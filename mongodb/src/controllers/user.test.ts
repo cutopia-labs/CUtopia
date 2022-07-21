@@ -103,7 +103,6 @@ describe('User', () => {
       resetPwdCode: null,
       fullAccess: false,
       timetables: [],
-      sharedTimetables: [],
       reviewIds: [],
       exp: 0,
     });
