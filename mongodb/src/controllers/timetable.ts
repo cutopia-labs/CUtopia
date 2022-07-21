@@ -2,7 +2,7 @@ import { ErrorCode } from 'cutopia-types/lib/codes';
 
 import Timetable from '../models/timetable.model';
 import User from '../models/user.model';
-import { updateTimetableId } from './user';
+import { updateTimetableId, updateUser } from './user';
 import {
   UPLOAD_TIMETABLE_ENTRY_LIMIT,
   UPLOAD_TIMETABLE_TOTAL_LIMIT,
@@ -104,6 +104,6 @@ export const cleanExpiredTimetable = async input => {
 
 export const switchTimetable = async input => {
   const { _id, username } = input;
-  await User.updateOne({ username }, { timetableId: _id });
+  await updateUser({ username, timetableId: _id });
   return await Timetable.findOne({ username, _id });
 };

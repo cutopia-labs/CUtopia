@@ -67,6 +67,7 @@ export const createUser = async input => {
 
 export const deleteUser = async input => {
   const { username } = input;
+  userCache.del(username);
   await User.deleteOne({ username }).exec();
 };
 
@@ -84,7 +85,11 @@ export const getUser = async (filter, fetchIf?) =>
 
 export const updateUser = async input => {
   const { username, ...update } = input;
-  return await User.updateOne({ username }, update).exec();
+  const user = await User.findOneAndUpdate({ username }, update, {
+    new: true,
+  }).exec();
+  userCache.set(username, JSON.stringify(user));
+  return user;
 };
 
 export const verifyUser = async input => {
