@@ -4,9 +4,9 @@ import {
   DescriptionOutlined,
 } from '@material-ui/icons';
 
-import '../styles/pages/AboutPage.module.scss';
-import { useRouter } from 'next/router';
-import { FC } from 'react';
+import { FC, useState } from 'react';
+import clsx from 'clsx';
+import styles from '../styles/pages/AboutPage.module.scss';
 import { AboutTab, PrivacyTab, TermsOfUseTab } from '../components/about/tabs';
 import Page from '../components/atoms/Page';
 import TabsContainer from '../components/molecules/TabsContainer';
@@ -27,11 +27,9 @@ export const ABOUT_PAGE_ROUTES = [
 ];
 
 const AboutPage: FC = () => {
-  const router = useRouter();
-
+  const [tab, setTab] = useState('about');
   const renderTab = () => {
-    console.log(router.pathname);
-    switch (router?.pathname.slice(1)) {
+    switch (tab) {
       case 'about':
         return <AboutTab />;
       case 'privacy':
@@ -42,12 +40,12 @@ const AboutPage: FC = () => {
   };
 
   return (
-    <Page className="about-page" center padding>
-      <div className="grid-auto-row">
+    <Page className={styles.aboutPage} center padding>
+      <div className={clsx(styles.content, 'grid-auto-row')}>
         <TabsContainer
           items={ABOUT_PAGE_ROUTES}
-          selected={router.pathname.slice(1)}
-          onSelect={label => router.push(`/${label}`)}
+          selected={tab}
+          onSelect={label => setTab(label)}
         />
         {renderTab()}
       </div>
