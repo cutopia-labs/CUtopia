@@ -7,6 +7,7 @@
   width: 280px;
   height: calc(100vh - var(--header-height) - 3 * var(--page-margin));
   grid-template-rows: min-content minmax(0, 1fr);
+  overflow-y: scroll;
 }
 
 @media only screen and (max-width: 1260px) {
