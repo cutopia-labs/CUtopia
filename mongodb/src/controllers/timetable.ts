@@ -78,18 +78,24 @@ export const removeTimetable = async input => {
 
 export const cleanExpiredTimetable = async input => {
   const { expireDate } = input;
-  return await Timetable.deleteMany({
-    $and: [
-      {
-        expireAt: {
-          $lt: expireDate,
+  return await Timetable.updateMany(
+    {
+      $and: [
+        {
+          expireAt: {
+            $lt: expireDate,
+          },
+          expire: {
+            $gt: 0,
+          },
         },
-        expire: {
-          $gt: 0,
-        },
-      },
-    ],
-  });
+      ],
+    },
+    {
+      expireAt: -1,
+      expire: -1,
+    }
+  );
 };
 
 export const switchTimetable = async input => {

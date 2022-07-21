@@ -9,5 +9,5 @@ exports.handler = async () => {
     expireDate: Date.now(),
   });
   console.timeEnd('Remove expired timetables');
-  console.log(`Removed ${result.deletedCount} expired timetables`);
+  console.log(`Removed ${result.modifiedCount} expired timetables`);
 };
