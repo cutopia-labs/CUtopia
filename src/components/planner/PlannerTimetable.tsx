@@ -45,13 +45,11 @@ type PlannerTimetableProps = {
   className?: string;
 };
 
-const getModeFromExpire = (expire: number) => {
-  if (expire > 0) {
+const getModeFromExpire = (expireAt: number) => {
+  if (expireAt > 0) {
     return TimetableOverviewMode.SHARE;
   }
-  return expire === 0
-    ? TimetableOverviewMode.UPLOAD_SHARABLE
-    : TimetableOverviewMode.UPLOAD;
+  return TimetableOverviewMode.UPLOAD;
 };
 
 const getExpire = (str: string) => {
@@ -314,14 +312,15 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
     const importedPlanner: Planner = {
       createdAt: timetable.createdAt,
       tableName: timetable.tableName,
+      expireAt: timetable.expireAt,
       id,
       courses: entriesToCourses(timetable.entries),
     };
+    console.log(importedPlanner);
     if (addToOverview) {
       const newTimetableOverview = {
         _id: id,
         ...importedPlanner,
-        expireAt: timetable.expireAt,
         mode: getModeFromExpire(timetable.expireAt),
       };
       planner.updateStore('remoteTimetableData', [
@@ -581,6 +580,22 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
     planner.newPlanner(newTimetable?._id, newTimetable?.createdAt);
   };
 
+  const onShareClick = () => {
+    /* If it's shared, then copy link and display message */
+    console.log(`${planner.planner.expireAt}`);
+    if (
+      getModeFromExpire(planner.planner?.expireAt) ===
+      TimetableOverviewMode.SHARE
+    ) {
+      copy(shareConfig.shareLink);
+      view.setSnackBar('Copied share link to your clipboard!');
+    } else {
+      setShareCourses({
+        mode: ShareTimetableMode.SHARE,
+      });
+    }
+  };
+
   return (
     <div className={clsx(styles.plannerTimetableContainer, 'column')}>
       {(getTimetableLoading ||
@@ -590,11 +605,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
         <TimetablePanel
           className={className}
           createTimetable={createTimetable}
-          onShare={() =>
-            setShareCourses({
-              mode: ShareTimetableMode.SHARE,
-            })
-          }
+          onShare={onShareClick}
           switchTimetable={switchTimetable}
           deleteTable={(id: string, expire: number) => onDelete(id, expire)}
         />
