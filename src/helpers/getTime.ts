@@ -42,26 +42,31 @@ export function getMMMDDYY(
   }`;
 }
 
-export function getDateDifference(timestamp: string) {
-  const now = new Date() as any;
-  const old = new Date(parseInt(timestamp, 10)) as any;
-  const diffHours = Math.floor((now - old) / (1000 * 60 * 60));
+export function getDateDifference(timestamp: string | number) {
+  timestamp =
+    typeof timestamp === 'string' ? parseInt(timestamp, 10) : timestamp;
+  const now = +new Date();
+  const old = +new Date(timestamp);
+  let diffHours = Math.floor((now - old) / (1000 * 60 * 60));
+  const isFuture = diffHours < 0;
+  const suffix = isFuture ? '' : ' ago';
+  diffHours = Math.abs(diffHours);
   if (diffHours < 1) {
     const diffMinites = Math.floor((now - old) / (1000 * 60));
-    return diffMinites ? `${diffMinites} minutes ago` : 'just now';
+    return diffMinites ? `${diffMinites} minutes${suffix}` : 'just now';
   }
   if (diffHours < 24) {
-    return `${Math.floor(diffHours)} hours ago`;
+    return `${Math.floor(diffHours)} hours${suffix}`;
   }
   if (diffHours / 24 < 7) {
-    return `${Math.floor(diffHours / 24)} days ago`;
+    return `${Math.floor(diffHours / 24)} days${suffix}`;
   }
   if (diffHours / 24 <= 30) {
-    return `${Math.floor(diffHours / 24 / 7)} weeks ago`;
+    return `${Math.floor(diffHours / 24 / 7)} weeks${suffix}`;
   }
   if (diffHours / 24 / 30.41 < 12) {
-    return `${Math.floor(diffHours / 24 / 30.41)} months ago`;
+    return `${Math.floor(diffHours / 24 / 30.41)} months${suffix}`;
   }
 
-  return `${Math.floor(diffHours / 24 / 30 / 12)} years ago`;
+  return `${Math.floor(diffHours / 24 / 30 / 12)} years${suffix}`;
 }

@@ -16,7 +16,6 @@ import { useRouter } from 'next/router';
 import copy from 'copy-to-clipboard';
 import { AiOutlineDelete, AiOutlineShareAlt } from 'react-icons/ai';
 import clsx from 'clsx';
-import pluralize from 'pluralize';
 import { usePlanner, useView } from '../../store';
 import styles from '../../styles/components/planner/TimetableOverview.module.scss';
 import {
@@ -28,7 +27,7 @@ import { PLANNER_CONFIGS } from '../../constants/configs';
 import { GET_USER_TIMETABLES } from '../../constants/queries';
 import Loading from '../atoms/Loading';
 import ListItem from '../molecules/ListItem';
-import { getMMMDDYY } from '../../helpers/getTime';
+import { getDateDifference, getMMMDDYY } from '../../helpers/getTime';
 import { generateTimetableURL } from './PlannerTimetable';
 
 const getTimetableOverviewMode = (expire: number) => {
@@ -57,13 +56,13 @@ const getCombinedTimetable = (data: UserData): TimetableOverviewWithMode[] => {
     }));
 };
 
-const getExpire = (mode: TimetableOverviewMode, expire: number) => {
+const getExpire = (mode: TimetableOverviewMode, expireAt: number) => {
   if (mode === TimetableOverviewMode.SHARE) {
     return (
       <>
         {' • '}
         <Timer />
-        {`${pluralize('day', expire, true)}`}
+        {getDateDifference(expireAt)}
       </>
     );
   }
@@ -110,7 +109,7 @@ export const TimetableOverviewListItem: FC<TimetableOverviewListItemProps> = ({
         caption={
           <>
             {getMMMDDYY(item.createdAt)}
-            {getExpire(item.mode, item.expire)}
+            {getExpire(item.mode, item.expireAt)}
           </>
         }
       >

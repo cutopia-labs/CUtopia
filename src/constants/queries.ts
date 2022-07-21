@@ -180,6 +180,7 @@ export const GET_USER_TIMETABLES = gql`
         tableName
         createdAt
         expire
+        expireAt
         _id
       }
     }

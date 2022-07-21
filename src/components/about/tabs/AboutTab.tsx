@@ -1,8 +1,8 @@
 import { Link } from '@material-ui/core';
 import clsx from 'clsx';
-import moment from 'moment';
 import { FC } from 'react';
 import { STATICS_EXPIRE_BEFORE } from '../../../constants/configs';
+import { getMMMDDYY } from '../../../helpers/getTime';
 
 import styles from '../../../styles/components/about/About.module.scss';
 import Card from '../../atoms/Card';
@@ -29,9 +29,12 @@ const AboutTab: FC = () => (
       </p>
     </AboutSection>
     <AboutSection title="Course Data Source">
-      <p className="caption">{`Last batch update date: ${moment(
-        STATICS_EXPIRE_BEFORE
-      ).format('MMM DD, YYYY')}`}</p>
+      <p className="caption">{`Last batch update date: ${getMMMDDYY(
+        STATICS_EXPIRE_BEFORE,
+        false,
+        false,
+        false
+      )}`}</p>
       <p>
         The courses information is fetched and parsed from{' '}
         <Link href="http://rgsntl.rgs.cuhk.edu.hk/aqs_prd_applx/Public/tt_dsp_crse_catalog.aspx">
