@@ -8,6 +8,9 @@
   height: calc(100vh - var(--header-height) - 3 * var(--page-margin));
   grid-template-rows: min-content minmax(0, 1fr);
   overflow-y: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 @media only screen and (max-width: 1260px) {

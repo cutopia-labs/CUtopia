@@ -2,9 +2,6 @@
   max-height: 100%;
   height: fit-content;
   padding-top: 8px;
-  &::-webkit-scrollbar {
-    display: none;
-  }
   header {
     padding: 0 var(--card-padding);
     & > div:first-child {
