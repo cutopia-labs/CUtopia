@@ -179,7 +179,6 @@ export const GET_USER_TIMETABLES = gql`
       timetables {
         tableName
         createdAt
-        expire
         expireAt
         _id
       }

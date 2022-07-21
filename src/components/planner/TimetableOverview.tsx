@@ -30,12 +30,9 @@ import ListItem from '../molecules/ListItem';
 import { getDateDifference, getMMMDDYY } from '../../helpers/getTime';
 import { generateTimetableURL } from './PlannerTimetable';
 
-const getTimetableOverviewMode = (expire: number) => {
-  if (expire > 0) {
+const getTimetableOverviewMode = (expireAt: number) => {
+  if (expireAt > 0) {
     return TimetableOverviewMode.SHARE;
-  }
-  if (expire === 0) {
-    return TimetableOverviewMode.UPLOAD_SHARABLE;
   }
   return TimetableOverviewMode.UPLOAD;
 };
@@ -44,16 +41,10 @@ const getCombinedTimetable = (data: UserData): TimetableOverviewWithMode[] => {
   if (!data?.me?.timetables) {
     return [];
   }
-  return (data?.me?.timetables[TimetableOverviewMode.UPLOAD] || [])
-    .concat(
-      [...(data?.me?.timetables[TimetableOverviewMode.SHARE] || [])].sort(
-        (a, b) => (a.createdAt > b.createdAt ? -1 : 1)
-      )
-    )
-    .map(item => ({
-      ...item,
-      mode: getTimetableOverviewMode(item.expire),
-    }));
+  return (data?.me?.timetables).map(item => ({
+    ...item,
+    mode: getTimetableOverviewMode(item.expireAt),
+  }));
 };
 
 const getExpire = (mode: TimetableOverviewMode, expireAt: number) => {

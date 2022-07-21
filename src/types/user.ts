@@ -9,7 +9,7 @@ type User = {
   level: number;
   timetableId: string;
   email?: string;
-  timetables?: TimetableOverview[][];
+  timetables?: TimetableOverview[];
   fullAccess?: boolean;
 };
 
