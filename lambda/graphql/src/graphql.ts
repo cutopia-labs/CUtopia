@@ -1,6 +1,5 @@
 import { ApolloServer } from 'apollo-server-lambda';
 import { makeExecutableSchema } from '@graphql-tools/schema';
-import express from 'express';
 import { connect } from 'mongodb';
 import dotenv from 'dotenv';
 
@@ -35,28 +34,6 @@ const server = new ApolloServer({
 });
 
 export const graphqlHandler = server.createHandler({
-  expressAppFromMiddleware(middleware) {
-    const app = express();
-    app.use(
-      '/static',
-      express.static(__dirname + '/data/static', {
-        etag: true,
-        setHeaders: (res, path, stat) => {
-          res.header('Access-Control-Allow-Origin', '*');
-          res.header('Access-Control-Allow-Methods', 'GET,OPTIONS');
-          res.header('Access-Control-Allow-Headers', 'Content-Type');
-          res.header('Access-Control-Allow-Headers', 'Accept');
-        },
-      }),
-      (req, res) => {
-        res.sendStatus(200);
-      }
-    );
-    app.use(middleware, (req, res) => {
-      res.sendStatus(200);
-    });
-    return app;
-  },
   expressGetMiddlewareOptions: {
     cors: {
       origin: '*',
