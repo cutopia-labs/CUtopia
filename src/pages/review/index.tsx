@@ -123,8 +123,7 @@ const RecentReviewList: FC<RecentReviewListProps> = ({ visible, category }) => {
   const { loading: recentReviewsLoading, refetch: getRecentReviews } = useQuery<
     any,
     any
-  >(getRecentReviewQuery('grading'), {
-    // TODO: replace by localStorage category
+  >(getRecentReviewQuery(category), {
     variables: {
       page: 0,
     },
@@ -329,4 +328,4 @@ const HomePanel: FC = () => {
   );
 };
 
-export default observer(authenticatedRoute(HomePanel));
+export default authenticatedRoute(observer(HomePanel));
