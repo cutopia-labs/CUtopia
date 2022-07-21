@@ -4,6 +4,7 @@ import {
   getTimetable,
   getTimetablesOverview,
   switchTimetable,
+  cloneTimetable,
 } from 'mongodb';
 import { Resolvers } from '../schemas/types';
 
@@ -32,6 +33,10 @@ const timetableResolver: Resolvers = {
     switchTimetable: async (parent, { input }, { user }) => {
       const { username } = user;
       return await switchTimetable({ ...input, username });
+    },
+    cloneTimetable: async (parent, { input }, { user }) => {
+      const { username } = user;
+      return await cloneTimetable({ ...input, username });
     },
   },
 };

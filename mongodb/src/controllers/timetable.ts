@@ -1,4 +1,5 @@
 import { ErrorCode } from 'cutopia-types/lib/codes';
+import { nanoid } from 'nanoid';
 
 import Timetable from '../models/timetable.model';
 import User from '../models/user.model';
@@ -102,4 +103,26 @@ export const switchTimetable = async input => {
   const { _id, username } = input;
   await updateUser({ username, timetableId: _id });
   return await Timetable.findOne({ username, _id });
+};
+
+export const cloneTimetable = async input => {
+  const { _id, username } = input;
+  const timetable = await Timetable.findOne({ _id }).lean();
+  if (timetable.expire === -1 && username !== timetable.username) {
+    throw Error(ErrorCode.GET_TIMETABLE_UNAUTHORIZED.toString());
+  }
+  const newTimetable = new Timetable({
+    ...timetable,
+    username,
+    _id: nanoid(10),
+    expire: -1,
+    expireAt: -1,
+  });
+  await updateTimetableId({
+    operation: 'add',
+    _id: newTimetable._id,
+    username,
+  });
+  await newTimetable.save();
+  return newTimetable;
 };

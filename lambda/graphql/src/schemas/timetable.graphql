@@ -2,6 +2,7 @@ type Mutation {
   uploadTimetable(input: UploadTimetableInput!): UploadTimetableResult @auth @rateLimit(duration: 60, limit: 30)
   removeTimetable(input: RemoveTimetableInput!): Timetable @auth @rateLimit(duration: 1, limit: 3)
   switchTimetable(input: SwitchTimetableInput!): Timetable @auth @rateLimit(duration: 1, limit: 3)
+  cloneTimetable(input: CloneTimetableInput!): Timetable @auth @rateLimit(duration: 1, limit: 3)
 }
 
 type Query {
@@ -72,5 +73,9 @@ type TimetableOverview {
 }
 
 input SwitchTimetableInput {
+  _id: String!
+}
+
+input CloneTimetableInput {
   _id: String!
 }
