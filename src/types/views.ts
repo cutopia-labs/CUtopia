@@ -1,6 +1,11 @@
 import { DialogProps } from '@material-ui/core';
 import { AlertProps } from '@material-ui/lab';
 
+export type DatedData<T> = {
+  value: T;
+  time: number;
+};
+
 export type SearchMode = 'subject' | 'query' | 'Pins' | 'My Courses';
 
 export type SearchPayload = {

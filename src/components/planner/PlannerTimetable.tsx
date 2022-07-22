@@ -16,6 +16,7 @@ import {
   TIMETABLE_SYNC_INTERVAL,
 } from '../../constants/configs';
 import {
+  CLONE_TIMETABLE,
   REMOVE_TIMETABLE,
   SWITCH_TIMETABLE,
   UPLOAD_TIMETABLE,
@@ -302,6 +303,9 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
   const [switchTimetableMutation, { loading: switchTimetableLoading }] =
     useMutation(SWITCH_TIMETABLE);
 
+  const [cloneTimetableMutation, { loading: cloneTimetableLoading }] =
+    useMutation(CLONE_TIMETABLE);
+
   const applyTimetable = (
     timetable: UploadTimetable | null,
     id: string,
@@ -393,6 +397,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
   };
 
   const switchTimetable = async (id: string) => {
+    if (id === planner.plannerId) return;
     try {
       if (planner.syncState === PlannerSyncState.DIRTY) {
         console.log('Is dirty');
@@ -542,15 +547,27 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
   }, [shareCourses]);
 
   useEffect(() => {
+    /* If the id is invalid, return */
     if (!shareId) return;
     if (!validShareId(shareId)) {
       view.setSnackBar({
         message: 'Invalid shared timetable!',
         severity: 'warning',
       });
+      router.push('/planner');
       return;
     }
-    switchTimetable(shareId);
+    /*
+     * If the id is valid, check if it's cloned,
+     * switch ttb if cloned otherwise clone
+     */
+    const cloneId = planner.inShareMap(shareId);
+    console.log(`Clone id ${cloneId}`);
+    if (cloneId) {
+      switchTimetable(cloneId);
+    } else {
+      cloneTimetable(shareId);
+    }
   }, [shareId]);
 
   // If planner is dirty, prevent unload
@@ -580,6 +597,27 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
     planner.newPlanner(newTimetable?._id, newTimetable?.createdAt);
   };
 
+  const cloneTimetable = async (shareId: string) => {
+    try {
+      const { data } = await cloneTimetableMutation({
+        variables: { id: shareId },
+      });
+      const clonedTtbId = data?.cloneTimetable._id;
+      console.log(`Cloned ttb ${clonedTtbId}`);
+      applyTimetable(
+        data?.cloneTimetable,
+        clonedTtbId,
+        `Loaded share timetable ${
+          data?.cloneTimetable?.tableName || PLANNER_CONFIGS.DEFAULT_TABLE_NAME
+        }`
+      );
+      planner.addToShareMap(shareId, clonedTtbId);
+    } catch (e) {
+      console.warn(e);
+      view.handleError(e);
+    }
+  };
+
   const onShareClick = () => {
     /* If it's shared, then copy link and display message */
     console.log(`${planner.planner.expireAt}`);
@@ -587,7 +625,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
       getModeFromExpire(planner.planner?.expireAt) ===
       TimetableOverviewMode.SHARE
     ) {
-      copy(shareConfig.shareLink);
+      copy(generateTimetableURL(planner.plannerId));
       view.setSnackBar('Copied share link to your clipboard!');
     } else {
       setShareCourses({

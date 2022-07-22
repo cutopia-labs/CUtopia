@@ -1,5 +1,24 @@
 import { gql } from '@apollo/client';
 
+const TIMETABLE_BASE = `
+  entries {
+    courseId
+    title
+    credits
+    sections {
+      name
+      startTimes
+      endTimes
+      days
+      locations
+      instructors
+      hide
+    }
+  }
+  tableName
+  createdAt
+  expireAt`;
+
 // CUTOPIA LOGIN Mutations
 export const LOGIN_CUTOPIA = gql`
   mutation ($username: String!, $password: String!) {
@@ -154,23 +173,7 @@ export const REPORT = gql`
 export const REMOVE_TIMETABLE = gql`
   mutation ($id: String!, $switchTo: String) {
     removeTimetable(input: { _id: $id, switchTo: $switchTo }) {
-      entries {
-        courseId
-        title
-        credits
-        sections {
-          name
-          startTimes
-          endTimes
-          days
-          locations
-          instructors
-          hide
-        }
-      }
-      tableName
-      createdAt
-      expireAt
+      ${TIMETABLE_BASE}
       _id
     }
   }
@@ -188,23 +191,17 @@ export const SEND_MESSAGE = gql`
 export const SWITCH_TIMETABLE = gql`
   mutation ($id: String!) {
     switchTimetable(input: { _id: $id }) {
-      entries {
-        courseId
-        title
-        credits
-        sections {
-          name
-          startTimes
-          endTimes
-          days
-          locations
-          instructors
-          hide
-        }
-      }
-      tableName
-      createdAt
-      expireAt
+      ${TIMETABLE_BASE}
+    }
+  }
+`;
+
+/* To switch timetableId */
+export const CLONE_TIMETABLE = gql`
+  mutation ($id: String!) {
+    cloneTimetable(input: { _id: $id }) {
+      ${TIMETABLE_BASE}
+      _id
     }
   }
 `;

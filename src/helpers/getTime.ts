@@ -16,6 +16,10 @@ const MONTHS = [
 ];
 const addZero = (digit: number) => (digit > 9 ? digit : `0${digit}`);
 
+export const daysDiff = (d1: number, d2: number) => {
+  const diff = d1 - d2;
+  return Math.ceil(diff / (1000 * 3600 * 24));
+};
 export function getHHMM(timestamp: Date | string | number) {
   const time =
     typeof timestamp === 'object'
