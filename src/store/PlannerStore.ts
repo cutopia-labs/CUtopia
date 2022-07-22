@@ -10,20 +10,25 @@ import {
   TimetableOverviewWithMode,
   PlannerDelta,
   PlannerSyncState,
+  DatedData,
 } from '../types';
 
 import withUndo from '../helpers/withUndo';
 import { getDurationInHour, timeInRange } from '../helpers/timetable';
 import { makeSectionLabel } from '../constants';
-import ViewStore from './ViewStore';
+import { storeData } from '../helpers/store';
+import { daysDiff } from '../helpers/getTime';
+import { jsonCloneDeep } from '../helpers';
 import StorePrototype from './StorePrototype';
+import ViewStore from './ViewStore';
 
-const LOAD_KEYS = [];
+const LOAD_KEYS = ['shareMap'];
 
 const RESET_KEYS = LOAD_KEYS;
 
 const DEFAULT_VALUES = {
   plannerName: '',
+  shareMap: {},
 };
 
 const STORAGE_CONFIG = {};
@@ -36,6 +41,7 @@ class PlannerStore extends StorePrototype {
   @observable plannerCourses: PlannerCourse[] = [];
   @observable remoteTimetableData: TimetableOverviewWithMode[] | null = null;
   @observable isSyncing: boolean = false;
+  @observable shareMap: Record<string, DatedData<string>>;
 
   viewStore: ViewStore;
 
@@ -48,6 +54,18 @@ class PlannerStore extends StorePrototype {
   @action init = () => {
     console.log('Init planner store');
     this.loadStore();
+    /* Check for expired share map, if so remove it */
+    const toBeDeleted = [];
+    const now = +new Date();
+    const shareMap: any = jsonCloneDeep(this.shareMap);
+    Object.entries(shareMap).forEach(([k, v]: [string, any]) => {
+      console.log(daysDiff(now, v.time));
+      if (daysDiff(now, v.time) >= 7) {
+        toBeDeleted.push(k);
+      }
+    });
+    toBeDeleted.forEach(k => delete shareMap[k]);
+    this.setStore('shareMap', shareMap);
     console.log(`Loaded ${this.plannerId}`);
   };
 
@@ -192,6 +210,18 @@ class PlannerStore extends StorePrototype {
   // reset
   @action reset = () => {
     this.resetStore();
+  };
+
+  @action addToShareMap = (shareId: string, cloneId: string) => {
+    this.shareMap[shareId] = {
+      value: cloneId,
+      time: +new Date(),
+    };
+    storeData('shareMap', this.shareMap);
+  };
+
+  @action inShareMap = (shareId: string) => {
+    return this.shareMap[shareId]?.value;
   };
 
   @action findIndexInPlanner = courseId =>
