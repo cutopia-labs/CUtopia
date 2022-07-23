@@ -4,6 +4,7 @@ import {
   GRADES,
   TOKEN_EXPIRE_DAYS,
 } from '../constants';
+import { MIN_DESKTOP_WIDTH } from '../constants/configs';
 import { VALID_COURSE_RULE } from '../constants/rules';
 import { Review } from '../types';
 import { getStoreData } from './store';
@@ -72,3 +73,8 @@ export const getAttrs = (obj: Record<string, any>, ...attrs: string[]) =>
 export const objStrEqual = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
 export const jsonCloneDeep = obj => JSON.parse(JSON.stringify(obj));
+
+export const isMobileQuery = () => {
+  const mqList = window.matchMedia(`(max-width:${MIN_DESKTOP_WIDTH}px)`);
+  return mqList.matches;
+};

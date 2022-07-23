@@ -14,9 +14,9 @@ import Page from '../../components/atoms/Page';
 import PlannerTimetable from '../../components/planner/PlannerTimetable';
 import PlannerCart from '../../components/planner/PlannerCart';
 
-import useMobileQuery from '../../hooks/useMobileQuery';
 import authenticatedRoute from '../../components/molecules/authenticatedRoute';
 import useClickObserver from '../../hooks/useClickObserver';
+import { isMobileQuery } from '../../helpers';
 
 enum PlannerMode {
   INITIAL,
@@ -57,13 +57,14 @@ const PlannerMobileFab = ({ targetMode, setMode }: PlannerMobileFabProps) => {
 const PlannerPage: FC = () => {
   const router = useRouter();
   const { courseId: queryCourseId, sid: shareId } = router.query;
-  const isMobile = useMobileQuery();
+  const isMobile = isMobileQuery();
 
   const [mode, setMode] = useState<PlannerMode>(
     isMobile ? PlannerMode.TIMETABLE : PlannerMode.INITIAL
   );
 
   const renderContent = () => {
+    console.log(mode);
     switch (mode) {
       case PlannerMode.INITIAL:
         return (
