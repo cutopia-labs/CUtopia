@@ -301,10 +301,9 @@ const ReviewEditPanel: FC<Props> = ({ courseInfo }) => {
   const submit = e => {
     e.preventDefault();
     if (progress < 100) {
-      view.setSnackBar({
-        message: `Please write at least ${TARGET_REVIEW_WORD_COUNT} words before submit`,
-        severity: 'warning',
-      });
+      view.warn(
+        `Please write at least ${TARGET_REVIEW_WORD_COUNT} words before submit`
+      );
       return;
     }
     // If user editing old review

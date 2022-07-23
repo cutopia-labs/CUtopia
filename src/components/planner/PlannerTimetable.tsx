@@ -37,11 +37,7 @@ import DialogContentTemplate from '../templates/DialogContentTemplate';
 import Section from '../molecules/Section';
 import Footer from '../molecules/Footer';
 import TimetablePanel from '../templates/TimetablePanel';
-import {
-  CREATE_PLANNER_FLAG,
-  EXPIRE_LOOKUP,
-  makeWarning,
-} from '../../constants';
+import { CREATE_PLANNER_FLAG, EXPIRE_LOOKUP } from '../../constants';
 import { GET_TIMETABLE } from '../../constants/queries';
 import useMobileQuery from '../../hooks/useMobileQuery';
 
@@ -460,7 +456,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
       copy(shareURL);
       view.setSnackBar('Copied share link to your clipboard!');
     } catch {
-      makeWarning('Share timetable failed...', view);
+      view.warn('Share timetable failed...');
     }
   };
 
@@ -515,10 +511,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
     /* If the id is invalid, return */
     if (!shareId) return;
     if (!validShareId(shareId)) {
-      view.setSnackBar({
-        message: 'Invalid shared timetable!',
-        severity: 'warning',
-      });
+      view.warn('Invalid shared timetable!');
       router.push('/planner');
       return;
     }
@@ -576,10 +569,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
     } catch {
       /* Update planner id to prevent create ttb called inf times */
       planner.updateStore('plannerId', 'FAIL');
-      view.setSnackBar({
-        message: 'Create timetable failed...',
-        severity: 'warning',
-      });
+      view.warn('Create timetable failed...');
     }
   };
 

@@ -133,10 +133,7 @@ const Timetable: FC<TimetableProps> = ({ courses, timetableInfo }) => {
       });
     config.numOfHours = config.endHour - config.startHour + 1;
   } catch (error) {
-    view.setSnackBar({
-      message: 'Invalid Timetable',
-      severity: 'warning',
-    });
+    view.warn('Invalid Timetable');
   }
 
   return (

@@ -37,6 +37,13 @@ class ViewStore extends StorePrototype {
     }
   };
 
+  @action warn = (message: string) => {
+    this.setSnackBar({
+      message,
+      severity: 'warning',
+    });
+  };
+
   @action setDialog = (dialog: Dialog | null) => {
     this.updateStore('dialog', dialog);
   };
