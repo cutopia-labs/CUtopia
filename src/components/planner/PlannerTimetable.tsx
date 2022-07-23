@@ -46,7 +46,7 @@ type PlannerTimetableProps = {
   className?: string;
 };
 
-const getModeFromExpire = (expireAt: number) => {
+const getModeFromExpireAt = (expireAt: number) => {
   if (expireAt > 0) {
     return TimetableOverviewMode.SHARE;
   }
@@ -72,6 +72,15 @@ const getExpire = (str: string) => {
       return EXPIRE_LOOKUP.upload;
   }
   return str;
+};
+
+const getExpireAt = (str: string, createdAt: number): number => {
+  const expireDays = getExpire(str);
+  if (expireDays > 0) {
+    const createDate = new Date(createdAt);
+    createDate.setDate(createDate.getDate() + (expireDays as number));
+    return +createDate;
+  } else return -1;
 };
 
 const getLabelFromKey = {
@@ -256,6 +265,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
     {
       onCompleted: handleCompleted(
         data => {
+          console.log(`Handle here in hook`);
           const uploadTimetable = data?.uploadTimetable;
           /* If no ttb id, then it's ttb sync result, no need switch plannerId */
           if (!uploadTimetable?._id) {
@@ -265,15 +275,16 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
           const isShare =
             getExpire(shareConfig?.expire) !== EXPIRE_LOOKUP.upload;
           const message = getUploadTimetableMessage(uploadTimetable, isShare);
-          if (message) {
-            view.setSnackBar(message);
-          }
+          if (message) view.setSnackBar(message);
+          const expireAt = isShare
+            ? getExpireAt(shareConfig.expire, uploadTimetable.createdAt)
+            : planner.planner?.expireAt;
           const newTimetableOverview = {
             _id: uploadTimetable._id,
             createdAt: uploadTimetable.createdAt,
             tableName: planner.plannerName,
-            expire: getExpire(shareConfig?.expire),
-            mode: getModeFromExpire(getExpire(shareConfig?.expire) as any),
+            expireAt,
+            mode: getModeFromExpireAt(expireAt),
           };
           planner.updateStore('remoteTimetableData', [
             ...(planner.remoteTimetableData || []),
@@ -325,7 +336,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
       const newTimetableOverview = {
         _id: id,
         ...importedPlanner,
-        mode: getModeFromExpire(timetable.expireAt),
+        mode: getModeFromExpireAt(timetable.expireAt),
       };
       planner.updateStore('remoteTimetableData', [
         ...(planner.remoteTimetableData || []),
@@ -426,6 +437,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
 
   const updateTimetable = debounce(
     async ({ delta, _id, syncing }) => {
+      console.log(`Handle here in Fn`);
       console.log(`Update timetable fired ${JSON.stringify(delta)}`);
       /* If no update / updating, do nothing */
       if (!delta || syncing) return;
@@ -483,22 +495,13 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
 
   const onShareTimetTable = async e => {
     e.preventDefault();
-    if (!planner.plannerCourses?.length) {
-      return view.setSnackBar({
-        severity: 'warning',
-        message: 'Empty timetable!',
-      });
-    }
-    const data = {
-      entries: coursesToEntries(planner.plannerCourses),
-      expire: getExpire(shareConfig.expire),
-      tableName: planner.plannerName,
-    };
-    console.log(JSON.stringify(data));
     await uploadTimetable({
-      variables: data,
+      variables: {
+        expire: getExpire(shareConfig.expire),
+      },
     });
   };
+
   // on mount
   useEffect(() => {
     // start sync
@@ -622,7 +625,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
     /* If it's shared, then copy link and display message */
     console.log(`${planner.planner.expireAt}`);
     if (
-      getModeFromExpire(planner.planner?.expireAt) ===
+      getModeFromExpireAt(planner.planner?.expireAt) ===
       TimetableOverviewMode.SHARE
     ) {
       copy(generateTimetableURL(planner.plannerId));
