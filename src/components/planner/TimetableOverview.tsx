@@ -166,7 +166,10 @@ const TimetableOverview: FC<TimetableOverviewProps> = ({
     <>
       <Button
         size="small"
-        onClick={e => [setAnchorEl(e.currentTarget), getUserTimetable()]}
+        onClick={e => {
+          getUserTimetable();
+          setAnchorEl(e.currentTarget);
+        }}
         endIcon={<ExpandMore />}
       >
         {planner.plannerName || PLANNER_CONFIGS.DEFAULT_TABLE_NAME}

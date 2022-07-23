@@ -376,9 +376,10 @@ class PlannerStore extends StorePrototype {
     overview: Partial<TimetableOverviewWithMode>,
     isAdd: boolean = false
   ) => {
-    const overviewIdx = isAdd
-      ? -1
-      : this.timetableOverviews.findIndex(o => o._id === overview._id);
+    const overviewIdx =
+      isAdd || !this.timetableOverviews
+        ? -1
+        : this.timetableOverviews.findIndex(o => o._id === overview._id);
     /* Update overview if found, otherwise add to overview */
     if (overviewIdx >= 0) {
       this.timetableOverviews[overviewIdx] = {
@@ -396,7 +397,7 @@ class PlannerStore extends StorePrototype {
   @action removeTimetableOverview = (id: string) => {
     this.updateStore(
       'timetableOverviews',
-      [...this.timetableOverviews].filter(item => item._id !== id)
+      [...(this.timetableOverviews || [])].filter(item => item._id !== id)
     );
   };
 }

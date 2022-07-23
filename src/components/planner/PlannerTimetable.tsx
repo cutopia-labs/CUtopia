@@ -455,7 +455,8 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
       });
       copy(shareURL);
       view.setSnackBar('Copied share link to your clipboard!');
-    } catch {
+    } catch (e) {
+      console.warn(e);
       view.warn('Share timetable failed...');
     }
   };
@@ -485,6 +486,8 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
    */
   useEffect(() => {
     console.log(`Planner ID: ${planner.plannerId}`);
+    /* If it's shared planner link, then return */
+    if (shareId) return;
     /* if no planner, then init / load one */
     if (planner.plannerId === CREATE_PLANNER_FLAG) {
       createTimetable();
@@ -498,7 +501,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
         },
       });
     }
-  }, [planner.plannerId]);
+  }, [planner.plannerId, shareId]);
 
   useEffect(() => {
     dispatchShareConfig({
