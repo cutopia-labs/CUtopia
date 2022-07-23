@@ -79,9 +79,12 @@ const PlannerPage: FC = () => {
         return <PlannerTimetable />;
       case PlannerMode.CART:
         return (
-          <div className={clsx(styles.plannerCartColumn, 'secondary-column')}>
-            <PlannerCart />
-          </div>
+          <>
+            <PlannerTimetable hide />
+            <div className={clsx(styles.plannerCartColumn, 'secondary-column')}>
+              <PlannerCart />
+            </div>
+          </>
         );
     }
   };

@@ -41,10 +41,6 @@ import { CREATE_PLANNER_FLAG, EXPIRE_LOOKUP } from '../../constants';
 import { GET_TIMETABLE } from '../../constants/queries';
 import useMobileQuery from '../../hooks/useMobileQuery';
 
-type PlannerTimetableProps = {
-  className?: string;
-};
-
 const getModeFromExpireAt = (expireAt: number) => {
   if (expireAt > 0) {
     return TimetableOverviewMode.SHARE;
@@ -229,7 +225,12 @@ const SHARE_ID_RULE = new RegExp('^[A-Za-z0-9_-]{8,10}$', 'i');
 
 const validShareId = (id: string) => id && SHARE_ID_RULE.test(id);
 
-const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
+type PlannerTimetableProps = {
+  className?: string;
+  hide?: boolean; // for mobile to switch to cart view
+};
+
+const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
   const planner = usePlanner();
   const router = useRouter();
   const isMobile = useMobileQuery();
@@ -391,7 +392,6 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
 
   const updateTimetable = debounce(
     async ({ delta, _id, syncing }) => {
-      console.log(`Handle here in Fn`);
       console.log(`Update timetable fired ${JSON.stringify(delta)}`);
       /* If no update / updating, do nothing */
       if (!delta || syncing) return;
@@ -609,6 +609,8 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
       });
     }
   };
+
+  if (hide) return null;
 
   return (
     <div className={clsx(styles.plannerTimetableContainer, 'column')}>
