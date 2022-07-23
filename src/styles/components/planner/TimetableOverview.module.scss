@@ -45,14 +45,14 @@
     }
     h4 {
       margin: 12px var(--menu-padding-horizontal);
-      color: var(--accent);
+      color: var(--primary);
     }
   }
   & .timetableLabelInputContainer {
     margin: 0 var(--menu-padding-horizontal) var(--menu-padding-vertical) var(--menu-padding-horizontal);
   }
   & :global(.MuiButtonBase-root):last-child {
-    color: var(--accent);
+    color: var(--primary);
     font-weight: bold;
   }
   & .timetableSelectItem :global(.MuiIconButton-root) {
