@@ -3,11 +3,11 @@ import { observer } from 'mobx-react-lite';
 
 import Draggable from 'react-draggable';
 import { Fab } from '@material-ui/core';
-import { BsList } from 'react-icons/bs';
-import { AiTwotoneCalendar } from 'react-icons/ai';
+import { AiOutlineCalendar } from 'react-icons/ai';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import clsx from 'clsx';
+import { RiShoppingCartLine } from 'react-icons/ri';
 import styles from '../../styles/pages/PlannerPage.module.scss';
 import SearchPanel from '../../components/organisms/SearchPanel';
 import Page from '../../components/atoms/Page';
@@ -31,10 +31,10 @@ type PlannerMobileFabProps = {
 
 const PLANNER_MOBILE_FAB_ITEM = {
   [PlannerMode.CART]: {
-    icon: <BsList />,
+    icon: <RiShoppingCartLine />,
   },
   [PlannerMode.TIMETABLE]: {
-    icon: <AiTwotoneCalendar />,
+    icon: <AiOutlineCalendar />,
   },
 };
 

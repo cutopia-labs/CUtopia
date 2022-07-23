@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { AiTwotoneCalendar } from 'react-icons/ai';
+import { AiOutlineCalendar } from 'react-icons/ai';
 import { BiMessageRounded } from 'react-icons/bi';
 import { RiShareForwardLine, RiFlag2Line } from 'react-icons/ri';
 import { useMutation } from '@apollo/client';
@@ -72,7 +72,7 @@ const ReviewCard: FC<ReviewCardProps> = ({
         {Boolean(review.title) && (
           <div className={clsx(styles.reviewTitle, 'center-row ellipsis-text')}>
             <BiMessageRounded />
-            {review.title}
+            <span>{review.title}</span>
           </div>
         )}
         <div
@@ -82,7 +82,7 @@ const ReviewCard: FC<ReviewCardProps> = ({
             'center-row'
           )}
         >
-          <AiTwotoneCalendar />
+          <AiOutlineCalendar />
           <span className={clsx('reviewsFilterLabel', styles.term)}>
             {review.term}
           </span>
