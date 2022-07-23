@@ -340,10 +340,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
       });
       view.setSnackBar('Deleted!');
       /* Update the remoteTimetableData */
-      planner.updateStore(
-        'remoteTimetableData',
-        [...planner.remoteTimetableData].filter(item => item._id !== id)
-      );
+      planner.removeTimetableOverview(id);
       /* Switch to the new if deleting current planner */
       if (isCurrentPlanner) {
         console.log(

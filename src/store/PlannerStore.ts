@@ -392,6 +392,13 @@ class PlannerStore extends StorePrototype {
       ]);
     }
   };
+
+  @action removeTimetableOverview = (id: string) => {
+    this.updateStore(
+      'remoteTimetableData',
+      [...this.remoteTimetableData].filter(item => item._id !== id)
+    );
+  };
 }
 
 export default PlannerStore;
