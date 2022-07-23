@@ -39,7 +39,7 @@ class PlannerStore extends StorePrototype {
   @observable plannerName: string;
   @observable previewPlannerCourse: PlannerCourse;
   @observable plannerCourses: PlannerCourse[] = [];
-  @observable remoteTimetableData: TimetableOverviewWithMode[] | null = null;
+  @observable timetableOverviews: TimetableOverviewWithMode[] | null = null;
   @observable isSyncing: boolean = false;
   @observable shareMap: Record<string, DatedData<string>>;
 
@@ -378,16 +378,16 @@ class PlannerStore extends StorePrototype {
   ) => {
     const overviewIdx = isAdd
       ? -1
-      : this.remoteTimetableData.findIndex(o => o._id === overview._id);
+      : this.timetableOverviews.findIndex(o => o._id === overview._id);
     /* Update overview if found, otherwise add to overview */
     if (overviewIdx >= 0) {
-      this.remoteTimetableData[overviewIdx] = {
-        ...this.remoteTimetableData[overviewIdx],
+      this.timetableOverviews[overviewIdx] = {
+        ...this.timetableOverviews[overviewIdx],
         ...overview,
       };
     } else {
-      this.updateStore('remoteTimetableData', [
-        ...(this.remoteTimetableData || []),
+      this.updateStore('timetableOverviews', [
+        ...(this.timetableOverviews || []),
         overview,
       ]);
     }
@@ -395,8 +395,8 @@ class PlannerStore extends StorePrototype {
 
   @action removeTimetableOverview = (id: string) => {
     this.updateStore(
-      'remoteTimetableData',
-      [...this.remoteTimetableData].filter(item => item._id !== id)
+      'timetableOverviews',
+      [...this.timetableOverviews].filter(item => item._id !== id)
     );
   };
 }

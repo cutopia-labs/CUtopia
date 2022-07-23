@@ -153,7 +153,7 @@ const TimetableOverview: FC<TimetableOverviewProps> = ({
   ] = useLazyQuery(GET_USER_TIMETABLES, {
     onCompleted: async data => {
       console.log(`fetched tiemtable`);
-      planner.updateStore('remoteTimetableData', getCombinedTimetable(data));
+      planner.updateStore('timetableOverviews', getCombinedTimetable(data));
     },
     onError: view.handleError,
   });
@@ -184,11 +184,11 @@ const TimetableOverview: FC<TimetableOverviewProps> = ({
             e.preventDefault();
             planner.updateStore('plannerName', labelInput);
             // update the remoteTimetable data as well
-            const idx = planner.remoteTimetableData.findIndex(
+            const idx = planner.timetableOverviews.findIndex(
               d => d._id === planner.plannerId
             );
             if (idx >= 0) {
-              planner.remoteTimetableData[idx].tableName = labelInput;
+              planner.timetableOverviews[idx].tableName = labelInput;
             }
           }}
         >
@@ -206,10 +206,10 @@ const TimetableOverview: FC<TimetableOverviewProps> = ({
         </form>
         <Divider />
         <h4 className="subheading">Timetables</h4>
-        {!planner.remoteTimetableData ? (
+        {!planner.timetableOverviews ? (
           <Loading />
         ) : (
-          planner.remoteTimetableData.map(item => (
+          planner.timetableOverviews.map(item => (
             <TimetableOverviewListItem
               key={`${item.createdAt}${item._id}`}
               item={item}

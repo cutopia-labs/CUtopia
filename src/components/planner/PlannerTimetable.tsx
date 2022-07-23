@@ -327,7 +327,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
         let maxCreatedAt = 0;
         /* If it's the last ttb, then switch to null means create one */
         switchTo = null;
-        planner.remoteTimetableData.forEach(d => {
+        planner.timetableOverviews.forEach(d => {
           if (d.createdAt > maxCreatedAt && d._id !== id) {
             maxCreatedAt = d.createdAt;
             switchTo = d._id;
@@ -339,7 +339,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
         variables,
       });
       view.setSnackBar('Deleted!');
-      /* Update the remoteTimetableData */
+      /* Update the timetableOverviews */
       planner.removeTimetableOverview(id);
       /* Switch to the new if deleting current planner */
       if (isCurrentPlanner) {
