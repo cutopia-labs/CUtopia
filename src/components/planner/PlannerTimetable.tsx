@@ -31,14 +31,17 @@ import {
 } from '../../types';
 import ChipsRow from '../molecules/ChipsRow';
 import TextField from '../atoms/TextField';
-import handleCompleted from '../../helpers/handleCompleted';
 import LoadingButton from '../atoms/LoadingButton';
 import Loading from '../atoms/Loading';
 import DialogContentTemplate from '../templates/DialogContentTemplate';
 import Section from '../molecules/Section';
 import Footer from '../molecules/Footer';
 import TimetablePanel from '../templates/TimetablePanel';
-import { CREATE_PLANNER_FLAG, EXPIRE_LOOKUP } from '../../constants';
+import {
+  CREATE_PLANNER_FLAG,
+  EXPIRE_LOOKUP,
+  makeWarning,
+} from '../../constants';
 import { GET_TIMETABLE } from '../../constants/queries';
 import useMobileQuery from '../../hooks/useMobileQuery';
 
@@ -74,8 +77,12 @@ const getExpire = (str: string) => {
   return str;
 };
 
-const getExpireAt = (str: string, createdAt: number): number => {
-  const expireDays = getExpire(str);
+const getExpireAt = (
+  str: string | number,
+  createdAt: number,
+  isExpire: boolean = false
+): number => {
+  const expireDays = isExpire ? str : getExpire(str as string);
   if (expireDays > 0) {
     const createDate = new Date(createdAt);
     createDate.setDate(createDate.getDate() + (expireDays as number));
@@ -263,50 +270,6 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
   const [uploadTimetable, { loading: uploadTimetableLoading }] = useMutation(
     UPLOAD_TIMETABLE,
     {
-      onCompleted: handleCompleted(
-        data => {
-          console.log(`Handle here in hook`);
-          const uploadTimetable = data?.uploadTimetable;
-          /* If no ttb id, then it's ttb sync result, no need switch plannerId */
-          if (!uploadTimetable?._id) {
-            console.log('Updated');
-            return;
-          }
-          const isShare =
-            getExpire(shareConfig?.expire) !== EXPIRE_LOOKUP.upload;
-          const message = getUploadTimetableMessage(uploadTimetable, isShare);
-          if (message) view.setSnackBar(message);
-          const expireAt = isShare
-            ? getExpireAt(shareConfig.expire, uploadTimetable.createdAt)
-            : planner.planner?.expireAt;
-          const newTimetableOverview = {
-            _id: uploadTimetable._id,
-            createdAt: uploadTimetable.createdAt,
-            tableName: planner.plannerName,
-            expireAt,
-            mode: getModeFromExpireAt(expireAt),
-          };
-          planner.updateStore('remoteTimetableData', [
-            ...(planner.remoteTimetableData || []),
-            newTimetableOverview,
-          ]);
-          // If uploaded a share timetable
-          if (isShare) {
-            const shareURL = generateTimetableURL(uploadTimetable._id);
-            dispatchShareConfig({
-              shareLink: shareURL,
-            });
-            copy(shareURL);
-            return;
-          }
-          /* If it's create new, then only need update local plannerId, cuz remote is updated */
-          console.log(`Updating plannerId to ${uploadTimetable?._id}`);
-          planner.updateStore('plannerId', uploadTimetable?._id);
-        },
-        {
-          mute: true, // handle snackbar message in callback
-        }
-      ),
       onError: view.handleError,
     }
   );
@@ -333,15 +296,13 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
     };
     console.log(importedPlanner);
     if (addToOverview) {
-      const newTimetableOverview = {
+      const overview = {
         _id: id,
         ...importedPlanner,
         mode: getModeFromExpireAt(timetable.expireAt),
       };
-      planner.updateStore('remoteTimetableData', [
-        ...(planner.remoteTimetableData || []),
-        newTimetableOverview,
-      ]);
+      delete overview.courses;
+      planner.updateTimetableOverview(overview as any);
     }
     planner.updateCurrentPlanner(importedPlanner);
     /* If current path is a share path, then change to planner */
@@ -477,29 +438,33 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
     }
   );
 
-  const getUploadTimetableMessage = (
-    uploadTimetable,
-    isShare: boolean
-  ): string => {
-    const prevPlannerId = planner.plannerId;
-    /* If no prev planner id, then it's a newly created TTB */
-    if (prevPlannerId === '') {
-      return 'TimeTable Created';
-    }
-    /* If current planner id same as prev one, then it's update / share */
-    if (prevPlannerId === uploadTimetable._id) {
-      return null;
-    }
-    return isShare ? 'Copied share link to your clipboard!' : null;
-  };
-
   const onShareTimetTable = async e => {
-    e.preventDefault();
-    await uploadTimetable({
-      variables: {
-        expire: getExpire(shareConfig.expire),
-      },
-    });
+    try {
+      e.preventDefault();
+      const expire = getExpire(shareConfig.expire);
+      await uploadTimetable({
+        variables: {
+          _id: planner.plannerId,
+          expire,
+        },
+      });
+      const expireAt = getExpireAt(expire, +new Date(), true);
+      const overview = {
+        _id: planner.plannerId,
+        expireAt,
+        mode: getModeFromExpireAt(expireAt),
+      };
+      planner.updateTimetableOverview(overview);
+      planner.syncPlanner({ expireAt });
+      const shareURL = generateTimetableURL(planner.plannerId);
+      dispatchShareConfig({
+        shareLink: shareURL,
+      });
+      copy(shareURL);
+      view.setSnackBar('Copied share link to your clipboard!');
+    } catch {
+      makeWarning('Share timetable failed...', view);
+    }
   };
 
   // on mount
@@ -589,15 +554,36 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className }) => {
   }, 'Timetable syncing, please wait for a few seconds before leaving');
 
   const createTimetable = async () => {
-    console.log('Called create timetable');
-    const res = await uploadTimetable({
-      variables: {
-        entries: [],
-        expire: EXPIRE_LOOKUP.upload,
-      },
-    });
-    const newTimetable = res.data?.uploadTimetable;
-    planner.newPlanner(newTimetable?._id, newTimetable?.createdAt);
+    try {
+      console.log('Called create timetable');
+      const { data } = await uploadTimetable({
+        variables: {
+          entries: [],
+          expire: EXPIRE_LOOKUP.upload,
+        },
+      });
+      view.setSnackBar('Timetable created!');
+      const timetable = data?.uploadTimetable;
+      const overview = {
+        _id: timetable._id,
+        createdAt: timetable.createdAt,
+        tableName: planner.plannerName,
+        expireAt: -1,
+        mode: TimetableOverviewMode.UPLOAD,
+      };
+      planner.updateTimetableOverview(overview, true);
+      /* If it's create new, then only need update local plannerId, cuz remote is updated */
+      planner.updateStore('plannerId', timetable._id);
+      const newTimetable = data?.uploadTimetable;
+      planner.newPlanner(newTimetable?._id, newTimetable?.createdAt);
+    } catch {
+      /* Update planner id to prevent create ttb called inf times */
+      planner.updateStore('plannerId', 'FAIL');
+      view.setSnackBar({
+        message: 'Create timetable failed...',
+        severity: 'warning',
+      });
+    }
   };
 
   const cloneTimetable = async (shareId: string) => {

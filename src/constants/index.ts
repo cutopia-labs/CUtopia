@@ -1,3 +1,4 @@
+import ViewStore from '../store/ViewStore';
 import { CourseSection, Grade, RatingField } from '../types';
 
 export const CREATE_PLANNER_FLAG = 'CREATE';
@@ -88,3 +89,9 @@ export const EMOJIS_LENGTH = 18;
 
 export const makeSectionLabel = (section: CourseSection, courseId: string) =>
   `${courseId} ${section.name}`;
+
+export const makeWarning = (message: string, view: ViewStore) =>
+  view.setSnackBar({
+    message,
+    severity: 'warning',
+  });

@@ -370,6 +370,28 @@ class PlannerStore extends StorePrototype {
   @action setPlannerLabel = (tableName: string) => {
     this.planner.tableName = tableName;
   };
+
+  /* Timetable Overview */
+  @action updateTimetableOverview = (
+    overview: Partial<TimetableOverviewWithMode>,
+    isAdd: boolean = false
+  ) => {
+    const overviewIdx = isAdd
+      ? -1
+      : this.remoteTimetableData.findIndex(o => o._id === overview._id);
+    /* Update overview if found, otherwise add to overview */
+    if (overviewIdx >= 0) {
+      this.remoteTimetableData[overviewIdx] = {
+        ...this.remoteTimetableData[overviewIdx],
+        ...overview,
+      };
+    } else {
+      this.updateStore('remoteTimetableData', [
+        ...(this.remoteTimetableData || []),
+        overview,
+      ]);
+    }
+  };
 }
 
 export default PlannerStore;
