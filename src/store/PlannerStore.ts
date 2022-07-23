@@ -80,10 +80,6 @@ class PlannerStore extends StorePrototype {
     this.plannerCourses = [];
   };
 
-  get timetableIds() {
-    return this.remoteTimetableData.map(d => d._id);
-  }
-
   get syncState(): PlannerSyncState {
     if (this.isSyncing) return PlannerSyncState.SYNCING;
     return this.delta ? PlannerSyncState.DIRTY : PlannerSyncState.SYNCED;
@@ -94,7 +90,12 @@ class PlannerStore extends StorePrototype {
     // console.log(JSON.stringify(courses) + ', ' + tableName);
     const delta: PlannerDelta = {};
     let dirty = false;
-    if (this.plannerName !== this.planner?.tableName) {
+    const prevPlannerName = this.planner?.tableName;
+    /* need either old / new to be non empty for the delta to be valid */
+    if (
+      this.plannerName !== prevPlannerName &&
+      (this.plannerName || prevPlannerName)
+    ) {
       delta['tableName'] = this.plannerName;
       dirty = true;
     }
