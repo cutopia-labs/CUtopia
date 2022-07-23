@@ -1,9 +1,14 @@
 .plannerCart {
   max-height: 100%;
   height: fit-content;
-  padding-top: 8px;
   header {
-    padding: 0 var(--card-padding);
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+    padding: 8px var(--card-padding) 0 var(--card-padding);
+    position: sticky;
+    top: 0;
+    background-color: var(--surface);
+    z-index: 1;
     & > div:first-child {
       height: 30px;
     }
