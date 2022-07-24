@@ -17,6 +17,7 @@ const regexEqual = (x, y) => {
 };
 
 module.exports = {
+  trailingSlash: false,
   sassOptions: {
     includePaths: [path.join(__dirname, 'styles')],
   },
