@@ -198,6 +198,7 @@ const TimetableOverview: FC<TimetableOverviewProps> = ({
           <InputBase
             placeholder="Enter Label"
             value={labelInput}
+            onKeyDown={e => e.stopPropagation()}
             onChange={e => {
               setLabelInput(e.target.value);
             }}
