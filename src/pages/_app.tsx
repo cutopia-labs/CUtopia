@@ -1,4 +1,3 @@
-import '../styles/globals.scss';
 import type { AppProps } from 'next/app';
 import { FC, useEffect, useMemo } from 'react';
 import { ApolloProvider } from '@apollo/client';
@@ -9,8 +8,8 @@ import * as Sentry from '@sentry/react';
 import NProgress from 'nprogress';
 import { useRouter } from 'next/router';
 
+import '../styles/globals.scss';
 import StoreProvider from '../store';
-
 import { DARK_THEME, THEME } from '../constants/colors';
 import client from '../helpers/apollo-client';
 import Header from '../components/organisms/Header';
@@ -31,6 +30,11 @@ Sentry.init({
   integrations: [new Integrations.BrowserTracing()],
 });
 
+NProgress.configure({
+  trickleSpeed: 100,
+  showSpinner: false,
+});
+
 const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const theme = useMemo(
@@ -41,7 +45,6 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
 
   useEffect(() => {
     router.events.on('routeChangeStart', () => NProgress.start());
-
     router.events.on('routeChangeComplete', () => NProgress.done());
     router.events.on('routeChangeError', () => NProgress.done());
   }, []);
