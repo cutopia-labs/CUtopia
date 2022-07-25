@@ -1,11 +1,13 @@
 import '../styles/globals.scss';
 import type { AppProps } from 'next/app';
-import { FC, useMemo } from 'react';
+import { FC, useEffect, useMemo } from 'react';
 import { ApolloProvider } from '@apollo/client';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { useMediaQuery } from '@material-ui/core';
 import { Integrations } from '@sentry/tracing';
 import * as Sentry from '@sentry/react';
+import NProgress from 'nprogress';
+import { useRouter } from 'next/router';
 
 import StoreProvider from '../store';
 
@@ -35,6 +37,14 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
     () => (prefersDarkMode ? DARK_THEME : THEME),
     [prefersDarkMode]
   );
+  const router = useRouter();
+
+  useEffect(() => {
+    router.events.on('routeChangeStart', () => NProgress.start());
+
+    router.events.on('routeChangeComplete', () => NProgress.done());
+    router.events.on('routeChangeError', () => NProgress.done());
+  }, []);
   return (
     <StoreProvider>
       <ApolloProvider client={client}>
