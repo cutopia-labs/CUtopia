@@ -5,8 +5,9 @@ import { CourseQuery, CourseSearchList } from '../types';
 import { DATA_VALID_BEFORE, SIMILAR_COURSE_LIMIT } from '../constants/configs';
 import { storeData } from '../helpers/store';
 import {
-  getSimilarCourses,
-  searchCoursesFromQuery,
+  _searchCourses,
+  _getRandomGeCourses,
+  _getSimilarCourses,
 } from '../helpers/getCourses';
 import StorePrototype from './StorePrototype';
 
@@ -68,7 +69,7 @@ class DataStore extends StorePrototype {
 
   @action searchCourses = async (query: CourseQuery) => {
     const courses = await this.getRemoteData('courseList');
-    return searchCoursesFromQuery(courses, query);
+    return _searchCourses(courses, query);
   };
 
   @action getSimilarCourses = async (
@@ -76,12 +77,12 @@ class DataStore extends StorePrototype {
     limit: number = SIMILAR_COURSE_LIMIT
   ) => {
     const courses = await this.getRemoteData('courseList');
-    return getSimilarCourses(courses, courseId, limit);
+    return _getSimilarCourses(courses, courseId, limit);
   };
 
   @action getRandomGeCourses = async (limit: number = SIMILAR_COURSE_LIMIT) => {
     const courses = await this.getRemoteData('courseList');
-    return this.getSimilarCourses(courses, limit);
+    return _getRandomGeCourses(courses, limit);
   };
 }
 

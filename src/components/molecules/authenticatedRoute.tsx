@@ -1,5 +1,6 @@
 import { DocumentNode, useLazyQuery } from '@apollo/client';
 import * as Sentry from '@sentry/react';
+import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 import { FC, useEffect, useState } from 'react';
 import { GET_USER } from '../../constants/queries';
@@ -77,7 +78,7 @@ const authenticatedRoute: HOC = (Component = null, options = {}) => {
     );
   };
 
-  return AuthenticatedRoute;
+  return observer(AuthenticatedRoute);
 };
 
 export default authenticatedRoute;

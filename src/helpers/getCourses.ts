@@ -8,7 +8,7 @@ const CODE_RULE = new RegExp('\\d{4}$');
 const CODE_RULE_ALTER = new RegExp('\\d+', 'g');
 const CONDENSED_RULE = new RegExp('[^a-zA-Z0-9]', 'g');
 
-export const searchCoursesFromQuery = (
+export const _searchCourses = (
   courseList: CourseSearchList,
   query: CourseQuery
 ) => {
@@ -86,7 +86,7 @@ export const searchCoursesFromQuery = (
   }
 };
 
-export const getSimilarCourses = (
+export const _getSimilarCourses = (
   courseList: CourseSearchList,
   courseId: string,
   limit: number = SIMILAR_COURSE_LIMIT
@@ -120,7 +120,7 @@ export const getSimilarCourses = (
   }));
 };
 
-export const getRandomGeCourses = (
+export const _getRandomGeCourses = (
   courses: CourseSearchList,
   limit: number = SIMILAR_COURSE_LIMIT
 ): CourseConcise[] => {
