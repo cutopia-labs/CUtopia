@@ -47,7 +47,13 @@ export const SentryConfigs: BrowserOptions = {
 export const CURRENT_TERM = '2022-23 Term 1';
 
 // Update course list and instructors if etag before below (10/11/2021)
+
 export const STATICS_EXPIRE_BEFORE = 1657979311000;
+
+export const DATA_VALID_BEFORE = {
+  courseList: STATICS_EXPIRE_BEFORE,
+  instructors: STATICS_EXPIRE_BEFORE,
+};
 
 export const TOKEN_EXPIRE_BEFORE = 1636518372000;
 

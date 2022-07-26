@@ -25,7 +25,7 @@ import clsx from 'clsx';
 import styles from '../../styles/components/organisms/SearchPanel.module.scss';
 import ListItem from '../molecules/ListItem';
 import COURSE_CODES from '../../constants/courseCodes';
-import { useView, useUser } from '../../store';
+import { useView, useUser, useData } from '../../store';
 import { COURSE_SECTIONS_QUERY } from '../../constants/queries';
 import { validCourse } from '../../helpers';
 import Loading from '../atoms/Loading';
@@ -42,10 +42,10 @@ import {
 import UserStore from '../../store/UserStore';
 import Card from '../atoms/Card';
 import ErrorCard from '../molecules/ErrorCard';
-import { getCoursesFromQuery } from '../../helpers/getCourses';
 import ChipsRow from '../molecules/ChipsRow';
 import useMobileQuery from '../../hooks/useMobileQuery';
 import CourseCard from '../review/CourseCard';
+import DataStore from '../../store/DataStore';
 
 /*
 c: courseId
@@ -65,6 +65,7 @@ type SearchResultProps = {
   onClick?: (courseId: string) => any;
   onMouseDown?: (courseId: string) => any;
   limit?: number;
+  data: DataStore;
 };
 
 export const SearchResult: FC<SearchResultProps> = ({
@@ -73,20 +74,23 @@ export const SearchResult: FC<SearchResultProps> = ({
   onClick,
   onMouseDown,
   limit,
+  data,
 }) => {
   const [results, setResults] = useState<CourseSearchItem[] | null | false>(
     null
   );
 
   useEffect(() => {
-    getCoursesFromQuery({
-      payload: searchPayload,
-      user,
-      limit: limit || MAX_SEARCH_RESULT_LENGTH,
-      offerredOnly: searchPayload.offerredOnly,
-    }).then(result => {
-      setResults(result);
-    });
+    data
+      .searchCourses({
+        payload: searchPayload,
+        user,
+        limit: limit || MAX_SEARCH_RESULT_LENGTH,
+        offerredOnly: searchPayload.offerredOnly,
+      })
+      .then(result => {
+        setResults(result);
+      });
   }, [searchPayload]);
 
   if (results === null) {
@@ -219,6 +223,7 @@ const SearchPanel: FC<SearchPanelProps> = ({
   const user = useUser();
   const isMobile = useMobileQuery();
   const isPlanner = router.pathname.includes('planner');
+  const data = useData();
   console.log(`planner: ${isPlanner}`);
 
   useEffect(() => {
@@ -368,6 +373,7 @@ const SearchPanel: FC<SearchPanelProps> = ({
             <SearchResult
               searchPayload={searchPayload}
               user={user}
+              data={data}
               onClick={courseId => {
                 isPlanner && user.saveHistory(courseId);
                 if (!skipDefaultAction) {

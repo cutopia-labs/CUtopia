@@ -2,8 +2,12 @@ import {
   SIMILAR_COURSE_LIMIT,
   STATICS_EXPIRE_BEFORE,
 } from '../constants/configs';
-import UserStore from '../store/UserStore';
-import { CourseConcise, CourseSearchItem, SearchPayload } from '../types';
+import {
+  CourseConcise,
+  CourseQuery,
+  CourseSearchItem,
+  CourseSearchList,
+} from '../types';
 import { UGE_COURSE_CODES } from '../constants';
 import { getStoreData, storeData } from './store';
 import { generateRandomArray, getSubjectAndCode } from '.';
@@ -35,42 +39,32 @@ export const fetchCourses = async (): Promise<
   return courseList;
 };
 
-export const getCoursesFromQuery = async ({
-  payload,
-  user,
-  limit,
-  offerredOnly,
-}: {
-  payload: SearchPayload;
-  user?: UserStore;
-  limit?: number;
-  offerredOnly?: boolean;
-}): Promise<CourseSearchItem[] | false> => {
+export const searchCoursesFromQuery = (
+  courseList: CourseSearchList,
+  query: CourseQuery
+) => {
   try {
-    const courseList = await fetchCourses();
+    const { payload, user, limit, offerredOnly } = query;
     if (!courseList) {
       throw new Error('Cannot fetch courses!');
     }
-    let courseResults: CourseSearchItem[] = null;
     // load local Timetable
     const { mode, text } = payload;
     switch (mode) {
       case 'Pins':
-        courseResults = user.favoriteCourses.map(course => ({
+        return user.favoriteCourses.map(course => ({
           c: course.courseId,
           t: course.title,
         }));
-        break;
       case 'subject':
-        courseResults = courseList[text];
-        break;
+        return courseList[text];
       case 'query':
         const condensed = text.replace(CONDENSED_RULE, '');
         try {
           // valid search contains suject and code
-          const subject = SUBJECT_RULE.exec(condensed)[0].toUpperCase();
+          const subject = condensed.match(SUBJECT_RULE)[0].toUpperCase();
           const rawCode =
-            CODE_RULE.exec(condensed) || condensed.match(CODE_RULE_ALTER);
+            condensed.match(CODE_RULE) || condensed.match(CODE_RULE_ALTER);
           const code = rawCode ? rawCode[0] : null;
           if (!(subject in courseList)) {
             throw 'Wrong subject, searching for title';
@@ -87,18 +81,15 @@ export const getCoursesFromQuery = async ({
                 (!offerredOnly || courseList[subject][i].o)
               ) {
                 if (code.length === 4) {
-                  courseResults = [courseList[subject][i]].slice(0, limit);
-                  break;
+                  return [courseList[subject][i]].slice(0, limit);
                 }
                 results.push(courseList[subject][i]);
               }
             }
-            courseResults = results;
-            break;
+            return results;
           }
           if (subject) {
-            courseResults = courseList[subject];
-            return;
+            return courseList[subject];
           }
         } catch (error) {
           // search for courseId & titles
@@ -115,15 +106,12 @@ export const getCoursesFromQuery = async ({
               }
             }
           }
-          courseResults = results;
-          break;
+          return results;
         }
-        courseResults = [];
-        break;
+        return [];
       default:
         return false;
     }
-    return courseResults;
   } catch (e) {
     return false;
   }

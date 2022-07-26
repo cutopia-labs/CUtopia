@@ -1,5 +1,7 @@
 import { DialogProps } from '@material-ui/core';
 import { AlertProps } from '@material-ui/lab';
+import UserStore from '../store/UserStore';
+import { CourseSearchItem } from './courses';
 
 export type DatedData<T> = {
   value: T;
@@ -40,4 +42,18 @@ export type Dialog = {
   key: DialogKeys;
   props?: Partial<DialogProps>;
   contentProps?: Record<string, any>;
+};
+
+export type CourseSearchList = Record<string, CourseSearchItem[]>;
+
+export type DataWithETag<T = any> = {
+  data: T;
+  etag: number;
+};
+
+export type CourseQuery = {
+  payload: SearchPayload;
+  user?: UserStore;
+  limit?: number;
+  offerredOnly?: boolean;
 };
