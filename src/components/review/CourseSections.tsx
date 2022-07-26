@@ -63,7 +63,8 @@ const SectionCard: FC<SectionCardProps> = ({
         {section.name}
         <IconButton
           size="small"
-          onClick={() => {
+          onClick={e => {
+            e.stopPropagation();
             added ? deleteSection(section.name) : addSection(section);
           }}
           onMouseEnter={() => !added && onAddHoverChange(true, section)}
