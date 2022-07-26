@@ -3,6 +3,7 @@ import NodeCache from 'node-cache';
 
 import withCache from '../utils/withCache';
 import { Resolvers } from '../schemas/types';
+import { courses } from '../tools/courses';
 
 const rankingCache = new NodeCache({
   stdTTL: 600,
@@ -22,7 +23,7 @@ export const getRankingWithCache = async (field: string) =>
       return {
         courseId,
         course: {
-          courseId,
+          ...courses[courseId],
           reviewLecturers,
           reviewTerms,
           rating,
