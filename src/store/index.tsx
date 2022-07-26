@@ -5,10 +5,12 @@ import { isServer } from '../helpers';
 import UserStore from './UserStore';
 import ViewStore from './ViewStore';
 import PlannerStore from './PlannerStore';
+import DataStore from './DataStore';
 
 export let viewStore: ViewStore;
 export let userStore: UserStore;
 export let plannerStore: PlannerStore;
+export let dataStore: DataStore;
 
 // enable static rendering ONLY on server
 enableStaticRendering(isServer);
@@ -16,10 +18,12 @@ enableStaticRendering(isServer);
 const UserContext = createContext(null as UserStore);
 const ViewContext = createContext(null as ViewStore);
 const PlannerContext = createContext(null as PlannerStore);
+const DataContext = createContext(null as DataStore);
 
 export const useView = () => useContext(ViewContext);
 export const useUser = () => useContext(UserContext);
 export const usePlanner = () => useContext(PlannerContext);
+export const useData = () => useContext(DataContext);
 
 export const getStores = () => {
   console.log('Store inited');
@@ -27,35 +31,40 @@ export const getStores = () => {
     console.log('Store inited - Server');
     return {
       viewStore: new ViewStore(),
+      dataStore: new DataStore(),
       userStore: new UserStore(viewStore, plannerStore),
       plannerStore: new PlannerStore(viewStore),
     };
   }
-  if (!viewStore || !userStore || !plannerStore) {
+  if (!viewStore || !userStore || !plannerStore || !dataStore) {
     console.log('Store inited - Client');
     viewStore = new ViewStore();
+    dataStore = new DataStore();
     plannerStore = new PlannerStore(viewStore);
     userStore = new UserStore(viewStore, plannerStore);
   }
-  return { viewStore, userStore, plannerStore };
+  return { viewStore, userStore, plannerStore, dataStore };
 };
 
 const StoreProvider: FC = ({ children }) => {
-  const { userStore, plannerStore, viewStore } = getStores();
+  const { userStore, plannerStore, viewStore, dataStore } = getStores();
   const [ready, setReady] = useState(false);
   useEffect(() => {
     userStore.init();
     plannerStore.init();
+    dataStore.init();
     setReady(true);
   }, []);
   if (!ready) return null;
   return (
     <UserContext.Provider value={userStore}>
-      <PlannerContext.Provider value={plannerStore}>
-        <ViewContext.Provider value={viewStore}>
-          {children}
-        </ViewContext.Provider>
-      </PlannerContext.Provider>
+      <DataContext.Provider value={dataStore}>
+        <PlannerContext.Provider value={plannerStore}>
+          <ViewContext.Provider value={viewStore}>
+            {children}
+          </ViewContext.Provider>
+        </PlannerContext.Provider>
+      </DataContext.Provider>
     </UserContext.Provider>
   );
 };
