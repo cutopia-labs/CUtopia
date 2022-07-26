@@ -1,43 +1,12 @@
-import {
-  SIMILAR_COURSE_LIMIT,
-  STATICS_EXPIRE_BEFORE,
-} from '../constants/configs';
-import {
-  CourseConcise,
-  CourseQuery,
-  CourseSearchItem,
-  CourseSearchList,
-} from '../types';
+import { SIMILAR_COURSE_LIMIT } from '../constants/configs';
+import { CourseConcise, CourseQuery, CourseSearchList } from '../types';
 import { UGE_COURSE_CODES } from '../constants';
-import { getStoreData, storeData } from './store';
 import { generateRandomArray, getSubjectAndCode } from '.';
 
 const SUBJECT_RULE = new RegExp('[a-zA-Z]{4}');
 const CODE_RULE = new RegExp('\\d{4}$');
 const CODE_RULE_ALTER = new RegExp('\\d+', 'g');
 const CONDENSED_RULE = new RegExp('[^a-zA-Z0-9]', 'g');
-
-export const fetchCourses = async (): Promise<
-  Record<string, CourseSearchItem[]> | undefined
-> => {
-  const courseListStore = getStoreData('courseList');
-  let courseList: Record<string, CourseSearchItem[]> | undefined =
-    courseListStore?.data;
-  if (!courseList || courseListStore.etag < STATICS_EXPIRE_BEFORE) {
-    const res = await fetch(`/resources/course_list.json`, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-      },
-    });
-    courseList = await res.json();
-    storeData('courseList', {
-      data: courseList,
-      etag: +new Date(),
-    });
-  }
-  return courseList;
-};
 
 export const searchCoursesFromQuery = (
   courseList: CourseSearchList,
@@ -117,17 +86,16 @@ export const searchCoursesFromQuery = (
   }
 };
 
-export const getSimilarCourses = async (
+export const getSimilarCourses = (
+  courseList: CourseSearchList,
   courseId: string,
-  limit: number = SIMILAR_COURSE_LIMIT,
-  courseTitle?: string
-): Promise<CourseConcise[]> => {
+  limit: number = SIMILAR_COURSE_LIMIT
+): CourseConcise[] => {
   const occurred = new Set();
   let results = [];
   const { subject, code } = getSubjectAndCode(courseId);
   console.log(code);
   const codeLevel = code.charAt(0);
-  const courseList = await fetchCourses();
   let currLen = 0;
   for (let i = 0; i < courseList[subject].length && currLen < limit; i++) {
     if (
@@ -152,10 +120,10 @@ export const getSimilarCourses = async (
   }));
 };
 
-export const getRandomGeCourses = async (
+export const getRandomGeCourses = (
+  courses: CourseSearchList,
   limit: number = SIMILAR_COURSE_LIMIT
-): Promise<CourseConcise[]> => {
-  const courses = await fetchCourses();
+): CourseConcise[] => {
   const GECourses = UGE_COURSE_CODES.map(subject => courses[subject])
     .flat()
     .filter(course => course.o);

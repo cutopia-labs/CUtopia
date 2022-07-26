@@ -30,11 +30,10 @@ import {
   TopRatedCourse,
 } from '../../types';
 
-import { useView, useUser } from '../../store';
+import { useView, useUser, useData } from '../../store';
 import { getMMMDDYY } from '../../helpers/getTime';
 import Footer from '../../components/molecules/Footer';
 import FeedCard from '../../components/molecules/FeedCard';
-import { getRandomGeCourses } from '../../helpers/getCourses';
 import Card from '../../components/atoms/Card';
 import { LAZY_LOAD_BUFFER, REVIEWS_PER_PAGE } from '../../constants/configs';
 import useDebounce from '../../hooks/useDebounce';
@@ -241,6 +240,7 @@ const HomePanel: FC = () => {
   const router = useRouter();
   const view = useView();
   const user = useUser();
+  const data = useData();
 
   const { data: popularCourses, loading: popularCoursesLoading } = useQuery(
     POPULAR_COURSES_QUERY,
@@ -262,7 +262,7 @@ const HomePanel: FC = () => {
 
   useEffect(() => {
     const fetchFeedCourses = async () => {
-      setFeedCourse(await getRandomGeCourses());
+      setFeedCourse(await data.getRandomGeCourses());
     };
     fetchFeedCourses();
   }, []);

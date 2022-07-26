@@ -12,9 +12,8 @@ import clsx from 'clsx';
 import { useQuery } from '@apollo/client';
 import styles from '../../styles/components/review/CoursePanel.module.scss';
 import { getAttrs, validCourse } from '../../helpers';
-import { useUser, useView } from '../../store';
+import { useUser, useView, useData } from '../../store';
 import useMobileQuery from '../../hooks/useMobileQuery';
-import { getSimilarCourses } from '../../helpers/getCourses';
 import FeedCard from '../../components/molecules/FeedCard';
 import TabsContainer from '../../components/molecules/TabsContainer';
 import CourseCard from '../../components/review/CourseCard';
@@ -54,6 +53,7 @@ const CoursePanel: FC<Props> = ({ courseInfo }) => {
   const isMobile = useMobileQuery();
   const view = useView();
   const user = useUser();
+  const data = useData();
   const [similarCourses, setSimilarCourse] = useState([]);
   const [FABOpen, setFABOpen] = useState(false);
   const [FABHidden, setFABHidden] = useState(!isMobile);
@@ -85,7 +85,7 @@ const CoursePanel: FC<Props> = ({ courseInfo }) => {
   );
 
   const fetchSimilarCourses = async (courseId: string) => {
-    setSimilarCourse(await getSimilarCourses(courseId));
+    setSimilarCourse(await data.getSimilarCourses(courseId));
   };
 
   const writeReview = () =>
