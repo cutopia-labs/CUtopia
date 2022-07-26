@@ -481,6 +481,43 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
     return () => disposer();
   }, []);
 
+  /* TEMP START: to upload local ttb */
+  const uploadPlanners = async (planners: Record<string, Planner>) => {
+    planner.updateStore('uploading', true);
+    await Promise.all(
+      Object.entries(planners).map(async ([k, v]) => {
+        console.log('Uploading:');
+        console.log(v);
+        if (!v?.courses?.length) return;
+        const variables: any = {
+          entries: coursesToEntries(v.courses),
+          expire: EXPIRE_LOOKUP.upload,
+        };
+        const tableName = (v as any).label;
+        if (tableName) {
+          variables.tableName = tableName;
+        }
+        const { data } = await uploadTimetable({ variables });
+        const timetable = data?.uploadTimetable;
+        const overview = {
+          _id: timetable._id,
+          createdAt: timetable.createdAt,
+          tableName,
+          expireAt: -1,
+          mode: TimetableOverviewMode.UPLOAD,
+        };
+        planner.updateTimetableOverview(overview, true);
+      })
+    );
+    planner.destroyPlanners();
+  };
+  useEffect(() => {
+    if (planner.planners && !planner.uploading) {
+      uploadPlanners(planner.planners);
+    }
+  }, [planner.planners, planner.uploading]);
+  /* TEMP END */
+
   /*
    * Init based on planner id
    */

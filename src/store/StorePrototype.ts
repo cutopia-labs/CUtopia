@@ -58,6 +58,11 @@ class StorePrototype {
     storeData(key, value, this.storageConfig[key] === undefined ? true : false);
   };
 
+  @action removeStore = (key: string) => {
+    this.updateStore(key, undefined, true);
+    removeStoreItem(key);
+  };
+
   @action resetStore = () => {
     const defaultValues = { ...this.defaultValues };
     if (this.onResetKeys) {

@@ -22,12 +22,14 @@ import { jsonCloneDeep } from '../helpers';
 import StorePrototype from './StorePrototype';
 import ViewStore from './ViewStore';
 
-const LOAD_KEYS = ['shareMap'];
+/* NOTE: planners are only temp, need remove after this sem Add drop */
+const LOAD_KEYS = ['shareMap', 'planners'];
 
 const RESET_KEYS = LOAD_KEYS;
 
 const DEFAULT_VALUES = {
   plannerName: '',
+  planners: null,
   shareMap: {},
 };
 
@@ -42,6 +44,8 @@ class PlannerStore extends StorePrototype {
   @observable timetableOverviews: TimetableOverviewWithMode[] | null = null;
   @observable isSyncing: boolean = false;
   @observable shareMap: Record<string, DatedData<string>>;
+  @observable planners: Record<string, Planner>; // TEMP
+  @observable uploading: Record<string, Planner>; // TEMP
 
   viewStore: ViewStore;
 
@@ -400,6 +404,18 @@ class PlannerStore extends StorePrototype {
       [...(this.timetableOverviews || [])].filter(item => item._id !== id)
     );
   };
+  /* TEMP start */
+  @action deletePlanner = (key: number) => {
+    const copy = cloneDeep(this.planners);
+    delete copy[key];
+    this.setStore('planners', copy);
+  };
+  @action destroyPlanners = () => {
+    console.log('Removing planners');
+    this.removeStore('planners');
+  };
+
+  /* TEMP end */
 }
 
 export default PlannerStore;
