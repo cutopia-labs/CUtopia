@@ -51,16 +51,19 @@ export const getCoursesFromQuery = async ({
     if (!courseList) {
       throw new Error('Cannot fetch courses!');
     }
+    let courseResults: CourseSearchItem[] = null;
     // load local Timetable
     const { mode, text } = payload;
     switch (mode) {
       case 'Pins':
-        return user.favoriteCourses.map(course => ({
+        courseResults = user.favoriteCourses.map(course => ({
           c: course.courseId,
           t: course.title,
         }));
+        break;
       case 'subject':
-        return courseList[text];
+        courseResults = courseList[text];
+        break;
       case 'query':
         const condensed = text.replace(CONDENSED_RULE, '');
         try {
@@ -84,15 +87,18 @@ export const getCoursesFromQuery = async ({
                 (!offerredOnly || courseList[subject][i].o)
               ) {
                 if (code.length === 4) {
-                  return [courseList[subject][i]].slice(0, limit);
+                  courseResults = [courseList[subject][i]].slice(0, limit);
+                  break;
                 }
                 results.push(courseList[subject][i]);
               }
             }
-            return results;
+            courseResults = results;
+            break;
           }
           if (subject) {
-            return courseList[subject];
+            courseResults = courseList[subject];
+            return;
           }
         } catch (error) {
           // search for courseId & titles
@@ -109,12 +115,15 @@ export const getCoursesFromQuery = async ({
               }
             }
           }
-          return results;
+          courseResults = results;
+          break;
         }
-        return [];
+        courseResults = [];
+        break;
       default:
         return false;
     }
+    return courseResults;
   } catch (e) {
     return false;
   }
