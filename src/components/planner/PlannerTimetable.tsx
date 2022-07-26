@@ -264,12 +264,8 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
   const [removeTimetable, { loading: removeTimetableLoading }] =
     useMutation(REMOVE_TIMETABLE);
 
-  const [uploadTimetable, { loading: uploadTimetableLoading }] = useMutation(
-    UPLOAD_TIMETABLE,
-    {
-      onError: view.handleError,
-    }
-  );
+  const [uploadTimetable, { loading: uploadTimetableLoading }] =
+    useMutation(UPLOAD_TIMETABLE);
 
   const [switchTimetableMutation, { loading: switchTimetableLoading }] =
     useMutation(SWITCH_TIMETABLE);
@@ -392,38 +388,32 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
 
   const updateTimetable = debounce(
     async ({ delta, _id, syncing }) => {
-      console.log(`Update timetable fired ${JSON.stringify(delta)}`);
-      /* If no update / updating, do nothing */
-      if (!delta || syncing) return;
-      /* Update sync states to syncing */
-      planner.updateStore('isSyncing', true);
-      const deltaClone = JSON.parse(JSON.stringify(delta));
-      console.log(deltaClone);
-      /* Process the entries for gql */
-      if (delta.courses) {
-        delta['entries'] = coursesToEntries(delta.courses);
-        delete delta.courses;
+      try {
+        /* If no update / updating, do nothing */
+        if (!delta || syncing) return;
+        /* Update sync states to syncing */
+        planner.updateStore('isSyncing', true);
+        const deltaClone = JSON.parse(JSON.stringify(delta));
+        console.log(deltaClone);
+        /* Process the entries for gql */
+        if (delta.courses) {
+          delta['entries'] = coursesToEntries(delta.courses);
+          delete delta.courses;
+        }
+        /* If dirty, then upload timetable */
+        await uploadTimetable({
+          variables: {
+            _id,
+            ...delta,
+            expire: EXPIRE_LOOKUP.default,
+          },
+        });
+        /* Update planner (prev state) after synced */
+        planner.syncPlanner(deltaClone);
+        planner.updateStore('isSyncing', false);
+      } catch (e) {
+        view.handleError(e);
       }
-      /* If dirty, then upload timetable */
-      await uploadTimetable({
-        variables: {
-          _id,
-          ...delta,
-          expire: EXPIRE_LOOKUP.default,
-        },
-      });
-      /* Update planner (prev state) after synced */
-      planner.syncPlanner(deltaClone);
-      /*
-      console.log('Planner courses:');
-      console.log(toJS(planner.plannerCourses));
-      console.log('Planner:');
-      console.log(toJS(planner.planner.courses));
-      console.log(
-        `Isequal: ${isEqual(planner.plannerCourses, planner.planner.courses)}`
-      );
-      */
-      planner.updateStore('isSyncing', false);
     },
     TIMETABLE_SYNC_INTERVAL,
     {
@@ -457,7 +447,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
       view.setSnackBar('Copied share link to your clipboard!');
     } catch (e) {
       console.warn(e);
-      view.warn('Share timetable failed...');
+      view.handleError(e);
     }
   };
 
@@ -497,16 +487,20 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
         if (tableName) {
           variables.tableName = tableName;
         }
-        const { data } = await uploadTimetable({ variables });
-        const timetable = data?.uploadTimetable;
-        const overview = {
-          _id: timetable._id,
-          createdAt: timetable.createdAt,
-          tableName,
-          expireAt: -1,
-          mode: TimetableOverviewMode.UPLOAD,
-        };
-        planner.updateTimetableOverview(overview, true);
+        try {
+          const { data } = await uploadTimetable({ variables });
+          const timetable = data?.uploadTimetable;
+          const overview = {
+            _id: timetable._id,
+            createdAt: timetable.createdAt,
+            tableName,
+            expireAt: -1,
+            mode: TimetableOverviewMode.UPLOAD,
+          };
+          planner.updateTimetableOverview(overview, true);
+        } catch (e) {
+          view.handleError(e);
+        }
       })
     );
     planner.destroyPlanners();

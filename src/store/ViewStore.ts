@@ -27,6 +27,18 @@ class ViewStore extends StorePrototype {
 
   @action handleError = (e: ApolloError) => handleError(e, this);
 
+  @action withErrorHandle(fn: (...args: any[]) => any) {
+    return function (...args: any[]) {
+      try {
+        return fn(...args);
+      } catch (e) {
+        this.handleError(e);
+      }
+    };
+  }
+
+  @action safe = (e: ApolloError) => handleError(e, this);
+
   @action setSnackBar = async (prop: string | SnackBarProps) => {
     const snackbar = typeof prop === 'string' ? { message: prop } : prop;
     const snackbarId = snackbar?.message ? +new Date() : undefined;
