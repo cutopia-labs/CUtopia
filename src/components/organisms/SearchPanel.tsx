@@ -80,17 +80,19 @@ export const SearchResult: FC<SearchResultProps> = ({
     null
   );
 
+  const getCourses = async searchPayload => {
+    const query = {
+      payload: searchPayload,
+      user,
+      limit: limit || MAX_SEARCH_RESULT_LENGTH,
+      offerredOnly: searchPayload.offerredOnly,
+    };
+    const results = await data.searchCourses(query);
+    setResults(results);
+  };
+
   useEffect(() => {
-    data
-      .searchCourses({
-        payload: searchPayload,
-        user,
-        limit: limit || MAX_SEARCH_RESULT_LENGTH,
-        offerredOnly: searchPayload.offerredOnly,
-      })
-      .then(result => {
-        setResults(result);
-      });
+    getCourses(searchPayload);
   }, [searchPayload]);
 
   if (results === null) {
@@ -107,44 +109,42 @@ export const SearchResult: FC<SearchResultProps> = ({
 
   return (
     <>
-      {results
-        .sort((a, b) => (a.o ? -1 : 1))
-        .map((course, i) =>
-          searchPayload.showAvalibility && !course.o ? (
-            <Tooltip
-              title="No information for current semester, please check CUSIS"
-              placement="right"
+      {results.map((course, i) =>
+        searchPayload.showAvalibility && !course.o ? (
+          <Tooltip
+            title="No information for current semester, please check CUSIS"
+            placement="right"
+            key={`listitem-${course.c}`}
+          >
+            <div
+              className={clsx(
+                styles.searchListItem,
+                'list-item-container disabled'
+              )}
               key={`listitem-${course.c}`}
             >
-              <div
-                className={clsx(
-                  styles.searchListItem,
-                  'list-item-container disabled'
-                )}
-                key={`listitem-${course.c}`}
-              >
-                <div className="list-item-title-container column">
-                  <span className="title">{course.c}</span>
-                  <span className="caption">{course.t}</span>
-                </div>
+              <div className="list-item-title-container column">
+                <span className="title">{course.c}</span>
+                <span className="caption">{course.t}</span>
               </div>
-            </Tooltip>
-          ) : (
-            <ListItem
-              className={styles.searchListItem}
-              key={`listitem-${course.c}`}
-              ribbonIndex={i}
-              chevron
-              onClick={e => {
-                e.stopPropagation();
-                onClick ? onClick(course.c) : {};
-              }}
-              onMouseDown={() => (onMouseDown ? onMouseDown(course.c) : {})}
-              title={course.c}
-              caption={course.t}
-            />
-          )
-        )}
+            </div>
+          </Tooltip>
+        ) : (
+          <ListItem
+            className={styles.searchListItem}
+            key={`listitem-${course.c}`}
+            ribbonIndex={i}
+            chevron
+            onClick={e => {
+              e.stopPropagation();
+              onClick ? onClick(course.c) : {};
+            }}
+            onMouseDown={() => (onMouseDown ? onMouseDown(course.c) : {})}
+            title={course.c}
+            caption={course.t}
+          />
+        )
+      )}
     </>
   );
 };
@@ -268,7 +268,7 @@ const SearchPanel: FC<SearchPanelProps> = ({
         }
       : null;
     if (isPlanner && router.query?.courseId) {
-      router.push('/planner');
+      router.push('/planner', undefined, { shallow: true });
     }
     setSearchPayloadState(newPayload);
     setSearchPayloadProp && setSearchPayloadProp(payload);
@@ -303,7 +303,7 @@ const SearchPanel: FC<SearchPanelProps> = ({
                 setSearchPayload(null);
               }
               if (isPlanner) {
-                router.push('/planner');
+                router.push('/planner', undefined, { shallow: true });
               }
             }}
           >
