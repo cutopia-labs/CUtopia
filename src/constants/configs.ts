@@ -1,4 +1,5 @@
 import { BrowserOptions } from '@sentry/react';
+import { DataConfig } from '../types';
 
 export const LAZY_LOAD_BUFFER = 50;
 export const SNACKBAR_TIMEOUT = 5000;
@@ -50,9 +51,14 @@ export const CURRENT_TERM = '2022-23 Term 1';
 
 export const STATICS_EXPIRE_BEFORE = 1657979311000;
 
-export const DATA_VALID_BEFORE = {
-  courseList: STATICS_EXPIRE_BEFORE,
-  instructors: STATICS_EXPIRE_BEFORE,
+export const DATA_CONFIGS: Record<string, DataConfig> = {
+  courseList: {
+    expire: STATICS_EXPIRE_BEFORE,
+    fetchKey: 'course_list',
+  },
+  instructors: {
+    expire: STATICS_EXPIRE_BEFORE,
+  },
 };
 
 export const TOKEN_EXPIRE_BEFORE = 1636518372000;
