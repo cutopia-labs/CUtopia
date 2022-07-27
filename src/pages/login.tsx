@@ -1,7 +1,7 @@
 import { useState, useEffect, FC } from 'react';
 import { Button, IconButton, CircularProgress } from '@material-ui/core';
 import { ArrowBack } from '@material-ui/icons';
-import * as Sentry from '@sentry/react';
+import * as Sentry from '@sentry/nextjs';
 import { observer } from 'mobx-react-lite';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';

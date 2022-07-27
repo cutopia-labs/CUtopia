@@ -1,5 +1,5 @@
 import { DocumentNode, useLazyQuery } from '@apollo/client';
-import * as Sentry from '@sentry/react';
+import * as Sentry from '@sentry/nextjs';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 import { FC, useEffect, useState } from 'react';

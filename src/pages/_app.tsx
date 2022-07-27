@@ -4,7 +4,7 @@ import { ApolloProvider } from '@apollo/client';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { useMediaQuery } from '@material-ui/core';
 import { Integrations } from '@sentry/tracing';
-import * as Sentry from '@sentry/react';
+import * as Sentry from '@sentry/nextjs';
 import NProgress from 'nprogress';
 import { useRouter } from 'next/router';
 
