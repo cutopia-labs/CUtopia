@@ -1,6 +1,6 @@
 import { makeObservable, observable, action } from 'mobx';
 
-import { CourseQuery, CourseSearchList } from '../types';
+import { CourseQuery, CourseSearchList, LecturerQuery } from '../types';
 
 import { DATA_VALID_BEFORE, SIMILAR_COURSE_LIMIT } from '../constants/configs';
 import { storeData } from '../helpers/store';
@@ -8,7 +8,8 @@ import {
   _searchCourses,
   _getRandomGeCourses,
   _getSimilarCourses,
-} from '../helpers/getCourses';
+  _searchLecturers,
+} from '../helpers/data';
 import StorePrototype from './StorePrototype';
 
 /* NOTE: planners are only temp, need remove after this sem Add drop */
@@ -83,6 +84,12 @@ class DataStore extends StorePrototype {
   @action getRandomGeCourses = async (limit: number = SIMILAR_COURSE_LIMIT) => {
     const courses = await this.getRemoteData('courseList');
     return _getRandomGeCourses(courses, limit);
+  };
+
+  /* Instructor Data Related */
+  @action searchLecturers = async (query: LecturerQuery) => {
+    const instructors = await this.getRemoteData('instructors');
+    return _searchLecturers(instructors, query);
   };
 }
 

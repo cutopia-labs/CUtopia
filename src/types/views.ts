@@ -57,3 +57,8 @@ export type CourseQuery = {
   limit?: number;
   offerredOnly?: boolean;
 };
+
+export type LecturerQuery = {
+  payload: string;
+  limit: number;
+};

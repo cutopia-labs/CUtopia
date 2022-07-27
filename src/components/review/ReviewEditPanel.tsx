@@ -20,7 +20,7 @@ import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import { useBeforeUnload } from 'react-use';
 import styles from '../../styles/components/review/ReviewEditPanel.module.scss';
-import { useView, useUser } from '../../store';
+import { useView, useUser, useData } from '../../store';
 import { GET_REVIEW } from '../../constants/queries';
 import { ADD_REVIEW, EDIT_REVIEW } from '../../constants/mutations';
 import { GRADES, RATING_FIELDS } from '../../constants';
@@ -29,7 +29,6 @@ import Loading from '../atoms/Loading';
 import ListItem from '../molecules/ListItem';
 import {
   SAVE_DRAFT_PROGRESS_BUFFER,
-  STATICS_EXPIRE_BEFORE,
   TARGET_REVIEW_WORD_COUNT,
 } from '../../constants/configs';
 import {
@@ -42,7 +41,6 @@ import SelectionGroup, { FormSection } from '../molecules/SectionGroup';
 import useMobileQuery from '../../hooks/useMobileQuery';
 import handleCompleted from '../../helpers/handleCompleted';
 import LoadingButton from '../atoms/LoadingButton';
-import { getStoreData, storeData } from '../../helpers/store';
 import Page from '../../components/atoms/Page';
 import CourseCard from './CourseCard';
 
@@ -83,45 +81,6 @@ const TERMS_OPTIONS = [
 const wordCount = (str: string) => {
   const matches = str.match(WORD_COUNT_RULE);
   return matches ? matches.length : 0;
-};
-
-const searchLecturers = async ({
-  payload,
-  limit,
-}: {
-  payload: string;
-  limit: number;
-}): Promise<string[] | false> => {
-  try {
-    const instructorsStore = getStoreData('instructors');
-    let instructors: string[] | undefined = instructorsStore?.data;
-    if (!instructors || instructorsStore.etag < STATICS_EXPIRE_BEFORE) {
-      const res = await fetch(`/resources/instructors.json`, {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-        },
-      });
-      instructors = await res.json();
-      storeData('instructors', {
-        data: instructors,
-        etag: +new Date(),
-      });
-    }
-    const results = [];
-    let resultsLen = 0;
-    for (let i = 0; i <= instructors.length && resultsLen <= limit; i++) {
-      if (
-        (instructors[i] || '').toLowerCase().includes(payload.toLowerCase())
-      ) {
-        results.push(instructors[i]);
-        resultsLen++;
-      }
-    }
-    return results;
-  } catch (e) {
-    return false;
-  }
 };
 
 type ReviewSectionProps = {
@@ -285,6 +244,7 @@ const ReviewEditPanel: FC<Props> = ({ courseInfo }) => {
     }
   );
   const user = useUser();
+  const data = useData();
   const router = useRouter();
   const lecturerInputRef = useRef();
 
@@ -400,10 +360,12 @@ const ReviewEditPanel: FC<Props> = ({ courseInfo }) => {
   );
 
   useEffect(() => {
-    searchLecturers({
-      payload: formData.lecturer,
-      limit: isMobile ? 4 : 6,
-    }).then(result => setInstructorsSearchResult(result));
+    data
+      .searchLecturers({
+        payload: formData.lecturer,
+        limit: isMobile ? 4 : 6,
+      })
+      .then(result => setInstructorsSearchResult(result));
   }, [formData.lecturer]);
 
   useBeforeUnload(() => {

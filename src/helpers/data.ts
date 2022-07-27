@@ -1,5 +1,10 @@
 import { SIMILAR_COURSE_LIMIT } from '../constants/configs';
-import { CourseConcise, CourseQuery, CourseSearchList } from '../types';
+import {
+  CourseConcise,
+  CourseQuery,
+  CourseSearchList,
+  LecturerQuery,
+} from '../types';
 import { UGE_COURSE_CODES } from '../constants';
 import { generateRandomArray, getSubjectAndCode } from '.';
 
@@ -132,4 +137,28 @@ export const _getRandomGeCourses = (
     courseId: GECourses[index].c,
     title: GECourses[index].t,
   }));
+};
+
+/* Instructors */
+
+export const _searchLecturers = async (
+  instructors: string[],
+  query: LecturerQuery
+): Promise<string[] | false> => {
+  try {
+    const { payload, limit } = query;
+    const results = [];
+    let resultsLen = 0;
+    for (let i = 0; i <= instructors.length && resultsLen <= limit; i++) {
+      if (
+        (instructors[i] || '').toLowerCase().includes(payload.toLowerCase())
+      ) {
+        results.push(instructors[i]);
+        resultsLen++;
+      }
+    }
+    return results;
+  } catch (e) {
+    return false;
+  }
 };
