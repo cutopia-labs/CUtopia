@@ -62,3 +62,8 @@ export type LecturerQuery = {
   payload: string;
   limit: number;
 };
+
+export type DataConfig = {
+  expire: number;
+  fetchKey?: string; // default same as store key
+};

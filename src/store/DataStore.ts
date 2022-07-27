@@ -1,8 +1,13 @@
 import { makeObservable, observable, action } from 'mobx';
 
-import { CourseQuery, CourseSearchList, LecturerQuery } from '../types';
+import {
+  CourseQuery,
+  CourseSearchItem,
+  CourseSearchList,
+  LecturerQuery,
+} from '../types';
 
-import { DATA_VALID_BEFORE, SIMILAR_COURSE_LIMIT } from '../constants/configs';
+import { DATA_CONFIGS, SIMILAR_COURSE_LIMIT } from '../constants/configs';
 import { storeData } from '../helpers/store';
 import {
   _searchCourses,
@@ -29,7 +34,8 @@ class DataStore extends StorePrototype {
 
   @action async getRemoteData(key) {
     if (this[key]) return this[key];
-    const res = await fetch(`/resources/${key}.json`, {
+    const fetchKey = DATA_CONFIGS[key].fetchKey || key;
+    const res = await fetch(`/resources/${fetchKey}.json`, {
       method: 'GET',
       headers: {
         Accept: 'application/json',
@@ -47,7 +53,8 @@ class DataStore extends StorePrototype {
   };
 
   @action verifyAndMount = () => {
-    Object.entries(DATA_VALID_BEFORE).map(([key, expireBefore]) => {
+    Object.entries(DATA_CONFIGS).map(([key, config]) => {
+      const { expire: expireBefore } = config;
       console.log(`key: ${key} ${this[key]} - ${expireBefore}`);
       /* If not expired */
       if (this[key]?.etag >= expireBefore && this[key]?.data) {
@@ -70,7 +77,14 @@ class DataStore extends StorePrototype {
 
   @action searchCourses = async (query: CourseQuery) => {
     const courses = await this.getRemoteData('courseList');
-    return _searchCourses(courses, query);
+    const results: false | CourseSearchItem[] = _searchCourses(courses, query);
+    if (results) {
+      /* Make offered course come first */
+      if (query.payload?.showAvalibility) {
+        results.sort((a, b) => (a.o ? (b.o ? a.c.localeCompare(b.c) : -1) : 1));
+      }
+    }
+    return results;
   };
 
   @action getSimilarCourses = async (
