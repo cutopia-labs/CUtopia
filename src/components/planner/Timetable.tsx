@@ -14,11 +14,11 @@ import {
 import { useView } from '../../store';
 import CourseCard from './CourseCard';
 
-export type PropsWithConfig<T> = T & {
+export type PropsWithConfig<T = {}> = T & {
   config: EventConfig;
 };
 
-const TimetableTicks: FC<PropsWithConfig<{}>> = ({ config }) => {
+const TimetableTicks: FC<PropsWithConfig> = ({ config }) => {
   return (
     <>
       {Array.from(

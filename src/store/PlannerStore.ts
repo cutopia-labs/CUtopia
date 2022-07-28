@@ -124,7 +124,7 @@ class PlannerStore extends StorePrototype {
         if (!section.hide) {
           unhide = true;
           for (let i = 0; i < section.days.length; i++) {
-            const day = section.days[i];
+            let day = parseInt(section.days[i] as any, 10);
             const sectionDuration = getDurationInHour(section, i);
             /* If no a number, then it's TBA section, remove from credit calc */
             if (Number.isNaN(sectionDuration) || Number.isNaN(day)) {
@@ -133,6 +133,10 @@ class PlannerStore extends StorePrototype {
                 courseIndex: courseIdx,
               };
               break;
+            }
+            /* If sunday course */
+            if (day === 0) {
+              day = 7;
             }
             if (day > maxDay) {
               maxDay = day;
