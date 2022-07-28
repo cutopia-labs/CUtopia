@@ -20,6 +20,7 @@ import { LoginPageMode } from '../types';
 import handleCompleted from '../helpers/handleCompleted';
 import { reverseMapping } from '../helpers';
 import { LOGIN_REDIRECT_PAGE } from '../constants/configs';
+import { USERNAME_RULE, USER_ID_RULE, PASSWORD_RULE } from '../helpers/rules';
 
 const INITIAL_MODE = LoginPageMode.CUTOPIA_LOGIN;
 const MODE_ITEMS = {
@@ -76,20 +77,6 @@ const PREVIOUS_MODE_LOOKUP = {
   [LoginPageMode.RESET_PASSWORD]: LoginPageMode.CUTOPIA_LOGIN,
   [LoginPageMode.RESET_PASSWORD_VERIFY]: LoginPageMode.RESET_PASSWORD,
 };
-
-const USER_ID_RULE = new RegExp('^[0-9]{10}$');
-const USERNAME_RULE = new RegExp(
-  `^[A-Za-z0-9\u3000\u3400-\u4DBF\u4E00-\u9FFF]{2,10}$`
-);
-const PASSWORD_RULE = new RegExp(`^[A-Za-z0-9@$!%*#?&^_-]{8,15}$`);
-
-/*
-Contains no space
-
-Allow only alphas + digits + @$!%*#?&^_-
-
-8 - 15 length
-*/
 
 type Props = {
   className?: string;
@@ -266,7 +253,7 @@ const LoginPanel: FC<Props> = ({ className, returnUrl }) => {
       (mode === LoginPageMode.CUTOPIA_SIGNUP ||
         mode === LoginPageMode.RESET_PASSWORD_VERIFY) &&
       !PASSWORD_RULE.test(password) &&
-      'Invalid password (8 - 15 length without space)';
+      'Invalid password (8 length up without space)';
     console.log(`sign up error ${passwordSignUpError}`);
     const passwordMissingError =
       MODE_ITEMS[mode].password &&
