@@ -146,6 +146,12 @@ const LoginPanel: FC<Props> = ({ className, returnUrl }) => {
     setMode(mode);
   }, [queryMode]);
 
+  useEffect(() => {
+    if (user.loggedIn) {
+      router.push(LOGIN_REDIRECT_PAGE);
+    }
+  }, []);
+
   const [createUser, { loading: creatingUser, error: createError }] =
     useMutation(SEND_VERIFICATION, {
       onCompleted: handleCompleted(
