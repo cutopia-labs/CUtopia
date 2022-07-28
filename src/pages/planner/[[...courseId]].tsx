@@ -56,7 +56,7 @@ const PlannerMobileFab = ({ targetMode, setMode }: PlannerMobileFabProps) => {
 
 const PlannerPage: FC = () => {
   const router = useRouter();
-  const { courseId: queryCourseId, sid: shareId } = router.query;
+  const { sid: shareId } = router.query;
   const isMobile = isMobileQuery();
 
   const [mode, setMode] = useState<PlannerMode>(

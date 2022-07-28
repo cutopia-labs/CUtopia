@@ -80,21 +80,22 @@ const PREVIOUS_MODE_LOOKUP = {
 
 type Props = {
   className?: string;
-  returnUrl?: string; // redirect to returnUrl after login
 };
 
 type QueryParams = {
   mode: string;
   username: string;
   code: string;
+  returnUrl?: string;
 };
 
-const LoginPanel: FC<Props> = ({ className, returnUrl }) => {
+const LoginPanel: FC<Props> = ({ className }) => {
   const router = useRouter();
   const {
     mode: queryMode,
     username: queryUsername,
     code: queryCode,
+    returnUrl,
   } = router.query as QueryParams;
   const [mode, setMode] = useState(INITIAL_MODE);
   const [username, setUsername] = useState('');

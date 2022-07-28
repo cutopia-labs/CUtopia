@@ -146,6 +146,7 @@ class UserStore extends StorePrototype {
     this.setLogout();
     LOGOUT_KEYS.forEach(key => {
       removeStoreItem(key);
+      this[key] = undefined;
     });
   };
 
