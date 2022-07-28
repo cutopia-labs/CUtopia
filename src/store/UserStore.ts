@@ -148,6 +148,7 @@ class UserStore extends StorePrototype {
       removeStoreItem(key);
       this[key] = undefined;
     });
+    this.data = undefined;
   };
 
   @action setLogout = () => {
