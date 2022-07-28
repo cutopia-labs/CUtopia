@@ -3,7 +3,6 @@ import { FC, useEffect, useMemo } from 'react';
 import { ApolloProvider } from '@apollo/client';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { useMediaQuery } from '@material-ui/core';
-import { Integrations } from '@sentry/tracing';
 import * as Sentry from '@sentry/nextjs';
 import NProgress from 'nprogress';
 import { useRouter } from 'next/router';
@@ -15,7 +14,8 @@ import client from '../helpers/apollo-client';
 import Header from '../components/organisms/Header';
 import Dialog from '../components/templates/Dialog';
 import SnackBar from '../components/molecules/SnackBar';
-import { SentryConfigs } from '../constants/configs';
+import ErrorCard from '../components/molecules/ErrorCard';
+import { ErrorCardMode } from '../types';
 
 // clear all console output
 if (process.env.NODE_ENV === 'production') {
@@ -23,12 +23,6 @@ if (process.env.NODE_ENV === 'production') {
   console.warn = () => {};
   console.table = () => {};
 }
-
-// use sentry to catch exceptions
-Sentry.init({
-  ...SentryConfigs,
-  integrations: [new Integrations.BrowserTracing()],
-});
 
 NProgress.configure({
   trickleSpeed: 100,
@@ -49,16 +43,18 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
     router.events.on('routeChangeError', () => NProgress.done());
   }, []);
   return (
-    <StoreProvider>
-      <ApolloProvider client={client}>
-        <ThemeProvider theme={theme}>
-          <Header />
-          <Component {...pageProps} />
-          <SnackBar />
-          <Dialog />
-        </ThemeProvider>
-      </ApolloProvider>
-    </StoreProvider>
+    <Sentry.ErrorBoundary fallback={<ErrorCard mode={ErrorCardMode.ERROR} />}>
+      <StoreProvider>
+        <ApolloProvider client={client}>
+          <ThemeProvider theme={theme}>
+            <Header />
+            <Component {...pageProps} />
+            <SnackBar />
+            <Dialog />
+          </ThemeProvider>
+        </ApolloProvider>
+      </StoreProvider>
+    </Sentry.ErrorBoundary>
   );
 };
 
