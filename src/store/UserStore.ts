@@ -3,7 +3,6 @@ import { makeObservable, observable, action } from 'mobx';
 import {
   CourseConcise,
   CourseInfo,
-  CourseTableEntry,
   AuthState,
   RatingField,
   Review,
@@ -24,9 +23,7 @@ import StorePrototype from './StorePrototype';
 import PlannerStore from './PlannerStore';
 
 const LOAD_KEYS = [
-  'username',
   'favoriteCourses',
-  'timetable',
   'searchHistory',
   'reviewDrafts',
   'recentReviewCategory',
@@ -52,7 +49,6 @@ class UserStore extends StorePrototype {
   @observable reviewDrafts: Record<string, Review> = {};
   @observable searchHistory: string[] = [];
   @observable favoriteCourses: CourseConcise[] = [];
-  @observable timetable: CourseTableEntry[];
   @observable recentReviewCategory: RatingField;
 
   // User Session Data (Reload everytime init)
@@ -85,6 +81,10 @@ class UserStore extends StorePrototype {
 
   get level() {
     return Math.floor((this.data?.exp || 0) / LEVEL_UP_EXP);
+  }
+
+  get loggedIn() {
+    return Boolean(this.data?.username);
   }
 
   // CUtopia
@@ -151,7 +151,6 @@ class UserStore extends StorePrototype {
 
   @action setLogout = () => {
     this.loginState = AuthState.LOGGED_OUT;
-    this.username = null;
     this.token = null;
   };
 
