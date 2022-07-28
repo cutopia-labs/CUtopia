@@ -64,7 +64,6 @@ const PlannerPage: FC = () => {
   );
 
   const renderContent = () => {
-    console.log(mode);
     switch (mode) {
       case PlannerMode.INITIAL:
         return (

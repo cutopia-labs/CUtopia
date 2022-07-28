@@ -17,8 +17,6 @@ const SearchDropdown: FC<SearchPanelProps> = props => {
 
   const inputRef = useRef<HTMLInputElement>(null);
   const searchDropDownRef = useOuterClick(e => {
-    console.log('Clicked outside');
-    console.log(e.target);
     setVisible(false);
     setSearchPayload(null);
   }, !visible);

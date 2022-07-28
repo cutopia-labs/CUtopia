@@ -69,7 +69,6 @@ class UserStore extends StorePrototype {
   }
 
   @action init() {
-    console.log('Init user store');
     this.loadStore();
     this.applyToken();
     if (this.loginState === AuthState.INIT) {
@@ -97,9 +96,8 @@ class UserStore extends StorePrototype {
 
   @action updateUserData = (data: Partial<User>) => {
     if (data?.username) {
-      console.log(data);
       this.updateStore('data', data);
-      console.log(`Update plannerId to ${data.timetableId}`);
+
       this.plannerStore.updateStore(
         'plannerId',
         data.timetableId || CREATE_PLANNER_FLAG
@@ -112,12 +110,7 @@ class UserStore extends StorePrototype {
     if (!savedToken.token) {
       return;
     }
-    console.log(
-      `Apply token ${savedToken.token}\n${getTokenExpireDate(
-        TOKEN_EXPIRE_BEFORE,
-        TOKEN_EXPIRE_DAYS
-      )}`
-    );
+
     if (
       savedToken.expire <
       getTokenExpireDate(TOKEN_EXPIRE_BEFORE, TOKEN_EXPIRE_DAYS)

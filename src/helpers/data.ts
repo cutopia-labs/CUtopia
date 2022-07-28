@@ -99,7 +99,7 @@ export const _getSimilarCourses = (
   const occurred = new Set();
   let results = [];
   const { subject, code } = getSubjectAndCode(courseId);
-  console.log(code);
+
   const codeLevel = code.charAt(0);
   let currLen = 0;
   for (let i = 0; i < courseList[subject].length && currLen < limit; i++) {

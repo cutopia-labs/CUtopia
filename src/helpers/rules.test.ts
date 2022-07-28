@@ -11,12 +11,12 @@ describe('Rule: password', () => {
   });
   it('should NOT reject long length', () => {
     const pwd = '123456790123456';
-    console.log(pwd.length);
+
     expect(PASSWORD_RULE.test(pwd)).toBe(true);
   });
   it('should NOT reject special char', () => {
     const pwd = ')*+,-./:;<=>?@[';
-    console.log(pwd.length);
+
     expect(PASSWORD_RULE.test(pwd)).toBe(true);
   });
 });

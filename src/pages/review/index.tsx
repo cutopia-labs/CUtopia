@@ -116,7 +116,6 @@ const RecentReviewList: FC<RecentReviewListProps> = ({ visible, category }) => {
 
   useEffect(() => {
     const now = new Date();
-    console.log(`${reviews.length} ${now} ${now.getMilliseconds()}`);
   }, [reviews]);
 
   const { loading: recentReviewsLoading, refetch: getRecentReviews } = useQuery<
@@ -156,12 +155,11 @@ const RecentReviewList: FC<RecentReviewListProps> = ({ visible, category }) => {
       document.documentElement.scrollHeight -
       document.documentElement.scrollTop -
       window.innerHeight;
-    console.log(`Distance: ${distanceFromBottom}`);
+
     if (distanceFromBottom <= LAZY_LOAD_BUFFER) {
       // Fetch more here;
-      console.log(`page: ${current.page} stall: ${current.stall}`);
+
       if (current.page && !current.stall) {
-        console.log('Refetching');
         getRecentReviews({ page: current.page });
       }
     }
@@ -170,7 +168,6 @@ const RecentReviewList: FC<RecentReviewListProps> = ({ visible, category }) => {
   useEffect(() => {
     window.addEventListener('scroll', listenToScroll, true);
     return () => {
-      console.log(`Removed listener ${category}`);
       window.removeEventListener('scroll', listenToScroll, true);
     };
   }, [visible, category]);

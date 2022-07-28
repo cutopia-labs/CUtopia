@@ -70,7 +70,6 @@ const CourseReviews: FC<Props> = ({
       ...reviewsPayload,
     },
     onCompleted: data => {
-      console.table(data);
       if (page) {
         setReviews(prevReviews =>
           prevReviews
@@ -105,20 +104,15 @@ const CourseReviews: FC<Props> = ({
   });
 
   const listenToScroll = useDebounce(async () => {
-    console.log(`Scroll dep ${reviewId}`);
     const distanceFromBottom =
       document.documentElement.scrollHeight -
       document.documentElement.scrollTop -
       window.innerHeight;
-    console.log(distanceFromBottom);
+
     // Set Function Bar for Desktop
     if (!isMobile) {
       const reviewFilterBarTop =
         reviewFilterBarRef?.current?.getBoundingClientRect()?.top;
-
-      console.log(
-        `Scroll height ${document.documentElement.scrollHeight} ${document.documentElement.scrollTop} ${reviewFilterBarTop}`
-      );
 
       const desktopFABHidden = !(reviewFilterBarTop < 0);
       setFABHidden(desktopFABHidden);
@@ -127,7 +121,6 @@ const CourseReviews: FC<Props> = ({
     if (distanceFromBottom <= LAZY_LOAD_BUFFER) {
       // Fetch more here;
       if (page && courseId && !reviewId) {
-        console.log('Refetching');
         await reviewsRefetch({
           courseId,
           ...reviewsPayload,

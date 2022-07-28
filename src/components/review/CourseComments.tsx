@@ -92,7 +92,6 @@ const CourseComments: FC<CourseCommentsProps> = ({ courseId }) => {
   >(GET_DISCUSSIONS, {
     onError: view.handleError,
     onCompleted: data => {
-      console.log(`Fetched ${data}`);
       setMessages(items =>
         [...new Set(items.concat(data?.discussion?.messages || []))]
           .sort((a, b) => (a.id > b.id ? 1 : -1))
@@ -105,13 +104,7 @@ const CourseComments: FC<CourseCommentsProps> = ({ courseId }) => {
   });
   const [sendMessage] = useMutation(SEND_MESSAGE);
   const loadMore = () => {
-    console.log(`Loading ${page}`);
     if (page) {
-      console.log('Fetching');
-      console.log({
-        courseId,
-        page,
-      });
       fetchDiscussion({
         variables: {
           courseId,

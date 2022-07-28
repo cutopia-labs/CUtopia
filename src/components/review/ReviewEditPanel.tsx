@@ -269,7 +269,7 @@ const ReviewEditPanel: FC<Props> = ({ courseInfo }) => {
     // If user editing old review
     if (mode === MODES.EDIT) {
       const { title, term, section, lecturer, ...editReviewForm } = formData;
-      console.log(JSON.stringify(editReviewForm));
+
       editReview({
         variables: {
           ...editReviewForm,
@@ -278,7 +278,6 @@ const ReviewEditPanel: FC<Props> = ({ courseInfo }) => {
     }
     // If user composing new review
     else {
-      console.log(JSON.stringify(formData));
       addReview({
         variables: formData,
       });
@@ -289,13 +288,11 @@ const ReviewEditPanel: FC<Props> = ({ courseInfo }) => {
     if (typeof formData === 'object' && formData) {
       for (const [key, value] of Object.entries(formData)) {
         if (value === '' && !(key === 'title' || key === 'anonymous')) {
-          console.log(key);
           return false;
         }
         if (typeof value === 'object') {
           for (const [innerKey, innerValue] of Object.entries(value || {})) {
             if (innerValue === '') {
-              console.log(`${key}.${innerKey}`);
               return false;
             }
           }
@@ -332,7 +329,6 @@ const ReviewEditPanel: FC<Props> = ({ courseInfo }) => {
   // to fillin posted review if choose to edit
   useEffect(() => {
     if (!reviewLoading && review && review.review) {
-      console.log(review.review);
       dispatchFormData(review.review);
     }
   }, [review]);
@@ -371,7 +367,7 @@ const ReviewEditPanel: FC<Props> = ({ courseInfo }) => {
   useBeforeUnload(() => {
     const unsaved =
       progress > SAVE_DRAFT_PROGRESS_BUFFER && mode === MODES.INITIAL;
-    console.log(`Saved?: ${!unsaved}`);
+
     if (unsaved) {
       user.updateReviewDrafts(courseId, formData);
     }

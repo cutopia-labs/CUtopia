@@ -41,7 +41,6 @@ const authenticatedRoute: HOC = (Component = null, options = {}) => {
         },
       });
     useEffect(() => {
-      console.log(`Current user ${user.token}`);
       // If no prev login data, then redirect to login page
       if (!user.token) {
         setAuthState(AuthState.LOGGED_OUT);
@@ -61,10 +60,8 @@ const authenticatedRoute: HOC = (Component = null, options = {}) => {
     }, [user.token]);
 
     useEffect(() => {
-      console.log(`Auth state ${authState}`);
       user.updateStore('loginState', authState);
       if (authState === AuthState.LOGGED_OUT) {
-        console.log(`Logged out: returnUrl: ${router.asPath}`);
         router.push({
           pathname: '/login',
           query: { returnUrl: router.asPath },

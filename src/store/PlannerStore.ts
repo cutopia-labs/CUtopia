@@ -56,21 +56,18 @@ class PlannerStore extends StorePrototype {
   }
 
   @action init = () => {
-    console.log('Init planner store');
     this.loadStore();
     /* Check for expired share map, if so remove it */
     const toBeDeleted = [];
     const now = +new Date();
     const shareMap: any = jsonCloneDeep(this.shareMap);
     Object.entries(shareMap).forEach(([k, v]: [string, any]) => {
-      console.log(daysDiff(now, v.time));
       if (daysDiff(now, v.time) >= 7) {
         toBeDeleted.push(k);
       }
     });
     toBeDeleted.forEach(k => delete shareMap[k]);
     this.setStore('shareMap', shareMap);
-    console.log(`Loaded ${this.plannerId}`);
   };
 
   @action newPlanner = (id: string, createdAt: number) => {
@@ -90,8 +87,8 @@ class PlannerStore extends StorePrototype {
   }
 
   get delta() {
-    // console.log(JSON.stringify(planner?.courses));
-    // console.log(JSON.stringify(courses) + ', ' + tableName);
+    //
+    //
     const delta: PlannerDelta = {};
     let dirty = false;
     const prevPlannerName = this.planner?.tableName;
@@ -346,7 +343,6 @@ class PlannerStore extends StorePrototype {
               sections: sectionCopy,
             };
           } else {
-            console.log('Delete the planner course');
             this.plannerCourses?.splice(index, 1);
           }
         }
@@ -415,7 +411,6 @@ class PlannerStore extends StorePrototype {
     this.setStore('planners', copy);
   };
   @action destroyPlanners = () => {
-    console.log('Removing planners');
     this.removeStore('planners');
   };
 

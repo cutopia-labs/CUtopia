@@ -81,7 +81,7 @@ const ReportIssuesDialogContent: FC<ReportIssuesDialogContentProps> = observer(
     });
     const submit = async e => {
       e.preventDefault();
-      console.log(issueData.types);
+
       const { types, ...payload } = issueData;
       await report({
         variables: {

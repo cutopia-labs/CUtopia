@@ -46,7 +46,6 @@ class DataStore extends StorePrototype {
   }
 
   @action init = () => {
-    console.log('Init data store');
     this.loadStore();
     this.verifyAndMount();
     /* Post-process to make course list in order */
@@ -55,12 +54,11 @@ class DataStore extends StorePrototype {
   @action verifyAndMount = () => {
     Object.entries(DATA_CONFIGS).map(([key, config]) => {
       const { expire: expireBefore } = config;
-      console.log(`key: ${key} ${this[key]} - ${expireBefore}`);
+
       /* If not expired */
       if (this[key]?.etag >= expireBefore && this[key]?.data) {
         this[key] = this[key].data;
       } else {
-        console.log(`Expired: ${key} at ${this[key]?.etag}`);
       }
     });
   };

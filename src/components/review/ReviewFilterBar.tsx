@@ -74,14 +74,12 @@ const ReviewFilterBar: FC<ReviewFilterBarProps> = ({
       return '';
     }
     if (mode === ReviewFilterBarMode.SORTING) {
-      console.log(reviewsPayload);
       return SORTING_FIELDS_REVERSE[reviewsPayload.sortBy] || 'date';
     }
     return reviewsPayload[REVIEWS_CONFIGS[mode].key] || 'All';
   };
 
   const onSelect = (field: string, selected: boolean) => {
-    console.log(`Setted to ${field}`);
     if (mode === ReviewFilterBarMode.SORTING) {
       dispatchReviewsPayload({
         sortBy: selected ? 'createdAt' : SORTING_FIELDS[field],
@@ -161,11 +159,6 @@ const ReviewFilterBar: FC<ReviewFilterBarProps> = ({
         disableScrollLock={true}
       >
         {(REVIEWS_CONFIGS[mode]?.selections || []).map((field: string) => {
-          console.log(
-            `sorting ${field} ${
-              SORTING_FIELDS_REVERSE[reviewsPayload.sortBy || 'createdAt']
-            }`
-          );
           const selected =
             mode === ReviewFilterBarMode.SORTING
               ? SORTING_FIELDS_REVERSE[reviewsPayload.sortBy || 'createdAt'] ===

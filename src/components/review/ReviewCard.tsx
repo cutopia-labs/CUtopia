@@ -45,12 +45,11 @@ const ReviewCard: FC<ReviewCardProps> = ({
   const [skipHeightCheck, setSkipHeightCheck] = useState(showAll);
 
   const updateVote = async vote => {
-    console.log(review.courseId);
     if (
       Object.values(VOTE_ACTIONS).some(v => v === review.myVote || v === liked)
     ) {
       // i.e. already voted
-      console.log('Voted Already');
+
       return;
     }
     const res = await voteReview({
@@ -59,7 +58,7 @@ const ReviewCard: FC<ReviewCardProps> = ({
         vote,
       },
     });
-    console.log(res);
+
     setLiked(vote);
   };
 

@@ -40,6 +40,4 @@ subjectFilenames.forEach(subjectFileName => {
   }
 });
 
-console.log(`Loaded e.g. AIST: ${courses['AIST3010'].title}`);
-
 export { courses };

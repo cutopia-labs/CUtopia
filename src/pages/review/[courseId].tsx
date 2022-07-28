@@ -43,7 +43,7 @@ type Props = {
 
 const CoursePanel: FC<Props> = ({ courseInfo }) => {
   const router = useRouter();
-  console.log(router.query);
+
   const { courseId, rid, mode } = router.query as {
     courseId?: string;
     rid?: string; // review Id (query param)

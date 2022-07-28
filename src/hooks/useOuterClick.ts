@@ -19,7 +19,6 @@ const useOuterClick = (
       }
       if (ignoredClassNames && typeof e.target?.className === 'string') {
         for (const name of (e.target.className as string).split(' ')) {
-          console.log(`Checking name ${name}`);
           if (ignoredClassNames.has(name)) {
             return;
           }

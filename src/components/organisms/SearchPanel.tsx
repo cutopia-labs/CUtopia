@@ -224,7 +224,6 @@ const SearchPanel: FC<SearchPanelProps> = ({
   const isMobile = useMobileQuery();
   const isPlanner = router.pathname.includes('planner');
   const data = useData();
-  console.log(`planner: ${isPlanner}`);
 
   useEffect(() => {
     if (currentCourse) {
@@ -234,9 +233,8 @@ const SearchPanel: FC<SearchPanelProps> = ({
 
   useEffect(() => {
     const courseId = router.query?.courseId;
-    console.log(`Got ID ${courseId}`);
+
     if (courseId && validCourse(courseId[0]) && (!onCoursePress || isMobile)) {
-      console.log(`Planner Current course ${courseId}`);
       setCurrentCourse(courseId[0]); // { "courseId": ["param1"] } // `GET /planner/courseId` (single-element array)
     } else {
       setCurrentCourse(null);
@@ -274,9 +272,7 @@ const SearchPanel: FC<SearchPanelProps> = ({
     setSearchPayloadProp && setSearchPayloadProp(payload);
   };
 
-  useEffect(() => {
-    console.log(COURSE_CODES);
-  }, []);
+  useEffect(() => {}, []);
 
   useEffect(() => {
     if (JSON.stringify(searchPayload) !== JSON.stringify(searchPayloadProp)) {

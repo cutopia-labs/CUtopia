@@ -82,7 +82,7 @@ const TimetablePanel: FC<TimetablePanelProps> = ({
         {Boolean(courses?.length) && (
           <div className={clsx(styles.btnRow, 'center-row')}>
             {planner.syncState !== PlannerSyncState.SYNCED && (
-              <IconButton size="small" onClick={() => console.log('clicked')}>
+              <IconButton size="small">
                 {SYNC_STATE_ICON[planner.syncState]}
               </IconButton>
             )}

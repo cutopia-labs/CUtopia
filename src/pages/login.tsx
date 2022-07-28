@@ -114,9 +114,6 @@ const LoginPanel: FC<Props> = ({ className }) => {
   const view = useView();
 
   useEffect(() => {
-    console.log(
-      `Query mode: ${queryMode}, username: ${queryUsername}, code: ${queryCode}`
-    );
     const mode = queryMode ? PATH_MODE_LOOKUP[queryMode] : INITIAL_MODE;
     if (queryUsername || queryCode) {
       setUsername(queryUsername);
@@ -255,7 +252,7 @@ const LoginPanel: FC<Props> = ({ className }) => {
         mode === LoginPageMode.RESET_PASSWORD_VERIFY) &&
       !PASSWORD_RULE.test(password) &&
       'Invalid password (8 length up without space)';
-    console.log(`sign up error ${passwordSignUpError}`);
+
     const passwordMissingError =
       MODE_ITEMS[mode].password &&
       !password &&

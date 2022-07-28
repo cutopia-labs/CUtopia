@@ -287,7 +287,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
       id,
       courses: entriesToCourses(timetable.entries),
     };
-    console.log(importedPlanner);
+
     if (addToOverview) {
       const overview = {
         _id: id,
@@ -336,11 +336,6 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
       planner.removeTimetableOverview(id);
       /* Switch to the new if deleting current planner */
       if (isCurrentPlanner) {
-        console.log(
-          `Switch to ${
-            switchTo || data?.removeTimetable?._id
-          }\n${JSON.stringify(data?.removeTimetable, null, 2)}`
-        );
         if (data?.removeTimetable) {
           applyTimetable(
             data?.removeTimetable,
@@ -362,7 +357,6 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
     if (id === planner.plannerId) return;
     try {
       if (planner.syncState === PlannerSyncState.DIRTY) {
-        console.log('Is dirty');
         /* May call twice? Ref: https://github.com/lodash/lodash/issues/4185 */
         await updateTimetable({
           delta: planner.delta,
@@ -380,7 +374,6 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
         }`
       );
     } catch (e) {
-      console.warn(e);
       view.handleError(e);
       createTimetable();
     }
@@ -394,7 +387,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
         /* Update sync states to syncing */
         planner.updateStore('isSyncing', true);
         const deltaClone = JSON.parse(JSON.stringify(delta));
-        console.log(deltaClone);
+
         /* Process the entries for gql */
         if (delta.courses) {
           delta['entries'] = coursesToEntries(delta.courses);
@@ -446,7 +439,6 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
       copy(shareURL);
       view.setSnackBar('Copied share link to your clipboard!');
     } catch (e) {
-      console.warn(e);
       view.handleError(e);
     }
   };
@@ -461,9 +453,6 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
         syncing: planner.isSyncing,
       }),
       data => {
-        console.log(
-          `(${+new Date()}) Reaction fired ${JSON.stringify(data.delta)}`
-        );
         updateTimetable(data);
       }
     );
@@ -476,8 +465,6 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
     planner.updateStore('uploading', true);
     await Promise.all(
       Object.entries(planners).map(async ([k, v]) => {
-        console.log('Uploading:');
-        console.log(v);
         if (!v?.courses?.length) return;
         const variables: any = {
           entries: coursesToEntries(v.courses),
@@ -516,7 +503,6 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
    * Init based on planner id
    */
   useEffect(() => {
-    console.log(`Planner ID: ${planner.plannerId}`);
     /* If it's shared planner link, then return */
     if (shareId) return;
     /* if no planner, then init / load one */
@@ -554,7 +540,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
      * switch ttb if cloned otherwise clone
      */
     const cloneId = planner.inShareMap(shareId);
-    console.log(`Clone id ${cloneId}`);
+
     if (cloneId) {
       switchTimetable(cloneId);
     } else {
@@ -564,9 +550,6 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
 
   // If planner is dirty, prevent unload
   useBeforeUnload(() => {
-    console.log(
-      `Leave detected, dirty: ${planner.syncState === PlannerSyncState.DIRTY}`
-    );
     if (planner.syncState === PlannerSyncState.DIRTY) {
       updateTimetable({
         delta: planner.delta,
@@ -579,7 +562,6 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
 
   const createTimetable = async () => {
     try {
-      console.log('Called create timetable');
       const { data } = await uploadTimetable({
         variables: {
           entries: [],
@@ -613,7 +595,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
         variables: { id: shareId },
       });
       const clonedTtbId = data?.cloneTimetable._id;
-      console.log(`Cloned ttb ${clonedTtbId}`);
+
       applyTimetable(
         data?.cloneTimetable,
         clonedTtbId,
@@ -623,14 +605,13 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
       );
       planner.addToShareMap(shareId, clonedTtbId);
     } catch (e) {
-      console.warn(e);
       view.handleError(e);
     }
   };
 
   const onShareClick = () => {
     /* If it's shared, then copy link and display message */
-    console.log(`${planner.planner.expireAt}`);
+
     if (
       getModeFromExpireAt(planner.planner?.expireAt) ===
       TimetableOverviewMode.SHARE

@@ -28,7 +28,6 @@ const SearchInput: FC<any> = ({
   const plannerCourseMatch =
     router.pathname.includes('planner') && router.query.courseId;
   const getButtonActionMode = () => {
-    console.log(searchPayload);
     if (plannerCourseMatch && isMobile && visible) {
       return SearchInputMode.SEARCH_RESULT;
     }
@@ -52,7 +51,6 @@ const SearchInput: FC<any> = ({
     switch (getButtonActionMode()) {
       case SearchInputMode.SHOW_DROPDOWN:
         if (isMobile && inputRef.current) {
-          console.log('Hi');
           setVisible(true);
           await new Promise(resolve => setTimeout(resolve, 100));
           inputRef.current.focus();
