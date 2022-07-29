@@ -7,7 +7,6 @@ import { ChatBubbleOutline, Edit, Share } from '@material-ui/icons';
 import copy from 'copy-to-clipboard';
 import { useRouter } from 'next/router';
 import { GetStaticPaths } from 'next';
-import Head from 'next/head';
 import clsx from 'clsx';
 import { useQuery } from '@apollo/client';
 import styles from '../../styles/components/review/CoursePanel.module.scss';
@@ -38,10 +37,10 @@ const MENU_ITEMS = [
 ];
 
 type Props = {
-  courseInfo: CourseInfo;
+  c: CourseInfo;
 };
 
-const CoursePanel: FC<Props> = ({ courseInfo }) => {
+const CoursePanel: FC<Props> = ({ c: courseInfo }) => {
   const router = useRouter();
 
   const { courseId, rid, mode } = router.query as {
@@ -102,9 +101,6 @@ const CoursePanel: FC<Props> = ({ courseInfo }) => {
 
   return (
     <Page className={styles.reviewPage} center padding>
-      <Head>
-        <title>{`${courseId} Reviews - ${courseInfo.title} - CUtopia`}</title>
-      </Head>
       <div className={clsx(styles.coursePanelContainer, 'grid-auto-row')}>
         <div className={clsx(styles.coursePanel, 'panel card')}>
           <CourseCard
@@ -167,12 +163,13 @@ const CoursePanel: FC<Props> = ({ courseInfo }) => {
 // SSR to get course info
 export const getStaticProps = async ({ params }) => {
   const { courses } = await import('../../../tools/coursesLoader');
+  const courseInfo = getAttrs(
+    courses[params.courseId],
+    ...REVIEW_COURSE_INFO_ATTRS
+  );
   return {
     props: {
-      courseInfo: getAttrs(
-        courses[params.courseId],
-        ...REVIEW_COURSE_INFO_ATTRS
-      ),
+      c: courseInfo,
     },
   };
 };

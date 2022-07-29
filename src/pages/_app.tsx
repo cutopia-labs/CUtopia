@@ -16,6 +16,7 @@ import Dialog from '../components/templates/Dialog';
 import SnackBar from '../components/molecules/SnackBar';
 import ErrorCard from '../components/molecules/ErrorCard';
 import { ErrorCardMode } from '../types';
+import HeadSeo from '../components/atoms/HeadSeo';
 
 // clear all console output
 if (process.env.NODE_ENV === 'production') {
@@ -42,19 +43,23 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
     router.events.on('routeChangeComplete', () => NProgress.done());
     router.events.on('routeChangeError', () => NProgress.done());
   }, []);
+
   return (
-    <Sentry.ErrorBoundary fallback={<ErrorCard mode={ErrorCardMode.ERROR} />}>
-      <StoreProvider>
-        <ApolloProvider client={client}>
-          <ThemeProvider theme={theme}>
-            <Header />
-            <Component {...pageProps} />
-            <SnackBar />
-            <Dialog />
-          </ThemeProvider>
-        </ApolloProvider>
-      </StoreProvider>
-    </Sentry.ErrorBoundary>
+    <>
+      <HeadSeo pageProps={pageProps} />
+      <Sentry.ErrorBoundary fallback={<ErrorCard mode={ErrorCardMode.ERROR} />}>
+        <StoreProvider>
+          <ApolloProvider client={client}>
+            <ThemeProvider theme={theme}>
+              <Header />
+              <Component {...pageProps} />
+              <SnackBar />
+              <Dialog />
+            </ThemeProvider>
+          </ApolloProvider>
+        </StoreProvider>
+      </Sentry.ErrorBoundary>
+    </>
   );
 };
 

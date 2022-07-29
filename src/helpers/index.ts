@@ -78,3 +78,7 @@ export const isMobileQuery = () => {
   const mqList = window.matchMedia(`(max-width:${MIN_DESKTOP_WIDTH}px)`);
   return mqList.matches;
 };
+
+export const trimEllip = (str: string, len: number) => {
+  return str.length > len ? `${str.substring(0, len).trim()}...` : str;
+};
