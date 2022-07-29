@@ -1,4 +1,3 @@
-import { BrowserOptions } from '@sentry/react';
 import { DataConfig } from '../types';
 
 export const LAZY_LOAD_BUFFER = 50;
@@ -36,7 +35,7 @@ export const SERVER_CONFIG = {
   URI: `${SERVER_ADDR}/graphql`,
 };
 
-export const SentryConfigs: BrowserOptions = {
+export const SentryConfigs = {
   dsn:
     process.env.NODE_ENV === 'production'
       ? 'https://c38359448a5448a58971eeb211568473@o861810.ingest.sentry.io/5821571'
