@@ -108,7 +108,7 @@ const CourseSections: FC<CourseSectionsProps> = ({
       credits: parseInt(units, 10),
     });
     planner.updateStore('previewPlannerCourse', null);
-    view.setSnackBar(`Added ${courseId} ${name}`);
+    view.setSnackBar(`Added ${courseId} ${section.name}`);
   };
   const deleteInPlanner = sectionId => {
     planner.deleteSectionInPlannerCourses({ courseId, sectionId });
