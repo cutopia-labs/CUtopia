@@ -80,6 +80,12 @@ export const REVIEW_COURSE_INFO_ATTRS = [
   'description',
   'academic_group',
   'assessments',
+  'courseId', // Needed for title SSR
 ];
 
 export const TIMETABLE_SYNC_INTERVAL = 4000;
+
+export const META_DESCRIPTION_CHAR_LIMIT = 150;
+
+export const DEFAULT_DESCRIPTION =
+  'CUtopia is a course review and planning platform for CUHK students.';
