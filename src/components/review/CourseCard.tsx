@@ -123,9 +123,7 @@ const CourseCard: FC<CourseCardProps> = ({
   const isMobile = useMobileQuery();
   const view = useView();
 
-  const isFavorited = user.favoriteCourses.some(
-    course => course.courseId === courseInfo.courseId
-  );
+  const isFavorited = user.checkIsFavourite(courseInfo.courseId);
 
   return (
     <div

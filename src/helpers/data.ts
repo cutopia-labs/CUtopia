@@ -29,6 +29,7 @@ export const _searchCourses = (
         return user.favoriteCourses.map(course => ({
           c: course.courseId,
           t: course.title,
+          o: 1, // TEMP: cuz search for avalibiltity is tedious, so set as offered for all
         }));
       case 'subject':
         return courseList[text];
