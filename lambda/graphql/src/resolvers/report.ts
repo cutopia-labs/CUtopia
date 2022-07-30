@@ -3,11 +3,10 @@ import { Resolvers } from '../schemas/types';
 
 const reportResolver: Resolvers = {
   Mutation: {
-    report: async (parent, { input }, { user }) => {
-      const { username } = user;
+    report: async (parent, { input }, context) => {
       const reportId = await report({
         ...input,
-        username,
+        username: context.user?.username,
       });
       return reportId;
     },

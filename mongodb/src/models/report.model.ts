@@ -11,7 +11,7 @@ const reportSchema = new Schema<ReportDocument>(
     },
     createdAt: createdAt,
     cat: requiredNumber,
-    username: requiredString,
+    username: String,
     description: requiredString,
     types: [requiredNumber],
     identifier: String,
