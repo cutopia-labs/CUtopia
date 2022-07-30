@@ -1,7 +1,7 @@
 import { Link } from '@material-ui/core';
 import clsx from 'clsx';
 import { FC } from 'react';
-import { STATICS_EXPIRE_BEFORE } from '../../../constants/configs';
+import { STATICS_EXPIRE_BEFORE } from '../../../config';
 import { getMMMDDYY } from '../../../helpers/getTime';
 
 import styles from '../../../styles/components/about/About.module.scss';

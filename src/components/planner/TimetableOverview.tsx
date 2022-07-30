@@ -23,7 +23,7 @@ import {
   TimetableOverviewWithMode,
   UserData,
 } from '../../types';
-import { PLANNER_CONFIGS } from '../../constants/configs';
+import { PLANNER_CONFIGS } from '../../config';
 import { GET_USER_TIMETABLES } from '../../constants/queries';
 import Loading from '../atoms/Loading';
 import ListItem from '../molecules/ListItem';

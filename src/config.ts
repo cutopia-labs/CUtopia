@@ -1,4 +1,4 @@
-import { DataConfig } from '../types';
+import { DataConfig } from './types';
 
 export const LAZY_LOAD_BUFFER = 50;
 export const SNACKBAR_TIMEOUT = 5000;

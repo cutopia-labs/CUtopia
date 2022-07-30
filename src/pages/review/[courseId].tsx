@@ -23,7 +23,7 @@ import Page from '../../components/atoms/Page';
 import authenticatedRoute from '../../components/molecules/authenticatedRoute';
 import ReviewEditPanel from '../../components/review/ReviewEditPanel';
 import { COURSE_INFO_QUERY } from '../../constants/queries';
-import { REVIEW_COURSE_INFO_ATTRS } from '../../constants/configs';
+import { REVIEW_COURSE_INFO_ATTRS } from '../../config';
 
 const MENU_ITEMS = [
   {

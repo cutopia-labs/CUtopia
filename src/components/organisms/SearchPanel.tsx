@@ -29,10 +29,7 @@ import { useView, useUser, useData } from '../../store';
 import { COURSE_SECTIONS_QUERY } from '../../constants/queries';
 import { validCourse } from '../../helpers';
 import Loading from '../atoms/Loading';
-import {
-  CURRENT_TERM,
-  MAX_SEARCH_RESULT_LENGTH,
-} from '../../constants/configs';
+import { CURRENT_TERM, MAX_SEARCH_RESULT_LENGTH } from '../../config';
 import {
   CourseSearchItem,
   ErrorCardMode,

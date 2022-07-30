@@ -1,4 +1,4 @@
-import { SIMILAR_COURSE_LIMIT } from '../constants/configs';
+import { SIMILAR_COURSE_LIMIT } from '../config';
 import {
   CourseConcise,
   CourseQuery,

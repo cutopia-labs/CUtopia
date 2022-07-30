@@ -11,10 +11,7 @@ import { debounce } from 'lodash';
 import { useBeforeUnload } from 'react-use';
 import styles from '../../styles/components/planner/PlannerTimetable.module.scss';
 import { useView, usePlanner } from '../../store';
-import {
-  PLANNER_CONFIGS,
-  TIMETABLE_SYNC_INTERVAL,
-} from '../../constants/configs';
+import { PLANNER_CONFIGS, TIMETABLE_SYNC_INTERVAL } from '../../config';
 import {
   CLONE_TIMETABLE,
   REMOVE_TIMETABLE,

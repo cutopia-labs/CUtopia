@@ -7,7 +7,7 @@ import {
   LecturerQuery,
 } from '../types';
 
-import { DATA_CONFIGS, SIMILAR_COURSE_LIMIT } from '../constants/configs';
+import { DATA_CONFIGS, SIMILAR_COURSE_LIMIT } from '../config';
 import { storeData } from '../helpers/store';
 import {
   _searchCourses,

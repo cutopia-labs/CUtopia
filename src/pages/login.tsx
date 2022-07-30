@@ -19,7 +19,7 @@ import {
 import { LoginPageMode } from '../types';
 import handleCompleted from '../helpers/handleCompleted';
 import { reverseMapping } from '../helpers';
-import { LOGIN_REDIRECT_PAGE } from '../constants/configs';
+import { LOGIN_REDIRECT_PAGE } from '../config';
 import { USERNAME_RULE, USER_ID_RULE, PASSWORD_RULE } from '../helpers/rules';
 import Footer from '../components/molecules/Footer';
 

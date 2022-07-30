@@ -15,7 +15,7 @@ import { usePlanner, useView } from '../../store';
 import { WEEKDAYS_TWO_ABBR } from '../../constants';
 import { CourseInfo, CourseSection, ErrorCardMode } from '../../types';
 import ErrorCard from '../molecules/ErrorCard';
-import { CURRENT_TERM } from '../../constants/configs';
+import { CURRENT_TERM } from '../../config';
 
 type SectionCardProps = {
   section: CourseSection;

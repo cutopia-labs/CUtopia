@@ -9,7 +9,7 @@ import { FC } from 'react';
 import styles from '../../styles/components/home/UserCard.module.scss';
 import { useUser, useView } from '../../store';
 import { User } from '../../types';
-import { LEVEL_UP_EXP } from '../../constants/configs';
+import { LEVEL_UP_EXP } from '../../config';
 
 type UserCardProps = {
   userData: User;

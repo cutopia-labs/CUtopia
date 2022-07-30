@@ -11,7 +11,7 @@ import styles from '../../styles/components/review/CourseCard.module.scss';
 import ShowMoreOverlay from '../molecules/ShowMoreOverlay';
 import Badge from '../atoms/Badge';
 import { useView, useUser } from '../../store';
-import { COURSE_CARD_MAX_HEIGHT } from '../../constants/configs';
+import { COURSE_CARD_MAX_HEIGHT } from '../../config';
 import { CourseInfo } from '../../types';
 import Link from '../molecules/Link';
 import useMobileQuery from '../../hooks/useMobileQuery';

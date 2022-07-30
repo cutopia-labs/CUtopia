@@ -1,6 +1,6 @@
 import { ApolloError } from '@apollo/client';
 import { makeObservable, observable, action } from 'mobx';
-import { SNACKBAR_TIMEOUT } from '../constants/configs';
+import { SNACKBAR_TIMEOUT } from '../config';
 import handleError from '../helpers/handleError';
 import { Dialog, SnackBar, SnackBarProps } from '../types';
 import StorePrototype from './StorePrototype';

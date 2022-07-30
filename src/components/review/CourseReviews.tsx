@@ -12,7 +12,7 @@ import { GET_REVIEW, REVIEWS_QUERY } from '../../constants/queries';
 import Loading from '../atoms/Loading';
 import { useView, useUser } from '../../store';
 import useDebounce from '../../hooks/useDebounce';
-import { LAZY_LOAD_BUFFER, REVIEWS_PER_PAGE } from '../../constants/configs';
+import { LAZY_LOAD_BUFFER, REVIEWS_PER_PAGE } from '../../config';
 import { CourseInfo, Review, ReviewsFilter, ReviewsResult } from '../../types';
 import Footer from '../molecules/Footer';
 import ReviewCard from './ReviewCard';

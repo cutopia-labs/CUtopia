@@ -14,7 +14,7 @@ import {
   HISTORY_MAX_LENGTH,
   LEVEL_UP_EXP,
   TOKEN_EXPIRE_BEFORE,
-} from '../constants/configs';
+} from '../config';
 import withUndo from '../helpers/withUndo';
 import { getTokenExpireDate } from '../helpers';
 import { CREATE_PLANNER_FLAG, TOKEN_EXPIRE_DAYS } from '../constants';

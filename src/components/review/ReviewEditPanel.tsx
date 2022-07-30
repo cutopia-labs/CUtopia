@@ -30,7 +30,7 @@ import ListItem from '../molecules/ListItem';
 import {
   SAVE_DRAFT_PROGRESS_BUFFER,
   TARGET_REVIEW_WORD_COUNT,
-} from '../../constants/configs';
+} from '../../config';
 import {
   CourseInfo,
   RatingFieldWithOverall,

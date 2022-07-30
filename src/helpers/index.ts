@@ -4,7 +4,7 @@ import {
   GRADES,
   TOKEN_EXPIRE_DAYS,
 } from '../constants';
-import { MIN_DESKTOP_WIDTH } from '../constants/configs';
+import { MIN_DESKTOP_WIDTH } from '../config';
 import { VALID_COURSE_RULE } from '../constants/rules';
 import { Review } from '../types';
 import { getStoreData } from './store';

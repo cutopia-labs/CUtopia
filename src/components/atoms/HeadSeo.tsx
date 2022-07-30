@@ -1,9 +1,6 @@
 import Head from 'next/head';
 import { FC } from 'react';
-import {
-  DEFAULT_DESCRIPTION,
-  META_DESCRIPTION_CHAR_LIMIT,
-} from '../../constants/configs';
+import { DEFAULT_DESCRIPTION, META_DESCRIPTION_CHAR_LIMIT } from '../../config';
 import { CourseInfo } from '../../types';
 import { trimEllip } from '../../helpers';
 

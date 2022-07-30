@@ -35,7 +35,7 @@ import { getMMMDDYY } from '../../helpers/getTime';
 import Footer from '../../components/molecules/Footer';
 import FeedCard from '../../components/molecules/FeedCard';
 import Card from '../../components/atoms/Card';
-import { LAZY_LOAD_BUFFER, REVIEWS_PER_PAGE } from '../../constants/configs';
+import { LAZY_LOAD_BUFFER, REVIEWS_PER_PAGE } from '../../config';
 import useDebounce from '../../hooks/useDebounce';
 import { getRecentReviewQuery } from '../../helpers/dynamicQueries';
 import Page from '../../components/atoms/Page';
