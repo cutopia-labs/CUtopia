@@ -25,7 +25,12 @@ export const MIN_DESKTOP_WIDTH = 1260;
 
 const AWS_REGION = 'ap-southeast-1';
 
-// mike-dev: uvp03fp791
+/**
+ * Server ID List
+ * production: eisbgazs16
+ * plus-dev: d8r6qarg78
+ * mike-dev: uvp03fp791
+ */
 export const SERVER_ID =
   process.env.NODE_ENV === 'production' ? 'd8r6qarg78' : 'd8r6qarg78';
 
@@ -35,19 +40,10 @@ export const SERVER_CONFIG = {
   URI: `${SERVER_ADDR}/graphql`,
 };
 
-export const SentryConfigs = {
-  dsn:
-    process.env.NODE_ENV === 'production'
-      ? 'https://c38359448a5448a58971eeb211568473@o861810.ingest.sentry.io/5821571'
-      : '',
-  tracesSampleRate: 0.3,
-};
-
 // Return only current term sections in planner
 export const CURRENT_TERM = '2022-23 Term 1';
 
-// Update course list and instructors if etag before below (10/11/2021)
-
+// Update course list and instructors if etag before below
 export const STATICS_EXPIRE_BEFORE = 1657979311000;
 
 export const DATA_CONFIGS: Record<string, DataConfig> = {
