@@ -81,11 +81,12 @@ const renderItem = (item: MultiTypeLink) => {
 
 type FooterProps = {
   mt?: boolean;
+  mb?: boolean;
   style?: string;
 };
 
-const Footer: FC<FooterProps> = ({ mt, style }) => (
-  <div className={clsx(styles.footer, mt && 'mt', style)}>
+const Footer: FC<FooterProps> = ({ mt, mb, style }) => (
+  <div className={clsx(styles.footer, mt && 'mt', mb && 'mb', style)}>
     {FOOTER_ITEMS.map(item => renderItem(item))}
   </div>
 );
