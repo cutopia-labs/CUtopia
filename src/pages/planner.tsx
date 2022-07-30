@@ -8,15 +8,15 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import clsx from 'clsx';
 import { RiShoppingCartLine } from 'react-icons/ri';
-import styles from '../../styles/pages/PlannerPage.module.scss';
-import SearchPanel from '../../components/organisms/SearchPanel';
-import Page from '../../components/atoms/Page';
-import PlannerTimetable from '../../components/planner/PlannerTimetable';
-import PlannerCart from '../../components/planner/PlannerCart';
+import styles from '../styles/pages/PlannerPage.module.scss';
+import SearchPanel from '../components/organisms/SearchPanel';
+import Page from '../components/atoms/Page';
+import PlannerTimetable from '../components/planner/PlannerTimetable';
+import PlannerCart from '../components/planner/PlannerCart';
 
-import authenticatedRoute from '../../components/molecules/authenticatedRoute';
-import useClickObserver from '../../hooks/useClickObserver';
-import { isMobileQuery } from '../../helpers';
+import authenticatedRoute from '../components/molecules/authenticatedRoute';
+import useClickObserver from '../hooks/useClickObserver';
+import { isMobileQuery } from '../helpers';
 
 enum PlannerMode {
   INITIAL,
