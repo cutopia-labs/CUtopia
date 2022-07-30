@@ -74,6 +74,7 @@ const Header: FC = () => {
                 aria-label="sort"
                 size="small"
                 onClick={e => setAnchorEl(e.currentTarget)}
+                disableRipple
               >
                 <MenuIcon />
               </IconButton>
