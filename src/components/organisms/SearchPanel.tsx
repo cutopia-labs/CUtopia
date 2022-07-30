@@ -267,8 +267,8 @@ const SearchPanel: FC<SearchPanelProps> = ({
           offerredOnly: Boolean(isPlanner),
         }
       : null;
-    if (isPlanner && router.query?.courseId) {
-      router.push('/planner', undefined, { shallow: true });
+    if (isPlanner && router.query?.cid) {
+      router.replace('/planner', undefined, { shallow: true });
     }
     setSearchPayloadState(newPayload);
     setSearchPayloadProp && setSearchPayloadProp(payload);
@@ -301,7 +301,7 @@ const SearchPanel: FC<SearchPanelProps> = ({
                 setSearchPayload(null);
               }
               if (isPlanner) {
-                router.push('/planner', undefined, { shallow: true });
+                router.replace('/planner', undefined, { shallow: true });
               }
             }}
           >
