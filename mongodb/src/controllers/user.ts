@@ -114,7 +114,6 @@ export const verifyUser = async input => {
   user.verified = true;
   await User.updateOne({ username }, user).exec();
   userCache.set(username, JSON.stringify(user));
-  return true;
 };
 
 export const login = async input => {
@@ -182,7 +181,6 @@ export const resetPassword = async input => {
   user.resetPwdCode = null;
   await User.updateOne({ username }, user).exec();
   userCache.set(username, JSON.stringify(user));
-  return true;
 };
 
 export const incrementUpvotesCount = async input => {
