@@ -353,8 +353,18 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
     }
   };
 
-  const switchTimetable = async (id: string) => {
-    if (id === planner.plannerId) return;
+  const switchTimetable = async (id: string, noFail: boolean = false) => {
+    if (id === planner.plannerId) {
+      /* If same planner id as current one, call get ttb but not switch */
+      if (noFail) {
+        getTimetable({
+          variables: {
+            id: planner.plannerId,
+          },
+        });
+      }
+      return;
+    }
     try {
       if (planner.syncState === PlannerSyncState.DIRTY) {
         /* May call twice? Ref: https://github.com/lodash/lodash/issues/4185 */
@@ -542,7 +552,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
     const cloneId = planner.inShareMap(shareId);
 
     if (cloneId) {
-      switchTimetable(cloneId);
+      switchTimetable(cloneId, true);
     } else {
       cloneTimetable(shareId);
     }
