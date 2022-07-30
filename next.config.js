@@ -1,49 +1,44 @@
 const path = require('path');
+const loaderUtils = require('loader-utils');
 
 /** @type {import('next').NextConfig} */
 
-/**
- * Stolen from https://stackoverflow.com/questions/10776600/testing-for-equality-of-regular-expressions
- */
-const regexEqual = (x, y) => {
-  return (
-    x instanceof RegExp &&
-    y instanceof RegExp &&
-    x.source === y.source &&
-    x.global === y.global &&
-    x.ignoreCase === y.ignoreCase &&
-    x.multiline === y.multiline
-  );
-};
+// based on https://github.com/vercel/next.js/blob/0af3b526408bae26d6b3f8cab75c4229998bf7cb/packages/next/build/webpack/config/blocks/css/loaders/getCssModuleLocalIdent.ts
+const hashOnlyIdent = (context, _, exportName) =>
+  loaderUtils
+    .getHashDigest(
+      Buffer.from(
+        `filePath:${path
+          .relative(context.rootContext, context.resourcePath)
+          .replace(/\\+/g, '/')}#className:${exportName}`
+      ),
+      'md4',
+      'base64',
+      7
+    )
+    .replace(/^(-?\d|--)/, '_$1')
+    .replaceAll('+', '_')
+    .replaceAll('/', '_');
 
 module.exports = {
   trailingSlash: false,
   sassOptions: {
     includePaths: [path.join(__dirname, 'styles')],
   },
-  webpack(config) {
-    const sassRules = config.module.rules
+  webpack(config, { dev }) {
+    const rules = config.module.rules
       .find(rule => typeof rule.oneOf === 'object')
-      .oneOf.find(
-        rule =>
-          rule.sideEffects === false &&
-          regexEqual(rule.test, /\.module\.(scss|sass)$/)
-      );
+      .oneOf.filter(rule => Array.isArray(rule.use));
 
-    sassRules.use = sassRules.use.map(rule =>
-      rule.loader.includes('css-loader/dist')
-        ? {
-            ...rule,
-            options: {
-              ...rule.options,
-              modules: {
-                ...rule.modules,
-                localIdentName: '[hash:base64:5]',
-              },
-            },
-          }
-        : rule
-    );
+    rules.forEach(rule => {
+      rule.use.forEach(moduleLoader => {
+        if (
+          moduleLoader.loader?.includes('css-loader') &&
+          !moduleLoader.loader?.includes('postcss-loader')
+        )
+          moduleLoader.options.modules.getLocalIdent = hashOnlyIdent;
+      });
+    });
 
     return config;
   },
