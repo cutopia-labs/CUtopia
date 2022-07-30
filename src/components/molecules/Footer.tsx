@@ -19,11 +19,11 @@ const FOOTER_ITEMS = [
   },
   {
     label: 'Privacy',
-    to: '/privacy',
+    to: '/about',
   },
   {
     label: 'Terms',
-    to: '/terms',
+    to: '/about',
   },
   {
     label: 'Report Issues',
