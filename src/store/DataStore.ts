@@ -43,6 +43,7 @@ class DataStore extends StorePrototype {
     });
     const data = await res.json();
     this.saveData(data, key);
+    return this[key];
   }
 
   @action init = () => {
@@ -58,7 +59,6 @@ class DataStore extends StorePrototype {
       /* If not expired */
       if (this[key]?.etag >= expireBefore && this[key]?.data) {
         this[key] = this[key].data;
-      } else {
       }
     });
   };
