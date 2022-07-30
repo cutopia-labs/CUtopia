@@ -1,9 +1,11 @@
+
 .loginPage {
-  height: 100%;
   flex: 1;
+  height: 100%;
 }
 
 .loginPanel {
+  margin: auto auto auto auto;
   background-color: var(--surface);
   border-radius: var(--border-radius);
   padding: 36px;

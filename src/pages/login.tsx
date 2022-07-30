@@ -21,6 +21,7 @@ import handleCompleted from '../helpers/handleCompleted';
 import { reverseMapping } from '../helpers';
 import { LOGIN_REDIRECT_PAGE } from '../constants/configs';
 import { USERNAME_RULE, USER_ID_RULE, PASSWORD_RULE } from '../helpers/rules';
+import Footer from '../components/molecules/Footer';
 
 const INITIAL_MODE = LoginPageMode.CUTOPIA_LOGIN;
 const MODE_ITEMS = {
@@ -476,6 +477,7 @@ const LoginPanel: FC<Props> = ({ className }) => {
           </div>
         )}
       </div>
+      <Footer mb />
     </div>
   );
 };
