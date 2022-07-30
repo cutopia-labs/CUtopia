@@ -50,6 +50,9 @@
   }
   & .timetableLabelInputContainer {
     margin: 0 var(--menu-padding-horizontal) var(--menu-padding-vertical) var(--menu-padding-horizontal);
+    > :global(.MuiInputBase-root) {
+      flex: 1;
+    }
   }
   & :global(.MuiButtonBase-root):last-child {
     color: var(--primary);

@@ -181,7 +181,7 @@ const TimetableOverview: FC<TimetableOverviewProps> = ({
       >
         <h4 className="subheading">Title</h4>
         <form
-          className={styles.timetableLabelInputContainer}
+          className={clsx(styles.timetableLabelInputContainer, 'row')}
           onSubmit={e => {
             e.preventDefault();
             planner.updateStore('plannerName', labelInput);
