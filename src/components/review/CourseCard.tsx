@@ -123,7 +123,10 @@ const CourseCard: FC<CourseCardProps> = ({
   const isMobile = useMobileQuery();
   const view = useView();
 
-  const isFavorited = user.checkIsFavourite(courseInfo.courseId);
+  /* Note: cannot use store method, cuz it will not rerender the view */
+  const isFavorited = user.favoriteCourses.some(
+    course => course.courseId === courseInfo.courseId
+  );
 
   return (
     <div
