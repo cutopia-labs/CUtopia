@@ -49,7 +49,7 @@ const FOOTER_ITEMS = [
 const renderItem = (item: MultiTypeLink) => {
   if (item.to) {
     return (
-      <Link key={item.to} href={item.to}>
+      <Link key={`${item.label}_${item.to}`} href={item.to}>
         <a className={clsx(styles.footerLink, 'hover')}>{item.label}</a>
       </Link>
     );
