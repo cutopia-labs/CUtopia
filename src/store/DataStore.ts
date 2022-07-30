@@ -59,6 +59,8 @@ class DataStore extends StorePrototype {
       /* If not expired */
       if (this[key]?.etag >= expireBefore && this[key]?.data) {
         this[key] = this[key].data;
+      } else {
+        this[key] = null;
       }
     });
   };
