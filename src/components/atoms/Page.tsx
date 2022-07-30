@@ -8,13 +8,20 @@ type PageProps = {
   column?: boolean;
 };
 
-const Page: FC<PageProps> = ({ children, className, center, padding }) => {
+const Page: FC<PageProps> = ({
+  children,
+  className,
+  center,
+  padding,
+  column,
+}) => {
   return (
     <div
       className={clsx(
         'page',
         center && 'center-page',
         padding && 'padding',
+        column && 'column',
         className
       )}
     >
