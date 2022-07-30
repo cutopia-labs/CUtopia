@@ -17,8 +17,10 @@ const hashOnlyIdent = (context, _, exportName) =>
       7
     )
     .replace(/^(-?\d|--)/, '_$1')
-    .replaceAll('+', '_')
-    .replaceAll('/', '_');
+    .split('+')
+    .join('_')
+    .split('/')
+    .join('_');
 
 module.exports = {
   trailingSlash: false,
