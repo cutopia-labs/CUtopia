@@ -199,6 +199,10 @@ const DepartmentList: FC<DepartmentListProps> = ({ setSearchPayload }) => {
   );
 };
 
+const makeUrlFromCourseId = (courseId: string, isPlanner: boolean = false) => {
+  return isPlanner ? `/planner?cid=${courseId}` : `/review/${courseId}`;
+};
+
 export type SearchPanelProps = {
   searchPayloadProp?: SearchPayload;
   setSearchPayloadProp?: (payload: SearchPayload) => void;
@@ -224,6 +228,9 @@ const SearchPanel: FC<SearchPanelProps> = ({
   const isMobile = useMobileQuery();
   const isPlanner = router.pathname.includes('planner');
   const data = useData();
+  const { cid } = router.query as {
+    cid?: string;
+  };
 
   useEffect(() => {
     if (currentCourse) {
@@ -232,14 +239,12 @@ const SearchPanel: FC<SearchPanelProps> = ({
   }, [currentCourse]);
 
   useEffect(() => {
-    const courseId = router.query?.courseId;
-
-    if (courseId && validCourse(courseId[0]) && (!onCoursePress || isMobile)) {
-      setCurrentCourse(courseId[0]); // { "courseId": ["param1"] } // `GET /planner/courseId` (single-element array)
+    if (validCourse(cid) && (!onCoursePress || isMobile)) {
+      setCurrentCourse(cid);
     } else {
       setCurrentCourse(null);
     }
-  }, [router.query?.courseId, isMobile]);
+  }, [cid, isMobile]);
 
   // Fetch course info
   const {
@@ -336,11 +341,9 @@ const SearchPanel: FC<SearchPanelProps> = ({
             onItemClick={(item, e) => {
               e.stopPropagation();
               if (!skipDefaultAction) {
-                router.push(
-                  `/${isPlanner ? 'planner' : 'review'}/${item}`,
-                  undefined,
-                  { shallow: true }
-                );
+                router.push(makeUrlFromCourseId(item, isPlanner), undefined, {
+                  shallow: true,
+                });
               }
               (!isMobile || !isPlanner) && onCoursePress && onCoursePress(item);
             }}
@@ -374,9 +377,11 @@ const SearchPanel: FC<SearchPanelProps> = ({
                 isPlanner && user.saveHistory(courseId);
                 if (!skipDefaultAction) {
                   router.push(
-                    `/${isPlanner ? 'planner' : 'review'}/${courseId}`,
+                    makeUrlFromCourseId(courseId, isPlanner),
                     undefined,
-                    { shallow: isPlanner } // Do not trigger refresh (TODO: reload reviews)
+                    {
+                      shallow: isPlanner,
+                    }
                   );
                 }
                 onCoursePress &&
