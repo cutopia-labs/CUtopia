@@ -1,3 +1,9 @@
-# https://www.robotstxt.org/robotstxt.html
+# *
 User-agent: *
-Disallow:
+Allow: /
+
+# Host
+Host: cutopia.app
+
+# Sitemaps
+Sitemap: cutopia.app/sitemap.xml
