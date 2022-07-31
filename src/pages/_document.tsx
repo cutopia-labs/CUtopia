@@ -1,5 +1,4 @@
 import { Html, Head, Main, NextScript } from 'next/document';
-import Script from 'next/script';
 import { FC } from 'react';
 
 const Document: FC = () => (
@@ -16,19 +15,6 @@ const Document: FC = () => (
     </Head>
     <body>
       <Main />
-      <Script
-        src="https://www.googletagmanager.com/gtag/js?id=G-C85DMTM94G"
-        strategy="afterInteractive"
-      />
-      <Script id="google-analytics" strategy="afterInteractive">
-        {`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){window.dataLayer.push(arguments);}
-          gtag('js', new Date());
-
-          gtag('config', 'G-C85DMTM94G');
-        `}
-      </Script>
       <NextScript />
     </body>
   </Html>

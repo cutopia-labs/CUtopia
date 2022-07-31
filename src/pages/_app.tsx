@@ -8,6 +8,7 @@ import NProgress from 'nprogress';
 import { useRouter } from 'next/router';
 
 import '../styles/globals.scss';
+import Script from 'next/script';
 import StoreProvider from '../store';
 import { DARK_THEME, THEME } from '../constants/colors';
 import client from '../helpers/apollo-client';
@@ -59,6 +60,19 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
           </ApolloProvider>
         </StoreProvider>
       </Sentry.ErrorBoundary>
+      <Script
+        src="https://www.googletagmanager.com/gtag/js?id=G-C85DMTM94G"
+        strategy="afterInteractive"
+      />
+      <Script id="google-analytics" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){window.dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'G-C85DMTM94G');
+        `}
+      </Script>
     </>
   );
 };
