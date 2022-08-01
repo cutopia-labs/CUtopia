@@ -2,7 +2,7 @@
 const config = {
   siteUrl: process.env.SITE_URL || 'cutopia.app',
   generateRobotsTxt: true, // (optional)
-  outDir: 'public/resources',
+  outDir: 'build',
   // ...other options
 };
 
