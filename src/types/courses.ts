@@ -20,7 +20,6 @@ export interface CourseDataRaw {
 
 export interface Course extends CourseDataRaw {
   courseId: string;
-  terms?: Term[];
   rating?: CourseRating;
   reviewLecturers?: string[];
   reviewTerms?: string[];
