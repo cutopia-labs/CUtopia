@@ -21,8 +21,8 @@ const TIMETABLE_BASE = `
 
 // CUTOPIA LOGIN Mutations
 export const LOGIN_CUTOPIA = gql`
-  mutation ($username: String!, $password: String!) {
-    login(input: { username: $username, password: $password }) {
+  mutation ($userId: String!, $password: String!) {
+    login(input: { userId: $userId, password: $password }) {
       token
       me {
         reviewIds
@@ -51,16 +51,16 @@ export const VERIFY_USER = gql`
 
 // CUTOPIA PASSWORD RESET Mutations
 export const SEND_RESET_PASSWORD_CODE = gql`
-  mutation ($username: String!) {
-    sendResetPasswordCode(input: { username: $username })
+  mutation ($userId: String!) {
+    sendResetPasswordCode(input: { userId: $userId })
   }
 `;
 
 export const RESET_PASSWORD = gql`
-  mutation ($username: String!, $newPassword: String!, $resetCode: String!) {
+  mutation ($userId: String!, $newPassword: String!, $resetCode: String!) {
     resetPassword(
       input: {
-        username: $username
+        userId: $userId
         newPassword: $newPassword
         resetCode: $resetCode
       }

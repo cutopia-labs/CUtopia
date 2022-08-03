@@ -91,7 +91,7 @@ class UserStore extends StorePrototype {
     // need set date before set token cuz set token first will trigger query user.me
     this.updateUserData(data);
     this.saveToken(token);
-    this.viewStore.setSnackBar(`Logged in as ${username}`);
+    this.viewStore.setSnackBar(`Logged in as ${username || data?.username}`);
   };
 
   @action updateUserData = (data: Partial<User>) => {

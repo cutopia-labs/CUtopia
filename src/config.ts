@@ -30,9 +30,10 @@ const AWS_REGION = 'ap-southeast-1';
  * production: eisbgazs16
  * plus-dev: d8r6qarg78
  * mike-dev: uvp03fp791
+ * dev: 1reoh16ya2
  */
 export const SERVER_ID =
-  process.env.NODE_ENV === 'production' ? 'eisbgazs16' : 'f6le32w9fj';
+  process.env.NODE_ENV === 'production' ? 'eisbgazs16' : '1reoh16ya2';
 
 export const SERVER_ADDR = `https://${SERVER_ID}.execute-api.${AWS_REGION}.amazonaws.com/Prod`;
 

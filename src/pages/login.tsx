@@ -28,7 +28,7 @@ const MODE_ITEMS = {
   [LoginPageMode.CUTOPIA_LOGIN]: {
     title: 'Log In',
     caption: 'Welcome back',
-    username: 'Username',
+    userId: 'Username / CUHK SID',
     password: 'Password',
     button: 'Log In',
   },
@@ -50,13 +50,13 @@ const MODE_ITEMS = {
   [LoginPageMode.RESET_PASSWORD]: {
     title: 'Reset Password',
     caption: 'An verification code will be send to your CUHK email',
-    username: 'Username',
+    userId: 'Username / CUHK SID',
     button: 'Send Reset Code',
   },
   [LoginPageMode.RESET_PASSWORD_VERIFY]: {
     title: 'Set New Password',
     caption:
-      'Please enter new password an the verification code in your CUHK email',
+      'Please enter new password and the verification code in your CUHK email',
     password: 'New Password',
     verificationCode: 'Verification Code',
     button: 'Send',
@@ -86,15 +86,20 @@ type Props = {
 type QueryParams = {
   mode: string;
   username: string;
+  userId: string;
   code: string;
   returnUrl?: string;
 };
+
+export const isSid = (str: string) =>
+  str.startsWith('11') && USER_ID_RULE.test(str);
 
 const LoginPanel: FC<Props> = ({ className }) => {
   const router = useRouter();
   const {
     mode: queryMode,
     username: queryUsername,
+    userId: queryUserId,
     code: queryCode,
     returnUrl,
   } = router.query as QueryParams;
@@ -102,6 +107,7 @@ const LoginPanel: FC<Props> = ({ className }) => {
   const [username, setUsername] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
   const [sid, setSid] = useState('');
+  const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
   const [invisible, setInvisible] = useState(true);
   const [errors, setErrors] = useState({
@@ -109,6 +115,7 @@ const LoginPanel: FC<Props> = ({ className }) => {
     username: null,
     sid: null,
     password: null,
+    userId: null,
   });
 
   const user = useUser();
@@ -116,11 +123,12 @@ const LoginPanel: FC<Props> = ({ className }) => {
 
   useEffect(() => {
     const mode = queryMode ? PATH_MODE_LOOKUP[queryMode] : INITIAL_MODE;
-    if (queryUsername || queryCode) {
+    if (queryUsername || queryCode || queryUserId) {
       setUsername(queryUsername);
+      setUserId(queryUserId);
       setVerificationCode(queryCode);
     }
-    // Handle verify
+    // Handle sign up verify (RESET PWD VERIFY NO NEED AUTO, CUZ NEED SET PWD)
     if (mode === LoginPageMode.VERIFY && queryUsername && queryCode) {
       verifyUser({
         variables: {
@@ -233,7 +241,7 @@ const LoginPanel: FC<Props> = ({ className }) => {
     if (password) {
       const loginPayload = {
         variables: {
-          username,
+          userId: userId || username, // username is for verified user auto login
           password,
         },
       };
@@ -244,10 +252,11 @@ const LoginPanel: FC<Props> = ({ className }) => {
   };
 
   const validate = (): boolean => {
+    /* Valid username && username is NOT SID */
     const usernameSignUpError =
       mode === LoginPageMode.CUTOPIA_SIGNUP &&
-      !USERNAME_RULE.test(username) &&
-      'Invalid username (2 - 10 length without space)';
+      (!USERNAME_RULE.test(username) || USER_ID_RULE.test(username)) &&
+      'Invalid username (2 - 10 length without space, NOT SID)';
     const passwordSignUpError =
       (mode === LoginPageMode.CUTOPIA_SIGNUP ||
         mode === LoginPageMode.RESET_PASSWORD_VERIFY) &&
@@ -268,7 +277,12 @@ const LoginPanel: FC<Props> = ({ className }) => {
       username:
         (MODE_ITEMS[mode].username &&
           !username &&
-          'Please choose your CUtopia username') ||
+          'Please choose your CUtopia username, do use ur SID') ||
+        usernameSignUpError,
+      userId:
+        (MODE_ITEMS[mode].userId &&
+          !userId &&
+          'Please enter your username / CUHK SID') ||
         usernameSignUpError,
       sid:
         MODE_ITEMS[mode].sid &&
@@ -314,7 +328,7 @@ const LoginPanel: FC<Props> = ({ className }) => {
       case LoginPageMode.RESET_PASSWORD: {
         const resetPasswordPayload = {
           variables: {
-            username,
+            userId,
           },
         };
         await sendResetPasswordCode(resetPasswordPayload);
@@ -324,7 +338,7 @@ const LoginPanel: FC<Props> = ({ className }) => {
         {
           const resetPasswordVerifyPayload = {
             variables: {
-              username,
+              userId,
               newPassword: password,
               resetCode: verificationCode,
             },
@@ -385,6 +399,16 @@ const LoginPanel: FC<Props> = ({ className }) => {
               value={username}
               onChangeText={text => setUsername(text)}
               label="Username"
+            />
+          )}
+          {MODE_ITEMS[mode].userId && (
+            <TextField
+              className={styles.loginInputContainer}
+              error={errors.userId}
+              placeholder={MODE_ITEMS[mode].userId}
+              value={userId}
+              onChangeText={text => setUserId(text)}
+              label="Username / SID"
             />
           )}
           {MODE_ITEMS[mode].password && (
