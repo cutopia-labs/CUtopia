@@ -49,7 +49,7 @@ const MODE_ITEMS = {
   },
   [LoginPageMode.RESET_PASSWORD]: {
     title: 'Reset Password',
-    caption: 'An verification code will be send to your CUHK email',
+    caption: 'An verification code will be sent to your CUHK email',
     userId: 'Username / CUHK SID',
     button: 'Send Reset Code',
   },
@@ -157,7 +157,7 @@ const LoginPanel: FC<Props> = ({ className }) => {
             },
           }),
         {
-          message: 'Verification code send to your CUHK email',
+          message: 'Verification code has been sent to your CUHK email',
           view,
         }
       ),
@@ -211,7 +211,7 @@ const LoginPanel: FC<Props> = ({ className }) => {
             },
           }),
         {
-          message: 'Verification code has been send to your CUHK email',
+          message: 'Verification code has been sent to your CUHK email',
           view,
         }
       ),
