@@ -4,13 +4,11 @@ type Query {
 
 type User {
   username: String!
-  email: String!
   verified: Boolean!
   reviewIds: [String]!
   discussions: [String]
   upvotes: Int!
   exp: Int!
-  level: Int!
   fullAccess: Boolean!
 }
 

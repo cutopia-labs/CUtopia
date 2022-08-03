@@ -27,9 +27,6 @@ const userResolver: Resolvers = {
       return await getUser({ username });
     },
   },
-  User: {
-    level: ({ exp }) => Math.floor(exp / 5),
-  },
   Mutation: {
     createUser: async (parent, { input }) => {
       const { username, SID } = input;

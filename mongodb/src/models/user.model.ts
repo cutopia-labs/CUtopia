@@ -52,12 +52,7 @@ const userSchema = new Schema<User>(
     toJSON: { virtuals: true, getters: true },
   }
 );
-userSchema.virtual('level').get(function () {
-  return this.exp % 5;
-});
-userSchema.virtual('email').get(function () {
-  return `${this.SID}@link.cuhk.edu.hk`;
-});
+
 // to be removed when viewsCount is implemented
 userSchema.virtual('fullAccess').get(function () {
   return this.reviewIds.length > 0;
