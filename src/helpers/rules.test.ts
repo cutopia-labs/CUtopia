@@ -29,12 +29,20 @@ describe('Rule: username', () => {
 });
 
 describe('Rule: SID', () => {
-  it('should reject length != 10', () => {
-    const str = '12345678901';
+  it('should reject length > 10', () => {
+    const str = '11345678901';
     expect(USER_ID_RULE.test(str)).toBe(false);
   });
-  it('should NOT reject length of 10', () => {
-    const str = '1234567891';
+  it('should reject length < 10', () => {
+    const str = '11345678';
+    expect(USER_ID_RULE.test(str)).toBe(false);
+  });
+  it('should reject non 11 start', () => {
+    const str = '1780230430';
+    expect(USER_ID_RULE.test(str)).toBe(false);
+  });
+  it('should NOT reject length of 10 and 11 start', () => {
+    const str = '1134567891';
     expect(USER_ID_RULE.test(str)).toBe(true);
   });
 });
