@@ -17,11 +17,11 @@ exports.createUserTemplate = ({ SID, username, code }) => ({
 manually enter the verification code: <b>${code}</b><br /><br />Regards,<br />CUtopia Team`,
 });
 
-exports.resetPwdTemplate = ({ SID, username, code }) => ({
+exports.resetPwdTemplate = ({ SID, userId, code }) => ({
   from: 'CUtopia <cutopia.app@gmail.com>',
   to: `${SID}@link.cuhk.edu.hk`,
   subject: 'CUtopia reset password',
   html: `To reset your password, please click 
-<a href='https://cutopia.app/login?mode=reset-pwd&username=${username}&code=${code}'>here</a> OR 
+<a href='https://cutopia.app/login?mode=reset-pwd&userId=${userId}&code=${code}'>here</a> OR 
 manually enter the code: <b>${code}</b><br /><br />Regards,<br />CUtopia Team`,
 });

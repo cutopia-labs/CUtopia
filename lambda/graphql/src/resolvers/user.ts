@@ -44,7 +44,7 @@ const userResolver: Resolvers = {
     verifyUser: async (parent, { input }) => verifyUser(input),
     login: async (parent, { input }) => {
       const user = await login(input);
-      const token = sign({ username: input.username, password: user.password });
+      const token = sign({ username: user.username, password: user.password });
       return {
         token,
         me: user,
@@ -55,7 +55,7 @@ const userResolver: Resolvers = {
       await sendEmail({
         action: 'resetPwd',
         code: resetPwdCode,
-        username: input.username,
+        userId: input.userId,
         SID,
       });
     },

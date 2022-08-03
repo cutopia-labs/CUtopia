@@ -14,6 +14,9 @@ const userCache = new NodeCache({
 const isVerfiCodeExpired = createdAt =>
   createdAt + VERIFY_EXPIRATION_TIME - Date.now() < 0;
 
+const parseUserIdField = userId =>
+  /^11[0-9]{8}$/.test(userId) ? 'SID' : 'username';
+
 const replaceUnverifiedUser = async (filter, newUser, err) => {
   const user = await User.findOne(filter, 'verified createdAt').exec();
   if (user.verified || !isVerfiCodeExpired(user.createdAt)) {
@@ -25,8 +28,11 @@ const replaceUnverifiedUser = async (filter, newUser, err) => {
 
 export const createUser = async input => {
   const { username, SID, password } = input;
-  const now = +new Date();
+  if (parseUserIdField(username) === 'SID') {
+    throw Error(ErrorCode.CREATE_USER_INVALID_USERNAME.toString());
+  }
 
+  const now = +new Date();
   const hash = await bcrypt.hash(password, SALT_ROUNDS);
   const veriCode = nanoid(5);
 
@@ -117,13 +123,9 @@ export const verifyUser = async input => {
 };
 
 export const login = async input => {
-  const { username, password } = input;
-  const user = await getUser(
-    { username },
-    async cachedUser =>
-      !cachedUser.verified ||
-      !(await bcrypt.compare(password, cachedUser.password))
-  );
+  const { userId, password } = input;
+  const userIdField = parseUserIdField(userId);
+  const user = await User.findOne({ [userIdField]: userId });
 
   if (!user) {
     throw Error(ErrorCode.LOGIN_USER_DNE.toString());
@@ -136,24 +138,28 @@ export const login = async input => {
   if (!(await bcrypt.compare(password, user.password))) {
     throw Error(ErrorCode.LOGIN_FAILED.toString());
   }
+
+  userCache.set(user.username, JSON.stringify(user));
   return user;
 };
 
 export const getResetPasswordCodeAndEmail = async input => {
-  const { username } = input;
-  const user = await getUser({ username }, cachedUser => !cachedUser.verified);
+  const { userId } = input;
+  const userIdField = parseUserIdField(userId);
+  const user = await User.findOne({ [userIdField]: userId });
 
   if (!user) {
     throw Error(ErrorCode.GET_PASSWORD_USER_DNE.toString());
   }
+
   if (!user.verified) {
     throw Error(ErrorCode.GET_PASSWORD_NOT_VERIFIED.toString());
   }
 
   const resetPwdCode = nanoid(5);
   user.resetPwdCode = resetPwdCode;
-  await User.updateOne({ username }, user).exec();
-  userCache.set(username, JSON.stringify(user));
+  await user.save();
+  userCache.set(user.username, JSON.stringify(user));
   return {
     SID: user.SID,
     resetPwdCode,
@@ -161,13 +167,14 @@ export const getResetPasswordCodeAndEmail = async input => {
 };
 
 export const resetPassword = async input => {
-  const { username, newPassword, resetCode } = input;
-
-  const user = await getUser({ username }, cachedUser => !cachedUser.verified);
+  const { userId, newPassword, resetCode } = input;
+  const userIdField = parseUserIdField(userId);
+  const user = await User.findOne({ [userIdField]: userId });
 
   if (!user) {
     throw Error(ErrorCode.RESET_PASSWORD_USER_DNE.toString());
   }
+
   if (!user.verified) {
     throw Error(ErrorCode.RESET_PASSWORD_NOT_VERIFIED.toString());
   }
@@ -179,8 +186,8 @@ export const resetPassword = async input => {
 
   user.password = await bcrypt.hash(newPassword, SALT_ROUNDS);
   user.resetPwdCode = null;
-  await User.updateOne({ username }, user).exec();
-  userCache.set(username, JSON.stringify(user));
+  await user.save();
+  userCache.set(user.username, JSON.stringify(user));
 };
 
 export const incrementUpvotesCount = async input => {

@@ -34,7 +34,7 @@ input VerifyUserInput {
 }
 
 input LoginInput {
-  username: String!
+  userId: String!
   password: String!
 }
 
@@ -44,11 +44,11 @@ type LoginResult {
 }
 
 input SendResetPasswordCodeInput {
-  username: String!
+  userId: String!
 }
 
 input ResetPasswordInput {
-  username: String!
+  userId: String!
   newPassword: String!
   resetCode: String!
 }
