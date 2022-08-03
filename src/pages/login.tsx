@@ -53,6 +53,12 @@ const MODE_ITEMS = {
     username: 'Username',
     button: 'Send Reset Code',
   },
+  [LoginPageMode.RESET_PASSWORD_SID]: {
+    title: 'Reset Password',
+    caption: 'An verification code will be send to your CUHK email',
+    userId: 'Your CUHK SID',
+    button: 'Send Reset Code',
+  },
   [LoginPageMode.RESET_PASSWORD_VERIFY]: {
     title: 'Set New Password',
     caption:
@@ -68,6 +74,7 @@ const PATH_MODE_LOOKUP = {
   'login': LoginPageMode.CUTOPIA_LOGIN,
   'verify': LoginPageMode.VERIFY,
   'forgot': LoginPageMode.RESET_PASSWORD,
+  'forgot-sid': LoginPageMode.RESET_PASSWORD_SID,
   'reset-pwd': LoginPageMode.RESET_PASSWORD_VERIFY,
 };
 
@@ -76,6 +83,7 @@ const MODE_PATH_LOOKUP = reverseMapping(PATH_MODE_LOOKUP);
 const PREVIOUS_MODE_LOOKUP = {
   [LoginPageMode.VERIFY]: LoginPageMode.CUTOPIA_LOGIN,
   [LoginPageMode.RESET_PASSWORD]: LoginPageMode.CUTOPIA_LOGIN,
+  [LoginPageMode.RESET_PASSWORD_SID]: LoginPageMode.RESET_PASSWORD,
   [LoginPageMode.RESET_PASSWORD_VERIFY]: LoginPageMode.RESET_PASSWORD,
 };
 
@@ -422,6 +430,23 @@ const LoginPanel: FC<Props> = ({ className }) => {
                 }
               >
                 Forgot Password?
+              </span>
+            </div>
+          )}
+          {mode === LoginPageMode.RESET_PASSWORD && (
+            <div className={clsx(styles.forgotPwdRow, 'center-row')}>
+              <span
+                className={clsx(styles.label, styles.forgotPwdLabel)}
+                onClick={() =>
+                  router.push({
+                    pathname: '/login',
+                    query: {
+                      mode: MODE_PATH_LOOKUP[LoginPageMode.RESET_PASSWORD_SID],
+                    },
+                  })
+                }
+              >
+                Forgot Username?
               </span>
             </div>
           )}
