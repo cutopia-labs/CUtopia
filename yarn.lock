@@ -2580,7 +2580,7 @@ csstype@^3.0.2, csstype@^3.0.6:
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.0.8.tgz#d2266a792729fb227cd216fb572f43728e1ad340"
   integrity sha512-jXKhWqXPmlUeoQnF/EhTtTl4C9SnrxSH/jZUih3jmO6lBKr99rP3/+FmrMj4EFpOXzMtXHAZkd3x0E6h6Fgflw==
 
-cutopia-types@^1.0.1:
+cutopia-types@^1.0.28:
   version "1.0.28"
   resolved "https://registry.yarnpkg.com/cutopia-types/-/cutopia-types-1.0.28.tgz#d9d8a0c2d624d69b0547e8de38cdb7642eefdde1"
   integrity sha512-jGUX+JaCOu9DTtTRIlSe0M+Uvuf9vpmDqDO74jDzGLyYzZqvk65HRlHj95kn4NWG7YaCQdFsNxo8WNK20kh/yw==
