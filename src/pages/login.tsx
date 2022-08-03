@@ -20,7 +20,7 @@ import { LoginPageMode } from '../types';
 import handleCompleted from '../helpers/handleCompleted';
 import { reverseMapping } from '../helpers';
 import { LOGIN_REDIRECT_PAGE } from '../config';
-import { USERNAME_RULE, USER_ID_RULE, PASSWORD_RULE } from '../helpers/rules';
+import { USERNAME_RULE, SID_RULE, PASSWORD_RULE } from '../helpers/rules';
 import Footer from '../components/molecules/Footer';
 
 const INITIAL_MODE = LoginPageMode.CUTOPIA_LOGIN;
@@ -92,7 +92,7 @@ type QueryParams = {
 };
 
 export const isSid = (str: string) =>
-  str.startsWith('11') && USER_ID_RULE.test(str);
+  str.startsWith('11') && SID_RULE.test(str);
 
 const LoginPanel: FC<Props> = ({ className }) => {
   const router = useRouter();
@@ -255,7 +255,7 @@ const LoginPanel: FC<Props> = ({ className }) => {
     /* Valid username && username is NOT SID */
     const usernameSignUpError =
       mode === LoginPageMode.CUTOPIA_SIGNUP &&
-      (!USERNAME_RULE.test(username) || USER_ID_RULE.test(username)) &&
+      (!USERNAME_RULE.test(username) || SID_RULE.test(username)) &&
       'Invalid username (2 - 10 length without space, NOT SID)';
     const passwordSignUpError =
       (mode === LoginPageMode.CUTOPIA_SIGNUP ||
@@ -286,7 +286,7 @@ const LoginPanel: FC<Props> = ({ className }) => {
         usernameSignUpError,
       sid:
         MODE_ITEMS[mode].sid &&
-        (!sid || !USER_ID_RULE.test(sid)) &&
+        (!sid || !SID_RULE.test(sid)) &&
         'Please enter a valid CUHK SID (Not email)',
       password: passwordMissingError || passwordSignUpError,
     };

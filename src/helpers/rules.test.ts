@@ -1,4 +1,4 @@
-import { PASSWORD_RULE, USER_ID_RULE, USERNAME_RULE } from './rules';
+import { PASSWORD_RULE, SID_RULE, USERNAME_RULE } from './rules';
 
 describe('Rule: password', () => {
   it('should reject short length', () => {
@@ -31,18 +31,18 @@ describe('Rule: username', () => {
 describe('Rule: SID', () => {
   it('should reject length > 10', () => {
     const str = '11345678901';
-    expect(USER_ID_RULE.test(str)).toBe(false);
+    expect(SID_RULE.test(str)).toBe(false);
   });
   it('should reject length < 10', () => {
     const str = '11345678';
-    expect(USER_ID_RULE.test(str)).toBe(false);
+    expect(SID_RULE.test(str)).toBe(false);
   });
   it('should reject non 11 start', () => {
     const str = '1780230430';
-    expect(USER_ID_RULE.test(str)).toBe(false);
+    expect(SID_RULE.test(str)).toBe(false);
   });
   it('should NOT reject length of 10 and 11 start', () => {
     const str = '1134567891';
-    expect(USER_ID_RULE.test(str)).toBe(true);
+    expect(SID_RULE.test(str)).toBe(true);
   });
 });
