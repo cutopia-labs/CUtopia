@@ -35,7 +35,7 @@ const MODE_ITEMS = {
   [LoginPageMode.CUTOPIA_SIGNUP]: {
     title: 'Sign Up',
     caption: 'A few steps away from unlimited course reviews',
-    userId: 'Your CUHK SID (for verification)',
+    sid: 'Your CUHK SID (for verification)',
     username: 'Username (2-10 chars, case sensitive)',
     password: 'Password (8-15 chars)',
     button: 'Sign Up',
@@ -53,12 +53,6 @@ const MODE_ITEMS = {
     username: 'Username',
     button: 'Send Reset Code',
   },
-  [LoginPageMode.RESET_PASSWORD_SID]: {
-    title: 'Reset Password',
-    caption: 'An verification code will be send to your CUHK email',
-    userId: 'Your CUHK SID',
-    button: 'Send Reset Code',
-  },
   [LoginPageMode.RESET_PASSWORD_VERIFY]: {
     title: 'Set New Password',
     caption:
@@ -74,7 +68,6 @@ const PATH_MODE_LOOKUP = {
   'login': LoginPageMode.CUTOPIA_LOGIN,
   'verify': LoginPageMode.VERIFY,
   'forgot': LoginPageMode.RESET_PASSWORD,
-  'forgot-sid': LoginPageMode.RESET_PASSWORD_SID,
   'reset-pwd': LoginPageMode.RESET_PASSWORD_VERIFY,
 };
 
@@ -83,7 +76,6 @@ const MODE_PATH_LOOKUP = reverseMapping(PATH_MODE_LOOKUP);
 const PREVIOUS_MODE_LOOKUP = {
   [LoginPageMode.VERIFY]: LoginPageMode.CUTOPIA_LOGIN,
   [LoginPageMode.RESET_PASSWORD]: LoginPageMode.CUTOPIA_LOGIN,
-  [LoginPageMode.RESET_PASSWORD_SID]: LoginPageMode.RESET_PASSWORD,
   [LoginPageMode.RESET_PASSWORD_VERIFY]: LoginPageMode.RESET_PASSWORD,
 };
 
@@ -109,13 +101,13 @@ const LoginPanel: FC<Props> = ({ className }) => {
   const [mode, setMode] = useState(INITIAL_MODE);
   const [username, setUsername] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
-  const [userId, setUserId] = useState('');
+  const [sid, setSid] = useState('');
   const [password, setPassword] = useState('');
   const [invisible, setInvisible] = useState(true);
   const [errors, setErrors] = useState({
     verification: null,
     username: null,
-    userId: null,
+    sid: null,
     password: null,
   });
 
@@ -278,9 +270,9 @@ const LoginPanel: FC<Props> = ({ className }) => {
           !username &&
           'Please choose your CUtopia username') ||
         usernameSignUpError,
-      userId:
-        MODE_ITEMS[mode].userId &&
-        (!userId || !USER_ID_RULE.test(userId)) &&
+      sid:
+        MODE_ITEMS[mode].sid &&
+        (!sid || !USER_ID_RULE.test(sid)) &&
         'Please enter a valid CUHK SID (Not email)',
       password: passwordMissingError || passwordSignUpError,
     };
@@ -302,7 +294,7 @@ const LoginPanel: FC<Props> = ({ className }) => {
         const createUserPayload = {
           variables: {
             username,
-            sid: userId,
+            sid: sid,
             password,
           },
         };
@@ -374,14 +366,14 @@ const LoginPanel: FC<Props> = ({ className }) => {
           </div>
         </div>
         <form className="grid-auto-row" onSubmit={onSubmit}>
-          {MODE_ITEMS[mode].userId && (
+          {MODE_ITEMS[mode].sid && (
             <TextField
               className={styles.loginInputContainer}
-              error={errors.userId}
-              placeholder={MODE_ITEMS[mode].userId}
+              error={errors.sid}
+              placeholder={MODE_ITEMS[mode].sid}
               type="number"
-              value={userId}
-              onChangeText={text => setUserId(text)}
+              value={sid}
+              onChangeText={text => setSid(text)}
               label="CUHK SID"
             />
           )}
@@ -430,23 +422,6 @@ const LoginPanel: FC<Props> = ({ className }) => {
                 }
               >
                 Forgot Password?
-              </span>
-            </div>
-          )}
-          {mode === LoginPageMode.RESET_PASSWORD && (
-            <div className={clsx(styles.forgotPwdRow, 'center-row')}>
-              <span
-                className={clsx(styles.label, styles.forgotPwdLabel)}
-                onClick={() =>
-                  router.push({
-                    pathname: '/login',
-                    query: {
-                      mode: MODE_PATH_LOOKUP[LoginPageMode.RESET_PASSWORD_SID],
-                    },
-                  })
-                }
-              >
-                Forgot Username?
               </span>
             </div>
           )}
