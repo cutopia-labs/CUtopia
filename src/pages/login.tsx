@@ -49,7 +49,7 @@ const MODE_ITEMS = {
   },
   [LoginPageMode.RESET_PASSWORD]: {
     title: 'Reset Password',
-    caption: 'An verification code has been send to your CUHK email',
+    caption: 'An verification code will be send to your CUHK email',
     username: 'Username',
     button: 'Send Reset Code',
   },
