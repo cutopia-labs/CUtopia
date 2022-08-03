@@ -14,16 +14,22 @@ Resources:
           Properties:
             Method: get
             Path: /graphql
+            Auth:
+              Authorizer: null
           Type: Api
         HttpOptions:
           Properties:
             Method: options
             Path: /graphql
+            Auth:
+              Authorizer: null
           Type: Api
         HttpPost:
           Properties:
             Method: post
             Path: /graphql
+            Auth:
+              Authorizer: null
           Type: Api
       Environment:
         Variables:

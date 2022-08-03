@@ -51,13 +51,13 @@ aws configure
 ```
 
 ### Deploy to AWS
-All serivces (e.g. GraphQL server) will be deployed to [Lambda](https://aws.amazon.com/lambda/) using the script below. The status of deployed stacks can be found in [CloudFormation](https://aws.amazon.com/cloudformation/).
+All serverless serivces will be deployed to [Lambda](https://aws.amazon.com/lambda/) using the script below. The status of deployed stacks can be found in [CloudFormation](https://aws.amazon.com/cloudformation/).
 
 ```sh
 sh tools/deploy.sh cutopia-dev
 ```
 
-> Note: when running the script for the first time, a few config options will be asked in console. Follow the default values for all options, except setting the "GraphQL may not have authorization defined, Is this okay? [y/N]" to "y".
+> Note: when running the script for the first time, a few config options will be asked in console. Follow the default values for all options.
 
 Once the server is successfully deployed, find the API ID of the server in [API Gateway](https://aws.amazon.com/api-gateway/). Then, the GraphQL playground is available at https://{API ID}.execute-api.ap-southeast-1.amazonaws.com/Stage/graphql.
 
