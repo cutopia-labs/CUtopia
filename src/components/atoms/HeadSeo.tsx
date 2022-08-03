@@ -11,7 +11,7 @@ type SeoDoc = {
 
 const DEFAULT_HEAD = {
   title: 'CUtopia',
-  description: META_DESCRIPTION_CHAR_LIMIT,
+  description: DEFAULT_DESCRIPTION,
 };
 
 const getReviewTitle = (prop: CourseInfo): SeoDoc => {
