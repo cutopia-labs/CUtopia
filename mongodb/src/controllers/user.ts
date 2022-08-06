@@ -166,17 +166,18 @@ export const resetPassword = async input => {
   await user.save();
 };
 
-export const incrementUpvotesCount = async input => {
-  const { username } = input;
-  const user = await User.findOneAndUpdate(
+export const incrementVotesCount = async input => {
+  const { username, isUpvote } = input;
+  const voteCountField = isUpvote ? 'upvotes' : 'downvotes';
+
+  await User.updateOne(
     { username },
     {
       $inc: {
-        upvotes: 1,
-        exp: 3,
+        [voteCountField]: 1,
+        exp: isUpvote ? 3 : 0,
       },
-    },
-    { new: true }
+    }
   ).exec();
 };
 

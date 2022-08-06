@@ -5,6 +5,7 @@ import Review from '../models/review.model';
 import User from '../models/user.model';
 import withCache from '../utils/withCache';
 import { updateCourseData } from './course';
+import { incrementVotesCount } from './user';
 import { REVIEWS_PER_PAGE } from '../constant/configs';
 
 export const generateReviewId = (
@@ -80,11 +81,7 @@ export const voteReview = async input => {
   review[voteListField].push(username);
   review[voteCountField] += 1;
   await review.save();
-
-  await User.updateOne(
-    { username: review.username },
-    { $inc: { [voteCountField]: 1 } }
-  ).exec();
+  await incrementVotesCount({ username: review.username, isUpvote });
 };
 
 export const getReviews = async input => {
