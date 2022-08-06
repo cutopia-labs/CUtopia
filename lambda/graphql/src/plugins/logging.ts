@@ -1,11 +1,35 @@
 // Reference: https://www.apollographql.com/docs/apollo-server/integrations/plugins/#end-hooks
 
-const logError = (requestContext, type, err) => {
-  const query = requestContext.request.query;
-  const variables = JSON.stringify(requestContext.request.variables, null, 2);
-  const { user, ip } = requestContext.context;
+const excludedMutations = ['switchTimetable', 'uploadTimetable'];
+const excludedVariables = ['password', 'newPassword'];
 
-  console.error(`${type}/${user ? user.username : ip}`, err, query, variables);
+const getCommonLog = requestContext => {
+  const query = requestContext.request.query;
+  const variables = JSON.stringify(
+    Object.fromEntries(
+      Object.entries(requestContext.request.variables).filter(
+        ([key, value]) => !excludedVariables.includes(key)
+      )
+    ),
+    null,
+    2
+  );
+  const { user, ip } = requestContext.context;
+  return `${user ? user.username : ip}\n${query}\n${variables}`;
+};
+
+const logMutation = requestContext => {
+  if (
+    !excludedMutations.includes(
+      requestContext.operation.selectionSet.selections[0].name.value
+    )
+  ) {
+    console.log(getCommonLog(requestContext));
+  }
+};
+
+const logError = (requestContext, type, err) => {
+  console.error(`${getCommonLog(requestContext)}\n${type}\n${err}`);
 };
 
 const loggingPlugin = {
@@ -26,6 +50,10 @@ const loggingPlugin = {
         };
       },
       async executionDidStart() {
+        if (requestContext.operation.operation === 'mutation') {
+          logMutation(requestContext);
+        }
+
         return {
           async executionDidEnd(err) {
             if (err) {

@@ -9,6 +9,7 @@ import resolvers from './resolvers';
 import scalarResolvers from './scalars';
 import createContext from './context';
 import { directivesTypeDefs, addDirectivesToSchema } from './directives';
+import loggingPlugin from './plugins/logging';
 
 dotenv.config();
 
@@ -38,6 +39,7 @@ const server = new ApolloServer({
       },
     }),
   introspection: true,
+  plugins: [loggingPlugin],
 });
 
 const startApolloServer = async () => {
