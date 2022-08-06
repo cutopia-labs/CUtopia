@@ -15,7 +15,7 @@ dotenv.config();
 const isProduction = process.env.NODE_ENV === 'production';
 
 // no need to await, mongoose buffers function calls internally
-connect(isProduction ? process.env.ATLAS_URI : process.env.ATLAS_DEV_URI);
+connect(process.env.ATLAS_URI);
 
 let schema = makeExecutableSchema({
   typeDefs: [...directivesTypeDefs, ...typeDefs],

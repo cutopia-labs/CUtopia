@@ -45,7 +45,7 @@ const server = new ApolloServer({
 const startApolloServer = async () => {
   await server.start();
 
-  await connect(process.env.ATLAS_DEV_URI);
+  await connect(process.env.ATLAS_URI);
   const app = express();
   server.applyMiddleware({ app });
   app.listen({ port: 4000 });

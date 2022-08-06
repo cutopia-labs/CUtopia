@@ -1,3 +1,5 @@
+sh tools/copy-env.sh
+
 yarn --cwd mongodb/ run predeploy
 yarn --cwd lambda/graphql/ run predeploy
 if [ -f "samconfig.toml" ]; then

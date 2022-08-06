@@ -12,7 +12,7 @@ sh tools/install-package.sh
 ```
 
 ### Create environment files
-After running the script below, replace all `ATLAS_URI` in the .env files with your MongoDB connection URI.
+After running the script below, replace `ATLAS_PROD_URI` and `ATLAS_DEV_URI` in the .env file with your MongoDB connection URI.
 
 ```sh
 sh tools/create-env.sh
@@ -54,7 +54,11 @@ aws configure
 All serverless serivces will be deployed to [Lambda](https://aws.amazon.com/lambda/) using the script below. The status of deployed stacks can be found in [CloudFormation](https://aws.amazon.com/cloudformation/).
 
 ```sh
+# Deploy development stack
 sh tools/deploy.sh cutopia-dev
+
+# Deploy production stack
+export NODE_ENV=production; sh tools/deploy.sh cutopia-production
 ```
 
 > Note: when running the script for the first time, a few config options will be asked in console. Follow the default values for all options.

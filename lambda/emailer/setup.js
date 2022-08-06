@@ -1,3 +1,4 @@
+require('dotenv').config({ path: '.emailer.env' });
 const { google } = require('googleapis');
 const nodemailer = require('nodemailer');
 

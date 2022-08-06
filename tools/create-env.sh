@@ -1,14 +1,8 @@
-# MongoDB env
+# Common env
 echo "\
-ATLAS_DEV_URI=Your MongoDB connection key for running Jest test scripts\
-" > mongodb/.env
-
-# GraphQL env
-echo "\
-NODE_ENV=production
-ATLAS_URI=Your MongoDB connection key
-ATLAS_DEV_URI=Your MongoDB connection key for dev\
-" > lambda/graphql/.env
+ATLAS_PROD_URI=\"Your MongoDB connection key for production\"
+ATLAS_DEV_URI=\"Your MongoDB connection key for development\"\
+" > .env
 
 # Emailer env
 # This env file can be ignored if you are not developing emailer
@@ -30,20 +24,8 @@ GMAIL_ADDRESS_2=Your email address
 GMAIL_CLIENT_ID_2=Your client id
 GMAIL_CLIENT_SECRET_2=Your client secret
 GMAIL_REFRESH_TOKEN_2=Your refresh token
-GMAIL_ACCESS_TOKEN_2=Your access token
-
-ATLAS_URI=Your MongoDB connection key\
-" > lambda/emailer/.env
-
-# Env of cron scheduler of timetable removal 
-echo "\
-ATLAS_URI=Your MongoDB connection key\
-" > lambda/cron-remove-timetable/.env
-
-# Env of cron scheduler of ranking update
-echo "\
-ATLAS_URI=Your MongoDB connection key\
-" > lambda/cron-update-ranking/.env
+GMAIL_ACCESS_TOKEN_2=Your access token\
+" > lambda/emailer/.emailer.env
 
 # Env of Lambda load test
 echo "\
