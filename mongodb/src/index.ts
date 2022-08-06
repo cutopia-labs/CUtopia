@@ -1,38 +1,6 @@
 import mongoose from 'mongoose';
 
-export {
-  getUser,
-  updateUser,
-  getCourseData,
-  updateCourseData,
-  createReview,
-  getReviews,
-  getReview,
-  editReview,
-  voteReview,
-  getTimetablesOverview,
-  getTimetable,
-  uploadTimetable,
-  removeTimetable,
-  switchTimetable,
-  cloneTimetable,
-  cleanExpiredTimetable,
-  createUser,
-  verifyUser,
-  login,
-  getResetPasswordCodeAndEmail,
-  resetPassword,
-  incrementUpvotesCount,
-  updateTimetableId,
-  report,
-  rankCourses,
-  getRanking,
-  sendDiscussionMessage,
-  getDiscussion,
-  addToResendList,
-  getResendList,
-  removeFromResendList,
-} from './controllers';
+export * from './controllers';
 
 require('dotenv').config();
 
