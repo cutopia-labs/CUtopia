@@ -7,7 +7,6 @@ import {
 } from '@material-ui/icons';
 import { observer } from 'mobx-react-lite';
 
-import { useTitle } from 'react-use';
 import clsx from 'clsx';
 import styles from '../styles/pages/HomePage.module.scss';
 import UserCard from '../components/home/UserCard';
@@ -67,7 +66,6 @@ const SELECTIONS = [
 ];
 
 const HomePage: FC = () => {
-  useTitle('CUtopia');
   const user = useUser();
   const planner = usePlanner();
   const [tab, setTab] = useState('Courses');

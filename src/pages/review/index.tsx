@@ -6,8 +6,6 @@ import {
   WhatshotOutlined,
 } from '@material-ui/icons';
 import { useQuery } from '@apollo/client';
-
-import { useTitle } from 'react-use';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
@@ -230,7 +228,6 @@ const RankingCard = ({
 };
 
 const HomePanel: FC = () => {
-  useTitle('Course Reviews - CUtopia');
   const [tab, setTab] = useState<ReviewHomeTab>('Recents');
   const [sortKey, setSortKey] = useState('overall');
   const [feedCourses, setFeedCourse] = useState([]);
