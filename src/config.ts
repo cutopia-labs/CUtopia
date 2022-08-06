@@ -84,5 +84,8 @@ export const TIMETABLE_SYNC_INTERVAL = 4000;
 
 export const META_DESCRIPTION_CHAR_LIMIT = 150;
 
-export const DEFAULT_DESCRIPTION =
-  'CUtopia is a course review and planning platform for CUHK students.';
+export const DEFAULT_HEAD = {
+  title: 'CUtopia - CUHK Course Review and Planning Platform',
+  description:
+    'CUtopia is a course review and timetable planning website for CUHK students. It provides a platform for students to share their opinions and pick the course that best fits them.',
+};

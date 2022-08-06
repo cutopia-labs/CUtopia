@@ -47,7 +47,7 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
 
   return (
     <>
-      <HeadSeo pageProps={pageProps} />
+      <HeadSeo pageProps={pageProps} pagePath={router.asPath} />
       <Sentry.ErrorBoundary fallback={<ErrorCard mode={ErrorCardMode.ERROR} />}>
         <StoreProvider>
           <ApolloProvider client={client}>
