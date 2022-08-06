@@ -24,7 +24,7 @@ const userResolver: Resolvers = {
   Query: {
     me: async (parent, args, { user }) => {
       const { username } = user;
-      return await getUser({ username });
+      return await getUser(username);
     },
   },
   Mutation: {

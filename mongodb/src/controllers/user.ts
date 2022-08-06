@@ -1,15 +1,9 @@
 import bcrypt from 'bcryptjs';
 import { nanoid } from 'nanoid';
-import NodeCache from 'node-cache';
 import { ErrorCode } from 'cutopia-types/lib/codes';
 
 import User from '../models/user.model';
 import { SALT_ROUNDS, VERIFY_EXPIRATION_TIME } from '../constant/configs';
-import withCache from '../utils/withCache';
-
-const userCache = new NodeCache({
-  stdTTL: 1800,
-});
 
 const isVerfiCodeExpired = createdAt =>
   createdAt + VERIFY_EXPIRATION_TIME - Date.now() < 0;
@@ -23,7 +17,6 @@ const replaceUnverifiedUser = async (filter, newUser, err) => {
     throw Error(err);
   }
   await User.replaceOne(filter, newUser).exec();
-  userCache.set(newUser.username, JSON.stringify(user));
 };
 
 export const createUser = async input => {
@@ -47,7 +40,6 @@ export const createUser = async input => {
 
   try {
     await user.save();
-    userCache.set(username, JSON.stringify(user));
   } catch (e) {
     if (e.code === 11000) {
       switch (Object.keys(e.keyValue)[0]) {
@@ -73,34 +65,25 @@ export const createUser = async input => {
 
 export const deleteUser = async input => {
   const { username } = input;
-  userCache.del(username);
   await User.deleteOne({ username }).exec();
 };
 
-export const getUser = async (filter, fetchIf?) =>
-  withCache(
-    userCache,
-    filter.username,
-    async () => User.findOne(filter).exec(),
-    // fetchIf here is to deal with data synchronization accross lambda instances
-    // e.g. suppose lambda A and B have cache of unverified user U, U verified its account in A
-    // and reset password in B, but U is unverified in B's cache, resulting in error
-    // database access is reduced if U's requests are handled by A
-    fetchIf
-  );
+export const getUser = async userId => {
+  const userIdField = parseUserIdField(userId);
+  return await User.findOne({ [userIdField]: userId });
+};
 
 export const updateUser = async input => {
   const { username, ...update } = input;
   const user = await User.findOneAndUpdate({ username }, update, {
     new: true,
   }).exec();
-  userCache.set(username, JSON.stringify(user));
   return user;
 };
 
 export const verifyUser = async input => {
   const { username, code } = input;
-  const user = await getUser({ username }, cachedUser => !cachedUser.verified);
+  const user = await getUser(username);
 
   if (!user) {
     throw Error(ErrorCode.VERIFICATION_USER_DNE.toString());
@@ -119,13 +102,11 @@ export const verifyUser = async input => {
   user.veriCode = null;
   user.verified = true;
   await User.updateOne({ username }, user).exec();
-  userCache.set(username, JSON.stringify(user));
 };
 
 export const login = async input => {
   const { userId, password } = input;
-  const userIdField = parseUserIdField(userId);
-  const user = await User.findOne({ [userIdField]: userId });
+  const user = await getUser(userId);
 
   if (!user) {
     throw Error(ErrorCode.LOGIN_USER_DNE.toString());
@@ -139,14 +120,12 @@ export const login = async input => {
     throw Error(ErrorCode.LOGIN_FAILED.toString());
   }
 
-  userCache.set(user.username, JSON.stringify(user));
   return user;
 };
 
 export const getResetPasswordCodeAndEmail = async input => {
   const { userId } = input;
-  const userIdField = parseUserIdField(userId);
-  const user = await User.findOne({ [userIdField]: userId });
+  const user = await getUser(userId);
 
   if (!user) {
     throw Error(ErrorCode.GET_PASSWORD_USER_DNE.toString());
@@ -159,7 +138,6 @@ export const getResetPasswordCodeAndEmail = async input => {
   const resetPwdCode = nanoid(5);
   user.resetPwdCode = resetPwdCode;
   await user.save();
-  userCache.set(user.username, JSON.stringify(user));
   return {
     SID: user.SID,
     resetPwdCode,
@@ -168,8 +146,7 @@ export const getResetPasswordCodeAndEmail = async input => {
 
 export const resetPassword = async input => {
   const { userId, newPassword, resetCode } = input;
-  const userIdField = parseUserIdField(userId);
-  const user = await User.findOne({ [userIdField]: userId });
+  const user = await getUser(userId);
 
   if (!user) {
     throw Error(ErrorCode.RESET_PASSWORD_USER_DNE.toString());
@@ -187,7 +164,6 @@ export const resetPassword = async input => {
   user.password = await bcrypt.hash(newPassword, SALT_ROUNDS);
   user.resetPwdCode = null;
   await user.save();
-  userCache.set(user.username, JSON.stringify(user));
 };
 
 export const incrementUpvotesCount = async input => {
@@ -202,7 +178,6 @@ export const incrementUpvotesCount = async input => {
     },
     { new: true }
   ).exec();
-  userCache.set(username, JSON.stringify(user));
 };
 
 export const updateTimetableId = async input => {
@@ -210,17 +185,15 @@ export const updateTimetableId = async input => {
   const [op, timetableId] =
     operation === 'add' ? ['$addToSet', _id] : ['$pull', switchTo];
 
-  const user = await User.findOneAndUpdate(
+  await User.updateOne(
     { username },
     {
       [op]: {
         timetables: _id,
       },
       ...(timetableId !== undefined && { timetableId }),
-    },
-    { new: true }
+    }
   ).exec();
-  userCache.set(username, JSON.stringify(user));
 };
 
 export const getTimetablesOverview = async input => {

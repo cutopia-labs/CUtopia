@@ -3,14 +3,13 @@ import NodeCache from 'node-cache';
 const withCache = async (
   cache: NodeCache,
   cacheKey: string,
-  callback: () => any,
-  fetchIf?: (cached: any) => any // fetch data if it returns truthy value
+  callback: () => any
 ) => {
   if (!cacheKey) {
     return;
   }
   const cachedData = JSON.parse(cache.get(cacheKey) || 'null');
-  if (cachedData && (!fetchIf || !(await fetchIf(cachedData)))) {
+  if (cachedData) {
     // console.log(`Cached: ${JSON.stringify(cachedData)}`);
     return cachedData;
   }
