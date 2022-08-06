@@ -1,4 +1,4 @@
-import { getCourseData, getRanking } from 'mongodb';
+import { getRanking } from 'mongodb';
 import NodeCache from 'node-cache';
 
 import withCache from '../utils/withCache';
@@ -11,27 +11,17 @@ const rankingCache = new NodeCache({
 });
 
 export const getRankingWithCache = async (field: string) =>
-  withCache(rankingCache, `${field}-ranking`, async () => {
+  withCache(rankingCache, field, async () => {
     const result = await getRanking(field);
-    const resData = result?.ranks?.map(async rank => {
+    const resData = result.ranks?.map(rank => {
       const courseId = rank._id;
-      const {
-        lecturers: reviewLecturers,
-        terms: reviewTerms,
-        rating,
-      } = (await getCourseData({ courseId })) || {};
       return {
         courseId,
-        course: {
-          ...courses[courseId],
-          reviewLecturers,
-          reviewTerms,
-          rating,
-        },
+        course: courses[courseId],
         [field]: rank.val,
       };
     });
-    return await Promise.all(resData);
+    return resData;
   });
 
 const rankingResolver: Resolvers = {
