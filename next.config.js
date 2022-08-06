@@ -29,34 +29,28 @@ const moduleExports = {
     includePaths: [path.join(__dirname, 'styles')],
   },
   webpack(config, { dev }) {
-    const rules = config.module.rules
-      .find(rule => typeof rule.oneOf === 'object')
-      .oneOf.filter(rule => Array.isArray(rule.use));
+    if (!dev) {
+      const rules = config.module.rules
+        .find(rule => typeof rule.oneOf === 'object')
+        .oneOf.filter(rule => Array.isArray(rule.use));
 
-    rules.forEach(rule => {
-      rule.use.forEach(moduleLoader => {
-        if (
-          moduleLoader.loader?.includes('css-loader') &&
-          !moduleLoader.loader?.includes('postcss-loader')
-        )
-          moduleLoader.options.modules.getLocalIdent = hashOnlyIdent;
+      rules.forEach(rule => {
+        rule.use.forEach(moduleLoader => {
+          if (
+            moduleLoader.loader?.includes('css-loader') &&
+            !moduleLoader.loader?.includes('postcss-loader')
+          )
+            moduleLoader.options.modules.getLocalIdent = hashOnlyIdent;
+        });
       });
-    });
+    }
 
     return config;
   },
 };
 
 const sentryWebpackPluginOptions = {
-  // Additional config options for the Sentry Webpack plugin. Keep in mind that
-  // the following options are set automatically, and overriding them is not
-  // recommended:
-  //   release, url, org, project, authToken, configFile, stripPrefix,
-  //   urlPrefix, include, ignore
-
-  silent: true, // Suppresses all logs
-  // For all available options, see:
-  // https://github.com/getsentry/sentry-webpack-plugin#options.
+  silent: true,
 };
 
 module.exports = withSentryConfig(moduleExports, sentryWebpackPluginOptions);
