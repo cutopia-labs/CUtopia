@@ -142,6 +142,7 @@ const LoginPanel: FC<Props> = ({ className, returnUrl }) => {
     setMode(mode);
   }, [queryMode]);
 
+  // Maybe shall disable, and let user switch acc?
   useEffect(() => {
     if (user.loggedIn) {
       router.push(LOGIN_REDIRECT_PAGE);
@@ -150,19 +151,10 @@ const LoginPanel: FC<Props> = ({ className, returnUrl }) => {
 
   const [createUser, { loading: creatingUser, error: createError }] =
     useMutation(SEND_VERIFICATION, {
-      onCompleted: handleCompleted(
-        () =>
-          router.push({
-            pathname: '/login',
-            query: {
-              mode: MODE_PATH_LOOKUP[LoginPageMode.VERIFY],
-            },
-          }),
-        {
-          message: 'Verification code has been sent to your CUHK email',
-          view,
-        }
-      ),
+      onCompleted: handleCompleted(() => setMode(LoginPageMode.VERIFY), {
+        message: 'Verification code has been sent to your CUHK email',
+        view,
+      }),
       onError: view.handleError,
     });
   const [verifyUser, { loading: verifying, error: verifyError }] = useMutation(
@@ -174,12 +166,7 @@ const LoginPanel: FC<Props> = ({ className, returnUrl }) => {
       }),
       onError: e => {
         view.handleError(e);
-        router.push({
-          pathname: '/login',
-          query: {
-            mode: MODE_PATH_LOOKUP[LoginPageMode.VERIFY],
-          },
-        });
+        setMode(LoginPageMode.VERIFY);
       },
     }
   );
@@ -208,13 +195,7 @@ const LoginPanel: FC<Props> = ({ className, returnUrl }) => {
     SEND_RESET_PASSWORD_CODE,
     {
       onCompleted: handleCompleted(
-        () =>
-          router.push({
-            pathname: '/login',
-            query: {
-              mode: MODE_PATH_LOOKUP[LoginPageMode.RESET_PASSWORD_VERIFY],
-            },
-          }),
+        () => setMode(LoginPageMode.RESET_PASSWORD_VERIFY),
         {
           message: 'Verification code has been sent to your CUHK email',
           view,
@@ -226,18 +207,9 @@ const LoginPanel: FC<Props> = ({ className, returnUrl }) => {
   const [resetPassword, { loading: resettingPassword }] = useMutation(
     RESET_PASSWORD,
     {
-      onCompleted: handleCompleted(
-        () =>
-          router.push({
-            pathname: '/login',
-            query: {
-              mode: MODE_PATH_LOOKUP[LoginPageMode.CUTOPIA_LOGIN],
-            },
-          }),
-        {
-          view,
-        }
-      ),
+      onCompleted: handleCompleted(() => setMode(LoginPageMode.CUTOPIA_LOGIN), {
+        view,
+      }),
       onError: view.handleError,
     }
   );
@@ -360,12 +332,7 @@ const LoginPanel: FC<Props> = ({ className, returnUrl }) => {
     const prevMode = PREVIOUS_MODE_LOOKUP[mode];
     // If prev mode is a valid mode
     if (prevMode >= 0) {
-      router.push({
-        pathname: '/login',
-        query: {
-          mode: MODE_PATH_LOOKUP[prevMode],
-        },
-      });
+      setMode(prevMode);
     }
   };
 
@@ -441,14 +408,7 @@ const LoginPanel: FC<Props> = ({ className, returnUrl }) => {
             <div className={clsx(styles.forgotPwdRow, 'center-row')}>
               <span
                 className={clsx(styles.label, styles.forgotPwdLabel)}
-                onClick={() =>
-                  router.push({
-                    pathname: '/login',
-                    query: {
-                      mode: MODE_PATH_LOOKUP[LoginPageMode.RESET_PASSWORD],
-                    },
-                  })
-                }
+                onClick={() => setMode(LoginPageMode.RESET_PASSWORD)}
               >
                 Forgot Password?
               </span>
@@ -489,16 +449,11 @@ const LoginPanel: FC<Props> = ({ className, returnUrl }) => {
             <span
               className={styles.label}
               onClick={() =>
-                router.push({
-                  pathname: 'login',
-                  query: {
-                    mode: MODE_PATH_LOOKUP[
-                      mode === LoginPageMode.CUTOPIA_LOGIN
-                        ? LoginPageMode.CUTOPIA_SIGNUP
-                        : LoginPageMode.CUTOPIA_LOGIN
-                    ],
-                  },
-                })
+                setMode(
+                  mode === LoginPageMode.CUTOPIA_LOGIN
+                    ? LoginPageMode.CUTOPIA_SIGNUP
+                    : LoginPageMode.CUTOPIA_LOGIN
+                )
               }
             >
               {mode === LoginPageMode.CUTOPIA_SIGNUP ? 'Log In' : 'Sign Up'}
