@@ -4,13 +4,9 @@
   "description": "",
   "main": "graphql.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build-schema": "ts-node src/schemas/build.ts",
     "build-gql-types": "graphql-codegen --config codegen.yml",
-    "build": "rm -rf build && yarn run build-schema && tsc && sh copyfile.sh",
-    "predeploy": "yarn run build && rm -rf node_modules && rm -rf build/node_modules && yarn install --prod && cp -RL node_modules/ build/",
-    "postdeploy": "rm -rf node_modules && yarn install --prod=false",
-    "local": "nodemon build/local.js",
+    "build": "rm -rf build && yarn run build-schema && tsc && sh copyfile.sh && yarn --modules-folder build/node_modules --prod install",
     "local-gql": "yarn run build-schema && yarn run build-gql-types && sh copyfile.sh",
     "upgrade-db": "yarn upgrade mongodb && cp -RL node_modules/mongodb/ build/node_modules/"
   },

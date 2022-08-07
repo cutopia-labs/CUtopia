@@ -5,9 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "yarn jest",
-    "build": "rm -rf lib && tsc && cp -RL node_modules/ lib/",
-    "predeploy": "rm -rf node_modules && yarn install --prod && yarn build",
-    "postdeploy": "yarn install --prod=false"
+    "build": "rm -rf lib && tsc && yarn --modules-folder lib/node_modules --prod install"
   },
   "exports": {
     ".": "./lib"
