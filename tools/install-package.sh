@@ -1,5 +1,3 @@
-isProd=${NODE_ENV:-development}
-
 declare -a modules=(
   "./"
   "./mongodb"
@@ -17,11 +15,7 @@ for d in "${modules[@]}"; do
   fi
 
   echo "Installing node_modules in $d"
-  if [ $isProd = "production" ]; then
-    yarn --cwd $d install --prod
-  else
-    yarn --cwd $d install
-  fi
+  yarn --cwd $d install
 
   # Build the mongodb for lambda to install it
   if [ $d = "./mongodb" ]; then

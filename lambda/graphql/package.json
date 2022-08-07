@@ -6,9 +6,7 @@
   "scripts": {
     "build-schema": "ts-node src/schemas/build.ts",
     "build-gql-types": "graphql-codegen --config codegen.yml",
-    "build": "rm -rf build && yarn run build-schema && tsc && sh copyfile.sh && yarn --modules-folder build/node_modules --prod install",
-    "local-gql": "yarn run build-schema && yarn run build-gql-types && sh copyfile.sh",
-    "upgrade-db": "yarn upgrade mongodb && cp -RL node_modules/mongodb/ build/node_modules/"
+    "build": "rm -rf build && yarn run build-schema && tsc && sh copyfile.sh && yarn --modules-folder build/node_modules --prod install"
   },
   "author": "",
   "license": "ISC",
@@ -44,6 +42,7 @@
     "@types/jsonwebtoken": "^8.5.8",
     "apollo-server-express": "^3.8.1",
     "express": "^4.18.1",
+    "nodemon": "^2.0.19",
     "ts-node": "^10.8.0",
     "webpack": "^5.72.1"
   }

@@ -1,2 +1,2 @@
 sh tools/copy-env.sh
-nodemon lambda/graphql/build/local.js
+yarn --cwd lambda/graphql nodemon src/local.ts
