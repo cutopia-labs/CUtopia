@@ -7,6 +7,7 @@ import { GET_USER } from '../../constants/queries';
 import { useUser, useView } from '../../store';
 import { User, AuthState } from '../../types';
 import Loading from '../atoms/Loading';
+import LoginPanel from '../templates/LoginPanel';
 
 type Options = {
   userQuery?: DocumentNode;
@@ -61,19 +62,20 @@ const authenticatedRoute: HOC = (Component = null, options = {}) => {
 
     useEffect(() => {
       user.updateStore('loginState', authState);
-      if (authState === AuthState.LOGGED_OUT) {
-        router.push({
-          pathname: '/login',
-          query: { returnUrl: router.asPath },
-        });
-      }
     }, [authState]);
 
-    return authState === AuthState.LOGGED_IN ? (
-      <Component {...props} {...options} />
-    ) : (
-      <Loading fixed padding={false} logo />
-    );
+    const renderContent = () => {
+      switch (authState) {
+        case AuthState.LOGGED_IN:
+          return <Component {...props} {...options} />;
+        case AuthState.LOGGED_OUT:
+          return <LoginPanel returnUrl={router.asPath} />;
+        default:
+          return <Loading fixed padding={false} logo />;
+      }
+    };
+
+    return renderContent();
   };
 
   return observer(AuthenticatedRoute);
