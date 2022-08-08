@@ -1,15 +1,17 @@
-import { FC } from 'react';
+import { FC, useRef } from 'react';
 import { IconButton } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 
 import copy from 'copy-to-clipboard';
 import clsx from 'clsx';
 import {
+  AiOutlineCamera,
   AiOutlineDelete,
   AiOutlineLoading,
   AiOutlineShareAlt,
   AiOutlineSync,
 } from 'react-icons/ai';
+import html2canvas from 'html2canvas';
 import { usePlanner, useView } from '../../store';
 import styles from '../../styles/components/templates/TimetablePanel.module.scss';
 import Timetable from '../planner/Timetable';
@@ -30,6 +32,32 @@ const SYNC_STATE_ICON = {
   [PlannerSyncState.SYNCING]: <AiOutlineLoading className="icon-spin" />,
 };
 
+const saveAs = (uri: string, filename: string) => {
+  const link = document.createElement('a');
+  if (typeof link.download === 'string') {
+    link.href = uri;
+    link.download = filename;
+
+    //Firefox requires the link to be in the body
+    document.body.appendChild(link);
+
+    //simulate click
+    link.click();
+
+    //remove the link when done
+    document.body.removeChild(link);
+  } else {
+    window.open(uri);
+  }
+};
+
+const screenshotDiv = async (el: HTMLDivElement) => {
+  if (!el) return;
+  const canvas = await html2canvas(el);
+  const data = canvas.toDataURL();
+  saveAs(data, 'cutopia-timetable.png');
+};
+
 const TimetablePanel: FC<TimetablePanelProps> = ({
   onShare,
   deleteTable,
@@ -39,6 +67,7 @@ const TimetablePanel: FC<TimetablePanelProps> = ({
 }) => {
   const view = useView();
   const planner = usePlanner();
+  const timetableRef = useRef<HTMLDivElement>();
   const courses = planner.plannerCourses
     ?.concat(planner.previewPlannerCourse)
     .filter(course => course);
@@ -46,6 +75,13 @@ const TimetablePanel: FC<TimetablePanelProps> = ({
   const onClear = () => planner.clearPlannerCourses();
 
   const FUNCTION_BUTTONS = [
+    {
+      action: () => {
+        screenshotDiv(timetableRef?.current);
+      },
+      icon: <AiOutlineCamera />,
+      key: 'screenshot',
+    },
     {
       action: () => {
         if (!onShare) {
@@ -95,6 +131,7 @@ const TimetablePanel: FC<TimetablePanelProps> = ({
         )}
       </header>
       <Timetable
+        ref={timetableRef}
         courses={(courses?.slice() || []) as any}
         timetableInfo={timetableInfo}
       />
