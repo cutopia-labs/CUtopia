@@ -51,10 +51,13 @@ const saveAs = (uri: string, filename: string) => {
   }
 };
 
-const screenshotDiv = async (el: HTMLDivElement) => {
+const SS_MARGIN = {};
+
+const screenShotTimetable = async (el: HTMLDivElement) => {
   if (!el) return;
   const canvas = await html2canvas(el);
   const data = canvas.toDataURL();
+  // process canvas
   saveAs(data, 'cutopia-timetable.png');
 };
 
@@ -77,7 +80,7 @@ const TimetablePanel: FC<TimetablePanelProps> = ({
   const FUNCTION_BUTTONS = [
     {
       action: () => {
-        screenshotDiv(timetableRef?.current);
+        screenShotTimetable(timetableRef?.current);
       },
       icon: <AiOutlineCamera />,
       key: 'screenshot',
