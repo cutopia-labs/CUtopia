@@ -5,24 +5,22 @@
 - [Docker](https://www.docker.com/)
 - [MongoDB Compass](https://www.mongodb.com/products/compass)
 - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+- [Git](https://git-scm.com/downloads)
 
-### Install node modules
-```sh
-sh tools/install-package.sh
-```
-
-### Create environment files
-After running the script below, replace `ATLAS_PROD_URI` and `ATLAS_DEV_URI` in the .env file with your MongoDB connection URI.
+### Run initialization script
 
 ```sh
-sh tools/create-env.sh
+sh tools/init.sh
 ```
 
-### Generate RSA key pair
-The key pair is used for JWT login token encryption and decryption.
-```sh
-sh tools/generate-jwtRS256.sh
-```
+This script will:
+- install git submodules
+- install node modules
+- build GraphQL types
+- create environment variables
+- generate RSA key pair for JWT login token
+
+> After running the script, replace `ATLAS_PROD_URI` and `ATLAS_DEV_URI` in the .env file with your MongoDB connection URI.
 
 ## Development
 ### Compile scripts
