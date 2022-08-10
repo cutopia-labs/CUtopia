@@ -59,6 +59,7 @@ const screenShotTimetable = async (el: HTMLDivElement) => {
         const ttb: any = el.querySelector('.timetable-container');
         if (ttb?.style) {
           ttb.style.padding = '24px';
+          ttb.style.backgroundColor = `var(--surface)`;
         }
       },
     });
