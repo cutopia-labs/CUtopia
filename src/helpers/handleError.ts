@@ -15,7 +15,8 @@ const handleError = (e: ApolloError, view: ViewStore): boolean | null => {
   // Clear the invalid token and log out
   if (
     err_code === ErrorCode.AUTHORIZATION_INVALID_TOKEN ||
-    alt_code === ErrorCode.AUTHORIZATION_REFRESH_TOKEN
+    alt_code === ErrorCode.AUTHORIZATION_REFRESH_TOKEN ||
+    alt_code === ErrorCode.AUTHORIZATION_INVALID_TOKEN
   ) {
     if (alt_code === ErrorCode.AUTHORIZATION_REFRESH_TOKEN) {
       userStore.saveToken(customErrors[0]?.extensions?.refreshedToken);
