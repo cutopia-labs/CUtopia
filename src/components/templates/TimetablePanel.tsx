@@ -56,7 +56,7 @@ const screenShotTimetable = async (el: HTMLDivElement) => {
   try {
     const canvas = await html2canvas(el, {
       onclone: el => {
-        const ttb = el.querySelector('.timetable-container');
+        const ttb: any = el.querySelector('.timetable-container');
         if (ttb?.style) {
           ttb.style.padding = '24px';
         }
