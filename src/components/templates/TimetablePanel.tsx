@@ -51,14 +51,23 @@ const saveAs = (uri: string, filename: string) => {
   }
 };
 
-const SS_MARGIN = {};
-
 const screenShotTimetable = async (el: HTMLDivElement) => {
   if (!el) return;
-  const canvas = await html2canvas(el);
-  const data = canvas.toDataURL();
-  // process canvas
-  saveAs(data, 'cutopia-timetable.png');
+  try {
+    const canvas = await html2canvas(el, {
+      onclone: el => {
+        const ttb = el.querySelector('.timetable-container');
+        if (ttb?.style) {
+          ttb.style.padding = '24px';
+        }
+      },
+    });
+    const data = canvas.toDataURL();
+    // process canvas
+    saveAs(data, 'cutopia-timetable.png');
+  } catch (e) {
+    return e;
+  }
 };
 
 const TimetablePanel: FC<TimetablePanelProps> = ({
@@ -79,8 +88,11 @@ const TimetablePanel: FC<TimetablePanelProps> = ({
 
   const FUNCTION_BUTTONS = [
     {
-      action: () => {
-        screenShotTimetable(timetableRef?.current);
+      action: async () => {
+        const err = await screenShotTimetable(timetableRef?.current);
+        if (err) {
+          view.warn('Failed to screenshot QAQ');
+        }
       },
       icon: <AiOutlineCamera />,
       key: 'screenshot',

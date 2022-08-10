@@ -137,7 +137,10 @@ const Timetable = forwardRef<HTMLDivElement, TimetableProps>(
     }
 
     return (
-      <div ref={ref} className={styles.timetableContainer}>
+      <div
+        ref={ref}
+        className={clsx(styles.timetableContainer, 'timetable-container')}
+      >
         <div className={styles.weekdayRow}>
           <WeekdayText config={config} timetableInfo={timetableInfo} />
         </div>
