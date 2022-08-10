@@ -24,6 +24,7 @@ const handleError = (e: ApolloError, view: ViewStore): boolean | null => {
       return true;
     } else {
       userStore.logout();
+      return; // Do not show error, cuz it's confusing, just let them login again
     }
   }
   view.setSnackBar({
