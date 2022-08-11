@@ -82,7 +82,7 @@ export const REVIEW_COURSE_INFO_ATTRS = [
 
 export const TIMETABLE_SYNC_INTERVAL = 4000;
 
-export const META_DESCRIPTION_CHAR_LIMIT = 180;
+export const META_DESCRIPTION_CHAR_LIMIT = 170;
 
 export const DEFAULT_HEAD = {
   title: 'CUtopia - CUHK Course Review and Planning Platform',
