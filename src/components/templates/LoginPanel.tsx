@@ -1,5 +1,5 @@
 import { useState, useEffect, FC } from 'react';
-import { Button, IconButton, CircularProgress } from '@material-ui/core';
+import { IconButton } from '@material-ui/core';
 import { ArrowBack } from '@material-ui/icons';
 import * as Sentry from '@sentry/nextjs';
 import { observer } from 'mobx-react-lite';
@@ -22,6 +22,7 @@ import { reverseMapping } from '../../helpers';
 import { LOGIN_REDIRECT_PAGE } from '../../config';
 import { USERNAME_RULE, SID_RULE, PASSWORD_RULE } from '../../helpers/rules';
 import Footer from '../molecules/Footer';
+import LoadingButton from '../atoms/LoadingButton';
 
 const INITIAL_MODE = LoginPageMode.CUTOPIA_LOGIN;
 const MODE_ITEMS = {
@@ -414,7 +415,7 @@ const LoginPanel: FC<Props> = ({ className, returnUrl }) => {
               </span>
             </div>
           )}
-          <Button
+          <LoadingButton
             variant="contained"
             className={styles.loginBtn}
             color="primary"
@@ -426,17 +427,16 @@ const LoginPanel: FC<Props> = ({ className, returnUrl }) => {
               sendingResetCode ||
               resettingPassword
             }
+            loading={
+              loggingInCUtopia ||
+              creatingUser ||
+              verifying ||
+              sendingResetCode ||
+              resettingPassword
+            }
           >
-            {loggingInCUtopia ||
-            creatingUser ||
-            verifying ||
-            sendingResetCode ||
-            resettingPassword ? (
-              <CircularProgress size={24} />
-            ) : (
-              MODE_ITEMS[mode].button
-            )}
-          </Button>
+            {MODE_ITEMS[mode].button}
+          </LoadingButton>
         </form>
         {(mode === LoginPageMode.CUTOPIA_LOGIN ||
           mode === LoginPageMode.CUTOPIA_SIGNUP) && (
