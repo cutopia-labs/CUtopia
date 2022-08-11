@@ -90,12 +90,12 @@ export const makeSectionLabel = (section: CourseSection, courseId: string) =>
   `${courseId} ${section.name}`;
 
 export const INSTRUCTOR_PREFIXS = [
+  'professor', // must before prof, otherwise replace wrong
+  'prof',
   'ms',
   'dr',
   'mr',
   'miss',
-  'prof',
-  'professor',
 ];
 
 export const INSTRUCTOR_PREFIXS_LEN = 6;

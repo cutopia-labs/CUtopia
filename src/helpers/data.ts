@@ -166,11 +166,12 @@ export const _searchLecturers = async (
     const { payload, limit } = query;
     const results = [];
     let resultsLen = 0;
+    const instructorsLen = instructors.length;
     // preprocess str
     const searchStr = removePrefix(payload.toLowerCase())
       .replace('.', '')
       .trim();
-    for (let i = 0; i <= instructors.length && resultsLen <= limit; i++) {
+    for (let i = 0; i <= instructorsLen && resultsLen <= limit; i++) {
       if ((instructors[i] || '').toLowerCase().includes(searchStr)) {
         results.push(instructors[i]);
         resultsLen++;
