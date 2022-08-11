@@ -9,7 +9,7 @@ exports.getTemplateByAction = input => {
 };
 
 exports.createUserTemplate = ({ SID, username, code }) => ({
-  from: 'CUtopia <cutopia.app@gmail.com>',
+  from: 'CUtopia <services@cutopia.app>',
   to: `${SID}@link.cuhk.edu.hk`,
   subject: 'CUtopia confirmation email',
   html: `Thanks for using CUtopia!<br /><br /> To verify your account, please click 
@@ -18,7 +18,7 @@ manually enter the verification code: <b>${code}</b><br /><br />Regards,<br />CU
 });
 
 exports.resetPwdTemplate = ({ SID, userId, code }) => ({
-  from: 'CUtopia <cutopia.app@gmail.com>',
+  from: 'CUtopia <services@cutopia.app>',
   to: `${SID}@link.cuhk.edu.hk`,
   subject: 'CUtopia reset password',
   html: `To reset your password, please click 
