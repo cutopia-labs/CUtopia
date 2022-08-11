@@ -88,3 +88,14 @@ export const EMOJIS_LENGTH = 18;
 
 export const makeSectionLabel = (section: CourseSection, courseId: string) =>
   `${courseId} ${section.name}`;
+
+export const INSTRUCTOR_PREFIXS = [
+  'ms',
+  'dr',
+  'mr',
+  'miss',
+  'prof',
+  'professor',
+];
+
+export const INSTRUCTOR_PREFIXS_LEN = 6;

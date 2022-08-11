@@ -5,7 +5,11 @@ import {
   CourseSearchList,
   LecturerQuery,
 } from '../types';
-import { UGE_COURSE_CODES } from '../constants';
+import {
+  INSTRUCTOR_PREFIXS,
+  INSTRUCTOR_PREFIXS_LEN,
+  UGE_COURSE_CODES,
+} from '../constants';
 import { generateRandomArray, getSubjectAndCode } from '.';
 
 const SUBJECT_RULE = new RegExp('[a-zA-Z]{4}');
@@ -142,6 +146,18 @@ export const _getRandomGeCourses = (
 
 /* Instructors */
 
+const removePrefix = (
+  str: string,
+  prefix: Array<string> = INSTRUCTOR_PREFIXS
+) => {
+  for (let i = 0; i < INSTRUCTOR_PREFIXS_LEN; i++) {
+    if (str.startsWith(prefix[i])) {
+      return str.slice(prefix[i].length);
+    }
+  }
+  return str;
+};
+
 export const _searchLecturers = async (
   instructors: string[],
   query: LecturerQuery
@@ -150,16 +166,18 @@ export const _searchLecturers = async (
     const { payload, limit } = query;
     const results = [];
     let resultsLen = 0;
+    // preprocess str
+    const searchStr = removePrefix(payload.toLowerCase())
+      .replace('.', '')
+      .trim();
     for (let i = 0; i <= instructors.length && resultsLen <= limit; i++) {
-      if (
-        (instructors[i] || '').toLowerCase().includes(payload.toLowerCase())
-      ) {
+      if ((instructors[i] || '').toLowerCase().includes(searchStr)) {
         results.push(instructors[i]);
         resultsLen++;
       }
     }
     return results;
   } catch (e) {
-    return false;
+    return [];
   }
 };
