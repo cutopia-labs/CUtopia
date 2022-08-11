@@ -6,7 +6,7 @@ type Mutation {
 }
 
 type Query {
-  timetable(_id: String!): Timetable @rateLimit(duration: 1, limit: 5)
+  timetable(_id: String!): Timetable @auth @rateLimit(duration: 1, limit: 5)
 }
 
 type User {

@@ -3,7 +3,7 @@ type Query {
 }
 
 type RankTable {
-  rankedCourses(filter: RankingFilter!): [RankedCourse] @rateLimit(duration: 60, limit: 100)
+  rankedCourses(filter: RankingFilter!): [RankedCourse] @auth @rateLimit(duration: 60, limit: 100)
 }
 
 input RankingFilter {

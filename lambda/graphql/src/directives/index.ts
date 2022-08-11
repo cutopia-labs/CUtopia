@@ -15,7 +15,7 @@ const directivesTypeDefs = [
 ];
 const addDirectivesToSchema = schema => {
   let newSchema = authDirectiveTransformer(schema);
-  newSchema = rateLimitDirectiveTransformer(schema);
+  newSchema = rateLimitDirectiveTransformer(newSchema);
   newSchema = constraintDirective()(newSchema);
   return newSchema;
 };
