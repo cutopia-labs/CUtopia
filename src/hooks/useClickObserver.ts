@@ -5,7 +5,7 @@ type Point = {
   y: number;
 };
 
-const l2norm = (p1: Point, p2: Point) => {
+const l2dist = (p1: Point, p2: Point) => {
   const dx = p2.x - p1.x;
   const dy = p2.y - p1.y;
   return Math.sqrt(dx * dx + dy * dy);
@@ -18,7 +18,7 @@ const useClickObserver = clickCallback => {
   };
   const onStop = (_, data) => {
     const dragStopPoint = { x: data.x, y: data.y };
-    if (l2norm(dragStartPos, dragStopPoint) < 5) {
+    if (l2dist(dragStartPos, dragStopPoint) < 5) {
       clickCallback();
     }
   };

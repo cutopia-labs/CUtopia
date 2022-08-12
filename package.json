@@ -44,7 +44,8 @@
     "prepare": "husky install && yarn run update-data",
     "cleanup": "rm -r .next build node_modules out && yarn install && yarn run dev",
     "update-data": "git submodule update --init && cp -R data/resources public/",
-    "clear-console": "gulp strip-debug"
+    "clear-console": "gulp strip-debug",
+    "unimported": "npx unimported"
   },
   "eslintConfig": {
     "extends": [
