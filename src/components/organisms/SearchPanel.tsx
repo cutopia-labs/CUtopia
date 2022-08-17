@@ -43,6 +43,8 @@ import ChipsRow from '../molecules/ChipsRow';
 import useMobileQuery from '../../hooks/useMobileQuery';
 import CourseCard from '../review/CourseCard';
 import DataStore from '../../store/DataStore';
+import If from '../atoms/If';
+import LoadingView from '../atoms/LoadingView';
 
 /**
  * c: courseId
@@ -282,9 +284,18 @@ const SearchPanel: FC<SearchPanelProps> = ({
           'searchPanelInputContainer row'
         )}
       >
-        {(searchPayload &&
-          (searchPayload.mode !== 'query' || searchPayload.text)) ||
-        currentCourse ? (
+        <If
+          visible={
+            (searchPayload &&
+              (searchPayload.mode !== 'query' || searchPayload.text)) ||
+            currentCourse
+          }
+          elseNode={
+            <div className={styles.searchIcon}>
+              <Search />
+            </div>
+          }
+        >
           <IconButton
             size="small"
             className={styles.goBackBtn}
@@ -299,11 +310,7 @@ const SearchPanel: FC<SearchPanelProps> = ({
           >
             <ArrowBack />
           </IconButton>
-        ) : (
-          <div className={styles.searchIcon}>
-            <Search />
-          </div>
-        )}
+        </If>
         <form className={styles.searchForm} onSubmit={e => e.preventDefault()}>
           <InputBase
             className="search-input"
@@ -321,7 +328,7 @@ const SearchPanel: FC<SearchPanelProps> = ({
         </form>
       </div>
       <Divider />
-      {!searchPayload && !currentCourse && (
+      <If visible={!searchPayload && !currentCourse}>
         <Card title="Recents" inPlace>
           <ChipsRow
             className={clsx(styles.recentChips)}
@@ -340,48 +347,25 @@ const SearchPanel: FC<SearchPanelProps> = ({
             }}
           />
         </Card>
-      )}
-      {Boolean(currentCourse) && (
-        <>
-          {courseInfo && !courseInfoLoading ? (
-            <CourseCard
-              courseInfo={{
-                ...courseInfo.courses[0],
-                courseId: currentCourse,
-              }}
-              concise
-            />
-          ) : (
-            <Loading />
-          )}
-        </>
-      )}
-      {!currentCourse &&
-        (searchPayload?.mode &&
-        (searchPayload.mode !== 'query' || searchPayload.text) ? (
-          <>
-            <SearchResult
-              searchPayload={searchPayload}
-              user={user}
-              data={data}
-              onClick={courseId => {
-                isPlanner && user.saveHistory(courseId);
-                if (!skipDefaultAction) {
-                  router.push(
-                    makeUrlFromCourseId(courseId, isPlanner),
-                    undefined,
-                    {
-                      shallow: isPlanner,
-                    }
-                  );
-                }
-                if (hasCoursePressCB) {
-                  onCoursePress(courseId);
-                }
-              }}
-            />
-          </>
-        ) : (
+      </If>
+      <If visible={currentCourse}>
+        <LoadingView loading={!courseInfo || courseInfoLoading}>
+          <CourseCard
+            courseInfo={{
+              ...courseInfo?.courses[0],
+              courseId: currentCourse,
+            }}
+            concise
+          />
+        </LoadingView>
+      </If>
+      <If
+        visible={
+          !currentCourse &&
+          searchPayload?.mode &&
+          (searchPayload.mode !== 'query' || Boolean(searchPayload.text))
+        }
+        elseNode={
           <>
             {LIST_ITEMS.map(item => (
               <MUIListItem
@@ -399,7 +383,25 @@ const SearchPanel: FC<SearchPanelProps> = ({
             <Divider />
             <DepartmentList setSearchPayload={setSearchPayload} />
           </>
-        ))}
+        }
+      >
+        <SearchResult
+          searchPayload={searchPayload}
+          user={user}
+          data={data}
+          onClick={courseId => {
+            isPlanner && user.saveHistory(courseId);
+            if (!skipDefaultAction) {
+              router.push(makeUrlFromCourseId(courseId, isPlanner), undefined, {
+                shallow: isPlanner,
+              });
+            }
+            if (hasCoursePressCB) {
+              onCoursePress(courseId);
+            }
+          }}
+        />
+      </If>
     </Card>
   );
 };

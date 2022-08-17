@@ -16,7 +16,7 @@ import clsx from 'clsx';
 import styles from '../../styles/components/organisms/Header.module.scss';
 import Logo from '../atoms/Logo';
 import useMobileQuery from '../../hooks/useMobileQuery';
-import ConditionView from '../atoms/ConditionView';
+import If from '../atoms/If';
 import SearchDropdown from './SearchDropdown';
 
 const SECTIONS = [
@@ -68,7 +68,7 @@ const Header: FC = () => {
   return (
     <header className={styles.headerBgContainer}>
       <div className={clsx(styles.headerContainer, 'row')}>
-        <ConditionView visible={isMobile}>
+        <If visible={isMobile}>
           {!visible && (
             <IconButton
               aria-label="sort"
@@ -96,7 +96,7 @@ const Header: FC = () => {
               </MenuItem>
             ))}
           </Menu>
-        </ConditionView>
+        </If>
         {(!visible || !isMobile) && (
           <Link href="/">
             <a className={styles.headerLogo}>
