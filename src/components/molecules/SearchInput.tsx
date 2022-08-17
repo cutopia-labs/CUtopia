@@ -1,11 +1,11 @@
 import InputBase from '@material-ui/core/InputBase';
 import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
-
 import clsx from 'clsx';
 import { ArrowBack } from '@material-ui/icons';
 import { useRouter } from 'next/router';
 import { FC } from 'react';
+
 import styles from '../../styles/components/molecules/SearchInput.module.scss';
 
 enum SearchInputMode {
@@ -45,10 +45,11 @@ const SearchInput: FC<any> = ({
     }
     return SearchInputMode.SHOW_DROPDOWN;
   };
+  const currMode = getButtonActionMode();
 
   const onIconButtonPress = async e => {
     e.stopPropagation();
-    switch (getButtonActionMode()) {
+    switch (currMode) {
       case SearchInputMode.SHOW_DROPDOWN:
         if (isMobile && inputRef.current) {
           setVisible(true);
@@ -73,7 +74,6 @@ const SearchInput: FC<any> = ({
     <form
       className={clsx(
         styles.searchInputContainer,
-        '.searchInputContainer',
         isMobile && 'mobile',
         visible && styles.active
       )}
@@ -82,11 +82,10 @@ const SearchInput: FC<any> = ({
       <IconButton
         size="small"
         type="submit"
-        className="search-input-icon"
         aria-label="search"
         onClick={e => onIconButtonPress(e)}
       >
-        {getButtonActionMode() === SearchInputMode.SHOW_DROPDOWN ? (
+        {currMode === SearchInputMode.SHOW_DROPDOWN ? (
           <SearchIcon />
         ) : (
           <ArrowBack />
