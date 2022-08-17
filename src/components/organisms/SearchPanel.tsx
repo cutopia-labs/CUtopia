@@ -19,15 +19,15 @@ import {
 } from '@material-ui/icons';
 import { useQuery } from '@apollo/client';
 import { observer } from 'mobx-react-lite';
-
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
+
 import styles from '../../styles/components/organisms/SearchPanel.module.scss';
 import ListItem from '../molecules/ListItem';
 import COURSE_CODES from '../../constants/courseCodes';
 import { useView, useUser, useData } from '../../store';
 import { COURSE_SECTIONS_QUERY } from '../../constants/queries';
-import { validCourse } from '../../helpers';
+import { objStrEqual, validCourse } from '../../helpers';
 import Loading from '../atoms/Loading';
 import { CURRENT_TERM, MAX_SEARCH_RESULT_LENGTH } from '../../config';
 import {
@@ -44,10 +44,10 @@ import useMobileQuery from '../../hooks/useMobileQuery';
 import CourseCard from '../review/CourseCard';
 import DataStore from '../../store/DataStore';
 
-/*
-c: courseId
-t: title
-*/
+/**
+ * c: courseId
+ * t: title
+ */
 
 const LIST_ITEMS = Object.freeze([
   {
@@ -92,17 +92,11 @@ export const SearchResult: FC<SearchResultProps> = ({
     getCourses(searchPayload);
   }, [searchPayload]);
 
-  if (results === null) {
-    return <Loading style={styles.searchLoading} />;
-  }
+  if (results === null) return <Loading style={styles.searchLoading} />;
 
-  if (!results) {
-    return <ErrorCard mode={ErrorCardMode.ERROR} />;
-  }
+  if (!results) return <ErrorCard mode={ErrorCardMode.ERROR} />;
 
-  if (!results.length) {
-    return <ErrorCard mode={ErrorCardMode.NULL} />;
-  }
+  if (!results.length) return <ErrorCard mode={ErrorCardMode.NULL} />;
 
   return (
     <>
@@ -229,6 +223,8 @@ const SearchPanel: FC<SearchPanelProps> = ({
     cid?: string;
   };
 
+  const hasCoursePressCB = (!isMobile || !isPlanner) && Boolean(onCoursePress);
+
   useEffect(() => {
     if (currentCourse) {
       document.title = `${currentCourse} Planner - CUtopia`;
@@ -236,11 +232,9 @@ const SearchPanel: FC<SearchPanelProps> = ({
   }, [currentCourse]);
 
   useEffect(() => {
-    if (validCourse(cid) && (!onCoursePress || isMobile)) {
-      setCurrentCourse(cid);
-    } else {
-      setCurrentCourse(null);
-    }
+    setCurrentCourse(
+      validCourse(cid) && (!onCoursePress || isMobile) ? cid : null
+    );
   }, [cid, isMobile]);
 
   // Fetch course info
@@ -274,10 +268,8 @@ const SearchPanel: FC<SearchPanelProps> = ({
     setSearchPayloadProp && setSearchPayloadProp(payload);
   };
 
-  useEffect(() => {}, []);
-
   useEffect(() => {
-    if (JSON.stringify(searchPayload) !== JSON.stringify(searchPayloadProp)) {
+    if (!objStrEqual(searchPayload, searchPayloadProp)) {
       setSearchPayload(searchPayloadProp);
     }
   }, [searchPayloadProp]);
@@ -342,7 +334,9 @@ const SearchPanel: FC<SearchPanelProps> = ({
                   shallow: true,
                 });
               }
-              (!isMobile || !isPlanner) && onCoursePress && onCoursePress(item);
+              if (hasCoursePressCB) {
+                onCoursePress(item);
+              }
             }}
           />
         </Card>
@@ -381,9 +375,9 @@ const SearchPanel: FC<SearchPanelProps> = ({
                     }
                   );
                 }
-                onCoursePress &&
-                  !(isPlanner && isMobile) &&
+                if (hasCoursePressCB) {
                   onCoursePress(courseId);
+                }
               }}
             />
           </>
@@ -394,9 +388,7 @@ const SearchPanel: FC<SearchPanelProps> = ({
                 key={item.label}
                 button
                 onClick={e => {
-                  if (onCoursePress) {
-                    e.stopPropagation(); // prevent e.target showes child node
-                  }
+                  if (onCoursePress) e.stopPropagation(); // prevent e.target showes child node
                   setSearchPayload({ mode: item.label });
                 }}
               >
