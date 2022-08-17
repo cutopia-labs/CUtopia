@@ -16,6 +16,7 @@ import clsx from 'clsx';
 import styles from '../../styles/components/organisms/Header.module.scss';
 import Logo from '../atoms/Logo';
 import useMobileQuery from '../../hooks/useMobileQuery';
+import ConditionView from '../atoms/ConditionView';
 import SearchDropdown from './SearchDropdown';
 
 const SECTIONS = [
@@ -67,37 +68,35 @@ const Header: FC = () => {
   return (
     <header className={styles.headerBgContainer}>
       <div className={clsx(styles.headerContainer, 'row')}>
-        {isMobile && (
-          <>
-            {!visible && (
-              <IconButton
-                aria-label="sort"
-                size="small"
-                onClick={e => setAnchorEl(e.currentTarget)}
-                disableRipple
-              >
-                <MenuIcon />
-              </IconButton>
-            )}
-            <Menu
-              id="simple-menu"
-              className={styles.sortMenu}
-              anchorEl={anchorEl}
-              keepMounted
-              open={Boolean(anchorEl)}
-              onClose={() => setAnchorEl(null)}
+        <ConditionView visible={isMobile}>
+          {!visible && (
+            <IconButton
+              aria-label="sort"
+              size="small"
+              onClick={e => setAnchorEl(e.currentTarget)}
+              disableRipple
             >
-              {SECTIONS.map(section => (
-                <MenuItem
-                  key={section.link}
-                  onClick={() => [router.push(section.link), setAnchorEl(null)]}
-                >
-                  {section.label}
-                </MenuItem>
-              ))}
-            </Menu>
-          </>
-        )}
+              <MenuIcon />
+            </IconButton>
+          )}
+          <Menu
+            id="simple-menu"
+            className={styles.sortMenu}
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={() => setAnchorEl(null)}
+          >
+            {SECTIONS.map(section => (
+              <MenuItem
+                key={section.link}
+                onClick={() => [router.push(section.link), setAnchorEl(null)]}
+              >
+                {section.label}
+              </MenuItem>
+            ))}
+          </Menu>
+        </ConditionView>
         {(!visible || !isMobile) && (
           <Link href="/">
             <a className={styles.headerLogo}>

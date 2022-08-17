@@ -5,6 +5,7 @@ import SearchInput from '../molecules/SearchInput';
 import useMobileQuery from '../../hooks/useMobileQuery';
 import useOuterClick from '../../hooks/useOuterClick';
 import { SearchPayload } from '../../types';
+import ConditionView from '../atoms/ConditionView';
 import SearchPanel, { SearchPanelProps } from './SearchPanel';
 
 const SearchDropdown: FC<SearchPanelProps> = props => {
@@ -44,19 +45,18 @@ const SearchDropdown: FC<SearchPanelProps> = props => {
         visible={visible}
         setVisible={setVisible}
       />
-      {visible && (
+      <ConditionView visible={visible}>
         <SearchPanel
           style={styles.searchPanel}
           searchPayloadProp={searchPayload}
           onCoursePress={courseId => {
             setSearchPayload(null);
             setVisible(false);
-            onCoursePress && onCoursePress(courseId);
           }}
           setSearchPayloadProp={setSearchPayload}
           {...searchPanelProps}
         />
-      )}
+      </ConditionView>
     </div>
   );
 };
