@@ -14,28 +14,22 @@ type CoursesListProps = {
 };
 
 export const CoursesList: FC<CoursesListProps> = ({ loading, courses }) => {
-  if (!courses.length) {
+  if (!courses.length)
     return <ErrorCard mode={ErrorCardMode.NULL} inPlace={false} />;
-  }
+  if (loading) return <Loading />;
   return (
-    <>
-      {loading ? (
-        <Loading />
-      ) : (
-        <div className={clsx(styles.homeCourseContainer, 'card')}>
-          {courses?.map(course => (
-            <Link key={course.courseId} href={`/review/${course.courseId}`}>
-              <ListItem
-                className={styles.homeCourseListItem}
-                title={course.courseId}
-                caption={course.title}
-                noBorder
-              />
-            </Link>
-          ))}
-        </div>
-      )}
-    </>
+    <div className={clsx(styles.homeCourseContainer, 'card')}>
+      {courses?.map(course => (
+        <Link key={course.courseId} href={`/review/${course.courseId}`}>
+          <ListItem
+            className={styles.homeCourseListItem}
+            title={course.courseId}
+            caption={course.title}
+            noBorder
+          />
+        </Link>
+      ))}
+    </div>
   );
 };
 
@@ -44,9 +38,8 @@ type ReviewsListProps = {
 };
 
 export const ReviewsList: FC<ReviewsListProps> = ({ reviewIds }) => {
-  if (!reviewIds?.length) {
+  if (!reviewIds?.length)
     return <ErrorCard mode={ErrorCardMode.NULL} inPlace={false} />;
-  }
   return (
     <div className={clsx(styles.homeCourseContainer, 'card')}>
       {reviewIds?.map(id => {

@@ -52,6 +52,16 @@ const ListItem: FC<ListItemProps> = ({
       {chevron && <span className="list-item-title chevron">{'\u203A'}</span>}
     </>
   );
+  const renderContent = () => {
+    if (children)
+      return (
+        <>
+          <div className="center-row list-content-row">{listContent}</div>
+          {children}
+        </>
+      );
+    return listContent;
+  };
   return (
     <div
       className={clsx(
@@ -64,14 +74,7 @@ const ListItem: FC<ListItemProps> = ({
       onClick={onClick}
       onMouseDown={onMouseDown}
     >
-      {children ? (
-        <>
-          <div className="center-row list-content-row">{listContent}</div>
-          {children}
-        </>
-      ) : (
-        listContent
-      )}
+      {renderContent()}
     </div>
   );
 };

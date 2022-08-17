@@ -21,26 +21,25 @@ const authenticatedRoute: HOC = (Component = null, options = {}) => {
     const user = useUser();
     const view = useView();
     const router = useRouter();
-    const [getUser, { data: userData, loading: userDataLoading }] =
-      useLazyQuery<{
-        me: User;
-      }>(options.userQuery || GET_USER, {
-        onCompleted: data => {
-          if (data?.me?.username) {
-            user.updateUserData(data.me);
-            Sentry.setUser({
-              username: data.me.username,
-            });
-            setAuthState(AuthState.LOGGED_IN);
-          } else {
-            setAuthState(AuthState.LOGGED_OUT);
-          }
-        },
-        onError: e => {
-          const handled = view.handleError(e);
+    const [getUser] = useLazyQuery<{
+      me: User;
+    }>(options.userQuery || GET_USER, {
+      onCompleted: data => {
+        if (data?.me?.username) {
+          user.updateUserData(data.me);
+          Sentry.setUser({
+            username: data.me.username,
+          });
+          setAuthState(AuthState.LOGGED_IN);
+        } else {
           setAuthState(AuthState.LOGGED_OUT);
-        },
-      });
+        }
+      },
+      onError: e => {
+        const handled = view.handleError(e);
+        setAuthState(AuthState.LOGGED_OUT);
+      },
+    });
     useEffect(() => {
       // If no prev login data, then redirect to login page
       if (!user.token) {

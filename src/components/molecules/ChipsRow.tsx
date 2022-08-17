@@ -23,9 +23,7 @@ const ChipsRow: FC<ChipsRowProps & React.HTMLProps<HTMLDivElement>> = ({
   onItemClick,
   ...props
 }) => {
-  if (!items.length) {
-    return <ErrorCard mode={ErrorCardMode.NULL} />;
-  }
+  if (!items.length) return <ErrorCard mode={ErrorCardMode.NULL} />;
   const multipleSelection = typeof select !== 'string';
   return (
     <div className={clsx(styles.chipsRow, className)} {...props}>
