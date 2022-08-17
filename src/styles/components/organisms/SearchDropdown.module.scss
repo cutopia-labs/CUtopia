@@ -4,6 +4,7 @@
   flex-direction: column;
   margin: 10px 0;
   align-items: flex-end;
+  z-index: 2;
   :global(.searchPanel) {
     --searchPanel-width: calc(var(--searchDropdown-width) - 2px); // 2px for border
     border-radius: 0;
