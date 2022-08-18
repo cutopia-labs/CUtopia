@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import Head from 'next/head';
+import { NextSeo } from 'next-seo';
 import { DEFAULT_HEAD, META_DESCRIPTION_CHAR_LIMIT } from '../../config';
 import { CourseInfo } from '../../types';
 import { trimEllip } from '../../helpers';
@@ -60,12 +60,7 @@ type Prop = {
 const HeadSeo: FC<Prop> = ({ pageProps, pagePath }) => {
   const { title, description } = makeHead(pageProps, pagePath);
   // <NextSeo title={title} description={description} />
-  return (
-    <Head>
-      <title>{title}</title>
-      <meta name="description" content={description} />
-    </Head>
-  );
+  return <NextSeo title={title} description={description} />;
 };
 
 export default HeadSeo;
