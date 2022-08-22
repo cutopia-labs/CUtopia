@@ -1,14 +1,18 @@
 import If, { IfProps } from './If';
-import Loading from './Loading';
+import Loading, { LoadingProps } from './Loading';
 
 type Props = {
   loading: boolean;
 };
 
 /* @ts-ignore */
-const LoadingView: FC<Props & IfProps> = ({ loading, children, ...props }) => (
-  <If visible={!loading} elseNode={<Loading />} {...props}>
-    {children}
+const LoadingView: FC<Props & IfProps & LoadingProps> = ({
+  loading,
+  children,
+  ...props
+}) => (
+  <If visible={!loading} elseNode={<Loading {...props} />}>
+    {children || null}
   </If>
 );
 
