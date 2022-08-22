@@ -26,11 +26,11 @@ type SelectionGroupProps = {
   onSelect: (index: number) => any;
 };
 
-const SelectionGroup = ({
+const SelectionGroup: FC<SelectionGroupProps> = ({
   selections,
   selectedIndex,
   onSelect,
-}: SelectionGroupProps) => (
+}) => (
   <div className={clsx(styles.selectionGroup, 'center-row')}>
     {selections.map((selection, i) => (
       <span

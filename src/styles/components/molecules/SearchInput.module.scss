@@ -21,9 +21,6 @@
 @media only screen and (max-width: 1260px) {
   .searchInputContainer {
     border: none;
-    .search-input {
-      margin-left: 0;
-    }
     margin-right: 0;
     background-color: transparent;
     width: 34px;
@@ -35,9 +32,5 @@
     background-color: var(--background-search);
     border-bottom-left-radius: var(--border-radius);
     border-bottom-right-radius: var(--border-radius);
-    .search-input {
-      visibility: visible;
-      width: 100%;
-    }
   }
 }
