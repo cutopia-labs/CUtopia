@@ -13,11 +13,15 @@ import { Resolvers } from '../schemas/types';
 const SNS = new AWS.SNS({ apiVersion: '2010-03-31' });
 
 const sendEmail = async message => {
-  const params = {
-    TopicArn: process.env.UserSNSTopic,
-    Message: JSON.stringify(message),
-  };
-  await SNS.publish(params).promise();
+  if (process.env.AWS_EXECUTION_ENV) {
+    const params = {
+      TopicArn: process.env.UserSNSTopic,
+      Message: JSON.stringify(message),
+    };
+    await SNS.publish(params).promise();
+  } else {
+    console.log('Email content:', message);
+  }
 };
 
 const userResolver: Resolvers = {
