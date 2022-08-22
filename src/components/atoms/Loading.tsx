@@ -7,7 +7,7 @@ import { FC } from 'react';
 import styles from '../../styles/components/atoms/Loading.module.scss';
 import Logo from './Logo';
 
-type LoadingProps = {
+export type LoadingProps = {
   fixed?: boolean;
   padding?: boolean;
   logo?: boolean;

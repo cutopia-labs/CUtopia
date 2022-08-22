@@ -1,12 +1,11 @@
 import { observer } from 'mobx-react-lite';
-
 import { Checkbox, IconButton, Tooltip } from '@material-ui/core';
 import { ClearAllRounded, Warning } from '@material-ui/icons';
 import clsx from 'clsx';
 import { FC } from 'react';
+
 import styles from '../../styles/components/planner/PlannerCart.module.scss';
 import { usePlanner } from '../../store';
-
 import Card from '../atoms/Card';
 import ListItem from '../molecules/ListItem';
 import { getSectionTime } from '../review/CourseSections';

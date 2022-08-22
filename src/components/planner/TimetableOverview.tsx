@@ -8,14 +8,13 @@ import {
   InputBase,
 } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
-
 import { Check, Edit, ExpandMore, Timer } from '@material-ui/icons';
-
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import copy from 'copy-to-clipboard';
 import { AiOutlineDelete, AiOutlineShareAlt } from 'react-icons/ai';
 import clsx from 'clsx';
+
 import { usePlanner, useView } from '../../store';
 import styles from '../../styles/components/planner/TimetableOverview.module.scss';
 import {
@@ -25,22 +24,16 @@ import {
 } from '../../types';
 import { PLANNER_CONFIGS } from '../../config';
 import { GET_USER_TIMETABLES } from '../../constants/queries';
-import Loading from '../atoms/Loading';
 import ListItem from '../molecules/ListItem';
 import { getDateDifference, getMMMDDYY } from '../../helpers/getTime';
+import LoadingView from '../atoms/LoadingView';
 import { generateTimetableURL } from './PlannerTimetable';
 
-const getTimetableOverviewMode = (expireAt: number) => {
-  if (expireAt > 0) {
-    return TimetableOverviewMode.SHARE;
-  }
-  return TimetableOverviewMode.UPLOAD;
-};
+const getTimetableOverviewMode = (expireAt: number) =>
+  expireAt > 0 ? TimetableOverviewMode.SHARE : TimetableOverviewMode.UPLOAD;
 
-const getCombinedTimetable = (data: UserData): TimetableOverviewWithMode[] => {
-  if (!data?.me?.timetables) {
-    return [];
-  }
+const getTimetableOverview = (data: UserData): TimetableOverviewWithMode[] => {
+  if (!data?.me?.timetables) return [];
   return (data?.me?.timetables).map(item => ({
     ...item,
     mode: getTimetableOverviewMode(item.expireAt),
@@ -147,12 +140,9 @@ const TimetableOverview: FC<TimetableOverviewProps> = ({
       setLabelInput(planner?.plannerName);
     }
   }, [anchorEl]);
-  const [
-    getUserTimetable,
-    { data: userTimetable, loading: userTimetableLoading },
-  ] = useLazyQuery(GET_USER_TIMETABLES, {
+  const [getUserTimetable] = useLazyQuery(GET_USER_TIMETABLES, {
     onCompleted: async data => {
-      planner.updateStore('timetableOverviews', getCombinedTimetable(data));
+      planner.updateStore('timetableOverviews', getTimetableOverview(data));
     },
     onError: view.handleError,
   });
@@ -209,10 +199,8 @@ const TimetableOverview: FC<TimetableOverviewProps> = ({
         </form>
         <Divider />
         <h4 className="subheading">Timetables</h4>
-        {!planner.timetableOverviews ? (
-          <Loading />
-        ) : (
-          planner.timetableOverviews.map(item => (
+        <LoadingView loading={!planner.timetableOverviews}>
+          {planner.timetableOverviews?.map(item => (
             <TimetableOverviewListItem
               key={`${item.createdAt}${item._id}`}
               item={item}
@@ -224,10 +212,15 @@ const TimetableOverview: FC<TimetableOverviewProps> = ({
               }}
               selected={planner.plannerId === item._id}
             />
-          ))
-        )}
+          ))}
+        </LoadingView>
         <Divider />
-        <MenuItem onClick={() => [createTimetable(), setAnchorEl(null)]}>
+        <MenuItem
+          onClick={() => {
+            createTimetable();
+            setAnchorEl(null);
+          }}
+        >
           Create New
         </MenuItem>
       </Menu>

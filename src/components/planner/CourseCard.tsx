@@ -34,11 +34,12 @@ const getStyles = (
   },
 });
 
-const CourseCard: FC<
-  PropsWithConfig<{
-    course: Event;
-  }>
-> = ({ course, config }) => {
+type Props = PropsWithConfig<{
+  course: Event;
+}>;
+
+const CourseCard: FC<Props> = ({ course, config }) => {
+  const planner = usePlanner();
   const theme = useTheme();
   const sTime = course.startTime.split(':');
   const eTime = course.endTime.split(':');
@@ -63,7 +64,6 @@ const CourseCard: FC<
     course.day,
     config.numOfDays
   );
-  const planner = usePlanner();
 
   return (
     <div className={staticStyles.timetableCourseCard} style={styles.courseCard}>

@@ -29,7 +29,6 @@ import {
 import ChipsRow from '../molecules/ChipsRow';
 import TextField from '../atoms/TextField';
 import LoadingButton from '../atoms/LoadingButton';
-import Loading from '../atoms/Loading';
 import DialogContentTemplate from '../templates/DialogContentTemplate';
 import Section from '../molecules/Section';
 import Footer from '../molecules/Footer';
@@ -37,6 +36,7 @@ import TimetablePanel from '../templates/TimetablePanel';
 import { CREATE_PLANNER_FLAG, EXPIRE_LOOKUP } from '../../constants';
 import { GET_TIMETABLE } from '../../constants/queries';
 import useMobileQuery from '../../hooks/useMobileQuery';
+import LoadingView from '../atoms/LoadingView';
 
 const getModeFromExpireAt = (expireAt: number) => {
   if (expireAt > 0) {
@@ -243,7 +243,6 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
     (state, action) => ({ ...state, ...action }),
     {}
   );
-
   const [getTimetable, { loading: getTimetableLoading }] = useLazyQuery(
     GET_TIMETABLE,
     {
@@ -267,8 +266,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
   const [switchTimetableMutation, { loading: switchTimetableLoading }] =
     useMutation(SWITCH_TIMETABLE);
 
-  const [cloneTimetableMutation, { loading: cloneTimetableLoading }] =
-    useMutation(CLONE_TIMETABLE);
+  const [cloneTimetableMutation] = useMutation(CLONE_TIMETABLE);
 
   const applyTimetable = (
     timetable: UploadTimetable | null,
@@ -450,7 +448,6 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
     }
   };
 
-  // on mount
   useEffect(() => {
     // start sync
     const disposer = reaction(
@@ -463,11 +460,11 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
         updateTimetable(data);
       }
     );
-    // end sync b4 unmount (handle unload here!)
+    // end sync b4 unmount
     return () => disposer();
   }, []);
 
-  /* TEMP START: to upload local ttb */
+  /* TEMP START: to upload local ttb (Remove on Nov?) */
   const uploadPlanners = async (planners: Record<string, Planner>) => {
     planner.updateStore('uploading', true);
     await Promise.all(
@@ -506,8 +503,15 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
   }, [planner.planners, planner.uploading]);
   /* TEMP END */
 
-  /*
-   * Init based on planner id
+  useEffect(() => {
+    dispatchShareConfig({
+      expire: shareCourses?.mode === ShareTimetableMode.SHARE ? '7 days' : 'No',
+      shareLink: '',
+    });
+  }, [shareCourses]);
+
+  /**
+   * Handle plannerId change
    */
   useEffect(() => {
     /* If it's shared planner link, then return */
@@ -527,13 +531,9 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
     }
   }, [planner.plannerId, shareId]);
 
-  useEffect(() => {
-    dispatchShareConfig({
-      expire: shareCourses?.mode === ShareTimetableMode.SHARE ? '7 days' : 'No',
-      shareLink: '',
-    });
-  }, [shareCourses]);
-
+  /**
+   * Handle shareId change
+   */
   useEffect(() => {
     /* If the id is invalid, return */
     if (!shareId) return;
@@ -636,18 +636,21 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
 
   return (
     <div className={clsx(styles.plannerTimetableContainer, 'column')}>
-      {(getTimetableLoading ||
-        switchTimetableLoading ||
-        removeTimetableLoading) && <Loading fixed />}
-      {
-        <TimetablePanel
-          className={className}
-          createTimetable={createTimetable}
-          onShare={onShareClick}
-          switchTimetable={switchTimetable}
-          deleteTable={(id: string, expire: number) => onDelete(id, expire)}
-        />
-      }
+      <LoadingView
+        loading={
+          getTimetableLoading ||
+          switchTimetableLoading ||
+          removeTimetableLoading
+        }
+        fixed
+      />
+      <TimetablePanel
+        className={className}
+        createTimetable={createTimetable}
+        onShare={onShareClick}
+        switchTimetable={switchTimetable}
+        deleteTable={(id: string, expire: number) => onDelete(id, expire)}
+      />
       {!isHome && !isMobile && <Footer style={styles.plannerFooter} />}
       <Dialog
         transitionDuration={{
