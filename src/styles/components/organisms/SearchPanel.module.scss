@@ -36,6 +36,7 @@
     width: fit-content;
   }
 }
+
 .searchPanelInputContainer {
   .goBackBtn {
     margin-left: -4px;
@@ -43,34 +44,27 @@
     width: 30px;
   }
 }
-.goBackBtn, .searchIcon {
+
+.goBackBtn,
+.searchIcon {
   margin-right: 6px;
 }
+
 .searchForm {
   display: flex;
   flex: 1;
 }
+
 .search-input {
   flex: 1;
 }
-.course-codes-container {
-  text-align: left;
-  & > * {
-    padding: 0 16px;
-  }
-}
-.course-codes-title {
-  display: flex;
-  align-items: center;
-  height: 40px;
-  font-size: 18;
-  background-color: #dddddd;
-}
+
 .codeList {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   overflow-x: hidden;
 }
+
 .searchListItem {
   height: auto;
   justify-content: space-between;

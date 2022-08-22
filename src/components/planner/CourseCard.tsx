@@ -82,7 +82,7 @@ const CourseCard: FC<Props> = ({ course, config }) => {
       <IconButton
         size="small"
         color="primary"
-        className={staticStyles.timetableCourseCardDelete}
+        className={staticStyles.delete}
         style={{
           color: textColor,
         }}

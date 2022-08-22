@@ -10,17 +10,16 @@
   transition: transform 0.3s;
   user-select: none;
   padding: 4px 6px;
-  .timetableCourseCardDelete {
+  .delete {
     display: none;
   }
   &:hover {
     height: fit-content !important;
     transform: scale(1.2);
     z-index: 10;
-    .timetableCourseCardDelete {
+    .delete {
       display: inline-flex;
       position: absolute;
-      color: white;
       z-index: 12;
       bottom: 2px;
       right: 2px;
@@ -38,6 +37,7 @@
   font-weight: bold;
   text-align: initial;
 }
+
 .timetableCourseCardLocation {
   margin-top: 2px;
   font-size: 10px;
