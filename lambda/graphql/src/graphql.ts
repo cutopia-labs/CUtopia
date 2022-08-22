@@ -36,9 +36,10 @@ const server = new ApolloServer({
 export const graphqlHandler = server.createHandler({
   expressGetMiddlewareOptions: {
     cors: {
-      origin: '*',
+      origin: isProduction
+        ? ['https://cutopia.app', 'https://dev.cutopia.app']
+        : '*',
       methods: ['get', 'post'],
-      credentials: true,
       maxAge: 3600,
     },
   },
