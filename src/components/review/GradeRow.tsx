@@ -31,44 +31,39 @@ const GradeRow: FC<GradeRowProps> = ({
   isMobile,
 }) => (
   <div className={clsx(styles.gradeRow, concise && styles.concise, style)}>
-    {['overall', ...RATING_FIELDS]
-      .filter(x => x)
-      .map(field => (
-        <div
-          key={field}
-          className={clsx(
-            styles.ratingContainer,
-            'center-row',
-            selected === field && 'active',
-            additionalChildClassName
-          )}
-          onClick={() => {
-            if (setSelected && !isMobile) {
-              setSelected(field);
-            }
-          }}
-        >
-          {field !== 'overall' && (
-            <div
-              className={clsx('reviewsFilterLabel', styles.reviewsFilterLabel)}
-              key={field}
-            >
-              {`${field}${isMobile ? '' : ':'}`}
-            </div>
-          )}
-          <GradeIndicator
-            grade={
-              isReview && field !== 'overall'
-                ? rating[field].grade
-                : rating[field]
-            }
-            style={clsx(
-              styles.reviewsFilterGradeIndicator,
-              gradeIndicatorStyle
-            )}
-          />
-        </div>
-      ))}
+    {['overall', ...RATING_FIELDS].map(field => (
+      <div
+        key={field}
+        className={clsx(
+          styles.ratingContainer,
+          'center-row',
+          selected === field && 'active',
+          additionalChildClassName
+        )}
+        onClick={() => {
+          if (setSelected && !isMobile) {
+            setSelected(field);
+          }
+        }}
+      >
+        {field !== 'overall' && (
+          <div
+            className={clsx('reviewsFilterLabel', styles.reviewsFilterLabel)}
+            key={field}
+          >
+            {`${field}${isMobile ? '' : ':'}`}
+          </div>
+        )}
+        <GradeIndicator
+          grade={
+            isReview && field !== 'overall'
+              ? rating[field].grade
+              : rating[field]
+          }
+          style={clsx(styles.reviewsFilterGradeIndicator, gradeIndicatorStyle)}
+        />
+      </div>
+    ))}
     {children}
   </div>
 );

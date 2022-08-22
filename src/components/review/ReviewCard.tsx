@@ -5,8 +5,8 @@ import { BiMessageRounded } from 'react-icons/bi';
 import { RiShareForwardLine, RiFlag2Line } from 'react-icons/ri';
 import { useMutation } from '@apollo/client';
 import { IconButton } from '@material-ui/core';
-
 import clsx from 'clsx';
+
 import styles from '../../styles/components/review/ReviewCard.module.scss';
 import { RATING_FIELDS, VOTE_ACTIONS } from '../../constants';
 import { VOTE_REVIEW } from '../../constants/mutations';
@@ -21,7 +21,6 @@ import LikeButtonsRow from './LikeButtonRow';
 
 type ReviewCardProps = {
   review: Review;
-  concise?: boolean;
   showAll?: boolean;
   shareAction?: (item: Review) => void;
   reportAction?: (item: Review) => void;
@@ -29,14 +28,13 @@ type ReviewCardProps = {
 
 const ReviewCard: FC<ReviewCardProps> = ({
   review,
-  concise,
   showAll,
   shareAction,
   reportAction,
 }) => {
   const [selectedCriteria, setSelectedCriteria] = useState('overall');
   const view = useView();
-  const [voteReview, { loading, error }] = useMutation(VOTE_REVIEW, {
+  const [voteReview] = useMutation(VOTE_REVIEW, {
     onError: view.handleError,
   });
   const [liked, setLiked] = useState(review.myVote); // null for unset, false for dislike, true for like
@@ -49,22 +47,17 @@ const ReviewCard: FC<ReviewCardProps> = ({
       Object.values(VOTE_ACTIONS).some(v => v === review.myVote || v === liked)
     ) {
       // i.e. already voted
-
       return;
     }
-    const res = await voteReview({
+    await voteReview({
       variables: {
         id: getReviewId(review),
         vote,
       },
     });
-
     setLiked(vote);
   };
 
-  if (concise) {
-    return <div />;
-  }
   return (
     <div className={clsx(styles.reviewCard, 'card', !showMore && 'retracted')}>
       <div className={clsx(styles.reviewHeader, 'row')}>
@@ -141,7 +134,7 @@ const ReviewCard: FC<ReviewCardProps> = ({
       )}
       <div className={clsx(styles.reviewBottomRow, 'center-row')}>
         <span className={styles.reviewTitleAuthor}>
-          {`@`}
+          {'@'}
           <span>{review.anonymous ? 'Anonymous' : review.username}</span>
           {' • '}
           {getMMMDDYY(review.createdAt)}

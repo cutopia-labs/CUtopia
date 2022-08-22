@@ -6,7 +6,13 @@ import { BiDownvote, BiUpvote } from 'react-icons/bi';
 
 import styles from '../../styles/components/review/LikeButtonRow.module.scss';
 
-const LikeButton = ({ isLike, selected, disabled, caption, onClick }) => (
+const LikeButton: FC<any> = ({
+  isLike,
+  selected,
+  disabled,
+  caption,
+  onClick,
+}) => (
   <Button
     size="small"
     onClick={onClick}

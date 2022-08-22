@@ -4,11 +4,10 @@ import { Button, IconButton, Menu, MenuItem } from '@material-ui/core';
 import { TiArrowSortedUp } from 'react-icons/ti';
 import { AiTwotoneCalendar } from 'react-icons/ai';
 import { FaUserAlt } from 'react-icons/fa';
-
 import { FiEdit } from 'react-icons/fi';
 import clsx from 'clsx';
-import styles from '../../styles/components/review/ReviewFilterBar.module.scss';
 
+import styles from '../../styles/components/review/ReviewFilterBar.module.scss';
 import { CourseInfo, ReviewsFilter } from '../../types';
 import { reverseMapping } from '../../helpers';
 
@@ -19,7 +18,7 @@ type ReviewFilterBarProps = {
   forwardedRef?: any;
   courseInfo: CourseInfo;
   reviewsPayload: Partial<ReviewsFilter>;
-  dispatchReviewsPayload;
+  dispatchReviewsPayload: any;
   fetchAllAction?: any;
   writeAction?: any;
   exceedLimit?: any;

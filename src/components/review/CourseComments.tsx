@@ -5,6 +5,7 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import { observer } from 'mobx-react-lite';
 import pluralize from 'pluralize';
 import clsx from 'clsx';
+
 import { DiscussionMessage } from '../../types';
 import { useView, useUser } from '../../store';
 import TextField from '../atoms/TextField';
@@ -12,7 +13,6 @@ import TextIcon from '../atoms/TextIcon';
 import { GET_DISCUSSIONS } from '../../constants/queries';
 import { SEND_MESSAGE } from '../../constants/mutations';
 import Loading from '../atoms/Loading';
-
 import styles from '../../styles/components/review/CourseComments.module.scss';
 import { getMMMDDYY } from '../../helpers/getTime';
 import { EMOJIS, EMOJIS_LENGTH } from '../../constants';
@@ -23,28 +23,26 @@ type MessageProps = {
   isAuthor: boolean;
 };
 
-const Message: FC<MessageProps> = ({ message, isAuthor }) => {
-  return (
-    <div className={clsx(styles.message, 'row')}>
-      <TextIcon
-        className={styles.forumTextIcon}
-        char={EMOJIS[hashing(message.user, EMOJIS_LENGTH)]}
-        size={30}
-        fontSize={22}
-        backgroundColor="transparent"
-      />
-      <span>
-        <span className={clsx(styles.messageUsername, 'center-row')}>
-          {`${message.user} · `}
-          <span className={clsx(styles.messageText, 'caption')}>
-            {getMMMDDYY(message.id)}
-          </span>
+const Message: FC<MessageProps> = ({ message }) => (
+  <div className={clsx(styles.message, 'row')}>
+    <TextIcon
+      className={styles.forumTextIcon}
+      char={EMOJIS[hashing(message.user, EMOJIS_LENGTH)]}
+      size={30}
+      fontSize={22}
+      backgroundColor="transparent"
+    />
+    <span>
+      <span className={clsx(styles.messageUsername, 'center-row')}>
+        {`${message.user} · `}
+        <span className={clsx(styles.messageText, 'caption')}>
+          {getMMMDDYY(message.id)}
         </span>
-        <span className={styles.messageText}>{message.text}</span>
       </span>
-    </div>
-  );
-};
+      <span className={styles.messageText}>{message.text}</span>
+    </span>
+  </div>
+);
 
 type CourseCommentsProps = {
   courseId: string;
@@ -55,8 +53,8 @@ const CourseComments: FC<CourseCommentsProps> = ({ courseId }) => {
   const [messageInput, setMessageInput] = useState('');
   const [page, setPage] = useState<number | null>(0);
   const user = useUser();
-  const messagesContainerRef = useRef<HTMLDivElement>(null);
   const view = useView();
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
   const onSubmit = async e => {
     const messageId = +new Date();
     e.preventDefault();
@@ -79,6 +77,7 @@ const CourseComments: FC<CourseCommentsProps> = ({ courseId }) => {
       view.setSnackBar('Comment posted!');
     } catch (e) {
       view.handleError(e);
+      // remove the failed-to-post message in list
       setMessages(items => items.filter(item => item._id !== messageId));
     }
   };

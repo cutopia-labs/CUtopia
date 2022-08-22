@@ -7,9 +7,9 @@ import {
   RoomOutlined,
   DeleteOutline,
 } from '@material-ui/icons';
-
 import clsx from 'clsx';
 import { FC } from 'react';
+
 import styles from '../../styles/components/review/CourseSections.module.scss';
 import { usePlanner, useView } from '../../store';
 import { WEEKDAYS_TWO_ABBR } from '../../constants';
@@ -22,7 +22,7 @@ type SectionCardProps = {
   addSection: (section: CourseSection) => void;
   deleteSection: (sectionId) => void;
   added: boolean;
-  onAddHoverChange?: (hover: boolean, section: CourseSection) => void;
+  onMouseEvent?: (hover: boolean, section: CourseSection) => void;
 };
 
 export const getSectionTime = (section: CourseSection) =>
@@ -40,9 +40,8 @@ const SectionCard: FC<SectionCardProps> = ({
   addSection,
   deleteSection,
   added,
-  onAddHoverChange,
+  onMouseEvent,
 }) => {
-  // TODO: Delete if added not yet implemented since plannerCourses observable is not deep enough to observe such change
   const SECTION_CARD_ITEMS = [
     {
       icon: <PersonOutline />,
@@ -67,8 +66,8 @@ const SectionCard: FC<SectionCardProps> = ({
             e.stopPropagation();
             added ? deleteSection(section.name) : addSection(section);
           }}
-          onMouseEnter={() => !added && onAddHoverChange(true, section)}
-          onMouseLeave={() => onAddHoverChange(false, section)}
+          onMouseEnter={() => !added && onMouseEvent(true, section)}
+          onMouseLeave={() => onMouseEvent(false, section)}
         >
           {added ? <DeleteOutline /> : <Add />}
         </IconButton>
@@ -87,15 +86,13 @@ const SectionCard: FC<SectionCardProps> = ({
 
 type CourseSectionsProps = {
   courseInfo: CourseInfo;
-  onAddHoverChange?: (hover: boolean, courseSection: CourseSection) => void;
+  onMouseEvent?: (hover: boolean, courseSection: CourseSection) => void;
 };
 
 const CourseSections: FC<CourseSectionsProps> = ({
   courseInfo: { sections: courseSections, courseId, title, units },
 }) => {
-  if (!courseSections) {
-    return <ErrorCard mode={ErrorCardMode.NULL} />;
-  }
+  if (!courseSections) return <ErrorCard mode={ErrorCardMode.NULL} />;
   const planner = usePlanner();
   const view = useView();
   const addToPlanner = (section: CourseSection) => {
@@ -128,7 +125,7 @@ const CourseSections: FC<CourseSectionsProps> = ({
   return (
     <div className={styles.courseSections}>
       <div className={styles.courseSectionWrapper}>
-        <span className={styles.courseTermLabel}>{`${CURRENT_TERM}`}</span>
+        <span className={styles.courseTermLabel}>{CURRENT_TERM}</span>
         {courseSections.map(section => (
           <SectionCard
             key={section.name}
@@ -138,7 +135,7 @@ const CourseSections: FC<CourseSectionsProps> = ({
             added={planner.currentSections.some(
               curSection => curSection.name == section.name
             )}
-            onAddHoverChange={handlePreviewCourse}
+            onMouseEvent={handlePreviewCourse}
           />
         ))}
       </div>

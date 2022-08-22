@@ -2,19 +2,20 @@ import { useState, useEffect, useRef, useReducer, FC } from 'react';
 import { useQuery } from '@apollo/client';
 import { Divider } from '@material-ui/core';
 import pluralize from 'pluralize';
-
 import copy from 'copy-to-clipboard';
 import { ReportCategory } from 'cutopia-types/lib/codes';
 import { useRouter } from 'next/router';
+
 import styles from '../../styles/components/review/CourseReviews.module.scss';
 import { removeEmptyValues } from '../../helpers';
 import { GET_REVIEW, REVIEWS_QUERY } from '../../constants/queries';
 import Loading from '../atoms/Loading';
-import { useView, useUser } from '../../store';
+import { useView } from '../../store';
 import useDebounce from '../../hooks/useDebounce';
 import { LAZY_LOAD_BUFFER, REVIEWS_PER_PAGE } from '../../config';
 import { CourseInfo, Review, ReviewsFilter, ReviewsResult } from '../../types';
 import Footer from '../molecules/Footer';
+import If from '../atoms/If';
 import ReviewCard from './ReviewCard';
 import ReviewFilterBar from './ReviewFilterBar';
 
@@ -46,7 +47,6 @@ const CourseReviews: FC<Props> = ({
   const [page, setPage] = useState(0);
   const [reviews, setReviews] = useState([]);
   const view = useView();
-  const user = useUser();
   const reviewFilterBarRef = useRef<HTMLDivElement | null>(null);
   const [reviewsPayload, dispatchReviewsPayload] = useReducer(
     (state: Partial<ReviewsFilter>, action: Partial<ReviewsFilter>) =>
@@ -210,16 +210,19 @@ const CourseReviews: FC<Props> = ({
       )}
       {Boolean(courseInfo) && (
         <span className="review-count caption center-row">
-          {reviewId ? (
-            <>
-              {`Showing 1 review`}
-              <span className="caption">{`(${
-                courseInfo?.rating?.numReviews || ''
-              } total)`}</span>
-            </>
-          ) : (
-            `${pluralize('review', courseInfo?.rating?.numReviews || 0, true)}`
-          )}
+          <If
+            visible={reviewId}
+            elseNode={`${pluralize(
+              'review',
+              courseInfo?.rating?.numReviews || 0,
+              true
+            )}`}
+          >
+            {`Showing 1 review`}
+            <span className="caption">{`(${
+              courseInfo?.rating?.numReviews || ''
+            } total)`}</span>
+          </If>
           <Divider />
         </span>
       )}
