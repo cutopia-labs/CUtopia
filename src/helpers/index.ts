@@ -5,9 +5,9 @@ import {
   TOKEN_EXPIRE_DAYS,
 } from '../constants';
 import { MIN_DESKTOP_WIDTH } from '../config';
-import { VALID_COURSE_RULE } from '../constants/rules';
 import { Review } from '../types';
 import { getStoreData } from './store';
+import { VALID_COURSE_RULE } from './rules';
 
 export const getSubjectAndCode = (courseId: string) => ({
   subject: courseId.substring(0, 4),

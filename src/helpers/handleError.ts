@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import { ApolloError } from '@apollo/client';
 import { ErrorCode } from 'cutopia-types/lib/codes';
 import { ERROR_MESSAGES } from '../constants/errors';
@@ -8,6 +6,7 @@ import ViewStore from '../store/ViewStore';
 
 const handleError = (e: ApolloError, view: ViewStore): boolean | null => {
   const err_code = parseInt(e.message, 10);
+  // @ts-ignore
   const customErrors = isNaN(err_code) ? e.networkError?.result?.errors : null;
   const alt_code = customErrors?.length
     ? parseInt(customErrors[0]?.extensions?.code, 10)
