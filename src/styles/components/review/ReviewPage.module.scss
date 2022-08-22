@@ -1,15 +1,9 @@
 .reviewPage {
-  grid-template-columns: minmax(0,1fr) min-content;
+  grid-template-columns: minmax(0, 1fr) min-content;
 }
 .reviewHomePanel {
   padding: 0;
   grid-auto-rows: min-content;
-}
-.homeChipsRow {
-  margin-right: auto;
-}
-.review-home-row {
-  align-items: flex-start;
 }
 .rankingCard {
   overflow: hidden;
@@ -34,27 +28,16 @@
     }
   }
   .gradeIndicator {
-    width: 57px;
-    height: 25px;
+    width: 56px;
+    height: 28px;
   }
 }
-.rankingCard-header {
-  padding: 0 var(--card-padding);
-  height: 44px;
-  color: var(--primary);
-  background-color: var(--background-secondary);
-  & > :first-child {
-    margin-right: 10px;
-  }
-}
-.rankingCard-header-title {
-  font-size: 16px;
-  font-weight: 500;
-}
+
 .rankingLabel {
   width: 40px;
   opacity: 0.5;
 }
+
 .sortMenu {
   text-transform: capitalize;
 }
@@ -75,22 +58,16 @@
     white-space: pre-line;
     -webkit-line-clamp: 3;
   }
+  .gradeIndicator {
+    width: 36px;
+    height: 36px;
+  }
 }
 
 @media only screen and (max-width: 1260px) {
-  .reviewHomePanel {
-    .tabs-row {
-      position: sticky;
-      top: var(--header-height);
-      z-index: 2;
-    }
-  }
   .homeChipsRow {
-    padding: 0 var(--card-padding);
-    width: calc(100% - 2 * var(--card-padding));
-  }
-  .review-home-row {
-    flex-direction: column;
+    padding: 0 8px;
+    width: calc(100% - 2 * 8px);
   }
   .rankingCard {
     width: 100%;

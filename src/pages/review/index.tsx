@@ -10,7 +10,7 @@ import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
 
-import styles from '../../styles/components/review/HomePanel.module.scss';
+import styles from '../../styles/components/review/ReviewPage.module.scss';
 import GradeIndicator from '../../components/atoms/GradeIndicator';
 import { RATING_FIELDS } from '../../constants';
 import {
@@ -82,7 +82,12 @@ const RecentReviewCard: FC<RecentReviewCardProps> = ({
       caption={`By ${review.username || 'Anonymous'} on ${getMMMDDYY(
         review.createdAt
       )}`}
-      right={<GradeIndicator grade={review[category]?.grade} />}
+      right={
+        <GradeIndicator
+          grade={review[category]?.grade}
+          style={styles.gradeIndicator}
+        />
+      }
       onClick={() => onClick(`${review.courseId}?rid=${review.createdAt}`)}
     >
       <span className={clsx(styles.recentReviewText, 'ellipsis-text')}>
@@ -209,7 +214,10 @@ const RankingCard: FC<RankingCardProps> = ({
               course.numReviews ? (
                 <Badge index={0} text={`${course.numReviews} reviews`} />
               ) : (
-                <GradeIndicator grade={course[sortKey]} />
+                <GradeIndicator
+                  grade={course[sortKey]}
+                  style={styles.gradeIndicator}
+                />
               )
             }
             title={course.courseId}
@@ -266,6 +274,7 @@ const HomePanel: FC = () => {
         <TabsContainer items={MENU_ITEMS} selected={tab} onSelect={setTab} />
         {(tab === 'Top Rated' || tab === 'Recents') && (
           <ChipsRow
+            className={styles.homeChipsRow}
             items={[
               tab === 'Top Rated' ? 'overall' : '',
               ...RATING_FIELDS,
