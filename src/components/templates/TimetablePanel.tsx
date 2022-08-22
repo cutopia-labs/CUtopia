@@ -29,7 +29,7 @@ type TimetablePanelProps = {
 
 const SYNC_STATE_ICON = {
   [PlannerSyncState.DIRTY]: <AiOutlineSync />,
-  [PlannerSyncState.SYNCING]: <AiOutlineLoading className="icon-spin" />,
+  [PlannerSyncState.SYNCING]: <AiOutlineLoading className={styles.iconSpin} />,
 };
 
 const saveAs = (uri: string, filename: string) => {
