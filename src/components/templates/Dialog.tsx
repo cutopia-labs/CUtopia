@@ -4,9 +4,9 @@ import { observer } from 'mobx-react-lite';
 import { useMutation } from '@apollo/client';
 import { ReportCategory } from 'cutopia-types/lib/codes';
 
+import styles from '../../styles/components/templates/Dialog.module.scss';
 import ListItem from '../molecules/ListItem';
 import { useView, useUser } from '../../store';
-import styles from '../../styles/components/templates/Dialog.module.scss';
 import { clearStore } from '../../helpers/store';
 import { REPORT_ISSUES_MESSAGES, REPORT_MODES } from '../../constants/messages';
 import Section from '../molecules/Section';
@@ -92,7 +92,6 @@ const ReportIssuesDialogContent: FC<ReportIssuesDialogContentProps> = observer(
     };
     return (
       <DialogContentTemplate
-        className={styles.issueReportDialog}
         title="Report Issues"
         caption={`${REPORT_ISSUES_MESSAGES[reportCategory]}${
           id ? ` ${id}` : ''

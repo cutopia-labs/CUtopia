@@ -1,34 +1,14 @@
-.issueReportDialog {
-  .report-issue-category {
-    height: 42px;
-    text-transform: capitalize;
-    font-size: 14px;
-    &:global(.caption) {
-      color: var(--caption);
-    }
+.logOutRow {
+  width: calc(100% - 24px);
+  padding: 12px 0 12px 14px;
+  height: 32px;
+  :global(.title) {
+    font-weight: normal;
+    font-size: 16px;
   }
 }
 
-
-:global(.list-item-container) {
-  &.logOutRow {
-    width: calc(100% - 24px);
-    padding: 12px 0 12px 14px;
-    height: 32px;
-    :global(.title) {
-      font-weight: normal;
-      text-transform: capitalize;
-      font-size: 16px;
-    }
-  }
-}
-
-.category-menu {
-  :global(.MuiListItem-root) {
-    text-transform: capitalize;
-  }
-}
-.dialogDescription.inputContainer {
+.dialogDescription {
   height: 36px;
   font-size: 14px;
 }
@@ -41,9 +21,7 @@
 }
 
 @media only screen and (max-width: 1260px) {
-  .issueReportDialog {
-    .issueChipsRow {
-      flex-wrap: wrap;
-    }
+  .issueChipsRow {
+    flex-wrap: wrap;
   }
 }
