@@ -42,7 +42,6 @@ const SECTIONS = [
 
 const Header: FC = () => {
   const router = useRouter();
-  const [visible, setVisible] = useState(false);
   const isMobile = useMobileQuery();
   const [anchorEl, setAnchorEl] = useState(null);
   const navSections = SECTIONS.map(section => {
@@ -69,16 +68,14 @@ const Header: FC = () => {
     <header className={styles.headerBgContainer}>
       <div className={clsx(styles.headerContainer, 'row')}>
         <If visible={isMobile}>
-          {!visible && (
-            <IconButton
-              aria-label="sort"
-              size="small"
-              onClick={e => setAnchorEl(e.currentTarget)}
-              disableRipple
-            >
-              <MenuIcon />
-            </IconButton>
-          )}
+          <IconButton
+            aria-label="sort"
+            size="small"
+            onClick={e => setAnchorEl(e.currentTarget)}
+            disableRipple
+          >
+            <MenuIcon />
+          </IconButton>
           <Menu
             id="simple-menu"
             className={styles.sortMenu}
@@ -97,13 +94,11 @@ const Header: FC = () => {
             ))}
           </Menu>
         </If>
-        {(!visible || !isMobile) && (
-          <Link href="/">
-            <a className={styles.headerLogo}>
-              <Logo />
-            </a>
-          </Link>
-        )}
+        <Link href="/">
+          <a className={styles.headerLogo}>
+            <Logo />
+          </a>
+        </Link>
         <nav className={clsx(styles.headerNav, 'row')}>
           <SearchDropdown style={styles.headerSearchDropdown} />
           {!isMobile && navSections}
