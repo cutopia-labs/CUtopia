@@ -68,9 +68,9 @@ export const deleteUser = async input => {
   await User.deleteOne({ username }).exec();
 };
 
-export const getUser = async userId => {
+export const getUser = async (userId, projection?) => {
   const userIdField = parseUserIdField(userId);
-  return await User.findOne({ [userIdField]: userId });
+  return await User.findOne({ [userIdField]: userId }, projection);
 };
 
 export const updateUser = async input => {
@@ -83,7 +83,7 @@ export const updateUser = async input => {
 
 export const verifyUser = async input => {
   const { username, code } = input;
-  const user = await getUser(username);
+  const user = await getUser(username, 'verified veriCode createdAt');
 
   if (!user) {
     throw Error(ErrorCode.VERIFICATION_USER_DNE.toString());
@@ -101,7 +101,7 @@ export const verifyUser = async input => {
 
   user.veriCode = null;
   user.verified = true;
-  await User.updateOne({ username }, user).exec();
+  await user.save();
 };
 
 export const login = async input => {
@@ -125,7 +125,7 @@ export const login = async input => {
 
 export const getResetPasswordCodeAndEmail = async input => {
   const { userId } = input;
-  const user = await getUser(userId);
+  const user = await getUser(userId, 'verified SID');
 
   if (!user) {
     throw Error(ErrorCode.GET_PASSWORD_USER_DNE.toString());
@@ -135,18 +135,17 @@ export const getResetPasswordCodeAndEmail = async input => {
     throw Error(ErrorCode.GET_PASSWORD_NOT_VERIFIED.toString());
   }
 
-  const resetPwdCode = nanoid(5);
-  user.resetPwdCode = resetPwdCode;
+  user.resetPwdCode = nanoid(5);
   await user.save();
   return {
     SID: user.SID,
-    resetPwdCode,
+    resetPwdCode: user.resetPwdCode,
   };
 };
 
 export const resetPassword = async input => {
   const { userId, newPassword, resetCode } = input;
-  const user = await getUser(userId);
+  const user = await getUser(userId, 'verified resetPwdCode');
 
   if (!user) {
     throw Error(ErrorCode.RESET_PASSWORD_USER_DNE.toString());

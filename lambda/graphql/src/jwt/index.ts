@@ -36,9 +36,9 @@ export const verify = async token => {
 
   if (Date.now() >= decoded.exp * 1000) {
     const { username, password } = decoded;
-    const user = await getUser(username);
+    const user = await getUser(username, 'password');
     // If pwd not changed, then return refreshed token
-    if (user?.password?.endsWith(password)) {
+    if (user?.password.endsWith(password)) {
       throw new ApolloError(
         'Expired token',
         ErrorCode.AUTHORIZATION_REFRESH_TOKEN.toString(),
