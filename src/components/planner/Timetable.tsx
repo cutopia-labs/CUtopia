@@ -184,4 +184,6 @@ const Timetable = forwardRef<HTMLDivElement, TimetableProps>(
   }
 );
 
+Timetable.displayName = 'Timetable';
+
 export default Timetable;
