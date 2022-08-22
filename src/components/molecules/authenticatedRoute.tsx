@@ -36,7 +36,7 @@ const authenticatedRoute: HOC = (Component = null, options = {}) => {
         }
       },
       onError: e => {
-        const handled = view.handleError(e);
+        view.handleError(e);
         setAuthState(AuthState.LOGGED_OUT);
       },
     });

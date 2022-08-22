@@ -7,10 +7,10 @@
   &:global(.fixed) {
     position: fixed;
     --loading-content-width: 20px;
-    &:global(.logo) {
-      --loading-content-width: 46px
-    }
     --loading-margin: calc(50% - var(--loading-content-width));
+    &:global(.logo) {
+      --loading-content-width: 46px;
+    }
     &:global(.padding) {
       --loading-margin: calc(50% - var(--loading-content-width) - var(--page-margin) / 2);
     }

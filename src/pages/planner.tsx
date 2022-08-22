@@ -13,7 +13,6 @@ import SearchPanel from '../components/organisms/SearchPanel';
 import Page from '../components/atoms/Page';
 import PlannerTimetable from '../components/planner/PlannerTimetable';
 import PlannerCart from '../components/planner/PlannerCart';
-
 import authenticatedRoute from '../components/molecules/authenticatedRoute';
 import useClickObserver from '../hooks/useClickObserver';
 import { isMobileQuery } from '../helpers';

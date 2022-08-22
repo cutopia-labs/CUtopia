@@ -47,9 +47,7 @@ const getModeFromExpireAt = (expireAt: number) => {
 
 const getExpire = (str: string) => {
   /* Handle invalid case */
-  if (!str) {
-    return null;
-  }
+  if (!str) return null;
   /* If user choose share expire days */
   if (str.endsWith('day') || str.endsWith('days')) {
     return parseInt(str[0], 10);
