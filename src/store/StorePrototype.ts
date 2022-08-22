@@ -48,7 +48,7 @@ class StorePrototype {
         delete defaultValues[key];
       });
     }
-    /* If there are some unloaded keys in default values, load it */
+    // If there are some unloaded keys in default values, load it
     this.initStore(defaultValues);
   };
 

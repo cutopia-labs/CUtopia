@@ -1,5 +1,4 @@
 import { makeObservable, observable, action } from 'mobx';
-
 import {
   CourseConcise,
   CourseInfo,
@@ -9,7 +8,6 @@ import {
   User,
 } from '../types';
 import { storeData, getStoreData, removeStoreItem } from '../helpers/store';
-
 import {
   HISTORY_MAX_LENGTH,
   LEVEL_UP_EXP,
@@ -76,8 +74,6 @@ class UserStore extends StorePrototype {
     }
   }
 
-  // General
-
   get level() {
     return Math.floor((this.data?.exp || 0) / LEVEL_UP_EXP);
   }
@@ -86,7 +82,6 @@ class UserStore extends StorePrototype {
     return Boolean(this.data?.username);
   }
 
-  // CUtopia
   @action saveUser = (username: string, token: string, data: Partial<User>) => {
     // need set date before set token cuz set token first will trigger query user.me
     this.updateUserData(data);
@@ -107,10 +102,7 @@ class UserStore extends StorePrototype {
 
   @action applyToken = () => {
     const savedToken = getStoreData('token') || {};
-    if (!savedToken.token) {
-      return;
-    }
-
+    if (!savedToken.token) return;
     if (
       savedToken.expire <
       getTokenExpireDate(TOKEN_EXPIRE_BEFORE, TOKEN_EXPIRE_DAYS)
@@ -150,7 +142,6 @@ class UserStore extends StorePrototype {
   };
 
   // Fav courses
-
   @action checkIsFavourite = (courseId: string) =>
     this.favoriteCourses.some(course => course.courseId === courseId);
 
@@ -183,11 +174,6 @@ class UserStore extends StorePrototype {
     this.setStore('searchHistory', temp);
   };
 
-  @action deleteHistory = (courseId: string) => {
-    const temp = this.searchHistory.filter(hist => hist !== courseId);
-    this.setStore('searchHistory', temp);
-  };
-
   @action updateReviewDrafts = (courseId: string, review: Review) => {
     withUndo(
       {
@@ -208,11 +194,6 @@ class UserStore extends StorePrototype {
     const copy = { ...this.reviewDrafts };
     delete copy[courseId];
     this.setStore('reviewDrafts', copy);
-  };
-
-  // reset
-  @action reset = () => {
-    this.resetStore();
   };
 }
 

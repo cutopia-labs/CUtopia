@@ -1,12 +1,10 @@
 import { makeObservable, observable, action } from 'mobx';
-
 import {
   CourseQuery,
   CourseSearchItem,
   CourseSearchList,
   LecturerQuery,
 } from '../types';
-
 import { DATA_CONFIGS, SIMILAR_COURSE_LIMIT } from '../config';
 import { storeData } from '../helpers/store';
 import {
@@ -79,7 +77,7 @@ class DataStore extends StorePrototype {
     const courses = await this.getRemoteData('courseList');
     const results: false | CourseSearchItem[] = _searchCourses(courses, query);
     if (results) {
-      /* Make offered course come first */
+      // Make offered course come first
       if (query.payload?.showAvalibility) {
         results.sort((a, b) => (a.o ? (b.o ? a.c.localeCompare(b.c) : -1) : 1));
       }

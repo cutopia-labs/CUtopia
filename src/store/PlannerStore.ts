@@ -1,5 +1,4 @@
 import { makeObservable, observable, action } from 'mobx';
-
 import { cloneDeep, isEqual } from 'lodash';
 import {
   PlannerCourse,
@@ -12,7 +11,6 @@ import {
   PlannerSyncState,
   DatedData,
 } from '../types';
-
 import withUndo from '../helpers/withUndo';
 import { getDurationInHour, timeInRange } from '../helpers/timetable';
 import { makeSectionLabel } from '../constants';
@@ -87,12 +85,10 @@ class PlannerStore extends StorePrototype {
   }
 
   get delta() {
-    //
-    //
     const delta: PlannerDelta = {};
     let dirty = false;
     const prevPlannerName = this.planner?.tableName;
-    /* need either old / new to be non empty for the delta to be valid */
+    // need either old / new to be non empty for the delta to be valid
     if (
       this.plannerName !== prevPlannerName &&
       (this.plannerName || prevPlannerName)
@@ -123,7 +119,7 @@ class PlannerStore extends StorePrototype {
           for (let i = 0; i < section.days.length; i++) {
             let day = parseInt(section.days[i] as any, 10);
             const sectionDuration = getDurationInHour(section, i);
-            /* If no a number, then it's TBA section, remove from credit calc */
+            // If no a number, then it's TBA section, remove from credit calc
             if (Number.isNaN(sectionDuration) || Number.isNaN(day)) {
               info.tbaSections[makeSectionLabel(section, course.courseId)] = {
                 name: section.name,
@@ -131,7 +127,7 @@ class PlannerStore extends StorePrototype {
               };
               break;
             }
-            /* If sunday course */
+            // If sunday course
             if (day === 0) {
               day = 7;
             }
@@ -375,7 +371,7 @@ class PlannerStore extends StorePrototype {
     this.planner.tableName = tableName;
   };
 
-  /* Timetable Overview */
+  // Timetable Overview
   @action updateTimetableOverview = (
     overview: Partial<TimetableOverviewWithMode>,
     isAdd: boolean = false
@@ -404,16 +400,10 @@ class PlannerStore extends StorePrototype {
       [...(this.timetableOverviews || [])].filter(item => item._id !== id)
     );
   };
-  /* TEMP start */
-  @action deletePlanner = (key: number) => {
-    const copy = cloneDeep(this.planners);
-    delete copy[key];
-    this.setStore('planners', copy);
-  };
+  /* TEMP start (Remove tgt with local ttb upload) */
   @action destroyPlanners = () => {
     this.removeStore('planners');
   };
-
   /* TEMP end */
 }
 
