@@ -83,12 +83,16 @@ type FooterProps = {
   mt?: boolean;
   mb?: boolean;
   style?: string;
+  visible?: boolean;
 };
 
-const Footer: FC<FooterProps> = ({ mt, mb, style }) => (
-  <div className={clsx(styles.footer, mt && 'mt', mb && 'mb', style)}>
-    {FOOTER_ITEMS.map(item => renderItem(item))}
-  </div>
-);
+const Footer: FC<FooterProps> = ({ mt, mb, style, visible }) => {
+  if (!visible) return null;
+  return (
+    <div className={clsx(styles.footer, mt && 'mt', mb && 'mb', style)}>
+      {FOOTER_ITEMS.map(item => renderItem(item))}
+    </div>
+  );
+};
 
 export default Footer;
