@@ -86,7 +86,7 @@ type FooterProps = {
   visible?: boolean;
 };
 
-const Footer: FC<FooterProps> = ({ mt, mb, style, visible }) => {
+const Footer: FC<FooterProps> = ({ mt, mb, style, visible = true }) => {
   if (!visible) return null;
   return (
     <div className={clsx(styles.footer, mt && 'mt', mb && 'mb', style)}>

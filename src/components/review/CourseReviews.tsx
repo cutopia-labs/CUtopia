@@ -238,7 +238,7 @@ const CourseReviews: FC<Props> = ({
         ))}
         {(reviewLoading || reviewsLoading) && <Loading />}
       </div>
-      {page === null && <Footer />}
+      <Footer visible={page === null} />
     </>
   );
 };

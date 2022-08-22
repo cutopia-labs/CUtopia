@@ -651,7 +651,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
         switchTimetable={switchTimetable}
         deleteTable={(id: string, expire: number) => onDelete(id, expire)}
       />
-      {!isHome && !isMobile && <Footer style={styles.plannerFooter} />}
+      <Footer style={styles.plannerFooter} visible={!isHome && !isMobile} />
       <Dialog
         transitionDuration={{
           enter: 120,

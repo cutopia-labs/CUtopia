@@ -89,12 +89,12 @@ const HomePage: FC = () => {
       <div className={clsx(styles.homePageLeft, 'grid-auto-row')}>
         <UserCard userData={user.data} />
         <LinksCard />
-        {!isMobile && <Footer />}
+        <Footer visible={!isMobile} />
       </div>
       <div className={clsx(styles.homePageRight, 'grid-auto-row')}>
         <TabsContainer items={SELECTIONS} selected={tab} onSelect={setTab} />
         {renderTab()}
-        {isMobile && <Footer />}
+        <Footer visible={isMobile} />
       </div>
     </Page>
   );
