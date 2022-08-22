@@ -1,10 +1,9 @@
-
 .loginPage {
   flex: 1;
 }
 
 .loginPanel {
-  margin: auto auto auto auto;
+  margin: auto;
   background-color: var(--surface);
   border-radius: var(--border-radius);
   padding: 36px;
@@ -38,19 +37,13 @@
   font-size: 14px;
   cursor: pointer;
   margin-left: 12px;
-  color: var(--landing-page-btn-color);
   font-weight: bold;
 }
 .loginInputContainer {
   margin-top: 0;
 }
-.qrcodeRow {
-  justify-content: space-between;
+.titleRow {
   margin-bottom: 8px;
-  canvas {
-    padding: 2px;
-    background-color: white;
-  }
 }
 .forgotPwdRow {
   margin-top: 4px;
@@ -60,9 +53,6 @@
   > .forgotPwdLabel {
     margin-left: auto;
   }
-}
-.forgot-password-container {
-  flex-direction: row;
 }
 .loginBtn {
   height: 50px;

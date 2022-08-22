@@ -343,17 +343,15 @@ const LoginPanel: FC<Props> = ({ className, returnUrl }) => {
   return (
     <div className={clsx(styles.loginPage, 'center column')}>
       <div className={clsx(styles.loginPanel, 'grid-auto-row', className)}>
-        <div className={clsx(styles.qrcodeRow, 'center-row')}>
-          <div>
-            {mode !== LoginPageMode.CUTOPIA_LOGIN &&
-              mode !== LoginPageMode.CUTOPIA_SIGNUP && (
-                <IconButton className={styles.goBackIcon} onClick={goBack}>
-                  <ArrowBack />
-                </IconButton>
-              )}
-            <h2 className="title">{MODE_ITEMS[mode].title}</h2>
-            <span className="caption">{MODE_ITEMS[mode].caption}</span>
-          </div>
+        <div className={clsx(styles.titleRow, 'column-row')}>
+          {mode !== LoginPageMode.CUTOPIA_LOGIN &&
+            mode !== LoginPageMode.CUTOPIA_SIGNUP && (
+              <IconButton className={styles.goBackIcon} onClick={goBack}>
+                <ArrowBack />
+              </IconButton>
+            )}
+          <h2 className="title">{MODE_ITEMS[mode].title}</h2>
+          <span className="caption">{MODE_ITEMS[mode].caption}</span>
         </div>
         <form className="grid-auto-row" onSubmit={onSubmit}>
           {MODE_ITEMS[mode].sid && (
