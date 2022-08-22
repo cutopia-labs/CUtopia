@@ -18,24 +18,17 @@
   &.shine {
     font-size: 30px;
     animation: shine 2s infinite;
-    opacity:0.8;
-    &:after {
-      margin-left: 4px;
-      content: '';
-      animation: dots 2s infinite;
-    }
   }
 }
 
 @keyframes shine {
-  0%   { opacity:0.8; }
-  50%  { opacity:0.6; }
-  100% { opacity:0.8; }
-}
-
-@keyframes dots {
-  25%  { content: ''; }
-  50%  { content: '.'; }
-  75%  { content: '..'; }
-  100% { content: '...'; }
+  0% {
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 0.725;
+  }
+  100% {
+    opacity: 0.9;
+  }
 }
