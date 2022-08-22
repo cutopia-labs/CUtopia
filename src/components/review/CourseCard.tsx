@@ -2,11 +2,11 @@ import { useState, FC } from 'react';
 import { observer } from 'mobx-react-lite';
 import { IconButton, Tooltip } from '@material-ui/core';
 import { ErrorOutline, Favorite, FavoriteBorder } from '@material-ui/icons';
-
 import { default as RouterLink } from 'next/link';
 import { FiExternalLink } from 'react-icons/fi';
 import clsx from 'clsx';
 import { ReportCategory } from 'cutopia-types/lib/codes';
+
 import styles from '../../styles/components/review/CourseCard.module.scss';
 import ShowMoreOverlay from '../molecules/ShowMoreOverlay';
 import Badge from '../atoms/Badge';
@@ -17,6 +17,7 @@ import Link from '../molecules/Link';
 import useMobileQuery from '../../hooks/useMobileQuery';
 import Section from '../molecules/Section';
 import SectionText from '../molecules/SectionText';
+import If from '../atoms/If';
 import CourseSections from './CourseSections';
 import GradeRow from './GradeRow';
 
@@ -26,63 +27,57 @@ type CourseInfoProps = {
 
 const CourseBadgeRow: FC<CourseInfoProps> = ({ courseInfo }) => {
   if (!courseInfo?.units) return null;
+  const badgeInfo = [
+    [
+      courseInfo.units
+        ? `${parseInt(courseInfo.units, 10)} Credits`
+        : undefined,
+    ],
+    [courseInfo.academic_group],
+    ...(Array.isArray(courseInfo.components)
+      ? courseInfo.components
+      : (courseInfo.components || '').match(/[A-Z][a-z]+/g) || []
+    ).map(item => item && [item]),
+    ...(courseInfo.assessments || []).map(assessment => [
+      assessment.name,
+      parseInt(assessment.percentage, 10) || false,
+    ]),
+  ].filter(([k, v]) => k !== undefined);
   return (
     <div className="badges-row">
-      {[
-        [
-          courseInfo.units
-            ? `${parseInt(courseInfo.units, 10)} Credits`
-            : undefined,
-        ],
-        [courseInfo.academic_group],
-        ...(Array.isArray(courseInfo.components)
-          ? courseInfo.components
-          : (courseInfo.components || '').match(/[A-Z][a-z]+/g) || []
-        ).map(item => item && [item]),
-        ...(courseInfo.assessments || []).map(assessment => [
-          assessment.name,
-          parseInt(assessment.percentage, 10) || false,
-        ]),
-      ]
-        .filter(([k, v]) => k !== undefined)
-        .map(([k, v], i) => (
-          <Badge index={i} text={k} value={v} key={k + v} />
-        ))}
+      {badgeInfo.map(([k, v], i) => (
+        <Badge index={i} text={k} value={v} key={k + v} />
+      ))}
     </div>
   );
 };
 
 const CourseConcise: FC<CourseInfoProps> = ({ courseInfo }) => (
   <>
-    {courseInfo.requirements && (
+    <If visible={courseInfo.requirements}>
       <SectionText
         className={styles.requirementSection}
         title="Requirements"
         caption={courseInfo.requirements}
       />
-    )}
-    {courseInfo.rating && (
-      <>
-        <div className={styles.subHeadingContainer}>
-          <RouterLink href={`/review/${courseInfo.courseId}`}>
-            <a
-              className={clsx(
-                styles.reviewsLinkHeading,
-                'subHeading center-row'
-              )}
-            >
-              Reviews
-              <FiExternalLink />
-            </a>
-          </RouterLink>
-          <GradeRow
-            rating={courseInfo.rating}
-            concise
-            style={clsx(styles.gradeRowConcise, styles.gradeRow)}
-          />
-        </div>
-      </>
-    )}
+    </If>
+    <If visible={courseInfo.rating}>
+      <div className={styles.subHeadingContainer}>
+        <RouterLink href={`/review/${courseInfo.courseId}`}>
+          <a
+            className={clsx(styles.reviewsLinkHeading, 'subHeading center-row')}
+          >
+            Reviews
+            <FiExternalLink />
+          </a>
+        </RouterLink>
+        <GradeRow
+          rating={courseInfo.rating}
+          concise
+          style={clsx(styles.gradeRowConcise, styles.gradeRow)}
+        />
+      </div>
+    </If>
     <Section title="Sections" subheading>
       <CourseSections courseInfo={courseInfo} />
     </Section>
@@ -91,9 +86,9 @@ const CourseConcise: FC<CourseInfoProps> = ({ courseInfo }) => (
 
 const CourseDetails: FC<CourseInfoProps> = ({ courseInfo }) => (
   <>
-    {Boolean(courseInfo.requirements) && (
-      <SectionText title={'requirements'} caption={courseInfo.requirements} />
-    )}
+    <If visible={courseInfo.requirements}>
+      <SectionText title="requirements" caption={courseInfo.requirements} />
+    </If>
     <Section title="Past Paper" subheading>
       <Link
         style={styles.courseLinkContainer}
@@ -106,17 +101,11 @@ const CourseDetails: FC<CourseInfoProps> = ({ courseInfo }) => (
 
 type CourseCardProps = {
   courseInfo: CourseInfo;
-  concise?: boolean; // if concise, meaning that it's for planner search result
-  loading?: boolean;
+  concise?: boolean; // if concise, then it's for planner search result
   style?: string;
 };
 
-const CourseCard: FC<CourseCardProps> = ({
-  courseInfo,
-  concise,
-  loading,
-  style,
-}) => {
+const CourseCard: FC<CourseCardProps> = ({ courseInfo, concise, style }) => {
   const [showMore, setShowMore] = useState(true);
   const [skipHeightCheck, setSkipHeightCheck] = useState(concise);
   const user = useUser();
@@ -181,35 +170,40 @@ const CourseCard: FC<CourseCardProps> = ({
                 <ErrorOutline />
               </IconButton>
             </Tooltip>
-            {concise && (
+            <If visible={concise}>
               <Badge
                 className="right"
                 index={0}
                 text={`${parseInt(courseInfo.units, 10)} credits`}
                 value={null}
               />
-            )}
+            </If>
           </span>
           <span className="caption">{courseInfo.title}</span>
         </div>
-        {courseInfo.rating && !concise && !isMobile && (
+        <If visible={courseInfo.rating && !concise && !isMobile}>
           <GradeRow rating={courseInfo.rating} style={styles.gradeRow} />
-        )}
+        </If>
       </header>
-      {concise ? (
+      <If
+        visible={concise}
+        elseNode={<CourseBadgeRow courseInfo={courseInfo} />}
+      >
         <CourseConcise courseInfo={courseInfo} />
-      ) : (
-        <CourseBadgeRow courseInfo={courseInfo} />
-      )}
-      {courseInfo.rating &&
-        isMobile && // for mobile display grades
-        !concise && (
-          <GradeRow
-            rating={courseInfo.rating}
-            style={clsx(styles.gradeRowConcise, styles.gradeRow)}
-            concise
-          />
-        )}
+      </If>
+      <If
+        visible={
+          courseInfo.rating &&
+          isMobile && // for mobile display grades
+          !concise
+        }
+      >
+        <GradeRow
+          rating={courseInfo.rating}
+          style={clsx(styles.gradeRowConcise, styles.gradeRow)}
+          concise
+        />
+      </If>
       {Boolean(courseInfo.description) && (
         <p className="caption description">{courseInfo.description}</p>
       )}

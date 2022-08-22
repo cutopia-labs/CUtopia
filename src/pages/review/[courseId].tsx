@@ -108,7 +108,6 @@ const CoursePanel: FC<Props> = ({ c: courseInfo }) => {
               ...courseInfo,
               ...courseRating?.courses[0],
             }}
-            loading={false}
             style={styles.courseCard}
           />
           <TabsContainer items={MENU_ITEMS} selected={tab} onSelect={setTab} />
