@@ -6,6 +6,7 @@ import { observer } from 'mobx-react-lite';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
+
 import styles from '../../styles/pages/login.module.scss';
 import TextField from '../atoms/TextField';
 import { useView, useUser } from '../../store';
@@ -18,7 +19,6 @@ import {
 } from '../../constants/mutations';
 import { LoginPageMode } from '../../types';
 import handleCompleted from '../../helpers/handleCompleted';
-import { reverseMapping } from '../../helpers';
 import { LOGIN_REDIRECT_PAGE } from '../../config';
 import { USERNAME_RULE, SID_RULE, PASSWORD_RULE } from '../../helpers/rules';
 import Footer from '../molecules/Footer';
@@ -71,8 +71,6 @@ const PATH_MODE_LOOKUP = {
   'forgot': LoginPageMode.RESET_PASSWORD,
   'reset-pwd': LoginPageMode.RESET_PASSWORD_VERIFY,
 };
-
-const MODE_PATH_LOOKUP = reverseMapping(PATH_MODE_LOOKUP);
 
 const PREVIOUS_MODE_LOOKUP = {
   [LoginPageMode.VERIFY]: LoginPageMode.CUTOPIA_LOGIN,
@@ -274,9 +272,7 @@ const LoginPanel: FC<Props> = ({ className, returnUrl }) => {
 
   const onSubmit = async e => {
     e.preventDefault();
-    if (!validate()) {
-      return;
-    }
+    if (!validate()) return;
     switch (mode) {
       case LoginPageMode.CUTOPIA_LOGIN: {
         loginAndRedirect();
@@ -336,6 +332,13 @@ const LoginPanel: FC<Props> = ({ className, returnUrl }) => {
       setMode(prevMode);
     }
   };
+
+  const processing =
+    loggingInCUtopia ||
+    creatingUser ||
+    verifying ||
+    sendingResetCode ||
+    resettingPassword;
 
   return (
     <div className={clsx(styles.loginPage, 'center column')}>
@@ -420,20 +423,8 @@ const LoginPanel: FC<Props> = ({ className, returnUrl }) => {
             className={styles.loginBtn}
             color="primary"
             type="submit"
-            disabled={
-              loggingInCUtopia ||
-              creatingUser ||
-              verifying ||
-              sendingResetCode ||
-              resettingPassword
-            }
-            loading={
-              loggingInCUtopia ||
-              creatingUser ||
-              verifying ||
-              sendingResetCode ||
-              resettingPassword
-            }
+            disabled={processing}
+            loading={processing}
           >
             {MODE_ITEMS[mode].button}
           </LoadingButton>

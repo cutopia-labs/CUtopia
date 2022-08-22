@@ -1,7 +1,6 @@
 import { FC, useRef } from 'react';
 import { IconButton } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
-
 import copy from 'copy-to-clipboard';
 import clsx from 'clsx';
 import {
@@ -12,8 +11,9 @@ import {
   AiOutlineSync,
 } from 'react-icons/ai';
 import html2canvas from 'html2canvas';
-import { usePlanner, useView } from '../../store';
+
 import styles from '../../styles/components/templates/TimetablePanel.module.scss';
+import { usePlanner, useView } from '../../store';
 import Timetable from '../planner/Timetable';
 import Card from '../atoms/Card';
 
@@ -37,14 +37,8 @@ const saveAs = (uri: string, filename: string) => {
   if (typeof link.download === 'string') {
     link.href = uri;
     link.download = filename;
-
-    //Firefox requires the link to be in the body
     document.body.appendChild(link);
-
-    //simulate click
     link.click();
-
-    //remove the link when done
     document.body.removeChild(link);
   } else {
     window.open(uri);
@@ -55,6 +49,7 @@ const screenShotTimetable = async (el: HTMLDivElement) => {
   if (!el) return;
   try {
     const canvas = await html2canvas(el, {
+      // add styles for the screenshot
       onclone: el => {
         const ttb: any = el.querySelector('.timetable-container');
         if (ttb?.style) {
@@ -64,7 +59,6 @@ const screenShotTimetable = async (el: HTMLDivElement) => {
       },
     });
     const data = canvas.toDataURL();
-    // process canvas
     saveAs(data, 'cutopia-timetable.png');
   } catch (e) {
     return e;
@@ -116,9 +110,7 @@ const TimetablePanel: FC<TimetablePanelProps> = ({
     },
     {
       key: 'Clear',
-      action: () => {
-        onClear();
-      },
+      action: onClear,
       icon: <AiOutlineDelete />,
     },
   ];

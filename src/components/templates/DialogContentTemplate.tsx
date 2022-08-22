@@ -15,7 +15,7 @@ const DialogContentTemplate: FC<DialogContentTemplateProps> = ({
 }) => (
   <div className={clsx('contentContainer grid-auto-row', className)}>
     <div className="sub-title">{title}</div>
-    <div className={clsx('dialogCaption caption')}>{caption}</div>
+    <div className="dialogCaption caption">{caption}</div>
     {children}
   </div>
 );
