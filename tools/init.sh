@@ -4,7 +4,8 @@ git submodule update --init
 # Step 2: install node modules
 sh tools/install-package.sh
 
-# Step 3: build GraphQL types
+# Step 3: build schema and GraphQL types
+yarn --cwd lambda/graphql build-schema
 yarn --cwd lambda/graphql build-gql-types
 
 # Step 4: create environment variables
@@ -54,5 +55,3 @@ privateKeyPath="lambda/graphql/src/jwt/jwtRS256.key"
 
 ssh-keygen -t rsa -b 4096 -m PEM -f $privateKeyPath -N ""
 openssl rsa -in $privateKeyPath -pubout -outform PEM -out $publicKeyPath
-cat $publicKeyPath
-cat $privateKeyPath
