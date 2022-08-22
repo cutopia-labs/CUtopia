@@ -161,7 +161,7 @@ const removePrefix = (
 export const _searchLecturers = async (
   instructors: string[],
   query: LecturerQuery
-): Promise<string[] | false> => {
+): Promise<string[]> => {
   try {
     const { payload, limit } = query;
     const results = [];

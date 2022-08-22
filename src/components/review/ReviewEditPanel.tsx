@@ -14,11 +14,11 @@ import {
 } from '@material-ui/core';
 import { useMutation, useQuery } from '@apollo/client';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
-
 import { HiOutlineInformationCircle } from 'react-icons/hi';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import { useBeforeUnload } from 'react-use';
+
 import styles from '../../styles/components/review/ReviewEditPanel.module.scss';
 import { useView, useUser, useData } from '../../store';
 import { GET_REVIEW } from '../../constants/queries';
@@ -42,6 +42,7 @@ import useMobileQuery from '../../hooks/useMobileQuery';
 import handleCompleted from '../../helpers/handleCompleted';
 import LoadingButton from '../atoms/LoadingButton';
 import Page from '../../components/atoms/Page';
+import LoadingView from '../atoms/LoadingView';
 import CourseCard from './CourseCard';
 
 enum MODES {
@@ -148,12 +149,12 @@ type ReviewSubmitProps = {
   loading: boolean;
 };
 
-const ReviewSubmit = ({
+const ReviewSubmit: FC<ReviewSubmitProps> = ({
   disabled,
   progress,
   onSubmit,
   loading,
-}: ReviewSubmitProps) => (
+}) => (
   <LoadingButton
     loading={loading}
     className={styles.submitBtn}
@@ -180,15 +181,14 @@ type Props = {
 
 const ReviewEditPanel: FC<Props> = ({ courseInfo }) => {
   const courseId = courseInfo.courseId;
-
   const view = useView();
   const [mode, setMode] = useState(MODES.INITIAL);
   const [targetReview, setTargetReview] = useState<string | Review>('');
   const [progress, setProgress] = useState(0);
   const [anchorEl, setAnchorEl] = useState(null);
   const [instructorsSearchResult, setInstructorsSearchResult] = useState<
-    string[] | null | false
-  >(null);
+    string[]
+  >([]);
   const [showLecturers, setShowLecturers] = useState(false);
   const [addReview, { loading: addReviewLoading, error: addReviewError }] =
     useMutation(ADD_REVIEW, {
@@ -483,10 +483,8 @@ const ReviewEditPanel: FC<Props> = ({ courseInfo }) => {
             />
             {showLecturers && Boolean(formData.lecturer) && (
               <div className={clsx(styles.headerSearchResult, 'card')}>
-                {!instructorsSearchResult ? (
-                  <Loading />
-                ) : (
-                  instructorsSearchResult
+                <LoadingView loading={!instructorsSearchResult}>
+                  {instructorsSearchResult
                     .filter(item => formData.lecturer !== item)
                     .map(lecturer => (
                       <ListItem
@@ -494,8 +492,8 @@ const ReviewEditPanel: FC<Props> = ({ courseInfo }) => {
                         onMouseDown={() => dispatchFormData({ lecturer })}
                         title={lecturer}
                       />
-                    ))
-                )}
+                    ))}
+                </LoadingView>
               </div>
             )}
           </FormSection>
@@ -560,22 +558,6 @@ const ReviewEditPanel: FC<Props> = ({ courseInfo }) => {
               </DialogActions>
             </Dialog>
           )}
-          {/*
-        
-      <Prompt
-        when={progress > SAVE_DRAFT_PROGRESS_BUFFER && mode === MODES.INITIAL}
-        message={(location, action) => {
-          // ignore draft saving if it's submitted
-          const isRedirect =
-            action === 'PUSH' &&
-            location.pathname.startsWith(`/review/${courseId}/`);
-          if (!isRedirect && (action === 'PUSH' || action === 'POP')) {
-            user.updateReviewDrafts(courseId, formData);
-          }
-          return isRedirect ? true : WINDOW_LEAVE_MESSAGES.REVIEW_EDIT;
-        }}
-      />
-        */}
         </div>
       </div>
     </Page>
