@@ -1,41 +1,41 @@
 .homePage {
-	background-color: var(--background);
-	height: 100%;
+  background-color: var(--background);
+  height: 100%;
 }
 
 .homePageLeft {
   height: 0;
-	width: 300px;
-	position: sticky;
-	top: calc(var(--header-height) + var(--page-margin));
+  width: 300px;
+  position: sticky;
+  top: calc(var(--header-height) + var(--page-margin));
 }
 
 .homePageRight {
-	flex: 1;
-	height: fit-content;
+  flex: 1;
+  height: fit-content;
 }
 
 .homePageTimetable {
-	min-height: calc(100vh - 202px);
+  min-height: calc(100vh - 202px);
   margin-left: 0;
 }
 
 .linksCard {
-	padding: var(--card-padding);
+  padding: var(--card-padding);
   row-gap: 8px;
-	:global(.sub-title) {
-		margin-bottom: 8px;
-	}
+  :global(.sub-title) {
+    margin-bottom: 8px;
+  }
 }
 
 .homeLinkContainer {
-	font-size: 14px;
-	&:hover {
-		color: var(--primary);
-	}
-	svg {
-		margin-right: 8px;
-	}
+  font-size: 14px;
+  &:hover {
+    color: var(--primary);
+  }
+  svg {
+    margin-right: 8px;
+  }
 }
 
 @media only screen and (max-width: 1260px) {
