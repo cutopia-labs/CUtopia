@@ -10,17 +10,13 @@
         color: var(--text);
         :global(.MuiButton-label) {
           text-transform: capitalize;
-        };
+        }
         :global(.MuiSvgIcon-root) {
           font-size: 22px;
         }
       }
     }
   }
-}
-
-.homePage-timetable {
-  min-height: calc(100vh - 202px);
 }
 
 @media only screen and (max-width: 1260px) {

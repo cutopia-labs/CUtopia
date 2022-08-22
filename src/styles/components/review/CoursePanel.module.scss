@@ -18,7 +18,8 @@
     border: 0px;
     border-radius: 0;
   }
-  > .courseCard, .courseCard-skeleton, .reviewEdit {
+  > .courseCard,
+  .reviewEdit {
     margin: var(--card-padding);
   }
   p {
@@ -26,16 +27,6 @@
   }
 }
 
-.course-error-card {
-  display: flex;
-  flex-direction: column;
-}
-
-.vertical-divider {
-  width: 1px;
-  height: 16px;
-  background-color: #3b3b3b80;
-}
 .coursePanelFab {
   position: fixed;
   right: calc((100vw - var(--max-width)) / 2 + 32px);
