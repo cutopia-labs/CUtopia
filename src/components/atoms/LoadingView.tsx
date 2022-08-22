@@ -5,6 +5,7 @@ type Props = {
   loading: boolean;
 };
 
+/* @ts-ignore */
 const LoadingView: FC<Props & IfProps> = ({ loading, children, ...props }) => (
   <If visible={!loading} elseNode={<Loading />} {...props}>
     {children}
