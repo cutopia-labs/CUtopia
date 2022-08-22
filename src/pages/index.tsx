@@ -6,8 +6,8 @@ import {
   NoteOutlined,
 } from '@material-ui/icons';
 import { observer } from 'mobx-react-lite';
-
 import clsx from 'clsx';
+
 import styles from '../styles/pages/HomePage.module.scss';
 import UserCard from '../components/home/UserCard';
 import { useUser, usePlanner } from '../store';

@@ -1,6 +1,5 @@
 import { useState, useEffect, FC } from 'react';
 import { observer } from 'mobx-react-lite';
-
 import { BsChat } from 'react-icons/bs';
 import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@material-ui/lab';
 import { ChatBubbleOutline, Edit, Share } from '@material-ui/icons';
@@ -9,6 +8,7 @@ import { useRouter } from 'next/router';
 import { GetStaticPaths } from 'next';
 import clsx from 'clsx';
 import { useQuery } from '@apollo/client';
+
 import styles from '../../styles/components/review/CoursePanel.module.scss';
 import { getAttrs, validCourse } from '../../helpers';
 import { useUser, useView, useData } from '../../store';
@@ -42,7 +42,6 @@ type Props = {
 
 const CoursePanel: FC<Props> = ({ c: courseInfo }) => {
   const router = useRouter();
-
   const { courseId, rid, mode } = router.query as {
     courseId?: string;
     rid?: string; // review Id (query param)

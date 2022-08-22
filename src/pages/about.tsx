@@ -3,9 +3,9 @@ import {
   LockOutlined,
   DescriptionOutlined,
 } from '@material-ui/icons';
-
 import { FC, useState } from 'react';
 import clsx from 'clsx';
+
 import styles from '../styles/pages/AboutPage.module.scss';
 import { AboutTab, PrivacyTab, TermsOfUseTab } from '../components/about/tabs';
 import Page from '../components/atoms/Page';

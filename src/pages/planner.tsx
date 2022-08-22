@@ -1,6 +1,5 @@
 import { useState, useEffect, FC } from 'react';
 import { observer } from 'mobx-react-lite';
-
 import Draggable from 'react-draggable';
 import { Fab } from '@material-ui/core';
 import { AiOutlineCalendar } from 'react-icons/ai';
@@ -8,6 +7,7 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import clsx from 'clsx';
 import { RiShoppingCartLine } from 'react-icons/ri';
+
 import styles from '../styles/pages/PlannerPage.module.scss';
 import SearchPanel from '../components/organisms/SearchPanel';
 import Page from '../components/atoms/Page';
@@ -98,13 +98,11 @@ const PlannerPage: FC = () => {
   }, [shareId, mode]);
 
   return (
-    <>
-      <Page className={styles.plannerPage} center padding>
-        <Head>
-          <title>{'Course Planner - CUtopia'}</title>
-        </Head>
-        {renderContent()}
-      </Page>
+    <Page className={styles.plannerPage} center padding>
+      <Head>
+        <title>{'Course Planner - CUtopia'}</title>
+      </Head>
+      {renderContent()}
       {isMobile && (
         <PlannerMobileFab
           targetMode={
@@ -113,7 +111,7 @@ const PlannerPage: FC = () => {
           setMode={setMode}
         />
       )}
-    </>
+    </Page>
   );
 };
 

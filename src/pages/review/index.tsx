@@ -9,6 +9,7 @@ import { useQuery } from '@apollo/client';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
+
 import styles from '../../styles/components/review/HomePanel.module.scss';
 import GradeIndicator from '../../components/atoms/GradeIndicator';
 import { RATING_FIELDS } from '../../constants';
@@ -27,7 +28,6 @@ import {
   RecentReview,
   TopRatedCourse,
 } from '../../types';
-
 import { useView, useUser, useData } from '../../store';
 import { getMMMDDYY } from '../../helpers/getTime';
 import Footer from '../../components/molecules/Footer';
@@ -112,10 +112,6 @@ const RecentReviewList: FC<RecentReviewListProps> = ({ visible, category }) => {
     current.page = 0;
   }, [category]);
 
-  useEffect(() => {
-    const now = new Date();
-  }, [reviews]);
-
   const { loading: recentReviewsLoading, refetch: getRecentReviews } = useQuery<
     any,
     any
@@ -155,8 +151,7 @@ const RecentReviewList: FC<RecentReviewListProps> = ({ visible, category }) => {
       window.innerHeight;
 
     if (distanceFromBottom <= LAZY_LOAD_BUFFER) {
-      // Fetch more here;
-
+      // Fetch more here
       if (current.page && !current.stall) {
         getRecentReviews({ page: current.page });
       }
@@ -170,9 +165,7 @@ const RecentReviewList: FC<RecentReviewListProps> = ({ visible, category }) => {
     };
   }, [visible, category]);
 
-  if (!visible) {
-    return null;
-  }
+  if (!visible) return null;
   return (
     <>
       <div className="grid-auto-row">
@@ -186,16 +179,17 @@ const RecentReviewList: FC<RecentReviewListProps> = ({ visible, category }) => {
         ))}
         {recentReviewsLoading && <Loading />}
       </div>
-      {current.page === null && <Footer />}
+      <Footer visible={current.page === null} />
     </>
   );
 };
-const RankingCard = ({
+
+const RankingCard: FC<RankingCardProps> = ({
   rankList,
   headerTitle,
   sortKey,
   loading,
-}: RankingCardProps) => {
+}) => {
   if (loading) return <Loading />;
   if (!rankList || !rankList.length) return null;
   return (
@@ -297,11 +291,15 @@ const HomePanel: FC = () => {
           rankList={popularCourses?.ranking?.rankedCourses}
           loading={popularCoursesLoading}
         />
-        {!(
-          popularCoursesLoading ||
-          rankedCoursesLoading ||
-          tab === 'Recents'
-        ) && <Footer />}
+        <Footer
+          visible={
+            !(
+              popularCoursesLoading ||
+              rankedCoursesLoading ||
+              tab === 'Recents'
+            )
+          }
+        />
       </div>
       <div className="secondary-column sticky">
         <Card title="Recents">
