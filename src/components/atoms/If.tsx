@@ -1,7 +1,7 @@
 import { FC, ReactNode } from 'react';
 
 export type IfProps = {
-  visible: boolean;
+  visible: boolean | any;
   elseNode?: ReactNode;
 };
 

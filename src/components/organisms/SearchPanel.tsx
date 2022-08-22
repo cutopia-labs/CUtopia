@@ -359,48 +359,53 @@ const SearchPanel: FC<SearchPanelProps> = ({
           />
         </LoadingView>
       </If>
-      <If
-        visible={
-          !currentCourse &&
-          searchPayload?.mode &&
-          (searchPayload.mode !== 'query' || Boolean(searchPayload.text))
-        }
-        elseNode={
-          <>
-            {LIST_ITEMS.map(item => (
-              <MUIListItem
-                key={item.label}
-                button
-                onClick={e => {
-                  if (onCoursePress) e.stopPropagation(); // prevent e.target showes child node
-                  setSearchPayload({ mode: item.label });
-                }}
-              >
-                <ListItemIcon>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.label} />
-              </MUIListItem>
-            ))}
-            <Divider />
-            <DepartmentList setSearchPayload={setSearchPayload} />
-          </>
-        }
-      >
-        <SearchResult
-          searchPayload={searchPayload}
-          user={user}
-          data={data}
-          onClick={courseId => {
-            isPlanner && user.saveHistory(courseId);
-            if (!skipDefaultAction) {
-              router.push(makeUrlFromCourseId(courseId, isPlanner), undefined, {
-                shallow: isPlanner,
-              });
-            }
-            if (hasCoursePressCB) {
-              onCoursePress(courseId);
-            }
-          }}
-        />
+      <If visible={!currentCourse}>
+        <If
+          visible={
+            searchPayload?.mode &&
+            (searchPayload.mode !== 'query' || searchPayload.text)
+          }
+          elseNode={
+            <>
+              {LIST_ITEMS.map(item => (
+                <MUIListItem
+                  key={item.label}
+                  button
+                  onClick={e => {
+                    if (onCoursePress) e.stopPropagation(); // prevent e.target showes child node
+                    setSearchPayload({ mode: item.label });
+                  }}
+                >
+                  <ListItemIcon>{item.icon}</ListItemIcon>
+                  <ListItemText primary={item.label} />
+                </MUIListItem>
+              ))}
+              <Divider />
+              <DepartmentList setSearchPayload={setSearchPayload} />
+            </>
+          }
+        >
+          <SearchResult
+            searchPayload={searchPayload}
+            user={user}
+            data={data}
+            onClick={courseId => {
+              isPlanner && user.saveHistory(courseId);
+              if (!skipDefaultAction) {
+                router.push(
+                  makeUrlFromCourseId(courseId, isPlanner),
+                  undefined,
+                  {
+                    shallow: isPlanner,
+                  }
+                );
+              }
+              if (hasCoursePressCB) {
+                onCoursePress(courseId);
+              }
+            }}
+          />
+        </If>
       </If>
     </Card>
   );
