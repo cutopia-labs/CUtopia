@@ -89,3 +89,5 @@ export const DEFAULT_HEAD = {
   description:
     'CUtopia is a course review and timetable planning website for CUHK students. It provides a platform for students to share their opinions and pick the course that best fits them.',
 };
+
+export const DEFAULT_NO_SEO_DOC = DEFAULT_HEAD;

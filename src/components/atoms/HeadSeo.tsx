@@ -1,6 +1,10 @@
 import { FC } from 'react';
 import { NextSeo } from 'next-seo';
-import { DEFAULT_HEAD, META_DESCRIPTION_CHAR_LIMIT } from '../../config';
+import {
+  DEFAULT_HEAD,
+  DEFAULT_NO_SEO_DOC,
+  META_DESCRIPTION_CHAR_LIMIT,
+} from '../../config';
 import { CourseInfo } from '../../types';
 import { trimEllip } from '../../helpers';
 
@@ -24,7 +28,7 @@ const propMapping = {
   c: getReviewTitle,
 };
 
-const pathMapping: Record<string, SeoDoc> = {
+const pathMapping: Record<string, SeoDoc | false> = {
   '/planner': {
     title: 'Course Planner - CUtopia',
     description:
@@ -35,12 +39,15 @@ const pathMapping: Record<string, SeoDoc> = {
     description:
       'Share your opinions and make informed decisions about coursework. It provides detailed reviews and quantitive information in different metrics.',
   },
+  '/about': false,
 };
 
-const makeHead = (pageProps, pagePath): SeoDoc => {
+const makeHead = (pageProps, pagePath): SeoDoc | false => {
   let doc = null;
   // For path derived head
   doc = pathMapping[pagePath];
+  // For no-crawl pages
+  if (doc === false) return doc;
   // For prop derived head
   for (const key in propMapping) {
     const prop = pageProps[key];
@@ -49,6 +56,7 @@ const makeHead = (pageProps, pagePath): SeoDoc => {
       break;
     }
   }
+  // For default head
   return doc || DEFAULT_HEAD;
 };
 
@@ -58,9 +66,16 @@ type Prop = {
 };
 
 const HeadSeo: FC<Prop> = ({ pageProps, pagePath }) => {
-  const { title, description } = makeHead(pageProps, pagePath);
-  // <NextSeo title={title} description={description} />
-  return <NextSeo title={title} description={description} />;
+  const seoDoc = makeHead(pageProps, pagePath);
+  const { title, description } = seoDoc || DEFAULT_NO_SEO_DOC;
+  return (
+    <NextSeo
+      title={title}
+      description={description}
+      noindex={seoDoc === false}
+      nofollow={seoDoc === false}
+    />
+  );
 };
 
 export default HeadSeo;
