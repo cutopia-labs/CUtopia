@@ -257,7 +257,7 @@ const LoginPanel: FC<Props> = ({ className, returnUrl }) => {
       username:
         (MODE_ITEMS[mode].username &&
           !username &&
-          'Please choose your CUtopia username, do use ur SID') ||
+          'Please choose your username, do NOT use your SID') ||
         usernameSignUpError,
       userId:
         (MODE_ITEMS[mode].userId &&
