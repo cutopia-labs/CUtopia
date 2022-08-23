@@ -1,3 +1,4 @@
+import { VALID_COURSE_RULE } from 'cutopia-types/lib/rules';
 import {
   VALUE_TO_LETTER,
   GRADE_VALUES,
@@ -7,7 +8,6 @@ import {
 import { MIN_DESKTOP_WIDTH } from '../config';
 import { Review } from '../types';
 import { getStoreData } from './store';
-import { VALID_COURSE_RULE } from './rules';
 
 export const getSubjectAndCode = (courseId: string) => ({
   subject: courseId.substring(0, 4),
