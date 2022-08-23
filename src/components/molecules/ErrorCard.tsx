@@ -6,16 +6,12 @@ import { ErrorCardMode } from '../../types';
 
 const CARD_ITEMS = {
   [ErrorCardMode.NULL]: {
-    image: '/images/undraw_empty_xct9.svg',
+    image: '/images/null.svg',
     caption: 'Nothing here...',
   },
   [ErrorCardMode.ERROR]: {
-    image: '/images/undraw_server_down_s4lk.svg',
+    image: '/images/error.svg',
     caption: 'Something is wrong here...',
-  },
-  [ErrorCardMode.NOT_FOUND]: {
-    image: '/images/404 Page Not Found _Monochromatic.svg',
-    caption: '404 Not Found...',
   },
 };
 

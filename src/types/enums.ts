@@ -17,7 +17,6 @@ export enum AuthState {
 export enum ErrorCardMode {
   NULL,
   ERROR,
-  NOT_FOUND,
 }
 
 export enum TimetableOverviewMode {
