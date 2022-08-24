@@ -42,7 +42,9 @@
     "lint": "eslint --ext .js,.jsx,.ts,.tsx src",
     "prepare": "husky install && yarn run prepare-data",
     "cleanup": "rm -r .next build node_modules out && yarn install && yarn run dev",
-    "prepare-data": "git submodule update --init && cp -R data/resources public/"
+    "move-data": "cp -R data/resources public/ && cp -r data/derived/faculty_subjects.json src/constants/faculty_subjects.json",
+    "prepare-data": "git submodule update --init && yarn move-data",
+    "update-data": "git submodule update --remote && yarn move-data"
   },
   "browserslist": {
     "production": [
