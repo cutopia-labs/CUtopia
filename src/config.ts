@@ -45,7 +45,7 @@ export const SERVER_CONFIG = {
 export const CURRENT_TERM = '2022-23 Term 1';
 
 // Update course list and instructors if etag before below
-export const STATICS_EXPIRE_BEFORE = 1660330219000;
+export const STATICS_EXPIRE_BEFORE = 1661358657000;
 
 export const DATA_CONFIGS: Record<string, DataConfig> = {
   courseList: {
