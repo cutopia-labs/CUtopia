@@ -2,13 +2,11 @@
 ### Semester Data Update
 1. Run the course scraper (and modify current term config) to generate static data & derived data
 
-2. Copy the courses into data/courses
+2. In the course scraper dir, run the `sh tools/move_data.sh {timestamp}` to copy data into CUtopia-data. Then gc and push the data.
 
-3. Copy the `course_list.json` and `instructors.json` into public/resources
+3. Backend: `git submodule update --remote`
 
-4. Copy the `subject_course_names.json` into data, and run `python derive.py` to generate `courses.json`
-
-5. Modify the current term & expire before in configs after BE deployed
+4. Frontend: run `yarn update-data` to update data, THEN modify the current term & expire before in config.ts after BE deployed
 
 # Getting Started with Create React App
 
