@@ -1,9 +1,9 @@
 import { gql } from '@apollo/client';
 
-// Course Information Query
+// Review Course Information Query
 export const COURSE_INFO_QUERY = gql`
   query ($courseId: CourseID!) {
-    courses(filter: { requiredCourses: [$courseId] }) {
+    course(filter: { requiredCourse: $courseId }) {
       rating {
         numReviews
         overall
@@ -14,6 +14,34 @@ export const COURSE_INFO_QUERY = gql`
       }
       reviewLecturers
       reviewTerms
+    }
+  }
+`;
+
+// Planner Courses Query
+export const COURSE_SECTIONS_QUERY = gql`
+  query ($courseId: CourseID!, $term: String!) {
+    course(filter: { requiredCourse: $courseId, requiredTerm: $term }) {
+      units
+      title
+      academic_group
+      requirements
+      rating {
+        numReviews
+        overall
+        grading
+        content
+        difficulty
+        teaching
+      }
+      sections {
+        name
+        startTimes
+        endTimes
+        days
+        locations
+        instructors
+      }
     }
   }
 `;
@@ -215,33 +243,6 @@ export const POPULAR_COURSES_QUERY = gql`
           title
         }
         numReviews
-      }
-    }
-  }
-`;
-
-export const COURSE_SECTIONS_QUERY = gql`
-  query ($courseId: CourseID!, $term: String!) {
-    courses(filter: { requiredCourses: [$courseId], requiredTerm: $term }) {
-      units
-      title
-      academic_group
-      requirements
-      rating {
-        numReviews
-        overall
-        grading
-        content
-        difficulty
-        teaching
-      }
-      sections {
-        name
-        startTimes
-        endTimes
-        days
-        locations
-        instructors
       }
     }
   }

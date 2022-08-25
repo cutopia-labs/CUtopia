@@ -105,7 +105,7 @@ const CoursePanel: FC<Props> = ({ c: courseInfo }) => {
           <CourseCard
             courseInfo={{
               ...courseInfo,
-              ...courseRating?.courses[0],
+              ...courseRating?.course,
             }}
             style={styles.courseCard}
           />
@@ -117,7 +117,7 @@ const CoursePanel: FC<Props> = ({ c: courseInfo }) => {
             reviewId={rid}
             courseInfo={{
               ...courseInfo,
-              ...courseRating?.courses[0],
+              ...courseRating?.course,
             }}
             courseInfoLoading={courseRatingLoading}
             isMobile={isMobile}

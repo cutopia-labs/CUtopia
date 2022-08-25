@@ -352,7 +352,7 @@ const SearchPanel: FC<SearchPanelProps> = ({
         <LoadingView loading={!courseInfo || courseInfoLoading}>
           <CourseCard
             courseInfo={{
-              ...courseInfo?.courses[0],
+              ...courseInfo?.course,
               courseId: currentCourse,
             }}
             concise
