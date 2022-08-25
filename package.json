@@ -2,19 +2,19 @@
   "name": "cutopia",
   "version": "1.0.0",
   "workspaces": [
-      "frontend",
-      "backend",
-      "types"
+    "frontend",
+    "backend",
+    "types"
   ],
   "private": true,
   "description": "CUtopia is a course review and timetable planning website for CUHK students.",
   "repository": "https://github.com/cutility/CUtopia.git",
   "license": "MIT",
   "scripts": {
-    "fe": "yarn workspace frontend",
-    "be": "yarn workspace backend",
-    "types": "yarn workspace types",
-    "prepare": "yarn run prepare-data",
+    "fe": "yarn workspace cutopia-frontend",
+    "be": "yarn workspace cutopia-backend",
+    "types": "yarn workspace cutopia-types",
+    "prepare": "yarn husky install",
     "test": "jest"
   },
   "devDependencies": {
