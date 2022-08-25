@@ -29,6 +29,7 @@ import Section from '../molecules/Section';
 import SectionText from '../molecules/SectionText';
 import If from '../atoms/If';
 import { SWITCH_SECTION_QUERY } from '../../constants/queries';
+import LoadingView from '../atoms/LoadingView';
 import CourseSections from './CourseSections';
 import GradeRow from './GradeRow';
 
@@ -76,9 +77,6 @@ const CourseConcise: FC<CourseInfoProps & CourseConciseProps> = ({
     getSection,
     { data: courseSectionInfo, loading: courseSectionLoading },
   ] = useLazyQuery(SWITCH_SECTION_QUERY, {
-    onCompleted: (data: { course: CourseInfo }) => {
-      courseInfo.sections = data?.course?.sections;
-    },
     onError: viewStore.handleError,
     notifyOnNetworkStatusChange: true,
     fetchPolicy: 'cache-first',
@@ -156,7 +154,9 @@ const CourseConcise: FC<CourseInfoProps & CourseConciseProps> = ({
             </MenuItem>
           ))}
         </Menu>
-        <CourseSections courseInfo={combinedCourseInfo} />
+        <LoadingView loading={courseSectionLoading}>
+          <CourseSections courseInfo={combinedCourseInfo} />
+        </LoadingView>
       </Section>
     </>
   );
