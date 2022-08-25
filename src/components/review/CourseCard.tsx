@@ -140,7 +140,8 @@ const CourseConcise: FC<CourseInfoProps> = ({ courseInfo }) => {
             <MenuItem
               key={t}
               selected={t === term}
-              onClick={() => {
+              onClick={e => {
+                e.stopPropagation();
                 switchTerm(t);
                 setAnchorEl(null);
               }}
