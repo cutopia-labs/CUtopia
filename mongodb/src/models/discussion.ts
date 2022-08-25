@@ -1,5 +1,6 @@
 import { Discussion } from 'cutopia-types/lib/types';
 import { model, Schema } from 'mongoose';
+
 import { createdAt, requiredString } from '../constants/schema';
 
 const discussionMessage = {

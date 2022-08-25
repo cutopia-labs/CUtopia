@@ -1,9 +1,9 @@
 import { getRanking } from 'mongodb';
 import NodeCache from 'node-cache';
 
-import withCache from '../utils/withCache';
 import { Resolvers } from '../schemas/types';
 import { courses } from '../tools/courses';
+import withCache from '../utils/withCache';
 
 const rankingCache = new NodeCache({
   stdTTL: 600,

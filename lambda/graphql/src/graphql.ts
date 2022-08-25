@@ -1,14 +1,14 @@
-import { ApolloServer } from 'apollo-server-lambda';
 import { makeExecutableSchema } from '@graphql-tools/schema';
-import { connect } from 'mongodb';
+import { ApolloServer } from 'apollo-server-lambda';
 import dotenv from 'dotenv';
+import { connect } from 'mongodb';
 
-import typeDefs from './schemas';
+import createContext from './context';
+import { directivesTypeDefs, addDirectivesToSchema } from './directives';
+import loggingPlugin from './plugins/logging';
 import resolvers from './resolvers';
 import scalarResolvers from './scalars';
-import { directivesTypeDefs, addDirectivesToSchema } from './directives';
-import createContext from './context';
-import loggingPlugin from './plugins/logging';
+import typeDefs from './schemas';
 
 dotenv.config();
 

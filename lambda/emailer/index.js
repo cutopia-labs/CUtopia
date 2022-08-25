@@ -1,5 +1,6 @@
 require('dotenv').config();
 const { connect, disconnect, addToResendList } = require('mongodb');
+
 const { setupEmailer } = require('./setup');
 const { getTemplateByAction } = require('./template');
 

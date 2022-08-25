@@ -1,4 +1,5 @@
 import { getDiscussion, sendDiscussionMessage } from 'mongodb';
+
 import { Resolvers } from '../schemas/types';
 
 const discussionResolver: Resolvers = {

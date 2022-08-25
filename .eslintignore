@@ -1,6 +1,4 @@
-.eslintrc.js
-modules/codes
+**/node_modules
 lambda/*/build
 lambda/graphql/src/schemas/types.ts
-**/node_modules
 mongodb/lib

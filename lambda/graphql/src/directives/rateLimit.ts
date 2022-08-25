@@ -1,8 +1,9 @@
+import { ErrorCode } from 'cutopia-types/lib/codes';
 import {
   defaultKeyGenerator,
   rateLimitDirective,
 } from 'graphql-rate-limit-directive';
-import { ErrorCode } from 'cutopia-types/lib/codes';
+
 import { Context } from '../context';
 
 // reference: https://github.com/ravangen/graphql-rate-limit/tree/master/examples/context

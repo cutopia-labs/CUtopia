@@ -1,7 +1,8 @@
+import { ReportDocument } from 'cutopia-types/lib/types';
 import { Schema, model } from 'mongoose';
 import { nanoid } from 'nanoid';
+
 import { createdAt, requiredNumber, requiredString } from '../constants/schema';
-import { ReportDocument } from 'cutopia-types/lib/types';
 
 const reportSchema = new Schema<ReportDocument>(
   {

@@ -1,3 +1,4 @@
+import { VoteAction } from 'cutopia-types/lib/codes';
 import {
   createReview,
   getReviews,
@@ -5,7 +6,6 @@ import {
   editReview,
   voteReview,
 } from 'mongodb';
-import { VoteAction } from 'cutopia-types/lib/codes';
 
 import { Resolvers } from '../schemas/types';
 

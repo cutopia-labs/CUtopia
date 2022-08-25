@@ -1,9 +1,10 @@
+import { RankEntry } from 'cutopia-types/lib/types';
 import NodeCache from 'node-cache';
-import withCache from '../utils/withCache';
+
+import { RANK_LIMIT } from '../constants/config';
 import Course from '../models/course';
 import Ranking from '../models/ranking';
-import { RANK_LIMIT } from '../constants/config';
-import { RankEntry } from 'cutopia-types/lib/types';
+import withCache from '../utils/withCache';
 
 const rankingCache = new NodeCache({
   stdTTL: 600,

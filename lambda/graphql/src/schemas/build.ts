@@ -1,10 +1,11 @@
+import { writeFileSync } from 'fs';
+import { join } from 'path';
+
 import { loadFilesSync } from '@graphql-tools/load-files';
 import { mergeTypeDefs } from '@graphql-tools/merge';
-import { typeDefs as scalarTypeDefs } from 'graphql-scalars';
-import { constraintDirectiveTypeDefs } from 'graphql-constraint-directive';
 import { print } from 'graphql';
-import { join } from 'path';
-import { writeFileSync } from 'fs';
+import { constraintDirectiveTypeDefs } from 'graphql-constraint-directive';
+import { typeDefs as scalarTypeDefs } from 'graphql-scalars';
 
 const graphqlFiles = [
   'courses.graphql',

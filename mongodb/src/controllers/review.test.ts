@@ -1,10 +1,12 @@
 import { describe, expect, beforeAll, afterAll, it } from '@jest/globals';
 import { ErrorCode } from 'cutopia-types/lib/codes';
 import { nanoid } from 'nanoid';
-import { createReview, getReviews, voteReview } from './review';
-import { getUser } from './user';
+
 import { createTestUser, deleteTestUser, setup, teardown } from '../jest/env';
 import ReviewModel from '../models/review';
+
+import { createReview, getReviews, voteReview } from './review';
+import { getUser } from './user';
 
 describe('Review', () => {
   let testUser;

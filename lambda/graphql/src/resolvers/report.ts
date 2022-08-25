@@ -1,4 +1,5 @@
 import { report } from 'mongodb';
+
 import { Resolvers } from '../schemas/types';
 
 const reportResolver: Resolvers = {

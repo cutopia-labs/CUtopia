@@ -1,5 +1,6 @@
-import { GraphQLScalarType } from 'graphql';
 import { ErrorCode } from 'cutopia-types/lib/codes';
+import { GraphQLScalarType } from 'graphql';
+
 import courseIds from '../data/derived/subject_course_names.json';
 
 const validateCourseId = (courseId: string) => {

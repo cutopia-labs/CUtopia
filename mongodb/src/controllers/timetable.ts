@@ -1,13 +1,14 @@
 import { ErrorCode } from 'cutopia-types/lib/codes';
 import { nanoid } from 'nanoid';
 
-import Timetable from '../models/timetable';
-import User from '../models/user';
-import { updateTimetableId, updateUser } from './user';
 import {
   UPLOAD_TIMETABLE_ENTRY_LIMIT,
   UPLOAD_TIMETABLE_TOTAL_LIMIT,
 } from '../constants/config';
+import Timetable from '../models/timetable';
+import User from '../models/user';
+
+import { updateTimetableId, updateUser } from './user';
 
 export const getTimetable = async input => {
   const timetable = await Timetable.findById(input._id);

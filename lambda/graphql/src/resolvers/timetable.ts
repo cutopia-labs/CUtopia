@@ -6,6 +6,7 @@ import {
   switchTimetable,
   cloneTimetable,
 } from 'mongodb';
+
 import { Resolvers } from '../schemas/types';
 
 const timetableResolver: Resolvers = {

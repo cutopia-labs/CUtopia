@@ -1,12 +1,13 @@
 import { mergeResolvers } from '@graphql-tools/merge';
 import { resolvers as scalarResolvers } from 'graphql-scalars';
-import reviewsResolver from './review';
+
 import coursesResolver from './course';
-import userResolver from './user';
-import rankingResolver from './ranking';
-import timetableResolver from './timetable';
-import reportResolver from './report';
 import discussionResolver from './discussion';
+import rankingResolver from './ranking';
+import reportResolver from './report';
+import reviewsResolver from './review';
+import timetableResolver from './timetable';
+import userResolver from './user';
 
 const resolvers = [
   scalarResolvers,

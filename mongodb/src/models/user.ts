@@ -1,5 +1,6 @@
-import { Schema, model } from 'mongoose';
 import { User } from 'cutopia-types/lib/types';
+import { Schema, model } from 'mongoose';
+
 import { requiredString, createdAt } from '../constants/schema';
 
 const userSchema = new Schema<User>(

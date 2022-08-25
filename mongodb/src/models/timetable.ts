@@ -1,6 +1,7 @@
 import { Timetable } from 'cutopia-types/lib/types';
 import { Schema, model } from 'mongoose';
 import { nanoid } from 'nanoid';
+
 import { requiredNumber, requiredString, createdAt } from '../constants/schema';
 
 const timetableSection = {

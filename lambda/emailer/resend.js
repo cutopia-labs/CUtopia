@@ -5,6 +5,7 @@ const {
   getResendList,
   removeFromResendList,
 } = require('mongodb');
+
 const { setupEmailer } = require('./setup');
 const { getTemplateByAction } = require('./template');
 

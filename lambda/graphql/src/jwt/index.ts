@@ -1,9 +1,10 @@
-import jwt, { JwtPayload } from 'jsonwebtoken';
 import fs from 'fs';
 import { join } from 'path';
-import { getUser } from 'mongodb';
-import { ErrorCode } from 'cutopia-types/lib/codes';
+
 import { ApolloError } from 'apollo-server-errors';
+import { ErrorCode } from 'cutopia-types/lib/codes';
+import jwt, { JwtPayload } from 'jsonwebtoken';
+import { getUser } from 'mongodb';
 
 const privateKey = fs.readFileSync(join(__dirname, './jwtRS256.key'));
 const publicKey = fs.readFileSync(join(__dirname, './jwtRS256.key.pub'));

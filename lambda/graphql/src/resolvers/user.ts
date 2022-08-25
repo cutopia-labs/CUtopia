@@ -7,6 +7,7 @@ import {
   resetPassword,
   login,
 } from 'mongodb';
+
 import { sign } from '../jwt';
 import { Resolvers } from '../schemas/types';
 

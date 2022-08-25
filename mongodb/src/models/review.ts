@@ -1,5 +1,6 @@
 import { Review } from 'cutopia-types/lib/types';
 import { Schema, model } from 'mongoose';
+
 import { requiredNumber, requiredString } from '../constants/schema';
 
 const rating = {

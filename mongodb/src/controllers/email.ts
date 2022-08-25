@@ -1,4 +1,5 @@
 import { Email as EmailType } from 'cutopia-types/lib/types';
+
 import Email from '../models/email';
 
 export const addToResendList = async (input: EmailType) => {
