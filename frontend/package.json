@@ -14,7 +14,6 @@
     "@sentry/nextjs": "^7.8.0",
     "clsx": "^1.1.1",
     "copy-to-clipboard": "^3.3.1",
-    "cutopia-types": "^1.0.29",
     "graphql": "^15.5.2",
     "html2canvas": "^1.4.1",
     "lodash": "^4.17.21",
