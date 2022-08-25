@@ -1,8 +1,8 @@
-import { getCourseData } from 'mongodb';
+import { getCourse as getCourseDataFromDB } from 'mongodb';
 import NodeCache from 'node-cache';
 
 import { Resolvers } from '../schemas/types';
-import { courses } from '../tools/courses';
+import { getCourse as getCourseDataFromJSON } from '../utils/getCourse';
 import withCache from '../utils/withCache';
 
 const courseCache = new NodeCache({ stdTTL: 600 });
@@ -16,13 +16,11 @@ const coursesResolver: Resolvers = {
         `${requiredCourse}#${requiredTerm}`,
         async () => {
           const { lecturers, terms, rating } =
-            (await getCourseData(requiredCourse)) || {};
+            (await getCourseDataFromDB(requiredCourse)) || {};
+          const courseData = getCourseDataFromJSON(requiredCourse);
           return {
-            ...courses[requiredCourse],
-            courseId: requiredCourse,
-            sections: requiredTerm
-              ? courses[requiredCourse]['terms'][requiredTerm]
-              : null,
+            ...courseData,
+            sections: requiredTerm ? courseData['terms'][requiredTerm] : null,
             reviewLecturers: lecturers,
             reviewTerms: terms,
             rating,

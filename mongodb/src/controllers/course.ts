@@ -2,7 +2,7 @@ import { Review } from 'cutopia-types/lib/types';
 
 import Course from '../models/course';
 
-export const getCourseData = async courseId => Course.findById(courseId);
+export const getCourse = async courseId => Course.findById(courseId);
 
 export const updateCourseData = async (
   courseId: string,

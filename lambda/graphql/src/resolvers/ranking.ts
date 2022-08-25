@@ -2,7 +2,7 @@ import { getRanking } from 'mongodb';
 import NodeCache from 'node-cache';
 
 import { Resolvers } from '../schemas/types';
-import { courses } from '../tools/courses';
+import { getCourse } from '../utils/getCourse';
 import withCache from '../utils/withCache';
 
 const rankingCache = new NodeCache({ stdTTL: 600 });
@@ -17,7 +17,7 @@ const rankingResolver: Resolvers = {
         const { ranks } = await getRanking(rankBy);
         return ranks?.map(({ _id, val }) => ({
           courseId: _id,
-          course: courses[_id],
+          course: getCourse(_id),
           [rankBy]: val,
         }));
       }),
