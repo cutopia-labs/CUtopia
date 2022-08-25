@@ -1,0 +1,12 @@
+{
+  "name": "cutopia",
+  "version": "1.0.0",
+  "workspaces": [
+      "frontend",
+      "backend",
+      "types"
+  ],
+  "description": "CUtopia is a course review and timetable planning website for CUHK students.",
+  "repository": "https://github.com/cutility/CUtopia.git",
+  "license": "MIT"
+}
