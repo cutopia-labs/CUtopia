@@ -1,0 +1,3 @@
+[submodule "scraper"]
+	path = scraper
+	url = https://github.com/mikezzb/cuhk-course-scraper.git
