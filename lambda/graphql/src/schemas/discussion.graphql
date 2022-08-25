@@ -1,0 +1,37 @@
+type Mutation {
+  sendMessage(input: SendMessageInput!): SendMessageResult @auth @rateLimit(duration: 1, limit: 5)
+}
+
+type Query {
+  discussion(input: DiscussionFilter!): DiscussionResult! @auth
+}
+
+input SendMessageInput {
+  courseId: CourseID!
+  text: String!
+}
+
+type SendMessageResult {
+  id: Long!
+}
+
+input DiscussionFilter {
+  courseId: CourseID!
+  page: Int
+}
+
+type DiscussionMessage {
+  id: Long!
+  text: String!
+  user: String!
+}
+
+type DiscussionResult {
+  messages: [DiscussionMessage]
+  nextPage: Int
+}
+
+type Discussion {
+  id: String!
+  messages: [DiscussionMessage]
+}

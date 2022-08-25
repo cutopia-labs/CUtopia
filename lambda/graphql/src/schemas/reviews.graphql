@@ -1,0 +1,104 @@
+type Mutation {
+  createReview(input: CreateReviewInput!): CreateReviewResult @auth @rateLimit(duration: 60, limit: 3)
+  voteReview(input: VoteReviewInput!): Void @auth @rateLimit(duration: 1, limit: 5)
+  editReview(input: EditReviewInput!): Void @auth @rateLimit(duration: 60, limit: 10)
+}
+
+type Query {
+  reviews(input: ReviewsFilter): [Review]! @auth @rateLimit(duration: 60, limit: 200)
+  review(input: ReviewFilter!): Review @auth @rateLimit(duration: 60, limit: 80)
+}
+
+type ReviewsResult {
+  reviews: [Review]!
+  nextPage: Int
+}
+
+input ReviewsFilter {
+  "Set courseId to null to get the latest reviews"
+  courseId: CourseID
+  "Filter by lecturer and term"
+  lecturer: String
+  term: String
+  "Sort by date (pass _id string) or vote (pass upvotes string)"
+  sortBy: String
+  ascending: Boolean 
+  page: Int
+}
+
+input ReviewFilter {
+  courseId: CourseID!
+  createdAt: String!
+}
+
+input CreateReviewInput {
+  anonymous: Boolean!
+  title: String
+  courseId: CourseID!
+  term: String!
+  lecturer: String!
+  overall: Int! @constraint(min: 0, max: 4)
+  grading: ReviewDetailsInput!
+  teaching: ReviewDetailsInput!
+  difficulty: ReviewDetailsInput!
+  content: ReviewDetailsInput!
+}
+
+type CreateReviewResult {
+  createdAt: Long!
+}
+
+input EditReviewInput {
+  title: String
+  courseId: CourseID!
+  anonymous: Boolean
+  overall: Int @constraint(min: 0, max: 4)
+  grading: ReviewDetailsInput
+  teaching: ReviewDetailsInput
+  difficulty: ReviewDetailsInput
+  content: ReviewDetailsInput
+}
+
+type Ratings {
+  overall: Float!
+  grading: Float!
+  teaching: Float!
+  difficulty: Float!
+  content: Float!
+  numReviews: Int!
+}
+
+input VoteReviewInput {
+  _id: String! # format: courseId#createdAt
+  vote: Int!
+}
+
+type Review {
+  _id: String!
+  courseId: CourseID!
+  username: String!
+  anonymous: Boolean!
+  title: String
+  createdAt: String!
+  updatedAt: String!
+  term: String!
+  lecturer: String!
+  overall: Int!
+  grading: ReviewDetails!
+  teaching: ReviewDetails!
+  difficulty: ReviewDetails!
+  content: ReviewDetails!
+  upvotes: Int!
+  downvotes: Int!
+  myVote: Int
+}
+
+type ReviewDetails {
+  grade: Int!
+  text: String!
+}
+
+input ReviewDetailsInput {
+  grade: Int! @constraint(min: 0, max: 4)
+  text: String @constraint(maxLength: 10000)
+}

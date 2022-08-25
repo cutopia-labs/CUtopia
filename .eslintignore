@@ -1,0 +1,4 @@
+**/node_modules
+lambda/*/build
+lambda/graphql/src/schemas/types.ts
+mongodb/lib

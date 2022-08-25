@@ -1,0 +1,11 @@
+type Mutation {
+  report(input: ReportInput!): String! @rateLimit(duration: 60, limit: 10)
+}
+
+input ReportInput {
+  cat: Int!
+  "review id or course id"
+  identifier: String
+  types: [Int]!
+  description: String! @constraint(maxLength: 10000)
+}

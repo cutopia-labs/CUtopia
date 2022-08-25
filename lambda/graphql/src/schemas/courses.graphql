@@ -1,0 +1,54 @@
+type Query {
+  course(filter: CourseFilter): Course! @auth @rateLimit(duration: 60, limit: 100)
+}
+
+input CourseFilter {
+  requiredCourse: CourseID!
+  requiredTerm: String
+}
+
+type Course {
+  courseId: CourseID!
+  title: String
+  reviewLecturers: [String]
+  reviewTerms: [String]
+  career: String
+  units: String
+  grading: String
+  components: String
+  campus: String
+  academic_group: String
+  requirements: String
+  description: String
+  outcome: String
+  syllabus: String
+  required_readings: String
+  recommended_readings: String
+  sections: [CourseSection]
+  assessments: [AssessementComponent]
+  rating: CourseRating
+}
+
+type CourseRating {
+  numReviews: Int!
+  overall: Float!
+  grading: Float!
+  content: Float!
+  difficulty: Float!
+  teaching: Float!
+}
+
+type CourseSection {
+  name: String!
+  startTimes: [String]!
+  endTimes: [String]!
+  days: [String]!
+  locations: [String]!
+  instructors: [String]!
+  hide: Boolean
+}
+
+type AssessementComponent {
+  name: String!
+  percentage: String!
+}

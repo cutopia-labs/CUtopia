@@ -1,0 +1,81 @@
+type Mutation {
+  uploadTimetable(input: UploadTimetableInput!): UploadTimetableResult @auth @rateLimit(duration: 60, limit: 30)
+  removeTimetable(input: RemoveTimetableInput!): Timetable @auth @rateLimit(duration: 1, limit: 3)
+  switchTimetable(input: SwitchTimetableInput!): Timetable @auth @rateLimit(duration: 1, limit: 3)
+  cloneTimetable(input: CloneTimetableInput!): Timetable @auth @rateLimit(duration: 1, limit: 3)
+}
+
+type Query {
+  timetable(_id: String!): Timetable @auth @rateLimit(duration: 1, limit: 5)
+}
+
+type User {
+  timetableId: String
+  timetables: [TimetableOverview]
+}
+
+type CourseTableEntry {
+  courseId: CourseID!
+  title: String!
+  credits: Int!
+  sections: [CourseSection]
+}
+
+input CourseTableEntryInput {
+  courseId: CourseID!
+  title: String!
+  credits: Int!
+  sections: [CourseSectionInput]
+}
+
+input CourseSectionInput {
+  name: String!
+  startTimes: [String]!
+  endTimes: [String]!
+  days: [String]!
+  locations: [String]!
+  instructors: [String]!
+  hide: Boolean
+}
+
+input UploadTimetableInput {
+  _id: String
+  entries: [CourseTableEntryInput]
+  tableName: String
+  expire: Int
+}
+
+type UploadTimetableResult {
+  _id: String
+  createdAt: Timestamp
+}
+
+input RemoveTimetableInput {
+  _id: String!
+  switchTo: String
+}
+
+type Timetable {
+  _id: String!
+  entries: [CourseTableEntry]!
+  tableName: String
+  createdAt: Timestamp!
+  expireAt: Timestamp!
+  expire: Int!
+}
+
+type TimetableOverview {
+  _id: String!
+  tableName: String
+  createdAt: Timestamp!
+  expireAt: Timestamp!
+  expire: Int!
+}
+
+input SwitchTimetableInput {
+  _id: String!
+}
+
+input CloneTimetableInput {
+  _id: String!
+}

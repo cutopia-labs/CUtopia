@@ -1,0 +1,4 @@
+[submodule "data"]
+	path = data
+	url = https://github.com/cutility/CUtopia-data.git
+	branch = master

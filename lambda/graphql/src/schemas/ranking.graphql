@@ -1,0 +1,22 @@
+type Query {
+  ranking: RankTable
+}
+
+type RankTable {
+  rankedCourses(filter: RankingFilter!): [RankedCourse] @auth @rateLimit(duration: 60, limit: 100)
+}
+
+input RankingFilter {
+  rankBy: String! # numReviews, grading, content, difficulty, teaching, overall
+}
+
+type RankedCourse {
+  courseId: CourseID!
+  course: Course!
+  numReviews: Int
+  overall: Float
+  grading: Float
+  content: Float
+  difficulty: Float
+  teaching: Float
+}
