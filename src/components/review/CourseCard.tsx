@@ -1,7 +1,12 @@
 import { useState, FC } from 'react';
 import { observer } from 'mobx-react-lite';
-import { IconButton, Tooltip } from '@material-ui/core';
-import { ErrorOutline, Favorite, FavoriteBorder } from '@material-ui/icons';
+import { Button, IconButton, Menu, MenuItem, Tooltip } from '@material-ui/core';
+import {
+  ErrorOutline,
+  ExpandMore,
+  Favorite,
+  FavoriteBorder,
+} from '@material-ui/icons';
 import { default as RouterLink } from 'next/link';
 import { FiExternalLink } from 'react-icons/fi';
 import clsx from 'clsx';
@@ -12,7 +17,11 @@ import styles from '../../styles/components/review/CourseCard.module.scss';
 import ShowMoreOverlay from '../molecules/ShowMoreOverlay';
 import Badge from '../atoms/Badge';
 import { useView, useUser, viewStore } from '../../store';
-import { COURSE_CARD_MAX_HEIGHT, CURRENT_TERM } from '../../config';
+import {
+  COURSE_CARD_MAX_HEIGHT,
+  CURRENT_TERM,
+  plannerTerms,
+} from '../../config';
 import { CourseInfo } from '../../types';
 import Link from '../molecules/Link';
 import useMobileQuery from '../../hooks/useMobileQuery';
@@ -62,24 +71,33 @@ const CourseConcise: FC<CourseInfoProps & CourseConciseProps> = ({
   courseInfo,
 }) => {
   const [term, setTerm] = useState(CURRENT_TERM);
-  const [getSection, { loading: courseSectionLoading }] = useLazyQuery(
-    SWITCH_SECTION_QUERY,
-    {
-      onCompleted: (data: { course: CourseInfo }) => {
-        courseInfo.sections = data?.course?.sections;
-      },
-      onError: viewStore.handleError,
-    }
-  );
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [
+    getSection,
+    { data: courseSectionInfo, loading: courseSectionLoading },
+  ] = useLazyQuery(SWITCH_SECTION_QUERY, {
+    onCompleted: (data: { course: CourseInfo }) => {
+      courseInfo.sections = data?.course?.sections;
+    },
+    onError: viewStore.handleError,
+    notifyOnNetworkStatusChange: true,
+    fetchPolicy: 'cache-first',
+  });
   const switchTerm = (term: string) => {
-    setTerm(term);
     getSection({
       variables: {
         courseId: courseInfo.courseId,
         term,
       },
     });
+    setTerm(term);
   };
+  const combinedCourseInfo = courseSectionInfo
+    ? {
+        ...courseInfo,
+        ...courseSectionInfo.course,
+      }
+    : courseInfo;
   return (
     <>
       <If visible={courseInfo.requirements}>
@@ -110,7 +128,35 @@ const CourseConcise: FC<CourseInfoProps & CourseConciseProps> = ({
         </div>
       </If>
       <Section title="Sections" subheading>
-        <CourseSections courseInfo={courseInfo} />
+        <Button
+          size="small"
+          onClick={e => setAnchorEl(e.currentTarget)}
+          endIcon={<ExpandMore />}
+        >
+          {term}
+        </Button>
+        <Menu
+          id="course-terms-menu"
+          className={styles.sortMenu}
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={() => setAnchorEl(null)}
+        >
+          {plannerTerms.map(t => (
+            <MenuItem
+              key={t}
+              selected={t === term}
+              onClick={() => {
+                switchTerm(t);
+                setAnchorEl(null);
+              }}
+            >
+              {t}
+            </MenuItem>
+          ))}
+        </Menu>
+        <CourseSections courseInfo={combinedCourseInfo} />
       </Section>
     </>
   );
