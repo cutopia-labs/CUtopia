@@ -3,7 +3,7 @@ import fs from 'fs';
 import { Course } from 'cutopia-types/lib/types';
 
 const courses: Record<string, Course> = {};
-const courseFolder = `${__dirname}/../data/courses`;
+const courseFolder = `${__dirname}/../../../../../data/courses`;
 
 const getCourse = (courseId: string): Course => {
   if (!(courseId in courses)) {
