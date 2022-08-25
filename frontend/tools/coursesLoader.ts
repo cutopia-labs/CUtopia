@@ -11,7 +11,7 @@ const ignoredFiles = new Set(['.DS_Store']);
 
 const courses: Record<string, CourseExtended> = {};
 
-const dirname = `${process.cwd()}/data/courses`;
+const dirname = `${process.cwd()}/../data/courses`;
 
 const subjectFilenames = fs.readdirSync(dirname);
 
