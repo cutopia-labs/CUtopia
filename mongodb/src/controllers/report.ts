@@ -1,4 +1,4 @@
-import Report from '../models/report.model';
+import Report from '../models/report';
 
 export const report = async input => {
   const newReport = new Report(input);

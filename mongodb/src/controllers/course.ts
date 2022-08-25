@@ -1,7 +1,7 @@
 import NodeCache from 'node-cache';
 import { Review } from 'cutopia-types/lib/types';
 
-import Course from '../models/course.model';
+import Course from '../models/course';
 import withCache from '../utils/withCache';
 
 const courseCache = new NodeCache({

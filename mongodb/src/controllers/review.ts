@@ -1,8 +1,8 @@
 import NodeCache from 'node-cache';
 import { ErrorCode, VoteAction } from 'cutopia-types/lib/codes';
 
-import Review from '../models/review.model';
-import User from '../models/user.model';
+import Review from '../models/review';
+import User from '../models/user';
 import withCache from '../utils/withCache';
 import { updateCourseData } from './course';
 import { incrementVotesCount } from './user';

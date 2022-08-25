@@ -5,7 +5,7 @@ import { nanoid } from 'nanoid';
 
 import { connect } from '../';
 import { SALT_ROUNDS } from '../constants/config';
-import User from '../models/user.model';
+import User from '../models/user';
 
 dotenv.config();
 

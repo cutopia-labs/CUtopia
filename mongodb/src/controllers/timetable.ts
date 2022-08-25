@@ -1,8 +1,8 @@
 import { ErrorCode } from 'cutopia-types/lib/codes';
 import { nanoid } from 'nanoid';
 
-import Timetable from '../models/timetable.model';
-import User from '../models/user.model';
+import Timetable from '../models/timetable';
+import User from '../models/user';
 import { updateTimetableId, updateUser } from './user';
 import {
   UPLOAD_TIMETABLE_ENTRY_LIMIT,

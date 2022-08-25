@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import { nanoid } from 'nanoid';
 import { ErrorCode } from 'cutopia-types/lib/codes';
 
-import User from '../models/user.model';
+import User from '../models/user';
 import { SALT_ROUNDS, VERIFY_EXPIRATION_TIME } from '../constants/config';
 
 const isVerfiCodeExpired = createdAt =>

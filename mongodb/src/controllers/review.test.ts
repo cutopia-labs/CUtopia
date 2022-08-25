@@ -4,7 +4,7 @@ import { nanoid } from 'nanoid';
 import { createReview, getReviews, voteReview } from './review';
 import { getUser } from './user';
 import { createTestUser, deleteTestUser, setup, teardown } from '../jest/env';
-import ReviewModel from '../models/review.model';
+import ReviewModel from '../models/review';
 
 describe('Review', () => {
   let testUser;

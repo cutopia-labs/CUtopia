@@ -1,7 +1,7 @@
 import NodeCache from 'node-cache';
 import withCache from '../utils/withCache';
-import Course from '../models/course.model';
-import Ranking from '../models/ranking.model';
+import Course from '../models/course';
+import Ranking from '../models/ranking';
 import { RANK_LIMIT } from '../constants/config';
 import { RankEntry } from 'cutopia-types/lib/types';
 

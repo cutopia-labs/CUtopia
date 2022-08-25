@@ -1,4 +1,4 @@
-import DiscussionModel from '../models/discussion.model';
+import DiscussionModel from '../models/discussion';
 import { MESSAGES_PER_PAGE } from '../constants/config';
 
 type SendDiscussionMessageProps = {
