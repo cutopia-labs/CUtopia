@@ -25,7 +25,7 @@ const CourseSectionCard: FC<Props> = ({ courseId }) => {
       onError: view.handleError,
     }
   );
-  if (!courseInfo) return null;
+  if (!courseId) return null;
   if (courseInfoLoading) return <Loading />;
   return (
     <CourseCard

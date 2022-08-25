@@ -17,7 +17,6 @@ import {
   ClassOutlined,
   BookmarkBorderOutlined,
 } from '@material-ui/icons';
-import { useQuery } from '@apollo/client';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
@@ -25,11 +24,10 @@ import clsx from 'clsx';
 import styles from '../../styles/components/organisms/SearchPanel.module.scss';
 import ListItem from '../molecules/ListItem';
 import COURSE_CODES from '../../constants/courseCodes';
-import { useView, useUser, useData } from '../../store';
-import { COURSE_SECTIONS_QUERY } from '../../constants/queries';
+import { useUser, useData } from '../../store';
 import { objStrEqual, validCourse } from '../../helpers';
 import Loading from '../atoms/Loading';
-import { CURRENT_TERM, MAX_SEARCH_RESULT_LENGTH } from '../../config';
+import { MAX_SEARCH_RESULT_LENGTH } from '../../config';
 import {
   CourseSearchItem,
   ErrorCardMode,
@@ -215,7 +213,6 @@ const SearchPanel: FC<SearchPanelProps> = ({
   );
   const [currentCourse, setCurrentCourse] = useState(null);
   const router = useRouter();
-  const view = useView();
   const user = useUser();
   const isMobile = useMobileQuery();
   const isPlanner = router.pathname.includes('planner');
@@ -237,22 +234,6 @@ const SearchPanel: FC<SearchPanelProps> = ({
       validCourse(cid) && (!onCoursePress || isMobile) ? cid : null
     );
   }, [cid, isMobile]);
-
-  // Fetch course info
-  const {
-    data: courseInfo,
-    loading: courseInfoLoading,
-    error,
-  } = useQuery(COURSE_SECTIONS_QUERY, {
-    skip: !currentCourse || !validCourse(currentCourse),
-    ...(currentCourse && {
-      variables: {
-        courseId: currentCourse,
-        term: CURRENT_TERM,
-      },
-    }),
-    onError: view.handleError,
-  });
 
   const setSearchPayload = (payload: SearchPayload) => {
     const newPayload = payload
