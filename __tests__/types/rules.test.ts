@@ -1,4 +1,4 @@
-import { PASSWORD_RULE, SID_RULE, USERNAME_RULE } from '.';
+import { PASSWORD_RULE, SID_RULE, USERNAME_RULE } from 'cutopia-types/lib/rules';
 
 describe('Rule: password', () => {
   it('should reject short length', () => {

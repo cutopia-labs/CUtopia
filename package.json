@@ -2,9 +2,9 @@
   "name": "cutopia",
   "version": "1.0.0",
   "workspaces": [
+    "types",
     "frontend",
-    "backend",
-    "types"
+    "backend"
   ],
   "private": true,
   "description": "CUtopia is a course review and timetable planning website for CUHK students.",
@@ -15,7 +15,8 @@
     "be": "yarn workspace cutopia-backend",
     "types": "yarn workspace cutopia-types",
     "prepare": "yarn husky install",
-    "test": "jest"
+    "test": "jest",
+    "postinstall": "yarn types build"
   },
   "devDependencies": {
     "@types/jest": "^28.1.6",
