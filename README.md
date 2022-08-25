@@ -13,14 +13,7 @@
 sh tools/init.sh
 ```
 
-This script will:
-- install git submodules
-- install node modules
-- build GraphQL types
-- create environment variables
-- generate RSA key pair for JWT login token
-
-> After running the script, replace `ATLAS_PROD_URI` and `ATLAS_DEV_URI` in the .env file with your MongoDB connection URI.
+After running the script, replace `ATLAS_PROD_URI` and `ATLAS_DEV_URI` in the .env file with your MongoDB connection URI.
 
 ## Development
 ### Compile scripts
@@ -28,7 +21,7 @@ This script will:
 sh tools/watch-local-files.sh
 ```
 ### Start server
-Run below in another terminal after scripts are compiled:
+Run below in another terminal after the scripts are compiled:
 ```sh
 sh tools/run-local-server.sh
 ```
@@ -53,7 +46,7 @@ All serverless serivces will be deployed to [Lambda](https://aws.amazon.com/lamb
 
 ```sh
 # Deploy development stack
-sh tools/deploy.sh cutopia-dev
+export NODE_ENV=development; sh tools/deploy.sh cutopia-dev
 
 # Deploy production stack
 export NODE_ENV=production; sh tools/deploy.sh cutopia-production
