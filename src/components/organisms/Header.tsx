@@ -77,7 +77,7 @@ const Header: FC = () => {
             <MenuIcon />
           </IconButton>
           <Menu
-            id="simple-menu"
+            id="header-menu"
             className={styles.sortMenu}
             anchorEl={anchorEl}
             keepMounted
@@ -87,7 +87,10 @@ const Header: FC = () => {
             {SECTIONS.map(section => (
               <MenuItem
                 key={section.link}
-                onClick={() => [router.push(section.link), setAnchorEl(null)]}
+                onClick={() => {
+                  router.push(section.link);
+                  setAnchorEl(null);
+                }}
               >
                 {section.label}
               </MenuItem>
