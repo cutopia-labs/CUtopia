@@ -244,7 +244,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
   const [getTimetable, { loading: getTimetableLoading }] = useLazyQuery(
     GET_TIMETABLE,
     {
-      onCompleted: async (data: { timetable: UploadTimetable }) => {
+      onCompleted: (data: { timetable: UploadTimetable }) => {
         applyTimetable(data?.timetable, planner.plannerId);
       },
       onError: e => {
