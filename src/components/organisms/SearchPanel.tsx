@@ -41,10 +41,9 @@ import Card from '../atoms/Card';
 import ErrorCard from '../molecules/ErrorCard';
 import ChipsRow from '../molecules/ChipsRow';
 import useMobileQuery from '../../hooks/useMobileQuery';
-import CourseCard from '../review/CourseCard';
 import DataStore from '../../store/DataStore';
 import If from '../atoms/If';
-import LoadingView from '../atoms/LoadingView';
+import CourseSectionCard from '../planner/CourseSectionCard';
 
 /**
  * c: courseId
@@ -348,17 +347,7 @@ const SearchPanel: FC<SearchPanelProps> = ({
           />
         </Card>
       </If>
-      <If visible={currentCourse}>
-        <LoadingView loading={!courseInfo || courseInfoLoading}>
-          <CourseCard
-            courseInfo={{
-              ...courseInfo?.course,
-              courseId: currentCourse,
-            }}
-            concise
-          />
-        </LoadingView>
-      </If>
+      <CourseSectionCard courseId={currentCourse} />
       <If visible={!currentCourse}>
         <If
           visible={
