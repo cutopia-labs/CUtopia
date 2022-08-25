@@ -52,7 +52,14 @@ const CourseBadgeRow: FC<CourseInfoProps> = ({ courseInfo }) => {
   );
 };
 
-const CourseConcise: FC<CourseInfoProps> = ({ courseInfo }) => (
+type CourseConciseProps = {
+  switchTerm: (term: string) => any;
+};
+
+const CourseConcise: FC<CourseInfoProps & CourseConciseProps> = ({
+  courseInfo,
+  switchTerm,
+}) => (
   <>
     <If visible={courseInfo.requirements}>
       <SectionText
@@ -103,9 +110,15 @@ type CourseCardProps = {
   courseInfo: CourseInfo;
   concise?: boolean; // if concise, then it's for planner search result
   style?: string;
+  switchTerm?: (term: string) => any;
 };
 
-const CourseCard: FC<CourseCardProps> = ({ courseInfo, concise, style }) => {
+const CourseCard: FC<CourseCardProps> = ({
+  courseInfo,
+  concise,
+  style,
+  switchTerm,
+}) => {
   const [showMore, setShowMore] = useState(true);
   const [skipHeightCheck, setSkipHeightCheck] = useState(concise);
   const user = useUser();
@@ -155,15 +168,15 @@ const CourseCard: FC<CourseCardProps> = ({ courseInfo, concise, style }) => {
               arrow
             >
               <IconButton
-                onClick={() => {
+                onClick={() =>
                   view.setDialog({
                     key: 'reportIssues',
                     contentProps: {
                       reportCategory: ReportCategory.COURSE,
                       id: courseInfo.courseId,
                     },
-                  });
-                }}
+                  })
+                }
                 aria-label="report"
                 size="small"
               >
@@ -189,7 +202,7 @@ const CourseCard: FC<CourseCardProps> = ({ courseInfo, concise, style }) => {
         visible={concise}
         elseNode={<CourseBadgeRow courseInfo={courseInfo} />}
       >
-        <CourseConcise courseInfo={courseInfo} />
+        <CourseConcise courseInfo={courseInfo} switchTerm={switchTerm} />
       </If>
       <If
         visible={

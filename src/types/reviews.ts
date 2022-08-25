@@ -1,5 +1,7 @@
 export type Grade = 'F' | 'D' | 'C' | 'B' | 'A';
 
+export type ReviewTerm = 'Term 1' | 'Term 2' | 'Summer';
+
 export type RecentReview = {
   id: string;
   courseId: string;

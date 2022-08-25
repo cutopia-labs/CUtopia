@@ -44,6 +44,11 @@ export const SERVER_CONFIG = {
 // Return only current term sections in planner
 export const CURRENT_TERM = '2022-23 Term 1';
 
+// If current term is 1, then show term 2 as well in planner
+export const plannerTerms = CURRENT_TERM.endsWith('1')
+  ? [CURRENT_TERM, `${CURRENT_TERM.slice(0, -1)}2`]
+  : [CURRENT_TERM];
+
 // Update course list and instructors if etag before below
 export const STATICS_EXPIRE_BEFORE = 1661358657000;
 
