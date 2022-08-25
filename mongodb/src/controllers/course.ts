@@ -1,15 +1,8 @@
 import { Review } from 'cutopia-types/lib/types';
-import NodeCache from 'node-cache';
 
 import Course from '../models/course';
-import withCache from '../utils/withCache';
 
-const courseCache = new NodeCache({
-  stdTTL: 600,
-});
-
-export const getCourseData = async ({ courseId }) =>
-  withCache(courseCache, courseId, async () => Course.findById(courseId));
+export const getCourseData = async courseId => Course.findById(courseId);
 
 export const updateCourseData = async (
   courseId: string,

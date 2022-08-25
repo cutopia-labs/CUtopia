@@ -1,20 +1,14 @@
 import { ErrorCode, VoteAction } from 'cutopia-types/lib/codes';
-import NodeCache from 'node-cache';
 
 import { REVIEWS_PER_PAGE } from '../constants/config';
 import Review from '../models/review';
 import User from '../models/user';
-import withCache from '../utils/withCache';
 
 import { updateCourseData } from './course';
 import { incrementVotesCount } from './user';
 
-const formatReviewId = (courseId: string, createdAt: number | string) =>
+export const formatReviewId = (courseId: string, createdAt: number | string) =>
   `${courseId}#${createdAt}`;
-
-const reviewCache = new NodeCache({
-  stdTTL: 600,
-});
 
 export const createReview = async input => {
   const { username, courseId, ...reviewData } = input;
@@ -45,12 +39,7 @@ export const createReview = async input => {
 };
 
 export const getReview = async input =>
-  withCache(
-    reviewCache,
-    formatReviewId(input.courseId, input.createdAt),
-    async () =>
-      Review.findById(formatReviewId(input.courseId, input.createdAt)).exec()
-  );
+  Review.findById(formatReviewId(input.courseId, input.createdAt)).exec();
 
 export const voteReview = async input => {
   const { _id, username, vote } = input;
@@ -92,19 +81,13 @@ export const getReviews = async input => {
     key => query[key] === undefined && delete query[key]
   );
 
-  return withCache(
-    reviewCache,
-    courseId ? JSON.stringify(input) : `latest#${page || 0}`,
-    async () => {
-      return await Review.find(courseId && query, null, {
-        sort: {
-          [sortBy]: ascending ? 1 : -1,
-        },
-        skip: page * REVIEWS_PER_PAGE,
-        limit: REVIEWS_PER_PAGE,
-      }).exec();
-    }
-  );
+  return Review.find(courseId && query, null, {
+    sort: {
+      [sortBy]: ascending ? 1 : -1,
+    },
+    skip: page * REVIEWS_PER_PAGE,
+    limit: REVIEWS_PER_PAGE,
+  }).exec();
 };
 
 export const editReview = async input => {

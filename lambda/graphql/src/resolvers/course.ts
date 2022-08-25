@@ -1,27 +1,34 @@
 import { getCourseData } from 'mongodb';
+import NodeCache from 'node-cache';
 
 import { Resolvers } from '../schemas/types';
 import { courses } from '../tools/courses';
+import withCache from '../utils/withCache';
+
+const courseCache = new NodeCache({ stdTTL: 600 });
 
 const coursesResolver: Resolvers = {
   Query: {
     course: async (parent, { filter }) => {
       const { requiredCourse, requiredTerm } = filter;
-      const {
-        lecturers: reviewLecturers,
-        terms: reviewTerms,
-        rating,
-      } = (await getCourseData({ courseId: requiredCourse })) || {};
-      return {
-        ...courses[requiredCourse],
-        courseId: requiredCourse,
-        sections: requiredTerm
-          ? courses[requiredCourse]['terms'][requiredTerm]
-          : null,
-        reviewLecturers,
-        reviewTerms,
-        rating,
-      };
+      return withCache(
+        courseCache,
+        `${requiredCourse}#${requiredTerm}`,
+        async () => {
+          const { lecturers, terms, rating } =
+            (await getCourseData(requiredCourse)) || {};
+          return {
+            ...courses[requiredCourse],
+            courseId: requiredCourse,
+            sections: requiredTerm
+              ? courses[requiredCourse]['terms'][requiredTerm]
+              : null,
+            reviewLecturers: lecturers,
+            reviewTerms: terms,
+            rating,
+          };
+        }
+      );
     },
   },
   Course: {

@@ -5,9 +5,14 @@ import {
   getReview,
   editReview,
   voteReview,
+  formatReviewId,
 } from 'mongodb';
+import NodeCache from 'node-cache';
 
 import { Resolvers } from '../schemas/types';
+import withCache from '../utils/withCache';
+
+const reviewCache = new NodeCache({ stdTTL: 600 });
 
 const reviewsResolver: Resolvers = {
   Mutation: {
@@ -50,8 +55,22 @@ const reviewsResolver: Resolvers = {
     },
   },
   Query: {
-    reviews: async (parent, { input }) => getReviews(input),
-    review: async (parent, { input }) => getReview(input),
+    reviews: async (parent, { input }) => {
+      const { courseId, page } = input;
+      return withCache(
+        reviewCache,
+        courseId ? JSON.stringify(input) : `latest#${page || 0}`,
+        async () => getReviews(input)
+      );
+    },
+    review: async (parent, { input }) => {
+      const { courseId, createdAt } = input;
+      return withCache(
+        reviewCache,
+        formatReviewId(courseId, createdAt),
+        async () => getReview(input)
+      );
+    },
   },
   ReviewDetails: {},
 };
