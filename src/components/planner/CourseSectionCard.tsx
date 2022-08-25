@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { CURRENT_TERM } from '../../config';
 import { COURSE_SECTIONS_QUERY } from '../../constants/queries';
 import { validCourse } from '../../helpers';
@@ -12,7 +12,6 @@ type Props = {
 };
 
 const CourseSectionCard: FC<Props> = ({ courseId }) => {
-  const [term, setTerm] = useState(CURRENT_TERM);
   const view = useView();
   // Fetch course info
   const { data: courseInfo, loading: courseInfoLoading } = useQuery(
@@ -21,7 +20,7 @@ const CourseSectionCard: FC<Props> = ({ courseId }) => {
       skip: !courseId || !validCourse(courseId),
       variables: {
         courseId,
-        term,
+        term: CURRENT_TERM,
       },
       onError: view.handleError,
     }

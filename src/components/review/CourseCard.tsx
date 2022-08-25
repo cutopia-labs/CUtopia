@@ -64,13 +64,7 @@ const CourseBadgeRow: FC<CourseInfoProps> = ({ courseInfo }) => {
   );
 };
 
-type CourseConciseProps = {
-  switchTerm: (term: string) => any;
-};
-
-const CourseConcise: FC<CourseInfoProps & CourseConciseProps> = ({
-  courseInfo,
-}) => {
+const CourseConcise: FC<CourseInfoProps> = ({ courseInfo }) => {
   const [term, setTerm] = useState(CURRENT_TERM);
   const [anchorEl, setAnchorEl] = useState(null);
   const [
@@ -181,22 +175,16 @@ type CourseCardProps = {
   courseInfo: CourseInfo;
   concise?: boolean; // if concise, then it's for planner search result
   style?: string;
-  switchTerm?: (term: string) => any;
 };
 
-const CourseCard: FC<CourseCardProps> = ({
-  courseInfo,
-  concise,
-  style,
-  switchTerm,
-}) => {
+const CourseCard: FC<CourseCardProps> = ({ courseInfo, concise, style }) => {
   const [showMore, setShowMore] = useState(true);
   const [skipHeightCheck, setSkipHeightCheck] = useState(concise);
   const user = useUser();
   const isMobile = useMobileQuery();
   const view = useView();
 
-  /* Note: cannot use store method, cuz it will not rerender the view */
+  // Note: cannot use store method, cuz it will not rerender the view
   const isFavorited = user.favoriteCourses.some(
     course => course.courseId === courseInfo.courseId
   );
@@ -273,7 +261,7 @@ const CourseCard: FC<CourseCardProps> = ({
         visible={concise}
         elseNode={<CourseBadgeRow courseInfo={courseInfo} />}
       >
-        <CourseConcise courseInfo={courseInfo} switchTerm={switchTerm} />
+        <CourseConcise courseInfo={courseInfo} />
       </If>
       <If
         visible={
