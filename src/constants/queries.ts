@@ -46,6 +46,21 @@ export const COURSE_SECTIONS_QUERY = gql`
   }
 `;
 
+export const SWITCH_SECTION_QUERY = gql`
+  query ($courseId: CourseID!, $term: String!) {
+    course(filter: { requiredCourse: $courseId, requiredTerm: $term }) {
+      sections {
+        name
+        startTimes
+        endTimes
+        days
+        locations
+        instructors
+      }
+    }
+  }
+`;
+
 // Review Queries
 export const REVIEWS_QUERY = gql`
   query (
