@@ -25,6 +25,10 @@ export const MIN_DESKTOP_WIDTH = 1260;
 
 const AWS_REGION = 'ap-southeast-1';
 
+export const isDev =
+  process.env.NODE_ENV === 'development' ||
+  process.env.REACT_APP_ENV_MODE === 'dev';
+
 /**
  * Server ID List
  * production: eisbgazs16
@@ -32,8 +36,7 @@ const AWS_REGION = 'ap-southeast-1';
  * mike-dev: uvp03fp791
  * dev: 1reoh16ya2
  */
-export const SERVER_ID =
-  process.env.NODE_ENV === 'production' ? 'eisbgazs16' : '1reoh16ya2';
+export const SERVER_ID = isDev ? '1reoh16ya2' : 'eisbgazs16';
 
 export const SERVER_ADDR = `https://${SERVER_ID}.execute-api.${AWS_REGION}.amazonaws.com/Prod`;
 

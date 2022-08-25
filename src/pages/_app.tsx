@@ -18,9 +18,10 @@ import SnackBar from '../components/molecules/SnackBar';
 import ErrorCard from '../components/molecules/ErrorCard';
 import { ErrorCardMode } from '../types';
 import HeadSeo from '../components/atoms/HeadSeo';
+import { isDev } from '../config';
 
 // clear all console output
-if (process.env.NODE_ENV === 'production') {
+if (!isDev) {
   console.log = () => {};
   console.warn = () => {};
   console.table = () => {};
