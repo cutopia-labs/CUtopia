@@ -7,17 +7,19 @@ import { FiExternalLink } from 'react-icons/fi';
 import clsx from 'clsx';
 import { ReportCategory } from 'cutopia-types/lib/codes';
 
+import { useLazyQuery } from '@apollo/client';
 import styles from '../../styles/components/review/CourseCard.module.scss';
 import ShowMoreOverlay from '../molecules/ShowMoreOverlay';
 import Badge from '../atoms/Badge';
-import { useView, useUser } from '../../store';
-import { COURSE_CARD_MAX_HEIGHT } from '../../config';
+import { useView, useUser, viewStore } from '../../store';
+import { COURSE_CARD_MAX_HEIGHT, CURRENT_TERM } from '../../config';
 import { CourseInfo } from '../../types';
 import Link from '../molecules/Link';
 import useMobileQuery from '../../hooks/useMobileQuery';
 import Section from '../molecules/Section';
 import SectionText from '../molecules/SectionText';
 import If from '../atoms/If';
+import { SWITCH_SECTION_QUERY } from '../../constants/queries';
 import CourseSections from './CourseSections';
 import GradeRow from './GradeRow';
 
@@ -58,38 +60,61 @@ type CourseConciseProps = {
 
 const CourseConcise: FC<CourseInfoProps & CourseConciseProps> = ({
   courseInfo,
-  switchTerm,
-}) => (
-  <>
-    <If visible={courseInfo.requirements}>
-      <SectionText
-        className={styles.requirementSection}
-        title="Requirements"
-        caption={courseInfo.requirements}
-      />
-    </If>
-    <If visible={courseInfo.rating}>
-      <div className={styles.subHeadingContainer}>
-        <RouterLink href={`/review/${courseInfo.courseId}`}>
-          <a
-            className={clsx(styles.reviewsLinkHeading, 'subHeading center-row')}
-          >
-            Reviews
-            <FiExternalLink />
-          </a>
-        </RouterLink>
-        <GradeRow
-          rating={courseInfo.rating}
-          concise
-          style={clsx(styles.gradeRowConcise, styles.gradeRow)}
+}) => {
+  const [term, setTerm] = useState(CURRENT_TERM);
+  const [getSection, { loading: courseSectionLoading }] = useLazyQuery(
+    SWITCH_SECTION_QUERY,
+    {
+      onCompleted: (data: { course: CourseInfo }) => {
+        courseInfo.sections = data?.course?.sections;
+      },
+      onError: viewStore.handleError,
+    }
+  );
+  const switchTerm = (term: string) => {
+    setTerm(term);
+    getSection({
+      variables: {
+        courseId: courseInfo.courseId,
+        term,
+      },
+    });
+  };
+  return (
+    <>
+      <If visible={courseInfo.requirements}>
+        <SectionText
+          className={styles.requirementSection}
+          title="Requirements"
+          caption={courseInfo.requirements}
         />
-      </div>
-    </If>
-    <Section title="Sections" subheading>
-      <CourseSections courseInfo={courseInfo} />
-    </Section>
-  </>
-);
+      </If>
+      <If visible={courseInfo.rating}>
+        <div className={styles.subHeadingContainer}>
+          <RouterLink href={`/review/${courseInfo.courseId}`}>
+            <a
+              className={clsx(
+                styles.reviewsLinkHeading,
+                'subHeading center-row'
+              )}
+            >
+              Reviews
+              <FiExternalLink />
+            </a>
+          </RouterLink>
+          <GradeRow
+            rating={courseInfo.rating}
+            concise
+            style={clsx(styles.gradeRowConcise, styles.gradeRow)}
+          />
+        </div>
+      </If>
+      <Section title="Sections" subheading>
+        <CourseSections courseInfo={courseInfo} />
+      </Section>
+    </>
+  );
+};
 
 const CourseDetails: FC<CourseInfoProps> = ({ courseInfo }) => (
   <>
