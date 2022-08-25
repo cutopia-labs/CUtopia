@@ -1,3 +1,6 @@
 [submodule "scraper"]
 	path = scraper
 	url = https://github.com/mikezzb/cuhk-course-scraper.git
+[submodule "CUtopia-data"]
+	path = data
+	url = https://github.com/cutility/CUtopia-data.git
