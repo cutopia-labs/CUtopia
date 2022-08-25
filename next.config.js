@@ -24,6 +24,9 @@ const hashOnlyIdent = (context, _, exportName) =>
     .join('_');
 
 const moduleExports = {
+  env: {
+    REACT_APP_ENV_MODE: process.env.REACT_APP_ENV_MODE,
+  },
   trailingSlash: false,
   sassOptions: {
     includePaths: [path.join(__dirname, 'styles')],
