@@ -175,7 +175,7 @@ export const getStaticProps = async ({ params }) => {
 // Get all valid paths to prerender (i.e. valid courseId)
 export const getStaticPaths: GetStaticPaths<{}> = async () => {
   const courses = Object.values(
-    await import('../../../data/derived/courses.json')
+    await import('../../../../data/derived/courses.json')
   );
   return {
     paths: [...courses]
