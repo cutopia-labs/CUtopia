@@ -122,6 +122,7 @@ const CourseConcise: FC<CourseInfoProps> = ({ courseInfo }) => {
       <Section title="Sections" subheading>
         <Button
           size="small"
+          className={styles.termSwitchBtn}
           onClick={e => setAnchorEl(e.currentTarget)}
           endIcon={<ExpandMore />}
         >

@@ -15,7 +15,6 @@ import { usePlanner, useView } from '../../store';
 import { WEEKDAYS_TWO_ABBR } from '../../constants';
 import { CourseInfo, CourseSection, ErrorCardMode } from '../../types';
 import ErrorCard from '../molecules/ErrorCard';
-import { CURRENT_TERM } from '../../config';
 
 type SectionCardProps = {
   section: CourseSection;
@@ -125,7 +124,6 @@ const CourseSections: FC<CourseSectionsProps> = ({
   return (
     <div className={styles.courseSections}>
       <div className={styles.courseSectionWrapper}>
-        <span className={styles.courseTermLabel}>{CURRENT_TERM}</span>
         {courseSections.map(section => (
           <SectionCard
             key={section.name}
