@@ -7,7 +7,7 @@ import { updateTimetableId, updateUser } from './user';
 import {
   UPLOAD_TIMETABLE_ENTRY_LIMIT,
   UPLOAD_TIMETABLE_TOTAL_LIMIT,
-} from '../constant/configs';
+} from '../constants/config';
 
 export const getTimetable = async input => {
   const timetable = await Timetable.findById(input._id);

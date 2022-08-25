@@ -1,26 +1,22 @@
-import { Review, ReviewDetail } from 'cutopia-types/lib/types';
-import { Schema, model, set } from 'mongoose';
-import {
-  ratingSchema,
-  requiredNumber,
-  requiredString,
-  unixTimestampInSeconds,
-} from '../schemas';
+import { Review } from 'cutopia-types/lib/types';
+import { Schema, model } from 'mongoose';
+import { requiredNumber, requiredString } from '../constants/schema';
 
-const reviewDetailSchema = new Schema<ReviewDetail>(
-  {
-    grade: ratingSchema,
-    text: {
-      type: String,
-      required: true,
-      maxlength: 10000,
-    },
+const rating = {
+  type: Number,
+  required: true,
+  min: 0,
+  max: 4,
+};
+
+const reviewDetail = {
+  grade: rating,
+  text: {
+    type: String,
+    required: true,
+    maxlength: 10000,
   },
-  {
-    _id: false,
-    versionKey: false,
-  }
-);
+};
 
 const reviewSchema = new Schema<Review>(
   {
@@ -41,13 +37,13 @@ const reviewSchema = new Schema<Review>(
     },
     upvoteUserIds: [String],
     downvoteUserIds: [String],
-    overall: ratingSchema,
-    grading: reviewDetailSchema,
-    teaching: reviewDetailSchema,
-    difficulty: reviewDetailSchema,
-    content: reviewDetailSchema,
+    overall: rating,
+    grading: reviewDetail,
+    teaching: reviewDetail,
+    difficulty: reviewDetail,
+    content: reviewDetail,
     createdAt: requiredNumber, // cannot in second, as this shall be the same as the one in id
-    updatedAt: unixTimestampInSeconds,
+    updatedAt: requiredNumber,
   },
   {
     // not sure updateAt gonna trigger when updates changed, better manually change when editReview
@@ -60,12 +56,5 @@ const reviewSchema = new Schema<Review>(
 reviewSchema.index({ createdAt: -1 });
 
 const ReviewModel = model<Review>('Review', reviewSchema);
-
-/* DEBUG ONLY
-set('debug', true);
-ReviewModel.on('index', err => {
-  console.error(err);
-});
-*/
 
 export default ReviewModel;

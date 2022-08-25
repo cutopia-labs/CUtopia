@@ -1,26 +1,20 @@
-import { RankEntry, Ranking } from 'cutopia-types/lib/types';
+import { Ranking } from 'cutopia-types/lib/types';
 import { Schema, model } from 'mongoose';
-import { requiredNumber, requiredString } from '../schemas';
+import { requiredNumber, requiredString } from '../constants/schema';
 
-const RankEntry = new Schema<RankEntry>(
-  {
-    _id: requiredString,
-    val: {
-      type: Schema.Types.Mixed,
-      required: true,
-    },
+const rankEntry = {
+  _id: requiredString,
+  val: {
+    type: Schema.Types.Mixed,
+    required: true,
   },
-  {
-    _id: false,
-    versionKey: false,
-  }
-);
+};
 
 const rankingSchema = new Schema<Ranking>(
   {
     _id: requiredString,
     ranks: {
-      type: [RankEntry],
+      type: [rankEntry],
       required: true,
     },
     updatedAt: requiredNumber,

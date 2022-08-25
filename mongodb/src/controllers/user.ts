@@ -3,7 +3,7 @@ import { nanoid } from 'nanoid';
 import { ErrorCode } from 'cutopia-types/lib/codes';
 
 import User from '../models/user.model';
-import { SALT_ROUNDS, VERIFY_EXPIRATION_TIME } from '../constant/configs';
+import { SALT_ROUNDS, VERIFY_EXPIRATION_TIME } from '../constants/config';
 
 const isVerfiCodeExpired = createdAt =>
   createdAt + VERIFY_EXPIRATION_TIME - Date.now() < 0;

@@ -2,7 +2,7 @@ import NodeCache from 'node-cache';
 import withCache from '../utils/withCache';
 import Course from '../models/course.model';
 import Ranking from '../models/ranking.model';
-import { RANK_LIMIT } from '../constant/configs';
+import { RANK_LIMIT } from '../constants/config';
 import { RankEntry } from 'cutopia-types/lib/types';
 
 const rankingCache = new NodeCache({
@@ -60,7 +60,7 @@ export const rankCourses = async () => {
 };
 
 export const getRanking = async (field: string) =>
-  withCache(rankingCache, field, async () => await Ranking.findById(field));
+  withCache(rankingCache, field, async () => Ranking.findById(field));
 
 type UpdateRankingProps = {
   field: string;

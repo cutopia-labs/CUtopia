@@ -1,24 +1,18 @@
-import { Discussion, DiscussionMessage } from 'cutopia-types/lib/types';
+import { Discussion } from 'cutopia-types/lib/types';
 import { model, Schema } from 'mongoose';
-import { courseId, createdAt, requiredString } from '../schemas';
+import { createdAt, requiredString } from '../constants/schema';
 
-const discussionMessageSchema = new Schema<DiscussionMessage>(
-  {
-    _id: createdAt,
-    text: requiredString,
-    user: requiredString,
-  },
-  {
-    _id: false,
-    versionKey: false,
-  }
-);
+const discussionMessage = {
+  _id: createdAt,
+  text: requiredString,
+  user: requiredString,
+};
 
 const discussionSchema = new Schema<Discussion>(
   {
-    _id: courseId,
+    _id: requiredString,
     messages: {
-      type: [discussionMessageSchema],
+      type: [discussionMessage],
       required: true,
     },
     numMessages: { type: Number, default: 0 },

@@ -1,5 +1,5 @@
 import DiscussionModel from '../models/discussion.model';
-import { MESSAGES_PER_PAGE } from '../constant/configs';
+import { MESSAGES_PER_PAGE } from '../constants/config';
 
 type SendDiscussionMessageProps = {
   courseId: string;

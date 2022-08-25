@@ -6,12 +6,10 @@ import User from '../models/user.model';
 import withCache from '../utils/withCache';
 import { updateCourseData } from './course';
 import { incrementVotesCount } from './user';
-import { REVIEWS_PER_PAGE } from '../constant/configs';
+import { REVIEWS_PER_PAGE } from '../constants/config';
 
-export const generateReviewId = (
-  courseId: string,
-  createdAt: number | string
-) => `${courseId}#${createdAt}`;
+const formatReviewId = (courseId: string, createdAt: number | string) =>
+  `${courseId}#${createdAt}`;
 
 const reviewCache = new NodeCache({
   stdTTL: 600,
@@ -20,7 +18,7 @@ const reviewCache = new NodeCache({
 export const createReview = async input => {
   const { username, courseId, ...reviewData } = input;
   const createdAt = +new Date();
-  const _id = generateReviewId(courseId, createdAt);
+  const _id = formatReviewId(courseId, createdAt);
   const user = await User.findOne({ username }, 'reviewIds exp').exec();
   if (user.reviewIds.some(reviewId => reviewId.startsWith(courseId))) {
     throw Error(ErrorCode.CREATE_REVIEW_ALREADY_CREATED.toString());
@@ -34,26 +32,23 @@ export const createReview = async input => {
     _id,
     courseId,
     createdAt,
+    updatedAt: createdAt,
     ...reviewData,
   });
 
   await newReview.save();
-
-  // skip update if review cannot be saved
   await updateCourseData(courseId, reviewData);
   await user.save();
 
-  return {
-    createdAt,
-  };
+  return { createdAt };
 };
 
 export const getReview = async input =>
   withCache(
     reviewCache,
-    generateReviewId(input.courseId, input.createdAt),
+    formatReviewId(input.courseId, input.createdAt),
     async () =>
-      Review.findById(generateReviewId(input.courseId, input.createdAt)).exec()
+      Review.findById(formatReviewId(input.courseId, input.createdAt)).exec()
   );
 
 export const voteReview = async input => {

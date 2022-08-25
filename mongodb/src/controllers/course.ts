@@ -1,4 +1,6 @@
 import NodeCache from 'node-cache';
+import { Review } from 'cutopia-types/lib/types';
+
 import Course from '../models/course.model';
 import withCache from '../utils/withCache';
 
@@ -6,35 +8,8 @@ const courseCache = new NodeCache({
   stdTTL: 600,
 });
 
-export const getCourseData = async input =>
-  withCache(courseCache, input.courseId, async () =>
-    Course.findById(input.courseId)
-  );
-
-export type Review = {
-  _id: string;
-  courseId: string;
-  username: string;
-  anonymous: boolean;
-  title?: string;
-  createdAt: number;
-  updatedAt: number;
-  term: string;
-  lecturer: string;
-  overall: number;
-  grading: ReviewDetails;
-  teaching: ReviewDetails;
-  difficulty: ReviewDetails;
-  content: ReviewDetails;
-  upvotes: number;
-  downvotes: number;
-  myVote?: number;
-};
-
-export type ReviewDetails = {
-  grade: number;
-  text: string;
-};
+export const getCourseData = async ({ courseId }) =>
+  withCache(courseCache, courseId, async () => Course.findById(courseId));
 
 export const updateCourseData = async (
   courseId: string,

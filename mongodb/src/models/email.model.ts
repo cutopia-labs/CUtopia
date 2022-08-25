@@ -1,6 +1,6 @@
 import { Email } from 'cutopia-types/lib/types';
 import { Schema, model } from 'mongoose';
-import { requiredString } from '../schemas';
+import { requiredString } from '../constants/schema';
 
 const emailSchema = new Schema<Email>(
   {

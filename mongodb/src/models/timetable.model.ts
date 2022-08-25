@@ -1,12 +1,27 @@
 import { Timetable } from 'cutopia-types/lib/types';
 import { Schema, model } from 'mongoose';
 import { nanoid } from 'nanoid';
-import {
-  timetableEntrySchema,
-  requiredNumber,
-  requiredString,
-  createdAt,
-} from '../schemas';
+import { requiredNumber, requiredString, createdAt } from '../constants/schema';
+
+const timetableSection = {
+  days: [requiredString],
+  endTimes: [requiredString],
+  startTimes: [requiredString],
+  instructors: [requiredString],
+  locations: [requiredString],
+  hide: {
+    type: Boolean,
+    default: false,
+  },
+  name: String,
+};
+
+const timetableEntry = {
+  courseId: requiredString,
+  title: requiredString,
+  credits: requiredNumber,
+  sections: [timetableSection],
+};
 
 const timetableSchema = new Schema<Timetable>(
   {
@@ -15,7 +30,7 @@ const timetableSchema = new Schema<Timetable>(
       default: () => nanoid(10),
     },
     createdAt: createdAt,
-    entries: [timetableEntrySchema],
+    entries: [timetableEntry],
     expire: requiredNumber,
     expireAt: requiredNumber,
     username: requiredString,
