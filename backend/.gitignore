@@ -1,0 +1,11 @@
+samconfig.toml
+node_modules/
+*.env
+lambda/graphql/build
+lambda/graphql/src/data
+lambda/graphql/src/schemas/bundle.graphql
+lambda/graphql/src/schemas/types.ts
+mongodb/build
+mongodb/lib
+*.key
+*.key.pub
