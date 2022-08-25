@@ -5,25 +5,23 @@ import { courses } from '../tools/courses';
 
 const coursesResolver: Resolvers = {
   Query: {
-    courses: (parent, { filter }) => {
-      const { requiredCourses, requiredTerm } = filter;
-      return requiredCourses.map(async courseId => {
-        const {
-          lecturers: reviewLecturers,
-          terms: reviewTerms,
-          rating,
-        } = (await getCourseData({ courseId })) || {};
-        return {
-          ...courses[courseId],
-          sections: requiredTerm
-            ? courses[courseId]['terms'][requiredTerm]
-            : null,
-          courseId,
-          reviewLecturers,
-          reviewTerms,
-          rating,
-        };
-      });
+    course: async (parent, { filter }) => {
+      const { requiredCourse, requiredTerm } = filter;
+      const {
+        lecturers: reviewLecturers,
+        terms: reviewTerms,
+        rating,
+      } = (await getCourseData({ courseId: requiredCourse })) || {};
+      return {
+        ...courses[requiredCourse],
+        courseId: requiredCourse,
+        sections: requiredTerm
+          ? courses[requiredCourse]['terms'][requiredTerm]
+          : null,
+        reviewLecturers,
+        reviewTerms,
+        rating,
+      };
     },
   },
   Course: {

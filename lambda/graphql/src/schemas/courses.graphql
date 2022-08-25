@@ -1,9 +1,9 @@
 type Query {
-  courses(filter: CourseFilter): [Course]! @auth @rateLimit(duration: 60, limit: 100)
+  course(filter: CourseFilter): Course! @auth @rateLimit(duration: 60, limit: 100)
 }
 
 input CourseFilter {
-  requiredCourses: [CourseID]!
+  requiredCourse: CourseID!
   requiredTerm: String
 }
 
