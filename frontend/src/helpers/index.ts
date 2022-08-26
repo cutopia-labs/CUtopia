@@ -9,6 +9,9 @@ import { MIN_DESKTOP_WIDTH } from '../config';
 import { Review } from '../types';
 import { getStoreData } from './store';
 
+export const wait = (timeInMs: number) =>
+  new Promise(resolve => setTimeout(resolve, timeInMs));
+
 export const getSubjectAndCode = (courseId: string) => ({
   subject: courseId.substring(0, 4),
   code: courseId.substring(4),
