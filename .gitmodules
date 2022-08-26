@@ -1,4 +1,4 @@
-[submodule "scraper"]
+[submodule "cuhk-course-scraper"]
 	path = scraper
 	url = https://github.com/mikezzb/cuhk-course-scraper.git
 [submodule "CUtopia-data"]
