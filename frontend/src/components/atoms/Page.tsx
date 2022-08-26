@@ -1,5 +1,5 @@
-import { FC } from 'react';
 import clsx from 'clsx';
+import { FCC } from '../../types/general';
 
 type PageProps = {
   className?: string;
@@ -8,7 +8,7 @@ type PageProps = {
   column?: boolean;
 };
 
-const Page: FC<PageProps> = ({
+const Page: FCC<PageProps> = ({
   children,
   className,
   center,

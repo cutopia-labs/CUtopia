@@ -1,12 +1,13 @@
-import { FC, ReactNode } from 'react';
+import { ReactNode } from 'react';
+import { FCC } from '../../types/general';
 
 export type IfProps = {
   visible: boolean | any;
   elseNode?: ReactNode;
 };
 
-/* @ts-ignore */
-const If: FC<IfProps> = ({ visible, children, elseNode = null }) => {
+// @ts-ignore
+const If: FCC<IfProps> = ({ visible, children, elseNode = null }) => {
   return visible ? children : elseNode;
 };
 

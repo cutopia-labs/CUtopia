@@ -1,10 +1,10 @@
 import clsx from 'clsx';
-import { FC } from 'react';
 
 import { RATING_FIELDS } from '../../constants';
 import { CourseRating, Review } from '../../types';
 import GradeIndicator from '../atoms/GradeIndicator';
 import styles from '../../styles/components/review/GradeRow.module.scss';
+import { FCC } from '../../types/general';
 
 type GradeRowProps = {
   rating: Review | CourseRating;
@@ -18,7 +18,7 @@ type GradeRowProps = {
   concise?: boolean;
 };
 
-const GradeRow: FC<GradeRowProps> = ({
+const GradeRow: FCC<GradeRowProps> = ({
   rating,
   children,
   isReview,

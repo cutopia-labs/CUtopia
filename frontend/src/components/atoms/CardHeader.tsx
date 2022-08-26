@@ -1,6 +1,6 @@
 import clsx from 'clsx';
-import { FC } from 'react';
 import styles from '../../styles/components/atoms/CardHeader.module.scss';
+import { FCC } from '../../types/general';
 
 type CardHeaderProps = {
   left?: JSX.Element;
@@ -8,7 +8,7 @@ type CardHeaderProps = {
   title?: string;
 };
 
-const CardHeader: FC<CardHeaderProps> = ({
+const CardHeader: FCC<CardHeaderProps> = ({
   className,
   children,
   left,

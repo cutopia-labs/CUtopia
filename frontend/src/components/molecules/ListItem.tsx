@@ -1,6 +1,6 @@
 import clsx from 'clsx';
-import { FC } from 'react';
 import colors from '../../constants/colors';
+import { FCC } from '../../types/general';
 
 export type ListItemProps = {
   title?: string;
@@ -16,7 +16,7 @@ export type ListItemProps = {
   onMouseDown?: (...args: any[]) => any;
 };
 
-const ListItem: FC<ListItemProps> = ({
+const ListItem: FCC<ListItemProps> = ({
   title,
   caption,
   onClick,

@@ -3,13 +3,14 @@ import { FC } from 'react';
 import colors from '../../constants/colors';
 import { Grade } from '../../types';
 import styles from '../../styles/components/molecules/SectionGroup.module.scss';
+import { FCC } from '../../types/general';
 
 type FormSectionProps = {
   title: string;
   className?: string;
 };
 
-export const FormSection: FC<FormSectionProps> = ({
+export const FormSection: FCC<FormSectionProps> = ({
   title,
   className,
   children,

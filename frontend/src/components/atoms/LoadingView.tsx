@@ -1,3 +1,4 @@
+import { FCC } from '../../types/general';
 import If, { IfProps } from './If';
 import Loading, { LoadingProps } from './Loading';
 
@@ -5,8 +6,7 @@ type Props = {
   loading: boolean;
 };
 
-/* @ts-ignore */
-const LoadingView: FC<Props & IfProps & LoadingProps> = ({
+const LoadingView: FCC<Props & IfProps & LoadingProps> = ({
   loading,
   children,
   ...props

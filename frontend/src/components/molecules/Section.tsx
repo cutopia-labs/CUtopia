@@ -1,6 +1,6 @@
 import clsx from 'clsx';
-import { FC } from 'react';
 import styles from '../../styles/components/molecules/Section.module.scss';
+import { FCC } from '../../types/general';
 
 export type SectionProps = {
   title: string;
@@ -9,7 +9,7 @@ export type SectionProps = {
   subheading?: boolean;
 };
 
-const Section: FC<SectionProps> = ({
+const Section: FCC<SectionProps> = ({
   title,
   children,
   className,

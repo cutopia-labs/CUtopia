@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { FC } from 'react';
+import { FCC } from '../../types/general';
 
 type DialogContentTemplateProps = {
   className?: string;
@@ -7,7 +7,7 @@ type DialogContentTemplateProps = {
   caption?: string;
 };
 
-const DialogContentTemplate: FC<DialogContentTemplateProps> = ({
+const DialogContentTemplate: FCC<DialogContentTemplateProps> = ({
   className,
   children,
   title,
