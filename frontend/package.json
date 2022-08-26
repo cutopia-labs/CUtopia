@@ -43,7 +43,7 @@
     "prepare": "yarn prepare-data",
     "cleanup": "rm -r .next build node_modules",
     "move-data": "cp -R ../data/resources public/ && cp -r ../data/derived/faculty_subjects.json src/constants/faculty_subjects.json",
-    "prepare-data": "yarn move-data",
+    "prepare-data": "git submodule update --init && yarn move-data",
     "update-data": "yarn move-data"
   },
   "browserslist": {
