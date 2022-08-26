@@ -23,8 +23,7 @@
   },
   "homepage": "https://github.com/cutility/CUtopia-backend#readme",
   "engines": {
-    "node": ">=v14.0.0",
-    "npm": ">=6.14.8",
-    "yarn": ">=1.22.5"
+    "node": ">=v12.21.0",
+    "yarn": ">=1.22.0"
   }
 }
