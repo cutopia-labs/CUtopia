@@ -1,5 +1,4 @@
-import { DialogProps } from '@mui/material';
-import { AlertProps } from '@mui/lab';
+import { DialogProps, AlertProps } from '@mui/material';
 import UserStore from '../store/UserStore';
 import { CourseSearchItem } from './courses';
 
