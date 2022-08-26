@@ -1,7 +1,7 @@
 import { FC, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { IconButton, Menu, MenuItem } from '@material-ui/core';
+import { IconButton, Menu, MenuItem } from '@mui/material';
 import {
   ChatBubble,
   ChatBubbleOutlineOutlined,
@@ -10,7 +10,7 @@ import {
   Menu as MenuIcon,
   Note,
   NoteOutlined,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import clsx from 'clsx';
 
 import styles from '../../styles/components/organisms/Header.module.scss';

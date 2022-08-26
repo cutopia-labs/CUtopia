@@ -6,9 +6,9 @@ import {
   Divider,
   IconButton,
   InputBase,
-} from '@material-ui/core';
+} from '@mui/material';
 import { observer } from 'mobx-react-lite';
-import { Check, Edit, ExpandMore, Timer } from '@material-ui/icons';
+import { Check, Edit, ExpandMore, Timer } from '@mui/icons-material';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import copy from 'copy-to-clipboard';

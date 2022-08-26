@@ -2,7 +2,7 @@ import {
   InfoOutlined,
   LockOutlined,
   DescriptionOutlined,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { FC, useState } from 'react';
 import clsx from 'clsx';
 

@@ -1,4 +1,4 @@
-import { Chip } from '@material-ui/core';
+import { Chip } from '@mui/material';
 import clsx from 'clsx';
 import { FC, MouseEvent } from 'react';
 import { ErrorCardMode } from '../../types';

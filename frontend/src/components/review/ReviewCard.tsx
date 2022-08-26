@@ -4,7 +4,7 @@ import { AiOutlineCalendar } from 'react-icons/ai';
 import { BiMessageRounded } from 'react-icons/bi';
 import { RiShareForwardLine, RiFlag2Line } from 'react-icons/ri';
 import { useMutation } from '@apollo/client';
-import { IconButton } from '@material-ui/core';
+import { IconButton } from '@mui/material';
 import clsx from 'clsx';
 
 import styles from '../../styles/components/review/ReviewCard.module.scss';
@@ -70,7 +70,7 @@ const ReviewCard: FC<ReviewCardProps> = ({
         <div
           className={clsx(
             styles.reviewInfoRow,
-            !Boolean(review.title) && styles.noTitle,
+            !review.title && styles.noTitle,
             'center-row'
           )}
         >

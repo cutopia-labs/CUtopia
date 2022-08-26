@@ -1,10 +1,10 @@
 import { FC, useState } from 'react';
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 import {
   ChatBubbleOutlineOutlined,
   SchoolOutlined,
   NoteOutlined,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { observer } from 'mobx-react-lite';
 import clsx from 'clsx';
 

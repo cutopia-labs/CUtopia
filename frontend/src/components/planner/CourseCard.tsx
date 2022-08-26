@@ -1,6 +1,6 @@
 import { FC } from 'react';
-import { IconButton, useTheme } from '@material-ui/core';
-import { Delete } from '@material-ui/icons';
+import { IconButton, useTheme } from '@mui/material';
+import { Delete } from '@mui/icons-material';
 import { observer } from 'mobx-react-lite';
 
 import staticStyles from '../../styles/components/planner/CourseCard.module.scss';

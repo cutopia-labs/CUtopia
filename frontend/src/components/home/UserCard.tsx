@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite';
-import Avatar from '@material-ui/core/Avatar';
-import { SettingsOutlined } from '@material-ui/icons';
-import { IconButton, Tooltip } from '@material-ui/core';
+import Avatar from '@mui/material/Avatar';
+import { SettingsOutlined } from '@mui/icons-material';
+import { IconButton, Tooltip } from '@mui/material';
 import { GoUnverified, GoVerified } from 'react-icons/go';
 
 import clsx from 'clsx';

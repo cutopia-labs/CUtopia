@@ -1,8 +1,12 @@
 import type { AppProps } from 'next/app';
 import { FC, useEffect, useMemo } from 'react';
 import { ApolloProvider } from '@apollo/client';
-import { ThemeProvider } from '@material-ui/core/styles';
-import { useMediaQuery } from '@material-ui/core';
+import {
+  ThemeProvider,
+  Theme,
+  StyledEngineProvider,
+} from '@mui/material/styles';
+import { useMediaQuery } from '@mui/material';
 import * as Sentry from '@sentry/nextjs';
 import NProgress from 'nprogress';
 import { useRouter } from 'next/router';
@@ -19,6 +23,11 @@ import ErrorCard from '../components/molecules/ErrorCard';
 import { ErrorCardMode } from '../types';
 import HeadSeo from '../components/atoms/HeadSeo';
 import { isDev } from '../config';
+
+declare module '@mui/styles/defaultTheme' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface DefaultTheme extends Theme {}
+}
 
 // clear all console output
 if (!isDev) {
@@ -52,12 +61,14 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
       <Sentry.ErrorBoundary fallback={<ErrorCard mode={ErrorCardMode.ERROR} />}>
         <StoreProvider>
           <ApolloProvider client={client}>
-            <ThemeProvider theme={theme}>
-              <Header />
-              <Component {...pageProps} />
-              <SnackBar />
-              <Dialog />
-            </ThemeProvider>
+            <StyledEngineProvider injectFirst>
+              <ThemeProvider theme={theme}>
+                <Header />
+                <Component {...pageProps} />
+                <SnackBar />
+                <Dialog />
+              </ThemeProvider>
+            </StyledEngineProvider>
           </ApolloProvider>
         </StoreProvider>
       </Sentry.ErrorBoundary>
@@ -67,12 +78,12 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
       />
       <Script id="google-analytics" strategy="afterInteractive">
         {`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){window.dataLayer.push(arguments);}
-          gtag('js', new Date());
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){window.dataLayer.push(arguments);}
+        gtag('js', new Date());
 
-          gtag('config', 'G-C85DMTM94G');
-        `}
+        gtag('config', 'G-C85DMTM94G');
+      `}
       </Script>
     </>
   );

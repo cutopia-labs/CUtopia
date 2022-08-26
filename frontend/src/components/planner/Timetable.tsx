@@ -1,4 +1,4 @@
-import { useMediaQuery } from '@material-ui/core';
+import { useMediaQuery } from '@mui/material';
 
 import clsx from 'clsx';
 import { FC, forwardRef } from 'react';

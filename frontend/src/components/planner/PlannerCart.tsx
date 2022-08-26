@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite';
-import { Checkbox, IconButton, Tooltip } from '@material-ui/core';
-import { ClearAllRounded, Warning } from '@material-ui/icons';
+import { Checkbox, IconButton, Tooltip } from '@mui/material';
+import { ClearAllRounded, Warning } from '@mui/icons-material';
 import clsx from 'clsx';
 import { FC } from 'react';
 

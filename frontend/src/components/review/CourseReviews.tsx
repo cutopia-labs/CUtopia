@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useReducer, FC } from 'react';
 import { useQuery } from '@apollo/client';
-import { Divider } from '@material-ui/core';
+import { Divider } from '@mui/material';
 import pluralize from 'pluralize';
 import copy from 'copy-to-clipboard';
 import { ReportCategory } from 'cutopia-types/lib/codes';

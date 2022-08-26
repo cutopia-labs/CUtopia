@@ -1,8 +1,8 @@
 import { useState, useEffect, FC } from 'react';
 import { observer } from 'mobx-react-lite';
 import { BsChat } from 'react-icons/bs';
-import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@material-ui/lab';
-import { ChatBubbleOutline, Edit, Share } from '@material-ui/icons';
+import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@mui/material';
+import { ChatBubbleOutline, Edit, Share } from '@mui/icons-material';
 import copy from 'copy-to-clipboard';
 import { useRouter } from 'next/router';
 import { GetStaticPaths } from 'next';

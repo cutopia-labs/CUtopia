@@ -4,7 +4,7 @@ import {
   ForumOutlined,
   ThumbUpOutlined,
   WhatshotOutlined,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { useQuery } from '@apollo/client';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';

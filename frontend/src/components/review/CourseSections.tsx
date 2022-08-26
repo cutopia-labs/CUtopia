@@ -1,12 +1,12 @@
 import { observer } from 'mobx-react-lite';
-import { IconButton } from '@material-ui/core';
+import { IconButton } from '@mui/material';
 import {
   Add,
   PersonOutline,
   Schedule,
   RoomOutlined,
   DeleteOutline,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import clsx from 'clsx';
 import { FC } from 'react';
 

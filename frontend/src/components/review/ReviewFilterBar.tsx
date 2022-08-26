@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
-import { ExpandMore } from '@material-ui/icons';
-import { Button, IconButton, Menu, MenuItem } from '@material-ui/core';
+import { ExpandMore } from '@mui/icons-material';
+import { Button, IconButton, Menu, MenuItem } from '@mui/material';
 import { TiArrowSortedUp } from 'react-icons/ti';
 import { AiTwotoneCalendar } from 'react-icons/ai';
 import { FaUserAlt } from 'react-icons/fa';

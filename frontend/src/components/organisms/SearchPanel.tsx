@@ -8,7 +8,7 @@ import {
   Collapse,
   IconButton,
   Tooltip,
-} from '@material-ui/core';
+} from '@mui/material';
 import {
   Search,
   ExpandLess,
@@ -16,7 +16,7 @@ import {
   ArrowBack,
   ClassOutlined,
   BookmarkBorderOutlined,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
@@ -189,7 +189,7 @@ const DepartmentList: FC<DepartmentListProps> = ({ setSearchPayload }) => {
   );
 };
 
-const makeUrlFromCourseId = (courseId: string, isPlanner: boolean = false) => {
+const makeUrlFromCourseId = (courseId: string, isPlanner = false) => {
   return isPlanner ? `/planner?cid=${courseId}` : `/review/${courseId}`;
 };
 

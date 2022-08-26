@@ -1,5 +1,5 @@
 import { FC, useRef } from 'react';
-import { IconButton } from '@material-ui/core';
+import { IconButton } from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import copy from 'copy-to-clipboard';
 import clsx from 'clsx';

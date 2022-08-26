@@ -1,4 +1,4 @@
-import { useMediaQuery } from '@material-ui/core';
+import { useMediaQuery } from '@mui/material';
 import { MIN_DESKTOP_WIDTH } from '../config';
 
 const useMobileQuery = () =>

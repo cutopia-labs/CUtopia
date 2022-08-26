@@ -1,4 +1,4 @@
-import { createTheme } from '@material-ui/core/styles';
+import { createTheme, adaptV4Theme } from '@mui/material/styles';
 import {
   blue,
   cyan,
@@ -12,7 +12,7 @@ import {
   green,
   blueGrey,
   deepPurple,
-} from '@material-ui/core/colors';
+} from '@mui/material/colors';
 
 const RANDOM_COLOR_BASES = [
   deepOrange,
@@ -55,34 +55,38 @@ const colors = {
   randomColorsLength: RANDOM_COLOR_BASES.length,
 };
 
-export const THEME = createTheme({
-  palette: {
-    type: 'light',
-    primary: {
-      main: '#e21061',
+export const THEME = createTheme(
+  adaptV4Theme({
+    palette: {
+      mode: 'light',
+      primary: {
+        main: '#e21061',
+      },
+      secondary: {
+        main: '#e21061', // #f06292
+      },
+      background: {
+        paper: 'rgba(255, 255, 255, 1)',
+      },
     },
-    secondary: {
-      main: '#e21061', // #f06292
-    },
-    background: {
-      paper: 'rgba(255, 255, 255, 1)',
-    },
-  },
-});
+  })
+);
 
-export const DARK_THEME = createTheme({
-  palette: {
-    type: 'dark',
-    primary: {
-      main: '#d30051',
+export const DARK_THEME = createTheme(
+  adaptV4Theme({
+    palette: {
+      mode: 'dark',
+      primary: {
+        main: '#d30051',
+      },
+      secondary: {
+        main: '#ff8a65',
+      },
+      background: {
+        paper: 'rgba(31, 31, 31, 1)',
+      },
     },
-    secondary: {
-      main: '#ff8a65',
-    },
-    background: {
-      paper: 'rgba(31, 31, 31, 1)',
-    },
-  },
-});
+  })
+);
 
 export default colors;

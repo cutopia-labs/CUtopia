@@ -1,8 +1,7 @@
 import { FC, useEffect, useState } from 'react';
-import { Button, Portal } from '@material-ui/core';
-import { Check } from '@material-ui/icons';
+import { Button, Portal, Alert } from '@mui/material';
+import { Check } from '@mui/icons-material';
 import { observer } from 'mobx-react-lite';
-import { Alert } from '@material-ui/lab';
 
 import styles from '../../styles/components/molecules/SnackBar.module.scss';
 import { useView } from '../../store';

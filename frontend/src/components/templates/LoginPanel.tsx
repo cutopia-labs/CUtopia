@@ -1,6 +1,6 @@
 import { useState, useEffect, FC } from 'react';
-import { IconButton } from '@material-ui/core';
-import { ArrowBack } from '@material-ui/icons';
+import { IconButton } from '@mui/material';
+import { ArrowBack } from '@mui/icons-material';
 import * as Sentry from '@sentry/nextjs';
 import { observer } from 'mobx-react-lite';
 import { useMutation } from '@apollo/client';
@@ -350,7 +350,11 @@ const LoginPanel: FC<Props> = ({ className, returnUrl }) => {
         <div className={clsx(styles.titleRow, 'column-row')}>
           {mode !== LoginPageMode.CUTOPIA_LOGIN &&
             mode !== LoginPageMode.CUTOPIA_SIGNUP && (
-              <IconButton className={styles.goBackIcon} onClick={goBack}>
+              <IconButton
+                className={styles.goBackIcon}
+                onClick={goBack}
+                size="large"
+              >
                 <ArrowBack />
               </IconButton>
             )}

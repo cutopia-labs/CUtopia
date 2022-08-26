@@ -1,12 +1,12 @@
 import { useState, FC } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Button, IconButton, Menu, MenuItem, Tooltip } from '@material-ui/core';
+import { Button, IconButton, Menu, MenuItem, Tooltip } from '@mui/material';
 import {
   ErrorOutline,
   ExpandMore,
   Favorite,
   FavoriteBorder,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { default as RouterLink } from 'next/link';
 import { FiExternalLink } from 'react-icons/fi';
 import clsx from 'clsx';

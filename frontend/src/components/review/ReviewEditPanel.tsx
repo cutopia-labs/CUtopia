@@ -11,9 +11,9 @@ import {
   DialogContentText,
   DialogTitle,
   Tooltip,
-} from '@material-ui/core';
+} from '@mui/material';
 import { useMutation, useQuery } from '@apollo/client';
-import { Visibility, VisibilityOff } from '@material-ui/icons';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { HiOutlineInformationCircle } from 'react-icons/hi';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
@@ -429,6 +429,7 @@ const ReviewEditPanel: FC<Props> = ({ courseInfo }) => {
                 onClick={() =>
                   dispatchFormData({ anonymous: !formData.anonymous })
                 }
+                size="large"
               >
                 {formData.anonymous ? <VisibilityOff /> : <Visibility />}
               </IconButton>

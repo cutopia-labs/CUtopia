@@ -1,7 +1,7 @@
 import { useState, useEffect, FC } from 'react';
 import { observer } from 'mobx-react-lite';
 import Draggable from 'react-draggable';
-import { Fab } from '@material-ui/core';
+import { Fab } from '@mui/material';
 import { AiOutlineCalendar } from 'react-icons/ai';
 import { useRouter } from 'next/router';
 import Head from 'next/head';

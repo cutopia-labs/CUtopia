@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, FC } from 'react';
-import { Button, Divider, IconButton } from '@material-ui/core';
+import { Button, Divider, IconButton } from '@mui/material';
 import { RiSendPlaneLine } from 'react-icons/ri';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { observer } from 'mobx-react-lite';

@@ -2,7 +2,7 @@ import { useReducer, useState, useEffect, FC } from 'react';
 import { observer } from 'mobx-react-lite';
 import { reaction } from 'mobx';
 import { useLazyQuery, useMutation } from '@apollo/client';
-import { Button, Dialog } from '@material-ui/core';
+import { Button, Dialog } from '@mui/material';
 import copy from 'copy-to-clipboard';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
@@ -67,7 +67,7 @@ const getExpire = (str: string) => {
 const getExpireAt = (
   str: string | number,
   createdAt: number,
-  isExpire: boolean = false
+  isExpire = false
 ): number => {
   const expireDays = isExpire ? str : getExpire(str as string);
   if (expireDays > 0) {
@@ -117,10 +117,7 @@ const MODE_ASSETS = {
 export const generateTimetableURL = (id: string) =>
   `${window.location.protocol}//${window.location.host}/planner?sid=${id}`;
 
-export const coursesToEntries = (
-  courses: PlannerCourse[],
-  skipHide: boolean = false
-) =>
+export const coursesToEntries = (courses: PlannerCourse[], skipHide = false) =>
   courses
     .filter(
       course =>
@@ -346,7 +343,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
     }
   };
 
-  const switchTimetable = async (id: string, noFail: boolean = false) => {
+  const switchTimetable = async (id: string, noFail = false) => {
     if (id === planner.plannerId) {
       /* If same planner id as current one, call get ttb but not switch */
       if (noFail) {

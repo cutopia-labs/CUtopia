@@ -1,4 +1,4 @@
-import { ExpandMore } from '@material-ui/icons';
+import { ExpandMore } from '@mui/icons-material';
 import clsx from 'clsx';
 import { FC } from 'react';
 

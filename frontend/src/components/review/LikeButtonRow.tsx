@@ -1,5 +1,5 @@
-import { Divider } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
+import { Divider } from '@mui/material';
+import Button from '@mui/material/Button';
 import clsx from 'clsx';
 import { FC, Fragment } from 'react';
 import { BiDownvote, BiUpvote } from 'react-icons/bi';
