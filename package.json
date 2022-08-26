@@ -14,7 +14,8 @@
     "fe": "yarn workspace cutopia-frontend",
     "be": "yarn workspace cutopia-backend",
     "types": "yarn workspace cutopia-types",
-    "prepare": "yarn husky install && yarn fe prepare",
+    "prepare": "yarn husky install && yarn load-data && yarn fe prepare",
+    "load-data": "git submodule update --init",
     "upgrade-data": "git submodule update --init --remote && yarn fe move-data",
     "test": "jest",
     "postinstall": "yarn types build"
