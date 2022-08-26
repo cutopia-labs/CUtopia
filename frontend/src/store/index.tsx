@@ -1,7 +1,8 @@
-import { createContext, FC, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { enableStaticRendering } from 'mobx-react-lite';
 
 import { isServer } from '../helpers';
+import { FCC } from '../types/general';
 import UserStore from './UserStore';
 import ViewStore from './ViewStore';
 import PlannerStore from './PlannerStore';
@@ -43,7 +44,7 @@ export const getStores = () => {
   return { viewStore, userStore, plannerStore, dataStore };
 };
 
-const StoreProvider: FC = ({ children }) => {
+const StoreProvider: FCC = ({ children }) => {
   const { userStore, plannerStore, viewStore, dataStore } = getStores();
   const [ready, setReady] = useState(false);
   useEffect(() => {

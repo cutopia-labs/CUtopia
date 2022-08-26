@@ -1,6 +1,4 @@
-import CircularProgress, {
-  CircularProgressProps,
-} from '@mui/material/CircularProgress';
+import { CircularProgress, CircularProgressProps } from '@mui/material';
 import clsx from 'clsx';
 import { FC } from 'react';
 

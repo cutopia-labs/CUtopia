@@ -12,6 +12,7 @@
     "@emotion/styled": "^11.10.0",
     "@mui/icons-material": "^5.10.2",
     "@mui/material": "^5.10.2",
+    "@mui/styles": "^5.10.2",
     "@sentry/nextjs": "^7.8.0",
     "clsx": "^1.1.1",
     "copy-to-clipboard": "^3.3.1",
