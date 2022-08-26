@@ -53,7 +53,7 @@ export const plannerTerms = CURRENT_TERM.endsWith('1')
   : [CURRENT_TERM];
 
 // Update course list and instructors if etag before below
-export const STATICS_EXPIRE_BEFORE = 1661358657000;
+export const STATICS_EXPIRE_BEFORE = 1661545725000;
 
 export const DATA_CONFIGS: Record<string, DataConfig> = {
   courseList: {
