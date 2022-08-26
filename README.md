@@ -7,6 +7,12 @@ CUtopia is a course review and timetable planning website for CUHK students. It 
 
 Install `node.js` and `yarn`, then run `yarn` to install dependencies.
 
+## Scripts
+
+Start frontend dev server:
+
+`yarn fe dev`
+
 ## Contributing
 
 We'd love to accept your contributions to this project, you are welcomed to submit your issues and pull requests (rebase) to this project.
