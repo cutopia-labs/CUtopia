@@ -1,15 +1,15 @@
 import { ApolloError } from '@apollo/client';
-import { makeObservable, observable, action } from 'mobx';
+import { makeAutoObservable } from 'mobx';
 import { SNACKBAR_TIMEOUT } from '../config';
+import { wait } from '../helpers';
 import handleError from '../helpers/handleError';
 import { Dialog, SnackBar, SnackBarProps } from '../types';
-import StorePrototype from './StorePrototype';
 
-class ViewStore extends StorePrototype {
-  @observable snackbar: SnackBar;
-  @observable dialog: Dialog | null;
+class ViewStore {
+  snackbar: SnackBar;
+  dialog: Dialog | null;
 
-  @action init = () => {
+  init() {
     this.snackbar = {
       message: '',
       label: '',
@@ -17,17 +17,18 @@ class ViewStore extends StorePrototype {
       snackbarId: undefined,
     };
     this.dialog = null;
-  };
-
-  constructor() {
-    super();
-    makeObservable(this);
-    this.init();
   }
 
-  @action handleError = (e: ApolloError) => handleError(e, this);
+  constructor() {
+    this.init();
+    makeAutoObservable(this);
+  }
 
-  @action withErrorHandle(fn: (...args: any[]) => any) {
+  handleError(e: ApolloError) {
+    handleError(e, this);
+  }
+
+  withErrorHandle(fn: (...args: any[]) => any) {
     return function (...args: any[]) {
       try {
         return fn(...args);
@@ -37,36 +38,32 @@ class ViewStore extends StorePrototype {
     };
   }
 
-  @action safe = (e: ApolloError) => handleError(e, this);
-
-  @action setSnackBar = async (prop: string | SnackBarProps) => {
+  async setSnackBar(prop: string | SnackBarProps) {
+    console.log(prop);
     const snackbar = typeof prop === 'string' ? { message: prop } : prop;
     const snackbarId = snackbar?.message ? +new Date() : undefined;
-    this.updateSnackBar(prop ? { ...snackbar, snackbarId } : null);
-    await new Promise(resolve => setTimeout(resolve, SNACKBAR_TIMEOUT));
+    this.snackbar = prop ? { ...snackbar, snackbarId } : null;
+    await wait(SNACKBAR_TIMEOUT);
     if (this.needsClear(snackbarId)) {
-      this.updateSnackBar({ message: '', snackbarId: undefined });
+      console.log(`Clearing ${snackbarId}`);
+      this.snackbar = { message: '', snackbarId: undefined };
     }
-  };
+  }
 
-  @action warn = (message: string) => {
+  warn(message: string) {
     this.setSnackBar({
       message,
       severity: 'warning',
     });
-  };
+  }
 
-  @action setDialog = (dialog: Dialog | null) => {
-    this.updateStore('dialog', dialog);
-  };
+  setDialog(dialog: Dialog | null) {
+    this.dialog = dialog;
+  }
 
-  @action needsClear = (snackbarId: number) => {
+  needsClear(snackbarId: number) {
     return this.snackbar.snackbarId === snackbarId;
-  };
-
-  @action updateSnackBar = (snackbar: SnackBar | null) => {
-    this.snackbar = snackbar;
-  };
+  }
 }
 
 export default ViewStore;
