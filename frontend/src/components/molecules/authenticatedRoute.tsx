@@ -66,7 +66,7 @@ const authenticatedRoute: HOC = (Component = null, options = {}) => {
     const renderContent = () => {
       switch (authState) {
         case AuthState.LOGGED_IN:
-          return <Component {...props} {...options} />;
+          return <Component {...props} />;
         case AuthState.LOGGED_OUT:
           return <LoginPanel returnUrl={router.asPath} />;
         default:
