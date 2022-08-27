@@ -43,7 +43,7 @@ const ChipsRow: FC<ChipsRowProps & React.HTMLProps<HTMLDivElement>> = ({
               }
             }}
             label={item}
-            variant={selected ? 'default' : 'outlined'}
+            variant={selected ? 'filled' : 'outlined'}
           />
         );
       })}
