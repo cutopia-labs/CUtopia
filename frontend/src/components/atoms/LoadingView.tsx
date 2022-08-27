@@ -1,12 +1,14 @@
+import { ReactNode } from 'react';
 import { FCC } from '../../types/general';
-import If, { IfProps } from './If';
+import If from './If';
 import Loading, { LoadingProps } from './Loading';
 
 type Props = {
   loading: boolean;
+  elseNode?: ReactNode;
 };
 
-const LoadingView: FCC<Props & IfProps & LoadingProps> = ({
+const LoadingView: FCC<Props & LoadingProps> = ({
   loading,
   children,
   ...props

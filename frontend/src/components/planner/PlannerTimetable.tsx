@@ -238,31 +238,6 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
     (state, action) => ({ ...state, ...action }),
     {}
   );
-  const [getTimetable, { loading: getTimetableLoading }] = useLazyQuery(
-    GET_TIMETABLE,
-    {
-      onCompleted: (data: { timetable: UploadTimetable }) => {
-        applyTimetable(data?.timetable, planner.plannerId);
-      },
-      onError: e => {
-        view.handleError(e);
-        /* Reset the planner id and create a new timetable */
-        createTimetable();
-      },
-    }
-  );
-
-  const [removeTimetable, { loading: removeTimetableLoading }] =
-    useMutation(REMOVE_TIMETABLE);
-
-  const [uploadTimetable, { loading: uploadTimetableLoading }] =
-    useMutation(UPLOAD_TIMETABLE);
-
-  const [switchTimetableMutation, { loading: switchTimetableLoading }] =
-    useMutation(SWITCH_TIMETABLE);
-
-  const [cloneTimetableMutation] = useMutation(CLONE_TIMETABLE);
-
   const applyTimetable = (
     timetable: UploadTimetable | null,
     id: string,
@@ -295,6 +270,31 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
     }
     if (msg) view.setSnackBar(msg);
   };
+
+  const [getTimetable, { loading: getTimetableLoading }] = useLazyQuery(
+    GET_TIMETABLE,
+    {
+      onCompleted: (data: { timetable: UploadTimetable }) => {
+        applyTimetable(data?.timetable, planner.plannerId);
+      },
+      onError: e => {
+        view.handleError(e);
+        /* Reset the planner id and create a new timetable */
+        createTimetable();
+      },
+    }
+  );
+
+  const [removeTimetable, { loading: removeTimetableLoading }] =
+    useMutation(REMOVE_TIMETABLE);
+
+  const [uploadTimetable, { loading: uploadTimetableLoading }] =
+    useMutation(UPLOAD_TIMETABLE);
+
+  const [switchTimetableMutation, { loading: switchTimetableLoading }] =
+    useMutation(SWITCH_TIMETABLE);
+
+  const [cloneTimetableMutation] = useMutation(CLONE_TIMETABLE);
 
   const onDelete = async (id: string, expire: number) => {
     try {
