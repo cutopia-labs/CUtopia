@@ -1,11 +1,7 @@
 import type { AppProps } from 'next/app';
 import { FC, useEffect, useMemo } from 'react';
 import { ApolloProvider } from '@apollo/client';
-import {
-  ThemeProvider,
-  Theme,
-  StyledEngineProvider,
-} from '@mui/material/styles';
+import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { useMediaQuery } from '@mui/material';
 import * as Sentry from '@sentry/nextjs';
 import NProgress from 'nprogress';
@@ -23,11 +19,6 @@ import ErrorCard from '../components/molecules/ErrorCard';
 import { ErrorCardMode } from '../types';
 import HeadSeo from '../components/atoms/HeadSeo';
 import { isDev } from '../config';
-
-declare module '@mui/styles/defaultTheme' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface DefaultTheme extends Theme {}
-}
 
 // clear all console output
 if (!isDev) {
