@@ -14,6 +14,7 @@ import {
   blueGrey,
   deepPurple,
 } from '@mui/material/colors';
+import addOpacity from '../helpers/updateOpacity';
 
 const RANDOM_COLOR_BASES = [
   deepOrange,
@@ -57,9 +58,11 @@ const colors = {
 };
 
 const NEUTURAL_BG = 'rgba(0, 0, 0, 0.08)';
+const NEUTRUAL_BG_DARK = addOpacity(colors.primary, 0.08);
 const HOVER_BG = 'rgba(0, 0, 0, 0.03)';
+const HOVER_BG_DARK = addOpacity(colors.primary, 0.04);
 
-const COMMON_THEME: Partial<ThemeOptions> = {
+const makeCommonTheme = (isDark = false): Partial<ThemeOptions> => ({
   components: {
     MuiButton: {
       styleOverrides: {
@@ -68,10 +71,10 @@ const COMMON_THEME: Partial<ThemeOptions> = {
         },
         root: {
           ':hover': {
-            backgroundColor: HOVER_BG,
+            backgroundColor: isDark ? HOVER_BG_DARK : HOVER_BG,
           },
           '&.Mui-selected': {
-            backgroundColor: NEUTURAL_BG,
+            backgroundColor: isDark ? NEUTRUAL_BG_DARK : NEUTURAL_BG,
           },
         },
       },
@@ -83,28 +86,30 @@ const COMMON_THEME: Partial<ThemeOptions> = {
         },
       },
     },
-    MuiTouchRipple: {
-      styleOverrides: {
-        root: {},
-      },
-    },
     MuiMenuItem: {
       styleOverrides: {
         root: {
+          ...(isDark && {
+            '&.MuiButtonBase-root': {
+              ':hover': {
+                backgroundColor: isDark ? HOVER_BG_DARK : HOVER_BG,
+              },
+            },
+          }),
           '&.Mui-selected': {
-            'backgroundColor': NEUTURAL_BG,
+            'backgroundColor': isDark ? NEUTRUAL_BG_DARK : NEUTURAL_BG,
             ':hover': {
-              backgroundColor: NEUTURAL_BG,
+              backgroundColor: isDark ? NEUTRUAL_BG_DARK : NEUTURAL_BG,
             },
           },
         },
       },
     },
   },
-};
+});
 
 export const THEME = createTheme({
-  ...COMMON_THEME,
+  ...makeCommonTheme(false),
   palette: {
     mode: 'light',
     primary: {
@@ -120,7 +125,7 @@ export const THEME = createTheme({
 });
 
 export const DARK_THEME = createTheme({
-  ...COMMON_THEME,
+  ...makeCommonTheme(true),
   palette: {
     mode: 'dark',
     primary: {
