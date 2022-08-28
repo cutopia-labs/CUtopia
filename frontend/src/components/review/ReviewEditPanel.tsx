@@ -143,14 +143,14 @@ const ReviewSection: FC<ReviewSectionProps> = ({
 );
 
 type ReviewSubmitProps = {
-  disabled: boolean;
+  warning: string | false;
   progress: number;
   onSubmit: (e) => void;
   loading: boolean;
 };
 
 const ReviewSubmit: FC<ReviewSubmitProps> = ({
-  disabled,
+  warning,
   progress,
   onSubmit,
   loading,
@@ -160,11 +160,10 @@ const ReviewSubmit: FC<ReviewSubmitProps> = ({
     className={styles.submitBtn}
     onClick={onSubmit}
     variant="contained"
-    disabled={disabled}
-    color="inherit"
+    disabled={Boolean(warning)}
   >
-    {progress >= 100 ? 'Submit' : 'Write More'}
-    {!disabled && !loading && progress < 100 && (
+    {progress >= 100 ? 'Submit' : warning || 'Write More'}
+    {!warning && !loading && progress < 100 && (
       <span
         className={styles.progress}
         style={{
@@ -284,23 +283,23 @@ const ReviewEditPanel: FC<Props> = ({ courseInfo }) => {
     }
   };
 
-  const validation = () => {
+  const hasEmpty = () => {
     if (typeof formData === 'object' && formData) {
       for (const [key, value] of Object.entries(formData)) {
         if (value === '' && !(key === 'title' || key === 'anonymous')) {
-          return false;
+          return `Missing ${key}`;
         }
         if (typeof value === 'object') {
           for (const [innerKey, innerValue] of Object.entries(value || {})) {
             if (innerValue === '') {
-              return false;
+              return `Missing ${key}`;
             }
           }
         }
       }
-      return true;
+      return false;
     }
-    return false;
+    return 'Invalid form';
   };
 
   // Check userData to see if user already posted review
@@ -522,7 +521,7 @@ const ReviewEditPanel: FC<Props> = ({ courseInfo }) => {
               onChangeGrade={grade => dispatchFormData({ overall: grade })}
             />
             <ReviewSubmit
-              disabled={!validation()}
+              warning={hasEmpty()}
               onSubmit={submit}
               progress={progress}
               loading={addReviewLoading || editReviewLoading}
