@@ -57,12 +57,38 @@ const colors = {
   randomColorsLength: RANDOM_COLOR_BASES.length,
 };
 
-const NEUTURAL_BG = 'rgba(0, 0, 0, 0.08)';
-const NEUTRUAL_BG_DARK = addOpacity(colors.primary, 0.08);
-const HOVER_BG = 'rgba(0, 0, 0, 0.03)';
-const HOVER_BG_DARK = addOpacity(colors.primary, 0.04);
+type ThemeType = 'light' | 'dark';
 
-const makeCommonTheme = (isDark = false): Partial<ThemeOptions> => ({
+const themeColors: Record<ThemeType, any> = {
+  light: {
+    neuturalBg: 'rgba(0, 0, 0, 0.08)',
+    hoverBg: 'rgba(0, 0, 0, 0.03)',
+    primary: '#e21061', // #f06292
+    secondary: '#e21061',
+    paper: 'rgba(255, 255, 255, 1)',
+  },
+  dark: {
+    neuturalBg: addOpacity(colors.primary, 0.08),
+    hoverBg: addOpacity(colors.primary, 0.04),
+    primary: '#d30051',
+    secondary: '#ff8a65',
+    paper: 'rgba(31, 31, 31, 1)',
+  },
+};
+
+const makeTheme = (type: ThemeType): Partial<ThemeOptions> => ({
+  palette: {
+    mode: type,
+    primary: {
+      main: themeColors[type].primary,
+    },
+    secondary: {
+      main: themeColors[type].secondary,
+    },
+    background: {
+      paper: themeColors[type].paper,
+    },
+  },
   components: {
     MuiButton: {
       styleOverrides: {
@@ -71,10 +97,10 @@ const makeCommonTheme = (isDark = false): Partial<ThemeOptions> => ({
         },
         root: {
           ':hover': {
-            backgroundColor: isDark ? HOVER_BG_DARK : HOVER_BG,
+            backgroundColor: themeColors[type].hoverBg,
           },
           '&.Mui-selected': {
-            backgroundColor: isDark ? NEUTRUAL_BG_DARK : NEUTURAL_BG,
+            backgroundColor: themeColors[type].neuturalBg,
           },
         },
       },
@@ -89,17 +115,17 @@ const makeCommonTheme = (isDark = false): Partial<ThemeOptions> => ({
     MuiMenuItem: {
       styleOverrides: {
         root: {
-          ...(isDark && {
+          ...(type === 'dark' && {
             '&.MuiButtonBase-root': {
               ':hover': {
-                backgroundColor: isDark ? HOVER_BG_DARK : HOVER_BG,
+                backgroundColor: themeColors[type].hoverBg,
               },
             },
           }),
           '&.Mui-selected': {
-            'backgroundColor': isDark ? NEUTRUAL_BG_DARK : NEUTURAL_BG,
+            'backgroundColor': themeColors[type].neuturalBg,
             ':hover': {
-              backgroundColor: isDark ? NEUTRUAL_BG_DARK : NEUTURAL_BG,
+              backgroundColor: themeColors[type].neuturalBg,
             },
           },
         },
@@ -108,36 +134,8 @@ const makeCommonTheme = (isDark = false): Partial<ThemeOptions> => ({
   },
 });
 
-export const THEME = createTheme({
-  ...makeCommonTheme(false),
-  palette: {
-    mode: 'light',
-    primary: {
-      main: '#e21061',
-    },
-    secondary: {
-      main: '#e21061', // #f06292
-    },
-    background: {
-      paper: 'rgba(255, 255, 255, 1)',
-    },
-  },
-});
+export const THEME = createTheme(makeTheme('light'));
 
-export const DARK_THEME = createTheme({
-  ...makeCommonTheme(true),
-  palette: {
-    mode: 'dark',
-    primary: {
-      main: '#d30051',
-    },
-    secondary: {
-      main: '#ff8a65',
-    },
-    background: {
-      paper: 'rgba(31, 31, 31, 1)',
-    },
-  },
-});
+export const DARK_THEME = createTheme(makeTheme('dark'));
 
 export default colors;
