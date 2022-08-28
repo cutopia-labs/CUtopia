@@ -95,6 +95,12 @@ const makeTheme = (type: ThemeType): Partial<ThemeOptions> => ({
         text: {
           color: 'var(--text)',
         },
+        textPrimary: {
+          color: themeColors[type].primary,
+        },
+        textSecondary: {
+          color: themeColors[type].secondary,
+        },
         root: {
           ':hover': {
             backgroundColor: themeColors[type].hoverBg,
