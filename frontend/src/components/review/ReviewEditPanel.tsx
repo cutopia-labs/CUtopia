@@ -162,7 +162,7 @@ const ReviewSubmit: FC<ReviewSubmitProps> = ({
     variant="contained"
     disabled={Boolean(warning)}
   >
-    {progress >= 100 ? 'Submit' : warning || 'Write More'}
+    {progress >= 100 ? 'Submit ♡' : warning || 'Write More Plz'}
     {!warning && !loading && progress < 100 && (
       <span
         className={styles.progress}

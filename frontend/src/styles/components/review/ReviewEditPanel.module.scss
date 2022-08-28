@@ -17,12 +17,11 @@
     position: absolute;
     margin-top: 70px;
   }
-  :global(.input-container){
+  :global(.input-container) {
     width: calc(100% - 36px);
   }
   textarea:global(.input-container) {
     min-height: 100px;
-
   }
 }
 
@@ -30,7 +29,7 @@
   width: 100%;
   align-items: center;
 
-  :global(.title){
+  :global(.title) {
     width: fit-content;
   }
 
@@ -89,30 +88,27 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 6px;
-
   .reviewSectionContainer {
     width: calc(50% - 10px);
   }
-
   .reviewSectionHeader {
     margin-top: 0;
   }
+}
 
-  .submitBtn {
-    width: 240px;
-    height: 42px;
-    background-color: var(--default-button-background);
-    color: white;
+.submitBtn {
+  width: 240px;
+  height: 42px;
+  color: white;
+  background-color: var(--default-button-background);
+  position: relative;
+  overflow: hidden;
+  :global(.MuiButton-label) {
     position: relative;
-    overflow: hidden;
-    :global(.MuiButton-label) {
-      position: relative;
-    }
-    &:hover {
-      background-color: var(--default-button-background);
-    }
   }
-  
+  &:hover {
+    background-color: var(--default-button-background);
+  }
 }
 
 .progress {
@@ -120,7 +116,7 @@
   height: 4px;
   background-color: var(--accent);
   left: -16px; // MuiLabel padding
-  bottom: -10px; // MuiLabel padding
+  bottom: 0px; // MuiLabel padding
   transition: width 300ms cubic-bezier(0.7, 0, 0.3, 1) 0ms;
 }
 
