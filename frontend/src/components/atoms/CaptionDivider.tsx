@@ -4,11 +4,13 @@ import { FCC } from '../../types/general';
 import styles from '../../styles/components/atoms/CaptionDivider.module.scss';
 
 type Props = {
-  className: string;
+  className?: string;
 };
 
 const CaptionDivider: FCC<Props> = ({ children, className }) => (
-  <span className={clsx('row', styles.captionDivider, className)}>
+  <span
+    className={clsx('center-row caption', styles.captionDivider, className)}
+  >
     {children}
     <Divider />
   </span>

@@ -2,7 +2,7 @@
   font-size: 14px;
   font-weight: 500;
   margin-left: 2px;
-  .MuiDivider-root {
+  :global(.MuiDivider-root) {
     flex: 1;
     margin-left: var(--card-padding);
   }

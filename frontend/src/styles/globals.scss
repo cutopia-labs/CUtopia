@@ -491,21 +491,6 @@ textarea {
   margin: 4px var(--card-padding) var(--card-padding) var(--card-padding);
 }
 
-.review-count {
-  font-size: 14px;
-  font-weight: 500;
-  margin-left: 2px;
-  .MuiDivider-root {
-    flex: 1;
-    margin-left: var(--card-padding);
-  }
-  .caption {
-    color: var(--caption);
-    font-size: 12px;
-    margin-left: 6px;
-  }
-}
-
 .reviewsFilterLabel {
   text-transform: capitalize;
   margin: 0 10px;
@@ -550,9 +535,6 @@ textarea {
   .list-item-container {
     border-right: 0;
     border-left: 0;
-  }
-  .review-count {
-    margin: 0 6px;
   }
   .contentContainer {
     width: calc(100vw - 32px * 2 - 2 * var(--card-padding));

@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef, useReducer, FC } from 'react';
 import { useQuery } from '@apollo/client';
-import { Divider } from '@mui/material';
 import pluralize from 'pluralize';
 import copy from 'copy-to-clipboard';
 import { ReportCategory } from 'cutopia-types/lib/codes';
@@ -16,6 +15,7 @@ import { LAZY_LOAD_BUFFER, REVIEWS_PER_PAGE } from '../../config';
 import { CourseInfo, Review, ReviewsFilter, ReviewsResult } from '../../types';
 import Footer from '../molecules/Footer';
 import If from '../atoms/If';
+import CaptionDivider from '../atoms/CaptionDivider';
 import ReviewCard from './ReviewCard';
 import ReviewFilterBar from './ReviewFilterBar';
 
@@ -209,22 +209,21 @@ const CourseReviews: FC<Props> = ({
         />
       )}
       {Boolean(courseInfo) && (
-        <span className="review-count caption center-row">
+        <CaptionDivider>
           <If
             visible={reviewId}
-            elseNode={`${pluralize(
+            elseNode={pluralize(
               'review',
-              courseInfo?.rating?.numReviews || 0,
+              courseInfo.rating?.numReviews || 0,
               true
-            )}`}
+            )}
           >
             {`Showing 1 review`}
             <span className="caption">{`(${
-              courseInfo?.rating?.numReviews || ''
+              courseInfo.rating?.numReviews || ''
             } total)`}</span>
           </If>
-          <Divider />
-        </span>
+        </CaptionDivider>
       )}
       <div className="grid-auto-row">
         {(reviews || []).map(item => (

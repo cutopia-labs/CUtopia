@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, FC } from 'react';
-import { Button, Divider, IconButton } from '@mui/material';
+import { Button, IconButton } from '@mui/material';
 import { RiSendPlaneLine } from 'react-icons/ri';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { observer } from 'mobx-react-lite';
@@ -17,6 +17,8 @@ import styles from '../../styles/components/review/CourseComments.module.scss';
 import { getMMMDDYY } from '../../helpers/getTime';
 import { EMOJIS, EMOJIS_LENGTH } from '../../constants';
 import { hashing } from '../../helpers';
+import CaptionDivider from '../atoms/CaptionDivider';
+import LoadingView from '../atoms/LoadingView';
 
 type MessageProps = {
   message: DiscussionMessage;
@@ -126,12 +128,11 @@ const CourseComments: FC<CourseCommentsProps> = ({ courseId }) => {
   }, [courseId]);
   return (
     <>
-      {!discussionLoading && (
-        <span className="review-count caption center-row">
+      <LoadingView loading={discussionLoading}>
+        <CaptionDivider>
           {pluralize('comment', messages?.length, true)}
-          <Divider />
-        </span>
-      )}
+        </CaptionDivider>
+      </LoadingView>
       {Boolean(messages?.length) && (
         <div
           ref={messagesContainerRef}
