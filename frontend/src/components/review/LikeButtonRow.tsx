@@ -44,7 +44,7 @@ const LikeButtonsRow: FC<any> = ({
             caption={label ? likeCaption : dislikeCaption}
             onClick={() => updateVote(label)}
           />
-          {Boolean(label) && <Divider orientation="horizontal" />}
+          {Boolean(label) && <Divider orientation="vertical" />}
         </Fragment>
       ))}
     </div>
