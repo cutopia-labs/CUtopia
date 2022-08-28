@@ -28,7 +28,7 @@ if (!isDev) {
 }
 
 NProgress.configure({
-  trickleSpeed: 100,
+  trickleSpeed: 80,
   showSpinner: false,
 });
 

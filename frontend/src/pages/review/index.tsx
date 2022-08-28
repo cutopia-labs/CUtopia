@@ -5,7 +5,7 @@ import {
   ThumbUpOutlined,
   WhatshotOutlined,
 } from '@mui/icons-material';
-import { useQuery } from '@apollo/client';
+import { useLazyQuery, useQuery } from '@apollo/client';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
@@ -108,16 +108,11 @@ const RecentReviewList: FC<RecentReviewListProps> = ({ visible, category }) => {
     page: number | null;
     stall: boolean;
   }>({ page: 0, stall: false });
+  const [ended, setEnded] = useState(false);
   const router = useRouter();
   const view = useView();
 
-  useEffect(() => {
-    setReviews([]); // if come from react nav, it gonna set empty arr to be empty again
-    current.stall = true;
-    current.page = 0;
-  }, [category]);
-
-  const { loading: recentReviewsLoading, refetch: getRecentReviews } = useQuery<
+  const [getRecentReviews, { loading: recentReviewsLoading }] = useLazyQuery<
     any,
     any
   >(getRecentReviewQuery(category), {
@@ -125,6 +120,7 @@ const RecentReviewList: FC<RecentReviewListProps> = ({ visible, category }) => {
       page: 0,
     },
     onCompleted: async data => {
+      console.log(`Completed page ${current.page} + 1`);
       if (current.page) {
         setReviews(prevReviews =>
           prevReviews
@@ -137,16 +133,18 @@ const RecentReviewList: FC<RecentReviewListProps> = ({ visible, category }) => {
         if (current.stall) {
           current.stall = false;
         }
-        setReviews(data.reviews);
+        if (current.page === 0) setReviews(data.reviews);
       }
       if ((data?.reviews?.length || 0) < REVIEWS_PER_PAGE) {
         current.page = null;
+        setEnded(true);
       } else {
         current.page += 1;
       }
     },
     onError: view.handleError,
     notifyOnNetworkStatusChange: true,
+    fetchPolicy: 'cache-first',
   });
 
   const listenToScroll = useDebounce(async () => {
@@ -158,7 +156,9 @@ const RecentReviewList: FC<RecentReviewListProps> = ({ visible, category }) => {
     if (distanceFromBottom <= LAZY_LOAD_BUFFER) {
       // Fetch more here
       if (current.page && !current.stall) {
-        getRecentReviews({ page: current.page });
+        getRecentReviews({
+          variables: { page: current.page },
+        });
       }
     }
   }, 300);
@@ -168,6 +168,18 @@ const RecentReviewList: FC<RecentReviewListProps> = ({ visible, category }) => {
     return () => {
       window.removeEventListener('scroll', listenToScroll, true);
     };
+  }, [visible, category]);
+
+  useEffect(() => {
+    if (visible) {
+      setReviews([]); // if come from react nav, it gonna set empty arr to be empty again
+      setEnded(false);
+      current.stall = true;
+      current.page = 0;
+      getRecentReviews({
+        variables: { page: 0 },
+      });
+    }
   }, [visible, category]);
 
   if (!visible) return null;
@@ -184,7 +196,7 @@ const RecentReviewList: FC<RecentReviewListProps> = ({ visible, category }) => {
         ))}
         {recentReviewsLoading && <Loading />}
       </div>
-      <Footer visible={current.page === null} />
+      <Footer visible={ended} />
     </>
   );
 };
