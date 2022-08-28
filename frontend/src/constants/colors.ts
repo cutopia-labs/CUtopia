@@ -1,4 +1,5 @@
-import { createTheme } from '@mui/material/styles';
+import { createTheme, ThemeOptions } from '@mui/material/styles';
+
 import {
   blue,
   cyan,
@@ -55,7 +56,55 @@ const colors = {
   randomColorsLength: RANDOM_COLOR_BASES.length,
 };
 
+const NEUTURAL_BG = 'rgba(0, 0, 0, 0.08)';
+const HOVER_BG = 'rgba(0, 0, 0, 0.03)';
+
+const COMMON_THEME: Partial<ThemeOptions> = {
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        text: {
+          color: 'var(--text)',
+        },
+        root: {
+          ':hover': {
+            backgroundColor: HOVER_BG,
+          },
+          '&.Mui-selected': {
+            backgroundColor: NEUTURAL_BG,
+          },
+        },
+      },
+    },
+    MuiDivider: {
+      styleOverrides: {
+        root: {
+          borderColor: 'var(--border)',
+        },
+      },
+    },
+    MuiTouchRipple: {
+      styleOverrides: {
+        root: {},
+      },
+    },
+    MuiMenuItem: {
+      styleOverrides: {
+        root: {
+          '&.Mui-selected': {
+            'backgroundColor': NEUTURAL_BG,
+            ':hover': {
+              backgroundColor: NEUTURAL_BG,
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
 export const THEME = createTheme({
+  ...COMMON_THEME,
   palette: {
     mode: 'light',
     primary: {
@@ -71,6 +120,7 @@ export const THEME = createTheme({
 });
 
 export const DARK_THEME = createTheme({
+  ...COMMON_THEME,
   palette: {
     mode: 'dark',
     primary: {
