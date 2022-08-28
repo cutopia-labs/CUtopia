@@ -20,6 +20,7 @@ const LikeButton: FC<any> = ({
     startIcon={isLike ? <BiUpvote /> : <BiDownvote />}
     className={clsx(styles.likeBtn, selected && 'active')}
     disabled={disabled}
+    color="inherit"
   >
     {caption}
   </Button>
