@@ -1,0 +1,20 @@
+.captionDivider {
+  font-size: 14px;
+  font-weight: 500;
+  margin-left: 2px;
+  .MuiDivider-root {
+    flex: 1;
+    margin-left: var(--card-padding);
+  }
+  :global(.caption) {
+    color: var(--caption);
+    font-size: 12px;
+    margin-left: 6px;
+  }
+}
+
+@media only screen and (max-width: 1260px) {
+  .captionDivider {
+    margin: 0 6px;
+  }
+}
