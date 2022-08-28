@@ -18,7 +18,8 @@
     "upgrade-data": "git submodule update --init --remote && yarn fe move-data",
     "build:fe": "yarn fe build",
     "test": "jest",
-    "postinstall": "yarn types build"
+    "postinstall": "yarn types build",
+    "reinstall": "rm yarn.lock && lerna clean --yes && yarn"
   },
   "devDependencies": {
     "@types/nprogress": "^0.2.0",
