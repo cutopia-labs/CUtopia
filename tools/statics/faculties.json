@@ -1,0 +1,11 @@
+{
+  "Arts": 0,
+  "Business": 1,
+  "Education": 2,
+  "Engineering": 3,
+  "Law": 4,
+  "Medicine": 5,
+  "Science": 6,
+  "Social Science": 7,
+  "General Education": 8
+}
