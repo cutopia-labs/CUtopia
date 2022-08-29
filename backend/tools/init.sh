@@ -1,5 +1,5 @@
-# Step 1: fetch course data from remote repository
-sh tools/update-data.sh
+# Step 1: copy data from git submodule to GraphQL server
+sh tools/copy-data.sh
 
 # Step 2: install node modules
 sh tools/install-package.sh
