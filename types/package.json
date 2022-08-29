@@ -10,7 +10,7 @@
   },
   "exports": {
     ".": "./lib",
-    "./types": "./lib/types"
+    "./rules": "./lib/rules"
   },
   "keywords": [],
   "author": "",
