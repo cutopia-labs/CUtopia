@@ -9,13 +9,29 @@ Install `node.js` and `yarn`, then run `yarn` to install dependencies.
 
 ## Scripts
 
-Bootstrap (install all dependencies):
+### Bootstrap (install all dependencies):
 
-`yarn bootstrap`
+```bash
+yarn bootstrap
+```
 
-Start frontend dev server:
+After bootstrapping, replace `ATLAS_PROD_URI` and `ATLAS_DEV_URI` in the backend/.env file with your MongoDB connection URI.
 
-`yarn fe dev`
+### Start frontend dev server:
+
+```bash
+yarn fe dev
+```
+
+### Start backend dev server:
+
+```bash
+# watch and compile files
+yarn be watch
+
+# run the server in a separate terminal
+yarn be dev
+```
 
 ## Contributing
 

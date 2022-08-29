@@ -8,7 +8,8 @@
   },
   "scripts": {
     "bootstrap": "sh tools/init.sh",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "sh tools/watch-files.sh",
+    "dev": "sh tools/run-server.sh",
     "lint": "eslint --ext .js,.ts ."
   },
   "repository": "git+https://github.com/cutility/CUtopia-backend.git",

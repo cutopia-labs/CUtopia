@@ -7,28 +7,6 @@
 - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 - [Git](https://git-scm.com/downloads)
 
-### Run initialization script
-
-```sh
-sh tools/init.sh
-```
-
-After running the script, replace `ATLAS_PROD_URI` and `ATLAS_DEV_URI` in the .env file with your MongoDB connection URI.
-
-## Development
-### Compile scripts
-```sh
-sh tools/watch-local-files.sh
-```
-### Start server
-Run below in another terminal after the scripts are compiled:
-```sh
-sh tools/run-local-server.sh
-```
-
-### GraphQL playground
-After server started, GraphQL playground is available at: http://localhost:4000/graphql.
-
 ## Deployment
 
 ### Create MongoDB Atlas instance

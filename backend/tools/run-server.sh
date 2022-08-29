@@ -1,2 +1,2 @@
-sh tools/copy-env.sh
+NODE_ENV=dev; sh tools/copy-env.sh
 yarn --cwd lambda/graphql nodemon src/local.ts
