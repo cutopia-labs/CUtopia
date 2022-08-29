@@ -44,7 +44,7 @@ export const SERVER_CONFIG = {
 };
 
 /** Return current term sections by default in planner */
-export const CURRENT_TERM = '2022-23 Term 1';
+export const CURRENT_TERM = process.env.REACT_APP_CURRENT_TERM;
 
 /**
  * All available terms options in planner

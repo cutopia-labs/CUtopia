@@ -27,6 +27,7 @@ const moduleExports = {
   env: {
     REACT_APP_ENV_MODE: process.env.REACT_APP_ENV_MODE,
     REACT_APP_LAST_DATA_UPDATE: process.env.REACT_APP_LAST_DATA_UPDATE,
+    REACT_APP_CURRENT_TERM: process.env.REACT_APP_CURRENT_TERM,
   },
   trailingSlash: false,
   sassOptions: {
