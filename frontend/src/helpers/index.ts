@@ -1,4 +1,4 @@
-import { VALID_COURSE_RULE } from 'cutopia-types/rules';
+import { VALID_COURSE_RULE } from 'cutopia-types';
 import {
   VALUE_TO_LETTER,
   GRADE_VALUES,

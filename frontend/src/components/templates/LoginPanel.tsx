@@ -6,11 +6,7 @@ import { observer } from 'mobx-react-lite';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
-import {
-  USERNAME_RULE,
-  SID_RULE,
-  PASSWORD_RULE,
-} from 'cutopia-types/rules';
+import { USERNAME_RULE, SID_RULE, PASSWORD_RULE } from 'cutopia-types';
 
 import styles from '../../styles/pages/login.module.scss';
 import TextField from '../atoms/TextField';
