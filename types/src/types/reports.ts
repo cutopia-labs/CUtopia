@@ -1,4 +1,4 @@
-import { CourseReportType, ReviewReportType } from '../codes';
+import { CourseReportType, ReviewReportType } from './codes';
 
 type Report<T> = {
   type: T;

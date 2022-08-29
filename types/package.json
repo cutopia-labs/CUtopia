@@ -9,7 +9,6 @@
     "test": "jest"
   },
   "exports": {
-    "./codes": "./lib/codes/index.js",
     "./rules": "./lib/rules/index.js",
     "./types": "./lib/types"
   },
