@@ -9,9 +9,9 @@ Install `node.js` and `yarn`, then run `yarn` to install dependencies.
 
 ## Scripts
 
-Bootstrap:
+Bootstrap (install all dependencies):
 
-`yarn`
+`yarn bootstrap`
 
 Start frontend dev server:
 
