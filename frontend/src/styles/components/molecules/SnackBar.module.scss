@@ -1,6 +1,5 @@
 .snackbarContainer {
   position: fixed;
-  display: flex;
   z-index: 2000;
   bottom: 30px;
   margin-left: auto;
@@ -8,8 +7,8 @@
   width: fit-content;
   right: 2.5%;
   left: 2.5%;
-}
-
-.snackButton {
-  margin-left: auto;
+  align-items: center;
+  :global(.MuiAlert-action) {
+    padding: 0 0 0 16px;
+  }
 }
