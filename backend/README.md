@@ -1,12 +1,3 @@
-## Initialization
-### Install packages
-- [Node.js](https://nodejs.org/en/)
-- [Yarn](https://classic.yarnpkg.com/lang/en/docs/install/#debian-stable)
-- [Docker](https://www.docker.com/)
-- [MongoDB Compass](https://www.mongodb.com/products/compass)
-- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
-- [Git](https://git-scm.com/downloads)
-
 ## Deployment
 
 ### Create MongoDB Atlas instance

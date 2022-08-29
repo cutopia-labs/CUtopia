@@ -3,9 +3,15 @@ This is the source code for [cutopia.app](cutopia.app).
 
 CUtopia is a course review and timetable planning website for CUHK students. It provides a platform for students to share their opinions and pick the course that best fits them.
 
-## Installation
+## Packages
 
-Install `node.js` and `yarn`, then run `yarn` to install dependencies.
+Install the following packages:
+
+- [Node.js](https://nodejs.org/en/)
+- [Yarn](https://yarnpkg.com/)
+- [MongoDB Compass](https://www.mongodb.com/products/compass)
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+- [Docker](https://www.docker.com/)
 
 ## Scripts
 
