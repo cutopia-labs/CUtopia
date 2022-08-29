@@ -24,5 +24,4 @@ yarn-error.log*
 
 .eslintcache
 data/
-courses/
-derived/
+logs/
