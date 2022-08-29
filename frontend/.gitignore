@@ -36,3 +36,7 @@ yarn-error.log*
 # Site map
 public/**/*.xml
 public/resources/robots.txt
+
+# data
+public/resources
+src/constants/faculty_subjects.json
