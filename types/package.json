@@ -9,8 +9,7 @@
     "test": "jest"
   },
   "exports": {
-    ".": "./lib",
-    "./rules": "./lib/rules"
+    ".": "./lib"
   },
   "keywords": [],
   "author": "",
