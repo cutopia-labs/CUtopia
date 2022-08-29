@@ -9,7 +9,7 @@
     "test": "jest"
   },
   "exports": {
-    "./rules": "./lib/rules/index.js",
+    ".": "./lib",
     "./types": "./lib/types"
   },
   "keywords": [],
