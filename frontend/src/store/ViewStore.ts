@@ -2,7 +2,7 @@ import { ApolloError } from '@apollo/client';
 import { makeAutoObservable } from 'mobx';
 import { SNACKBAR_TIMEOUT } from '../config';
 import { wait } from '../helpers';
-import handleError from '../helpers/handleError';
+import { default as handleErrorFn } from '../helpers/handleError';
 import { Dialog, SnackBar, SnackBarProps } from '../types';
 
 class ViewStore {
@@ -22,10 +22,11 @@ class ViewStore {
   constructor() {
     this.init();
     makeAutoObservable(this);
+    this.handleError = this.handleError.bind(this);
   }
 
   handleError(e: ApolloError) {
-    handleError(e, this);
+    handleErrorFn(e, this);
   }
 
   withErrorHandle(fn: (...args: any[]) => any) {
