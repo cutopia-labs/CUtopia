@@ -1,7 +1,5 @@
 import fs from 'fs';
 import { Course } from 'cutopia-types';
-import getConfig from 'next/config';
-const { serverRuntimeConfig } = getConfig();
 
 export interface CourseExtended extends Course {
   courseId: string;
