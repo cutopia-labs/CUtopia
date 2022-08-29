@@ -37,27 +37,38 @@ type CourseInfoProps = {
   courseInfo: CourseInfo;
 };
 
+const makeBadges = (courseInfo: CourseInfo) => {
+  let badges = [];
+  // credits
+  if (courseInfo.units)
+    badges.push([`${parseInt(courseInfo.units, 10)} Credits`]);
+  // academic gp
+  if (courseInfo.academic_group) badges.push([courseInfo.academic_group]);
+  // components
+  if (Array.isArray(courseInfo.components)) {
+    badges = badges.concat(courseInfo.components.map(item => item && [item]));
+  } else if (typeof courseInfo.components === 'string') {
+    badges = badges.concat(
+      courseInfo.components.match(/[A-Z][a-z]+/g).map(item => item && [item])
+    );
+  }
+  // assessments
+  if (courseInfo.assessments) {
+    badges = badges.concat(
+      courseInfo.assessments.map(assessment => [
+        assessment.name,
+        parseInt(assessment.percentage, 10) || false,
+      ])
+    );
+  }
+  return badges;
+};
+
 const CourseBadgeRow: FC<CourseInfoProps> = ({ courseInfo }) => {
   if (!courseInfo?.units) return null;
-  const badgeInfo = [
-    [
-      courseInfo.units
-        ? `${parseInt(courseInfo.units, 10)} Credits`
-        : undefined,
-    ],
-    [courseInfo.academic_group],
-    ...(Array.isArray(courseInfo.components)
-      ? courseInfo.components
-      : (courseInfo.components || '').match(/[A-Z][a-z]+/g) || []
-    ).map(item => item && [item]),
-    ...(courseInfo.assessments || []).map(assessment => [
-      assessment.name,
-      parseInt(assessment.percentage, 10) || false,
-    ]),
-  ].filter(([k, v]) => k !== undefined);
   return (
     <div className="badges-row">
-      {badgeInfo.map(([k, v], i) => (
+      {makeBadges(courseInfo).map(([k, v], i) => (
         <Badge index={i} text={k} value={v} key={k + v} />
       ))}
     </div>
@@ -186,7 +197,6 @@ const CourseCard: FC<CourseCardProps> = ({ courseInfo, concise, style }) => {
   const isMobile = useMobileQuery();
   const view = useView();
 
-  // Note: cannot use store method, cuz it will not rerender the view
   const isFavorited = user.favoriteCourses.some(
     course => course.courseId === courseInfo.courseId
   );
