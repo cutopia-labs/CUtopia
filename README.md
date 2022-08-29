@@ -46,10 +46,5 @@ If you want to join the development team (with access to AWS, GA, Sentry, and th
 ## Guidelines
 
 ### Semester Data Update
-1. Run the course scraper (and modify current term config) to generate static data & derived data
 
-2. In the course scraper dir, run the `sh tools/move_data.sh {timestamp}` to copy data into CUtopia-data. Then gc and push the data.
-
-3. Backend: `git submodule update --remote`
-
-4. Frontend: run `yarn update-data` to update data, THEN modify the current term & expire before in config.ts after BE deployed
+Open `tools/data.ipynb` and run all sections
