@@ -16,7 +16,7 @@
     "types": "yarn workspace cutopia-types",
     "bootstrap": "yarn && yarn be bootstrap",
     "prepare": "yarn husky install && yarn fe prepare",
-    "upgrade-data": "git submodule update --init --remote && yarn fe move-data",
+    "upgrade-data": "git submodule update --init --remote && yarn fe prepare",
     "build:fe": "yarn fe build",
     "test": "jest",
     "postinstall": "yarn types build",

@@ -43,11 +43,9 @@
     "dev": "next dev",
     "eject": "next eject",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx src",
-    "prepare": "yarn prepare-data",
+    "prepare": "yarn move-data",
     "cleanup": "rm -r .next build node_modules",
-    "move-data": "cp -R ../data/resources public/ && cp -r ../data/derived/faculty_subjects.json src/constants/faculty_subjects.json",
-    "prepare-data": "git submodule update --init && yarn move-data",
-    "update-data": "yarn move-data"
+    "move-data": "cp -R ../data/resources public/ && cp -r ../data/derived/faculty_subjects.json src/constants/faculty_subjects.json"
   },
   "browserslist": {
     "production": [
