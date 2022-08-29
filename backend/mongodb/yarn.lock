@@ -973,10 +973,8 @@ cross-spawn@^7.0.3:
     shebang-command "^2.0.0"
     which "^2.0.1"
 
-cutopia-types@^1.0.23:
-  version "1.0.28"
-  resolved "https://registry.yarnpkg.com/cutopia-types/-/cutopia-types-1.0.28.tgz#d9d8a0c2d624d69b0547e8de38cdb7642eefdde1"
-  integrity sha512-jGUX+JaCOu9DTtTRIlSe0M+Uvuf9vpmDqDO74jDzGLyYzZqvk65HRlHj95kn4NWG7YaCQdFsNxo8WNK20kh/yw==
+"cutopia-types@file:../../types/lib":
+  version "0.0.0"
 
 debug@4.x, debug@^4.1.0, debug@^4.1.1:
   version "4.3.4"

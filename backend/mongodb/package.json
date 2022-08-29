@@ -14,7 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
-    "cutopia-types": "^1.0.23",
+    "cutopia-types": "file:../../types/lib",
     "dotenv": "^16.0.1",
     "mongodb": "^4.6.0",
     "mongoose": "^6.3.4",

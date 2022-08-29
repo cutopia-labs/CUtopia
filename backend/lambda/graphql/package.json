@@ -15,7 +15,7 @@
     "@graphql-tools/utils": "^8.6.12",
     "apollo-server-lambda": "^3.8.1",
     "aws-sdk": "^2.1144.0",
-    "cutopia-types": "^1.0.23",
+    "cutopia-types": "file:../../../types/lib",
     "dotenv": "^16.0.1",
     "graphql": "^16.5.0",
     "graphql-constraint-directive": "^3.1.1",
