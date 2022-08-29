@@ -1,17 +1,17 @@
 {
   "name": "cutopia-types",
   "version": "1.0.29",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "scripts": {
     "build": "tsc",
     "prepare": "yarn build",
     "test": "jest"
   },
   "exports": {
-    "./lib/codes": "./lib/codes/index.js",
-    "./lib/rules": "./lib/rules/index.js",
-    "./lib/types": "./lib/types"
+    "./codes": "./lib/codes/index.js",
+    "./rules": "./lib/rules/index.js",
+    "./types": "./lib/types"
   },
   "keywords": [],
   "author": "",
