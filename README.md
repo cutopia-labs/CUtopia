@@ -9,6 +9,10 @@ Install `node.js` and `yarn`, then run `yarn` to install dependencies.
 
 ## Scripts
 
+Bootstrap:
+
+`yarn`
+
 Start frontend dev server:
 
 `yarn fe dev`
@@ -19,7 +23,9 @@ We'd love to accept your contributions to this project, you are welcomed to subm
 
 The master branch is connected with [cutopia.app](cutopia.app), any updates on master branch will rebuild the production website. Similar to master branch, the dev branch is linked with [dev.cutopia.app](dev.cutopia.app).
 
-If you want to join the team (with access to AWS, GA, Sentry, and the database), please kindly [email us](mailto::cutopia.app@gmail.com) with your resume / github profile.
+You can come and join our [telegram group](https://t.me/+Al8YBqRRLxg1Yzll) to discuss suggestions and new features.
+
+If you want to join the development team (with access to AWS, GA, Sentry, and the database), you can [email us](mailto::cutopia.app@gmail.com) with your resume / github profile.
 
 ## Guidelines
 
