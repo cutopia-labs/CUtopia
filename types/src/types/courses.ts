@@ -102,4 +102,4 @@ export type CourseDocument = {
     difficulty: number;
     teaching: number;
   };
-}
+};

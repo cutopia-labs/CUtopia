@@ -1,4 +1,4 @@
-import { CourseTableEntry } from "./events";
+import { CourseTableEntry } from './events';
 
 export enum TimetableOverviewMode {
   NON_EXPIRE,
@@ -16,7 +16,6 @@ export type ShareTimeTable = {
   createdDate: number;
   expireDate: number;
 };
-
 
 export interface TimetableOverview {
   id: string;

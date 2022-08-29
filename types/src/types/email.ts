@@ -4,4 +4,4 @@ export type Email = {
   action: string;
   SID: string;
   code: string;
-}
+};
