@@ -9,18 +9,17 @@ export const MAX_SEARCH_RESULT_LENGTH = 40;
 export const FULL_MEMBER_LEVEL = 2;
 export const LEVEL_UP_EXP = 5;
 export const FULL_MEMBER_EXP = (FULL_MEMBER_LEVEL - 1) * LEVEL_UP_EXP;
-export const REVIEW_EXP = 3;
 export const SIMILAR_COURSE_LIMIT = 5;
-export const MESSAGE_PREVIEW_LENGTH = 10;
-export const MESSAGES_PER_PAGE = 10;
 export const REVIEWS_PER_PAGE = 10;
 
+/** Save reviews when progress > buffer */
 export const SAVE_DRAFT_PROGRESS_BUFFER = 25;
 
 export const PLANNER_CONFIGS = {
   DEFAULT_TABLE_NAME: 'New Timetable',
 };
 
+/** Render mobile view when < this number */
 export const MIN_DESKTOP_WIDTH = 1260;
 
 const AWS_REGION = 'ap-southeast-1';
@@ -44,17 +43,21 @@ export const SERVER_CONFIG = {
   URI: `${SERVER_ADDR}/graphql`,
 };
 
-// Return only current term sections in planner
+/** Return current term sections by default in planner */
 export const CURRENT_TERM = '2022-23 Term 1';
 
-// If current term is 1, then show term 2 as well in planner
+/**
+ * All available terms options in planner
+ * - If current term is 1, then show term 2 as well in planner
+ */
 export const plannerTerms = CURRENT_TERM.endsWith('1')
   ? [CURRENT_TERM, `${CURRENT_TERM.slice(0, -1)}2`]
   : [CURRENT_TERM];
 
-// Update course list and instructors if etag before below
+/** Update course list and instructors if etag before below */
 export const STATICS_EXPIRE_BEFORE = 1661545725000;
 
+/** All remote data to be loaded in datastore on demand */
 export const DATA_CONFIGS: Record<string, DataConfig> = {
   courseList: {
     expire: STATICS_EXPIRE_BEFORE,
@@ -65,6 +68,7 @@ export const DATA_CONFIGS: Record<string, DataConfig> = {
   },
 };
 
+/** If token BE format is updated, then remove FE expired token */
 export const TOKEN_EXPIRE_BEFORE = 1636518372000;
 
 export const LOGIN_REDIRECT_PAGE = '/review';
@@ -88,14 +92,18 @@ export const REVIEW_COURSE_INFO_ATTRS = [
   'courseId', // Needed for title SSR
 ];
 
+/** How frequent timetable is synced */
 export const TIMETABLE_SYNC_INTERVAL = 4000;
 
+/** SEO: description length */
 export const META_DESCRIPTION_CHAR_LIMIT = 160;
 
+/** Default SEO head */
 export const DEFAULT_HEAD = {
   title: 'CUtopia - CUHK Course Review and Planning Platform',
   description:
     'CUtopia is a course review and timetable planning website for CUHK students. It provides a platform for students to share their opinions and pick the course that best fits them.',
 };
 
+/** Head for noindex pages */
 export const DEFAULT_NO_SEO_DOC = DEFAULT_HEAD;
