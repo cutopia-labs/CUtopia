@@ -43,7 +43,6 @@
     "apollo-server-express": "^3.8.1",
     "express": "^4.18.1",
     "nodemon": "^2.0.19",
-    "ts-node": "^10.8.0",
-    "webpack": "^5.72.1"
+    "ts-node": "^10.8.0"
   }
 }
