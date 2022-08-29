@@ -3,7 +3,7 @@ import {
   IssueReportType,
   ReportCategory,
   ReviewReportType,
-} from 'cutopia-types/lib/codes';
+} from 'cutopia-types';
 
 export const REPORT_ISSUES_MESSAGES = {
   [ReportCategory.ISSUE]: 'Describe your issue',

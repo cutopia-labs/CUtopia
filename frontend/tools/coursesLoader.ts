@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { Course } from 'cutopia-types/lib/types';
+import { Course } from 'cutopia-types';
 import getConfig from 'next/config';
 const { serverRuntimeConfig } = getConfig();
 

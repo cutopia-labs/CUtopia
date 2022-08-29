@@ -1,4 +1,4 @@
-import { ReportDocument } from 'cutopia-types/lib/types';
+import { ReportDocument } from 'cutopia-types';
 import { Schema, model } from 'mongoose';
 import { nanoid } from 'nanoid';
 

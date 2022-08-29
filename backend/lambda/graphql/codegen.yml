@@ -14,5 +14,5 @@ generates:
       # for accessing fields that exist in MongoDB model only
       # e.g. upvoteUserIds in Review
       mappers:
-        Review: cutopia-types/lib/types#Review
+        Review: cutopia-types#Review
       mapperTypeSuffix: MongoDB

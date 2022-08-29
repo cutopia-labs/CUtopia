@@ -1,4 +1,4 @@
-import { Review } from 'cutopia-types/lib/types';
+import { Review } from 'cutopia-types';
 
 import Course from '../models/course';
 

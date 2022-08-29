@@ -1,4 +1,4 @@
-import { Email } from 'cutopia-types/lib/types';
+import { Email } from 'cutopia-types';
 import { Schema, model } from 'mongoose';
 
 import { requiredString } from '../constants/schema';

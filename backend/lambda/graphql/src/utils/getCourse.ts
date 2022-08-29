@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-import { Course } from 'cutopia-types/lib/types';
+import { Course } from 'cutopia-types';
 
 const courses: Record<string, Course> = {};
 const courseFolder = `${__dirname}/../../../../../data/courses`;

@@ -10,7 +10,7 @@ import {
 import { default as RouterLink } from 'next/link';
 import { FiExternalLink } from 'react-icons/fi';
 import clsx from 'clsx';
-import { ReportCategory } from 'cutopia-types/lib/codes';
+import { ReportCategory } from 'cutopia-types';
 
 import { useLazyQuery } from '@apollo/client';
 import styles from '../../styles/components/review/CourseCard.module.scss';

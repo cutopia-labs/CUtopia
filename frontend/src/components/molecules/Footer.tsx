@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import Link from 'next/link';
-import { ReportCategory } from 'cutopia-types/lib/codes';
+import { ReportCategory } from 'cutopia-types';
 import { FC } from 'react';
 import styles from '../../styles/components/molecules/Footer.module.scss';
 import { viewStore } from '../../store';

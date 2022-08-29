@@ -2,7 +2,7 @@ import { FC, useReducer } from 'react';
 import { Dialog as MUIDialog, DialogTitle, Divider } from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import { useMutation } from '@apollo/client';
-import { ReportCategory } from 'cutopia-types/lib/codes';
+import { ReportCategory } from 'cutopia-types';
 
 import styles from '../../styles/components/templates/Dialog.module.scss';
 import ListItem from '../molecules/ListItem';

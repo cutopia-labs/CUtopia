@@ -1,4 +1,4 @@
-import { CourseDocument } from 'cutopia-types/lib/types';
+import { CourseDocument } from 'cutopia-types';
 import { Schema, model } from 'mongoose';
 
 import { requiredNumber, requiredString } from '../constants/schema';

@@ -1,4 +1,4 @@
-import { RankEntry } from 'cutopia-types/lib/types';
+import { RankEntry } from 'cutopia-types';
 
 import { RANK_LIMIT } from '../constants/config';
 import Course from '../models/course';

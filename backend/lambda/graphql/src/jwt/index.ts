@@ -2,7 +2,7 @@ import fs from 'fs';
 import { join } from 'path';
 
 import { ApolloError } from 'apollo-server-errors';
-import { ErrorCode } from 'cutopia-types/lib/codes';
+import { ErrorCode } from 'cutopia-types';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { getUser } from 'mongodb';
 

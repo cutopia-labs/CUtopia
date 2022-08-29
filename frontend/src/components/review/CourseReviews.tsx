@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useReducer, FC } from 'react';
 import { useQuery } from '@apollo/client';
 import pluralize from 'pluralize';
 import copy from 'copy-to-clipboard';
-import { ReportCategory } from 'cutopia-types/lib/codes';
+import { ReportCategory } from 'cutopia-types';
 import { useRouter } from 'next/router';
 
 import styles from '../../styles/components/review/CourseReviews.module.scss';

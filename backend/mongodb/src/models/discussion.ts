@@ -1,4 +1,4 @@
-import { Discussion } from 'cutopia-types/lib/types';
+import { Discussion } from 'cutopia-types';
 import { model, Schema } from 'mongoose';
 
 import { createdAt, requiredString } from '../constants/schema';

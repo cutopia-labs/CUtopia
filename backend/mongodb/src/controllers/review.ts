@@ -1,4 +1,4 @@
-import { ErrorCode, VoteAction } from 'cutopia-types/lib/codes';
+import { ErrorCode, VoteAction } from 'cutopia-types';
 
 import { REVIEWS_PER_PAGE } from '../constants/config';
 import Review from '../models/review';

@@ -1,4 +1,4 @@
-import { ErrorCode } from 'cutopia-types/lib/codes';
+import { ErrorCode } from 'cutopia-types';
 
 export const ERROR_MESSAGES = {
   [ErrorCode.AUTHORIZATION_INVALID_TOKEN]: 'Invalid token, please login again',

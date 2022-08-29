@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import { ErrorCode } from 'cutopia-types/lib/codes';
+import { ErrorCode } from 'cutopia-types';
 import { nanoid } from 'nanoid';
 
 import { SALT_ROUNDS, VERIFY_EXPIRATION_TIME } from '../constants/config';

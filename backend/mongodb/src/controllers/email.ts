@@ -1,4 +1,4 @@
-import { Email as EmailType } from 'cutopia-types/lib/types';
+import { Email as EmailType } from 'cutopia-types';
 
 import Email from '../models/email';
 

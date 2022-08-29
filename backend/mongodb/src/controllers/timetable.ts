@@ -1,4 +1,4 @@
-import { ErrorCode } from 'cutopia-types/lib/codes';
+import { ErrorCode } from 'cutopia-types';
 import { nanoid } from 'nanoid';
 
 import {

@@ -1,4 +1,4 @@
-import { Ranking } from 'cutopia-types/lib/types';
+import { Ranking } from 'cutopia-types';
 import { Schema, model } from 'mongoose';
 
 import { requiredNumber, requiredString } from '../constants/schema';

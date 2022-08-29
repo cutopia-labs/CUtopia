@@ -1,6 +1,6 @@
 import { describe, expect, beforeAll, afterAll, it } from '@jest/globals';
 import bcrypt from 'bcryptjs';
-import { ErrorCode } from 'cutopia-types/lib/codes';
+import { ErrorCode } from 'cutopia-types';
 import { nanoid } from 'nanoid';
 
 import { createTestUser, deleteTestUser, setup, teardown } from '../jest/env';

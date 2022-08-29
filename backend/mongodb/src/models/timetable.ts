@@ -1,4 +1,4 @@
-import { Timetable } from 'cutopia-types/lib/types';
+import { Timetable } from 'cutopia-types';
 import { Schema, model } from 'mongoose';
 import { nanoid } from 'nanoid';
 

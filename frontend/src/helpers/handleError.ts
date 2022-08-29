@@ -1,5 +1,5 @@
 import { ApolloError } from '@apollo/client';
-import { ErrorCode } from 'cutopia-types/lib/codes';
+import { ErrorCode } from 'cutopia-types';
 import { ERROR_MESSAGES } from '../constants/errors';
 import { userStore } from '../store';
 import ViewStore from '../store/ViewStore';

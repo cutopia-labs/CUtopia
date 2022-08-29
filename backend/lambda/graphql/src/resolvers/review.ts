@@ -1,4 +1,4 @@
-import { VoteAction } from 'cutopia-types/lib/codes';
+import { VoteAction } from 'cutopia-types';
 import {
   createReview,
   getReviews,

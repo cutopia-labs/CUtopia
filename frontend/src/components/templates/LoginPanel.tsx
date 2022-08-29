@@ -10,7 +10,7 @@ import {
   USERNAME_RULE,
   SID_RULE,
   PASSWORD_RULE,
-} from 'cutopia-types/lib/rules';
+} from 'cutopia-types/rules';
 
 import styles from '../../styles/pages/login.module.scss';
 import TextField from '../atoms/TextField';

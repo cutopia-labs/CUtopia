@@ -1,4 +1,4 @@
-import { ErrorCode } from 'cutopia-types/lib/codes';
+import { ErrorCode } from 'cutopia-types';
 import { GraphQLScalarType } from 'graphql';
 
 import courseIds from '../../../../../data/derived/subject_course_names.json';
