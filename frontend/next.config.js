@@ -26,6 +26,7 @@ const hashOnlyIdent = (context, _, exportName) =>
 const moduleExports = {
   env: {
     REACT_APP_ENV_MODE: process.env.REACT_APP_ENV_MODE,
+    REACT_APP_LAST_DATA_UPDATE: process.env.REACT_APP_LAST_DATA_UPDATE,
   },
   trailingSlash: false,
   sassOptions: {

@@ -55,7 +55,10 @@ export const plannerTerms = CURRENT_TERM.endsWith('1')
   : [CURRENT_TERM];
 
 /** Update course list and instructors if etag before below */
-export const STATICS_EXPIRE_BEFORE = 1661545725000;
+export const STATICS_EXPIRE_BEFORE = parseInt(
+  process.env.REACT_APP_LAST_DATA_UPDATE,
+  10
+);
 
 /** All remote data to be loaded in datastore on demand */
 export const DATA_CONFIGS: Record<string, DataConfig> = {
