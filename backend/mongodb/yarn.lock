@@ -540,9 +540,9 @@
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
 "@sinclair/typebox@^0.24.1":
-  version "0.24.27"
-  resolved "https://registry.yarnpkg.com/@sinclair/typebox/-/typebox-0.24.27.tgz#d55643516a1546174e10da681a8aaa81e757452d"
-  integrity sha512-K7C7IlQ3zLePEZleUN21ceBA2aLcMnLHTLph8QWk1JK37L90obdpY+QGY8bXMKxf1ht1Z0MNewvXxWv0oGDYFg==
+  version "0.24.28"
+  resolved "https://registry.yarnpkg.com/@sinclair/typebox/-/typebox-0.24.28.tgz#15aa0b416f82c268b1573ab653e4413c965fe794"
+  integrity sha512-dgJd3HLOkLmz4Bw50eZx/zJwtBq65nms3N9VBYu5LTjJ883oBFkTyXRlCB/ZGGwqYpJJHA5zW2Ibhl5ngITfow==
 
 "@sinonjs/commons@^1.7.0":
   version "1.8.3"
@@ -638,9 +638,9 @@
     pretty-format "^27.0.0"
 
 "@types/node@*":
-  version "18.6.5"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.6.5.tgz#06caea822caf9e59d5034b695186ee74154d2802"
-  integrity sha512-Xjt5ZGUa5WusGZJ4WJPbOT8QOqp6nDynVFRKcUt32bOgvXEoc6o085WNkYTMO7ifAj2isEfQQ2cseE+wT6jsRw==
+  version "18.7.13"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.7.13.tgz#23e6c5168333480d454243378b69e861ab5c011a"
+  integrity sha512-46yIhxSe5xEaJZXWdIBP7GU4HDTG8/eo0qd9atdiL+lFpA03y8KS+lkTN834TWJj5767GbWv4n/P6efyTFt1Dw==
 
 "@types/prettier@^2.1.5":
   version "2.7.0"
@@ -837,10 +837,10 @@ bser@2.1.1:
   dependencies:
     node-int64 "^0.4.0"
 
-bson@^4.6.5:
-  version "4.6.5"
-  resolved "https://registry.yarnpkg.com/bson/-/bson-4.6.5.tgz#1a410148c20eef4e40d484878a037a7036e840fb"
-  integrity sha512-uqrgcjyOaZsHfz7ea8zLRCLe1u+QGUSzMZmvXqO24CDW7DWoW1qiN9folSwa7hSneTSgM2ykDIzF5kcQQ8cwNw==
+bson@^4.6.5, bson@^4.7.0:
+  version "4.7.0"
+  resolved "https://registry.yarnpkg.com/bson/-/bson-4.7.0.tgz#7874a60091ffc7a45c5dd2973b5cad7cded9718a"
+  integrity sha512-VrlEE4vuiO1WTpfof4VmaVolCVYkYTgB9iWgYNOrVlnifpME/06fhFRmONgBhClD5pFC1t9ZWqFUQEQAzY43bA==
   dependencies:
     buffer "^5.6.0"
 
@@ -993,7 +993,7 @@ deepmerge@^4.2.2:
   resolved "https://registry.yarnpkg.com/deepmerge/-/deepmerge-4.2.2.tgz#44d2ea3679b8f4d4ffba33f03d865fc1e7bf4955"
   integrity sha512-FJ3UgI4gIl+PHZm53knsuSFpE+nESMr7M4v9QcgB7S63Kj/6WqMiFQJpBBYz1Pt+66bZpP3Q7Lye0Oo9MPKEdg==
 
-denque@^2.0.1:
+denque@^2.0.1, denque@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/denque/-/denque-2.1.0.tgz#e93e1a6569fb5e66f16a3c2a2964617d349d6ab1"
   integrity sha512-HVQE3AAb/pxF8fQAoiqpvg9i3evqug3hoiwakOyZAwJm+6vZehbkYXZ0l4JxS+I3QxM97v5aaRNhj8v5oBhekw==
@@ -1821,7 +1821,7 @@ minimatch@^3.0.4, minimatch@^3.1.1:
   dependencies:
     brace-expansion "^1.1.7"
 
-mongodb-connection-string-url@^2.5.2:
+mongodb-connection-string-url@^2.5.2, mongodb-connection-string-url@^2.5.3:
   version "2.5.3"
   resolved "https://registry.yarnpkg.com/mongodb-connection-string-url/-/mongodb-connection-string-url-2.5.3.tgz#c0c572b71570e58be2bd52b33dffd1330cfb6990"
   integrity sha512-f+/WsED+xF4B74l3k9V/XkTVj5/fxFH2o5ToKXd8Iyi5UhM+sO9u0Ape17Mvl/GkZaFtM0HQnzAG5OTmhKw+tQ==
@@ -1829,7 +1829,7 @@ mongodb-connection-string-url@^2.5.2:
     "@types/whatwg-url" "^8.2.1"
     whatwg-url "^11.0.0"
 
-mongodb@4.8.1, mongodb@^4.6.0:
+mongodb@4.8.1:
   version "4.8.1"
   resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-4.8.1.tgz#596de88ff4519128266d9254dbe5b781c4005796"
   integrity sha512-/NyiM3Ox9AwP5zrfT9TXjRKDJbXlLaUDQ9Rg//2lbg8D2A8GXV0VidYYnA/gfdK6uwbnL4FnAflH7FbGw3TS7w==
@@ -1841,10 +1841,22 @@ mongodb@4.8.1, mongodb@^4.6.0:
   optionalDependencies:
     saslprep "^1.0.3"
 
+mongodb@^4.6.0:
+  version "4.9.0"
+  resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-4.9.0.tgz#58618439b721f2d6f7d38bb10a4612e29d7f1c8a"
+  integrity sha512-tJJEFJz7OQTQPZeVHZJIeSOjMRqc5eSyXTt86vSQENEErpkiG7279tM/GT5AVZ7TgXNh9HQxoa2ZkbrANz5GQw==
+  dependencies:
+    bson "^4.7.0"
+    denque "^2.1.0"
+    mongodb-connection-string-url "^2.5.3"
+    socks "^2.7.0"
+  optionalDependencies:
+    saslprep "^1.0.3"
+
 mongoose@^6.3.4:
-  version "6.5.1"
-  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-6.5.1.tgz#bcf28700ce3552fcdd4d6d4078d0127290020928"
-  integrity sha512-8C0213y279nrSp6Au+WB+l/VczcotMU65jalTJJxU6KYf/Kd8gNW9+B3giWNJOVd8VvKvUQG0suWv/Vngp/83A==
+  version "6.5.3"
+  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-6.5.3.tgz#776f6c72f411d10cd131135f6b1fce14ebf7f706"
+  integrity sha512-0L2ZOPzNQ7kcIgpdfpmVXc+/SypdhzcTlaHXYa983u1lrVp7/i3ekwHpPiTXxYBvV6FwBAsFoHI7+Ovf8tp3Mg==
   dependencies:
     bson "^4.6.5"
     kareem "2.4.1"
@@ -2141,7 +2153,7 @@ smart-buffer@^4.2.0:
   resolved "https://registry.yarnpkg.com/smart-buffer/-/smart-buffer-4.2.0.tgz#6e1d71fa4f18c05f7d0ff216dd16a481d0e8d9ae"
   integrity sha512-94hK0Hh8rPqQl2xXc3HsaBoOXKV20MToPkcXvwbISWLEs+64sBq5kFgn2kJDHb1Pry9yrP0dxrCI9RRci7RXKg==
 
-socks@^2.6.2:
+socks@^2.6.2, socks@^2.7.0:
   version "2.7.0"
   resolved "https://registry.yarnpkg.com/socks/-/socks-2.7.0.tgz#f9225acdb841e874dca25f870e9130990f3913d0"
   integrity sha512-scnOe9y4VuiNUULJN72GrM26BNOjVsfPXI+j+98PkyEfsIXroa5ofyjT+FzGvn/xHs73U2JtoBYAVx9Hl4quSA==
@@ -2296,9 +2308,9 @@ tr46@^3.0.0:
     punycode "^2.1.1"
 
 ts-jest@^28.0.3:
-  version "28.0.7"
-  resolved "https://registry.yarnpkg.com/ts-jest/-/ts-jest-28.0.7.tgz#e18757a9e44693da9980a79127e5df5a98b37ac6"
-  integrity sha512-wWXCSmTwBVmdvWrOpYhal79bDpioDy4rTT+0vyUnE3ZzM7LOAAGG9NXwzkEL/a516rQEgnMmS/WKP9jBPCVJyA==
+  version "28.0.8"
+  resolved "https://registry.yarnpkg.com/ts-jest/-/ts-jest-28.0.8.tgz#cd204b8e7a2f78da32cf6c95c9a6165c5b99cc73"
+  integrity sha512-5FaG0lXmRPzApix8oFG8RKjAz4ehtm8yMKOTy5HX3fY6W8kmvOrmcY0hKDElW52FJov+clhUbrKAqofnj4mXTg==
   dependencies:
     bs-logger "0.x"
     fast-json-stable-stringify "2.x"
@@ -2320,9 +2332,9 @@ type-fest@^0.21.3:
   integrity sha512-t0rzBq87m3fVcduHDUFhKmyyX+9eo6WQjZvf51Ea/M0Q7+T374Jp1aUiyUl0GKxp8M/OETVHSDvmkyPgvX+X2w==
 
 typescript@^4.7.2:
-  version "4.7.4"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.7.4.tgz#1a88596d1cf47d59507a1bcdfb5b9dfe4d488235"
-  integrity sha512-C0WQT0gezHuw6AdY1M2jxUO83Rjf0HP7Sk1DtXj6j1EwkQNZrHAg2XPWlq62oqEhYvONq5pkC2Y9oPljWToLmQ==
+  version "4.8.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.8.2.tgz#e3b33d5ccfb5914e4eeab6699cf208adee3fd790"
+  integrity sha512-C0I1UsrrDHo2fYI5oaCGbSejwX4ch+9Y5jTQELvovfmFkK3HHSZJB8MSJcWLmCUBzQBchCrZ9rMRV6GuNrvGtw==
 
 update-browserslist-db@^1.0.5:
   version "1.0.5"
