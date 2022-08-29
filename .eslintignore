@@ -1,1 +1,6 @@
 __tests__
+node_modules
+backend/lambda/graphql/build
+backend/lambda/graphql/src/schemas/types.ts
+backend/mongodb/lib
+types/lib
