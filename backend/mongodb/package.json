@@ -1,7 +1,6 @@
 {
   "name": "mongodb",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "yarn jest",
@@ -10,8 +9,7 @@
   "exports": {
     ".": "./lib"
   },
-  "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cutopia-types": "file:../../types/lib",

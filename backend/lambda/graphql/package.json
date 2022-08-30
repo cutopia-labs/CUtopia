@@ -1,15 +1,13 @@
 {
   "name": "graphql-endpoint",
   "version": "1.0.0",
-  "description": "",
   "main": "graphql.js",
   "scripts": {
     "build-schema": "ts-node src/schemas/build.ts",
     "build-gql-types": "graphql-codegen --config codegen.yml",
     "build": "rm -rf build && yarn run build-schema && tsc && yarn --modules-folder build/node_modules --prod install"
   },
-  "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@graphql-tools/load-files": "^6.5.3",
     "@graphql-tools/utils": "^8.6.12",

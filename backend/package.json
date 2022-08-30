@@ -1,7 +1,6 @@
 {
   "name": "cutopia-backend",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "devDependencies": {
     "nodemon": "^2.0.19"
@@ -14,7 +13,7 @@
     "lint": "eslint --ext .js,.ts ."
   },
   "repository": "git+https://github.com/cutility/CUtopia-backend.git",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/cutility/CUtopia-backend/issues"
   },
