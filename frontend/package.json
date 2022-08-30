@@ -33,6 +33,7 @@
     "react-use": "^17.3.1"
   },
   "scripts": {
+    "bootstrap": "yarn move-data",
     "start": "next start",
     "preinstall": "yarn --cwd ../types build",
     "build": "next build && next export -o build",
@@ -43,7 +44,6 @@
     "dev": "next dev",
     "eject": "next eject",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx src",
-    "prepare": "yarn move-data",
     "cleanup": "rm -r .next build node_modules",
     "move-data": "cp -R ../data/resources public/ && cp -r ../data/derived/faculty_subjects.json src/constants/faculty_subjects.json"
   },
