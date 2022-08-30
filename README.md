@@ -5,13 +5,9 @@ CUtopia is a course review and timetable planning website for CUHK students. It 
 
 ## Packages
 
-Install the following packages:
+Install [node.js](https://nodejs.org/en/) and [yarn](https://yarnpkg.com/).
 
-- [Node.js](https://nodejs.org/en/)
-- [Yarn](https://yarnpkg.com/)
-- [MongoDB Compass](https://www.mongodb.com/products/compass)
-- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
-- [Docker](https://www.docker.com/)
+For backend development, install: [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) and [Docker](https://www.docker.com/).
 
 ## Scripts
 
@@ -41,7 +37,7 @@ yarn be dev
 
 ## Contributing
 
-We'd love to accept your contributions to this project, you are welcomed to submit your issues and pull requests (rebase) to this project.
+We'd love to accept your contributions to this project, you are welcomed to submit your issues and pull requests to **dev branch**.
 
 The master branch is connected with [cutopia.app](cutopia.app), any updates on master branch will rebuild the production website. Similar to master branch, the dev branch is linked with [dev.cutopia.app](dev.cutopia.app).
 
@@ -54,3 +50,8 @@ If you want to join the development team (with access to AWS, GA, Sentry, and th
 ### Semester Data Update
 
 Open `tools/data.ipynb` and run all sections
+
+### Incorrect Data Correction
+
+Please submit PR / issue in [cutopia-data](https://github.com/cutility/CUtopia-data) repo.
+
