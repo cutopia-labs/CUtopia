@@ -37,7 +37,7 @@ yarn be dev
 
 ## Contributing
 
-We'd love to accept your contributions to this project, you are welcomed to submit your issues and pull requests to **dev branch**.
+We'd love to accept your contributions to this project, you are welcomed to submit your issues and pull requests to **dev branch** after read the [contributing guide](/CONTRIBUTING.md) .
 
 The master branch is connected with [cutopia.app](cutopia.app), any updates on master branch will rebuild the production website. Similar to master branch, the dev branch is linked with [dev.cutopia.app](dev.cutopia.app).
 
