@@ -56,7 +56,7 @@ const getExpire = (mode: TimetableOverviewMode, expireAt: number) => {
 type TimetableOverviewListItemProps = {
   item: TimetableOverviewWithMode;
   onShare: (id: string) => void;
-  onDelete: (id: string, expire: number) => void;
+  onDelete: (id: string) => void;
   onClick: () => void;
   selected: boolean;
 };
@@ -71,7 +71,7 @@ export const TimetableOverviewListItem: FC<TimetableOverviewListItemProps> = ({
   const menuItems = [
     {
       label: 'Delete',
-      action: () => onDelete(item._id, item.expire),
+      action: () => onDelete(item._id),
       icon: <AiOutlineDelete />,
     },
   ];
@@ -121,7 +121,7 @@ export const TimetableOverviewListItem: FC<TimetableOverviewListItemProps> = ({
 export type TimetableOverviewProps = {
   createTimetable: () => any;
   switchTimetable: (id: string) => any;
-  deleteTable?: (id: string, expire: number) => any;
+  deleteTable?: (id: string) => any;
 };
 
 const TimetableOverview: FC<TimetableOverviewProps> = ({

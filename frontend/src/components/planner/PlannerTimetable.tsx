@@ -39,10 +39,9 @@ import useMobileQuery from '../../hooks/useMobileQuery';
 import LoadingView from '../atoms/LoadingView';
 
 const getModeFromExpireAt = (expireAt: number) => {
-  if (expireAt > 0) {
-    return TimetableOverviewMode.SHARE;
-  }
-  return TimetableOverviewMode.UPLOAD;
+  return expireAt > 0
+    ? TimetableOverviewMode.SHARE
+    : TimetableOverviewMode.UPLOAD;
 };
 
 const getExpire = (str: string) => {
@@ -296,13 +295,12 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
 
   const [cloneTimetableMutation] = useMutation(CLONE_TIMETABLE);
 
-  const onDelete = async (id: string, expire: number) => {
+  const onDelete = async (id: string) => {
     try {
       const isCurrentPlanner = id === planner.plannerId;
       /* Get next timetable id if deleting current planner */
       const variables: any = {
         id,
-        expire,
       };
       /* Undefined switch to means not deleting current ttb, no need switch */
       let switchTo = undefined;
@@ -644,7 +642,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
         createTimetable={createTimetable}
         onShare={onShareClick}
         switchTimetable={switchTimetable}
-        deleteTable={(id: string, expire: number) => onDelete(id, expire)}
+        deleteTable={(id: string) => onDelete(id)}
       />
       <Footer style={styles.plannerFooter} visible={!isHome && !isMobile} />
       <Dialog
