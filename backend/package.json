@@ -6,9 +6,9 @@
     "nodemon": "^2.0.19"
   },
   "scripts": {
-    "bootstrap": "sh tools/init.sh",
-    "watch": "sh tools/watch-files.sh",
-    "dev": "sh tools/run-server.sh",
+    "bootstrap": "bash tools/init.sh",
+    "watch": "bash tools/watch-files.sh",
+    "dev": "bash tools/run-server.sh",
     "lint": "eslint --ext .js,.ts ."
   },
   "repository": "git+https://github.com/cutility/CUtopia-backend.git",

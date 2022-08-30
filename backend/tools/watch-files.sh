@@ -1,3 +1,5 @@
+#!/bin/bash
+
 trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
 
 yarn nodemon --watch "mongodb/src" \

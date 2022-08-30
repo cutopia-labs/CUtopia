@@ -15,10 +15,10 @@ All serverless serivces will be deployed to [Lambda](https://aws.amazon.com/lamb
 
 ```sh
 # Deploy development stack
-export NODE_ENV=development; sh tools/deploy.sh cutopia-dev
+export NODE_ENV=development; bash tools/deploy.sh cutopia-dev
 
 # Deploy production stack
-export NODE_ENV=production; sh tools/deploy.sh cutopia-production
+export NODE_ENV=production; bash tools/deploy.sh cutopia-production
 ```
 
 > Note: when running the script for the first time, a few config options will be asked in console. Follow the default values for all options.

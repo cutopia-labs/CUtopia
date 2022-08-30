@@ -1,3 +1,5 @@
+#!/bin/bash
+
 data_path=lambda/graphql/src/data
 
 [ -e $data_path ] && rm -r $data_path

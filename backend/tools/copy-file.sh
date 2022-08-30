@@ -1,3 +1,5 @@
+#!/bin/bash
+
 cd lambda/graphql
 cp src/jwt/jwtRS256.key build/jwt
 cp src/jwt/jwtRS256.key.pub build/jwt

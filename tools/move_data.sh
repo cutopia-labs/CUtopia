@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # Move data
 readonly DATA=$(dirname `pwd`)/data
 readonly TOOL=$(dirname `pwd`)/tools

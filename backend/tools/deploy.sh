@@ -1,8 +1,10 @@
+#!/bin/bash
+
 yarn --cwd mongodb/ run build
 yarn --cwd lambda/graphql/ run build
 
-sh tools/copy-env.sh
-sh tools/copy-file.sh
+bash tools/copy-env.sh
+bash tools/copy-file.sh
 
 if [ -f "samconfig.toml" ]; then
   sam deploy --stack-name $1 -t root-stack.yaml

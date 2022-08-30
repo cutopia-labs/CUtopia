@@ -1,8 +1,10 @@
+#!/bin/bash
+
 # Step 1: copy data from git submodule to GraphQL server
-sh tools/copy-data.sh
+bash tools/copy-data.sh
 
 # Step 2: install node modules
-sh tools/install-package.sh
+bash tools/install-package.sh
 
 # Step 3: build schema and GraphQL types
 yarn --cwd lambda/graphql build-schema
