@@ -91,8 +91,7 @@ type QueryParams = {
   returnUrl?: string;
 };
 
-export const isSid = (str: string) =>
-  str.startsWith('11') && SID_RULE.test(str);
+export const isSid = (str: string) => SID_RULE.test(str);
 
 const LoginPanel: FC<Props> = ({ className, returnUrl }) => {
   const router = useRouter();
