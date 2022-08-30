@@ -1,4 +1,4 @@
-declare -a modules=(
+modules=(
   "./"
   "./mongodb"
   "./lambda/emailer"
