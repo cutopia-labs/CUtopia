@@ -7,7 +7,7 @@ CUtopia is a course review and timetable planning website for CUHK students. It 
 
 Install [node.js](https://nodejs.org/en/) and [yarn](https://yarnpkg.com/).
 
-For backend development, install: [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) and [Docker](https://www.docker.com/).
+For backend development, install [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) and [Docker](https://www.docker.com/).
 
 ## Scripts
 
@@ -43,7 +43,7 @@ The master branch is connected with [cutopia.app](cutopia.app), any updates on m
 
 You can come and join our [telegram group](https://t.me/+Al8YBqRRLxg1Yzll) to discuss suggestions and new features.
 
-If you want to join the development team (with access to AWS, GA, Sentry, and the database), you can [email us](mailto::cutopia.app@gmail.com) with your resume / github profile.
+If you want to join the development team (with access to AWS, GA, Sentry, and the database), please [email us](mailto::cutopia.app@gmail.com) with your resume / github profile.
 
 ## Guidelines
 
