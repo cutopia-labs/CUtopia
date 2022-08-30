@@ -6,8 +6,7 @@
     "nodemon": "^2.0.19"
   },
   "scripts": {
-    "bootstrap": "yarn prepare",
-    "prepare": "sh tools/init.sh",
+    "bootstrap": "sh tools/init.sh",
     "watch": "sh tools/watch-files.sh",
     "dev": "sh tools/run-server.sh",
     "lint": "eslint --ext .js,.ts ."
