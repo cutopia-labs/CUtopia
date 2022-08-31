@@ -35,7 +35,6 @@
   "scripts": {
     "bootstrap": "yarn move-data",
     "start": "next start",
-    "preinstall": "yarn --cwd ../types build",
     "build": "next build && next export -o build",
     "postbuild": "next-sitemap",
     "test": "jest",
