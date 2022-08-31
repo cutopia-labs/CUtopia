@@ -47,7 +47,7 @@ const authenticatedRoute: HOC = (Component = null, options = {}) => {
         return;
       }
       // If logged in for current session, then return component
-      if (user.data?.username) {
+      if (user.loggedIn) {
         setAuthState(AuthState.LOGGED_IN);
         return;
       }
