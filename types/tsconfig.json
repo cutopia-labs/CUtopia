@@ -6,8 +6,12 @@
     "outDir": "./lib",
     "strict": true,
     "baseUrl": ".",
-    "typeRoots": ["./node_modules/@types"]
+    "typeRoots": [
+      "./node_modules/@types",
+      "../node_modules/@types",
+    ],
+    "skipLibCheck": true
   },
   "include": ["src"],
-  "exclude": ["node_modules", "**/__tests__/*"]
+  "exclude": ["node_modules", "**/__tests__/*"],
 }
