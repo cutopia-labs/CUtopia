@@ -64,6 +64,8 @@
   "devDependencies": {
     "@babel/core": "^7.15.0",
     "@babel/plugin-proposal-decorators": "^7.14.5",
+    "@babel/preset-env": "^7.18.10",
+    "@next/env": "^12.2.5",
     "@testing-library/react": "^12.1.5",
     "@types/react": "^18",
     "@types/react-beforeunload": "^2.1.1",
