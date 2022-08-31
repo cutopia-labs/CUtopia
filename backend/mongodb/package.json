@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "yarn jest",
     "build": "rm -rf lib && tsc && yarn --modules-folder lib/node_modules --prod install"
   },
   "exports": {
