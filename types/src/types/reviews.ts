@@ -14,9 +14,9 @@ export type RecentReview = {
   courseId: string;
   username: string;
   title?: string;
-  createdDate: string;
+  createdAt: string;
   overall: number;
-  grading: ReviewDetail;
+  grading: ReviewDetails;
 };
 
 export type Review = {
@@ -33,48 +33,39 @@ export type Review = {
   upvoteUserIds: string[];
   downvoteUserIds: string[];
   overall: number;
-  grading: ReviewDetail;
-  teaching: ReviewDetail;
-  difficulty: ReviewDetail;
-  content: ReviewDetail;
+  grading: ReviewDetails;
+  teaching: ReviewDetails;
+  difficulty: ReviewDetails;
+  content: ReviewDetails;
   createdAt: number;
   updatedAt: number;
 };
 
-export type ReviewDetail = {
+export type ReviewDetails = {
   grade: number;
   text: string;
 };
 
 export type ReviewsResult = {
-  reviews: {
-    reviews: Review[];
-    lastEvaluatedKey?: LastEvaluatedKey;
-  };
+  reviews: Review[];
+  nextPage?: number;
 };
 
 export type LastEvaluatedKey = {
   courseId: string;
-  createdDate: string;
+  createdAt: string;
   upvotes?: number;
 };
 
 export type CreateReviewResult = {
-  id?: string;
-  createdDate?: string;
-  error?: string;
-};
-
-export type VoteReviewResult = {
-  review?: Review;
-  error?: string;
+  createdAt?: string;
 };
 
 export type ReviewsFilter = {
   courseId: string;
-  getLatest?: boolean;
-  ascendingDate?: boolean;
-  ascendingVote?: boolean;
-  lastEvaluatedKey?: LastEvaluatedKey;
+  sortBy?: string;
+  page?: number;
   lecturer?: string;
+  term?: string;
+  ascending?: boolean;
 };

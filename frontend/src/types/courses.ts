@@ -8,15 +8,6 @@ import {
 import { TimetableOverviewMode } from './enums';
 import { TbaSections } from './events';
 
-export type RatingField = 'grading' | 'content' | 'difficulty' | 'teaching';
-
-export type RatingFieldWithOverall =
-  | 'overall'
-  | 'grading'
-  | 'content'
-  | 'difficulty'
-  | 'teaching';
-
 export type Subject = {
   name: string;
   courses: CourseWithRating[];

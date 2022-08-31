@@ -1,11 +1,5 @@
 import { CourseTableEntry } from './events';
 
-export enum TimetableOverviewMode {
-  NON_EXPIRE,
-  NON_EXPIRE_SHARE,
-  SHARE,
-}
-
 export type ShareTimeTableResponse = {
   id: string;
 };
