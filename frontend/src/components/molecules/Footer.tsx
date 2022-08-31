@@ -18,12 +18,12 @@ const FOOTER_ITEMS = [
     to: '/about',
   },
   {
-    label: 'Privacy',
-    to: '/about',
+    label: 'GitHub',
+    to: 'https://github.com/cutopia-lab/CUtopia',
   },
   {
-    label: 'Terms',
-    to: '/about',
+    label: 'Support ♡',
+    to: 'https://ko-fi.com/cutopia',
   },
   {
     label: 'Report Issues',
