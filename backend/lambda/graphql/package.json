@@ -10,6 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "@graphql-tools/load-files": "^6.5.3",
+    "@graphql-tools/schema": "^9.0.2",
     "@graphql-tools/utils": "^8.6.12",
     "apollo-server-lambda": "^3.8.1",
     "aws-sdk": "^2.1144.0",
