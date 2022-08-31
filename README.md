@@ -7,8 +7,6 @@ CUtopia is a course review and timetable planning website for CUHK students. It 
 
 Install [node.js](https://nodejs.org/en/) and [yarn](https://yarnpkg.com/).
 
-For backend development, install [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) and [Docker](https://www.docker.com/).
-
 ## Scripts
 
 ### Bootstrap (install all dependencies):
