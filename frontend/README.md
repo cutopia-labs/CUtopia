@@ -1,5 +1,5 @@
 # CUtopia Frontend
-This is the source code for [cutopia.app](cutopia.app) frontend.
+The source code for [cutopia.app](cutopia.app) frontend.
 
 ## Development
 
