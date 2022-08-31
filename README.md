@@ -17,8 +17,6 @@ For backend development, install [AWS CLI](https://docs.aws.amazon.com/cli/lates
 yarn bootstrap
 ```
 
-After bootstrapping, replace `ATLAS_DEV_URI` in the backend/.env file with your MongoDB connection URI.
-
 ### Start frontend dev server:
 
 ```bash
