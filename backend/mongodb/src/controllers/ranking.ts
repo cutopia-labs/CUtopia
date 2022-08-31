@@ -1,5 +1,3 @@
-import { RankEntry } from 'cutopia-types';
-
 import { RANK_LIMIT } from '../constants/config';
 import Course from '../models/course';
 import Ranking from '../models/ranking';
@@ -55,20 +53,3 @@ export const rankCourses = async () => {
 };
 
 export const getRanking = async (field: string) => Ranking.findById(field);
-
-type UpdateRankingProps = {
-  field: string;
-  rank: RankEntry;
-  limit?: number;
-};
-
-export const updateRanking = async (input: UpdateRankingProps) => {
-  Ranking.findByIdAndUpdate(input.field, {
-    $push: {
-      ranks: {
-        $each: [input.rank], // TODO: need check nested _id instead of this
-        $slice: -(input.limit || RANK_LIMIT),
-      },
-    },
-  });
-};
