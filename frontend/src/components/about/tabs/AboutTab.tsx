@@ -22,19 +22,26 @@ const AboutTab: FC = () => (
         users are CUHK students.
       </p>
       <p>
-        CUtopia is a open source project (will open source after beta test) and
-        under development by a team of CUHK students. It is still at the
+        CUtopia is a open source project (
+        <Link href="https://github.com/cutopia-lab/CUtopia">source code</Link>)
+        and under development by a team of CUHK students. It is still at the
         development stage, therefore functions are incomplete and potentially
         buggy. Any contribution to the CUtopia project is welcomed!
       </p>
     </AboutSection>
     <AboutSection title="Course Data Source">
-      <p className="caption">{`Last batch update date: ${getMMMDDYY(
-        STATICS_EXPIRE_BEFORE,
-        false,
-        false,
-        false
-      )}`}</p>
+      <p className="caption">
+        Data repository:{' '}
+        <Link href="https://github.com/cutopia-lab/cuhk-course-data">here</Link>{' '}
+        (
+        {`Last update date: ${getMMMDDYY(
+          STATICS_EXPIRE_BEFORE,
+          false,
+          false,
+          false
+        )}`}
+        )
+      </p>
       <p>
         The courses information is fetched and parsed from{' '}
         <Link href="http://rgsntl.rgs.cuhk.edu.hk/aqs_prd_applx/Public/tt_dsp_crse_catalog.aspx">
@@ -57,8 +64,8 @@ const AboutTab: FC = () => (
         <Link href="mailto::cutopia.app@gmail.com">cutopia.app@gmail.com</Link>
       </p>
       <p>
-        If you found any bugs or have any suggestion, you may email us or issue
-        a report via CUtopia apps.
+        If you found any bugs or have any suggestion, feel free to email us or
+        report via CUtopia apps.
       </p>
     </AboutSection>
     <AboutSection title="Declaimer">
