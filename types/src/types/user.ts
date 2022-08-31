@@ -1,57 +1,28 @@
 import { Timetable } from './timetable';
 
-type User = {
+export type UserVisible = {
   username: string;
+  verified: boolean;
+  reviewIds: string[];
+  upvotes: number;
+  exp: number;
+  level: number;
+  timetableId: string;
+  timetables: Timetable[];
+  fullAccess?: boolean;
+};
+
+export type User = UserVisible & {
   SID: string;
   password: string;
   resetPwdCode: string;
-  email: string;
   createdAt: number;
-  reviewIds: string[];
-  upvotes: number;
   downvotes: number;
-  exp: number;
   veriCode: string;
-  verified: boolean;
-  fullAccess: boolean;
-  timetableId: string;
-  timetables: Timetable[];
   sharedTimetables: Timetable[];
 };
 
-type CreateUserResult = {
-  error?: string;
-};
-
-type VerifyUserResult = {
-  code: number;
-};
-
-type UpdateUserResult = {
-  error?: string;
-};
-
-type LoginResult = {
+export type LoginResult = {
   token?: string;
   me?: User;
-};
-
-type SendResetPasswordCodeResult = {
-  code?: number;
-  error?: string;
-};
-
-type ResetPasswordResult = {
-  code?: number;
-  error?: string;
-};
-
-export type {
-  User,
-  CreateUserResult,
-  VerifyUserResult,
-  UpdateUserResult,
-  LoginResult,
-  SendResetPasswordCodeResult,
-  ResetPasswordResult,
 };
