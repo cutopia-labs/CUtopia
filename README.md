@@ -53,5 +53,5 @@ Open `tools/data.ipynb` and run all sections
 
 ### Incorrect Data Correction
 
-Please submit PR / issue in [cutopia-data](https://github.com/cutility/CUtopia-data) repo.
+Please submit PR / issue in [cutopia-data](https://github.com/cutopia-lab/CUtopia-data) repo.
 

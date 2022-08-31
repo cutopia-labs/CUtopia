@@ -12,7 +12,7 @@ Steps:
 2. Set upstream:
 
 ```sh
-git remote add upstream https://github.com/cutility/CUtopia.git
+git remote add upstream https://github.com/cutopia-lab/CUtopia.git
 ```
 
 3. Checkout to your feature / bug fix branch:
@@ -21,12 +21,12 @@ git remote add upstream https://github.com/cutility/CUtopia.git
 git checkout -b your-branch
 ```
 
-4. Install the dependencies and start the dev servers according to [readme](https://github.com/cutility/CUtopia#scripts)
+4. Install the dependencies and start the dev servers according to [readme](https://github.com/cutopia-lab/CUtopia#scripts)
 5. Commit your changes and push them to your fork repo
 
 ```sh
 git push -u origin HEAD
 ```
 
-6. Go to [this repo](https://github.com/cutility/CUtopia) and make a Pull Request to **dev branch**
+6. Go to [this repo](https://github.com/cutopia-lab/CUtopia) and make a Pull Request to **dev branch**
 

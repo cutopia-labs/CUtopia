@@ -8,7 +8,7 @@
   ],
   "private": true,
   "description": "CUtopia is a course review and timetable planning website for CUHK students.",
-  "repository": "https://github.com/cutility/CUtopia.git",
+  "repository": "https://github.com/cutopia-lab/CUtopia.git",
   "license": "MIT",
   "scripts": {
     "fe": "yarn workspace cutopia-frontend",
