@@ -23,7 +23,7 @@
     "build:fe": "yarn fe build",
     "test": "jest",
     "postinstall": "yarn types build",
-    "reinstall": "rm yarn.lock && lerna clean --yes && yarn"
+    "reinstall": "lerna clean --yes && yarn"
   },
   "devDependencies": {
     "@types/nprogress": "^0.2.0",
