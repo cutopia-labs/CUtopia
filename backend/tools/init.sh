@@ -15,7 +15,8 @@ yarn --cwd lambda/graphql build-gql-types
 # Shared env
 echo "\
 ATLAS_PROD_URI=\"Your MongoDB connection key for production\"
-ATLAS_DEV_URI=\"Your MongoDB connection key for development\"\
+ATLAS_DEV_URI=\"Your MongoDB connection key for development\"
+ATLAS_JEST_URI=\"Your MongoDB connection key for running Jest scripts (note: data is removed during testing)\"\
 " > .env
 
 # Emailer env

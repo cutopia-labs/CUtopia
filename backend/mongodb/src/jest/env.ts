@@ -30,12 +30,12 @@ export const deleteTestUser = async ({ username, SID }) =>
   });
 
 export const setup = async () => {
-  if (process.env.ATLAS_DEV_URI.includes('production')) {
+  if (process.env.ATLAS_JEST_URI.includes('production')) {
     throw Error(
-      "Please make sure that ATLAS_DEV_URI does not contain 'production'."
+      "Please make sure that ATLAS_JEST_URI does not contain 'production'."
     );
   }
-  await connect(process.env.ATLAS_DEV_URI);
+  await connect(process.env.ATLAS_JEST_URI);
 };
 
 export const teardown = async () => await mongoose.connection.close();
