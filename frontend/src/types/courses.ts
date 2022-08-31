@@ -3,9 +3,7 @@ import {
   CourseRating,
   Term,
   PlannerRaw,
-  PlannerCourse as PlannerCourseRaw,
-  CourseSection as CourseSectionRaw,
-  AssessementComponent as AssessementComponentRaw,
+  CourseSection,
 } from 'cutopia-types';
 import { TimetableOverviewMode } from './enums';
 import { TbaSections } from './events';
@@ -21,28 +19,24 @@ export type RatingFieldWithOverall =
 
 export type Subject = {
   name: string;
-  courses: Course[];
+  courses: CourseWithRating[];
 };
 
-export interface Course extends CourseDataRaw {
+export interface CourseWithRating extends CourseDataRaw {
   subject: Subject;
   terms?: Term[];
   rating?: CourseRating;
   reviewLecturers?: string[];
 }
 
-export interface CourseInfo extends Course {
+export interface CourseInfo extends CourseWithRating {
   courseId: string;
-  sections?: CourseSectionRaw[]; // For planner use
+  sections?: CourseSection[]; // For planner use
 }
-
-export type PlannerCourse = PlannerCourseRaw;
 
 export interface Planner extends PlannerRaw {
   type?: TimetableOverviewMode;
 }
-
-export type CourseSection = CourseSectionRaw;
 
 export type TimetableInfo = {
   totalCredits: number;
@@ -50,8 +44,6 @@ export type TimetableInfo = {
   weekdayAverageHour: Record<string, number>;
   tbaSections: TbaSections;
 };
-
-export type AssessementComponent = AssessementComponentRaw;
 
 export type DepartmentCourses = {
   [department: string]: CourseSearchItem[];
