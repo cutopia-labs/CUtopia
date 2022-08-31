@@ -1,5 +1,6 @@
-import { DiscussionMessage as DiscussionMessageRaw } from 'cutopia-types';
+import { DiscussionMessageBase } from 'cutopia-types';
 
-export type DiscussionMessage = DiscussionMessageRaw & {
+export interface DiscussionMessage extends DiscussionMessageBase {
   id?: number;
-};
+  _id?: number;
+}

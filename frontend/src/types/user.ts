@@ -1,5 +1,4 @@
-import { UserVisible } from 'cutopia-types';
-import { TimetableOverview } from './events';
+import { UserVisible, TimetableOverview } from 'cutopia-types';
 
 export type User = UserVisible & {
   timetables?: TimetableOverview[];

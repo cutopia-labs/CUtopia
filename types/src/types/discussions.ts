@@ -1,8 +1,11 @@
-export type DiscussionMessage = {
-  _id: number;
+export interface DiscussionMessageBase {
   text: string;
   user: string;
-};
+}
+
+export interface DiscussionMessage extends DiscussionMessageBase {
+  _id: number;
+}
 
 export type Discussion = {
   _id: string;

@@ -18,6 +18,7 @@ export interface CourseWithRating extends CourseDataRaw {
   terms?: Term[];
   rating?: CourseRating;
   reviewLecturers?: string[];
+  reviewTerms?: string[];
 }
 
 export interface CourseInfo extends CourseWithRating {
