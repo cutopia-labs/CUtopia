@@ -11,12 +11,7 @@
     "dev": "bash tools/run-server.sh",
     "lint": "eslint --ext .js,.ts ."
   },
-  "repository": "git+https://github.com/cutopia-lab/CUtopia-backend.git",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/cutopia-lab/CUtopia-backend/issues"
-  },
-  "homepage": "https://github.com/cutopia-lab/CUtopia-backend#readme",
   "engines": {
     "node": ">=v12.21.0",
     "yarn": ">=1.22.0"
