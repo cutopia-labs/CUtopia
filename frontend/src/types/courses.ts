@@ -1,5 +1,14 @@
+import {
+  CourseDataRaw,
+  CourseRating,
+  Term,
+  PlannerRaw,
+  PlannerCourse as PlannerCourseRaw,
+  CourseSection as CourseSectionRaw,
+  AssessementComponent as AssessementComponentRaw,
+} from 'cutopia-types';
 import { TimetableOverviewMode } from './enums';
-import { Events, TbaSections } from './events';
+import { TbaSections } from './events';
 
 export type RatingField = 'grading' | 'content' | 'difficulty' | 'teaching';
 
@@ -15,66 +24,25 @@ export type Subject = {
   courses: Course[];
 };
 
-export interface Course {
+export interface Course extends CourseDataRaw {
   subject: Subject;
-  code: string;
-  title: string;
-  career: string;
-  units: string;
-  grading: string;
-  components: string;
-  campus: string;
-  academic_group: string;
-  requirements: string;
-  description: string;
-  outcome: string;
-  syllabus: string;
-  required_readings: string;
-  recommended_readings: string;
   terms?: Term[];
-  assessments?: AssessementComponent[];
   rating?: CourseRating;
   reviewLecturers?: string[];
-  reviewTerms?: string[];
 }
 
 export interface CourseInfo extends Course {
   courseId: string;
-  sections?: CourseSection[]; // For planner use
+  sections?: CourseSectionRaw[]; // For planner use
 }
 
-export type CourseRating = {
-  numReviews: number;
-  overall: number;
-  grading: number;
-  content: number;
-  difficulty: number;
-  teaching: number;
-};
+export type PlannerCourse = PlannerCourseRaw;
 
-export type Term = {
-  name: string;
-  course_sections?: CourseSection[];
-};
-
-export type PlannerCourse = {
-  courseId: string;
-  title: string;
-  credits: number;
-  sections: {
-    [sectionName: string]: CourseSection;
-  };
-};
-
-export type Planner = {
-  tableName?: string;
+export interface Planner extends PlannerRaw {
   type?: TimetableOverviewMode;
-  createdAt?: number;
-  courses: PlannerCourse[];
-  expire?: number;
-  expireAt?: number;
-  id: string;
-};
+}
+
+export type CourseSection = CourseSectionRaw;
 
 export type TimetableInfo = {
   totalCredits: number;
@@ -83,16 +51,7 @@ export type TimetableInfo = {
   tbaSections: TbaSections;
 };
 
-export interface CourseSection extends Events {
-  name: string;
-  instructors: string[];
-  hide?: boolean;
-}
-
-export type AssessementComponent = {
-  name: string;
-  percentage: string;
-};
+export type AssessementComponent = AssessementComponentRaw;
 
 export type DepartmentCourses = {
   [department: string]: CourseSearchItem[];

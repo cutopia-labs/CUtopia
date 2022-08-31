@@ -52,16 +52,13 @@ export type PlannerCourse = {
   };
 };
 
-export type Planner = {
-  label?: string;
-  key: number; // timestamp
+export type PlannerRaw = {
+  tableName?: string;
+  createdAt?: number;
   courses: PlannerCourse[];
-};
-
-export type TimeTableInfo = {
-  totalCredits: number;
-  averageHour: number;
-  weekdayAverageHour: Record<string, number>;
+  expire?: number;
+  expireAt?: number;
+  id: string;
 };
 
 export interface CourseSection extends Events {
@@ -73,21 +70,6 @@ export interface CourseSection extends Events {
 export type AssessementComponent = {
   name: string;
   percentage: string;
-};
-
-export type DepartmentCourses = {
-  [department: string]: CourseSearchItem[];
-};
-
-export type CourseSearchItem = {
-  c: string;
-  t: string;
-  o?: number;
-};
-
-export type CourseConcise = {
-  courseId: string;
-  title: string;
 };
 
 export type CourseDocument = {
