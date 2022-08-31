@@ -2,11 +2,11 @@ import { describe, expect, beforeAll, afterAll, it } from '@jest/globals';
 import { ErrorCode } from 'cutopia-types';
 import { nanoid } from 'nanoid';
 
-import { createTestUser, deleteTestUser, setup, teardown } from '../jest/env';
+import { createReview, getReviews, voteReview } from '../controllers/review';
+import { getUser } from '../controllers/user';
 import ReviewModel from '../models/review';
 
-import { createReview, getReviews, voteReview } from './review';
-import { getUser } from './user';
+import { createTestUser, deleteTestUser, setup, teardown } from './env';
 
 describe('Review', () => {
   let testUser;

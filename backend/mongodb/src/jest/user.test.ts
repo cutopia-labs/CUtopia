@@ -3,9 +3,6 @@ import bcrypt from 'bcryptjs';
 import { ErrorCode } from 'cutopia-types';
 import { nanoid } from 'nanoid';
 
-import { createTestUser, deleteTestUser, setup, teardown } from '../jest/env';
-import UserModal from '../models/user';
-
 import {
   createUser,
   verifyUser,
@@ -14,7 +11,9 @@ import {
   getResetPasswordCodeAndEmail,
   getUser,
   deleteUser,
-} from './user';
+} from '../controllers/user';
+import { createTestUser, deleteTestUser, setup, teardown } from '../jest/env';
+import UserModal from '../models/user';
 
 describe('User', () => {
   let testUser;
