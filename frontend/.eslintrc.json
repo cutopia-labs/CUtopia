@@ -1,8 +1,7 @@
- 
 {
   "env": {
-      "browser": true,
-      "es2021": true
+    "browser": true,
+    "es2021": true
   },
   "extends": [
     "plugin:react/recommended",
@@ -21,12 +20,7 @@
     }
   },
   "parser": "@typescript-eslint/parser",
-  "plugins": [
-      "react",
-      "@typescript-eslint",
-      "unused-imports",
-      "only-warn"
-  ],
+  "plugins": ["react", "@typescript-eslint", "unused-imports", "only-warn"],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx"], // Your TypeScript files extension
@@ -66,17 +60,23 @@
     "no-restricted-syntax": 0,
     "no-undef": 0,
     "no-unused-vars": 0,
-		"@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
-    "prettier/prettier": [
-      "error"
-    ],
+    "prettier/prettier": ["error"],
     "import/no-named-as-default": 0,
-		"unused-imports/no-unused-imports": "error",
-		"unused-imports/no-unused-vars": [
-			"off",
-			{ "vars": "all", "varsIgnorePattern": "^_", "args": "after-used", "argsIgnorePattern": "^_" }
-		],
-    "import/order": ["error", {"groups": ["builtin", "external", "parent", "sibling", "index"]}]
+    "unused-imports/no-unused-imports": "error",
+    "unused-imports/no-unused-vars": [
+      "off",
+      {
+        "vars": "all",
+        "varsIgnorePattern": "^_",
+        "args": "after-used",
+        "argsIgnorePattern": "^_"
+      }
+    ],
+    "import/order": [
+      "error",
+      { "groups": ["builtin", "external", "parent", "sibling", "index"] }
+    ]
   }
 }
