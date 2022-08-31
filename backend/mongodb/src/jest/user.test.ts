@@ -12,25 +12,20 @@ import {
   getUser,
   deleteUser,
 } from '../controllers/user';
-import { createTestUser, deleteTestUser, setup, teardown } from '../jest/env';
 import UserModal from '../models/user';
 
-describe('User', () => {
-  let testUser;
+import { setup, teardown } from './env';
 
+describe('User', () => {
   beforeAll(async () => {
     await setup();
     // Empty the user documents
     await UserModal.deleteMany({});
-    testUser = await createTestUser();
   });
 
-  afterAll(async () => {
-    await deleteTestUser(testUser);
-    await teardown();
-  });
+  afterAll(teardown);
 
-  it('Register, Verify, Reset Password and Delete', async () => {
+  it('Register, Verify, Reset Password and Delete User', async () => {
     const username = nanoid(10);
     const fakeUsername = nanoid(10);
     const SID = Math.floor(1000000000 + Math.random() * 9000000000).toString();
@@ -65,36 +60,36 @@ describe('User', () => {
     ).rejects.toThrow(ErrorCode.VERIFICATION_USER_DNE.toString());
 
     await login({
-      username,
+      userId: username,
       password: '1234',
     });
 
     const { resetPwdCode } = await getResetPasswordCodeAndEmail({
-      username,
+      userId: username,
     });
 
     await resetPassword({
-      username,
+      userId: username,
       newPassword: '5678',
       resetCode: resetPwdCode,
     });
     expect(
       resetPassword({
-        username,
+        userId: username,
         newPassword: '5678',
         resetCode: nanoid(5),
       })
     ).rejects.toThrow(ErrorCode.RESET_PASSWORD_FAILED.toString());
     expect(
       resetPassword({
-        username: fakeUsername,
+        userId: fakeUsername,
         newPassword: '5678',
         resetCode: resetPwdCode,
       })
     ).rejects.toThrow(ErrorCode.RESET_PASSWORD_USER_DNE.toString());
 
-    const user = await getUser({ username });
-    const isPasswordCorrect = await bcrypt.compare('5678', user.password);
+    const user = await getUser(username);
+    const isPasswordCorrect = await bcrypt.compare('5678', user!.password);
     expect(isPasswordCorrect).toBeTruthy();
     expect(user).toMatchObject({
       username,

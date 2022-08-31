@@ -2,7 +2,12 @@ import { describe, expect, beforeAll, afterAll, it } from '@jest/globals';
 import { ErrorCode } from 'cutopia-types';
 import { nanoid } from 'nanoid';
 
-import { createReview, getReviews, voteReview } from '../controllers/review';
+import {
+  createReview,
+  formatReviewId,
+  getReviews,
+  voteReview,
+} from '../controllers/review';
 import { getUser } from '../controllers/user';
 import ReviewModel from '../models/review';
 
@@ -23,7 +28,7 @@ describe('Review', () => {
     await teardown();
   });
 
-  it('Create, Vote and Get', async () => {
+  it('Create, Vote and Get Review', async () => {
     const { username } = testUser;
 
     const review = {
@@ -52,13 +57,13 @@ describe('Review', () => {
     };
 
     const { createdAt } = await createReview(review);
-    const fakeId = nanoid(10);
+    const _id = formatReviewId(review['courseId'], createdAt);
     expect(createReview(review)).rejects.toThrow(
       ErrorCode.CREATE_REVIEW_ALREADY_CREATED.toString()
     );
 
     const voteReviewInput = {
-      _id: `${review['courseId']}#${createdAt}`,
+      _id,
       username,
       vote: 1,
     };
@@ -68,14 +73,14 @@ describe('Review', () => {
     );
     expect(
       voteReview({
-        _id: `${review['courseId']}#${createdAt}`,
+        _id,
         username,
         vote: -1,
       })
     ).rejects.toThrow(ErrorCode.VOTE_REVIEW_INVALID_VALUE.toString());
     expect(
       voteReview({
-        _id: fakeId,
+        _id: nanoid(10),
         username,
         vote: 1,
       })
@@ -88,17 +93,14 @@ describe('Review', () => {
     });
     expect(reviews[0]).toMatchObject({
       ...review,
-      _id: `${review['courseId']}#${createdAt}`,
+      _id,
       createdAt,
       upvotes: 1,
       upvoteUserIds: [username],
       downvotes: 0,
       downvoteUserIds: [],
     });
-    const reviewAuthor = await getUser({
-      username,
-      fields: ['upvotes'],
-    });
-    expect(reviewAuthor.upvotes).toEqual(1);
+    const reviewAuthor = await getUser(username, 'upvotes');
+    expect(reviewAuthor?.upvotes).toEqual(1);
   });
 });
