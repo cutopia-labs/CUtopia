@@ -9,7 +9,8 @@
     "test": "jest"
   },
   "exports": {
-    ".": "./lib"
+    ".": "./lib",
+    "./types": "./lib/types"
   },
   "keywords": [],
   "license": "MIT"

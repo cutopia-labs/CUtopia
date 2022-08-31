@@ -1,4 +1,4 @@
-import { Timetable } from './timetable';
+import { Timetable } from './events';
 
 export type UserVisible = {
   username: string;

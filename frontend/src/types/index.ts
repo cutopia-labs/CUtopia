@@ -1,8 +1,14 @@
+/* eslint-disable import/export */
+export * from 'cutopia-types';
 export * from './enums';
 export * from './courses';
+export * from './discussions';
 export * from './reviews';
-export * from './ranking';
 export * from './events';
 export * from './user';
 export * from './views';
-export * from './discussions';
+import { DiscussionMessage } from './discussions';
+import { CourseInfo } from './courses';
+import { Review } from './reviews';
+import { User } from './user';
+export type { DiscussionMessage, CourseInfo, Review, User };

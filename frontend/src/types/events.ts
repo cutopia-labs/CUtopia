@@ -1,4 +1,8 @@
-import { CourseTableEntry, PlannerCourse } from 'cutopia-types';
+import {
+  CourseTableEntry,
+  PlannerCourse,
+  TimetableOverview,
+} from 'cutopia-types';
 import { TimetableOverviewMode } from './enums';
 
 export type UploadTimetableResponse = {
@@ -31,14 +35,6 @@ export type TbaSection = {
 export type TbaSections = {
   [key: string]: TbaSection;
 };
-
-export interface TimetableOverview {
-  _id: string;
-  createdAt: number;
-  tableName: string | null;
-  expireAt?: number;
-  expire?: number;
-}
 
 export interface TimetableOverviewWithMode extends TimetableOverview {
   mode: TimetableOverviewMode;
