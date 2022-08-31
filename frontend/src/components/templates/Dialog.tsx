@@ -58,6 +58,7 @@ const ReportIssuesDialogContent: FC<ReportIssuesDialogContentProps> = observer(
     const currentModeMessages = REPORT_MODES[reportCategory];
     const currentModeMessagesLookup = reverseMapping(currentModeMessages);
     const view = useView();
+    const user = useUser();
     const [issueData, dispatchIssueData] = useReducer(
       (state, action) => ({ ...state, ...action }),
       {
@@ -68,15 +69,10 @@ const ReportIssuesDialogContent: FC<ReportIssuesDialogContentProps> = observer(
     );
 
     const [report, { loading: reportLoading }] = useMutation(REPORT, {
-      onCompleted: handleCompleted(
-        () => {
-          view.setDialog(null);
-        },
-        {
-          view,
-          message: 'Thank you for your feedback!',
-        }
-      ),
+      onCompleted: handleCompleted(() => view.setDialog(null), {
+        view,
+        message: 'Thank you for your feedback!',
+      }),
       onError: view.handleError,
     });
     const submit = async e => {
@@ -118,7 +114,11 @@ const ReportIssuesDialogContent: FC<ReportIssuesDialogContentProps> = observer(
           <Section title="Description">
             <TextField
               className={styles.dialogDescription}
-              placeholder="Please describe the issue..."
+              placeholder={
+                user.loggedIn
+                  ? 'Please describe the issue...'
+                  : 'Please describe the issue with your email...'
+              }
               value={issueData.description}
               Tag="textarea"
               onChangeText={text => dispatchIssueData({ description: text })}
