@@ -9,7 +9,7 @@ Install [node.js](https://nodejs.org/en/) and [yarn](https://yarnpkg.com/).
 
 ## Scripts
 
-For Windows users, run the below scripts in [Git Bash](https://git-scm.com/downloads).
+For Windows users, please run the following scripts in [Git Bash](https://git-scm.com/downloads).
 
 ### Bootstrap (install all dependencies):
 
