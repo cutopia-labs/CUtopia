@@ -156,7 +156,8 @@ const TimetableOverview: FC<TimetableOverviewProps> = ({
       <Button
         size="small"
         onClick={e => {
-          getUserTimetable();
+          // Do not refetch, cuz the outdated overview may served from cache (issue #1)
+          if (!planner.timetableOverviews) getUserTimetable();
           setAnchorEl(e.currentTarget);
         }}
         endIcon={<ExpandMore />}

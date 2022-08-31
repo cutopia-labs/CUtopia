@@ -535,7 +535,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
       router.push('/planner');
       return;
     }
-    /*
+    /**
      * If the id is valid, check if it's cloned,
      * switch ttb if cloned otherwise clone
      */

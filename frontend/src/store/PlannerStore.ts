@@ -40,7 +40,7 @@ class PlannerStore extends StorePrototype {
   @observable previewPlannerCourse: PlannerCourse;
   @observable plannerCourses: PlannerCourse[] = [];
   @observable timetableOverviews: TimetableOverviewWithMode[] | null = null;
-  @observable isSyncing: boolean = false;
+  @observable isSyncing = false;
   @observable shareMap: Record<string, DatedData<string>>;
   @observable planners: Record<string, Planner>; // TEMP
   @observable uploading: Record<string, Planner>; // TEMP
@@ -374,13 +374,13 @@ class PlannerStore extends StorePrototype {
   // Timetable Overview
   @action updateTimetableOverview = (
     overview: Partial<TimetableOverviewWithMode>,
-    isAdd: boolean = false
+    isAdd = false
   ) => {
     const overviewIdx =
       isAdd || !this.timetableOverviews
         ? -1
         : this.timetableOverviews.findIndex(o => o._id === overview._id);
-    /* Update overview if found, otherwise add to overview */
+    // Update overview if found, otherwise add to overview
     if (overviewIdx >= 0) {
       this.timetableOverviews[overviewIdx] = {
         ...this.timetableOverviews[overviewIdx],
