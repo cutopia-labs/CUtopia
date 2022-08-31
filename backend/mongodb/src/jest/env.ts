@@ -7,7 +7,7 @@ import { connect } from '../';
 import { SALT_ROUNDS } from '../constants/config';
 import User from '../models/user';
 
-dotenv.config();
+dotenv.config({ path: 'backend/.env' });
 
 export const createTestUser = async () => {
   const now = +new Date();
