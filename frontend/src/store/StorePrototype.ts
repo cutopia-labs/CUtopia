@@ -19,11 +19,7 @@ class StorePrototype {
     this.storageConfig = storageConfig || {};
   }
 
-  @action.bound updateStore(
-    key: string,
-    value: any,
-    skipCheck: boolean = false
-  ) {
+  @action.bound updateStore(key: string, value: any, skipCheck = false) {
     if (skipCheck) {
       this[key] = value;
       return;
