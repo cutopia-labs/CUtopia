@@ -20,7 +20,7 @@ import { jsonCloneDeep } from '../helpers';
 import StorePrototype from './StorePrototype';
 import ViewStore from './ViewStore';
 
-/* NOTE: planners are only temp, need remove after this sem Add drop */
+/** NOTE: planners are only temp, need remove after this sem Add drop */
 const LOAD_KEYS = ['shareMap', 'planners'];
 
 const RESET_KEYS = LOAD_KEYS;

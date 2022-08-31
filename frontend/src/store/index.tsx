@@ -1,8 +1,8 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { enableStaticRendering } from 'mobx-react-lite';
 
-import { isServer } from '../helpers';
 import { FCC } from '../types/general';
+import { isServer } from '../helpers';
 import UserStore from './UserStore';
 import ViewStore from './ViewStore';
 import PlannerStore from './PlannerStore';
