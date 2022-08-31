@@ -7,6 +7,7 @@
   },
   "scripts": {
     "bootstrap": "bash tools/init.sh",
+    "move-data": "bash tools/copy-data.sh",
     "watch": "bash tools/watch-files.sh",
     "dev": "bash tools/run-server.sh",
     "lint": "eslint --ext .js,.ts ."
