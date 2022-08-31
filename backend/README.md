@@ -2,7 +2,7 @@
 
 ## Packages
 
-Install [MongoDB Compass](https://www.mongodb.com/try/download/compass) to manage the database.
+Install [MongoDB](https://www.mongodb.com/try/download/community) and [MongoDB Compass](https://www.mongodb.com/try/download/compass) to manage the database.
 
 ## Deployment
 
