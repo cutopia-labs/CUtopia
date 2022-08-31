@@ -21,8 +21,8 @@ class ViewStore {
 
   constructor() {
     this.init();
-    makeAutoObservable(this);
     this.handleError = this.handleError.bind(this);
+    makeAutoObservable(this);
   }
 
   handleError(e: ApolloError) {
@@ -40,13 +40,11 @@ class ViewStore {
   }
 
   async setSnackBar(prop: string | SnackBarProps) {
-    console.log(prop);
     const snackbar = typeof prop === 'string' ? { message: prop } : prop;
     const snackbarId = snackbar?.message ? +new Date() : undefined;
     this.snackbar = prop ? { ...snackbar, snackbarId } : null;
     await wait(SNACKBAR_TIMEOUT);
     if (this.needsClear(snackbarId)) {
-      console.log(`Clearing ${snackbarId}`);
       this.snackbar = { message: '', snackbarId: undefined };
     }
   }

@@ -15,7 +15,6 @@ import {
 } from '../helpers/data';
 import StorePrototype from './StorePrototype';
 
-/* NOTE: planners are only temp, need remove after this sem Add drop */
 const LOAD_KEYS = ['courseList', 'instructors'];
 
 const RESET_KEYS = LOAD_KEYS;
@@ -47,14 +46,13 @@ class DataStore extends StorePrototype {
   @action init = () => {
     this.loadStore();
     this.verifyAndMount();
-    /* Post-process to make course list in order */
   };
 
   @action verifyAndMount = () => {
     Object.entries(DATA_CONFIGS).map(([key, config]) => {
       const { expire: expireBefore } = config;
 
-      /* If not expired */
+      // If not expired
       if (this[key]?.etag >= expireBefore && this[key]?.data) {
         this[key] = this[key].data;
       } else {
@@ -71,7 +69,7 @@ class DataStore extends StorePrototype {
     this[key] = data;
   };
 
-  /* Courses Data Related */
+  // Courses Data Related
 
   @action searchCourses = async (query: CourseQuery) => {
     const courses = await this.getRemoteData('courseList');
@@ -98,7 +96,7 @@ class DataStore extends StorePrototype {
     return _getRandomGeCourses(courses, limit);
   };
 
-  /* Instructor Data Related */
+  // Instructor Data Related
   @action searchLecturers = async (query: LecturerQuery) => {
     const instructors = await this.getRemoteData('instructors');
     return _searchLecturers(instructors, query);
