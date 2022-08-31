@@ -573,7 +573,7 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
       const overview = {
         _id: timetable._id,
         createdAt: timetable.createdAt,
-        tableName: planner.plannerName,
+        tableName: '',
         expireAt: -1,
         mode: TimetableOverviewMode.UPLOAD,
       };
