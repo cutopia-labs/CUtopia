@@ -10,9 +10,6 @@ type LogoProps = {
 const Logo: FC<LogoProps> = ({ shine }) => (
   <div className={clsx(styles.logoContainer, shine && styles.shine)}>
     cutopia
-    {!shine && (
-      <span className={clsx(styles.logoBeta, 'center-box')}>Beta</span>
-    )}
   </div>
 );
 
