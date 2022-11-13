@@ -15,10 +15,11 @@ import PlannerTimetable from '../components/planner/PlannerTimetable';
 import PlannerCart from '../components/planner/PlannerCart';
 import authenticatedRoute from '../components/molecules/authenticatedRoute';
 import useClickObserver from '../hooks/useClickObserver';
-import { isMobileQuery } from '../helpers';
+import useMobileQuery from '../hooks/useMobileQuery';
 
 enum PlannerMode {
-  INITIAL,
+  INIT,
+  DESKTOP, // Desktop Only
   CART, // Mobile Only
   TIMETABLE, // Mobile Only
 }
@@ -56,15 +57,15 @@ const PlannerMobileFab = ({ targetMode, setMode }: PlannerMobileFabProps) => {
 const PlannerPage: FC = () => {
   const router = useRouter();
   const { sid: shareId } = router.query;
-  const isMobile = isMobileQuery();
+  const isMobile = useMobileQuery();
 
-  const [mode, setMode] = useState<PlannerMode>(
-    isMobile ? PlannerMode.TIMETABLE : PlannerMode.INITIAL
-  );
+  const [mode, setMode] = useState<PlannerMode>(PlannerMode.INIT);
 
   const renderContent = () => {
     switch (mode) {
-      case PlannerMode.INITIAL:
+      case PlannerMode.INIT:
+        return null;
+      case PlannerMode.DESKTOP:
         return (
           <>
             <SearchPanel />
@@ -88,13 +89,21 @@ const PlannerPage: FC = () => {
     }
   };
 
+  /** Switch mode based on media */
+  useEffect(() => {
+    if (typeof isMobile === 'boolean') {
+      setMode(isMobile ? PlannerMode.TIMETABLE : PlannerMode.DESKTOP);
+    }
+  }, [isMobile]);
+
+  /** Set to timetable mode when accepting shareId for mobile */
   useEffect(() => {
     if (isMobile && shareId) {
       if (mode !== PlannerMode.TIMETABLE) {
         setMode(PlannerMode.TIMETABLE);
       }
     }
-  }, [shareId, mode]);
+  }, [shareId, mode, isMobile]);
 
   return (
     <Page className={styles.plannerPage} center padding>
