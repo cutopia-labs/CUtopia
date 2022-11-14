@@ -4,13 +4,30 @@ import { ClearAllRounded, Warning } from '@mui/icons-material';
 import clsx from 'clsx';
 import { FC } from 'react';
 
+import { unescape } from 'lodash';
 import styles from '../../styles/components/planner/PlannerCart.module.scss';
 import { usePlanner } from '../../store';
 import Card from '../atoms/Card';
 import ListItem from '../molecules/ListItem';
 import { getSectionTime } from '../review/CourseSections';
-import { CourseSection, ErrorCardMode } from '../../types';
+import {
+  CourseSection,
+  ErrorCardMode,
+  OverlapSection,
+  PlannerCourse,
+  TbaSection,
+} from '../../types';
 import ErrorCard from '../molecules/ErrorCard';
+
+const getSectionLabel = (
+  course: PlannerCourse,
+  overlap: OverlapSection,
+  isTba: TbaSection
+) => {
+  if (overlap) return `Overlap with ${overlap?.name}`;
+  if (isTba) return 'TBA Section';
+  return unescape(course?.title);
+};
 
 const PlannerCart: FC = () => {
   const planner = usePlanner();
@@ -72,25 +89,29 @@ const PlannerCart: FC = () => {
                 caption={getSectionTime(section)}
                 onClick={() => toggleHide(section, index, k)}
                 left={
-                  overlap || isTba ? (
-                    <Tooltip
-                      className={styles.plannerCartListIcon}
-                      title={
-                        isTba ? 'TBA Section' : `Overlap with ${overlap.name}`
-                      }
-                    >
-                      <Warning className={clsx(isTba && styles.warning)} />
-                    </Tooltip>
-                  ) : (
-                    <Checkbox
-                      className={styles.plannerCartCheckbox}
-                      checked={!section.hide}
-                      size="small"
-                      disableTouchRipple
-                      disableFocusRipple
-                      disableRipple
-                    />
-                  )
+                  <Tooltip
+                    title={getSectionLabel(course, overlap, isTba)}
+                    arrow
+                    placement="left"
+                  >
+                    {overlap ? (
+                      <Warning
+                        className={clsx(
+                          styles.alert,
+                          styles.plannerCartListIcon
+                        )}
+                      />
+                    ) : (
+                      <Checkbox
+                        className={styles.plannerCartCheckbox}
+                        checked={!section.hide}
+                        size="small"
+                        disableTouchRipple
+                        disableFocusRipple
+                        disableRipple
+                      />
+                    )}
+                  </Tooltip>
                 }
               />
             );
