@@ -59,7 +59,6 @@ type SearchResultProps = {
   searchPayload: SearchPayload;
   user: UserStore;
   onClick?: (courseId: string) => any;
-  onMouseDown?: (courseId: string) => any;
   limit?: number;
   data: DataStore;
 };
@@ -68,7 +67,6 @@ export const SearchResult: FC<SearchResultProps> = ({
   searchPayload,
   user,
   onClick,
-  onMouseDown,
   limit,
   data,
 }) => {
@@ -129,7 +127,6 @@ export const SearchResult: FC<SearchResultProps> = ({
               e.stopPropagation();
               onClick ? onClick(course.c) : {};
             }}
-            onMouseDown={() => (onMouseDown ? onMouseDown(course.c) : {})}
             title={course.c}
             caption={course.t}
           />
