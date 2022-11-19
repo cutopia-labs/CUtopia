@@ -54,6 +54,9 @@
   .headerContainer {
     padding: 0 var(--card-padding);
     max-width: 100%;
+    svg {
+      color: var(--text);
+    }
   }
   .headerSearchDropdown {
     position: absolute;
