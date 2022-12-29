@@ -29,7 +29,11 @@ const getSectionLabel = (
   return unescape(course?.title);
 };
 
-const PlannerCart: FC = () => {
+type Props = {
+  style?: string;
+};
+
+const PlannerCart: FC<Props> = ({ style }) => {
   const planner = usePlanner();
   const toggleHide = (
     section: CourseSection,
@@ -46,7 +50,7 @@ const PlannerCart: FC = () => {
     );
   };
   return (
-    <Card className={styles.plannerCart}>
+    <Card className={clsx(styles.plannerCart, style)}>
       <header className="column">
         <div className="center-row">
           <h3>Cart</h3>

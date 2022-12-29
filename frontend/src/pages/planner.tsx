@@ -5,7 +5,6 @@ import { Fab } from '@mui/material';
 import { AiOutlineCalendar } from 'react-icons/ai';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import clsx from 'clsx';
 import { RiShoppingCartLine } from 'react-icons/ri';
 
 import styles from '../styles/pages/PlannerPage.module.scss';
@@ -70,9 +69,7 @@ const PlannerPage: FC = () => {
           <>
             <SearchPanel />
             <PlannerTimetable />
-            <div className={clsx(styles.plannerCartColumn, 'secondary-column')}>
-              <PlannerCart />
-            </div>
+            <PlannerCart />
           </>
         );
       case PlannerMode.TIMETABLE:
@@ -81,9 +78,7 @@ const PlannerPage: FC = () => {
         return (
           <>
             <PlannerTimetable hide />
-            <div className={clsx(styles.plannerCartColumn, 'secondary-column')}>
-              <PlannerCart />
-            </div>
+            <PlannerCart />
           </>
         );
     }
@@ -108,7 +103,7 @@ const PlannerPage: FC = () => {
   return (
     <Page className={styles.plannerPage} center padding>
       <Head>
-        <title>{'Course Planner - CUtopia'}</title>
+        <title>{'CUHK Timetable Planner - CUtopia'}</title>
       </Head>
       {renderContent()}
       {isMobile && (

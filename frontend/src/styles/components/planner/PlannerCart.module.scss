@@ -1,6 +1,11 @@
 .plannerCart {
-  max-height: 100%;
+  width: 280px;
   height: fit-content;
+  max-height: calc(100vh - var(--header-height) - 2 * var(--page-margin));
+  overflow-y: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
   header {
     border-top-left-radius: var(--border-radius);
     border-top-right-radius: var(--border-radius);
@@ -18,7 +23,7 @@
     }
   }
   :global(.list-item-container) {
-    height: auto;
+    height: fit-content;
     justify-content: space-between;
     position: relative;
     --list-item-inner-padding: var(--card-padding);
@@ -37,6 +42,9 @@
     :global(.list-item-title-container) {
       margin-left: 6px;
     }
+    &:last-child {
+      border-bottom: none;
+    }
   }
 }
 
@@ -47,5 +55,12 @@
   }
   :global(.sub-title) {
     margin-bottom: 4px;
+  }
+}
+
+@media only screen and (max-width: 1260px) {
+  .plannerCart {
+    height: auto;
+    width: 100%;
   }
 }
