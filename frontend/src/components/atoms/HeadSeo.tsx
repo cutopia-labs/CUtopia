@@ -30,12 +30,12 @@ const propMapping = {
 
 const pathMapping: Record<string, SeoDoc | false> = {
   '/planner': {
-    title: 'Course Planner - CUtopia',
+    title: 'CUHK Timetable Planner - CUtopia',
     description:
       'Plan your coursework with all the tools you need. It provides timetable clash detection, workload and credits computation, and more',
   },
   '/review': {
-    title: 'Course Review - CUtopia',
+    title: 'CUHK Course Reviews - CUtopia',
     description:
       'Share your opinions and make informed decisions about coursework. It provides detailed reviews and quantitive information in different metrics.',
   },
