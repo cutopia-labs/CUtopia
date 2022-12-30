@@ -1,6 +1,6 @@
 [submodule "data"]
 	path = data
-	url = https://github.com/cutopia-lab/cuhk-course-data
+	url = https://github.com/cutopia-labs/cuhk-course-data
 [submodule "tools/scraper"]
 	path = tools/scraper
 	url = https://github.com/mikezzb/cuhk-course-scraper.git

@@ -19,7 +19,7 @@ const FOOTER_ITEMS = [
   },
   {
     label: 'GitHub',
-    to: 'https://github.com/cutopia-lab/CUtopia',
+    to: 'https://github.com/cutopia-labs/CUtopia',
   },
   {
     label: 'Support ♡',

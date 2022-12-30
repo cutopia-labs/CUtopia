@@ -1,4 +1,5 @@
 # CUtopia
+
 The source code for [cutopia.app](cutopia.app).
 
 CUtopia is a course review and timetable planning website for CUHK students. It provides a platform for students to share their opinions and pick the course that best fits them.
@@ -51,5 +52,4 @@ Open `tools/data.ipynb` and run all sections
 
 ### Incorrect Data Correction
 
-Please submit PR / issue in [cutopia-data](https://github.com/cutopia-lab/CUtopia-data) repo.
-
+Please submit PR / issue in [cutopia-data](https://github.com/cutopia-labs/CUtopia-data) repo.

@@ -23,7 +23,7 @@ const AboutTab: FC = () => (
       </p>
       <p>
         CUtopia is a open source project (
-        <Link href="https://github.com/cutopia-lab/CUtopia">source code</Link>)
+        <Link href="https://github.com/cutopia-labs/CUtopia">source code</Link>)
         and under development by a team of CUHK students. It is still at the
         development stage, therefore functions are incomplete and potentially
         buggy. Any contribution to the CUtopia project is welcomed!
@@ -32,7 +32,9 @@ const AboutTab: FC = () => (
     <AboutSection title="Course Data Source">
       <p className="caption">
         Data repository:{' '}
-        <Link href="https://github.com/cutopia-lab/cuhk-course-data">here</Link>{' '}
+        <Link href="https://github.com/cutopia-labs/cuhk-course-data">
+          here
+        </Link>{' '}
         (
         {`Last update date: ${getMMMDDYY(
           STATICS_EXPIRE_BEFORE,
