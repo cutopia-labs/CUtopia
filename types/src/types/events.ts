@@ -36,8 +36,8 @@ export interface TimetableOverview {
   _id: string;
   createdAt: number;
   tableName: string | null;
-  expireAt?: number;
-  expire?: number;
+  expireAt: number;
+  expire: number;
 }
 
 export interface Timetable extends TimetableOverview {

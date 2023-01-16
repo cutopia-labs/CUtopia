@@ -35,7 +35,7 @@ export const verify = async token => {
     return null;
   }
 
-  if (Date.now() >= decoded.exp * 1000) {
+  if (Date.now() >= (decoded as JwtPayload).exp * 1000) {
     const { username, password } = decoded;
     const user = await getUser(username, 'password');
     // If pwd not changed, then return refreshed token

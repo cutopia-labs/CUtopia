@@ -9,7 +9,7 @@ export type UserVisible = {
   level: number;
   timetableId: string;
   timetables: Timetable[];
-  fullAccess?: boolean;
+  fullAccess: boolean;
 };
 
 export type User = UserVisible & {
