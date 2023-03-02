@@ -2,6 +2,7 @@ import { getSectionTime } from '../components/review/CourseSections';
 import { DEFAULT_EVENT_CONFIG } from '../config';
 import { CourseSection, Event, EventConfig, PlannerCourse } from '../types';
 import colors from '../constants/colors';
+import ICS, { formatIcsDate, IcsEvent } from './ics';
 
 export const getDurationInHour = (section: CourseSection, i: number) => {
   const sTime = section.startTimes[i].split(':');
@@ -86,4 +87,60 @@ export const courses2events = (
   } catch (error) {
     return [null, config];
   }
+};
+
+/**
+ * Convert CUtopia course to iCal format
+ * - Each section join corresponding meeting dates to
+ * @param course
+ * @returns IcsEvents
+ */
+const course2ics = (course: PlannerCourse): IcsEvent[] => {
+  const currentYear = new Date().getFullYear(); // assume all courses are within the same year (CUHK has no winter semester)
+  const events: IcsEvent[] = [];
+  Object.entries(course.sections).forEach(([sectionName, section]) => {
+    if (section.hide) return;
+    // event with basic info
+    const baseEvent: Partial<IcsEvent> = {
+      title: `${course.courseId} ${sectionName}`,
+    };
+    section.days.forEach((day, i) => {
+      const sTime = section.startTimes[i];
+      const eTime = section.endTimes[i];
+      section.meetingDates.forEach(date => {
+        /** match day to date & format start time/end time to UNIX timestamp */
+        // convert dd/mm to a Date obj
+        const parts = date.split('/');
+        if (parts.length !== 2) return;
+        const sDate = new Date(
+          `${parts[1]}-${parts[0]}-${currentYear} ${sTime}`
+        );
+        const eDate = new Date(
+          `${parts[1]}-${parts[0]}-${currentYear} ${eTime}`
+        );
+        const dayOfDate = sDate.getDay();
+        if (dayOfDate !== +day) return; // skip not matching date
+        const event: IcsEvent = {
+          ...baseEvent,
+          startTime: formatIcsDate(sDate),
+          endTime: formatIcsDate(eDate),
+          location: section.locations[i],
+        };
+        events.push(event);
+      });
+    });
+  });
+  return events;
+};
+
+/**
+ * Convert CUtopia timetable to iCal format
+ * @param courses
+ */
+export const timetable2ics = (courses: PlannerCourse[]): ICS => {
+  const ics = new ICS();
+  courses.forEach(course => {
+    ics.addEvents(course2ics(course));
+  });
+  return ics;
 };
