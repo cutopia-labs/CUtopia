@@ -1,5 +1,7 @@
 import { getSectionTime } from '../components/review/CourseSections';
-import { CourseSection } from '../types';
+import { DEFAULT_EVENT_CONFIG } from '../config';
+import { CourseSection, CourseTableEntry, Event, EventConfig } from '../types';
+import colors from '../constants/colors';
 
 export const getDurationInHour = (section: CourseSection, i: number) => {
   const sTime = section.startTimes[i].split(':');
@@ -29,4 +31,62 @@ export const timeInRange = (
     }
   }
   return null;
+};
+
+export const courses2events = (
+  courses: CourseTableEntry[]
+): [Event[] | null, EventConfig] => {
+  const events: Event[] = [];
+  const config: EventConfig = DEFAULT_EVENT_CONFIG;
+  try {
+    courses
+      .filter(course => course)
+      .forEach((course, courseIndex) => {
+        Object.entries(course.sections).forEach(([k, v]) => {
+          (v.days || []).forEach((day, i) => {
+            if (!v.hide) {
+              const startHour = parseInt(v.startTimes[i].split(':')[0], 10);
+              const endHour = parseInt(v.endTimes[i].split(':')[0], 10);
+              day = parseInt(day as any, 10);
+              if (
+                Number.isNaN(startHour) ||
+                Number.isNaN(endHour) ||
+                Number.isNaN(day)
+              )
+                return;
+              if (startHour < config.startHour) {
+                config.startHour = startHour;
+              }
+              if (endHour > config.endHour) {
+                config.endHour = endHour;
+              }
+              /* If sunday course */
+              if (day === 0) {
+                day = 7;
+              }
+              if (day > config.numOfDays) {
+                config.numOfDays = day;
+              }
+              events.push({
+                courseId: course.courseId,
+                title: course.title,
+                section: k,
+                day: day,
+                startTime: v.startTimes[i],
+                endTime: v.endTimes[i],
+                location: v.locations[i],
+                color:
+                  colors.timetableColors[
+                    courseIndex % colors.randomColorsLength
+                  ],
+              });
+            }
+          });
+        });
+      });
+    config.numOfHours = config.endHour - config.startHour + 1;
+    return [events, config];
+  } catch (error) {
+    return [null, config];
+  }
 };

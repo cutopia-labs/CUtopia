@@ -3,15 +3,10 @@ import { useMediaQuery } from '@mui/material';
 import clsx from 'clsx';
 import { FC, forwardRef } from 'react';
 import styles from '../../styles/components/planner/Timetable.module.scss';
-import colors from '../../constants/colors';
 import { WEEKDAYS } from '../../constants';
-import {
-  CourseTableEntry,
-  Event,
-  EventConfig,
-  TimetableInfo,
-} from '../../types';
+import { CourseTableEntry, EventConfig, TimetableInfo } from '../../types';
 import { useView } from '../../store';
+import { courses2events } from '../../helpers/timetable';
 import CourseCard from './CourseCard';
 
 export type PropsWithConfig<T = {}> = T & {
@@ -78,63 +73,8 @@ const Timetable = forwardRef<HTMLDivElement, TimetableProps>(
   ({ courses, timetableInfo }, ref) => {
     const view = useView();
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-    const events: Event[] = [];
-    const config: EventConfig = {
-      startHour: 8,
-      endHour: 18,
-      numOfDays: 5,
-      numOfHours: 12,
-    };
-    try {
-      courses
-        .filter(course => course)
-        .forEach((course, courseIndex) => {
-          Object.entries(course.sections).forEach(([k, v]) => {
-            (v.days || []).forEach((day, i) => {
-              if (!v.hide) {
-                const startHour = parseInt(v.startTimes[i].split(':')[0], 10);
-                const endHour = parseInt(v.endTimes[i].split(':')[0], 10);
-                day = parseInt(day as any, 10);
-                if (
-                  Number.isNaN(startHour) ||
-                  Number.isNaN(endHour) ||
-                  Number.isNaN(day)
-                )
-                  return;
-                if (startHour < config.startHour) {
-                  config.startHour = startHour;
-                }
-                if (endHour > config.endHour) {
-                  config.endHour = endHour;
-                }
-                /* If sunday course */
-                if (day === 0) {
-                  day = 7;
-                }
-                if (day > config.numOfDays) {
-                  config.numOfDays = day;
-                }
-                events.push({
-                  courseId: course.courseId,
-                  title: course.title,
-                  section: k,
-                  day: day,
-                  startTime: v.startTimes[i],
-                  endTime: v.endTimes[i],
-                  location: v.locations[i],
-                  color:
-                    colors.timetableColors[
-                      courseIndex % colors.randomColorsLength
-                    ],
-                });
-              }
-            });
-          });
-        });
-      config.numOfHours = config.endHour - config.startHour + 1;
-    } catch (error) {
-      view.warn('Invalid Timetable');
-    }
+    const [events, config] = courses2events(courses);
+    if (events === null) view.warn('Invalid Timetable');
 
     return (
       <div
@@ -170,7 +110,7 @@ const Timetable = forwardRef<HTMLDivElement, TimetableProps>(
               </defs>
               <rect width="100%" height="100%" fill="url(#grid)" />
             </svg>
-            {events.map((event, i) => (
+            {(events || []).map((event, i) => (
               <CourseCard
                 key={`${event.courseId}-${i}-${event.day}`}
                 course={event}
