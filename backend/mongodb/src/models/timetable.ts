@@ -10,6 +10,7 @@ const timetableSection = {
   startTimes: [requiredString],
   instructors: [requiredString],
   locations: [requiredString],
+  meetingDates: [String],
   hide: {
     type: Boolean,
     default: false,

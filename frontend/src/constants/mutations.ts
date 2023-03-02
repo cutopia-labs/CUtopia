@@ -13,6 +13,7 @@ const TIMETABLE_BASE = `
       locations
       instructors
       hide
+      meetingDates
     }
   }
   tableName

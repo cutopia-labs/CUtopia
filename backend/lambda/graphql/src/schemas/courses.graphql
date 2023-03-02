@@ -46,6 +46,7 @@ type CourseSection {
   locations: [String]!
   instructors: [String]!
   hide: Boolean
+  meetingDates: [String]
 }
 
 type AssessementComponent {

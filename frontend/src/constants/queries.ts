@@ -41,6 +41,7 @@ export const COURSE_SECTIONS_QUERY = gql`
         days
         locations
         instructors
+        meetingDates
       }
     }
   }
@@ -56,6 +57,7 @@ export const SWITCH_SECTION_QUERY = gql`
         days
         locations
         instructors
+        meetingDates
       }
     }
   }
@@ -278,6 +280,7 @@ export const GET_TIMETABLE = gql`
           locations
           instructors
           hide
+          meetingDates
         }
       }
       tableName

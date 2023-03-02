@@ -36,6 +36,7 @@ input CourseSectionInput {
   locations: [String]!
   instructors: [String]!
   hide: Boolean
+  meetingDates: [String]
 }
 
 input UploadTimetableInput {
