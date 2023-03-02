@@ -14,7 +14,7 @@ const MONTHS = [
   'Nov',
   'Dec',
 ];
-const addZero = (digit: number) => (digit > 9 ? digit : `0${digit}`);
+export const addZero = (digit: number) => (digit > 9 ? digit : `0${digit}`);
 
 export const daysDiff = (d1: number, d2: number) => {
   const diff = d1 - d2;
