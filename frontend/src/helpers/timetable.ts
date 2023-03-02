@@ -1,6 +1,6 @@
 import { getSectionTime } from '../components/review/CourseSections';
 import { DEFAULT_EVENT_CONFIG } from '../config';
-import { CourseSection, CourseTableEntry, Event, EventConfig } from '../types';
+import { CourseSection, Event, EventConfig, PlannerCourse } from '../types';
 import colors from '../constants/colors';
 
 export const getDurationInHour = (section: CourseSection, i: number) => {
@@ -34,7 +34,7 @@ export const timeInRange = (
 };
 
 export const courses2events = (
-  courses: CourseTableEntry[]
+  courses: PlannerCourse[]
 ): [Event[] | null, EventConfig] => {
   const events: Event[] = [];
   const config: EventConfig = DEFAULT_EVENT_CONFIG;
@@ -43,44 +43,41 @@ export const courses2events = (
       .filter(course => course)
       .forEach((course, courseIndex) => {
         Object.entries(course.sections).forEach(([k, v]) => {
+          if (v.hide) return;
           (v.days || []).forEach((day, i) => {
-            if (!v.hide) {
-              const startHour = parseInt(v.startTimes[i].split(':')[0], 10);
-              const endHour = parseInt(v.endTimes[i].split(':')[0], 10);
-              day = parseInt(day as any, 10);
-              if (
-                Number.isNaN(startHour) ||
-                Number.isNaN(endHour) ||
-                Number.isNaN(day)
-              )
-                return;
-              if (startHour < config.startHour) {
-                config.startHour = startHour;
-              }
-              if (endHour > config.endHour) {
-                config.endHour = endHour;
-              }
-              /* If sunday course */
-              if (day === 0) {
-                day = 7;
-              }
-              if (day > config.numOfDays) {
-                config.numOfDays = day;
-              }
-              events.push({
-                courseId: course.courseId,
-                title: course.title,
-                section: k,
-                day: day,
-                startTime: v.startTimes[i],
-                endTime: v.endTimes[i],
-                location: v.locations[i],
-                color:
-                  colors.timetableColors[
-                    courseIndex % colors.randomColorsLength
-                  ],
-              });
+            const startHour = parseInt(v.startTimes[i].split(':')[0], 10);
+            const endHour = parseInt(v.endTimes[i].split(':')[0], 10);
+            day = parseInt(day as any, 10);
+            if (
+              Number.isNaN(startHour) ||
+              Number.isNaN(endHour) ||
+              Number.isNaN(day)
+            )
+              return;
+            if (startHour < config.startHour) {
+              config.startHour = startHour;
             }
+            if (endHour > config.endHour) {
+              config.endHour = endHour;
+            }
+            /* If sunday course */
+            if (day === 0) {
+              day = 7;
+            }
+            if (day > config.numOfDays) {
+              config.numOfDays = day;
+            }
+            events.push({
+              courseId: course.courseId,
+              title: course.title,
+              section: k,
+              day: day,
+              startTime: v.startTimes[i],
+              endTime: v.endTimes[i],
+              location: v.locations[i],
+              color:
+                colors.timetableColors[courseIndex % colors.randomColorsLength],
+            });
           });
         });
       });

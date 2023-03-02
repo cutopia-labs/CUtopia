@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { FC, forwardRef } from 'react';
 import styles from '../../styles/components/planner/Timetable.module.scss';
 import { WEEKDAYS } from '../../constants';
-import { CourseTableEntry, EventConfig, TimetableInfo } from '../../types';
+import { EventConfig, PlannerCourse, TimetableInfo } from '../../types';
 import { useView } from '../../store';
 import { courses2events } from '../../helpers/timetable';
 import CourseCard from './CourseCard';
@@ -65,7 +65,7 @@ const WeekdayText: FC<PropsWithConfig<WeekdayTextProps>> = ({
 };
 
 type TimetableProps = {
-  courses: CourseTableEntry[];
+  courses: PlannerCourse[];
   timetableInfo: TimetableInfo;
 };
 
