@@ -5,13 +5,14 @@ import copy from 'copy-to-clipboard';
 import clsx from 'clsx';
 import {
   AiOutlineCamera,
-  AiOutlineDelete,
+  AiOutlineClear,
   AiOutlineLoading,
   AiOutlineShareAlt,
   AiOutlineSync,
 } from 'react-icons/ai';
 import html2canvas from 'html2canvas';
 
+import { BiExport } from 'react-icons/bi';
 import styles from '../../styles/components/templates/TimetablePanel.module.scss';
 import { usePlanner, useView } from '../../store';
 import Timetable from '../planner/Timetable';
@@ -21,6 +22,7 @@ import TimetableOverview, {
   TimetableOverviewProps,
 } from '../planner/TimetableOverview';
 import { PlannerSyncState } from '../../types';
+import { timetable2ics } from '../../helpers/timetable';
 
 type TimetablePanelProps = {
   onShare?: (...args: any[]) => any;
@@ -84,6 +86,24 @@ const TimetablePanel: FC<TimetablePanelProps> = ({
   const FUNCTION_BUTTONS = [
     {
       action: async () => {
+        try {
+          const ics = timetable2ics(courses);
+          const fname = `${planner.plannerName}.ics`;
+          const icsFile = ics.getIcsFile(fname);
+          const url = URL.createObjectURL(icsFile);
+          saveAs(url, fname);
+          view.setSnackBar(
+            'Calendar file (.ics) saved, use Outlook/Google Calendar to import it~'
+          );
+        } catch (e) {
+          view.warn('Failed to export timetable events QAQ');
+        }
+      },
+      icon: <BiExport />,
+      key: 'export',
+    },
+    {
+      action: async () => {
         const err = await screenShotTimetable(timetableRef?.current);
         if (err) {
           view.warn('Failed to screenshot QAQ');
@@ -111,7 +131,7 @@ const TimetablePanel: FC<TimetablePanelProps> = ({
     {
       key: 'Clear',
       action: onClear,
-      icon: <AiOutlineDelete />,
+      icon: <AiOutlineClear />,
     },
   ];
 
