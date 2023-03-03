@@ -17,7 +17,7 @@ for d in "${modules[@]}"; do
   fi
 
   echo "Installing node_modules in $d"
-  yarn --cwd $d install
+  yarn --cwd $d install --production=false
 
   # Build the mongodb for lambda to install it
   if [ $d = "./mongodb" ]; then
