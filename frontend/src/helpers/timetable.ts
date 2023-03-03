@@ -99,7 +99,8 @@ const course2ics = (course: PlannerCourse): IcsEvent[] => {
   const currentYear = new Date().getFullYear(); // assume all courses are within the same year (CUHK has no winter semester)
   const events: IcsEvent[] = [];
   Object.entries(course.sections).forEach(([sectionName, section]) => {
-    if (section.hide) return;
+    // skip hidden or section without meetingDates (OLD VERSION)
+    if (section.hide || !section.meetingDates?.length) return;
     // event with basic info
     const baseEvent: Partial<IcsEvent> = {
       title: `${course.courseId} ${sectionName}`,

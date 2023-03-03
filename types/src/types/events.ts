@@ -16,6 +16,7 @@ export interface Events {
   endTimes: string[];
   days: number[];
   locations: string[];
+  meetingDates: string[];
 }
 
 export type EventConfig = {

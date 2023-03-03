@@ -87,8 +87,13 @@ const TimetablePanel: FC<TimetablePanelProps> = ({
     {
       action: async () => {
         try {
+          const numCourses = courses.length;
           const ics = timetable2ics(courses);
-          const fname = `${planner.plannerName}.ics`;
+          // OLD VERSION SUPPORT: if has courses but no event added & no error thrown => courses have no meetingDates
+          if (ics.length == 0 && numCourses) {
+            return view.warn('Sorry, only NEW timetables are supported');
+          }
+          const fname = `${planner.plannerName || 'cutopia_timetable'}.ics`;
           const icsFile = ics.getIcsFile(fname);
           const url = URL.createObjectURL(icsFile);
           saveAs(url, fname);
