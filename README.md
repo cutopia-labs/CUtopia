@@ -4,6 +4,12 @@ The source code for [cutopia.app](cutopia.app).
 
 CUtopia is a course review and timetable planning website for CUHK students. It provides a platform for students to share their opinions and pick the course that best fits them.
 
+Planner Demo Video:
+
+<a href="https://youtu.be/karQ2qAuenY" target="_blank">
+ <img src="https://img.youtube.com/vi/karQ2qAuenY/maxresdefault.jpg" alt="Planner Demo Video" width="480" border="10" />
+</a>
+
 ## Packages
 
 Install [node.js](https://nodejs.org/en/) and [yarn](https://yarnpkg.com/).
