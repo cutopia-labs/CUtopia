@@ -6,8 +6,8 @@ CUtopia is a course review and timetable planning website for CUHK students. It 
 
 Planner Demo Video:
 
-<a href="https://youtu.be/karQ2qAuenY" target="_blank">
- <img src="https://img.youtube.com/vi/karQ2qAuenY/maxresdefault.jpg" alt="Planner Demo Video" width="480" border="10" />
+<a href="https://youtu.be/kduL-toYHmo" target="_blank">
+ <img src="https://img.youtube.com/vi/kduL-toYHmo/maxresdefault.jpg" alt="Planner Demo Video" width="480" border="10" />
 </a>
 
 ## Packages
