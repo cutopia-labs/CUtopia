@@ -5,11 +5,16 @@ source ./.env
 set +a
 
 NODE_ENV=${NODE_ENV:-development}
-[[ "$NODE_ENV" == "production" ]] && URI=$ATLAS_PROD_URI || URI=$ATLAS_DEV_URI
-env="\
-NODE_ENV=${NODE_ENV}
-ATLAS_URI=${URI}\
-"
+if [[ "$NODE_ENV" == "production" ]]; then
+  URI=${ATLAS_PROD_URI:-$ATLAS_URI}
+else
+  URI=${ATLAS_DEV_URI:-$ATLAS_URI}
+fi
+
+env_content=$(grep -vE '^(NODE_ENV|ATLAS_URI)=' ./.env)
+env_content="${env_content}
+NODE_ENV=\"${NODE_ENV}\"
+ATLAS_URI=\"${URI}\""
 
 declare -a modules=(
   "./lambda/emailer"
@@ -19,5 +24,5 @@ declare -a modules=(
 )
 
 for d in "${modules[@]}"; do
-  echo "$env" > $d/.env
+  printf "%s\n" "$env_content" > "$d/.env"
 done
