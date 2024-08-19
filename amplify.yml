@@ -1,0 +1,26 @@
+version: 1
+applications:
+  - frontend:
+      phases:
+        preBuild:
+          commands:
+            - eval $(ssh-agent -s)
+            - ssh-add <(echo "$SUBMODULE_KEY" | base64 --decode)
+            - mkdir -p /root/.ssh/
+            - touch /root/.ssh/config
+            - 'echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+            - yarn --cwd ../ bootstrap:fe
+        build:
+          commands:
+            - echo "REACT_APP_ENV_MODE=$REACT_APP_ENV_MODE" >> .env
+            - echo "REACT_APP_CURRENT_TERM=$REACT_APP_CURRENT_TERM" >> .env
+            - echo "REACT_APP_LAST_DATA_UPDATE=$REACT_APP_LAST_DATA_UPDATE" >> .env
+            - yarn --cwd ../ run build:fe
+      artifacts:
+        baseDirectory: build
+        files:
+          - '**/*'
+      cache:
+        paths:
+          - node_modules/**/*
+    appRoot: frontend
