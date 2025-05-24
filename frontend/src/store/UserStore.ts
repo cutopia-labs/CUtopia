@@ -59,12 +59,15 @@ class UserStore extends StorePrototype {
   viewStore: ViewStore;
   plannerStore: PlannerStore;
 
-  constructor(viewStore: ViewStore, plannerStore: PlannerStore) {
+  constructor(viewStore: ViewStore) {
     super(LOAD_KEYS, RESET_KEYS, DEFAULT_VALUES);
     this.viewStore = viewStore;
-    this.plannerStore = plannerStore;
     makeObservable(this);
   }
+
+  @action setPlannerStore = (store: PlannerStore) => {
+    this.plannerStore = store;
+  };
 
   @action init() {
     this.loadStore();
@@ -92,11 +95,11 @@ class UserStore extends StorePrototype {
   @action updateUserData = (data: Partial<User>) => {
     if (data?.username) {
       this.updateStore('data', data);
-
       this.plannerStore.updateStore(
         'plannerId',
         data.timetableId || CREATE_PLANNER_FLAG
       );
+      this.plannerStore.setOnline();
     }
   };
 

@@ -66,3 +66,8 @@ export type DataConfig = {
   expire: number;
   fetchKey?: string; // default same as store key
 };
+
+export interface StoreWithLoading {
+  loading: boolean;
+  setLoading: (loading: boolean) => void;
+}

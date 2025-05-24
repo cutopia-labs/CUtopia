@@ -23,6 +23,7 @@ export enum TimetableOverviewMode {
   UPLOAD,
   SHARE,
   UPLOAD_SHARABLE,
+  LOCAL,
 }
 
 export enum ShareTimetableMode {

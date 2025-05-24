@@ -20,7 +20,6 @@ import {
 } from '../../constants/mutations';
 import {
   Planner,
-  PlannerCourse,
   PlannerSyncState,
   ShareTimetableMode,
   TimetableOverviewMode,
@@ -68,7 +67,9 @@ const getExpireAt = (
   createdAt: number,
   isExpire = false
 ): number => {
-  const expireDays = isExpire ? str : getExpire(str as string);
+  const expireDays: number = isExpire
+    ? (str as number)
+    : getExpire(str as string);
   if (expireDays > 0) {
     const createDate = new Date(createdAt);
     createDate.setDate(createDate.getDate() + (expireDays as number));
@@ -115,44 +116,6 @@ const MODE_ASSETS = {
 
 export const generateTimetableURL = (id: string) =>
   `${window.location.protocol}//${window.location.host}/planner?sid=${id}`;
-
-export const coursesToEntries = (courses: PlannerCourse[], skipHide = false) =>
-  courses
-    .filter(
-      course =>
-        course && course.sections && Object.values(course.sections)?.length
-    )
-    .map(course => {
-      let sections = Object.values(course?.sections || {});
-      sections = skipHide
-        ? sections.filter(section => section && !section.hide)
-        : sections;
-      return {
-        ...course,
-        sections: sections.map(section => {
-          /* Remove the hide attr if not hidden */
-          const { hide, ...copy } = section;
-          if (hide) {
-            (copy as any).hide = true;
-          }
-          return copy;
-        }),
-      };
-    });
-
-export const entriesToCourses = (entries: any[]) =>
-  entries.map(course => ({
-    ...course,
-    sections: Object.fromEntries(
-      course.sections.map(section => {
-        const sectionCopy = {
-          ...section,
-          hide: section.hide || false, // Must set to false, otherwise will sync twice!!!
-        };
-        return [section.name, sectionCopy];
-      })
-    ),
-  })) || [];
 
 const TimetableShareDialogContent = ({
   shareConfig,
@@ -295,46 +258,56 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
 
   const [cloneTimetableMutation] = useMutation(CLONE_TIMETABLE);
 
+  const deleteOnline = async (id: string) => {
+    const isCurrentPlanner = id === planner.plannerId;
+    /* Get next timetable id if deleting current planner */
+    const variables: any = {
+      id,
+    };
+    /* Undefined switch to means not deleting current ttb, no need switch */
+    let switchTo = undefined;
+    if (isCurrentPlanner) {
+      let maxCreatedAt = 0;
+      /* If it's the last ttb, then switch to null means create one */
+      switchTo = null;
+      planner.timetableOverviews.forEach(d => {
+        if (d.createdAt > maxCreatedAt && d._id !== id) {
+          maxCreatedAt = d.createdAt;
+          switchTo = d._id;
+        }
+      });
+      variables.switchTo = switchTo;
+    }
+    const { data } = await removeTimetable({
+      variables,
+    });
+    /* Switch to the new if deleting current planner */
+    if (isCurrentPlanner) {
+      if (data?.removeTimetable) {
+        applyTimetable(
+          data?.removeTimetable,
+          switchTo || data?.removeTimetable?._id,
+          undefined,
+          !switchTo
+        );
+      } else {
+        createTimetable();
+      }
+    }
+  };
+
+  // const deleteOffline = (id: string) => {};
+
   const onDelete = async (id: string) => {
     try {
-      const isCurrentPlanner = id === planner.plannerId;
-      /* Get next timetable id if deleting current planner */
-      const variables: any = {
-        id,
-      };
-      /* Undefined switch to means not deleting current ttb, no need switch */
-      let switchTo = undefined;
-      if (isCurrentPlanner) {
-        let maxCreatedAt = 0;
-        /* If it's the last ttb, then switch to null means create one */
-        switchTo = null;
-        planner.timetableOverviews.forEach(d => {
-          if (d.createdAt > maxCreatedAt && d._id !== id) {
-            maxCreatedAt = d.createdAt;
-            switchTo = d._id;
-          }
-        });
-        variables.switchTo = switchTo;
+      if (planner.offline) {
+        deleteOffline(id);
+      } else {
+        await deleteOnline(id);
       }
-      const { data } = await removeTimetable({
-        variables,
-      });
       view.setSnackBar('Deleted!');
       /* Update the timetableOverviews */
       planner.removeTimetableOverview(id);
-      /* Switch to the new if deleting current planner */
-      if (isCurrentPlanner) {
-        if (data?.removeTimetable) {
-          applyTimetable(
-            data?.removeTimetable,
-            switchTo || data?.removeTimetable?._id,
-            undefined,
-            !switchTo
-          );
-        } else {
-          createTimetable();
-        }
-      }
     } catch (e) {
       // To skip remove entry in state in case of any error
       view.handleError(e);
@@ -442,20 +415,35 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
   };
 
   useEffect(() => {
-    // start sync
-    const disposer = reaction(
-      () => ({
-        delta: planner.delta,
-        _id: planner.plannerId,
-        syncing: planner.isSyncing,
-      }),
-      data => {
-        updateTimetable(data);
-      }
-    );
-    // end sync b4 unmount
+    if (planner.offline === null) return;
+    let disposer;
+    if (planner.offline) {
+      // handle offline auto save
+      disposer = reaction(
+        () => ({
+          plannerCourses: planner.plannerCourses?.map(course => course),
+          key: planner.plannerId,
+        }),
+        ({ plannerCourses, key }) => {
+          planner.updatePlanners(key, plannerCourses);
+        }
+      );
+    } else {
+      // start sync
+      disposer = reaction(
+        () => ({
+          delta: planner.delta,
+          _id: planner.plannerId,
+          syncing: planner.isSyncing,
+        }),
+        data => {
+          updateTimetable(data);
+        }
+      );
+    }
+    // end sync / update b4 unmount
     return () => disposer();
-  }, []);
+  }, [planner.offline]);
 
   /* TEMP START: to upload local ttb (Remove on Nov?) */
   const uploadPlanners = async (planners: Record<string, Planner>) => {
@@ -489,13 +477,16 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
     );
     planner.destroyPlanners();
   };
+
   useEffect(() => {
-    if (planner.planners && !planner.uploading) {
-      uploadPlanners(planner.planners);
+    if (planner.planners && !planner.loading) {
+      // uploadPlanners(planner.planners);
     }
-  }, [planner.planners, planner.uploading]);
+  }, [planner.planners, planner.loading]);
+
   /* TEMP END */
 
+  /** Reset share config when we switch planner */
   useEffect(() => {
     dispatchShareConfig({
       expire: shareCourses?.mode === ShareTimetableMode.SHARE ? '7 days' : 'No',
@@ -560,29 +551,43 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
     return false;
   }, 'Timetable syncing, please wait for a few seconds before leaving');
 
+  const createOnlineTimetable = async () => {
+    const { data } = await uploadTimetable({
+      variables: {
+        entries: [],
+        expire: EXPIRE_LOOKUP.upload,
+      },
+    });
+    view.setSnackBar('Timetable created!');
+    const timetable = data?.uploadTimetable;
+    const overview = {
+      _id: timetable._id,
+      createdAt: timetable.createdAt,
+      tableName: '',
+      expireAt: -1,
+      mode: TimetableOverviewMode.UPLOAD,
+    };
+    planner.updateTimetableOverview(overview, true);
+    /* If it's create new, then only need update local plannerId, cuz remote is updated */
+    planner.updateStore('plannerId', timetable._id);
+    const newTimetable = data?.uploadTimetable;
+    planner.newPlanner(newTimetable?._id, newTimetable?.createdAt);
+  };
+
+  const createOfflineTimetable = () => {
+    planner.createTimetable();
+  };
+
   const createTimetable = async () => {
     try {
-      const { data } = await uploadTimetable({
-        variables: {
-          entries: [],
-          expire: EXPIRE_LOOKUP.upload,
-        },
-      });
-      view.setSnackBar('Timetable created!');
-      const timetable = data?.uploadTimetable;
-      const overview = {
-        _id: timetable._id,
-        createdAt: timetable.createdAt,
-        tableName: '',
-        expireAt: -1,
-        mode: TimetableOverviewMode.UPLOAD,
-      };
-      planner.updateTimetableOverview(overview, true);
-      /* If it's create new, then only need update local plannerId, cuz remote is updated */
-      planner.updateStore('plannerId', timetable._id);
-      const newTimetable = data?.uploadTimetable;
-      planner.newPlanner(newTimetable?._id, newTimetable?.createdAt);
-    } catch {
+      console.log(planner.offline);
+      if (planner.offline) {
+        createOfflineTimetable();
+      } else {
+        await createOnlineTimetable();
+      }
+    } catch (e) {
+      console.log(e);
       /* Update planner id to prevent create ttb called inf times */
       planner.updateStore('plannerId', 'FAIL');
       view.warn('Create timetable failed...');
@@ -629,20 +634,13 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
 
   return (
     <div className={clsx(styles.plannerTimetableContainer, 'column')}>
-      <LoadingView
-        loading={
-          getTimetableLoading ||
-          switchTimetableLoading ||
-          removeTimetableLoading
-        }
-        fixed
-      />
+      <LoadingView loading={planner.loading} fixed />
       <TimetablePanel
         className={className}
         createTimetable={createTimetable}
         onShare={onShareClick}
         switchTimetable={switchTimetable}
-        deleteTable={(id: string) => onDelete(id)}
+        deleteTable={planner.deleteTimetable}
       />
       <Footer style={styles.plannerFooter} visible={!isHome && !isMobile} />
       <Dialog

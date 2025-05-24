@@ -27,3 +27,10 @@ export function storeData(key: string, value: any, stringify = true) {
 export function clearStore() {
   localStorage.clear();
 }
+
+export const Store = {
+  removeItem: removeStoreItem,
+  getItem: getStoreData,
+  setItem: storeData,
+  clear: clearStore,
+};

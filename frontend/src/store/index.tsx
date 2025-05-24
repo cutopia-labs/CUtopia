@@ -31,15 +31,15 @@ export const getStores = () => {
     return {
       viewStore: new ViewStore(),
       dataStore: new DataStore(),
-      userStore: new UserStore(viewStore, plannerStore),
-      plannerStore: new PlannerStore(viewStore),
+      userStore: new UserStore(viewStore),
+      plannerStore: new PlannerStore(viewStore, userStore),
     };
   }
   if (!viewStore || !userStore || !plannerStore || !dataStore) {
     viewStore = new ViewStore();
     dataStore = new DataStore();
-    plannerStore = new PlannerStore(viewStore);
-    userStore = new UserStore(viewStore, plannerStore);
+    userStore = new UserStore(viewStore);
+    plannerStore = new PlannerStore(viewStore, userStore);
   }
   return { viewStore, userStore, plannerStore, dataStore };
 };

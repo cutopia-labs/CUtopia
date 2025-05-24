@@ -1,7 +1,6 @@
-import { action } from 'mobx';
 import { getStoreData, removeStoreItem, storeData } from '../helpers/store';
 
-class StorePrototype {
+class StoreManager {
   onLoadKeys?: string[];
   onResetKeys?: string[];
   defaultValues: Record<string, any>;
@@ -19,17 +18,13 @@ class StorePrototype {
     this.storageConfig = storageConfig || {};
   }
 
-  @action.bound updateStore(key: string, value: any, skipCheck = false) {
-    if (skipCheck) {
-      this[key] = value;
-      return;
-    }
-    if (this[key] !== value) {
+  updateStore(key: string, value: any, skipCheck = false) {
+    if (skipCheck || this[key] !== value) {
       this[key] = value;
     }
   }
 
-  @action loadStore = () => {
+  loadStore = () => {
     const defaultValues = { ...this.defaultValues };
     if (this.onLoadKeys) {
       this.onLoadKeys.forEach(key => {
@@ -48,29 +43,18 @@ class StorePrototype {
     this.initStore(defaultValues);
   };
 
-  @action setStore = (key: string, value: any) => {
+  setStore = (key: string, value: any) => {
     if (this[key] === value) return;
     this.updateStore(key, value, true);
-    console.log(
-      'setStore',
-      'key',
-      key,
-      'value\n',
-      value,
-      'this.storageConfig[key]',
-      this.storageConfig[key],
-      'this.storageConfig[key] === undefined',
-      this.storageConfig[key] === undefined
-    );
     storeData(key, value, this.storageConfig[key] === undefined ? true : false);
   };
 
-  @action removeStore = (key: string) => {
+  removeStore = (key: string) => {
     this.updateStore(key, undefined, true);
     removeStoreItem(key);
   };
 
-  @action resetStore = () => {
+  resetStore = () => {
     const defaultValues = { ...this.defaultValues };
     if (this.onResetKeys) {
       this.onResetKeys.forEach(key => {
@@ -82,11 +66,11 @@ class StorePrototype {
     this.initStore(defaultValues);
   };
 
-  @action initStore = (defaultValues?: Record<string, any>) => {
+  initStore = (defaultValues?: Record<string, any>) => {
     Object.entries(defaultValues || this.defaultValues).forEach(([k, v]) => {
       this.updateStore(k, v);
     });
   };
 }
 
-export default StorePrototype;
+export default StoreManager;

@@ -37,8 +37,8 @@ export const isDev =
  */
 export const SERVER_ID = isDev ? '1reoh16ya2' : 'eisbgazs16';
 
-export const SERVER_ADDR = `https://${SERVER_ID}.execute-api.${AWS_REGION}.amazonaws.com/Prod`;
-// export const SERVER_ADDR = 'http://localhost:4000/graphql';
+// export const SERVER_ADDR = `https://${SERVER_ID}.execute-api.${AWS_REGION}.amazonaws.com/Prod`;
+export const SERVER_ADDR = 'http://localhost:4000/graphql';
 
 export const SERVER_CONFIG = {
   URI: `${SERVER_ADDR}/graphql`,

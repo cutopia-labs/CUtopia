@@ -10,6 +10,8 @@ import {
   PlannerDelta,
   PlannerSyncState,
   DatedData,
+  TimetableOverviewMode,
+  StoreWithLoading,
 } from '../types';
 import withUndo from '../helpers/withUndo';
 import { getDurationInHour, timeInRange } from '../helpers/timetable';
@@ -17,23 +19,28 @@ import { makeSectionLabel } from '../constants';
 import { storeData } from '../helpers/store';
 import { daysDiff } from '../helpers/getTime';
 import { jsonCloneDeep } from '../helpers';
-import StorePrototype from './StorePrototype';
+import withLoading from '../helpers/withLoading';
+import { IPlannerService } from '../services/planner/PlannerService.interface';
+import { OnlinePlannerService } from '../services/planner/OnlinePlannerService';
+import { LocalPlannerService } from '../services/planner/LocalPlannerService';
+import UserStore from './UserStore';
 import ViewStore from './ViewStore';
+import StorePrototype from './StorePrototype';
 
 /** NOTE: planners are only temp, need remove after this sem Add drop */
-const LOAD_KEYS = ['shareMap', 'planners'];
+const LOAD_KEYS = ['shareMap'];
 
 const RESET_KEYS = LOAD_KEYS;
 
 const DEFAULT_VALUES = {
   plannerName: '',
-  planners: null,
+  plannerId: '',
   shareMap: {},
 };
 
 const STORAGE_CONFIG = {};
 
-class PlannerStore extends StorePrototype {
+class PlannerStore extends StorePrototype implements StoreWithLoading {
   @observable planner: Planner; // Store info like current id, old courses, and tableName
   @observable plannerId: string;
   @observable plannerName: string;
@@ -43,18 +50,36 @@ class PlannerStore extends StorePrototype {
   @observable isSyncing = false;
   @observable shareMap: Record<string, DatedData<string>>;
   @observable planners: Record<string, Planner>; // TEMP
-  @observable uploading: Record<string, Planner>; // TEMP
+  @observable loading = false; // TEMP
+  @observable offline: boolean = null;
 
   viewStore: ViewStore;
+  userStore: UserStore;
+  service: IPlannerService;
 
-  constructor(viewStore: ViewStore) {
+  constructor(viewStore: ViewStore, userStore: UserStore) {
     super(LOAD_KEYS, RESET_KEYS, DEFAULT_VALUES, STORAGE_CONFIG);
     makeObservable(this);
     this.viewStore = viewStore;
+    this.userStore = userStore;
+
+    this.deleteTimetable = this.deleteTimetable.bind(this);
+    this.createTimetable = this.createTimetable.bind(this);
   }
+
+  @action setLoading = (loading: boolean) => {
+    this.loading = loading;
+  };
 
   @action init = () => {
     this.loadStore();
+    this.offline = !this.userStore.loggedIn;
+    /** Load timetable */
+    if (this.offline) {
+      this.initOffline();
+    }
+    // this.offline = true;
+
     /* Check for expired share map, if so remove it */
     const toBeDeleted = [];
     const now = +new Date();
@@ -66,7 +91,82 @@ class PlannerStore extends StorePrototype {
     });
     toBeDeleted.forEach(k => delete shareMap[k]);
     this.setStore('shareMap', shareMap);
+
+    this.userStore.setPlannerStore(this);
   };
+
+  @action initOffline = () => {
+    console.log('init offline');
+    if (!this.plannerId || !this.planners) {
+      const now = String(+new Date());
+      this.setStore('plannerId', now);
+      this.setStore('planners', {
+        [now]: {
+          id: now,
+          courses: [],
+        },
+      });
+    }
+    console.log(this.planners);
+    this.plannerCourses = this.planners[this.plannerId]?.courses || [];
+  };
+
+  @action
+  @withLoading
+  async createTimetable() {
+    console.log('create ttb');
+    const overview = await this.service.createTimetable();
+    this.updateTimetableOverview(overview, true);
+    this.updateStore('plannerId', overview._id);
+
+    // set current planner
+    this.planner = {
+      id: overview._id,
+      createdAt: overview.createdAt,
+      courses: [],
+    };
+    this.plannerId = overview._id;
+    this.plannerCourses = [];
+    this.newPlanner(overview._id, overview.createdAt);
+  }
+
+  @action
+  @withLoading
+  async deleteTimetable(id: string) {
+    const isCurrTimetable = id === this.plannerId;
+    /* Undefined switch to means not deleting current ttb, no need switch */
+    let switchTo = undefined;
+    if (isCurrTimetable) {
+      let maxCreatedAt = 0;
+      /* If it's the last ttb, then switch to null means create one */
+      switchTo = null;
+      // switch to the latest timetable
+      this.timetableOverviews.forEach(d => {
+        if (d.createdAt > maxCreatedAt && d._id !== id) {
+          maxCreatedAt = d.createdAt;
+          switchTo = d._id;
+        }
+      });
+    }
+
+    const destPlanner = await this.service.deleteAndSwitchTimetable(
+      id,
+      switchTo
+    );
+
+    this.viewStore.setSnackBar('Deleted!');
+
+    /* Update the timetableOverviews */
+    this.removeTimetableOverview(id);
+
+    if (isCurrTimetable) {
+      if (destPlanner) {
+        this.updateCurrentPlanner(destPlanner);
+      } else {
+        this.createTimetable();
+      }
+    }
+  }
 
   @action newPlanner = (id: string, createdAt: number) => {
     const planner = {
@@ -256,6 +356,31 @@ class PlannerStore extends StorePrototype {
         this.updateStore('plannerCourses', []);
       }
     );
+  };
+
+  @action setOnline = () => {
+    this.offline = false;
+    this.service = OnlinePlannerService.getInstance();
+
+    // TEMP:
+    this.setOffline();
+  };
+
+  @action setOffline = () => {
+    this.offline = true;
+    this.service = LocalPlannerService.getInstance();
+  };
+
+  @action validKey = (key: string) =>
+    Boolean(this.planners && key && key in this.planners);
+
+  @action updatePlanners = (key: string, plannerCourses: PlannerCourse[]) => {
+    if (this.validKey(key)) {
+      this.planners[key].courses = plannerCourses;
+      // as the local one is updated, cannot treat it as uploaded
+      this.planners[key].type = TimetableOverviewMode.LOCAL;
+      storeData('planners', this.planners);
+    }
   };
 
   @action updatePlannerCourse = (course: PlannerCourse, index: number) => {
