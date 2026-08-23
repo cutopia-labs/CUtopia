@@ -9,3 +9,4 @@ mongodb/build
 mongodb/lib
 *.key
 *.key.pub
+.vscode/

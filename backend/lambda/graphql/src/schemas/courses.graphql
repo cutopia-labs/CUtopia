@@ -1,5 +1,7 @@
 type Query {
-  course(filter: CourseFilter): Course! @auth @rateLimit(duration: 60, limit: 100)
+  # Course catalog data is public and powers the anonymous planner. The query
+  # exposes no user data and remains IP-rate-limited.
+  course(filter: CourseFilter): Course! @rateLimit(duration: 60, limit: 100)
 }
 
 input CourseFilter {

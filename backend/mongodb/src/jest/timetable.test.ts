@@ -109,5 +109,23 @@ describe('Timetable', () => {
     expect(getTimetable({ _id, username: 'Bad guy' })).rejects.toThrow(
       ErrorCode.GET_TIMETABLE_UNAUTHORIZED.toString()
     );
+    expect(getTimetable({ _id })).rejects.toThrow(
+      ErrorCode.GET_TIMETABLE_UNAUTHORIZED.toString()
+    );
+  });
+
+  it('Allow guest access to a shared timetable', async () => {
+    const { username } = testUser;
+    const { _id } = await uploadTimetable({
+      ...timetable,
+      expire: 7,
+      username,
+    });
+
+    expect(getTimetable({ _id })).resolves.toMatchObject({
+      _id,
+      username,
+      expire: 7,
+    });
   });
 });

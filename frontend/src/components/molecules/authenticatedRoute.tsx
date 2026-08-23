@@ -11,6 +11,7 @@ import LoginPanel from '../templates/LoginPanel';
 
 type Options = {
   userQuery?: DocumentNode;
+  allowAnonymous?: boolean;
 };
 
 type HOC = (Component: FC, options?: Options) => FC;
@@ -36,7 +37,7 @@ const authenticatedRoute: HOC = (Component = null, options = {}) => {
         }
       },
       onError: e => {
-        view.handleError(e);
+        if (!options.allowAnonymous) view.handleError(e);
         setAuthState(AuthState.LOGGED_OUT);
       },
     });
@@ -68,7 +69,11 @@ const authenticatedRoute: HOC = (Component = null, options = {}) => {
         case AuthState.LOGGED_IN:
           return <Component {...props} />;
         case AuthState.LOGGED_OUT:
-          return <LoginPanel returnUrl={router.asPath} />;
+          return options.allowAnonymous ? (
+            <Component {...props} />
+          ) : (
+            <LoginPanel returnUrl={router.asPath} />
+          );
         default:
           return <Loading fixed padding={false} logo />;
       }

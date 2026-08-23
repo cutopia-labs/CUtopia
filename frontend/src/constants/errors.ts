@@ -35,3 +35,5 @@ export const ERROR_MESSAGES = {
   [ErrorCode.INPUT_INVALID_VALUE]: 'Invalid input value!',
   [ErrorCode.EXCEED_RATE_LIMIT]: 'Too fast, please try again later!',
 };
+
+export const ERROR_VAL = 'error';

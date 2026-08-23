@@ -15,7 +15,7 @@ import {
 } from '../config';
 import withUndo from '../helpers/withUndo';
 import { getTokenExpireDate } from '../helpers';
-import { CREATE_PLANNER_FLAG, TOKEN_EXPIRE_DAYS } from '../constants';
+import { TOKEN_EXPIRE_DAYS } from '../constants';
 import ViewStore from './ViewStore';
 import StorePrototype from './StorePrototype';
 import PlannerStore from './PlannerStore';
@@ -59,12 +59,15 @@ class UserStore extends StorePrototype {
   viewStore: ViewStore;
   plannerStore: PlannerStore;
 
-  constructor(viewStore: ViewStore, plannerStore: PlannerStore) {
+  constructor(viewStore: ViewStore) {
     super(LOAD_KEYS, RESET_KEYS, DEFAULT_VALUES);
     this.viewStore = viewStore;
-    this.plannerStore = plannerStore;
     makeObservable(this);
   }
+
+  @action setPlannerStore = (store: PlannerStore) => {
+    this.plannerStore = store;
+  };
 
   @action init() {
     this.loadStore();
@@ -82,21 +85,44 @@ class UserStore extends StorePrototype {
     return Boolean(this.data?.username);
   }
 
-  @action saveUser = (username: string, token: string, data: Partial<User>) => {
+  @action saveUser = async (
+    username: string,
+    token: string,
+    data: Partial<User>
+  ) => {
     // need set date before set token cuz set token first will trigger query user.me
-    this.updateUserData(data);
+    this.updateStore('data', data);
     this.saveToken(token);
-    this.viewStore.setSnackBar(`Logged in as ${username || data?.username}`);
+    const migrated = await this.connectPlanner();
+    if (migrated !== null) {
+      this.viewStore.setSnackBar(
+        migrated
+          ? 'Signed in — your timetable is now synced'
+          : `Logged in as ${username || data?.username}`
+      );
+    }
   };
 
   @action updateUserData = (data: Partial<User>) => {
     if (data?.username) {
       this.updateStore('data', data);
+      // Returning users already have cloud state. Only an explicit login via
+      // saveUser should migrate a guest timetable from this device.
+      this.plannerStore.setOnline();
+    }
+  };
 
-      this.plannerStore.updateStore(
-        'plannerId',
-        data.timetableId || CREATE_PLANNER_FLAG
+  private connectPlanner = async (): Promise<boolean | null> => {
+    try {
+      return await this.plannerStore.connectAuthenticated();
+    } catch {
+      // Authentication succeeded even if syncing did not. Keep the local copy
+      // and continue with the user's existing cloud planner.
+      this.plannerStore.setOnline();
+      this.viewStore.warn(
+        'Signed in. Your on-device timetable is safe; sign out and back in to retry syncing.'
       );
+      return null;
     }
   };
 
@@ -139,6 +165,7 @@ class UserStore extends StorePrototype {
   @action setLogout = () => {
     this.loginState = AuthState.LOGGED_OUT;
     this.token = null;
+    this.plannerStore?.setOffline();
   };
 
   // Fav courses

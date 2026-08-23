@@ -6,7 +6,9 @@ type Mutation {
 }
 
 type Query {
-  timetable(_id: String!): Timetable @auth @rateLimit(duration: 1, limit: 5)
+  # Public so guest planners can import shared timetables. The controller still
+  # rejects private timetables unless the authenticated user owns them.
+  timetable(_id: String!): Timetable @rateLimit(duration: 1, limit: 5)
 }
 
 type User {
