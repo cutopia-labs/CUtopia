@@ -54,4 +54,16 @@ describe('LocalPlannerService', () => {
       tableName: 'Fall plan',
     });
   });
+
+  it('removes a migrated timetable without deleting other local plans', async () => {
+    const service = LocalPlannerService.getInstance();
+    const older = await service.createTimetable();
+    const migrated = await service.createTimetable();
+
+    service.removeMigratedTimetable(migrated._id);
+
+    expect(await service.getTimetable(migrated._id)).toBeNull();
+    expect(await service.getSelectedTimetable()).toBe(older._id);
+    expect(await service.getTimetable(older._id)).not.toBeNull();
+  });
 });

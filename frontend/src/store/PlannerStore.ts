@@ -22,6 +22,7 @@ import withLoading from '../helpers/withLoading';
 import { IPlannerService } from '../services/planner/PlannerService.interface';
 import { OnlinePlannerService } from '../services/planner/OnlinePlannerService';
 import { LocalPlannerService } from '../services/planner/LocalPlannerService';
+import { migrateCurrentGuestTimetable } from '../services/planner/migrateGuestPlanner';
 import UserStore from './UserStore';
 import ViewStore from './ViewStore';
 import StorePrototype from './StorePrototype';
@@ -53,6 +54,7 @@ class PlannerStore extends StorePrototype implements StoreWithLoading {
   viewStore: ViewStore;
   userStore: UserStore;
   service: IPlannerService;
+  private onlineTransition: Promise<boolean> | null = null;
 
   constructor(viewStore: ViewStore, userStore: UserStore) {
     super(LOAD_KEYS, RESET_KEYS, DEFAULT_VALUES, STORAGE_CONFIG);
@@ -423,6 +425,29 @@ class PlannerStore extends StorePrototype implements StoreWithLoading {
     this.plannerName = '';
     this.plannerCourses = [];
     this.timetableOverviews = null;
+  };
+
+  connectAuthenticated = async (): Promise<boolean> => {
+    if (this.offline === false) return false;
+    if (this.onlineTransition) return this.onlineTransition;
+
+    this.onlineTransition = this.migrateCurrentTimetable();
+    try {
+      return await this.onlineTransition;
+    } finally {
+      this.onlineTransition = null;
+    }
+  };
+
+  private migrateCurrentTimetable = async (): Promise<boolean> => {
+    await this.saveCurrentPlanner();
+    const localService = LocalPlannerService.getInstance();
+    const migrated = await migrateCurrentGuestTimetable(
+      localService,
+      OnlinePlannerService.getInstance()
+    );
+    this.setOnline();
+    return migrated;
   };
 
   @action setOffline = () => {
