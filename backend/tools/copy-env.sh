@@ -11,12 +11,16 @@ case "$requested_node_env" in
     NODE_ENV=development
     atlas_uri="$ATLAS_DEV_URI"
     ;;
+  staging)
+    NODE_ENV=development
+    atlas_uri="${ATLAS_STAGING_URI:-$ATLAS_URI}"
+    ;;
   prod | production)
     NODE_ENV=production
     atlas_uri="$ATLAS_PROD_URI"
     ;;
   *)
-    echo "NODE_ENV must be development or production" >&2
+    echo "NODE_ENV must be development, staging, or production" >&2
     exit 1
     ;;
 esac

@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if [ -z "${NODE_ENV:-}" ]; then
-  echo "Set NODE_ENV to development or production before deploying" >&2
+if [ "${NODE_ENV:-}" != "staging" ] && [ "${NODE_ENV:-}" != "production" ]; then
+  echo "Set NODE_ENV to staging or production before deploying" >&2
   exit 1
 fi
 

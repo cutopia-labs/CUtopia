@@ -6,10 +6,9 @@ Install [MongoDB](https://www.mongodb.com/try/download/community) and [MongoDB C
 
 ## Local Development
 
-Keep `ATLAS_DEV_URI`, `ATLAS_PROD_URI`, and `ATLAS_JEST_URI` in the ignored
-`backend/.env` file. The command environment selects which URI is copied to
-each Lambda package; values such as `NODE_ENV` or `ATLAS_URI` in `.env` are
-ignored for that selection.
+Keep `ATLAS_DEV_URI`, `ATLAS_STAGING_URI` (or the legacy `ATLAS_URI`),
+`ATLAS_PROD_URI`, and `ATLAS_JEST_URI` in the ignored `backend/.env` file. The
+command environment selects which URI is copied to each Lambda package.
 
 From the repository root, mount the catalog and run the backend watcher and
 server in separate terminals:
@@ -42,8 +41,8 @@ aws configure
 All serverless services will be deployed to [Lambda](https://aws.amazon.com/lambda/) using the script below. Deployment copies the current catalog into the GraphQL package before building. The status of deployed stacks can be found in [CloudFormation](https://aws.amazon.com/cloudformation/).
 
 ```bash
-# Deploy development stack
-export NODE_ENV=development; bash tools/deploy.sh cutopia-dev
+# Deploy staging stack
+export NODE_ENV=staging; bash tools/deploy.sh cutopia-dev
 
 # Deploy production stack
 export NODE_ENV=production; bash tools/deploy.sh cutopia-production
