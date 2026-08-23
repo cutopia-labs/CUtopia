@@ -42,7 +42,7 @@ const FOOTER_ITEMS = [
   },
   {
     label: 'Contact Us',
-    url: 'mailto::cutopia.app@gmail.com',
+    url: 'mailto:cutopia.app@gmail.com',
   },
 ];
 

@@ -20,19 +20,19 @@ Install [node.js](https://nodejs.org/en/) and [yarn](https://yarnpkg.com/).
 
 For Windows users, please run the following scripts in [Git Bash](https://git-scm.com/downloads).
 
-### Bootstrap (install all dependencies):
+### Bootstrap (install all dependencies)
 
 ```bash
 yarn bootstrap
 ```
 
-### Start frontend dev server:
+### Start frontend dev server
 
 ```bash
 yarn fe dev
 ```
 
-### Start backend dev server:
+### Start backend dev server
 
 ```bash
 # watch and compile files
@@ -50,7 +50,7 @@ The master branch is connected with [cutopia.app](cutopia.app), any updates on t
 
 You can follow us on [Instagram](https://www.instagram.com/cutopia.app/) and DM us to discuss suggestions and new features.
 
-If you want to join the development team (with access to AWS, GA, Sentry, and the database), please [email us](mailto::cutopia.app@gmail.com) with your GitHub profile/resume.
+If you want to join the development team (with access to AWS, GA, Sentry, and the database), please [email us](mailto:cutopia.app@gmail.com) with your GitHub profile/resume.
 
 ## Guidelines
 

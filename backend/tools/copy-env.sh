@@ -26,6 +26,13 @@ if [ -z "$atlas_uri" ]; then
   exit 1
 fi
 
+# Preserve function-specific secrets while replacing environment selectors with
+# the explicitly requested deployment target.
+env_content=$(grep -vE '^(NODE_ENV|ATLAS_URI)=' ./.env)
+env_content="${env_content}
+NODE_ENV=\"${NODE_ENV}\"
+ATLAS_URI=\"${atlas_uri}\""
+
 declare -a modules=(
   "./lambda/emailer"
   "./lambda/graphql"
@@ -34,5 +41,5 @@ declare -a modules=(
 )
 
 for d in "${modules[@]}"; do
-  printf 'NODE_ENV=%s\nATLAS_URI=%s\n' "$NODE_ENV" "$atlas_uri" > "$d/.env"
+  printf "%s\n" "$env_content" > "$d/.env"
 done

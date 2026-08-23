@@ -63,7 +63,7 @@ const AboutTab: FC = () => (
     <AboutSection title="Contact Us">
       <p>
         Email:{' '}
-        <Link href="mailto::cutopia.app@gmail.com">cutopia.app@gmail.com</Link>
+        <Link href="mailto:cutopia.app@gmail.com">cutopia.app@gmail.com</Link>
       </p>
       <p>
         If you found any bugs or have any suggestion, feel free to email us or
