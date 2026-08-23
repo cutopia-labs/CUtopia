@@ -1,6 +1,7 @@
 import StoreManager from '../../helpers/StoreManager';
 import {
   Planner,
+  PlannerDelta,
   TimetableOverviewMode,
   TimetableOverviewWithMode,
 } from '../../types';
@@ -42,11 +43,15 @@ export class LocalPlannerService
     id: string,
     switchTo?: string | null
   ): Promise<Planner | null> {
-    delete this.timetables[id];
-    this.setStore('timetables', this.timetables);
+    const { [id]: deleted, ...timetables } = this.timetables;
+    this.setStore('timetables', timetables);
 
     // switch to
-    if (!switchTo) return null;
+    if (switchTo === null) {
+      this.setStore('timetableId', '');
+      return null;
+    }
+    if (switchTo === undefined) return null;
     return this.switchTimetable(switchTo);
   }
 
@@ -55,18 +60,34 @@ export class LocalPlannerService
   }
 
   public async switchTimetable(id: string): Promise<Planner | null> {
-    this.timetableId = id;
+    if (!this.timetables[id]) return null;
     this.setStore('timetableId', id);
     return this.getTimetable(id);
   }
 
+  public async getTimetableOverviews(): Promise<TimetableOverviewWithMode[]> {
+    return Object.values(this.timetables)
+      .map(timetable => ({
+        _id: timetable.id,
+        createdAt: timetable.createdAt,
+        tableName: timetable.tableName || null,
+        expireAt: timetable.expireAt ?? -1,
+        expire: timetable.expire ?? EXPIRE_LOOKUP.upload,
+        mode: TimetableOverviewMode.LOCAL,
+      }))
+      .sort((a, b) => b.createdAt - a.createdAt);
+  }
+
   public async createTimetable(): Promise<TimetableOverviewWithMode> {
     const now = new Date().getTime();
+    const id = `guest-${now.toString(36)}-${Math.random()
+      .toString(36)
+      .slice(2, 8)}`;
     const overview: TimetableOverviewWithMode = {
-      _id: now.toString(),
+      _id: id,
       createdAt: now,
       expireAt: -1,
-      expire: EXPIRE_LOOKUP.default,
+      expire: EXPIRE_LOOKUP.upload,
       tableName: undefined,
       mode: TimetableOverviewMode.LOCAL,
     };
@@ -79,9 +100,24 @@ export class LocalPlannerService
       expireAt: overview.expireAt,
       expire: overview.expire,
     };
-    this.timetables[newTimetable.id] = newTimetable;
-    this.setStore('timetables', this.timetables);
+    this.setStore('timetables', {
+      ...this.timetables,
+      [newTimetable.id]: newTimetable,
+    });
+    this.setStore('timetableId', newTimetable.id);
 
     return overview;
+  }
+
+  public async saveTimetable(id: string, delta: PlannerDelta): Promise<void> {
+    const timetable = this.timetables[id];
+    if (!timetable) return;
+    this.setStore('timetables', {
+      ...this.timetables,
+      [id]: {
+        ...timetable,
+        ...delta,
+      },
+    });
   }
 }

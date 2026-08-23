@@ -1,4 +1,4 @@
-import { Planner, TimetableOverviewWithMode } from '../../types';
+import { Planner, PlannerDelta, TimetableOverviewWithMode } from '../../types';
 
 export interface IPlannerService {
   getSelectedTimetable: () => Promise<string>;
@@ -8,6 +8,8 @@ export interface IPlannerService {
     switchTo?: string | null
   ) => Promise<Planner | null>;
   getTimetable: (id: string) => Promise<Planner | null>;
+  getTimetableOverviews: () => Promise<TimetableOverviewWithMode[]>;
   switchTimetable: (id: string) => Promise<Planner | null>;
   createTimetable: () => Promise<TimetableOverviewWithMode>;
+  saveTimetable: (id: string, delta: PlannerDelta) => Promise<void>;
 }

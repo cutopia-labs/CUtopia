@@ -10,12 +10,11 @@ import {
   PlannerDelta,
   PlannerSyncState,
   DatedData,
-  TimetableOverviewMode,
   StoreWithLoading,
 } from '../types';
 import withUndo from '../helpers/withUndo';
 import { getDurationInHour, timeInRange } from '../helpers/timetable';
-import { makeSectionLabel } from '../constants';
+import { EXPIRE_LOOKUP, makeSectionLabel } from '../constants';
 import { storeData } from '../helpers/store';
 import { daysDiff } from '../helpers/getTime';
 import { jsonCloneDeep } from '../helpers';
@@ -27,7 +26,6 @@ import UserStore from './UserStore';
 import ViewStore from './ViewStore';
 import StorePrototype from './StorePrototype';
 
-/** NOTE: planners are only temp, need remove after this sem Add drop */
 const LOAD_KEYS = ['shareMap'];
 
 const RESET_KEYS = LOAD_KEYS;
@@ -49,8 +47,7 @@ class PlannerStore extends StorePrototype implements StoreWithLoading {
   @observable timetableOverviews: TimetableOverviewWithMode[] | null = null;
   @observable isSyncing = false;
   @observable shareMap: Record<string, DatedData<string>>;
-  @observable planners: Record<string, Planner>; // TEMP
-  @observable loading = false; // TEMP
+  @observable loading = false;
   @observable offline: boolean = null;
 
   viewStore: ViewStore;
@@ -73,12 +70,7 @@ class PlannerStore extends StorePrototype implements StoreWithLoading {
 
   @action init = () => {
     this.loadStore();
-    this.offline = !this.userStore.loggedIn;
-    /** Load timetable */
-    if (this.offline) {
-      this.initOffline();
-    }
-    // this.offline = true;
+    this.setOffline();
 
     /* Check for expired share map, if so remove it */
     const toBeDeleted = [];
@@ -95,39 +87,60 @@ class PlannerStore extends StorePrototype implements StoreWithLoading {
     this.userStore.setPlannerStore(this);
   };
 
-  @action initOffline = () => {
-    console.log('init offline');
-    if (!this.plannerId || !this.planners) {
-      const now = String(+new Date());
-      this.setStore('plannerId', now);
-      this.setStore('planners', {
-        [now]: {
-          id: now,
-          courses: [],
-        },
-      });
+  @action
+  @withLoading
+  async initializePlanner() {
+    this.updateStore(
+      'timetableOverviews',
+      await this.service.getTimetableOverviews()
+    );
+    const selectedId = await this.service.getSelectedTimetable();
+    const selectedPlanner = selectedId
+      ? await this.service.getTimetable(selectedId)
+      : null;
+
+    if (selectedPlanner) {
+      this.updateCurrentPlanner(selectedPlanner);
+      return;
     }
-    console.log(this.planners);
-    this.plannerCourses = this.planners[this.plannerId]?.courses || [];
-  };
+    await this.createTimetable();
+  }
+
+  @action
+  async createTimetable(): Promise<boolean> {
+    this.setLoading(true);
+    try {
+      const overview = await this.service.createTimetable();
+      this.updateTimetableOverview(overview, true);
+      this.updateCurrentPlanner({
+        id: overview._id,
+        createdAt: overview.createdAt,
+        expire: overview.expire,
+        expireAt: overview.expireAt,
+        tableName: overview.tableName || '',
+        courses: [],
+      });
+      return true;
+    } catch (error) {
+      this.viewStore.handleError(error);
+      return false;
+    } finally {
+      this.setLoading(false);
+    }
+  }
 
   @action
   @withLoading
-  async createTimetable() {
-    console.log('create ttb');
-    const overview = await this.service.createTimetable();
-    this.updateTimetableOverview(overview, true);
-    this.updateStore('plannerId', overview._id);
-
-    // set current planner
-    this.planner = {
-      id: overview._id,
-      createdAt: overview.createdAt,
-      courses: [],
-    };
-    this.plannerId = overview._id;
-    this.plannerCourses = [];
-    this.newPlanner(overview._id, overview.createdAt);
+  async switchTimetable(id: string) {
+    if (id === this.plannerId) return;
+    await this.saveCurrentPlanner();
+    const destination = await this.service.switchTimetable(id);
+    if (destination) {
+      this.updateCurrentPlanner(destination);
+      this.viewStore.setSnackBar(
+        `Switched to ${destination.tableName || 'New Timetable'}`
+      );
+    }
   }
 
   @action
@@ -163,21 +176,64 @@ class PlannerStore extends StorePrototype implements StoreWithLoading {
       if (destPlanner) {
         this.updateCurrentPlanner(destPlanner);
       } else {
-        this.createTimetable();
+        await this.createTimetable();
       }
     }
   }
 
-  @action newPlanner = (id: string, createdAt: number) => {
-    const planner = {
-      id,
-      createdAt,
-      courses: [],
-    };
-    this.plannerId = id;
-    this.planner = planner;
-    this.plannerCourses = [];
-  };
+  @action.bound async saveCurrentPlanner() {
+    const delta = this.delta;
+    if (!delta || !this.plannerId || this.isSyncing) return;
+    this.isSyncing = true;
+    const savedDelta = cloneDeep(delta);
+    try {
+      await this.service.saveTimetable(this.plannerId, savedDelta);
+      this.syncPlanner(savedDelta);
+      this.updateTimetableOverview({
+        _id: this.plannerId,
+        tableName: this.plannerName,
+      });
+    } catch (error) {
+      this.viewStore.handleError(error);
+    } finally {
+      this.isSyncing = false;
+    }
+  }
+
+  @action
+  async importLocalTimetable(importedPlanner: Planner): Promise<boolean> {
+    if (!this.offline) return false;
+    this.setLoading(true);
+    try {
+      const overview = await this.service.createTimetable();
+      const localPlanner: Planner = {
+        ...importedPlanner,
+        id: overview._id,
+        createdAt: overview.createdAt,
+        expire: EXPIRE_LOOKUP.upload,
+        expireAt: -1,
+        courses: cloneDeep(importedPlanner.courses),
+      };
+      await this.service.saveTimetable(localPlanner.id, {
+        tableName: localPlanner.tableName,
+        courses: localPlanner.courses,
+      });
+      this.updateTimetableOverview(
+        {
+          ...overview,
+          tableName: localPlanner.tableName,
+        },
+        true
+      );
+      this.updateCurrentPlanner(localPlanner);
+      return true;
+    } catch (error) {
+      this.viewStore.handleError(error);
+      return false;
+    } finally {
+      this.setLoading(false);
+    }
+  }
 
   get syncState(): PlannerSyncState {
     if (this.isSyncing) return PlannerSyncState.SYNCING;
@@ -359,28 +415,25 @@ class PlannerStore extends StorePrototype implements StoreWithLoading {
   };
 
   @action setOnline = () => {
+    if (this.offline === false && this.service) return;
     this.offline = false;
     this.service = OnlinePlannerService.getInstance();
-
-    // TEMP:
-    this.setOffline();
+    this.planner = undefined;
+    this.plannerId = '';
+    this.plannerName = '';
+    this.plannerCourses = [];
+    this.timetableOverviews = null;
   };
 
   @action setOffline = () => {
+    if (this.offline === true && this.service) return;
     this.offline = true;
     this.service = LocalPlannerService.getInstance();
-  };
-
-  @action validKey = (key: string) =>
-    Boolean(this.planners && key && key in this.planners);
-
-  @action updatePlanners = (key: string, plannerCourses: PlannerCourse[]) => {
-    if (this.validKey(key)) {
-      this.planners[key].courses = plannerCourses;
-      // as the local one is updated, cannot treat it as uploaded
-      this.planners[key].type = TimetableOverviewMode.LOCAL;
-      storeData('planners', this.planners);
-    }
+    this.planner = undefined;
+    this.plannerId = '';
+    this.plannerName = '';
+    this.plannerCourses = [];
+    this.timetableOverviews = null;
   };
 
   @action updatePlannerCourse = (course: PlannerCourse, index: number) => {
@@ -492,10 +545,6 @@ class PlannerStore extends StorePrototype implements StoreWithLoading {
     }
   };
 
-  @action setPlannerLabel = (tableName: string) => {
-    this.planner.tableName = tableName;
-  };
-
   // Timetable Overview
   @action updateTimetableOverview = (
     overview: Partial<TimetableOverviewWithMode>,
@@ -525,11 +574,6 @@ class PlannerStore extends StorePrototype implements StoreWithLoading {
       [...(this.timetableOverviews || [])].filter(item => item._id !== id)
     );
   };
-  /* TEMP start (Remove tgt with local ttb upload) */
-  @action destroyPlanners = () => {
-    this.removeStore('planners');
-  };
-  /* TEMP end */
 }
 
 export default PlannerStore;

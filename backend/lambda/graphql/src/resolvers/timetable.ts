@@ -18,7 +18,7 @@ const timetableResolver: Resolvers = {
   },
   Query: {
     timetable: async (parent, { _id }, { user }) => {
-      const { username } = user;
+      const username = user?.username;
       return await getTimetable({ _id, username });
     },
   },

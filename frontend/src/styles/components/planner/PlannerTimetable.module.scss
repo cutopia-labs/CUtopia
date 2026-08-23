@@ -2,6 +2,22 @@
   margin-top: 4px;
 }
 
+.guestNotice {
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius);
+  background: var(--surface);
+  color: var(--grey-text);
+  font-size: 13px;
+
+  strong {
+    color: var(--text);
+  }
+}
+
 .plannerShareDialog {
   .shareLinkRow {
     height: 46px;
@@ -27,6 +43,9 @@
   }
   .plannerInputContainer {
     width: 100%;
+  }
+  .guestNotice {
+    margin: 0 var(--card-padding) 8px;
   }
   .plannerShareDialog {
     :global(.MuiPaper-root) {

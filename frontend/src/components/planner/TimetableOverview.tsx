@@ -9,7 +9,6 @@ import {
 } from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import { Check, Edit, ExpandMore, Timer } from '@mui/icons-material';
-import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import copy from 'copy-to-clipboard';
 import { AiOutlineDelete, AiOutlineShareAlt } from 'react-icons/ai';
@@ -17,28 +16,12 @@ import clsx from 'clsx';
 
 import { usePlanner, useView } from '../../store';
 import styles from '../../styles/components/planner/TimetableOverview.module.scss';
-import {
-  TimetableOverviewMode,
-  TimetableOverviewWithMode,
-  UserData,
-} from '../../types';
+import { TimetableOverviewMode, TimetableOverviewWithMode } from '../../types';
 import { PLANNER_CONFIGS } from '../../config';
-import { GET_USER_TIMETABLES } from '../../constants/queries';
 import ListItem from '../molecules/ListItem';
 import { getDateDifference, getMMMDDYY } from '../../helpers/getTime';
 import LoadingView from '../atoms/LoadingView';
 import { generateTimetableURL } from './PlannerTimetable';
-
-const getTimetableOverviewMode = (expireAt: number) =>
-  expireAt > 0 ? TimetableOverviewMode.SHARE : TimetableOverviewMode.UPLOAD;
-
-const getTimetableOverview = (data: UserData): TimetableOverviewWithMode[] => {
-  if (!data?.me?.timetables) return [];
-  return (data?.me?.timetables).map(item => ({
-    ...item,
-    mode: getTimetableOverviewMode(item.expireAt),
-  }));
-};
 
 const getExpire = (mode: TimetableOverviewMode, expireAt: number) => {
   if (mode === TimetableOverviewMode.SHARE) {
@@ -140,13 +123,12 @@ const TimetableOverview: FC<TimetableOverviewProps> = ({
       setLabelInput(planner?.plannerName);
     }
   }, [anchorEl]);
-  const [getUserTimetable] = useLazyQuery(GET_USER_TIMETABLES, {
-    onCompleted: async data => {
-      planner.updateStore('timetableOverviews', getTimetableOverview(data));
-    },
-    onError: view.handleError,
-  });
   const onShare = (id: string) => {
+    if (planner.offline) {
+      view.setSnackBar('Sign in to sync and share your timetable');
+      router.push('/login?returnUrl=/planner');
+      return;
+    }
     copy(generateTimetableURL(id));
     view.setSnackBar('Copied share link!');
   };
@@ -157,7 +139,7 @@ const TimetableOverview: FC<TimetableOverviewProps> = ({
         size="small"
         onClick={e => {
           // Do not refetch, cuz the outdated overview may served from cache (issue #1)
-          if (!planner.timetableOverviews) getUserTimetable();
+          if (!planner.timetableOverviews) planner.initializePlanner();
           setAnchorEl(e.currentTarget);
         }}
         endIcon={<ExpandMore />}

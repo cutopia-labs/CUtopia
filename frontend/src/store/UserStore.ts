@@ -95,11 +95,11 @@ class UserStore extends StorePrototype {
   @action updateUserData = (data: Partial<User>) => {
     if (data?.username) {
       this.updateStore('data', data);
+      this.plannerStore.setOnline();
       this.plannerStore.updateStore(
         'plannerId',
         data.timetableId || CREATE_PLANNER_FLAG
       );
-      this.plannerStore.setOnline();
     }
   };
 
@@ -142,6 +142,7 @@ class UserStore extends StorePrototype {
   @action setLogout = () => {
     this.loginState = AuthState.LOGGED_OUT;
     this.token = null;
+    this.plannerStore?.setOffline();
   };
 
   // Fav courses

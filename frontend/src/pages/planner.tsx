@@ -118,4 +118,6 @@ const PlannerPage: FC = () => {
   );
 };
 
-export default authenticatedRoute(observer(PlannerPage));
+export default authenticatedRoute(observer(PlannerPage), {
+  allowAnonymous: true,
+});

@@ -221,6 +221,7 @@ export const GET_USER = gql`
 export const GET_USER_TIMETABLES = gql`
   query {
     me {
+      timetableId
       timetables {
         tableName
         createdAt
