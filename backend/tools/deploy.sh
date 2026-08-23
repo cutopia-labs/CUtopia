@@ -1,5 +1,11 @@
 #!/bin/bash
 
+if [ -z "${NODE_ENV:-}" ]; then
+  echo "Set NODE_ENV to development or production before deploying" >&2
+  exit 1
+fi
+
+bash tools/copy-data.sh
 yarn --cwd mongodb/ run build
 yarn --cwd lambda/graphql/ run build
 

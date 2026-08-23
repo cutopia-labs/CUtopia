@@ -1,4 +1,5 @@
 import { DataConfig } from './types';
+import { resolveServerConfig } from './helpers/serverConfig';
 
 export const LAZY_LOAD_BUFFER = 50;
 export const SNACKBAR_TIMEOUT = 5000;
@@ -22,23 +23,19 @@ export const PLANNER_CONFIGS = {
 /** Render mobile view when < this number */
 export const MIN_DESKTOP_WIDTH = 1260;
 
-const AWS_REGION = 'ap-southeast-1';
-
 export const isDev =
   process.env.NODE_ENV === 'development' ||
-  process.env.REACT_APP_ENV_MODE === 'dev';
+  ['dev', 'staging'].includes(
+    process.env.REACT_APP_ENV_MODE?.trim().toLowerCase()
+  );
 
-/**
- * Server ID List
- * production: eisbgazs16
- * plus-dev: d8r6qarg78
- * mike-dev: uvp03fp791
- * dev: 1reoh16ya2
- */
-export const SERVER_ID = isDev ? '1reoh16ya2' : 'eisbgazs16';
+const resolvedServerConfig = resolveServerConfig(
+  process.env.NODE_ENV,
+  process.env.REACT_APP_ENV_MODE
+);
 
-// export const SERVER_ADDR = `https://${SERVER_ID}.execute-api.${AWS_REGION}.amazonaws.com/Prod`;
-export const SERVER_ADDR = 'http://localhost:4000/graphql';
+export const SERVER_ID = resolvedServerConfig.id;
+export const SERVER_ADDR = resolvedServerConfig.address;
 
 export const SERVER_CONFIG = {
   URI: `${SERVER_ADDR}/graphql`,
