@@ -1,15 +1,30 @@
 #!/bin/bash
 
+requested_node_env="${NODE_ENV:-development}"
+
 set -a
 source ./.env
 set +a
 
-NODE_ENV=${NODE_ENV:-development}
-[[ "$NODE_ENV" == "production" ]] && URI=$ATLAS_PROD_URI || URI=$ATLAS_DEV_URI
-env="\
-NODE_ENV=${NODE_ENV}
-ATLAS_URI=${URI}\
-"
+case "$requested_node_env" in
+  dev | development)
+    NODE_ENV=development
+    atlas_uri="$ATLAS_DEV_URI"
+    ;;
+  prod | production)
+    NODE_ENV=production
+    atlas_uri="$ATLAS_PROD_URI"
+    ;;
+  *)
+    echo "NODE_ENV must be development or production" >&2
+    exit 1
+    ;;
+esac
+
+if [ -z "$atlas_uri" ]; then
+  echo "Missing Atlas URI for NODE_ENV=$NODE_ENV" >&2
+  exit 1
+fi
 
 declare -a modules=(
   "./lambda/emailer"
@@ -19,5 +34,5 @@ declare -a modules=(
 )
 
 for d in "${modules[@]}"; do
-  echo "$env" > $d/.env
+  printf 'NODE_ENV=%s\nATLAS_URI=%s\n' "$NODE_ENV" "$atlas_uri" > "$d/.env"
 done

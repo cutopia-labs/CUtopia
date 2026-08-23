@@ -7,6 +7,7 @@ import {
 } from '../constants/config';
 import Timetable from '../models/timetable';
 import User from '../models/user';
+import { canReadTimetable } from '../policies/timetable';
 
 import { updateTimetableId, updateUser } from './user';
 
@@ -15,7 +16,7 @@ export const getTimetable = async input => {
   if (!timetable) {
     throw Error(ErrorCode.GET_TIMETABLE_INVALID_ID.toString());
   }
-  if (timetable.expire === -1 && input.username !== timetable.username) {
+  if (!canReadTimetable(timetable, input.username)) {
     throw Error(ErrorCode.GET_TIMETABLE_UNAUTHORIZED.toString());
   }
   return timetable;
@@ -109,7 +110,10 @@ export const switchTimetable = async input => {
 export const cloneTimetable = async input => {
   const { _id, username } = input;
   const timetable = await Timetable.findOne({ _id }).lean();
-  if (timetable.expire === -1 && username !== timetable.username) {
+  if (!timetable) {
+    throw Error(ErrorCode.GET_TIMETABLE_INVALID_ID.toString());
+  }
+  if (!canReadTimetable(timetable, username)) {
     throw Error(ErrorCode.GET_TIMETABLE_UNAUTHORIZED.toString());
   }
   const newTimetable = new Timetable({
