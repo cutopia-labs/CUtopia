@@ -318,19 +318,6 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
         }
         fixed
       />
-      {!user.loggedIn && (
-        <div className={clsx(styles.guestNotice, 'center-row')}>
-          <span>
-            <strong>Guest planner</strong> — saved on this device
-          </span>
-          <Button
-            size="small"
-            onClick={() => router.push('/login?returnUrl=/planner')}
-          >
-            Sign in to sync
-          </Button>
-        </div>
-      )}
       <TimetablePanel
         className={className}
         createTimetable={createTimetable}

@@ -173,7 +173,7 @@ const LoginPanel: FC<Props> = ({ className, returnUrl }) => {
     {
       onCompleted: handleCompleted(
         async data => {
-          user.saveUser(username, data.login?.token, data.login?.me);
+          await user.saveUser(username, data.login?.token, data.login?.me);
           if (data.login?.me?.username) {
             Sentry.setUser({
               username: data.login?.me?.username,

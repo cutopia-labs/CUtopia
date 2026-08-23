@@ -1,4 +1,5 @@
 import { ApolloClient } from '@apollo/client';
+import { isEqual } from 'lodash';
 import {
   REMOVE_TIMETABLE,
   SWITCH_TIMETABLE,
@@ -122,6 +123,44 @@ export class OnlinePlannerService implements IPlannerService {
       expire: EXPIRE_LOOKUP.upload,
     };
     return overview;
+  }
+
+  public async importTimetable(planner: Planner): Promise<string> {
+    const variables = {
+      entries: coursesToEntries(planner.courses),
+      expire: EXPIRE_LOOKUP.upload,
+      tableName: planner.tableName || '',
+    };
+
+    try {
+      const { data } = await this.client.mutate({
+        mutation: UPLOAD_TIMETABLE,
+        variables,
+      });
+      const id = data?.uploadTimetable?._id;
+      if (!id) throw new Error('Could not sync the on-device timetable');
+      return id;
+    } catch (error) {
+      // A dropped response may hide a successful create. Check the selected
+      // cloud timetable before retrying so a guest plan is not duplicated.
+      try {
+        await this.getTimetableOverviews();
+        const selectedId = await this.getSelectedTimetable();
+        const selected = selectedId
+          ? await this.getTimetable(selectedId)
+          : null;
+        if (
+          selected &&
+          (selected.tableName || '') === (planner.tableName || '') &&
+          isEqual(selected.courses, planner.courses)
+        ) {
+          return selectedId;
+        }
+      } catch (_) {
+        // Preserve and report the original upload error.
+      }
+      throw error;
+    }
   }
 
   public async saveTimetable(id: string, delta: PlannerDelta): Promise<void> {

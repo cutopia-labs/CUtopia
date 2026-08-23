@@ -120,4 +120,17 @@ export class LocalPlannerService
       },
     });
   }
+
+  public removeMigratedTimetable(id: string): void {
+    const { [id]: migrated, ...remaining } = this.timetables;
+    if (!migrated) return;
+
+    this.setStore('timetables', remaining);
+    if (this.timetableId === id) {
+      const nextTimetable = Object.values(remaining).sort(
+        (a, b) => b.createdAt - a.createdAt
+      )[0];
+      this.setStore('timetableId', nextTimetable?.id || '');
+    }
+  }
 }

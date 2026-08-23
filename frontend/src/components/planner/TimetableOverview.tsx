@@ -8,7 +8,13 @@ import {
   InputBase,
 } from '@mui/material';
 import { observer } from 'mobx-react-lite';
-import { Check, Edit, ExpandMore, Timer } from '@mui/icons-material';
+import {
+  Check,
+  DevicesOutlined,
+  Edit,
+  ExpandMore,
+  Timer,
+} from '@mui/icons-material';
 import { useRouter } from 'next/router';
 import copy from 'copy-to-clipboard';
 import { AiOutlineDelete, AiOutlineShareAlt } from 'react-icons/ai';
@@ -137,6 +143,11 @@ const TimetableOverview: FC<TimetableOverviewProps> = ({
     <>
       <Button
         size="small"
+        startIcon={
+          planner.offline ? (
+            <DevicesOutlined titleAccess="Stored on this device" />
+          ) : undefined
+        }
         onClick={e => {
           // Do not refetch, cuz the outdated overview may served from cache (issue #1)
           if (!planner.timetableOverviews) planner.initializePlanner();
@@ -181,7 +192,9 @@ const TimetableOverview: FC<TimetableOverviewProps> = ({
           </IconButton>
         </form>
         <Divider />
-        <h4 className="subheading">Timetables</h4>
+        <h4 className="subheading">
+          {planner.offline ? 'On this device' : 'Timetables'}
+        </h4>
         <LoadingView loading={!planner.timetableOverviews}>
           {planner.timetableOverviews?.map(item => (
             <TimetableOverviewListItem
