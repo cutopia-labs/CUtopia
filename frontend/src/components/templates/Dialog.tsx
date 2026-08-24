@@ -1,8 +1,15 @@
 import { FC, useReducer } from 'react';
-import { Dialog as MUIDialog, DialogTitle, Divider } from '@mui/material';
+import {
+  Dialog as MUIDialog,
+  DialogTitle,
+  Divider,
+  IconButton,
+} from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import { useMutation } from '@apollo/client';
 import { ReportCategory } from 'cutopia-types';
+import clsx from 'clsx';
+import { Close } from '@mui/icons-material';
 
 import styles from '../../styles/components/templates/Dialog.module.scss';
 import ListItem from '../molecules/ListItem';
@@ -16,7 +23,29 @@ import { REPORT } from '../../constants/mutations';
 import handleCompleted from '../../helpers/handleCompleted';
 import ChipsRow from '../molecules/ChipsRow';
 import { reverseMapping } from '../../helpers';
+import LoginPanel from './LoginPanel';
 import DialogContentTemplate from './DialogContentTemplate';
+
+const LoginDialogContent: FC<{ returnUrl?: string }> = ({ returnUrl }) => {
+  const view = useView();
+  return (
+    <div className={styles.loginDialogContent}>
+      <IconButton
+        className={styles.closeDialogButton}
+        aria-label="Close login"
+        onClick={() => view.setDialog(null)}
+      >
+        <Close />
+      </IconButton>
+      <LoginPanel
+        className={styles.loginDialogPanel}
+        returnUrl={returnUrl}
+        onSuccess={() => view.setDialog(null)}
+        hideFooter
+      />
+    </div>
+  );
+};
 
 const UserSettingsDialogContent: FC = observer(() => {
   const user = useUser();
@@ -143,6 +172,7 @@ const ReportIssuesDialogContent: FC<ReportIssuesDialogContentProps> = observer(
 const DialogContentMap = {
   userSettings: UserSettingsDialogContent,
   reportIssues: ReportIssuesDialogContent,
+  login: LoginDialogContent,
 };
 
 const Dialog: FC = () => {
@@ -150,7 +180,11 @@ const Dialog: FC = () => {
   const ContentFC = DialogContentMap[view.dialog?.key];
   return (
     <MUIDialog
-      className={styles.globalModalContainer}
+      {...view.dialog?.props}
+      className={clsx(
+        styles.globalModalContainer,
+        view.dialog?.key === 'login' && styles.loginModalContainer
+      )}
       open={Boolean(view.dialog)}
       onClose={(e, reason) => {
         view.dialog?.props?.onClose(e, reason);

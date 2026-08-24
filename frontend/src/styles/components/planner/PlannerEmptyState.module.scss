@@ -1,0 +1,42 @@
+.emptyState {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: 22px 20px 24px;
+  text-align: center;
+
+  strong {
+    margin-top: 10px;
+    font-size: 15px;
+  }
+
+  p {
+    max-width: 230px;
+    margin: 5px 0 0;
+    color: var(--caption);
+    font-size: 13px;
+    line-height: 19px;
+  }
+
+  button {
+    margin-top: 14px;
+    border-color: var(--border);
+    color: var(--text);
+    text-transform: none;
+  }
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--background-chip);
+
+  svg {
+    color: var(--primary);
+    font-size: 20px;
+  }
+}

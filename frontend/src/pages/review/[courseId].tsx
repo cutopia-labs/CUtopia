@@ -18,6 +18,7 @@ import TabsContainer from '../../components/molecules/TabsContainer';
 import CourseCard from '../../components/review/CourseCard';
 import CourseReviews from '../../components/review/CourseReviews';
 import CourseComments from '../../components/review/CourseComments';
+import ReviewAccessGate from '../../components/review/ReviewAccessGate';
 import { CourseInfo } from '../../types';
 import Page from '../../components/atoms/Page';
 import authenticatedRoute from '../../components/molecules/authenticatedRoute';
@@ -86,8 +87,21 @@ const CoursePanel: FC<Props> = ({ c: courseInfo }) => {
     setSimilarCourse(await data.getSimilarCourses(courseId));
   };
 
-  const writeReview = () =>
+  const openLogin = () =>
+    view.setDialog({
+      key: 'login',
+      contentProps: {
+        returnUrl: router.asPath,
+      },
+    });
+
+  const writeReview = () => {
+    if (!user.loggedIn) {
+      openLogin();
+      return;
+    }
     router.push(`/review/${courseId}?mode=edit`, undefined, { shallow: true });
+  };
 
   useEffect(() => {
     if (validCourse(courseId)) {
@@ -96,7 +110,8 @@ const CoursePanel: FC<Props> = ({ c: courseInfo }) => {
     }
   }, [courseId]);
 
-  if (mode == 'edit') return <ReviewEditPanel courseInfo={courseInfo} />;
+  if (mode == 'edit' && user.loggedIn)
+    return <ReviewEditPanel courseInfo={courseInfo} />;
 
   return (
     <Page className={styles.reviewPage} center padding>
@@ -111,21 +126,29 @@ const CoursePanel: FC<Props> = ({ c: courseInfo }) => {
           />
           <TabsContainer items={MENU_ITEMS} selected={tab} onSelect={setTab} />
         </div>
-        {tab == 'Reviews' && (
-          <CourseReviews
-            courseId={courseId}
-            reviewId={rid}
-            courseInfo={{
-              ...courseInfo,
-              ...courseRating?.course,
-            }}
-            courseInfoLoading={courseRatingLoading}
-            isMobile={isMobile}
-            FABHidden={FABHidden}
-            setFABHidden={setFABHidden}
-          />
-        )}
-        {tab == 'Comments' && <CourseComments courseId={courseId} />}
+        {tab == 'Reviews' &&
+          (user.loggedIn ? (
+            <CourseReviews
+              courseId={courseId}
+              reviewId={rid}
+              courseInfo={{
+                ...courseInfo,
+                ...courseRating?.course,
+              }}
+              courseInfoLoading={courseRatingLoading}
+              isMobile={isMobile}
+              FABHidden={FABHidden}
+              setFABHidden={setFABHidden}
+            />
+          ) : (
+            <ReviewAccessGate mode="reviews" onLogin={openLogin} />
+          ))}
+        {tab == 'Comments' &&
+          (user.loggedIn ? (
+            <CourseComments courseId={courseId} />
+          ) : (
+            <ReviewAccessGate mode="comments" onLogin={openLogin} />
+          ))}
         <SpeedDial
           ariaLabel="SpeedDial"
           hidden={!isMobile || FABHidden || tab == 'Comments'}
@@ -189,4 +212,6 @@ export const getStaticPaths: GetStaticPaths<{}> = async () => {
   };
 };
 
-export default authenticatedRoute(observer(CoursePanel));
+export default authenticatedRoute(observer(CoursePanel), {
+  allowAnonymous: true,
+});

@@ -9,18 +9,15 @@ const courseCache = new NodeCache({ stdTTL: 600 });
 
 const coursesResolver: Resolvers = {
   Query: {
-    course: async (parent, { filter }, context) => {
+    course: async (parent, { filter }) => {
       const { requiredCourse, requiredTerm } = filter;
       return withCache(
         courseCache,
-        `${requiredCourse}#${requiredTerm}#${context.user ? 'user' : 'guest'}`,
+        `${requiredCourse}#${requiredTerm}`,
         async () => {
-          // Guest planning uses packaged public catalog data. Avoid querying
-          // MongoDB for anonymous traffic; review aggregates are optional and
-          // remain available to authenticated users.
-          const courseReviewData = context.user
-            ? await getCourseDataFromDB(requiredCourse)
-            : null;
+          // Course metadata and aggregate ratings are public. Individual
+          // reviews remain protected by the auth directive on review queries.
+          const courseReviewData = await getCourseDataFromDB(requiredCourse);
           const lecturers = courseReviewData?.lecturers;
           const terms = courseReviewData?.terms;
           const rating = courseReviewData?.rating;
@@ -38,7 +35,7 @@ const coursesResolver: Resolvers = {
   },
   Course: {
     rating: async ({ rating }) => {
-      if (!rating) {
+      if (!rating?.numReviews) {
         return null;
       }
       return {
