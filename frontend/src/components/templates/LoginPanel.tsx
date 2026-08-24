@@ -81,6 +81,8 @@ const PREVIOUS_MODE_LOOKUP = {
 type Props = {
   className?: string;
   returnUrl?: string;
+  onSuccess?: () => void;
+  hideFooter?: boolean;
 };
 
 type QueryParams = {
@@ -93,7 +95,12 @@ type QueryParams = {
 
 export const isSid = (str: string) => SID_RULE.test(str);
 
-const LoginPanel: FC<Props> = ({ className, returnUrl }) => {
+const LoginPanel: FC<Props> = ({
+  className,
+  returnUrl,
+  onSuccess,
+  hideFooter,
+}) => {
   const router = useRouter();
   const {
     mode: queryMode,
@@ -174,6 +181,7 @@ const LoginPanel: FC<Props> = ({ className, returnUrl }) => {
       onCompleted: handleCompleted(
         async data => {
           await user.saveUser(username, data.login?.token, data.login?.me);
+          onSuccess?.();
           if (data.login?.me?.username) {
             Sentry.setUser({
               username: data.login?.me?.username,
@@ -453,7 +461,7 @@ const LoginPanel: FC<Props> = ({ className, returnUrl }) => {
           </div>
         )}
       </div>
-      <Footer mb />
+      <Footer mb visible={!hideFooter} />
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect } from 'react';
 import { enableStaticRendering } from 'mobx-react-lite';
 
 import { FCC } from '../types/general';
@@ -46,14 +46,11 @@ export const getStores = () => {
 
 const StoreProvider: FCC = ({ children }) => {
   const { userStore, plannerStore, viewStore, dataStore } = getStores();
-  const [ready, setReady] = useState(false);
   useEffect(() => {
     userStore.init();
     plannerStore.init();
     dataStore.init();
-    setReady(true);
   }, []);
-  if (!ready) return null;
   return (
     <UserContext.Provider value={userStore}>
       <DataContext.Provider value={dataStore}>

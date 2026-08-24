@@ -1,4 +1,4 @@
-import { useState, useEffect, Fragment, FC } from 'react';
+import { useState, useEffect, Fragment, FC, useRef } from 'react';
 import {
   InputBase,
   ListItem as MUIListItem,
@@ -42,6 +42,7 @@ import useMobileQuery from '../../hooks/useMobileQuery';
 import DataStore from '../../store/DataStore';
 import If from '../atoms/If';
 import CourseSectionCard from '../planner/CourseSectionCard';
+import PlannerEmptyState from '../planner/PlannerEmptyState';
 
 /**
  * c: courseId
@@ -209,6 +210,7 @@ const SearchPanel: FC<SearchPanelProps> = ({
     searchPayloadProp
   );
   const [currentCourse, setCurrentCourse] = useState(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const user = useUser();
   const isMobile = useMobileQuery();
@@ -290,6 +292,7 @@ const SearchPanel: FC<SearchPanelProps> = ({
         </If>
         <form className={styles.searchForm} onSubmit={e => e.preventDefault()}>
           <InputBase
+            inputRef={searchInputRef}
             className="search-input"
             placeholder="Search…"
             value={searchPayload?.text || ''}
@@ -306,23 +309,36 @@ const SearchPanel: FC<SearchPanelProps> = ({
       </div>
       <Divider />
       <If visible={!searchPayload && !currentCourse}>
-        <Card title="Recents" inPlace>
-          <ChipsRow
-            className={clsx(styles.recentChips)}
-            chipClassName="chipFill"
-            items={user.searchHistory.slice(0, 3)}
-            onItemClick={(item, e) => {
-              e.stopPropagation();
-              if (!skipDefaultAction) {
-                router.push(makeUrlFromCourseId(item, isPlanner), undefined, {
-                  shallow: true,
-                });
-              }
-              if (hasCoursePressCB) {
-                onCoursePress(item);
-              }
-            }}
-          />
+        <Card
+          title={user.searchHistory.length ? 'Recents' : 'Plan your timetable'}
+          inPlace
+        >
+          {user.searchHistory.length ? (
+            <ChipsRow
+              className={clsx(styles.recentChips)}
+              chipClassName="chipFill"
+              items={user.searchHistory.slice(0, 3)}
+              onItemClick={(item, e) => {
+                e.stopPropagation();
+                if (!skipDefaultAction) {
+                  router.push(makeUrlFromCourseId(item, isPlanner), undefined, {
+                    shallow: true,
+                  });
+                }
+                if (hasCoursePressCB) {
+                  onCoursePress(item);
+                }
+              }}
+            />
+          ) : (
+            <PlannerEmptyState
+              icon={<Search />}
+              title="Start with a course"
+              description="Search by course code, or browse a faculty below."
+              actionLabel="Search courses"
+              onAction={() => searchInputRef.current?.focus()}
+            />
+          )}
         </Card>
       </If>
       <CourseSectionCard courseId={currentCourse} />

@@ -1,6 +1,10 @@
 import { observer } from 'mobx-react-lite';
 import { Checkbox, IconButton, Tooltip } from '@mui/material';
-import { ClearAllRounded, Warning } from '@mui/icons-material';
+import {
+  ClearAllRounded,
+  PlaylistAddOutlined,
+  Warning,
+} from '@mui/icons-material';
 import clsx from 'clsx';
 import { FC } from 'react';
 
@@ -12,12 +16,11 @@ import ListItem from '../molecules/ListItem';
 import { getSectionTime } from '../review/CourseSections';
 import {
   CourseSection,
-  ErrorCardMode,
   OverlapSection,
   PlannerCourse,
   TbaSection,
 } from '../../types';
-import ErrorCard from '../molecules/ErrorCard';
+import PlannerEmptyState from './PlannerEmptyState';
 
 const getSectionLabel = (
   course: PlannerCourse,
@@ -122,7 +125,11 @@ const PlannerCart: FC<Props> = ({ style }) => {
           })
         )
       ) : (
-        <ErrorCard mode={ErrorCardMode.NULL} />
+        <PlannerEmptyState
+          icon={<PlaylistAddOutlined />}
+          title="No sections added yet"
+          description="Choose a course, then add a section to place it in your timetable."
+        />
       )}
     </Card>
   );

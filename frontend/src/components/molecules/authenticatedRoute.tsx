@@ -18,7 +18,9 @@ type HOC = (Component: FC, options?: Options) => FC;
 
 const authenticatedRoute: HOC = (Component = null, options = {}) => {
   const AuthenticatedRoute: FC = props => {
-    const [authState, setAuthState] = useState(AuthState.INIT);
+    const [authState, setAuthState] = useState(
+      options.allowAnonymous ? AuthState.LOGGED_OUT : AuthState.INIT
+    );
     const user = useUser();
     const view = useView();
     const router = useRouter();

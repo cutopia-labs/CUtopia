@@ -6,4 +6,4 @@ Allow: /
 Host: cutopia.app
 
 # Sitemaps
-Sitemap: cutopia.app/sitemap.xml
+Sitemap: https://cutopia.app/sitemap.xml

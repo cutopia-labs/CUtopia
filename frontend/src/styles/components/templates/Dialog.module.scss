@@ -20,8 +20,41 @@
   }
 }
 
+.loginModalContainer {
+  :global(.MuiDialog-paper) {
+    width: calc(100% - 32px);
+    max-width: 460px;
+    border-radius: 14px;
+  }
+}
+
+.loginDialogContent {
+  position: relative;
+  width: 100%;
+}
+
+.closeDialogButton {
+  position: absolute;
+  z-index: 1;
+  top: 10px;
+  right: 10px;
+  color: var(--caption);
+}
+
+.loginDialogPanel {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 36px !important;
+  box-sizing: border-box;
+  background: transparent !important;
+}
+
 @media only screen and (max-width: 1260px) {
   .issueChipsRow {
     flex-wrap: wrap;
+  }
+  .loginDialogPanel {
+    padding: 28px 24px !important;
   }
 }

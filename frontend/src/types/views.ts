@@ -35,7 +35,7 @@ export interface SnackBar extends SnackBarProps {
   snackbarId: number | undefined;
 }
 
-export type DialogKeys = 'userSettings' | 'reportIssues';
+export type DialogKeys = 'userSettings' | 'reportIssues' | 'login';
 
 export type Dialog = {
   key: DialogKeys;

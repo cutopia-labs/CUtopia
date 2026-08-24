@@ -38,6 +38,7 @@ import useDebounce from '../../hooks/useDebounce';
 import { getRecentReviewQuery } from '../../helpers/dynamicQueries';
 import Page from '../../components/atoms/Page';
 import authenticatedRoute from '../../components/molecules/authenticatedRoute';
+import ReviewAccessGate from '../../components/review/ReviewAccessGate';
 
 type ReviewHomeTab = 'Recents' | 'Top Rated' | 'Popular';
 
@@ -242,13 +243,22 @@ const RankingCard: FC<RankingCardProps> = ({
 };
 
 const HomePanel: FC = () => {
-  const [tab, setTab] = useState<ReviewHomeTab>('Recents');
+  const [tab, setTab] = useState<ReviewHomeTab>('Popular');
   const [sortKey, setSortKey] = useState('overall');
   const [feedCourses, setFeedCourse] = useState([]);
+  const tabSelected = useRef(false);
   const router = useRouter();
   const view = useView();
   const user = useUser();
   const data = useData();
+
+  const openLogin = () =>
+    view.setDialog({
+      key: 'login',
+      contentProps: {
+        returnUrl: router.asPath,
+      },
+    });
 
   const { data: popularCourses, loading: popularCoursesLoading } = useQuery(
     POPULAR_COURSES_QUERY,
@@ -275,6 +285,12 @@ const HomePanel: FC = () => {
     fetchFeedCourses();
   }, []);
 
+  useEffect(() => {
+    if (user.loggedIn && !tabSelected.current) {
+      setTab('Recents');
+    }
+  }, [user.loggedIn]);
+
   return (
     <Page className={styles.reviewPage} center padding>
       <div
@@ -283,8 +299,27 @@ const HomePanel: FC = () => {
           'panel center-row grid-auto-row'
         )}
       >
-        <TabsContainer items={MENU_ITEMS} selected={tab} onSelect={setTab} />
-        {(tab === 'Top Rated' || tab === 'Recents') && (
+        <section className={styles.reviewOverview}>
+          <header className={styles.pageIntro}>
+            <div>
+              <h1>CUHK Course Reviews</h1>
+              <p>Compare courses by rating and popularity.</p>
+            </div>
+            <p className={styles.reviewPrivacyNote}>
+              Written reviews stay within verified CUHK students.
+            </p>
+          </header>
+          <TabsContainer
+            className={styles.reviewTabs}
+            items={MENU_ITEMS}
+            selected={tab}
+            onSelect={selected => {
+              tabSelected.current = true;
+              setTab(selected);
+            }}
+          />
+        </section>
+        {(tab === 'Top Rated' || (tab === 'Recents' && user.loggedIn)) && (
           <ChipsRow
             className={styles.homeChipsRow}
             items={[
@@ -299,19 +334,28 @@ const HomePanel: FC = () => {
             }
           />
         )}
-        <RecentReviewList
-          visible={tab === 'Recents'}
-          category={user.recentReviewCategory}
-        />
-        <RankingCard
-          rankList={rankedCourses?.ranking?.rankedCourses}
-          sortKey={sortKey}
-          loading={rankedCoursesLoading}
-        />
-        <RankingCard
-          rankList={popularCourses?.ranking?.rankedCourses}
-          loading={popularCoursesLoading}
-        />
+        {user.loggedIn && (
+          <RecentReviewList
+            visible={tab === 'Recents'}
+            category={user.recentReviewCategory}
+          />
+        )}
+        {tab === 'Recents' && !user.loggedIn && (
+          <ReviewAccessGate mode="recent" onLogin={openLogin} />
+        )}
+        {tab === 'Top Rated' && (
+          <RankingCard
+            rankList={rankedCourses?.ranking?.rankedCourses}
+            sortKey={sortKey}
+            loading={rankedCoursesLoading}
+          />
+        )}
+        {tab === 'Popular' && (
+          <RankingCard
+            rankList={popularCourses?.ranking?.rankedCourses}
+            loading={popularCoursesLoading}
+          />
+        )}
         <Footer
           visible={
             !(
@@ -323,7 +367,7 @@ const HomePanel: FC = () => {
         />
       </div>
       <div className="secondary-column sticky">
-        <Card title="Recents">
+        <Card title="Recently viewed">
           <ChipsRow
             className="recentChips"
             chipClassName="chipFill"
@@ -341,4 +385,6 @@ const HomePanel: FC = () => {
   );
 };
 
-export default authenticatedRoute(observer(HomePanel));
+export default authenticatedRoute(observer(HomePanel), {
+  allowAnonymous: true,
+});
