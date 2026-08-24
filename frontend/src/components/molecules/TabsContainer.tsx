@@ -7,6 +7,7 @@ type TabsContainerProps = {
   selected: string;
   onSelect: (label: any) => void;
   mb?: boolean;
+  className?: string;
 };
 
 const TabsContainer: FC<TabsContainerProps> = ({
@@ -14,8 +15,9 @@ const TabsContainer: FC<TabsContainerProps> = ({
   selected,
   onSelect,
   mb,
+  className,
 }) => (
-  <div className={clsx('card', 'tabs-row', mb && 'mb')}>
+  <div className={clsx('card', 'tabs-row', mb && 'mb', className)}>
     {items.map(item => (
       <div
         key={item.label}

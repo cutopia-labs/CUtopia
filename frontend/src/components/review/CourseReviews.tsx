@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef, useReducer, FC } from 'react';
 import { useQuery } from '@apollo/client';
-import pluralize from 'pluralize';
 import copy from 'copy-to-clipboard';
 import { ReportCategory } from 'cutopia-types';
 import { useRouter } from 'next/router';
@@ -210,18 +209,8 @@ const CourseReviews: FC<Props> = ({
       )}
       {Boolean(courseInfo) && (
         <CaptionDivider>
-          <If
-            visible={reviewId}
-            elseNode={pluralize(
-              'review',
-              courseInfo.rating?.numReviews || 0,
-              true
-            )}
-          >
-            {`Showing 1 review`}
-            <span className="caption">{`(${
-              courseInfo.rating?.numReviews || ''
-            } total)`}</span>
+          <If visible={reviewId} elseNode="Reviews">
+            Showing 1 review
           </If>
         </CaptionDivider>
       )}

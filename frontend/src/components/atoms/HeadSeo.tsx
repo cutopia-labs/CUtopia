@@ -11,6 +11,7 @@ import { trimEllip } from '../../helpers';
 type SeoDoc = {
   title: string;
   description: string;
+  canonical?: string;
 };
 
 const getReviewTitle = (prop: CourseInfo): SeoDoc => {
@@ -20,6 +21,7 @@ const getReviewTitle = (prop: CourseInfo): SeoDoc => {
       prop.description || DEFAULT_HEAD.description,
       META_DESCRIPTION_CHAR_LIMIT
     ),
+    canonical: `https://cutopia.app/review/${prop.courseId}`,
   };
 };
 
@@ -37,7 +39,8 @@ const pathMapping: Record<string, SeoDoc | false> = {
   '/review': {
     title: 'CUHK Course Reviews - CUtopia',
     description:
-      'Share your opinions and make informed decisions about coursework. It provides detailed reviews and quantitive information in different metrics.',
+      'Compare popular and top-rated CUHK courses using aggregate student ratings. Written reviews are available only to verified CUHK students.',
+    canonical: 'https://cutopia.app/review',
   },
   '/about': false,
 };
@@ -68,10 +71,12 @@ type Prop = {
 const HeadSeo: FC<Prop> = ({ pageProps, pagePath }) => {
   const seoDoc = makeHead(pageProps, pagePath);
   const { title, description } = seoDoc || DEFAULT_NO_SEO_DOC;
+  const canonical = seoDoc && seoDoc.canonical;
   return (
     <NextSeo
       title={title}
       description={description}
+      canonical={canonical}
       noindex={seoDoc === false}
       nofollow={seoDoc === false}
     />

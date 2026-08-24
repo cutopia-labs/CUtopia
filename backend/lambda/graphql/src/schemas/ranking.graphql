@@ -3,7 +3,9 @@ type Query {
 }
 
 type RankTable {
-  rankedCourses(filter: RankingFilter!): [RankedCourse] @auth @rateLimit(duration: 60, limit: 100)
+  # Rankings contain aggregate course statistics only. Individual review data
+  # remains protected by the auth directive in reviews.graphql.
+  rankedCourses(filter: RankingFilter!): [RankedCourse] @rateLimit(duration: 60, limit: 100)
 }
 
 input RankingFilter {

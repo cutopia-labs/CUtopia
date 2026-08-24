@@ -1,0 +1,202 @@
+.accessGate {
+  position: relative;
+  min-height: 390px;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.preview {
+  display: grid;
+  gap: var(--card-padding);
+  padding: var(--card-padding);
+  filter: blur(3px);
+  opacity: 0.62;
+  transform: scale(1.015);
+  user-select: none;
+}
+
+.previewCard {
+  display: grid;
+  gap: 16px;
+  min-height: 126px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius);
+  background: var(--surface);
+}
+
+.previewHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.previewAvatar,
+.previewHeading,
+.previewMeta,
+.previewLine,
+.previewRatings span {
+  display: block;
+  background: var(--underlay);
+}
+
+.previewAvatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+}
+
+.previewHeading {
+  width: 28%;
+  height: 11px;
+  border-radius: 8px;
+}
+
+.previewMeta {
+  width: 64px;
+  height: 9px;
+  margin-left: auto;
+  border-radius: 8px;
+}
+
+.previewRatings {
+  display: flex;
+  gap: 18px;
+  span {
+    width: 38px;
+    height: 22px;
+    border-radius: 12px;
+  }
+}
+
+.previewLine {
+  width: 88%;
+  height: 10px;
+  border-radius: 8px;
+}
+
+.previewLineShort {
+  width: 62%;
+}
+
+.fade {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0.92) 46%,
+    var(--surface) 78%
+  );
+}
+
+.gateContent {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 480px;
+  margin: auto;
+  padding: 32px;
+  text-align: center;
+  h2 {
+    margin-top: 8px;
+    font-size: 24px;
+    line-height: 32px;
+  }
+  p {
+    max-width: 430px;
+    margin: 10px 0 22px;
+    color: var(--caption);
+    line-height: 22px;
+  }
+}
+
+.iconContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 10px;
+  border-radius: 16px;
+  color: var(--primary);
+  background: rgba(226, 16, 97, 0.1);
+  > svg {
+    font-size: 28px;
+  }
+}
+
+.lockBadge {
+  position: absolute;
+  right: -5px;
+  bottom: -5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 23px;
+  height: 23px;
+  border: 3px solid var(--surface);
+  border-radius: 50%;
+  color: white;
+  background: var(--primary);
+  svg {
+    font-size: 13px;
+  }
+}
+
+.eyebrow {
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.loginButton {
+  min-width: 220px;
+  padding: 10px 22px;
+  border-radius: 999px;
+  color: white;
+  font-weight: 700;
+  text-transform: none !important;
+  box-shadow: 0 8px 24px rgba(226, 16, 97, 0.2);
+}
+
+.accessNote {
+  margin-top: 10px;
+  color: var(--caption-light);
+  font-size: 12px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .fade {
+    background: linear-gradient(
+      180deg,
+      rgba(31, 31, 31, 0.2) 0%,
+      rgba(31, 31, 31, 0.92) 46%,
+      var(--surface) 78%
+    );
+  }
+}
+
+@media only screen and (max-width: 1260px) {
+  .accessGate {
+    min-height: 360px;
+  }
+  .gateContent {
+    padding: 24px;
+    h2 {
+      font-size: 21px;
+      line-height: 28px;
+    }
+  }
+  .previewRatings {
+    gap: 10px;
+  }
+}
