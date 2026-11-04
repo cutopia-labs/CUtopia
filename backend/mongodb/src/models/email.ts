@@ -6,7 +6,18 @@ import { requiredString } from '../constants/schema';
 const emailSchema = new Schema<Email>(
   {
     action: requiredString,
-    username: requiredString,
+    username: {
+      type: String,
+      required: function () {
+        return this.action === 'create';
+      },
+    },
+    userId: {
+      type: String,
+      required: function () {
+        return this.action === 'resetPwd';
+      },
+    },
     SID: requiredString,
     code: String,
   },
