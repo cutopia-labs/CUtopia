@@ -1,9 +1,9 @@
 import { useQuery } from '@apollo/client';
 import { FC } from 'react';
 import { observer } from 'mobx-react-lite';
-import { COURSE_SECTIONS_QUERY } from '../../constants/queries';
+import { COURSE_PLANNER_INFO_QUERY } from '../../constants/queries';
 import { validCourse } from '../../helpers';
-import { useData, useView } from '../../store';
+import { useView } from '../../store';
 import Loading from '../atoms/Loading';
 import CourseCard from '../review/CourseCard';
 
@@ -13,21 +13,19 @@ type Props = {
 
 const CourseSectionCard: FC<Props> = ({ courseId }) => {
   const view = useView();
-  const data = useData();
   // Fetch course info
   const { data: courseInfo, loading: courseInfoLoading } = useQuery(
-    COURSE_SECTIONS_QUERY,
+    COURSE_PLANNER_INFO_QUERY,
     {
       skip: !courseId || !validCourse(courseId),
       variables: {
         courseId,
-        term: data.currentTerm,
       },
       onError: view.handleError,
     }
   );
   if (!courseId) return null;
-  if (courseInfoLoading) return <Loading />;
+  if (courseInfoLoading && !courseInfo) return <Loading />;
   return (
     <CourseCard
       courseInfo={{
