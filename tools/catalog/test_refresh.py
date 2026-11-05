@@ -127,7 +127,7 @@ class PlanningTermTests(unittest.TestCase):
 
     def test_november_uses_second_term_without_selecting_programme_or_future_terms(self):
         self.dataset({self.first: 600, self.second: 600, '2026-27 Term 4': 600,
-                      '2026-27 Winter': 600, '2027-28 Term 1': 600})
+                      '2026-27 Winter': 600, '2027-28 Term 1': 1200})
         self.assertEqual(self.choose('2026-11-05'), self.second)
 
     def test_first_term_registration_does_not_jump_to_preloaded_second_term(self):
@@ -154,6 +154,18 @@ class PlanningTermTests(unittest.TestCase):
     def test_sparse_schedule_retains_existing_default(self):
         self.dataset({self.first: 600, self.second: 100})
         self.assertEqual(self.choose('2026-11-05'), self.first)
+
+    def test_bootstrap_cannot_bypass_the_official_release_floor(self):
+        self.dataset({self.first: 600, self.second: 600})
+        selected, _ = refresh.select_term(
+            self.root, {'termNotBefore': {self.second: '2026-11-04'}},
+            today=date(2026, 11, 3))
+        self.assertEqual(selected, self.first)
+
+    def test_bootstrap_rejects_sparse_data_instead_of_inventing_a_default(self):
+        self.dataset({self.first: 100, self.second: 100})
+        with self.assertRaisesRegex(ValueError, 'No sufficiently published'):
+            refresh.select_term(self.root, {}, today=date(2026, 11, 5))
 
     def test_partial_schedule_fails_relative_coverage_threshold(self):
         self.dataset({self.first: 1200, self.second: 800})
