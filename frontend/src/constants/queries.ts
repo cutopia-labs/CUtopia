@@ -19,9 +19,9 @@ export const COURSE_INFO_QUERY = gql`
 `;
 
 // Planner Courses Query
-export const COURSE_SECTIONS_QUERY = gql`
-  query ($courseId: CourseID!, $term: String!) {
-    course(filter: { requiredCourse: $courseId, requiredTerm: $term }) {
+export const COURSE_PLANNER_INFO_QUERY = gql`
+  query ($courseId: CourseID!) {
+    course(filter: { requiredCourse: $courseId }) {
       units
       title
       academic_group
@@ -33,15 +33,6 @@ export const COURSE_SECTIONS_QUERY = gql`
         content
         difficulty
         teaching
-      }
-      sections {
-        name
-        startTimes
-        endTimes
-        days
-        locations
-        instructors
-        meetingDates
       }
     }
   }

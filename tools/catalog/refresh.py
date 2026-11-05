@@ -12,7 +12,8 @@ import shutil
 import sys
 import tempfile
 import threading
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
+from zoneinfo import ZoneInfo
 
 
 def canonical(value):
@@ -46,7 +47,80 @@ def inspect(directory):
     return courses, terms, sections
 
 
-def validate(directory, baseline, current_term):
+def regular_term(term):
+    match = re.fullmatch(r'(20\d{2})-(\d{2}) Term ([12])', term)
+    if not match or int(match[2]) != (int(match[1]) + 1) % 100:
+        return None
+    return int(match[1]), int(match[3])
+
+
+def select_term(directory, config, previous=None, today=None):
+    """Choose the undergraduate planning window, never the largest term label."""
+    courses, counts, _ = inspect(directory)
+    today = today or datetime.now(ZoneInfo('Asia/Hong_Kong')).date()
+    override = config.get('currentTerm')
+    if override:
+        if not regular_term(override) or not counts.get(override):
+            raise ValueError('Default term override must be an offered undergraduate Term 1 or 2')
+        return override, 'manual-override'
+    # July opens planning for the next first term; November opens second-term
+    # planning. Keep Term 2 through June, including its January add/drop period.
+    year = today.year if today.month >= 7 else today.year - 1
+    number = 2 if today.month >= 11 or today.month < 7 else 1
+    target = f'{year}-{(year + 1) % 100:02d} Term {number}'
+    not_before = config.get('termNotBefore', {}).get(target)
+    if not_before:
+        not_before = date.fromisoformat(not_before)
+    reference = max((n for term, n in counts.items()
+                     if regular_term(term) and regular_term(term) <= (year, number)), default=0)
+    subjects = {course_id[:4] for course_id, c in courses.items() if c.get('terms', {}).get(target)}
+    ready = counts.get(target, 0) >= max(500, reference * 0.75) and len(subjects) >= 30
+    if ready and (not not_before or today >= not_before):
+        return target, 'registration-window-ready'
+    # Sparse/early future schedules must not change the published default.
+    if previous and regular_term(previous) and counts.get(previous):
+        return previous, 'retain-default-until-ready'
+    candidates = [term for term, count in counts.items()
+                  if regular_term(term) and regular_term(term) <= (year, number)
+                  and count >= max(500, reference * 0.75)]
+    if not candidates:
+        raise ValueError('No sufficiently published undergraduate planning term')
+    return max(candidates, key=regular_term), 'latest-ready-fallback'
+
+
+def available_terms(directory, current_term):
+    _, counts, _ = inspect(directory)
+    year, _ = regular_term(current_term)
+    others = [term for term, count in counts.items() if count and regular_term(term)
+              and regular_term(term)[0] == year and term != current_term]
+    summer = f'{year}-{(year + 1) % 100:02d} Summer Session'
+    return [current_term, *sorted(others, key=regular_term, reverse=True),
+            *([summer] if counts.get(summer) else [])]
+
+
+def update_availability(directory, current_term):
+    courses, _, _ = inspect(directory)
+    path = Path(directory) / 'resources/course_list.json'
+    listing = json.loads(path.read_text())
+    for rows in listing.values():
+        for row in rows:
+            row.pop('o', None)
+            if courses[row['c']].get('terms', {}).get(current_term):
+                row['o'] = 1
+    path.write_bytes(canonical(listing))
+
+
+def require_published_courses(directory, previous):
+    if previous is None:
+        return
+    subjects = {file.stem: f'objects/{hashlib.sha256(canonical(json.loads(file.read_text()))).hexdigest()}.json'
+                for file in (Path(directory) / 'courses').glob('*.json')
+                if re.fullmatch('[A-Z]{4}', file.stem)}
+    if subjects != previous['subjects']:
+        raise ValueError('Publish-only requires the currently published course data; update the data checkout first')
+
+
+def validate(directory, baseline, current_term, previous_term=None):
     new, terms, sections = inspect(directory)
     old, old_terms, old_sections = inspect(baseline)
     if not set(old).issubset(new):
@@ -54,6 +128,8 @@ def validate(directory, baseline, current_term):
     active_terms = [current_term]
     if current_term.endswith('Term 1'):
         active_terms.append(current_term[:-1] + '2')
+    if previous_term and previous_term[:7] == current_term[:7]:
+        active_terms.append(previous_term)
     for term in active_terms:
         if terms.get(term, 0) < old_terms.get(term, 0) * 0.95:
             raise ValueError(f'Unexpected drop in offered courses: {term}')
@@ -80,7 +156,7 @@ def get_json(s3, bucket, key):
         return None, None
 
 
-def publish(s3, bucket, directory, current_term, previous, previous_etag):
+def publish(s3, bucket, directory, current_term, previous, previous_etag, checked_at=None):
     def upload(value):
         body = canonical(value)
         digest = hashlib.sha256(body).hexdigest()
@@ -102,14 +178,12 @@ def publish(s3, bucket, directory, current_term, previous, previous_etag):
     files = {'courseList': 'resources/course_list.json', 'instructors': 'resources/instructors.json',
              'faculties': 'derived/faculty_subjects.json', 'courseIds': 'derived/subject_course_names.json'}
     resources = {name: upload(json.loads((Path(directory) / file).read_text())) for name, file in files.items()}
-    available = [current_term]
-    if current_term.endswith('Term 1'):
-        available.append(current_term[:-1] + '2')
+    available = available_terms(directory, current_term)
     content = {'schemaVersion': 1, 'currentTerm': current_term, 'availableTerms': available,
                'subjects': subjects, 'resources': resources}
     version = hashlib.sha256(canonical(content)).hexdigest()
     now = datetime.now(timezone.utc).isoformat(timespec='milliseconds').replace('+00:00', 'Z')
-    manifest = {**content, 'version': version, 'publishedAt': now, 'checkedAt': now}
+    manifest = {**content, 'version': version, 'publishedAt': now, 'checkedAt': checked_at or now}
     changed = previous is None or previous['version'] != version
     if changed:
         s3.put_object(Bucket=bucket, Key=f'published/manifests/{version}.json',
@@ -251,20 +325,31 @@ def main():
     s3 = boto3.client('s3', region_name=os.environ.get('AWS_REGION', 'ap-southeast-1'))
     data = args.data_dir.resolve()
     previous, etag = get_json(s3, args.bucket, 'published/manifest.json')
-    config = data / 'catalog-config.json'
-    current_term = args.current_term or (json.loads(config.read_text())['currentTerm'] if config.exists() else previous['currentTerm'])
+    config_path = data / 'catalog-config.json'
+    config = json.loads(config_path.read_text()) if config_path.exists() else {}
+    if args.current_term:
+        config['currentTerm'] = args.current_term
+    previous_term = previous['currentTerm'] if previous else None
+    current_term = config.get('currentTerm') or previous_term or select_term(data, config)[0]
+    if args.publish_only:
+        require_published_courses(data, previous)
     with tempfile.TemporaryDirectory(prefix='cutopia-catalog-') as temporary:
         work = Path(temporary)
         output, count = (data, 0) if args.publish_only else crawl(
             s3, args.bucket, data, work, args.run_id, current_term,
             previous['version'] if previous else None, args.workers)
-        summary = validate(output, data, current_term)
-        manifest, changed = publish(s3, args.bucket, output, current_term, previous, etag)
+        current_term, selection_reason = select_term(output, config, previous_term)
+        summary = validate(output, data, current_term, previous_term)
+        update_availability(output, current_term)
+        manifest, changed = publish(s3, args.bucket, output, current_term, previous, etag,
+                                    previous['checkedAt'] if args.publish_only and previous else None)
         if output != data:
             for name in ('courses', 'derived', 'resources'):
                 shutil.copytree(output / name, data / name, dirs_exist_ok=True)
         report = {**summary, 'subjectsChecked': count, 'version': manifest['version'],
-                  'checkedAt': manifest['checkedAt'], 'changed': changed, 'runId': args.run_id}
+                  'checkedAt': manifest['checkedAt'], 'changed': changed, 'runId': args.run_id,
+                  'currentTerm': current_term, 'availableTerms': manifest['availableTerms'],
+                  'termSelection': selection_reason, 'publicationMode': 'publish-only' if args.publish_only else 'full-crawl'}
         (data / 'last-update.json').write_text(json.dumps(report, indent=2) + '\n')
         print(json.dumps(report, indent=2))
 

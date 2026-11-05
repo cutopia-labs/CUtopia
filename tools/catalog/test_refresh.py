@@ -1,4 +1,5 @@
 import hashlib
+from datetime import date
 import importlib.util
 import json
 from pathlib import Path
@@ -79,11 +80,101 @@ class PublicationTests(unittest.TestCase):
             refresh.publish(self.s3, 'catalog', self.root, '2026-27 Term 1', before, 'stale')
         self.assertEqual(self.s3.objects['published/manifest.json'], current)
 
+    def test_reselecting_default_preserves_actual_crawl_timestamp(self):
+        before, _ = refresh.publish(self.s3, 'catalog', self.root, '2026-27 Term 1', None, None)
+        etag = hashlib.md5(self.s3.objects['published/manifest.json']).hexdigest()
+        after, _ = refresh.publish(self.s3, 'catalog', self.root, '2026-27 Term 2', before, etag,
+                                   checked_at=before['checkedAt'])
+        self.assertEqual(after['checkedAt'], before['checkedAt'])
+        self.assertEqual(after['currentTerm'], '2026-27 Term 2')
+
+    def test_publish_only_refuses_an_outdated_data_checkout(self):
+        before, _ = refresh.publish(self.s3, 'catalog', self.root, '2026-27 Term 1', None, None)
+        refresh.require_published_courses(self.root, before)
+        (self.root / 'courses/TEST.json').write_text(json.dumps([{'code': '1000', 'title': 'Stale data'}]))
+        with self.assertRaisesRegex(ValueError, 'currently published'):
+            refresh.require_published_courses(self.root, before)
+
     def test_validates_indexes_and_refuses_data_loss(self):
         self.assertEqual(refresh.validate(self.root, self.root, '2026-27 Term 1')['courses'], 1)
         (self.root / 'derived/subject_course_names.json').write_text('{}')
         with self.assertRaisesRegex(ValueError, 'Course ID index'):
             refresh.validate(self.root, self.root, '2026-27 Term 1')
+
+
+class PlanningTermTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.root = Path(self.temp.name)
+        (self.root / 'courses').mkdir()
+        self.first = '2026-27 Term 1'
+        self.second = '2026-27 Term 2'
+
+    def tearDown(self):
+        self.temp.cleanup()
+
+    def dataset(self, terms):
+        section = {'S1': {'days': [], 'startTimes': [], 'endTimes': [], 'locations': [], 'instructors': []}}
+        for n in range(30):
+            subject = f'T{chr(65 + n // 26)}{chr(65 + n % 26)}A'
+            rows = [{'code': f'{i:04d}', 'title': 'Course',
+                     'terms': {term: section for term, limit in terms.items() if i * 30 + n < limit}}
+                    for i in range(40)]
+            (self.root / 'courses' / f'{subject}.json').write_text(json.dumps(rows))
+
+    def choose(self, day, config=None, previous=None):
+        return refresh.select_term(self.root, config or {}, previous or self.first, date.fromisoformat(day))[0]
+
+    def test_november_uses_second_term_without_selecting_programme_or_future_terms(self):
+        self.dataset({self.first: 600, self.second: 600, '2026-27 Term 4': 600,
+                      '2026-27 Winter': 600, '2027-28 Term 1': 600})
+        self.assertEqual(self.choose('2026-11-05'), self.second)
+
+    def test_first_term_registration_does_not_jump_to_preloaded_second_term(self):
+        self.dataset({self.first: 600, self.second: 600})
+        self.assertEqual(self.choose('2026-09-10'), self.first)
+
+    def test_second_term_add_drop_does_not_jump_to_summer_or_four_term_programmes(self):
+        self.dataset({self.first: 600, self.second: 600, '2026-27 Summer Session': 600,
+                      '2026-27 Term 3': 600, '2026-27 Term 4': 600})
+        self.assertEqual(self.choose('2027-01-24', previous=self.second), self.second)
+
+    def test_new_academic_year_waits_for_first_term_planning_window(self):
+        next_first = '2027-28 Term 1'
+        self.dataset({self.first: 600, self.second: 600, next_first: 600})
+        self.assertEqual(self.choose('2027-06-30', previous=self.second), self.second)
+        self.assertEqual(self.choose('2027-07-01', previous=self.second), next_first)
+
+    def test_official_release_override_delays_automatic_switch(self):
+        self.dataset({self.first: 600, self.second: 600})
+        config = {'termNotBefore': {self.second: '2026-11-04'}}
+        self.assertEqual(self.choose('2026-11-03', config), self.first)
+        self.assertEqual(self.choose('2026-11-04', config), self.second)
+
+    def test_sparse_schedule_retains_existing_default(self):
+        self.dataset({self.first: 600, self.second: 100})
+        self.assertEqual(self.choose('2026-11-05'), self.first)
+
+    def test_partial_schedule_fails_relative_coverage_threshold(self):
+        self.dataset({self.first: 1200, self.second: 800})
+        self.assertEqual(self.choose('2026-11-05'), self.first)
+
+    def test_term_picker_keeps_previous_regular_term_and_default_first(self):
+        self.dataset({self.first: 600, self.second: 600, '2026-27 Winter': 600,
+                      '2026-27 Summer Session': 100})
+        self.assertEqual(refresh.available_terms(self.root, self.second),
+                         [self.second, self.first, '2026-27 Summer Session'])
+
+    def test_search_availability_follows_the_selected_default(self):
+        self.dataset({self.first: 600, self.second: 500})
+        (self.root / 'resources').mkdir()
+        listing = {'TEST': [{'c': 'TAAA0000'}, {'c': 'TBDA0039', 'o': 1}]}
+        path = self.root / 'resources/course_list.json'
+        path.write_text(json.dumps(listing))
+        refresh.update_availability(self.root, self.second)
+        rows = json.loads(path.read_text())['TEST']
+        self.assertEqual(rows[0]['o'], 1)
+        self.assertNotIn('o', rows[1])
 
 
 if __name__ == '__main__':
