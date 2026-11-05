@@ -5,7 +5,12 @@ import {
   CourseSearchList,
   LecturerQuery,
 } from '../types';
-import { DATA_CONFIGS, SIMILAR_COURSE_LIMIT } from '../config';
+import {
+  DATA_CONFIGS,
+  SIMILAR_COURSE_LIMIT,
+  CURRENT_TERM,
+  plannerTerms,
+} from '../config';
 import { storeData } from '../helpers/store';
 import {
   _searchCourses,
@@ -13,6 +18,8 @@ import {
   _getSimilarCourses,
   _searchLecturers,
 } from '../helpers/data';
+import { getCatalogManifest, getCatalogObject } from '../helpers/catalog';
+import initialFaculties from '../constants/courseCodes';
 import StorePrototype from './StorePrototype';
 
 const LOAD_KEYS = ['courseList', 'instructors'];
@@ -24,12 +31,38 @@ const DEFAULT_VALUES = {};
 class DataStore extends StorePrototype {
   @observable courseList: CourseSearchList;
   @observable instructors: string[];
+  @observable currentTerm = CURRENT_TERM;
+  @observable terms = plannerTerms;
+  @observable faculties = initialFaculties;
+  @observable catalogVersion = '';
+  @observable catalogCheckedAt = 0;
+  private resourceVersions: Record<string, string> = {};
   constructor() {
     super(LOAD_KEYS, RESET_KEYS, DEFAULT_VALUES);
     makeObservable(this);
   }
 
   @action async getRemoteData(key) {
+    const manifest = await getCatalogManifest();
+    if (manifest) {
+      this.currentTerm = manifest.currentTerm;
+      this.terms = manifest.availableTerms;
+      this.catalogVersion = manifest.version;
+      this.catalogCheckedAt = Date.parse(manifest.checkedAt);
+      const version = manifest.resources[key];
+      if (version && (this.resourceVersions[key] !== version || !this[key])) {
+        try {
+          const data = await getCatalogObject(version);
+          if (key === 'courseList' && (!data || Array.isArray(data)))
+            throw new Error('Invalid course index');
+          if (key === 'instructors' && !Array.isArray(data))
+            throw new Error('Invalid instructor index');
+          this.saveData(data, key, version);
+        } catch (error) {
+          if (!this[key]) throw error;
+        }
+      }
+    }
     if (this[key]) return this[key];
     const fetchKey = DATA_CONFIGS[key].fetchKey || key;
     const res = await fetch(`/resources/${fetchKey}.json`, {
@@ -46,6 +79,24 @@ class DataStore extends StorePrototype {
   @action init = () => {
     this.loadStore();
     this.verifyAndMount();
+    const refresh = async () => {
+      if (document.visibilityState === 'hidden') return;
+      const manifest = await getCatalogManifest();
+      if (!manifest) return;
+      this.currentTerm = manifest.currentTerm;
+      this.terms = manifest.availableTerms;
+      this.catalogVersion = manifest.version;
+      this.catalogCheckedAt = Date.parse(manifest.checkedAt);
+      try {
+        this.faculties = await getCatalogObject(manifest.resources.faculties);
+      } catch (_) {
+        // Keep the last usable subject navigation during a transient failure.
+      }
+    };
+    void refresh();
+    window.addEventListener('focus', refresh);
+    window.addEventListener('catalog-updated', refresh);
+    setInterval(refresh, 5 * 60000);
   };
 
   @action verifyAndMount = () => {
@@ -54,6 +105,7 @@ class DataStore extends StorePrototype {
 
       // If not expired
       if (this[key]?.etag >= expireBefore && this[key]?.data) {
+        this.resourceVersions[key] = this[key].version;
         this[key] = this[key].data;
       } else {
         this[key] = null;
@@ -61,12 +113,14 @@ class DataStore extends StorePrototype {
     });
   };
 
-  @action saveData = (data: any, key: string) => {
+  @action saveData = (data: any, key: string, version?: string) => {
     storeData(key, {
       data,
       etag: +new Date(),
+      version,
     });
     this[key] = data;
+    this.resourceVersions[key] = version;
   };
 
   // Courses Data Related

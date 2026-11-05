@@ -12,8 +12,14 @@ const parseUserIdField = userId =>
   /^11[0-9]{8}$/.test(userId) ? 'SID' : 'username';
 
 const replaceUnverifiedUser = async (filter, newUser, err) => {
-  const user = await User.findOne(filter, 'verified createdAt').exec();
-  if (user.verified || !isVerfiCodeExpired(user.createdAt)) {
+  const user = await User.findOne(
+    filter,
+    'verified createdAt veriCodeCreatedAt'
+  ).exec();
+  if (
+    user.verified ||
+    !isVerfiCodeExpired(user.veriCodeCreatedAt ?? user.createdAt)
+  ) {
     throw Error(err);
   }
   await User.replaceOne(filter, newUser).exec();
@@ -35,6 +41,7 @@ export const createUser = async input => {
     password: hash,
     createdAt: now,
     veriCode,
+    veriCodeCreatedAt: now,
   };
   const user = new User(userData);
 
@@ -83,7 +90,10 @@ export const updateUser = async input => {
 
 export const verifyUser = async input => {
   const { username, code } = input;
-  const user = await getUser(username, 'verified veriCode createdAt');
+  const user = await getUser(
+    username,
+    'verified veriCode createdAt veriCodeCreatedAt'
+  );
 
   if (!user) {
     throw Error(ErrorCode.VERIFICATION_USER_DNE.toString());
@@ -91,7 +101,7 @@ export const verifyUser = async input => {
   if (user.verified) {
     throw Error(ErrorCode.VERIFICATION_ALREADY_VERIFIED.toString());
   }
-  if (isVerfiCodeExpired(user.createdAt)) {
+  if (isVerfiCodeExpired(user.veriCodeCreatedAt ?? user.createdAt)) {
     await user.remove();
     throw Error(ErrorCode.VERIFICATION_EXPIRED.toString());
   }

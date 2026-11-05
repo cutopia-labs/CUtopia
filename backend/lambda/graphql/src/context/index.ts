@@ -1,8 +1,12 @@
+import { CatalogManifest } from 'cutopia-types';
+
 import { Token, verify } from '../jwt';
 
 export interface Context {
   user: Token;
   ip: string;
+  catalog?: CatalogManifest;
+  catalogVersion?: string;
 }
 
 const context = async ({ event: lambdaEvent }) => {
@@ -12,6 +16,9 @@ const context = async ({ event: lambdaEvent }) => {
   const defaultContext = {
     user: null,
     ip,
+    catalogVersion:
+      lambdaEvent.headers['X-Catalog-Version'] ||
+      lambdaEvent.headers['x-catalog-version'],
   };
 
   if (split.length !== 2) {

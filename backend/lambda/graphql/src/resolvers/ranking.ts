@@ -2,6 +2,7 @@ import { getRanking } from 'mongodb';
 import NodeCache from 'node-cache';
 
 import { Resolvers } from '../schemas/types';
+import { getCatalogManifest } from '../utils/catalog';
 import { getCourse } from '../utils/getCourse';
 import withCache from '../utils/withCache';
 
@@ -20,18 +21,25 @@ const rankingResolver: Resolvers = {
     ranking: () => ({}),
   },
   RankTable: {
-    rankedCourses: async (parent, { filter: { rankBy } }) => {
+    rankedCourses: async (parent, { filter: { rankBy } }, context) => {
       if (!PUBLIC_RANKING_FIELDS.has(rankBy)) {
         return [];
       }
-      return withCache(rankingCache, rankBy, async () => {
-        const { ranks } = await getRanking(rankBy);
-        return ranks?.map(({ _id, val }) => ({
-          courseId: _id,
-          course: getCourse(_id),
-          [rankBy]: val,
-        }));
-      });
+      const catalog = await getCatalogManifest(context?.catalogVersion);
+      return withCache(
+        rankingCache,
+        `${catalog?.version || 'local'}#${rankBy}`,
+        async () => {
+          const { ranks } = await getRanking(rankBy);
+          return Promise.all(
+            (ranks || []).map(async ({ _id, val }) => ({
+              courseId: _id,
+              course: await getCourse(_id, catalog),
+              [rankBy]: val,
+            }))
+          );
+        }
+      );
     },
   },
 };

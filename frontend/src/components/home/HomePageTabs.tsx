@@ -20,7 +20,10 @@ export const CoursesList: FC<CoursesListProps> = ({ loading, courses }) => {
   return (
     <div className={clsx(styles.homeCourseContainer, 'card')}>
       {courses?.map(course => (
-        <Link key={course.courseId} href={`/review/${course.courseId}`}>
+        <Link
+          key={course.courseId}
+          href={`/course?courseId=${course.courseId}`}
+        >
           <ListItem
             className={styles.homeCourseListItem}
             title={course.courseId}
@@ -45,7 +48,7 @@ export const ReviewsList: FC<ReviewsListProps> = ({ reviewIds }) => {
       {reviewIds?.map(id => {
         const [courseId, createdAt] = id.split('#');
         return (
-          <Link key={id} href={`/review/${courseId}?rid=${createdAt}`}>
+          <Link key={id} href={`/course?courseId=${courseId}&rid=${createdAt}`}>
             <ListItem
               className={styles.homeCourseListItem}
               title={courseId}

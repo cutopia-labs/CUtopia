@@ -16,12 +16,8 @@ import { useLazyQuery } from '@apollo/client';
 import styles from '../../styles/components/review/CourseCard.module.scss';
 import ShowMoreOverlay from '../molecules/ShowMoreOverlay';
 import Badge from '../atoms/Badge';
-import { useView, useUser, viewStore } from '../../store';
-import {
-  COURSE_CARD_MAX_HEIGHT,
-  CURRENT_TERM,
-  plannerTerms,
-} from '../../config';
+import { useData, useView, useUser, viewStore } from '../../store';
+import { COURSE_CARD_MAX_HEIGHT } from '../../config';
 import { CourseInfo } from '../../types';
 import Link from '../molecules/Link';
 import useMobileQuery from '../../hooks/useMobileQuery';
@@ -75,8 +71,9 @@ const CourseBadgeRow: FC<CourseInfoProps> = ({ courseInfo }) => {
   );
 };
 
-const CourseConcise: FC<CourseInfoProps> = ({ courseInfo }) => {
-  const [term, setTerm] = useState(CURRENT_TERM);
+const CourseConcise: FC<CourseInfoProps> = observer(({ courseInfo }) => {
+  const catalog = useData();
+  const [term, setTerm] = useState(catalog.currentTerm);
   const [anchorEl, setAnchorEl] = useState(null);
   const [
     getSection,
@@ -112,7 +109,7 @@ const CourseConcise: FC<CourseInfoProps> = ({ courseInfo }) => {
       </If>
       <If visible={courseInfo.rating}>
         <div className={styles.subHeadingContainer}>
-          <RouterLink href={`/review/${courseInfo.courseId}`}>
+          <RouterLink href={`/course?courseId=${courseInfo.courseId}`}>
             <a
               className={clsx(
                 styles.reviewsLinkHeading,
@@ -147,7 +144,7 @@ const CourseConcise: FC<CourseInfoProps> = ({ courseInfo }) => {
           open={Boolean(anchorEl)}
           onClose={() => setAnchorEl(null)}
         >
-          {plannerTerms.map(t => (
+          {catalog.terms.map(t => (
             <MenuItem
               key={t}
               selected={t === term}
@@ -167,7 +164,7 @@ const CourseConcise: FC<CourseInfoProps> = ({ courseInfo }) => {
       </Section>
     </>
   );
-};
+});
 
 const CourseDetails: FC<CourseInfoProps> = ({ courseInfo }) => (
   <>

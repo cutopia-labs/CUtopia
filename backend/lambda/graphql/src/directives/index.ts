@@ -4,6 +4,7 @@ import {
 } from 'graphql-constraint-directive';
 
 import { authDirectiveTypeDefs, authDirectiveTransformer } from './auth';
+import { catalogTransformer } from './catalog';
 import {
   rateLimitDirectiveTypeDefs,
   rateLimitDirectiveTransformer,
@@ -15,7 +16,8 @@ const directivesTypeDefs = [
   constraintDirectiveTypeDefs,
 ];
 const addDirectivesToSchema = schema => {
-  let newSchema = authDirectiveTransformer(schema);
+  let newSchema = catalogTransformer(schema);
+  newSchema = authDirectiveTransformer(newSchema);
   newSchema = rateLimitDirectiveTransformer(newSchema);
   newSchema = constraintDirective()(newSchema);
   return newSchema;

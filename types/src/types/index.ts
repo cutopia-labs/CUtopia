@@ -1,4 +1,5 @@
 export * from './courses';
+export * from './catalog';
 export * from './discussions';
 export * from './email';
 export * from './events';

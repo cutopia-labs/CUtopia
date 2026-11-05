@@ -23,7 +23,6 @@ import clsx from 'clsx';
 
 import styles from '../../styles/components/organisms/SearchPanel.module.scss';
 import ListItem from '../molecules/ListItem';
-import COURSE_CODES from '../../constants/courseCodes';
 import { useUser, useData } from '../../store';
 import { objStrEqual, validCourse } from '../../helpers';
 import Loading from '../atoms/Loading';
@@ -139,56 +138,61 @@ export const SearchResult: FC<SearchResultProps> = ({
 
 type DepartmentListProps = { setSearchPayload: any };
 
-const DepartmentList: FC<DepartmentListProps> = ({ setSearchPayload }) => {
-  const [currentSchool, setCurrentSchool] = useState(null);
-  return (
-    <div>
-      {Object.entries(COURSE_CODES).map(([k, v]) => (
-        <Fragment key={k}>
-          <MUIListItem
-            button
-            onClick={e => {
-              e.stopPropagation(); // prevent press icon trigger onClickOutside
-              if (k === currentSchool) {
-                setCurrentSchool(null);
-              } else {
-                setCurrentSchool(k);
-              }
-            }}
-          >
-            <ListItemIcon>
-              <ClassOutlined />
-            </ListItemIcon>
-            <ListItemText primary={k} />
-            {k === currentSchool ? <ExpandLess /> : <ExpandMore />}
-          </MUIListItem>
-          <Collapse in={k === currentSchool} timeout="auto" unmountOnExit>
-            <div className={styles.codeList}>
-              {v.map((code, i) => (
-                <ListItem
-                  key={code}
-                  title={code}
-                  ribbonIndex={i}
-                  chevron
-                  onClick={e => {
-                    e.stopPropagation();
-                    setSearchPayload({
-                      text: code,
-                      mode: 'subject',
-                    });
-                  }}
-                />
-              ))}
-            </div>
-          </Collapse>
-        </Fragment>
-      ))}
-    </div>
-  );
-};
+const DepartmentList: FC<DepartmentListProps> = observer(
+  ({ setSearchPayload }: DepartmentListProps) => {
+    const data = useData();
+    const [currentSchool, setCurrentSchool] = useState(null);
+    return (
+      <div>
+        {Object.entries(data.faculties).map(([k, v]) => (
+          <Fragment key={k}>
+            <MUIListItem
+              button
+              onClick={e => {
+                e.stopPropagation(); // prevent press icon trigger onClickOutside
+                if (k === currentSchool) {
+                  setCurrentSchool(null);
+                } else {
+                  setCurrentSchool(k);
+                }
+              }}
+            >
+              <ListItemIcon>
+                <ClassOutlined />
+              </ListItemIcon>
+              <ListItemText primary={k} />
+              {k === currentSchool ? <ExpandLess /> : <ExpandMore />}
+            </MUIListItem>
+            <Collapse in={k === currentSchool} timeout="auto" unmountOnExit>
+              <div className={styles.codeList}>
+                {v.map((code, i) => (
+                  <ListItem
+                    key={code}
+                    title={code}
+                    ribbonIndex={i}
+                    chevron
+                    onClick={e => {
+                      e.stopPropagation();
+                      setSearchPayload({
+                        text: code,
+                        mode: 'subject',
+                      });
+                    }}
+                  />
+                ))}
+              </div>
+            </Collapse>
+          </Fragment>
+        ))}
+      </div>
+    );
+  }
+);
 
 const makeUrlFromCourseId = (courseId: string, isPlanner = false) => {
-  return isPlanner ? `/planner?cid=${courseId}` : `/review/${courseId}`;
+  return isPlanner
+    ? `/planner?cid=${courseId}`
+    : `/course?courseId=${courseId}`;
 };
 
 export type SearchPanelProps = {

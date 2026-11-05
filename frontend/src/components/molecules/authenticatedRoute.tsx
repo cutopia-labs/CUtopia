@@ -14,10 +14,11 @@ type Options = {
   allowAnonymous?: boolean;
 };
 
-type HOC = (Component: FC, options?: Options) => FC;
-
-const authenticatedRoute: HOC = (Component = null, options = {}) => {
-  const AuthenticatedRoute: FC = props => {
+const authenticatedRoute = <P extends object>(
+  Component: FC<P>,
+  options: Options = {}
+): FC<P> => {
+  const AuthenticatedRoute: FC<P> = props => {
     const [authState, setAuthState] = useState(
       options.allowAnonymous ? AuthState.LOGGED_OUT : AuthState.INIT
     );

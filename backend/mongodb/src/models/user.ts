@@ -34,6 +34,7 @@ const userSchema = new Schema<User>(
       default: 0,
     },
     veriCode: String,
+    veriCodeCreatedAt: Number,
     verified: {
       type: Boolean,
       default: false,
