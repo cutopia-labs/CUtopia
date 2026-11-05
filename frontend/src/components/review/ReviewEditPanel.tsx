@@ -196,7 +196,7 @@ const ReviewEditPanel: FC<Props> = ({ courseInfo }) => {
           const id = data?.createReview?.createdAt;
           if (id) {
             user.deleteReveiwDraft(courseId);
-            router.push(`/review/${courseId}?rid=${id}`, undefined, {
+            router.push(`/course?courseId=${courseId}&rid=${id}`, undefined, {
               shallow: true,
             });
           }
@@ -215,7 +215,7 @@ const ReviewEditPanel: FC<Props> = ({ courseInfo }) => {
           if (formData.createdAt) {
             user.deleteReveiwDraft(courseId);
             router.push(
-              `/review/${courseId}?rid=${formData.createdAt}`,
+              `/course?courseId=${courseId}&rid=${formData.createdAt}`,
               undefined,
               { shallow: true }
             );
@@ -380,14 +380,18 @@ const ReviewEditPanel: FC<Props> = ({ courseInfo }) => {
       cancelButton: {
         label: 'Cancel',
         action: () =>
-          router.push(`/review/${courseId}`, undefined, { shallow: true }),
+          router.push(`/course?courseId=${courseId}`, undefined, {
+            shallow: true,
+          }),
       },
       confirmButton: {
         label: 'Edit',
         action: () => setMode(MODES.EDIT),
       },
       onClose: () =>
-        router.push(`/review/${courseId}`, undefined, { shallow: true }),
+        router.push(`/course?courseId=${courseId}`, undefined, {
+          shallow: true,
+        }),
     },
     [MODES.DRAFT_MODAL]: {
       title: 'Review draft found!',

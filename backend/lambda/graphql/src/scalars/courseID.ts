@@ -1,19 +1,12 @@
 import { ErrorCode } from 'cutopia-types';
 import { GraphQLScalarType } from 'graphql';
 
-import courseIds from '../data/derived/subject_course_names.json';
-
-const validateCourseId = (courseId: string) => {
-  const subject = courseId.slice(0, 4);
-  const course = courseId.slice(4, 8);
-  return courseIds[subject]?.includes(course);
-};
-
 export default new GraphQLScalarType({
   name: 'CourseID',
   description: 'Validate course ID',
   parseValue: (value: string) => {
-    if (!validateCourseId(value)) {
+    // Existence is checked asynchronously against the selected catalog snapshot.
+    if (typeof value !== 'string' || !/^[A-Z]{4}[0-9]{4}$/.test(value)) {
       throw Error(ErrorCode.INVALID_COURSE_ID.toString());
     }
     return value.slice(0, 8);

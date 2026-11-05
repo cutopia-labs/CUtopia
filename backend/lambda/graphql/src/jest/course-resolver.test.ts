@@ -27,7 +27,11 @@ import coursesResolver from '../resolvers/course';
 const resolveCourse = coursesResolver.Query.course as any;
 
 describe('course resolver', () => {
-  it('serves guest catalog data without querying MongoDB', async () => {
+  it('serves public catalog metadata with aggregate review data to guests', async () => {
+    getCourseDataFromDB.mockImplementation(async () => ({
+      lecturers: ['Public lecturer'],
+      terms: ['2026-27 Term 1'],
+    }));
     const result = await resolveCourse(
       null,
       {
@@ -43,6 +47,8 @@ describe('course resolver', () => {
       courseId: 'CSCI1120',
       title: 'Introduction to Computing Using C++',
     });
-    expect(getCourseDataFromDB).not.toHaveBeenCalled();
+    expect(getCourseDataFromDB).toHaveBeenCalledWith('CSCI1120');
+    expect(result).not.toHaveProperty('username');
+    expect(result).not.toHaveProperty('password');
   });
 });

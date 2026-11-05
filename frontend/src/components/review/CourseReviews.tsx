@@ -175,7 +175,9 @@ const CourseReviews: FC<Props> = ({
   };
 
   const writeReview = () =>
-    router.push(`/review/${courseId}?mode=edit`, undefined, { shallow: true });
+    router.push(`/course?courseId=${courseId}&mode=edit`, undefined, {
+      shallow: true,
+    });
 
   return (
     <>
@@ -186,7 +188,8 @@ const CourseReviews: FC<Props> = ({
           reviewsPayload={reviewsPayload}
           dispatchReviewsPayload={dispatchReviewsPayload}
           fetchAllAction={
-            Boolean(reviewId) && (() => router.push(`/review/${courseId}`))
+            Boolean(reviewId) &&
+            (() => router.push(`/course?courseId=${courseId}`))
           }
           writeAction={writeReview}
           exceedLimit={false}
@@ -201,7 +204,8 @@ const CourseReviews: FC<Props> = ({
           reviewsPayload={reviewsPayload}
           dispatchReviewsPayload={dispatchReviewsPayload}
           fetchAllAction={
-            Boolean(reviewId) && (() => router.push(`/review/${courseId}`))
+            Boolean(reviewId) &&
+            (() => router.push(`/course?courseId=${courseId}`))
           }
           writeAction={writeReview}
           exceedLimit={false}

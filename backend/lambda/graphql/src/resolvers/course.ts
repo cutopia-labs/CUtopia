@@ -2,6 +2,7 @@ import { getCourse as getCourseDataFromDB } from 'mongodb';
 import NodeCache from 'node-cache';
 
 import { Resolvers } from '../schemas/types';
+import { getCatalogManifest } from '../utils/catalog';
 import { getCourse as getCourseDataFromJSON } from '../utils/getCourse';
 import withCache from '../utils/withCache';
 
@@ -9,11 +10,12 @@ const courseCache = new NodeCache({ stdTTL: 600 });
 
 const coursesResolver: Resolvers = {
   Query: {
-    course: async (parent, { filter }) => {
+    course: async (parent, { filter }, context) => {
       const { requiredCourse, requiredTerm } = filter;
+      const manifest = context?.catalog || (await getCatalogManifest());
       return withCache(
         courseCache,
-        `${requiredCourse}#${requiredTerm}`,
+        `${manifest?.version || 'local'}#${requiredCourse}#${requiredTerm}`,
         async () => {
           // Course metadata and aggregate ratings are public. Individual
           // reviews remain protected by the auth directive on review queries.
@@ -21,10 +23,13 @@ const coursesResolver: Resolvers = {
           const lecturers = courseReviewData?.lecturers;
           const terms = courseReviewData?.terms;
           const rating = courseReviewData?.rating;
-          const courseData = getCourseDataFromJSON(requiredCourse);
+          const courseData = await getCourseDataFromJSON(
+            requiredCourse,
+            manifest
+          );
           return {
             ...courseData,
-            sections: requiredTerm ? courseData['terms'][requiredTerm] : null,
+            sections: requiredTerm ? courseData['terms']?.[requiredTerm] : null,
             reviewLecturers: lecturers,
             reviewTerms: terms,
             rating,
