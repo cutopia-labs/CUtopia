@@ -68,21 +68,24 @@ def select_term(directory, config, previous=None, today=None):
     year = today.year if today.month >= 7 else today.year - 1
     number = 2 if today.month >= 11 or today.month < 7 else 1
     target = f'{year}-{(year + 1) % 100:02d} Term {number}'
-    not_before = config.get('termNotBefore', {}).get(target)
-    if not_before:
-        not_before = date.fromisoformat(not_before)
     reference = max((n for term, n in counts.items()
                      if regular_term(term) and regular_term(term) <= (year, number)), default=0)
-    subjects = {course_id[:4] for course_id, c in courses.items() if c.get('terms', {}).get(target)}
-    ready = counts.get(target, 0) >= max(500, reference * 0.75) and len(subjects) >= 30
-    if ready and (not not_before or today >= not_before):
+
+    def ready(term):
+        not_before = config.get('termNotBefore', {}).get(term)
+        if not_before and today < date.fromisoformat(not_before):
+            return False
+        subjects = {cid[:4] for cid, c in courses.items() if c.get('terms', {}).get(term)}
+        return counts.get(term, 0) >= max(500, reference * 0.75) and len(subjects) >= 30
+
+    if ready(target):
         return target, 'registration-window-ready'
     # Sparse/early future schedules must not change the published default.
     if previous and regular_term(previous) and counts.get(previous):
         return previous, 'retain-default-until-ready'
-    candidates = [term for term, count in counts.items()
+    candidates = [term for term in counts
                   if regular_term(term) and regular_term(term) <= (year, number)
-                  and count >= max(500, reference * 0.75)]
+                  and ready(term)]
     if not candidates:
         raise ValueError('No sufficiently published undergraduate planning term')
     return max(candidates, key=regular_term), 'latest-ready-fallback'
