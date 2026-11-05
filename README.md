@@ -54,10 +54,15 @@ If you want to join the development team (with access to AWS, GA, Sentry, and th
 
 ## Guidelines
 
-### Semester Data Update
+### Course Data Updates
 
-Open `tools/data.ipynb` and run all sections
+Course data is refreshed daily at 04:23 Hong Kong time by the
+[data repository workflow](https://github.com/cutopia-labs/cuhk-course-data/actions/workflows/catalog-refresh.yml).
+Successful, validated snapshots are published independently of application deployments.
+See the [catalog runbook](tools/catalog/README.md) for semester selection,
+manual runs, resume, rollback and cost details. The local notebook remains an
+optional development tool.
 
 ### Incorrect Data Report
 
-Please submit PR / issue in the [cutopia-data](https://github.com/cutopia-labs/CUtopia-data) repo.
+Please submit PR / issue in the [course data](https://github.com/cutopia-labs/cuhk-course-data) repo.
