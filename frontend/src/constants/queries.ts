@@ -22,6 +22,7 @@ export const COURSE_INFO_QUERY = gql`
 export const COURSE_PLANNER_INFO_QUERY = gql`
   query ($courseId: CourseID!) {
     course(filter: { requiredCourse: $courseId }) {
+      courseId
       units
       title
       academic_group
