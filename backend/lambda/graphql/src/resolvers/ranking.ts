@@ -21,11 +21,11 @@ const rankingResolver: Resolvers = {
     ranking: () => ({}),
   },
   RankTable: {
-    rankedCourses: async (parent, { filter: { rankBy } }) => {
+    rankedCourses: async (parent, { filter: { rankBy } }, context) => {
       if (!PUBLIC_RANKING_FIELDS.has(rankBy)) {
         return [];
       }
-      const catalog = await getCatalogManifest();
+      const catalog = await getCatalogManifest(context?.catalogVersion);
       return withCache(
         rankingCache,
         `${catalog?.version || 'local'}#${rankBy}`,

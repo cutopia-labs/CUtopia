@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { getRanking } from 'mongodb';
 
 import rankingResolver from '../resolvers/ranking';
+import { getCatalogManifest } from '../utils/catalog';
 
 jest.mock('mongodb', () => ({
   getRanking: jest.fn(),
@@ -21,6 +22,10 @@ jest.mock(
 
 jest.mock('../utils/getCourse', () => ({
   getCourse: jest.fn(courseId => ({ courseId, title: 'Course title' })),
+}));
+
+jest.mock('../utils/catalog', () => ({
+  getCatalogManifest: jest.fn(async () => null),
 }));
 
 const getRankingMock = getRanking as jest.MockedFunction<typeof getRanking>;
@@ -53,5 +58,15 @@ describe('Public ranking access', () => {
       },
     ]);
     expect(getRankingMock).toHaveBeenCalledWith('overall');
+  });
+
+  it('uses the browser catalog version when reading ranked course metadata', async () => {
+    getRankingMock.mockResolvedValue({ ranks: [] } as any);
+    await rankedCourses(
+      null,
+      { filter: { rankBy: 'overall' } },
+      { catalogVersion: 'a'.repeat(64) }
+    );
+    expect(getCatalogManifest).toHaveBeenCalledWith('a'.repeat(64));
   });
 });

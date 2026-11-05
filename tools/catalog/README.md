@@ -23,6 +23,38 @@ and every five minutes while visible. Saved timetables are not overwritten.
 Course links use `/course?courseId=...`, which can display newly discovered courses
 without generating another static page. Existing static URLs remain supported.
 
+## Operations and cost
+
+The full crawl takes longer than a single Lambda invocation and uses native OCR
+dependencies. A scheduled standard GitHub runner keeps that work out of AWS
+compute. GitHub's public-repository runners are
+[free](https://docs.github.com/en/actions/concepts/billing-and-usage).
+GitHub concurrency supplies the run lock; S3 subject checkpoints supply resume
+state, so this job needs no database table or separate lock service.
+
+The deployed CloudFront distribution uses the
+[Free flat-rate plan](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/flat-rate-pricing-plan.html),
+currently including 1 million requests and 100 GB transfer monthly. AWS sends
+usage notifications at 50%, 80% and 100%; exceeding the allowance can reduce
+performance without an overage charge. S3 storage and requests, and existing
+GraphQL usage, are separate from the CDN price. The approximately 31 MB catalog,
+content deduplication and checkpoint expiration keep the new S3 footprint small;
+check actual billing after the first month rather than assuming all AWS usage is
+free. No paid CDN plan, scheduled Lambda or always-on server is provisioned.
+
+For routine maintenance:
+
+- Check the latest workflow result and `https://data.cutopia.app/manifest.json`.
+  `checkedAt` advances after every successful full crawl, even with unchanged
+  course content. GitHub may delay scheduled runs; 04:23 is a target start time.
+- If a run fails, inspect its logs and dispatch the workflow with its run ID in
+  `resume_run`. A changed scraper, term or published baseline invalidates old
+  checkpoints and starts those subjects again.
+- Change `catalog-config.json` in the data repository to select the default
+  semester. Keep the publisher commit pinned when changing application code.
+- Application releases still use the normal deployment process. Daily data
+  commits have no permission to deploy application code or change user records.
+
 ## Setup
 
 Deploy `backend/catalog-storage.yaml` in Singapore and `backend/catalog-cdn.yaml`
