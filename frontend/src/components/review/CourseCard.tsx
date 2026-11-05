@@ -12,7 +12,7 @@ import { FiExternalLink } from 'react-icons/fi';
 import clsx from 'clsx';
 import { ReportCategory } from 'cutopia-types';
 
-import { useLazyQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import styles from '../../styles/components/review/CourseCard.module.scss';
 import ShowMoreOverlay from '../molecules/ShowMoreOverlay';
 import Badge from '../atoms/Badge';
@@ -21,6 +21,7 @@ import { COURSE_CARD_MAX_HEIGHT } from '../../config';
 import { CourseInfo } from '../../types';
 import Link from '../molecules/Link';
 import useMobileQuery from '../../hooks/useMobileQuery';
+import usePlanningTerm from '../../hooks/usePlanningTerm';
 import Section from '../molecules/Section';
 import SectionText from '../molecules/SectionText';
 import If from '../atoms/If';
@@ -73,23 +74,21 @@ const CourseBadgeRow: FC<CourseInfoProps> = ({ courseInfo }) => {
 
 const CourseConcise: FC<CourseInfoProps> = observer(({ courseInfo }) => {
   const catalog = useData();
-  const [term, setTerm] = useState(catalog.currentTerm);
+  const [term, setTerm] = usePlanningTerm(
+    courseInfo.courseId,
+    catalog.currentTerm
+  );
   const [anchorEl, setAnchorEl] = useState(null);
-  const [
-    getSection,
-    { data: courseSectionInfo, loading: courseSectionLoading },
-  ] = useLazyQuery(SWITCH_SECTION_QUERY, {
-    onError: viewStore.handleError,
-    notifyOnNetworkStatusChange: true,
-    fetchPolicy: 'cache-first',
-  });
+  const { data: courseSectionInfo, loading: courseSectionLoading } = useQuery(
+    SWITCH_SECTION_QUERY,
+    {
+      variables: { courseId: courseInfo.courseId, term },
+      onError: viewStore.handleError,
+      notifyOnNetworkStatusChange: true,
+      fetchPolicy: 'cache-first',
+    }
+  );
   const switchTerm = (term: string) => {
-    getSection({
-      variables: {
-        courseId: courseInfo.courseId,
-        term,
-      },
-    });
     setTerm(term);
   };
   const combinedCourseInfo = courseSectionInfo
@@ -144,7 +143,7 @@ const CourseConcise: FC<CourseInfoProps> = observer(({ courseInfo }) => {
           open={Boolean(anchorEl)}
           onClose={() => setAnchorEl(null)}
         >
-          {catalog.terms.map(t => (
+          {Array.from(new Set([...catalog.terms, term])).map(t => (
             <MenuItem
               key={t}
               selected={t === term}

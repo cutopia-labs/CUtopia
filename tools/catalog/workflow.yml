@@ -8,6 +8,11 @@ on:
         description: Optional failed run ID to resume
         required: false
         type: string
+      publish_only:
+        description: Reapply term policy to the latest validated data without crawling
+        required: false
+        default: false
+        type: boolean
 concurrency:
   group: course-catalog-production
   cancel-in-progress: false
@@ -49,11 +54,14 @@ jobs:
       - name: Refresh, validate and publish data
         env:
           RESUME_RUN: ${{ inputs.resume_run }}
+          PUBLISH_ONLY: ${{ inputs.publish_only }}
         run: |
+          extra=()
+          if [ "$PUBLISH_ONLY" = 'true' ]; then extra+=(--publish-only); fi
           python -u app/tools/catalog/refresh.py \
             --data-dir "$GITHUB_WORKSPACE/data" \
             --bucket "${{ vars.CATALOG_BUCKET }}" \
-            --run-id "${RESUME_RUN:-$GITHUB_RUN_ID}"
+            --run-id "${RESUME_RUN:-$GITHUB_RUN_ID}" "${extra[@]}"
       - name: Record checked data and freshness
         working-directory: data
         run: |

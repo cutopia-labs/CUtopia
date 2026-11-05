@@ -50,8 +50,10 @@ For routine maintenance:
 - If a run fails, inspect its logs and dispatch the workflow with its run ID in
   `resume_run`. A changed scraper, term or published baseline invalidates old
   checkpoints and starts those subjects again.
-- Change `catalog-config.json` in the data repository to select the default
-  semester. Keep the publisher commit pinned when changing application code.
+- The default planning term follows the undergraduate registration policy below.
+  `catalog-config.json` can impose an official `termNotBefore` release date or
+  explicitly pin `currentTerm` during an exceptional registration arrangement.
+  Keep the publisher commit pinned when changing application code.
 - Application releases still use the normal deployment process. Daily data
   commits have no permission to deploy application code or change user records.
 
@@ -69,10 +71,32 @@ Install this workflow in `cutopia-labs/cuhk-course-data/.github/workflows/` and 
 - `CATALOG_PUBLISHER_ROLE`: role ARN from the storage stack.
 - `CATALOG_BUCKET`: bucket name from the storage stack.
 
-The data repository's `catalog-config.json` selects `currentTerm`. Updating this
-file changes the next catalog's default semester without rebuilding the app.
+With no explicit `currentTerm` pin, the publisher chooses the default from
+validated schedules using Hong Kong dates:
+
+- July–October targets that academic year's Term 1; November–June targets Term 2.
+  These are conservative planning windows, not assertions that registration is
+  already open. They prevent preloaded next-year schedules from taking over.
+- A target must have at least 500 offered courses across 30 subjects and at
+  least 75% of the largest regular-semester course count up to that target.
+  Sparse or incomplete schedules retain the previous default.
+- `termNotBefore` can delay a specific semester until its verified official
+  release date. For 2026–27 Term 2 this is 4 November 2026, per the
+  [RES registration announcement](https://www.res.cuhk.edu.hk/undergraduate-students/information-for-current-students/course-selection-and-add-drop/course-registration-and-add-drop-for-the-second-term-2026-27/).
+- Only undergraduate Term 1/Term 2 participate in automatic selection. Summer
+  remains an explicit picker option when data exists. Programme-specific Term
+  3/4, medical academic-year labels, and unknown labels such as Winter never
+  become the default by string sorting.
+
+The previous regular semester remains selectable. A user's explicit picker
+choice survives a default change, and saved timetables are not rewritten.
+The course-search availability flags are rebuilt for the selected default.
 Every successful run commits its report, preserving an auditable freshness
 history even when course content has not changed.
+
+Dispatch with `publish_only=true` to reapply the policy to the currently
+published dataset without another crawl or app deployment. This refuses a stale
+course checkout and preserves the last actual crawl's `checkedAt` timestamp.
 
 ## Run and test
 
