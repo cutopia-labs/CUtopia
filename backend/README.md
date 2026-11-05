@@ -38,7 +38,7 @@ aws configure
 
 ### Deploy to AWS
 
-All serverless services will be deployed to [Lambda](https://aws.amazon.com/lambda/) using the script below. Deployment copies the current catalog into the GraphQL package before building. The status of deployed stacks can be found in [CloudFormation](https://aws.amazon.com/cloudformation/).
+All serverless services will be deployed to [Lambda](https://aws.amazon.com/lambda/) using the script below. Deployment copies a fallback catalog into the GraphQL package before building. With `CATALOG_BUCKET` configured, GraphQL reads published S3 snapshots instead; daily course refreshes do not require this deployment. See the [catalog runbook](../tools/catalog/README.md). The status of deployed stacks can be found in [CloudFormation](https://aws.amazon.com/cloudformation/).
 
 ```bash
 # Deploy staging stack
