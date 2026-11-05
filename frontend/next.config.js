@@ -56,6 +56,7 @@ const moduleExports = {
 
 const sentryWebpackPluginOptions = {
   silent: true,
+  dryRun: process.env.SENTRY_SKIP_UPLOAD === '1',
 };
 
 module.exports = withSentryConfig(moduleExports, sentryWebpackPluginOptions);

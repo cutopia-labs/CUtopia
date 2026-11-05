@@ -1,0 +1,86 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Versioned course catalog and resumable daily refresh storage
+Parameters:
+  ReaderRoles:
+    Type: CommaDelimitedList
+Resources:
+  CatalogBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BucketName: !Sub 'cutopia-catalog-${AWS::AccountId}-${AWS::Region}'
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      VersioningConfiguration:
+        Status: Enabled
+      LifecycleConfiguration:
+        Rules:
+          - Id: ExpireCheckpoints
+            Status: Enabled
+            Prefix: checkpoints/
+            ExpirationInDays: 14
+            NoncurrentVersionExpiration:
+              NoncurrentDays: 7
+          - Id: ExpireOldManifestRevisions
+            Status: Enabled
+            Prefix: published/
+            NoncurrentVersionExpiration:
+              NoncurrentDays: 30
+  GitHubIdentity:
+    Type: AWS::IAM::OIDCProvider
+    Properties:
+      Url: https://token.actions.githubusercontent.com
+      ClientIdList: [sts.amazonaws.com]
+  PublisherRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: cutopia-catalog-publisher
+      MaxSessionDuration: 7200
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated: !Ref GitHubIdentity
+            Action: sts:AssumeRoleWithWebIdentity
+            Condition:
+              StringEquals:
+                token.actions.githubusercontent.com:aud: sts.amazonaws.com
+                token.actions.githubusercontent.com:sub: repo:cutopia-labs/cuhk-course-data:ref:refs/heads/master
+      Policies:
+        - PolicyName: PublishCatalog
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: s3:ListBucket
+                Resource: !GetAtt CatalogBucket.Arn
+              - Effect: Allow
+                Action: [s3:GetObject, s3:PutObject]
+                Resource:
+                  - !Sub '${CatalogBucket.Arn}/published/*'
+                  - !Sub '${CatalogBucket.Arn}/checkpoints/*'
+  Readers:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: ReadPublishedCourseCatalog
+      Roles: !Ref ReaderRoles
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action: s3:GetObject
+            Resource: !Sub '${CatalogBucket.Arn}/published/*'
+Outputs:
+  BucketName:
+    Value: !Ref CatalogBucket
+  PublisherRoleArn:
+    Value: !GetAtt PublisherRole.Arn

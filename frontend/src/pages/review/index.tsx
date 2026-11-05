@@ -191,7 +191,7 @@ const RecentReviewList: FC<RecentReviewListProps> = ({ visible, category }) => {
           <RecentReviewCard
             key={review.createdAt}
             review={review}
-            onClick={id => router.push(`/review/${id}`)}
+            onClick={id => router.push(`/course?courseId=${id}`)}
             category={category}
           />
         ))}
@@ -215,7 +215,7 @@ const RankingCard: FC<RankingCardProps> = ({
       {rankList.map((course: PopularCourse | TopRatedCourse, i: number) => (
         <Link
           key={`${headerTitle}-${course.courseId}`}
-          href={`/review/${course.courseId}`}
+          href={`/course?courseId=${course.courseId}`}
         >
           <ListItem
             left={
@@ -372,13 +372,15 @@ const HomePanel: FC = () => {
             className="recentChips"
             chipClassName="chipFill"
             items={user.searchHistory}
-            onItemClick={item => router.push(`/review/${item}`)}
+            onItemClick={item => router.push(`/course?courseId=${item}`)}
           />
         </Card>
         <FeedCard
           title="Suggestions"
           courses={feedCourses}
-          onItemClick={course => router.push(`/review/${course.courseId}`)}
+          onItemClick={course =>
+            router.push(`/course?courseId=${course.courseId}`)
+          }
         />
       </div>
     </Page>
