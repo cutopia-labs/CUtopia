@@ -5,6 +5,8 @@ import json
 from pathlib import Path
 import unittest
 from unittest.mock import patch
+from urllib.error import HTTPError
+from io import BytesIO
 
 spec = importlib.util.spec_from_file_location('catalog_check', Path(__file__).with_name('check.py'))
 check = importlib.util.module_from_spec(spec)
@@ -13,7 +15,7 @@ spec.loader.exec_module(check)
 
 class DeliveryTests(unittest.TestCase):
     def setUp(self):
-        self.headers = {'access-control-allow-origin': '*'}
+        self.headers = {'access-control-allow-origin': '*', 'etag': '"version"'}
         self.objects = {}
         self.section = {key: [] for key in check.FIELDS}
         self.section['days'] = [1]
@@ -52,6 +54,8 @@ class DeliveryTests(unittest.TestCase):
         return key
 
     def fetch(self, url, payload=None, headers=None):
+        if headers and 'If-None-Match' in headers:
+            return b'', self.headers
         if url.endswith('/manifest.json'):
             return self.encode(self.manifest), self.headers
         if payload:
@@ -99,6 +103,21 @@ class DeliveryTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'sections differ'):
             self.run_check()
 
+    def test_checks_inactive_course_with_only_previous_semester_sections(self):
+        listing = json.loads(self.objects[self.manifest['resources']['courseList']])
+        listing['AIST'] = [{'c': 'AIST1000', 't': 'First-term course'}]
+        self.manifest['resources']['courseList'] = self.object(listing)
+        self.manifest['subjects']['AIST'] = self.object([
+            {'code': '1000', 'title': 'First-term course',
+             'terms': {'2026-27 Term 1': {'A': self.section}}}])
+        self.rehash_manifest()
+        self.api['data']['c5'] = {'courseId': 'AIST1000', 'title': 'First-term course', 'sections': None}
+        result = self.run_check()
+        self.assertEqual(result['verifiedUnavailableCourse'], 'AIST1000')
+        self.api['data']['c5']['sections'] = self.api['data']['c0']['sections']
+        with self.assertRaisesRegex(ValueError, 'sections differ'):
+            self.run_check()
+
     def test_rejects_index_offering_a_course_without_sections(self):
         key = self.manifest['subjects']['CSCI']
         rows = json.loads(self.objects[key])
@@ -112,6 +131,23 @@ class DeliveryTests(unittest.TestCase):
         self.manifest['resources']['courseList'] = 'objects/' + '0' * 64 + '.json'
         with self.assertRaisesRegex(ValueError, 'does not match'):
             self.run_check()
+
+    def test_rejects_missing_cors_on_conditional_response_even_when_first_get_passes(self):
+        def fetch(url, payload=None, headers=None):
+            if headers and 'If-None-Match' in headers:
+                return b'', {'etag': '"version"'}
+            return self.fetch(url, payload, headers)
+        with patch.object(check, 'fetch', fetch):
+            with self.assertRaisesRegex(ValueError, 'Conditional catalog response'):
+                check.check()
+
+    def test_reads_headers_on_304_instead_of_treating_it_as_a_network_failure(self):
+        error = HTTPError('https://data.cutopia.app/manifest.json', 304, 'Not Modified',
+                          {'Access-Control-Allow-Origin': '*'}, BytesIO(b''))
+        with patch.object(check, 'urlopen', side_effect=error):
+            raw, headers = check.fetch(error.url, headers={'If-None-Match': '"version"'})
+            self.assertEqual(raw, b'')
+            self.assertEqual(headers['access-control-allow-origin'], '*')
 
     def test_public_get_uses_a_simple_browser_request(self):
         with patch.object(check, 'urlopen') as opener:

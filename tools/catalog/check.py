@@ -6,6 +6,7 @@ from pathlib import Path
 import re
 import time
 from datetime import datetime, timezone
+from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
 BASE_URL = 'https://data.cutopia.app'
@@ -19,7 +20,13 @@ def fetch(url, payload=None, headers=None):
                       headers={'Origin': 'https://cutopia.app',
                                **({'Content-Type': 'application/json'} if payload else {}),
                                **(headers or {})})
-    with urlopen(request, timeout=20) as response:
+    try:
+        response = urlopen(request, timeout=20)
+    except HTTPError as error:
+        if error.code != 304:
+            raise
+        response = error
+    with response:
         return response.read(), {key.lower(): value for key, value in response.headers.items()}
 
 
@@ -57,6 +64,16 @@ def check(base_url=BASE_URL, api_url=API_URL, max_age_hours=36, expected=None):
     if expected and any(manifest[key] != expected[key] for key in ('version', 'checkedAt', 'currentTerm')):
         raise ValueError('CDN has not reached the just-published catalog')
 
+    def revalidate(url, original_headers):
+        etag = original_headers.get('etag')
+        if not etag:
+            raise ValueError('Public catalog response has no ETag')
+        _, conditional_headers = fetch(url, headers={'If-None-Match': etag})
+        if conditional_headers.get('access-control-allow-origin') not in ('*', 'https://cutopia.app'):
+            raise ValueError('Conditional catalog response does not allow the browser origin')
+
+    revalidate(base_url + '/manifest.json', headers)
+
     def read_object(key):
         if not OBJECT_KEY.fullmatch(key):
             raise ValueError('Invalid catalog object key')
@@ -65,6 +82,7 @@ def check(base_url=BASE_URL, api_url=API_URL, max_age_hours=36, expected=None):
             raise ValueError(f'Public object is missing browser CORS: {key}')
         if hashlib.sha256(raw).hexdigest() != key[8:-5]:
             raise ValueError(f'Public object has incorrect content: {key}')
+        revalidate(base_url + '/' + key, object_headers)
         return json.loads(raw)
 
     listing = read_object(manifest['resources']['courseList'])
@@ -85,6 +103,17 @@ def check(base_url=BASE_URL, api_url=API_URL, max_age_hours=36, expected=None):
         row = next(row for row in rows if subject + row['code'] in indexed)
         samples.append((subject + row['code'], row))
 
+    # Negative availability must agree too: an inactive course must not acquire
+    # old/default sections merely because metadata or a favourite exists.
+    unavailable = next((row['c'] for subject in ['AIST', *sorted(listing)]
+                        for row in listing.get(subject, []) if not row.get('o')), None)
+    if unavailable:
+        rows = read_object(manifest['subjects'][unavailable[:4]])
+        row = next(row for row in rows if row['code'] == unavailable[4:])
+        if row.get('terms', {}).get(term):
+            raise ValueError(f'Inactive search course actually has current sections: {unavailable}')
+        samples.append((unavailable, row))
+
     selections = []
     for index, (cid, _) in enumerate(samples):
         selections.append(f'c{index}:course(filter:{{requiredCourse:{json.dumps(cid)},'
@@ -103,12 +132,13 @@ def check(base_url=BASE_URL, api_url=API_URL, max_age_hours=36, expected=None):
             raise ValueError(f'Production course metadata differs from catalog: {cid}')
         sections = {section['name']: {key: section.get(key) for key in FIELDS}
                     for section in actual['sections'] or []}
-        if sections != sections_for_api(row['terms'][term]):
+        if sections != sections_for_api(row.get('terms', {}).get(term) or {}):
             raise ValueError(f'Production sections differ from published catalog: {cid}')
     return {'version': manifest['version'], 'checkedAt': manifest['checkedAt'],
             'ageHours': round(age, 2), 'currentTerm': term, 'offeredCourses': len(offered),
             'verifiedSubjects': subjects, 'verifiedCourses': [cid for cid, _ in samples],
-            'delivery': 'CDN integrity, browser CORS, search and production API passed'}
+            'verifiedUnavailableCourse': unavailable,
+            'delivery': 'CDN integrity, browser CORS (including conditional requests), search and production API passed'}
 
 
 def main():
