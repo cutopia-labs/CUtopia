@@ -1,4 +1,4 @@
-import { makeObservable, observable, action } from 'mobx';
+import { makeObservable, observable, action, runInAction } from 'mobx';
 import {
   CourseQuery,
   CourseSearchItem,
@@ -42,13 +42,33 @@ class DataStore extends StorePrototype {
     makeObservable(this);
   }
 
-  @action async getRemoteData(key) {
+  private async syncCatalog() {
     const manifest = await getCatalogManifest();
-    if (manifest) {
+    if (!manifest) return null;
+    const version = manifest.resources.courseList;
+    const changed = version !== this.resourceVersions.courseList;
+    const courses =
+      changed || !this.courseList
+        ? await getCatalogObject(version)
+        : this.courseList;
+    if (!courses || Array.isArray(courses))
+      throw new Error('Invalid course index');
+    // Availability flags and the semester they describe must change together.
+    // A failed fetch leaves the last coherent catalog in place.
+    runInAction(() => {
+      if (changed || !this.courseList)
+        this.saveData(courses, 'courseList', version);
       this.currentTerm = manifest.currentTerm;
       this.terms = manifest.availableTerms;
       this.catalogVersion = manifest.version;
       this.catalogCheckedAt = Date.parse(manifest.checkedAt);
+    });
+    return manifest;
+  }
+
+  @action async getRemoteData(key) {
+    const manifest = await this.syncCatalog();
+    if (manifest) {
       const version = manifest.resources[key];
       if (version && (this.resourceVersions[key] !== version || !this[key])) {
         try {
@@ -63,7 +83,8 @@ class DataStore extends StorePrototype {
         }
       }
     }
-    if (this[key]) return this[key];
+    if (this[key] && (key !== 'courseList' || this.resourceVersions[key]))
+      return this[key];
     const fetchKey = DATA_CONFIGS[key].fetchKey || key;
     const res = await fetch(`/resources/${fetchKey}.json`, {
       method: 'GET',
@@ -71,7 +92,17 @@ class DataStore extends StorePrototype {
         Accept: 'application/json',
       },
     });
-    const data = await res.json();
+    let data = await res.json();
+    if (key === 'courseList') {
+      // Build-time indexes have no semester/version contract. Retain browsing
+      // metadata, but never advertise their old offerings as the current term.
+      data = Object.fromEntries(
+        Object.entries(data).map(([subject, rows]) => [
+          subject,
+          (rows as CourseSearchItem[]).map(({ o, ...course }) => course),
+        ])
+      );
+    }
     this.saveData(data, key);
     return this[key];
   }
@@ -81,13 +112,9 @@ class DataStore extends StorePrototype {
     this.verifyAndMount();
     const refresh = async () => {
       if (document.visibilityState === 'hidden') return;
-      const manifest = await getCatalogManifest();
-      if (!manifest) return;
-      this.currentTerm = manifest.currentTerm;
-      this.terms = manifest.availableTerms;
-      this.catalogVersion = manifest.version;
-      this.catalogCheckedAt = Date.parse(manifest.checkedAt);
       try {
+        const manifest = await this.syncCatalog();
+        if (!manifest) return;
         this.faculties = await getCatalogObject(manifest.resources.faculties);
       } catch (_) {
         // Keep the last usable subject navigation during a transient failure.

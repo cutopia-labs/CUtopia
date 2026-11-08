@@ -104,7 +104,7 @@ It requires only public HTTP reads and GitHub `contents: read`; it uses no AWS
 credentials, crawler dependencies, database writes or application deployments.
 
 The check fails when the last **full crawl** is over 36 hours old, browser CORS
-fails, an immutable object has the wrong hash, sampled search availability differs
+fails (including conditional HTTP 304 cache revalidation), an immutable object has the wrong hash, sampled search availability differs
 from schedules, or the version-pinned production API returns different course
 sections. It samples five subjects including ACCT, CSCI, ECON, ENGG and MATH when
 offered. `publish_only` cannot disguise stale data by changing `checkedAt`.

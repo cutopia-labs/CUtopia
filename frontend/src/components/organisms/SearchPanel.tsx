@@ -1,4 +1,11 @@
-import { useState, useEffect, Fragment, FC, useRef } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  Fragment,
+  FC,
+  useRef,
+} from 'react';
 import {
   InputBase,
   ListItem as MUIListItem,
@@ -63,78 +70,77 @@ type SearchResultProps = {
   data: DataStore;
 };
 
-export const SearchResult: FC<SearchResultProps> = ({
-  searchPayload,
-  user,
-  onClick,
-  limit,
-  data,
-}) => {
-  const [results, setResults] = useState<CourseSearchItem[] | null | false>(
-    null
-  );
+export const SearchResult: FC<SearchResultProps> = observer(
+  ({ searchPayload, user, onClick, limit, data }) => {
+    const [results, setResults] = useState<CourseSearchItem[] | null | false>(
+      null
+    );
 
-  const getCourses = async searchPayload => {
-    const query = {
-      payload: searchPayload,
-      user,
-      limit: limit || MAX_SEARCH_RESULT_LENGTH,
-      offerredOnly: searchPayload.offerredOnly,
-    };
-    const results = await data.searchCourses(query);
-    setResults(results);
-  };
+    useEffect(() => {
+      let active = true;
+      setResults(null);
+      const query = {
+        payload: searchPayload,
+        user,
+        limit: limit || MAX_SEARCH_RESULT_LENGTH,
+        offerredOnly: searchPayload.offerredOnly,
+      };
+      data.searchCourses(query).then(
+        results => active && setResults(results),
+        () => active && setResults(false)
+      );
+      return () => {
+        active = false;
+      };
+    }, [searchPayload, limit, user, data, data.catalogVersion]);
 
-  useEffect(() => {
-    getCourses(searchPayload);
-  }, [searchPayload]);
+    if (results === null) return <Loading style={styles.searchLoading} />;
 
-  if (results === null) return <Loading style={styles.searchLoading} />;
+    if (!results) return <ErrorCard mode={ErrorCardMode.ERROR} />;
 
-  if (!results) return <ErrorCard mode={ErrorCardMode.ERROR} />;
+    if (!results.length) return <ErrorCard mode={ErrorCardMode.NULL} />;
 
-  if (!results.length) return <ErrorCard mode={ErrorCardMode.NULL} />;
-
-  return (
-    <>
-      {results.map((course, i) =>
-        searchPayload.showAvalibility && !course.o ? (
-          <Tooltip
-            title="No information for current semester, please check CUSIS"
-            placement="right"
-            key={`listitem-${course.c}`}
-          >
-            <div
-              className={clsx(
-                styles.searchListItem,
-                'list-item-container disabled'
-              )}
+    return (
+      <>
+        {results.map((course, i) =>
+          searchPayload.showAvalibility && !course.o ? (
+            <Tooltip
+              title="No information for current semester, please check CUSIS"
+              placement="right"
               key={`listitem-${course.c}`}
             >
-              <div className="list-item-title-container column">
-                <span className="title">{course.c}</span>
-                <span className="caption">{course.t}</span>
+              <div
+                className={clsx(
+                  styles.searchListItem,
+                  'list-item-container disabled'
+                )}
+                key={`listitem-${course.c}`}
+              >
+                <div className="list-item-title-container column">
+                  <span className="title">{course.c}</span>
+                  <span className="caption">{course.t}</span>
+                </div>
               </div>
-            </div>
-          </Tooltip>
-        ) : (
-          <ListItem
-            className={styles.searchListItem}
-            key={`listitem-${course.c}`}
-            ribbonIndex={i}
-            chevron
-            onClick={e => {
-              e.stopPropagation();
-              onClick ? onClick(course.c) : {};
-            }}
-            title={course.c}
-            caption={course.t}
-          />
-        )
-      )}
-    </>
-  );
-};
+            </Tooltip>
+          ) : (
+            <ListItem
+              className={styles.searchListItem}
+              key={`listitem-${course.c}`}
+              ribbonIndex={i}
+              chevron
+              onClick={e => {
+                e.stopPropagation();
+                onClick ? onClick(course.c) : {};
+              }}
+              title={course.c}
+              caption={course.t}
+            />
+          )
+        )}
+      </>
+    );
+  }
+);
 
 type DepartmentListProps = { setSearchPayload: any };
 
@@ -219,6 +225,15 @@ const SearchPanel: FC<SearchPanelProps> = ({
   const user = useUser();
   const isMobile = useMobileQuery();
   const isPlanner = router.pathname.includes('planner');
+  const effectiveSearchPayload = useMemo(
+    () =>
+      searchPayload && {
+        ...searchPayload,
+        showAvalibility: Boolean(isPlanner),
+        offerredOnly: Boolean(isPlanner),
+      },
+    [searchPayload, isPlanner]
+  );
   const data = useData();
   const { cid } = router.query as {
     cid?: string;
@@ -373,7 +388,7 @@ const SearchPanel: FC<SearchPanelProps> = ({
           }
         >
           <SearchResult
-            searchPayload={searchPayload}
+            searchPayload={effectiveSearchPayload}
             user={user}
             data={data}
             onClick={courseId => {

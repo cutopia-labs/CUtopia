@@ -91,9 +91,15 @@ type CourseSectionsProps = {
 const CourseSections: FC<CourseSectionsProps> = ({
   courseInfo: { sections: courseSections, courseId, title, units },
 }) => {
-  if (!courseSections) return <ErrorCard mode={ErrorCardMode.NULL} />;
   const planner = usePlanner();
   const view = useView();
+  if (!courseSections?.length)
+    return (
+      <ErrorCard
+        mode={ErrorCardMode.NULL}
+        caption="No information for the selected semester. Try another semester or check CUSIS."
+      />
+    );
   const addToPlanner = (section: CourseSection) => {
     planner.addToPlannerCourses({
       sections: {
