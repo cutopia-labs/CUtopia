@@ -103,6 +103,17 @@ def check(base_url=BASE_URL, api_url=API_URL, max_age_hours=36, expected=None):
         row = next(row for row in rows if subject + row['code'] in indexed)
         samples.append((subject + row['code'], row))
 
+    # Negative availability must agree too: an inactive course must not acquire
+    # old/default sections merely because metadata or a favourite exists.
+    unavailable = next((row['c'] for subject in ['AIST', *sorted(listing)]
+                        for row in listing.get(subject, []) if not row.get('o')), None)
+    if unavailable:
+        rows = read_object(manifest['subjects'][unavailable[:4]])
+        row = next(row for row in rows if row['code'] == unavailable[4:])
+        if row.get('terms', {}).get(term):
+            raise ValueError(f'Inactive search course actually has current sections: {unavailable}')
+        samples.append((unavailable, row))
+
     selections = []
     for index, (cid, _) in enumerate(samples):
         selections.append(f'c{index}:course(filter:{{requiredCourse:{json.dumps(cid)},'
@@ -121,11 +132,12 @@ def check(base_url=BASE_URL, api_url=API_URL, max_age_hours=36, expected=None):
             raise ValueError(f'Production course metadata differs from catalog: {cid}')
         sections = {section['name']: {key: section.get(key) for key in FIELDS}
                     for section in actual['sections'] or []}
-        if sections != sections_for_api(row['terms'][term]):
+        if sections != sections_for_api(row.get('terms', {}).get(term) or {}):
             raise ValueError(f'Production sections differ from published catalog: {cid}')
     return {'version': manifest['version'], 'checkedAt': manifest['checkedAt'],
             'ageHours': round(age, 2), 'currentTerm': term, 'offeredCourses': len(offered),
             'verifiedSubjects': subjects, 'verifiedCourses': [cid for cid, _ in samples],
+            'verifiedUnavailableCourse': unavailable,
             'delivery': 'CDN integrity, browser CORS (including conditional requests), search and production API passed'}
 
 

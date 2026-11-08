@@ -107,7 +107,9 @@ The check fails when the last **full crawl** is over 36 hours old, browser CORS
 fails (including conditional HTTP 304 cache revalidation), an immutable object has the wrong hash, sampled search availability differs
 from schedules, or the version-pinned production API returns different course
 sections. It samples five subjects including ACCT, CSCI, ECON, ENGG and MATH when
-offered. `publish_only` cannot disguise stale data by changing `checkedAt`.
+offered, plus an inactive course (preferably from AIST) whose API sections must
+also be absent for the default semester. `publish_only` cannot disguise stale
+data by changing `checkedAt`.
 Failures appear as failed GitHub Actions runs; repository notification settings
 control who receives GitHub's failure notifications. This is detection, not a
 guarantee against GitHub scheduling or university website outages. The next daily

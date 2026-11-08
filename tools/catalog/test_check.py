@@ -103,6 +103,21 @@ class DeliveryTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'sections differ'):
             self.run_check()
 
+    def test_checks_inactive_course_with_only_previous_semester_sections(self):
+        listing = json.loads(self.objects[self.manifest['resources']['courseList']])
+        listing['AIST'] = [{'c': 'AIST1000', 't': 'First-term course'}]
+        self.manifest['resources']['courseList'] = self.object(listing)
+        self.manifest['subjects']['AIST'] = self.object([
+            {'code': '1000', 'title': 'First-term course',
+             'terms': {'2026-27 Term 1': {'A': self.section}}}])
+        self.rehash_manifest()
+        self.api['data']['c5'] = {'courseId': 'AIST1000', 'title': 'First-term course', 'sections': None}
+        result = self.run_check()
+        self.assertEqual(result['verifiedUnavailableCourse'], 'AIST1000')
+        self.api['data']['c5']['sections'] = self.api['data']['c0']['sections']
+        with self.assertRaisesRegex(ValueError, 'sections differ'):
+            self.run_check()
+
     def test_rejects_index_offering_a_course_without_sections(self):
         key = self.manifest['subjects']['CSCI']
         rows = json.loads(self.objects[key])

@@ -22,12 +22,34 @@ jest.mock('../../store', () => ({
   useUser: () => ({ searchHistory: [], favoriteCourses: [] }),
   useData: () => mockData,
 }));
-jest.mock('../atoms/Loading', () => () => <span>Loading results</span>);
-jest.mock('../atoms/Card', () => ({ children }) => <div>{children}</div>);
-jest.mock('../molecules/ListItem', () => ({ title, onClick }) => (
-  <button onClick={onClick}>{title}</button>
-));
-jest.mock('../molecules/ErrorCard', () => () => <span>No results</span>);
+jest.mock(
+  '../atoms/Loading',
+  () =>
+    function Loading() {
+      return <span>Loading results</span>;
+    }
+);
+jest.mock(
+  '../atoms/Card',
+  () =>
+    function Card({ children }) {
+      return <div>{children}</div>;
+    }
+);
+jest.mock(
+  '../molecules/ListItem',
+  () =>
+    function ListItem({ title, onClick }) {
+      return <button onClick={onClick}>{title}</button>;
+    }
+);
+jest.mock(
+  '../molecules/ErrorCard',
+  () =>
+    function ErrorCard() {
+      return <span>No results</span>;
+    }
+);
 jest.mock('../molecules/ChipsRow', () => () => null);
 jest.mock('../planner/CourseSectionCard', () => () => null);
 jest.mock('../planner/PlannerEmptyState', () => () => null);
