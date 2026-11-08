@@ -30,11 +30,16 @@ export const _searchCourses = (
     const { mode, text } = payload;
     switch (mode) {
       case 'Pins':
-        return user.favoriteCourses.map(course => ({
-          c: course.courseId,
-          t: course.title,
-          o: 1, // TEMP: cuz search for avalibiltity is tedious, so set as offered for all
-        }));
+        return user.favoriteCourses.map(course => {
+          const current = courseList[course.courseId.slice(0, 4)]?.find(
+            item => item.c === course.courseId
+          );
+          return {
+            c: course.courseId,
+            t: current?.t || course.title,
+            ...(current?.o && { o: current.o }),
+          };
+        });
       case 'subject':
         return courseList[text];
       case 'query':

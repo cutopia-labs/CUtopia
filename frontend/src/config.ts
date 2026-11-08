@@ -46,11 +46,12 @@ export const CURRENT_TERM = process.env.REACT_APP_CURRENT_TERM;
 
 /**
  * All available terms options in planner
- * - If current term is 1, then show term 2 as well in planner
+ * Keep both regular semesters usable while the remote catalog is loading.
  */
-export const plannerTerms = CURRENT_TERM.endsWith('1')
-  ? [CURRENT_TERM, `${CURRENT_TERM.slice(0, -1)}2`]
-  : [CURRENT_TERM];
+export const plannerTerms = [
+  CURRENT_TERM,
+  `${CURRENT_TERM.slice(0, -1)}${CURRENT_TERM.endsWith('1') ? '2' : '1'}`,
+];
 
 /** Update course list and instructors if etag before below */
 export const STATICS_EXPIRE_BEFORE = parseInt(

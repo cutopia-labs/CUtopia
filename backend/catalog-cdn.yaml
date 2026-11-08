@@ -66,7 +66,9 @@ Resources:
           CachedMethods: [GET, HEAD]
           Compress: true
           CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
-          ResponseHeadersPolicyId: 60669652-455b-4ae9-85a4-c4c02393f86c
+          # SimpleCORS omits CORS on requests with cache-validation headers.
+          # The preflight policy also covers these non-simple/304 responses.
+          ResponseHeadersPolicyId: 5cc3b908-e619-4b99-88e5-2cf7f45965bd
   BucketPolicy:
     Type: AWS::S3::BucketPolicy
     Properties:
