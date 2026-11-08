@@ -72,6 +72,8 @@ jobs:
             git commit -m 'chore: daily catalog refresh'
             git push
           fi
+      - name: Verify public delivery of this publication
+        run: python -u app/tools/catalog/check.py --expected-report data/last-update.json --attempts 7
       - name: Publish run summary
         if: always()
         run: |

@@ -94,6 +94,31 @@ The course-search availability flags are rebuilt for the selected default.
 Every successful run commits its report, preserving an auditable freshness
 history even when course content has not changed.
 
+## Automated delivery checks
+
+The daily job verifies its exact published version through the public CDN after
+recording the crawl. CDN propagation is allowed up to seven attempts. A separate
+`health-workflow.yml`, installed as `catalog-health.yml` in the data repository,
+checks delivery every six hours, even if the crawler fails before publication.
+It requires only public HTTP reads and GitHub `contents: read`; it uses no AWS
+credentials, crawler dependencies, database writes or application deployments.
+
+The check fails when the last **full crawl** is over 36 hours old, browser CORS
+fails, an immutable object has the wrong hash, sampled search availability differs
+from schedules, or the version-pinned production API returns different course
+sections. It samples five subjects including ACCT, CSCI, ECON, ENGG and MATH when
+offered. `publish_only` cannot disguise stale data by changing `checkedAt`.
+Failures appear as failed GitHub Actions runs; repository notification settings
+control who receives GitHub's failure notifications. This is detection, not a
+guarantee against GitHub scheduling or university website outages. The next daily
+run retries a full crawl automatically; manual checkpoint resume remains
+available for faster recovery. Successful data commits also keep the public
+repository active, avoiding GitHub's 60-day inactivity suspension while updates
+remain healthy. Check workflow activity if the repository has had no successful
+updates for an extended period.
+
+Run the same read-only delivery check locally with `python tools/catalog/check.py`.
+
 Dispatch with `publish_only=true` to reapply the policy to the currently
 published dataset without another crawl or app deployment. This refuses a stale
 course checkout and preserves the last actual crawl's `checkedAt` timestamp.

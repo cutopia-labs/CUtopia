@@ -1,0 +1,25 @@
+name: Course catalog delivery health
+on:
+  schedule:
+    - cron: '41 2,8,14,20 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: course-catalog-delivery-health
+  cancel-in-progress: false
+jobs:
+  check:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: cutopia-labs/CUtopia
+          ref: ${{ vars.CATALOG_UPDATER_REF }}
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.10'
+      - name: Check freshness, CDN and production planner
+        run: python -u tools/catalog/check.py
