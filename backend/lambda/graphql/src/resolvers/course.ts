@@ -1,12 +1,35 @@
 import { getCourse as getCourseDataFromDB } from 'mongodb';
 import NodeCache from 'node-cache';
 
+import { Context } from '../context';
 import { Resolvers } from '../schemas/types';
 import { getCatalogManifest } from '../utils/catalog';
+import { requireDatabase } from '../utils/database';
 import { getCourse as getCourseDataFromJSON } from '../utils/getCourse';
 import withCache from '../utils/withCache';
 
 const courseCache = new NodeCache({ stdTTL: 600 });
+const reviewCache = new NodeCache({ stdTTL: 600 });
+
+const courseReviews = (courseId: string, context: Context) => {
+  context.courseReviews ||= new Map();
+  if (!context.courseReviews.has(courseId)) {
+    const pending = withCache(reviewCache, courseId, async () => {
+      await requireDatabase();
+      const data = await getCourseDataFromDB(courseId);
+      return {
+        rating: data?.rating,
+        lecturers: data?.lecturers,
+        terms: data?.terms,
+      };
+    }).catch(() => {
+      console.warn(JSON.stringify({ event: 'course_reviews_unavailable' }));
+      return null;
+    });
+    context.courseReviews.set(courseId, pending);
+  }
+  return context.courseReviews.get(courseId);
+};
 
 const coursesResolver: Resolvers = {
   Query: {
@@ -17,29 +40,27 @@ const coursesResolver: Resolvers = {
         courseCache,
         `${manifest?.version || 'local'}#${requiredCourse}#${requiredTerm}`,
         async () => {
-          // Course metadata and aggregate ratings are public. Individual
-          // reviews remain protected by the auth directive on review queries.
-          const courseReviewData = await getCourseDataFromDB(requiredCourse);
-          const lecturers = courseReviewData?.lecturers;
-          const terms = courseReviewData?.terms;
-          const rating = courseReviewData?.rating;
           const courseData = await getCourseDataFromJSON(
             requiredCourse,
             manifest
           );
           return {
             ...courseData,
+            courseId: requiredCourse,
             sections: requiredTerm ? courseData['terms']?.[requiredTerm] : null,
-            reviewLecturers: lecturers,
-            reviewTerms: terms,
-            rating,
           };
         }
       );
     },
   },
   Course: {
-    rating: async ({ rating }) => {
+    reviewLecturers: async ({ courseId }, _, context) =>
+      (await courseReviews(courseId, context))?.lecturers,
+    reviewTerms: async ({ courseId }, _, context) =>
+      (await courseReviews(courseId, context))?.terms,
+    rating: async ({ courseId, rating: suppliedRating }, _, context) => {
+      const rating =
+        suppliedRating || (await courseReviews(courseId, context))?.rating;
       if (!rating?.numReviews) {
         return null;
       }

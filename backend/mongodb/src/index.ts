@@ -4,11 +4,29 @@ export * from './controllers';
 
 require('dotenv').config();
 
-export const connect = async uri => {
-  if (mongoose.connection.readyState === mongoose.STATES.disconnected) {
-    console.log(`Try connecting to ${uri}`);
-    await mongoose.connect(uri);
-    console.log('Connected to MongoDB successfully');
+let pendingConnection: Promise<typeof mongoose>;
+
+export const connect = async (uri: string) => {
+  if (pendingConnection) {
+    await pendingConnection;
+    return;
+  }
+  if (mongoose.connection.readyState === mongoose.STATES.connected) return;
+  pendingConnection = mongoose
+    .connect(uri, {
+      serverSelectionTimeoutMS: 5000,
+      connectTimeoutMS: 5000,
+      maxPoolSize: 5,
+      minPoolSize: 0,
+      bufferCommands: false,
+    })
+    .catch(() => {
+      throw new Error('Database connection unavailable');
+    });
+  try {
+    await pendingConnection;
+  } finally {
+    pendingConnection = undefined;
   }
 };
 

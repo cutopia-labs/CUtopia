@@ -6,6 +6,8 @@ import { ErrorCode } from 'cutopia-types';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { getUser } from 'mongodb';
 
+import { requireDatabase } from '../utils/database';
+
 const privateKey = fs.readFileSync(join(__dirname, './jwtRS256.key'));
 const publicKey = fs.readFileSync(join(__dirname, './jwtRS256.key.pub'));
 
@@ -36,6 +38,7 @@ export const verify = async token => {
   }
 
   if (Date.now() >= (decoded as JwtPayload).exp * 1000) {
+    await requireDatabase();
     const { username, password } = decoded;
     const user = await getUser(username, 'password');
     // If pwd not changed, then return refreshed token

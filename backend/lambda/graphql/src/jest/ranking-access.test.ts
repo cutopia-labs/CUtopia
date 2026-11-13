@@ -5,6 +5,7 @@ import rankingResolver from '../resolvers/ranking';
 import { getCatalogManifest } from '../utils/catalog';
 
 jest.mock('mongodb', () => ({
+  connect: jest.fn().mockResolvedValue(undefined as never),
   getRanking: jest.fn(),
 }));
 

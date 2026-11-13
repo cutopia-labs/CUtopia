@@ -13,9 +13,8 @@ const transporters = setupEmailer();
 
 exports.handler = async event => {
   await connect(process.env.ATLAS_URI);
-  const resendList = await getResendList();
-
   try {
+    const resendList = await getResendList();
     await Promise.all(
       resendList.map(async message => {
         for (const transporter of transporters) {
@@ -23,10 +22,10 @@ exports.handler = async event => {
           try {
             await transporter.sendMail(getTemplateByAction(message));
             await removeFromResendList(message);
-            console.log('resent!', message);
+            console.log('resent!', message.action);
             break;
           } catch (e) {
-            console.log('resend failed', message);
+            console.log('resend failed', message.action);
             continue;
           }
         }

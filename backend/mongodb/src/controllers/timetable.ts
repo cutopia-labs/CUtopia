@@ -9,7 +9,7 @@ import Timetable from '../models/timetable';
 import User from '../models/user';
 import { canReadTimetable } from '../policies/timetable';
 
-import { updateTimetableId, updateUser } from './user';
+import { updateTimetableId } from './user';
 
 export const getTimetable = async input => {
   const timetable = await Timetable.findById(input._id);
@@ -39,15 +39,12 @@ export const uploadTimetable = async input => {
   }
 
   if (_id) {
-    await Timetable.updateOne({ _id, username }, input);
+    const result = await Timetable.updateOne({ _id, username }, input);
+    if (!result.matchedCount)
+      throw Error(ErrorCode.GET_TIMETABLE_INVALID_ID.toString());
   } else {
     const newTimetable = new Timetable(input);
-    await updateTimetableId({
-      operation: 'add',
-      _id: newTimetable._id,
-      username,
-    });
-    await newTimetable.save();
+    await saveOwnedTimetable(newTimetable, username);
     return {
       _id: newTimetable._id,
       createdAt: newTimetable.createdAt,
@@ -55,12 +52,18 @@ export const uploadTimetable = async input => {
   }
 };
 
+const saveOwnedTimetable = async (timetable, username: string) => {
+  await timetable.save();
+  // Keep the record if the account update has an ambiguous network outcome.
+  // A later reconciliation can recover it without leaving a dangling pointer.
+  await updateTimetableId({ operation: 'add', _id: timetable._id, username });
+};
+
 export const removeTimetable = async input => {
   let { _id, switchTo, username } = input;
-  await Timetable.deleteOne({
-    _id,
-    username,
-  }).exec();
+  if (switchTo && !(await Timetable.exists({ _id: switchTo, username }))) {
+    throw Error(ErrorCode.GET_TIMETABLE_INVALID_ID.toString());
+  }
 
   if (switchTo === null) {
     // No timetable left after removing this last timetable
@@ -74,6 +77,7 @@ export const removeTimetable = async input => {
     switchTo,
     username,
   });
+  await Timetable.deleteOne({ _id, username }).exec();
   if (switchTo) {
     return await Timetable.findOne({ username, _id: switchTo }).exec();
   }
@@ -103,8 +107,15 @@ export const cleanExpiredTimetable = async input => {
 
 export const switchTimetable = async input => {
   const { _id, username } = input;
-  await updateUser({ username, timetableId: _id });
-  return await Timetable.findOne({ username, _id });
+  const timetable = await Timetable.findOne({ username, _id });
+  if (!timetable) throw Error(ErrorCode.GET_TIMETABLE_INVALID_ID.toString());
+  const updated = await User.updateOne(
+    { username, timetables: _id },
+    { $set: { timetableId: _id } }
+  ).exec();
+  if (!updated.matchedCount)
+    throw Error(ErrorCode.GET_TIMETABLE_INVALID_ID.toString());
+  return timetable;
 };
 
 export const cloneTimetable = async input => {
@@ -123,11 +134,6 @@ export const cloneTimetable = async input => {
     expire: -1,
     expireAt: -1,
   });
-  await updateTimetableId({
-    operation: 'add',
-    _id: newTimetable._id,
-    username,
-  });
-  await newTimetable.save();
+  await saveOwnedTimetable(newTimetable, username);
   return newTimetable;
 };

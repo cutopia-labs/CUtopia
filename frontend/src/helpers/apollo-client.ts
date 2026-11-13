@@ -30,10 +30,20 @@ const authLink = setContext(async (operation, { headers }) => {
       ? await getCatalogManifest()
       : null;
   const token = getToken();
+  const onlyPublicCatalog = operation.query.definitions.every(
+    definition =>
+      definition.kind === 'OperationDefinition' &&
+      definition.operation === 'query' &&
+      definition.selectionSet.selections.every(
+        selection =>
+          selection.kind === 'Field' &&
+          ['course', 'ranking'].includes(selection.name.value)
+      )
+  );
   return {
     headers: {
       ...headers,
-      authorization: token ? `Bearer ${token}` : '',
+      authorization: token && !onlyPublicCatalog ? `Bearer ${token}` : '',
       ...(catalog && { 'X-Catalog-Version': catalog.version }),
     },
   };
