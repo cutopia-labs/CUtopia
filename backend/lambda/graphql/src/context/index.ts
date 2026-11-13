@@ -7,18 +7,21 @@ export interface Context {
   ip: string;
   catalog?: CatalogManifest;
   catalogVersion?: string;
+  courseReviews?: Map<string, Promise<any>>;
 }
 
 const context = async ({ event: lambdaEvent }) => {
   const ip = lambdaEvent.requestContext.identity.sourceIp;
-  const split = (lambdaEvent.headers.Authorization || '').split('Bearer ');
+  const headers = lambdaEvent.headers || {};
+  const split = (headers.Authorization || headers.authorization || '').split(
+    'Bearer '
+  );
 
   const defaultContext = {
     user: null,
     ip,
     catalogVersion:
-      lambdaEvent.headers['X-Catalog-Version'] ||
-      lambdaEvent.headers['x-catalog-version'],
+      headers['X-Catalog-Version'] || headers['x-catalog-version'],
   };
 
   if (split.length !== 2) {
