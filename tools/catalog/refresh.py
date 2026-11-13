@@ -113,6 +113,34 @@ def update_availability(directory, current_term):
     path.write_bytes(canonical(listing))
 
 
+def venue_quality(courses, term):
+    quality = dict(meetings=0, namedLocation=0, toBeAnnounced=0,
+                   noRoomRequired=0, multiLocationSections=0)
+    for course_id, course in courses.items():
+        for name, section in course.get('terms', {}).get(term, {}).items():
+            locations = section['locations']
+            if not locations:
+                raise ValueError(f'No meeting locations in {course_id} {name}')
+            normalized = set()
+            for location in locations:
+                if (not isinstance(location, str) or not location.strip() or
+                        re.search(r'[\x00-\x1f\x7f]|<[^>]+>|^\s*(?:null|undefined)\s*$',
+                                  location, re.IGNORECASE)):
+                    raise ValueError(f'Malformed meeting location in {course_id} {name}')
+                value = ' '.join(location.split()).casefold()
+                normalized.add(value)
+                quality['meetings'] += 1
+                if value == 'tba':
+                    quality['toBeAnnounced'] += 1
+                elif value == 'no room required':
+                    quality['noRoomRequired'] += 1
+                else:
+                    quality['namedLocation'] += 1
+            if len(normalized) > 1:
+                quality['multiLocationSections'] += 1
+    return quality
+
+
 def require_published_courses(directory, previous):
     if previous is None:
         return
@@ -148,7 +176,8 @@ def validate(directory, baseline, current_term, previous_term=None):
     old_instructors = set(json.loads((Path(baseline) / 'resources/instructors.json').read_text()))
     if not old_instructors.issubset(json.loads((resources / 'instructors.json').read_text())):
         raise ValueError('Historical instructors were lost')
-    return {'courses': len(new), 'offeredCourses': terms, 'sections': sections}
+    return {'courses': len(new), 'offeredCourses': terms, 'sections': sections,
+            'venueQuality': venue_quality(new, current_term)}
 
 
 def get_json(s3, bucket, key):
