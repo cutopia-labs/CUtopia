@@ -50,6 +50,12 @@ export const VERIFY_USER = gql`
   }
 `;
 
+export const RESEND_VERIFICATION = gql`
+  mutation ResendVerification($userId: String!, $password: String!) {
+    resendVerification(input: { userId: $userId, password: $password })
+  }
+`;
+
 // CUTOPIA PASSWORD RESET Mutations
 export const SEND_RESET_PASSWORD_CODE = gql`
   mutation ($userId: String!) {

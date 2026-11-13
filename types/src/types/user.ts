@@ -20,6 +20,7 @@ export type User = UserVisible & {
   downvotes: number;
   veriCode: string;
   veriCodeCreatedAt?: number;
+  veriCodeResendAt?: number;
   sharedTimetables: Timetable[];
 };
 

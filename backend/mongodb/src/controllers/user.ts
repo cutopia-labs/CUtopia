@@ -22,7 +22,15 @@ const replaceUnverifiedUser = async (filter, newUser, err) => {
   ) {
     throw Error(err);
   }
-  await User.replaceOne(filter, newUser).exec();
+  const result = await User.replaceOne(
+    {
+      _id: user._id,
+      verified: false,
+      veriCodeCreatedAt: user.veriCodeCreatedAt ?? null,
+    },
+    newUser
+  ).exec();
+  if (!result.matchedCount) throw Error(err);
 };
 
 export const createUser = async input => {
@@ -48,23 +56,24 @@ export const createUser = async input => {
   try {
     await user.save();
   } catch (e) {
-    if (e.code === 11000) {
-      switch (Object.keys(e.keyValue)[0]) {
-        case 'username':
-          await replaceUnverifiedUser(
-            { username },
-            userData,
-            ErrorCode.CREATE_USER_USERNAME_EXISTS.toString()
-          );
-          break;
-        case 'SID':
-          await replaceUnverifiedUser(
-            { SID },
-            userData,
-            ErrorCode.CREATE_USER_EMAIL_EXISTS.toString()
-          );
-          break;
-      }
+    if (e.code !== 11000) throw e;
+    switch (Object.keys(e.keyValue)[0]) {
+      case 'username':
+        await replaceUnverifiedUser(
+          { username },
+          userData,
+          ErrorCode.CREATE_USER_USERNAME_EXISTS.toString()
+        );
+        break;
+      case 'SID':
+        await replaceUnverifiedUser(
+          { SID },
+          userData,
+          ErrorCode.CREATE_USER_EMAIL_EXISTS.toString()
+        );
+        break;
+      default:
+        throw e;
     }
   }
   return veriCode;
@@ -102,16 +111,57 @@ export const verifyUser = async input => {
     throw Error(ErrorCode.VERIFICATION_ALREADY_VERIFIED.toString());
   }
   if (isVerfiCodeExpired(user.veriCodeCreatedAt ?? user.createdAt)) {
-    await user.remove();
     throw Error(ErrorCode.VERIFICATION_EXPIRED.toString());
   }
-  if (user.veriCode !== code) {
+  if (!code || user.veriCode !== code) {
     throw Error(ErrorCode.VERIFICATION_FAILED.toString());
   }
 
-  user.veriCode = null;
-  user.verified = true;
-  await user.save();
+  const result = await User.updateOne(
+    { _id: user._id, verified: false, veriCode: code },
+    { $set: { verified: true, veriCode: null } }
+  ).exec();
+  if (!result.matchedCount)
+    throw Error(ErrorCode.VERIFICATION_FAILED.toString());
+};
+
+export const resendVerification = async ({ userId, password }) => {
+  const user = await getUser(userId);
+  if (!user || !(await bcrypt.compare(password, user.password))) {
+    throw Error(ErrorCode.LOGIN_FAILED.toString());
+  }
+  if (user.verified)
+    throw Error(ErrorCode.VERIFICATION_ALREADY_VERIFIED.toString());
+
+  const now = Date.now();
+  const issuedAt = user.veriCodeCreatedAt ?? user.createdAt;
+  const renew = !user.veriCode || isVerfiCodeExpired(issuedAt);
+  const updated = await User.findOneAndUpdate(
+    {
+      _id: user._id,
+      verified: false,
+      password: user.password,
+      veriCode: user.veriCode ?? null,
+      veriCodeCreatedAt: user.veriCodeCreatedAt ?? null,
+      $or: [
+        { veriCodeResendAt: null },
+        { veriCodeResendAt: { $lte: now - 60000 } },
+      ],
+    },
+    {
+      $set: {
+        veriCodeResendAt: now,
+        ...(renew && { veriCode: nanoid(5), veriCodeCreatedAt: now }),
+      },
+    },
+    { new: true }
+  ).exec();
+  if (!updated) throw Error(ErrorCode.EXCEED_RATE_LIMIT.toString());
+  return {
+    SID: updated.SID,
+    username: updated.username,
+    code: updated.veriCode,
+  };
 };
 
 export const login = async input => {
@@ -122,12 +172,11 @@ export const login = async input => {
     throw Error(ErrorCode.LOGIN_USER_DNE.toString());
   }
 
-  if (!user.verified) {
-    throw Error(ErrorCode.LOGIN_NOT_VERIFIED.toString());
-  }
-
   if (!(await bcrypt.compare(password, user.password))) {
     throw Error(ErrorCode.LOGIN_FAILED.toString());
+  }
+  if (!user.verified) {
+    throw Error(ErrorCode.LOGIN_NOT_VERIFIED.toString());
   }
 
   return user;

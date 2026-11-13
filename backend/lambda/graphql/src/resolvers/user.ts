@@ -5,6 +5,7 @@ import {
   getUser,
   getResetPasswordCodeAndEmail,
   resetPassword,
+  resendVerification,
   login,
 } from 'mongodb';
 
@@ -21,7 +22,7 @@ const sendEmail = async message => {
     };
     await SNS.publish(params).promise();
   } else {
-    console.log('Email content:', message);
+    console.log('Email queued in local mode:', message.action);
   }
 };
 
@@ -44,6 +45,10 @@ const userResolver: Resolvers = {
       });
     },
     verifyUser: async (parent, { input }) => verifyUser(input),
+    resendVerification: async (parent, { input }) => {
+      const message = await resendVerification(input);
+      await sendEmail({ action: 'create', ...message });
+    },
     login: async (parent, { input }) => {
       const user = await login(input);
       const token = sign({ username: user.username, password: user.password });
