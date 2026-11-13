@@ -33,8 +33,11 @@
 }
 .sectionDetail {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  flex-direction: column;
+}
+.meeting + .meeting {
+  margin-top: 8px;
+  border-top: 1px solid var(--background);
 }
 .sectionDetailItem {
   min-width: 50%;

@@ -8,7 +8,7 @@ import {
   DeleteOutline,
 } from '@mui/icons-material';
 import clsx from 'clsx';
-import { FC } from 'react';
+import React, { FC } from 'react';
 
 import styles from '../../styles/components/review/CourseSections.module.scss';
 import { usePlanner, useView } from '../../store';
@@ -24,15 +24,17 @@ type SectionCardProps = {
   onMouseEvent?: (hover: boolean, section: CourseSection) => void;
 };
 
+const meetingTime = (section: CourseSection, i: number) => {
+  const day = WEEKDAYS_TWO_ABBR[section.days[i]];
+  const start = section.startTimes[i];
+  const end = section.endTimes[i];
+  if (!start || !end || start === 'TBA' || end === 'TBA')
+    return day ? `${day} TBA` : 'TBA';
+  return `${day || 'TBA'} ${start} - ${end}`;
+};
+
 export const getSectionTime = (section: CourseSection) =>
-  section.days
-    .map(
-      (day, i) =>
-        `${WEEKDAYS_TWO_ABBR[day] || 'TBA'} ${section.startTimes[i]} - ${
-          section.endTimes[i]
-        }`
-    )
-    .join(', ');
+  section.days.map((_, i) => meetingTime(section, i)).join(', ');
 
 const SectionCard: FC<SectionCardProps> = ({
   section,
@@ -41,20 +43,6 @@ const SectionCard: FC<SectionCardProps> = ({
   added,
   onMouseEvent,
 }) => {
-  const SECTION_CARD_ITEMS = [
-    {
-      icon: <PersonOutline />,
-      val: section.instructors[0],
-    },
-    {
-      icon: <Schedule />,
-      val: getSectionTime(section),
-    },
-    {
-      icon: <RoomOutlined />,
-      val: section.locations[0],
-    },
-  ];
   return (
     <div className={styles.courseSectionCard}>
       <span className={clsx(styles.sectionHeader, styles.courseTermLabel)}>
@@ -72,10 +60,25 @@ const SectionCard: FC<SectionCardProps> = ({
         </IconButton>
       </span>
       <div className={styles.sectionDetail}>
-        {SECTION_CARD_ITEMS.map(item => (
-          <div className={styles.sectionDetailItem} key={item.val}>
-            {item.icon}
-            {item.val}
+        {!section.days.length && (
+          <div className={styles.sectionDetailItem}>Time and location TBA</div>
+        )}
+        {section.days.map((_, i) => (
+          <div className={styles.meeting} key={i}>
+            <div className={styles.sectionDetailItem}>
+              <Schedule />
+              {meetingTime(section, i)}
+            </div>
+            <div className={styles.sectionDetailItem}>
+              <RoomOutlined />
+              {section.locations[i]?.trim() || 'Location TBA'}
+            </div>
+            {section.instructors[i] && (
+              <div className={styles.sectionDetailItem}>
+                <PersonOutline />
+                {section.instructors[i]}
+              </div>
+            )}
           </div>
         ))}
       </div>
