@@ -1,12 +1,17 @@
 import { useState, useEffect, FC } from 'react';
-import { IconButton } from '@mui/material';
+import { Button, IconButton } from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
 import * as Sentry from '@sentry/nextjs';
 import { observer } from 'mobx-react-lite';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
-import { USERNAME_RULE, SID_RULE, PASSWORD_RULE } from 'cutopia-types';
+import {
+  ErrorCode,
+  USERNAME_RULE,
+  SID_RULE,
+  PASSWORD_RULE,
+} from 'cutopia-types';
 
 import styles from '../../styles/pages/login.module.scss';
 import TextField from '../atoms/TextField';
@@ -15,6 +20,7 @@ import {
   LOGIN_CUTOPIA,
   SEND_VERIFICATION,
   VERIFY_USER,
+  RESEND_VERIFICATION,
   SEND_RESET_PASSWORD_CODE,
   RESET_PASSWORD,
 } from '../../constants/mutations';
@@ -43,8 +49,8 @@ const MODE_ITEMS = {
   },
   [LoginPageMode.VERIFY]: {
     title: 'Verify',
-    caption:
-      'An verification code has been sent to CUHK email.\nPlease enter your code here:',
+    caption: 'Enter the verification code from your CUHK email.',
+    userId: 'Username / CUHK SID',
     verificationCode: 'Verification Code',
     button: 'Verify',
   },
@@ -117,6 +123,7 @@ const LoginPanel: FC<Props> = ({
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
   const [invisible, setInvisible] = useState(true);
+  const [showResend, setShowResend] = useState(false);
   const [errors, setErrors] = useState({
     verification: null,
     username: null,
@@ -129,11 +136,16 @@ const LoginPanel: FC<Props> = ({
   const view = useView();
 
   useEffect(() => {
-    const mode = queryMode ? PATH_MODE_LOOKUP[queryMode] : INITIAL_MODE;
+    const mode = Object.prototype.hasOwnProperty.call(
+      PATH_MODE_LOOKUP,
+      queryMode
+    )
+      ? PATH_MODE_LOOKUP[queryMode]
+      : INITIAL_MODE;
     if (queryUsername || queryCode || queryUserId) {
-      setUsername(queryUsername);
-      setUserId(queryUserId);
-      setVerificationCode(queryCode);
+      setUsername(queryUsername || '');
+      setUserId(queryUserId || queryUsername || '');
+      setVerificationCode(queryCode || '');
     }
     // Handle sign up verify (RESET PWD VERIFY NO NEED AUTO, CUZ NEED SET PWD)
     if (mode === LoginPageMode.VERIFY && queryUsername && queryCode) {
@@ -145,7 +157,7 @@ const LoginPanel: FC<Props> = ({
       });
     }
     setMode(mode);
-  }, [queryMode]);
+  }, [queryMode, queryUsername, queryUserId, queryCode]);
 
   // Maybe shall disable, and let user switch acc?
   useEffect(() => {
@@ -156,23 +168,46 @@ const LoginPanel: FC<Props> = ({
 
   const [createUser, { loading: creatingUser, error: createError }] =
     useMutation(SEND_VERIFICATION, {
-      onCompleted: handleCompleted(() => setMode(LoginPageMode.VERIFY), {
-        message: 'Verification code has been sent to your CUHK email',
-        view,
-      }),
+      onCompleted: handleCompleted(
+        () => {
+          setUserId(username);
+          setMode(LoginPageMode.VERIFY);
+        },
+        {
+          message: 'Verification code has been sent to your CUHK email',
+          view,
+        }
+      ),
       onError: view.handleError,
     });
   const [verifyUser, { loading: verifying, error: verifyError }] = useMutation(
     VERIFY_USER,
     {
-      onCompleted: handleCompleted(() => loginAndRedirect(), {
-        view,
-        message: 'Verification success!',
-      }),
+      onCompleted: handleCompleted(
+        () => {
+          setShowResend(false);
+          setMode(LoginPageMode.CUTOPIA_LOGIN);
+          return loginAndRedirect();
+        },
+        {
+          view,
+          message: 'Verification success!',
+        }
+      ),
       onError: e => {
         view.handleError(e);
         setMode(LoginPageMode.VERIFY);
       },
+    }
+  );
+  const [resendVerification, { loading: resendingVerification }] = useMutation(
+    RESEND_VERIFICATION,
+    {
+      onCompleted: handleCompleted(() => setShowResend(false), {
+        message: 'Check your CUHK email for your verification code',
+        view,
+      }),
+      onError: view.handleError,
     }
   );
   const [loginCUtopia, { loading: loggingInCUtopia }] = useMutation(
@@ -180,7 +215,11 @@ const LoginPanel: FC<Props> = ({
     {
       onCompleted: handleCompleted(
         async data => {
-          await user.saveUser(username, data.login?.token, data.login?.me);
+          await user.saveUser(
+            data.login?.me?.username,
+            data.login?.token,
+            data.login?.me
+          );
           onSuccess?.();
           if (data.login?.me?.username) {
             Sentry.setUser({
@@ -194,7 +233,17 @@ const LoginPanel: FC<Props> = ({
         },
         { mute: true } // login snackbar called user store
       ),
-      onError: view.handleError,
+      onError: error => {
+        if (
+          error.graphQLErrors.some(
+            e => e.message === String(ErrorCode.LOGIN_NOT_VERIFIED)
+          )
+        ) {
+          setMode(LoginPageMode.VERIFY);
+          return;
+        }
+        view.handleError(error);
+      },
     }
   );
   const [sendResetPasswordCode, { loading: sendingResetCode }] = useMutation(
@@ -299,7 +348,7 @@ const LoginPanel: FC<Props> = ({
       case LoginPageMode.VERIFY: {
         const verifyPayload = {
           variables: {
-            username,
+            username: userId,
             code: verificationCode,
           },
         };
@@ -344,6 +393,7 @@ const LoginPanel: FC<Props> = ({
     loggingInCUtopia ||
     creatingUser ||
     verifying ||
+    resendingVerification ||
     sendingResetCode ||
     resettingPassword;
 
@@ -419,6 +469,14 @@ const LoginPanel: FC<Props> = ({
           )}
           {mode === LoginPageMode.CUTOPIA_LOGIN && (
             <div className={clsx(styles.forgotPwdRow, 'center-row')}>
+              <Button
+                size="small"
+                type="button"
+                className={styles.label}
+                onClick={() => setMode(LoginPageMode.VERIFY)}
+              >
+                Continue verification
+              </Button>
               <span
                 className={clsx(styles.label, styles.forgotPwdLabel)}
                 onClick={() => setMode(LoginPageMode.RESET_PASSWORD)}
@@ -426,6 +484,35 @@ const LoginPanel: FC<Props> = ({
                 Forgot Password?
               </span>
             </div>
+          )}
+          {mode === LoginPageMode.VERIFY && (
+            <>
+              {showResend && (
+                <TextField
+                  className={styles.loginInputContainer}
+                  placeholder="Account password"
+                  value={password}
+                  onChangeText={setPassword}
+                  type="password"
+                  label="Account password"
+                />
+              )}
+              <Button
+                size="small"
+                type="button"
+                className={styles.label}
+                disabled={processing || (showResend && (!userId || !password))}
+                onClick={() => {
+                  if (!showResend) {
+                    setShowResend(true);
+                    return;
+                  }
+                  void resendVerification({ variables: { userId, password } });
+                }}
+              >
+                {showResend ? 'Send verification code' : 'Resend code'}
+              </Button>
+            </>
           )}
           <LoadingButton
             variant="contained"

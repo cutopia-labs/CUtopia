@@ -14,17 +14,19 @@ exports.handler = async event => {
     // temporary workaround to resend emails when failed
     try {
       await transporter.sendMail(mail);
-      console.log('sent!', transporter.transporter.auth.user, message);
+      console.log('sent!', message.action);
       return;
-    } catch (e) {
-      console.log('failed:', transporter.transporter.auth.user);
-      console.log(e);
+    } catch {
+      console.log('failed:', message.action);
       continue;
     }
   }
   // still failed, then add that message to database for resending later
-  console.log('still failed :(', message);
+  console.log('still failed :(', message.action);
   await connect(process.env.ATLAS_URI);
-  await addToResendList(message);
-  await disconnect();
+  try {
+    await addToResendList(message);
+  } finally {
+    await disconnect();
+  }
 };

@@ -1,66 +1,93 @@
-// Reference: https://www.apollographql.com/docs/apollo-server/integrations/plugins/#end-hooks
+import { ApolloServerPlugin } from 'apollo-server-plugin-base';
+import { GraphQLFormattedError } from 'graphql';
 
-const excludedMutations = ['switchTimetable', 'uploadTimetable'];
-const excludedVariables = ['password', 'newPassword'];
+const knownFields = new Set([
+  'course',
+  'ranking',
+  'me',
+  'timetable',
+  'reviews',
+  'review',
+  'discussion',
+  'login',
+  'createUser',
+  'verifyUser',
+  'resendVerification',
+  'resetPassword',
+  'sendResetPasswordCode',
+  'uploadTimetable',
+  'removeTimetable',
+  'switchTimetable',
+  'cloneTimetable',
+  'createReview',
+  'editReview',
+  'voteReview',
+  'sendMessage',
+  'report',
+]);
 
-const getCommonLog = requestContext => {
-  const query = requestContext.request.query;
-  const variables = JSON.stringify(
-    Object.fromEntries(
-      Object.entries(requestContext.request.variables).filter(
-        ([key, value]) => !excludedVariables.includes(key)
-      )
-    ),
-    null,
-    2
-  );
-  const { user, ip } = requestContext.context;
-  return `${user ? user.username : ip}\n${query}\n${variables}`;
-};
+const isDatabaseError = error =>
+  error.extensions?.code === 'DATABASE_UNAVAILABLE' ||
+  /^(Mongo|Mongoose)/.test(error.originalError?.name || '');
 
-const logMutation = requestContext => {
-  if (
-    !excludedMutations.includes(
-      requestContext.operation.selectionSet.selections[0].name.value
-    )
-  ) {
-    console.log(getCommonLog(requestContext));
-  }
-};
-
-const logError = (requestContext, type, err) => {
-  console.error(`${getCommonLog(requestContext)}\n${type}\n${err}`);
-};
-
-const loggingPlugin = {
-  async requestDidStart(requestContext) {
+export const formatError = (error): GraphQLFormattedError => {
+  if (isDatabaseError(error)) {
     return {
-      async parsingDidStart() {
-        return async err => {
-          if (err) {
-            logError(requestContext, 'parsing', err);
-          }
-        };
-      },
-      async validationDidStart() {
-        return async errs => {
-          if (errs) {
-            logError(requestContext, 'val', errs);
-          }
-        };
-      },
-      async executionDidStart() {
-        if (requestContext.operation.operation === 'mutation') {
-          logMutation(requestContext);
-        }
+      message: 'Database temporarily unavailable. Please try again.',
+      path: error.path,
+      extensions: { code: 'DATABASE_UNAVAILABLE' },
+    };
+  }
+  if (
+    error.extensions?.code === 'INTERNAL_SERVER_ERROR' &&
+    !/^\d+$/.test(error.message)
+  ) {
+    return {
+      message: 'Request temporarily unavailable. Please try again.',
+      path: error.path,
+      extensions: { code: 'INTERNAL_SERVER_ERROR' },
+    };
+  }
+  // Auth refresh needs its explicitly returned token. Never include exception
+  // stack traces, which may contain connection details or user data.
+  const { exception, ...extensions } = error.extensions || {};
+  return { message: error.message, path: error.path, extensions };
+};
 
-        return {
-          async executionDidEnd(err) {
-            if (err) {
-              logError(requestContext, 'exec', err);
-            }
-          },
-        };
+const loggingPlugin: ApolloServerPlugin = {
+  async requestDidStart() {
+    const started = Date.now();
+    return {
+      async willSendResponse({ operation, errors }) {
+        const outcome = errors?.some(isDatabaseError)
+          ? 'database_unavailable'
+          : errors?.some(
+              error =>
+                error.extensions?.code === 'INTERNAL_SERVER_ERROR' &&
+                !/^\d+$/.test(error.message)
+            )
+          ? 'server_error'
+          : errors?.length
+          ? 'request_error'
+          : 'ok';
+        console.log(
+          JSON.stringify({
+            event: 'graphql_request',
+            operation: operation?.operation || 'unknown',
+            fields: [
+              ...new Set(
+                operation?.selectionSet.selections.flatMap(selection =>
+                  selection.kind === 'Field' &&
+                  knownFields.has(selection.name.value)
+                    ? [selection.name.value]
+                    : []
+                )
+              ),
+            ],
+            outcome,
+            durationMs: Date.now() - started,
+          })
+        );
       },
     };
   },

@@ -4,6 +4,7 @@ const getCourseDataFromDB = jest.fn();
 
 jest.mock('mongodb', () => ({
   getCourse: getCourseDataFromDB,
+  connect: jest.fn().mockResolvedValue(undefined as never),
 }));
 jest.mock(
   'node-cache',
@@ -47,8 +48,30 @@ describe('course resolver', () => {
       courseId: 'CSCI1120',
       title: 'Introduction to Computing Using C++',
     });
+    expect(getCourseDataFromDB).not.toHaveBeenCalled();
+    const context = { ip: '127.0.0.1', user: null };
+    const resolver = coursesResolver.Course.reviewLecturers as any;
+    await expect(resolver(result, {}, context)).resolves.toEqual([
+      'Public lecturer',
+    ]);
     expect(getCourseDataFromDB).toHaveBeenCalledWith('CSCI1120');
     expect(result).not.toHaveProperty('username');
     expect(result).not.toHaveProperty('password');
+  });
+
+  it('keeps section data available if optional review data fails', async () => {
+    getCourseDataFromDB.mockRejectedValueOnce(new Error('offline') as never);
+    const context = { ip: '127.0.0.1', user: null };
+    const result = await resolveCourse(
+      null,
+      {
+        filter: { requiredCourse: 'CSCI1120', requiredTerm: '2026-27 Term 1' },
+      },
+      context
+    );
+    expect(result.sections).toEqual({});
+    await expect(
+      (coursesResolver.Course.rating as any)(result, {}, context)
+    ).resolves.toBeNull();
   });
 });

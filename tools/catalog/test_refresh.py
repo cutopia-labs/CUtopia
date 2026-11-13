@@ -56,6 +56,21 @@ class PublicationTests(unittest.TestCase):
     def tearDown(self):
         self.temp.cleanup()
 
+    def test_location_quality_keeps_official_placeholders_and_multiple_venues(self):
+        term = '2026-27 Term 2'
+        courses = {'TEST1000': {'terms': {term: {
+            'LEC': {'locations': ['Room 1', 'Room 2', 'TBA']},
+            'LAB': {'locations': ['No Room Required']},
+        }}}}
+        self.assertEqual(refresh.venue_quality(courses, term), {
+            'meetings': 4, 'namedLocation': 2, 'toBeAnnounced': 1,
+            'noRoomRequired': 1, 'multiLocationSections': 1,
+        })
+        for bad in ('', None, 'undefined', '<html>error</html>'):
+            courses['TEST1000']['terms'][term]['LAB']['locations'] = [bad]
+            with self.assertRaisesRegex(ValueError, 'Malformed meeting location'):
+                refresh.venue_quality(courses, term)
+
     def test_promotes_only_after_all_immutable_objects_exist(self):
         manifest, changed = refresh.publish(self.s3, 'catalog', self.root, '2026-27 Term 1', None, None)
         self.assertTrue(changed)

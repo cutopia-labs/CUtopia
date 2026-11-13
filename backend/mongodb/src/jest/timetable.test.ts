@@ -90,12 +90,12 @@ describe('Timetable', () => {
       entries: [...timetable.entries, newEntry],
     };
     await uploadTimetable(newTimetableInput);
-    expect(getTimetable({ _id, username })).resolves.toMatchObject(
+    await expect(getTimetable({ _id, username })).resolves.toMatchObject(
       newTimetableInput
     );
 
     await removeTimetable({ _id, username });
-    expect(getTimetable({ _id })).rejects.toThrow(
+    await expect(getTimetable({ _id })).rejects.toThrow(
       ErrorCode.GET_TIMETABLE_INVALID_ID.toString()
     );
   });
@@ -106,10 +106,10 @@ describe('Timetable', () => {
       ...timetable,
       username,
     });
-    expect(getTimetable({ _id, username: 'Bad guy' })).rejects.toThrow(
+    await expect(getTimetable({ _id, username: 'Bad guy' })).rejects.toThrow(
       ErrorCode.GET_TIMETABLE_UNAUTHORIZED.toString()
     );
-    expect(getTimetable({ _id })).rejects.toThrow(
+    await expect(getTimetable({ _id })).rejects.toThrow(
       ErrorCode.GET_TIMETABLE_UNAUTHORIZED.toString()
     );
   });
@@ -122,7 +122,7 @@ describe('Timetable', () => {
       username,
     });
 
-    expect(getTimetable({ _id })).resolves.toMatchObject({
+    await expect(getTimetable({ _id })).resolves.toMatchObject({
       _id,
       username,
       expire: 7,

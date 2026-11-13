@@ -3,6 +3,7 @@ import NodeCache from 'node-cache';
 
 import { Resolvers } from '../schemas/types';
 import { getCatalogManifest } from '../utils/catalog';
+import { requireDatabase } from '../utils/database';
 import { getCourse } from '../utils/getCourse';
 import withCache from '../utils/withCache';
 
@@ -30,6 +31,7 @@ const rankingResolver: Resolvers = {
         rankingCache,
         `${catalog?.version || 'local'}#${rankBy}`,
         async () => {
+          await requireDatabase();
           const { ranks } = await getRanking(rankBy);
           return Promise.all(
             (ranks || []).map(async ({ _id, val }) => ({
