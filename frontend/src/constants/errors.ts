@@ -10,7 +10,7 @@ export const ERROR_MESSAGES = {
   [ErrorCode.VERIFICATION_ALREADY_VERIFIED]: 'CUHK SID already verified!',
   [ErrorCode.VERIFICATION_USER_DNE]: "User doesn't exist!",
   [ErrorCode.VERIFICATION_EXPIRED]:
-    'Verification expired, please sign up again!',
+    'Verification code expired. Request a new code to continue.',
   [ErrorCode.LOGIN_FAILED]: 'Wrong password!',
   [ErrorCode.LOGIN_USER_DNE]: "Username doesn't exist!",
   [ErrorCode.LOGIN_NOT_VERIFIED]: 'Account not verified!',

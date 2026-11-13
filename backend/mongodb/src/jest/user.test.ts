@@ -11,6 +11,7 @@ import {
   getResetPasswordCodeAndEmail,
   getUser,
   deleteUser,
+  resendVerification,
 } from '../controllers/user';
 import UserModal from '../models/user';
 
@@ -24,6 +25,43 @@ describe('User', () => {
   });
 
   afterAll(teardown);
+
+  it('resumes an expired verification by SID with the original account and a fresh code', async () => {
+    const SID = '1100000001';
+    const username = 'resumeTest';
+    const password = 'Test-password-42';
+    const oldCode = await createUser({ username, SID, password });
+    const createdAt = Date.now() - 2 * 86400000;
+    await UserModal.updateOne(
+      { SID },
+      { createdAt, veriCodeCreatedAt: createdAt }
+    );
+
+    await expect(verifyUser({ username, code: oldCode })).rejects.toThrow(
+      String(ErrorCode.VERIFICATION_EXPIRED)
+    );
+    await expect(
+      resendVerification({ userId: SID, password: 'incorrect' })
+    ).rejects.toThrow(String(ErrorCode.LOGIN_FAILED));
+    const requests = await Promise.allSettled([
+      resendVerification({ userId: SID, password }),
+      resendVerification({ userId: SID, password }),
+    ]);
+    const successful = requests.filter(r => r.status === 'fulfilled');
+    expect(successful).toHaveLength(1);
+    const result = successful[0];
+    if (result.status !== 'fulfilled')
+      throw new Error('Expected a fresh verification');
+    expect(result.value.code).not.toBe(oldCode);
+    await verifyUser({ username: SID, code: result.value.code });
+    const account = await login({ userId: SID, password });
+    expect(account.createdAt).toBe(createdAt);
+    expect(account.verified).toBe(true);
+    await expect(resendVerification({ userId: SID, password })).rejects.toThrow(
+      String(ErrorCode.VERIFICATION_ALREADY_VERIFIED)
+    );
+    await UserModal.deleteOne({ SID });
+  });
 
   it('Register, Verify, Reset Password and Delete User', async () => {
     const username = nanoid(10);
