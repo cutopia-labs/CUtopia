@@ -195,13 +195,17 @@ const PlannerTimetable: FC<PlannerTimetableProps> = ({ className, hide }) => {
   }, [planner.offline, shareId]);
 
   useEffect(() => {
-    const save = debounce(
-      () => planner.saveCurrentPlanner(),
-      planner.offline ? 300 : TIMETABLE_SYNC_INTERVAL
-    );
+    const save = debounce(planner.saveCurrentPlanner, TIMETABLE_SYNC_INTERVAL);
     const disposer = reaction(
       () => ({ delta: planner.delta, syncing: planner.isSyncing }),
-      ({ delta, syncing }) => delta && !syncing && save()
+      ({ delta, syncing }) => {
+        if (!delta || syncing) return;
+        if (planner.offline) {
+          void planner.saveCurrentPlanner();
+        } else {
+          save();
+        }
+      }
     );
     return () => {
       save.flush();
