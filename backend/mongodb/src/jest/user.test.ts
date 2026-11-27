@@ -63,6 +63,66 @@ describe('User', () => {
     await UserModal.deleteOne({ SID });
   });
 
+  it('recovers an unverified account with a current reset code from its CUHK mailbox', async () => {
+    const SID = '1100000002';
+    const username = 'recoverTest';
+    const originalPassword = 'Old-password-42';
+    const newPassword = 'New-password-42';
+    const oldVerificationCode = await createUser({
+      username,
+      SID,
+      password: originalPassword,
+    });
+    const createdAt = Date.now() - 2 * 86400000;
+    await UserModal.updateOne(
+      { SID },
+      { createdAt, veriCodeCreatedAt: createdAt }
+    );
+    const expired = await getResetPasswordCodeAndEmail({ userId: SID });
+    expect(expired.SID).toBe(SID);
+    await UserModal.updateOne(
+      { SID },
+      { resetPwdCodeExpiresAt: Date.now() - 1 }
+    );
+    await expect(
+      resetPassword({
+        userId: SID,
+        newPassword,
+        resetCode: expired.resetPwdCode,
+      })
+    ).rejects.toThrow(String(ErrorCode.RESET_PASSWORD_FAILED));
+
+    const { resetPwdCode } = await getResetPasswordCodeAndEmail({
+      userId: username,
+    });
+    await expect(
+      verifyUser({ username, code: oldVerificationCode })
+    ).rejects.toThrow(String(ErrorCode.VERIFICATION_EXPIRED));
+    const results = await Promise.allSettled([
+      resetPassword({ userId: SID, newPassword, resetCode: resetPwdCode }),
+      resetPassword({ userId: username, newPassword, resetCode: resetPwdCode }),
+    ]);
+    expect(results.map(result => result.status).sort()).toEqual([
+      'fulfilled',
+      'rejected',
+    ]);
+    await expect(
+      resetPassword({ userId: SID, newPassword, resetCode: resetPwdCode })
+    ).rejects.toThrow(String(ErrorCode.RESET_PASSWORD_FAILED));
+    await expect(
+      login({ userId: SID, password: originalPassword })
+    ).rejects.toThrow(String(ErrorCode.LOGIN_FAILED));
+    await expect(
+      login({ userId: SID, password: newPassword })
+    ).resolves.toMatchObject({
+      username,
+      createdAt,
+      verified: true,
+      veriCode: null,
+    });
+    await UserModal.deleteOne({ SID });
+  });
+
   it('Register, Verify, Reset Password and Delete User', async () => {
     const username = nanoid(10);
     const fakeUsername = nanoid(10);

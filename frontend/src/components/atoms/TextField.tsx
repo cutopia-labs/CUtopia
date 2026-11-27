@@ -10,6 +10,7 @@ type TextFieldProps = {
   Tag?: Tag;
   value: string;
   type?: string;
+  autoComplete?: string;
   inputRef?: React.RefObject<HTMLInputElement | HTMLTextAreaElement>;
   label?: string;
   disabled?: boolean;
@@ -24,6 +25,7 @@ const TextField: FC<
   error,
   defaultValue,
   type,
+  autoComplete,
   Tag,
   inputRef,
   label,
@@ -44,6 +46,8 @@ const TextField: FC<
         placeholder={placeholder}
         defaultValue={defaultValue}
         type={type}
+        autoComplete={autoComplete}
+        aria-label={label}
         value={value}
         onChange={e => onChangeText(e.target.value)}
         onFocus={onFocus}

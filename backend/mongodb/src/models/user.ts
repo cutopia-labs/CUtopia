@@ -29,6 +29,7 @@ const userSchema = new Schema<User>(
       default: 0,
     },
     resetPwdCode: String,
+    resetPwdCodeExpiresAt: Number,
     exp: {
       type: Number,
       default: 0,

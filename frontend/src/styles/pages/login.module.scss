@@ -49,10 +49,8 @@
   margin-top: 4px;
   align-items: center;
   flex-direction: row;
+  flex-wrap: wrap;
   justify-content: space-between;
-  > .forgotPwdLabel {
-    margin-left: auto;
-  }
 }
 .loginBtn {
   height: 50px;
@@ -72,6 +70,9 @@
 .switchContainer {
   margin-top: 10px;
   font-size: 14px;
+}
+.guestPlannerLink {
+  justify-self: center;
 }
 
 @media only screen and (max-width: 1260px) {
