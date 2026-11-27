@@ -2,7 +2,11 @@ import bcrypt from 'bcryptjs';
 import { ErrorCode } from 'cutopia-types';
 import { nanoid } from 'nanoid';
 
-import { SALT_ROUNDS, VERIFY_EXPIRATION_TIME } from '../constants/config';
+import {
+  PASSWORD_RESET_EXPIRATION_TIME,
+  SALT_ROUNDS,
+  VERIFY_EXPIRATION_TIME,
+} from '../constants/config';
 import User from '../models/user';
 
 const isVerfiCodeExpired = createdAt =>
@@ -184,44 +188,59 @@ export const login = async input => {
 
 export const getResetPasswordCodeAndEmail = async input => {
   const { userId } = input;
-  const user = await getUser(userId, 'verified SID');
+  const resetPwdCode = nanoid(8);
+  const user = await User.findOneAndUpdate(
+    { [parseUserIdField(userId)]: userId },
+    {
+      $set: {
+        resetPwdCode,
+        resetPwdCodeExpiresAt: Date.now() + PASSWORD_RESET_EXPIRATION_TIME,
+      },
+    },
+    { projection: 'SID' }
+  ).exec();
 
   if (!user) {
     throw Error(ErrorCode.GET_PASSWORD_USER_DNE.toString());
   }
 
-  if (!user.verified) {
-    throw Error(ErrorCode.GET_PASSWORD_NOT_VERIFIED.toString());
-  }
-
-  user.resetPwdCode = nanoid(5);
-  await user.save();
   return {
     SID: user.SID,
-    resetPwdCode: user.resetPwdCode,
+    resetPwdCode,
   };
 };
 
 export const resetPassword = async input => {
   const { userId, newPassword, resetCode } = input;
-  const user = await getUser(userId, 'verified resetPwdCode');
+  const user = await getUser(userId, 'resetPwdCode');
 
   if (!user) {
     throw Error(ErrorCode.RESET_PASSWORD_USER_DNE.toString());
   }
 
-  if (!user.verified) {
-    throw Error(ErrorCode.RESET_PASSWORD_NOT_VERIFIED.toString());
-  }
-
-  const correct = resetCode !== '' && user.resetPwdCode === resetCode;
-  if (!correct) {
+  if (!resetCode || user.resetPwdCode !== resetCode) {
     throw Error(ErrorCode.RESET_PASSWORD_FAILED.toString());
   }
 
-  user.password = await bcrypt.hash(newPassword, SALT_ROUNDS);
-  user.resetPwdCode = null;
-  await user.save();
+  const password = await bcrypt.hash(newPassword, SALT_ROUNDS);
+  const result = await User.updateOne(
+    {
+      _id: user._id,
+      resetPwdCode: resetCode,
+      $or: [
+        { resetPwdCodeExpiresAt: { $gt: Date.now() } },
+        // Existing codes without an expiration were issued to verified users.
+        { verified: true, resetPwdCodeExpiresAt: null },
+      ],
+    },
+    {
+      $set: { password, verified: true, resetPwdCode: null, veriCode: null },
+      $unset: { resetPwdCodeExpiresAt: '' },
+    }
+  ).exec();
+  if (!result.matchedCount) {
+    throw Error(ErrorCode.RESET_PASSWORD_FAILED.toString());
+  }
 };
 
 export const incrementVotesCount = async input => {

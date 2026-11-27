@@ -16,7 +16,8 @@ export const ERROR_MESSAGES = {
   [ErrorCode.LOGIN_NOT_VERIFIED]: 'Account not verified!',
   [ErrorCode.GET_PASSWORD_USER_DNE]: "Username doesn't exist!",
   [ErrorCode.GET_PASSWORD_NOT_VERIFIED]: 'Not verified!',
-  [ErrorCode.RESET_PASSWORD_FAILED]: 'Failed to reset password',
+  [ErrorCode.RESET_PASSWORD_FAILED]:
+    'The reset code is invalid or expired. Request a new code and try again.',
   [ErrorCode.RESET_PASSWORD_USER_DNE]: "Username doesn't exist!",
   [ErrorCode.RESET_PASSWORD_NOT_VERIFIED]: 'Not verified!',
   [ErrorCode.CREATE_REVIEW_ALREADY_CREATED]: 'Already created review!',
