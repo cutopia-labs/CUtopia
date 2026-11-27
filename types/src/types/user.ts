@@ -16,6 +16,7 @@ export type User = UserVisible & {
   SID: string;
   password: string;
   resetPwdCode: string;
+  resetPwdCodeExpiresAt?: number;
   createdAt: number;
   downvotes: number;
   veriCode: string;

@@ -4,6 +4,7 @@ import { ArrowBack } from '@mui/icons-material';
 import * as Sentry from '@sentry/nextjs';
 import { observer } from 'mobx-react-lite';
 import { useMutation } from '@apollo/client';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import {
@@ -48,25 +49,28 @@ const MODE_ITEMS = {
     button: 'Sign Up',
   },
   [LoginPageMode.VERIFY]: {
-    title: 'Verify',
-    caption: 'Enter the verification code from your CUHK email.',
+    title: 'Verify your account',
+    caption:
+      'Enter the code from your CUHK email. Check your junk folder if it hasn’t arrived.',
     userId: 'Username / CUHK SID',
     verificationCode: 'Verification Code',
     button: 'Verify',
   },
   [LoginPageMode.RESET_PASSWORD]: {
     title: 'Reset Password',
-    caption: 'An verification code will be sent to your CUHK email',
+    caption:
+      'Use your CUHK email to reset your password, even if your account is still unverified.',
     userId: 'Username / CUHK SID',
     button: 'Send Reset Code',
   },
   [LoginPageMode.RESET_PASSWORD_VERIFY]: {
     title: 'Set New Password',
     caption:
-      'Please enter new password and the verification code in your CUHK email',
+      'Enter the reset code from your CUHK email and choose a new password.',
+    userId: 'Username / CUHK SID',
     password: 'New Password',
-    verificationCode: 'Verification Code',
-    button: 'Send',
+    verificationCode: 'Reset Code',
+    button: 'Set new password',
   },
 };
 
@@ -174,7 +178,7 @@ const LoginPanel: FC<Props> = ({
           setMode(LoginPageMode.VERIFY);
         },
         {
-          message: 'Verification code has been sent to your CUHK email',
+          message: 'Verification requested. Check your CUHK email.',
           view,
         }
       ),
@@ -250,9 +254,12 @@ const LoginPanel: FC<Props> = ({
     SEND_RESET_PASSWORD_CODE,
     {
       onCompleted: handleCompleted(
-        () => setMode(LoginPageMode.RESET_PASSWORD_VERIFY),
+        () => {
+          setVerificationCode('');
+          setMode(LoginPageMode.RESET_PASSWORD_VERIFY);
+        },
         {
-          message: 'Verification code has been sent to your CUHK email',
+          message: 'Reset requested. Check your CUHK email.',
           view,
         }
       ),
@@ -262,9 +269,14 @@ const LoginPanel: FC<Props> = ({
   const [resetPassword, { loading: resettingPassword }] = useMutation(
     RESET_PASSWORD,
     {
-      onCompleted: handleCompleted(() => setMode(LoginPageMode.CUTOPIA_LOGIN), {
-        view,
-      }),
+      onCompleted: handleCompleted(
+        () => {
+          setPassword('');
+          setVerificationCode('');
+          setMode(LoginPageMode.CUTOPIA_LOGIN);
+        },
+        { view, message: 'Password updated. Log in with your new password.' }
+      ),
       onError: view.handleError,
     }
   );
@@ -304,8 +316,8 @@ const LoginPanel: FC<Props> = ({
     const errorsFound = {
       verification:
         MODE_ITEMS[mode].verificationCode &&
-        !verificationCode &&
-        'Please enter the verification code',
+        !verificationCode.trim() &&
+        'Please enter the code from your CUHK email',
       username:
         (MODE_ITEMS[mode].username &&
           !username &&
@@ -349,7 +361,7 @@ const LoginPanel: FC<Props> = ({
         const verifyPayload = {
           variables: {
             username: userId,
-            code: verificationCode,
+            code: verificationCode.trim(),
           },
         };
         await verifyUser(verifyPayload);
@@ -370,7 +382,7 @@ const LoginPanel: FC<Props> = ({
             variables: {
               userId,
               newPassword: password,
-              resetCode: verificationCode,
+              resetCode: verificationCode.trim(),
             },
           };
           await resetPassword(resetPasswordVerifyPayload);
@@ -387,6 +399,12 @@ const LoginPanel: FC<Props> = ({
     if (prevMode >= 0) {
       setMode(prevMode);
     }
+  };
+
+  const openPasswordReset = () => {
+    setPassword('');
+    setShowResend(false);
+    setMode(LoginPageMode.RESET_PASSWORD);
   };
 
   const processing =
@@ -406,6 +424,7 @@ const LoginPanel: FC<Props> = ({
               <IconButton
                 className={styles.goBackIcon}
                 onClick={goBack}
+                aria-label="Go back"
                 size="large"
               >
                 <ArrowBack />
@@ -443,6 +462,7 @@ const LoginPanel: FC<Props> = ({
               placeholder={MODE_ITEMS[mode].userId}
               value={userId}
               onChangeText={text => setUserId(text)}
+              autoComplete="username"
               label="Username / SID"
             />
           )}
@@ -454,7 +474,16 @@ const LoginPanel: FC<Props> = ({
               value={password}
               onChangeText={text => setPassword(text)}
               type={invisible ? 'password' : 'text'}
-              label="Password"
+              autoComplete={
+                mode === LoginPageMode.CUTOPIA_LOGIN
+                  ? 'current-password'
+                  : 'new-password'
+              }
+              label={
+                mode === LoginPageMode.RESET_PASSWORD_VERIFY
+                  ? 'New password'
+                  : 'Password'
+              }
             />
           )}
           {MODE_ITEMS[mode].verificationCode && (
@@ -464,7 +493,8 @@ const LoginPanel: FC<Props> = ({
               placeholder={MODE_ITEMS[mode].verificationCode}
               value={verificationCode}
               onChangeText={text => setVerificationCode(text)}
-              label="Verification Code"
+              autoComplete="one-time-code"
+              label={MODE_ITEMS[mode].verificationCode}
             />
           )}
           {mode === LoginPageMode.CUTOPIA_LOGIN && (
@@ -477,12 +507,14 @@ const LoginPanel: FC<Props> = ({
               >
                 Continue verification
               </Button>
-              <span
-                className={clsx(styles.label, styles.forgotPwdLabel)}
-                onClick={() => setMode(LoginPageMode.RESET_PASSWORD)}
+              <Button
+                size="small"
+                type="button"
+                className={styles.label}
+                onClick={openPasswordReset}
               >
-                Forgot Password?
-              </span>
+                Forgot password?
+              </Button>
             </div>
           )}
           {mode === LoginPageMode.VERIFY && (
@@ -494,24 +526,40 @@ const LoginPanel: FC<Props> = ({
                   value={password}
                   onChangeText={setPassword}
                   type="password"
+                  autoComplete="current-password"
                   label="Account password"
                 />
               )}
-              <Button
-                size="small"
-                type="button"
-                className={styles.label}
-                disabled={processing || (showResend && (!userId || !password))}
-                onClick={() => {
-                  if (!showResend) {
-                    setShowResend(true);
-                    return;
+              <div className={clsx(styles.forgotPwdRow, 'center-row')}>
+                <Button
+                  size="small"
+                  type="button"
+                  className={styles.label}
+                  disabled={
+                    processing || (showResend && (!userId || !password))
                   }
-                  void resendVerification({ variables: { userId, password } });
-                }}
-              >
-                {showResend ? 'Send verification code' : 'Resend code'}
-              </Button>
+                  onClick={() => {
+                    if (!showResend) {
+                      setShowResend(true);
+                      return;
+                    }
+                    void resendVerification({
+                      variables: { userId, password },
+                    });
+                  }}
+                >
+                  {showResend ? 'Send verification code' : 'Resend code'}
+                </Button>
+                <Button
+                  size="small"
+                  type="button"
+                  className={styles.label}
+                  onClick={openPasswordReset}
+                  disabled={processing}
+                >
+                  Forgot password?
+                </Button>
+              </div>
             </>
           )}
           <LoadingButton
@@ -546,6 +594,13 @@ const LoginPanel: FC<Props> = ({
               {mode === LoginPageMode.CUTOPIA_SIGNUP ? 'Log In' : 'Sign Up'}
             </span>
           </div>
+        )}
+        {!hideFooter && mode === LoginPageMode.CUTOPIA_LOGIN && (
+          <Link href="/planner" passHref>
+            <Button className={styles.guestPlannerLink} size="small">
+              Use Planner as a guest
+            </Button>
+          </Link>
         )}
       </div>
       <Footer mb visible={!hideFooter} />
